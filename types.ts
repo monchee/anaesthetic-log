@@ -9,6 +9,8 @@ export interface PatientHistory {
   procedure: string;
   anaesthetist: string;
   hospital?: string;
+  inductionTime?: string;
+  reactionTime?: string;
 }
 
 export interface Patient {
@@ -57,4 +59,4 @@ export interface LogFormData {
   plan: string;
 }
 
-export type Screen = 'log' | 'summary' | 'patient-summary' | 'dashboard';
+export type Screen = 'log' | 'summary' | 'patient-summary' | 'dashboard' | 'changelog';

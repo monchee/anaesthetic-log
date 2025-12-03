@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, Database } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Label, Input } from './components/ui';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft } from 'lucide-react';
+import { Button, Card, CardContent, CardHeader, CardTitle } from './components/ui';
 import PatientSelector from './components/PatientSelector';
 import PatientHistory from './components/PatientHistory';
 import TestingLogForm from './components/TestingLogForm';
 import ClinicalReport from './components/ClinicalReport';
 import PatientHandout from './components/PatientHandout';
 import Dashboard from './components/Dashboard';
-import Changelog from './components/Changelog'; // Import Changelog
+import Changelog from './components/Changelog';
 import { LogFormData, Patient, Screen } from './types';
 import { formatDate } from './lib/utils';
 import { MOCK_PATIENTS } from './data/mockPatients';
@@ -41,20 +41,15 @@ const DRUG_OPTIONS = [
   'Cefazolin', 'Latex', 'Chlorhexidine', 'Lidocaine'
 ];
 
-// Extend Screen type locally to include 'changelog' without breaking strict typing elsewhere if possible, 
-// or cast it. For cleaner code, I will just use string comparison in the render logic.
-// However, to be type safe, I should update types.ts, but I am instructed to only update files I provide.
-// I will cast screen to string for the check or just use 'changelog' as a valid state value even if TS complains lightly 
-// (though best practice is to update types.ts). 
-// Let's update types.ts as well to be correct.
-
 export default function AnaestheticLogApp() {
-  // Adding 'changelog' to the state type implicitly by usage
-  const [screen, setScreen] = useState<Screen | 'changelog'>('log');
+  const [screen, setScreen] = useState<Screen>('log');
   const [formData, setFormData] = useState<LogFormData>(INITIAL_FORM_STATE);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [lastSavedRecord, setLastSavedRecord] = useState<LogFormData | null>(null);
   
+  // State for Patients Database (Initialized with Mock, can be updated via CSV)
+  const [patients, setPatients] = useState<Patient[]>(MOCK_PATIENTS);
+
   // State for NEWLY added logs (separate from the static database)
   const [recentLogs, setRecentLogs] = useState<LogFormData[]>([]);
 
@@ -83,6 +78,11 @@ export default function AnaestheticLogApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleUploadPatients = (newPatients: Patient[]) => {
+    setPatients(newPatients);
+    alert(`Successfully updated database with ${newPatients.length} records.`);
+  };
+
   const handlePrint = () => {
     window.print();
   };
@@ -105,7 +105,7 @@ export default function AnaestheticLogApp() {
     return (
         <Dashboard 
             setScreen={setScreen} 
-            existingPatients={MOCK_PATIENTS} 
+            existingPatients={patients}
             recentLogs={recentLogs}
             drugOptions={DRUG_OPTIONS}
             onViewLog={(log) => {
@@ -113,6 +113,7 @@ export default function AnaestheticLogApp() {
                 setScreen('summary');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
+            onUploadPatients={handleUploadPatients}
         />
     );
   }
@@ -227,7 +228,7 @@ export default function AnaestheticLogApp() {
                     <PatientSelector 
                         onSelectPatient={handlePatientSelect} 
                         selectedPatientId={selectedPatient?.id}
-                        patients={MOCK_PATIENTS}
+                        patients={patients} 
                     />
                     
                     {/* Read-only Demographics View */}
@@ -273,13 +274,14 @@ export default function AnaestheticLogApp() {
       </div>
 
       {/* Footer */}
-      <div className="mt-8 pt-4 border-t border-slate-200 text-center text-xs text-slate-400 pb-6">
-          <p className="font-medium text-[#441170] mb-1">RPAH Clinical Immunology & Allergy</p>
+      <div className="mt-8 pt-4 border-t border-slate-200 text-center text-xs text-slate-400 pb-6 flex flex-col items-center gap-1">
+          <p className="font-medium text-[#441170]">RPAH Clinical Immunology & Allergy</p>
+          <p className="italic opacity-80">Dataset updated: 03/12/2025</p>
           <button 
              onClick={() => setScreen('changelog')} 
              className="hover:text-[#8055f1] hover:underline transition-colors focus:outline-none"
           >
-            Anaesthetic Allergy Testing Log v4.8
+            Anaesthetic Allergy Testing Log v0.2.9
           </button>
       </div>
     </div>

@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 // --- Card ---
-export const Card = ({ className, children }: { className?: string, children?: React.ReactNode }) => (
-  <div className={`rounded-xl border border-slate-200 bg-white text-slate-950 shadow-sm ${className || ''}`}>
+export const Card = ({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`rounded-xl border border-slate-200 bg-white text-slate-950 shadow-sm ${className || ''}`} {...props}>
     {children}
   </div>
 );
@@ -98,7 +98,13 @@ export const Select = ({ options, placeholder, value, onChange, className }: { o
 );
 
 // --- Badge ---
-export const Badge = ({ variant = "default", children, className }: { variant?: "default" | "success" | "danger" | "warning" | "outline", children?: React.ReactNode, className?: string }) => {
+interface BadgeProps {
+  variant?: "default" | "success" | "danger" | "warning" | "outline";
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export const Badge: React.FC<BadgeProps> = ({ variant = "default", children, className }) => {
   const styles = {
     default: "border-transparent bg-[#8055f1] text-white hover:bg-[#8055f1]/80",
     success: "border-transparent bg-green-100 text-green-800 hover:bg-green-200",

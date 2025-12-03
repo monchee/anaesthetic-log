@@ -10,8 +10,16 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
-      version: "v4.8",
-      date: "2025-05-20",
+      version: "v0.2.9",
+      changes: [
+        "Added CSV upload functionality to update the patient database.",
+        "Implemented pagination for the Patient Database in Dashboard.",
+        "Added visual charts for Reaction Severity and Top Suspected Agents.",
+        "Refined Dashboard layout for better information density."
+      ]
+    },
+    {
+      version: "v0.2.8",
       changes: [
         "Added Changelog page accessible from footer.",
         "Updated Dashboard to include recent skin testing activity.",
@@ -20,8 +28,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
       ]
     },
     {
-      version: "v4.7",
-      date: "2025-05-18",
+      version: "v0.2.7",
       changes: [
         "Implemented dynamic patient database search.",
         "Added 'Hospital' field to demographics display.",
@@ -30,8 +37,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
       ]
     },
     {
-      version: "v4.6",
-      date: "2025-05-15",
+      version: "v0.2.6",
       changes: [
         "Integrated full REDCap dataset (92 records).",
         "Added logic to parse induction and reaction times.",
@@ -39,8 +45,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
       ]
     },
      {
-      version: "v4.5",
-      date: "2025-05-10",
+      version: "v0.2.5",
       changes: [
         "Migrated application to React with Shadcn UI components.",
         "Implemented accordion view for patient history.",
@@ -83,7 +88,6 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                             
                             <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
                                 <h3 className="text-lg font-bold text-slate-900">{v.version}</h3>
-                                <span className="text-xs font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">{v.date}</span>
                             </div>
                             
                             <ul className="list-disc list-outside text-sm text-slate-600 space-y-1 ml-4">
