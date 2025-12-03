@@ -8,6 +8,7 @@ import ClinicalReport from './components/ClinicalReport';
 import PatientHandout from './components/PatientHandout';
 import Dashboard from './components/Dashboard';
 import Changelog from './components/Changelog';
+import DisclaimerBanner from './components/DisclaimerBanner'; // Import Disclaimer
 import { LogFormData, Patient, Screen } from './types';
 import { formatDate } from './lib/utils';
 import { MOCK_PATIENTS } from './data/mockPatients';
@@ -52,6 +53,9 @@ export default function AnaestheticLogApp() {
 
   // State for NEWLY added logs (separate from the static database)
   const [recentLogs, setRecentLogs] = useState<LogFormData[]>([]);
+
+  // Disclaimer Visibility State
+  const [showDisclaimer, setShowDisclaimer] = useState(true);
 
   const symptomOptions = ['Urticaria', 'Angioedema', 'Bronchospasm', 'Hypotension', 'Flushing', 'Desaturation', 'Other'];
   const interventionOptions = ['None (Observation)', 'Adrenaline', 'Antihistamine', 'Other'];
@@ -196,8 +200,11 @@ export default function AnaestheticLogApp() {
 
   // --- LOG VIEW ---
   return (
-    <div className="max-w-3xl mx-auto min-h-screen pb-10 flex flex-col">
+    <div className="max-w-3xl mx-auto min-h-screen pb-10 flex flex-col relative">
       
+      {/* Disclaimer Banner */}
+      {showDisclaimer && <DisclaimerBanner onClose={() => setShowDisclaimer(false)} />}
+
       {/* Header */}
       <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center rounded-b-lg mb-6">
         <div>
