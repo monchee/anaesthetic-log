@@ -1,0 +1,5 @@
+{
+  "name": "RPAH Anaesthetic Allergy Log",
+  "description": "A clinical application for logging anaesthetic allergy testing, viewing patient reaction history, and generating reports.",
+  "requestFramePermissions": []
+}
