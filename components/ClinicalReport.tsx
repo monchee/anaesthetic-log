@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { Card, CardContent } from './ui';
 import { LogFormData } from '../types';
@@ -28,31 +26,31 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
     <Card className="border-t-8 border-t-[#441170] overflow-hidden print:shadow-none print:border-none">
       
       {/* Report Header */}
-      <div className="bg-[#441170] text-white p-6 flex justify-between items-start print:bg-[#441170] print:text-white">
+      <div className="bg-[#441170] text-white p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 print:flex-row print:items-center print:bg-[#441170] print:text-white">
          <div>
            <h1 className="text-xl font-bold">Clinical Immunology & Allergy</h1>
            <p className="text-sm opacity-90">Royal Prince Alfred Hospital</p>
          </div>
-         <div className="text-right">
+         <div className="text-left md:text-right print:text-right">
            <h2 className="font-semibold text-lg">Anaesthetic Testing Report</h2>
            <p className="text-sm opacity-80 text-white">Generated: {new Date().toLocaleDateString()}</p>
          </div>
       </div>
 
-      <CardContent className="p-8 space-y-8">
+      <CardContent className="p-4 md:p-8 space-y-6 md:space-y-8">
          
          {/* Patient Details */}
-         <div className="grid grid-cols-2 gap-8 border-b border-slate-100 py-6">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 border-b border-slate-100 pb-6 print:grid-cols-2">
             <div>
-               <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold">Patient Name</label>
-               <p className="text-2xl font-bold text-[#441170]">{data.firstName} {data.lastName}</p>
+               <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold block mb-1">Patient Name</label>
+               <p className="text-xl md:text-2xl font-bold text-[#441170]">{data.firstName} {data.lastName}</p>
             </div>
             <div>
-               <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold">REDCap Record ID</label>
+               <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold block mb-1">REDCap Record ID</label>
                <p className="text-lg font-mono font-medium">{data.mrn}</p>
             </div>
-            <div className="col-span-2">
-               <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold">Visit Date</label>
+            <div className="md:col-span-2 print:col-span-2">
+               <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold block mb-1">Visit Date</label>
                <p className="text-lg font-medium">{formatDate(data.visitDate)}</p>
             </div>
          </div>
@@ -64,38 +62,74 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
             </h3>
             
             {/* Controls */}
-            <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-4 text-sm print:bg-slate-50 print:border-slate-300">
-               <span className="font-semibold mr-2">Controls (mm):</span>
-               <span className="mr-4">Histamine SPT: <strong>{data.controls?.histamineSpt || '-'}</strong></span>
-               <span className="mr-4">Saline SPT: <strong>{data.controls?.salineSpt || '-'}</strong></span>
-               <span>Saline IDT: <strong>{data.controls?.salineIdt || '-'}</strong></span>
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 mb-4 text-sm print:bg-slate-50 print:border-slate-300">
+               <div className="font-semibold mb-2 block md:inline md:mr-2">Controls (mm):</div>
+               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:inline-flex md:gap-4">
+                   <span>Histamine SPT: <strong>{data.controls?.histamineSpt || '-'}</strong></span>
+                   <span>Saline SPT: <strong>{data.controls?.salineSpt || '-'}</strong></span>
+                   <span>Saline IDT: <strong>{data.controls?.salineIdt || '-'}</strong></span>
+               </div>
             </div>
 
             {(data.testPanel || []).length > 0 ? (
-              <table className="w-full text-sm text-left border-collapse">
-                 <thead>
-                    <tr className="border-b-2 border-slate-200 text-slate-600">
-                      <th className="py-2 font-semibold">Drug Tested</th>
-                      <th className="py-2 font-semibold">SPT</th>
-                      <th className="py-2 font-semibold">IDT 1:100</th>
-                      <th className="py-2 font-semibold">IDT 1:10</th>
-                      <th className="py-2 font-semibold">IDT Neat</th>
-                    </tr>
-                 </thead>
-                 <tbody>
-                    {data.testPanel.map((row, i) => (
-                      <tr key={i} className="border-b border-slate-100">
-                         <td className="py-2 font-medium">
-                           {row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName}
-                         </td>
-                         <td className="py-2">{row.sptWheal || '-'} mm</td>
-                         <td className="py-2">{row.idt100 || '-'} mm</td>
-                         <td className="py-2">{row.idt10 || '-'} mm</td>
-                         <td className="py-2">{row.idtNeat || '-'} mm</td>
-                      </tr>
-                    ))}
-                 </tbody>
-              </table>
+              <>
+                {/* Desktop/Print Table */}
+                <div className="hidden md:block print:block">
+                  <table className="w-full text-sm text-left border-collapse">
+                     <thead>
+                        <tr className="border-b-2 border-slate-200 text-slate-600">
+                          <th className="py-2 font-semibold">Drug Tested</th>
+                          <th className="py-2 font-semibold">SPT</th>
+                          <th className="py-2 font-semibold">IDT 1:100</th>
+                          <th className="py-2 font-semibold">IDT 1:10</th>
+                          <th className="py-2 font-semibold">IDT Neat</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {data.testPanel.map((row, i) => (
+                          <tr key={i} className="border-b border-slate-100">
+                             <td className="py-2 font-medium">
+                               {row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName}
+                             </td>
+                             <td className="py-2">{row.sptWheal || '-'} mm</td>
+                             <td className="py-2">{row.idt100 || '-'} mm</td>
+                             <td className="py-2">{row.idt10 || '-'} mm</td>
+                             <td className="py-2">{row.idtNeat || '-'} mm</td>
+                          </tr>
+                        ))}
+                     </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden print:hidden space-y-3">
+                   {data.testPanel.map((row, i) => (
+                      <div key={i} className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                          <div className="font-bold text-[#441170] mb-3 border-b border-slate-200 pb-2">
+                             {row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName}
+                          </div>
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                              <div>
+                                 <span className="text-[10px] text-slate-500 uppercase font-bold block">SPT</span>
+                                 <span className="font-medium">{row.sptWheal || '-'} mm</span>
+                              </div>
+                              <div>
+                                 <span className="text-[10px] text-slate-500 uppercase font-bold block">IDT 1:100</span>
+                                 <span className="font-medium">{row.idt100 || '-'} mm</span>
+                              </div>
+                              <div>
+                                 <span className="text-[10px] text-slate-500 uppercase font-bold block">IDT 1:10</span>
+                                 <span className="font-medium">{row.idt10 || '-'} mm</span>
+                              </div>
+                              <div>
+                                 <span className="text-[10px] text-slate-500 uppercase font-bold block">IDT Neat</span>
+                                 <span className="font-medium">{row.idtNeat || '-'} mm</span>
+                              </div>
+                          </div>
+                      </div>
+                   ))}
+                </div>
+              </>
             ) : (
               <p className="text-slate-500 italic">No panel testing recorded.</p>
             )}
@@ -110,11 +144,11 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                <div className={`p-4 rounded-lg border-l-4 ${data.outcome === 'SUCCESS' 
                    ? 'bg-green-50 border-green-500 print:bg-green-50' 
                    : 'bg-red-50 border-red-500 print:bg-red-50'}`}>
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2 gap-2">
                      <span className="font-bold text-lg">
                         {data.challengeDrug === 'Other' ? (data.challengeDrugCustom || 'Other') : data.challengeDrug}
                      </span>
-                     <div className={`px-2 py-1 rounded text-xs font-bold text-white ${data.outcome === 'SUCCESS' ? 'bg-green-600' : 'bg-red-600'}`}>
+                     <div className={`px-2 py-1 rounded text-xs font-bold text-white self-start md:self-auto ${data.outcome === 'SUCCESS' ? 'bg-green-600' : 'bg-red-600'}`}>
                         {data.outcome === 'SUCCESS' ? 'NEGATIVE (Safe)' : 'POSITIVE (Reaction)'}
                      </div>
                   </div>
@@ -137,7 +171,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
             <h3 className="text-[#441170] font-bold text-lg mb-2 flex items-center gap-2">
               <FileText className="w-5 h-5" /> Assessment & Plan
             </h3>
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 min-h-[100px] whitespace-pre-wrap">
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 min-h-[100px] whitespace-pre-wrap text-sm md:text-base">
                {data.plan || 'No comments recorded.'}
             </div>
          </div>

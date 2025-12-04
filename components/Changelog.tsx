@@ -12,6 +12,16 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
     {
+      version: "v0.3.7",
+      changes: [
+        "Mobile: Completely refactored Skin Testing Log for small screens. Now uses a card-based layout with clearer labels to prevent cramping.",
+        "Mobile: Optimised Clinical Report layout for mobile devices, switching tables to stacked lists.",
+        "UI: Increased touch target sizes for primary action buttons on the Clinical Report screen.",
+        "Fix: Resolved an issue where the Testing Plan / Request Form print preview would appear blank.",
+        "UI: Replaced 'Cancel' button with a close icon in the Testing Plan modal."
+      ]
+    },
+    {
       version: "v0.3.6",
       changes: [
         "UI: Standardised page width across Dashboard, Log, and Reports for a uniform experience.",

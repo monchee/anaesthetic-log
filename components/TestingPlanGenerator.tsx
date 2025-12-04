@@ -190,11 +190,17 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                 {/* Screen-only Header */}
                 <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 print:hidden">
                     <h3 className="font-bold text-slate-800">Print Preview</h3>
-                    <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => setShowPreview(false)}>Cancel</Button>
+                    <div className="flex items-center gap-2">
                         <Button size="sm" onClick={handlePrint} className="bg-[#441170]">
                             <Printer className="w-4 h-4 mr-2" /> Print
                         </Button>
+                        <button 
+                            onClick={() => setShowPreview(false)}
+                            className="ml-2 p-2 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                            title="Close Preview"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
                     </div>
                 </div>
 
@@ -305,25 +311,39 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
             <style>{`
                 @media print {
-                    body > * { display: none !important; }
-                    #printable-plan, #printable-plan * { display: block !important; visibility: visible !important; }
-                    #printable-plan { 
-                        position: absolute !important; 
-                        left: 0 !important; 
-                        top: 0 !important; 
-                        width: 100% !important; 
-                        max-width: none !important; 
-                        max-height: none !important;
-                        box-shadow: none !important;
+                    /* Hide everything in body using visibility to allow absolute positioning of children to work */
+                    body * {
+                        visibility: hidden;
+                    }
+                    
+                    /* Make the printable area visible */
+                    #printable-plan, #printable-plan * {
+                        visibility: visible;
+                    }
+                    
+                    /* Position the printable area at top left of page */
+                    #printable-plan {
+                        position: absolute !important;
+                        left: 0 !important;
+                        top: 0 !important;
+                        width: 100% !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
                         background: white !important;
                         color: black !important;
+                        box-shadow: none !important;
+                        max-width: none !important;
+                        max-height: none !important;
+                        overflow: visible !important;
                     }
-                    /* Restore flex layouts for printing */
+
+                    /* Restore layout properties */
                     #printable-plan .flex { display: flex !important; }
                     #printable-plan .grid { display: grid !important; }
                     #printable-plan .columns-2 { columns: 2 !important; }
                     #printable-plan .hidden.print\\:flex { display: flex !important; }
                     #printable-plan .print\\:hidden { display: none !important; }
+                    
                     /* Ensure bullets are visible */
                     #printable-plan ul { list-style-type: disc !important; }
                     #printable-plan li { display: list-item !important; }

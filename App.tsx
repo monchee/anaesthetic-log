@@ -184,22 +184,38 @@ function AnaestheticLogApp() {
 
     if (screen === 'dashboard') {
         return (
-            <Dashboard 
-                setScreen={setScreen} 
-                existingPatients={patients}
-                recentLogs={recentLogs}
-                drugOptions={FLAT_DRUG_OPTIONS}
-                drugCategories={DRUG_CATEGORIES}
-                onViewLog={(log) => {
-                    setLastSavedRecord(log);
-                    setScreen('summary');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                onSelectPatient={handleDashboardPatientSelect}
-                onUploadPatients={handleUploadPatients}
-                ThemeToggle={<ThemeToggle />}
-                databaseDate={databaseDate}
-            />
+            <div className="max-w-6xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 flex flex-col">
+                <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center no-print">
+                    <h1 className="font-bold text-lg flex items-center gap-2">
+                        <User className="w-5 h-5" /> Clinical Dashboard
+                    </h1>
+                    <div className="flex items-center">
+                        <Button onClick={() => setScreen('log')} variant="headerAction" size="sm">
+                            <ArrowLeft className="w-4 h-4 mr-1" /> Back to Log
+                        </Button>
+                        <ThemeToggle />
+                    </div>
+                </div>
+                <div className="flex-1">
+                    <Dashboard 
+                        setScreen={setScreen} 
+                        existingPatients={patients}
+                        recentLogs={recentLogs}
+                        drugOptions={FLAT_DRUG_OPTIONS}
+                        drugCategories={DRUG_CATEGORIES}
+                        onViewLog={(log) => {
+                            setLastSavedRecord(log);
+                            setScreen('summary');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        onSelectPatient={handleDashboardPatientSelect}
+                        onUploadPatients={handleUploadPatients}
+                        ThemeToggle={<ThemeToggle />}
+                        databaseDate={databaseDate}
+                    />
+                </div>
+                <Footer setScreen={setScreen} databaseDate={databaseDate} />
+            </div>
         );
     }
 
@@ -220,11 +236,11 @@ function AnaestheticLogApp() {
                 <div className="p-6 space-y-6 flex-1">
                     <ClinicalReport data={lastSavedRecord} />
                     <div className="flex flex-col sm:flex-row gap-4 no-print mt-8">
-                        <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1">
-                            <Printer className="w-4 h-4 mr-2" /> Print Clinical Report
+                        <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base border-2">
+                            <Printer className="w-5 h-5 mr-2" /> Print Clinical Report
                         </Button>
-                        <Button onClick={() => setScreen('patient-summary')} size="lg" variant="secondary" className="flex-1">
-                            <User className="w-4 h-4 mr-2" /> View Patient Handout
+                        <Button onClick={() => setScreen('patient-summary')} size="lg" variant="secondary" className="flex-1 py-6 h-auto text-base border-2 border-[#e6e1fd] dark:border-[#441170]">
+                            <User className="w-5 h-5 mr-2" /> View Patient Handout
                         </Button>
                     </div>
                     <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-6">

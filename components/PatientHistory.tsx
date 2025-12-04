@@ -132,11 +132,11 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col gap-5 shadow-sm flex-1">
                         
                         {/* Pre-induction Meds */}
-                        <div>
-                           <div className="text-red-900/70 dark:text-red-400 text-[10px] uppercase font-bold tracking-wider mb-2 flex items-center gap-1 border-b border-red-100 dark:border-red-900/30 pb-1">
-                                Pre-induction
-                           </div>
-                           {history.preInductionDrugs && history.preInductionDrugs.length > 0 ? (
+                        {history.preInductionDrugs && history.preInductionDrugs.length > 0 && (
+                            <div>
+                               <div className="text-red-900/70 dark:text-red-400 text-[10px] uppercase font-bold tracking-wider mb-2 flex items-center gap-1 border-b border-red-100 dark:border-red-900/30 pb-1">
+                                    Pre-induction
+                               </div>
                                <ul className="space-y-1.5">
                                    {history.preInductionDrugs.map((drug, idx) => (
                                        <li key={idx} className="flex justify-between items-center bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/40 rounded px-2 py-1.5 text-red-900 dark:text-red-300">
@@ -152,28 +152,53 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                        </li>
                                    ))}
                                </ul>
-                           ) : (
-                               <span className="text-slate-400 italic pl-1">None recorded</span>
-                           )}
-                        </div>
-
-                        {/* Post-induction */}
-                        <div>
-                            <div className="text-slate-500 dark:text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-2 border-b border-slate-200 dark:border-slate-800 pb-1">
-                                Post-induction
                             </div>
-                            {history.suspectedAgents && history.suspectedAgents.length > 0 ? (
+                        )}
+
+                        {/* Post-induction Meds (Muted) */}
+                        {history.postInductionDrugs && history.postInductionDrugs.length > 0 && (
+                            <div>
+                               <div className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold tracking-wider mb-2 flex items-center gap-1 border-b border-slate-200 dark:border-slate-700 pb-1">
+                                    Post-induction
+                               </div>
+                               <ul className="space-y-1.5">
+                                   {history.postInductionDrugs.map((drug, idx) => (
+                                       <li key={idx} className="flex justify-between items-center bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-2 py-1.5 text-slate-700 dark:text-slate-300">
+                                           {/* Handle "Drug @ Time" format if present */}
+                                           {drug.includes('@') ? (
+                                                <>
+                                                    <span className="font-medium">{drug.split('@')[0].trim()}</span>
+                                                    <span className="font-mono text-slate-500 dark:text-slate-400 text-[10px] bg-white/50 dark:bg-black/20 px-1 rounded border border-slate-200 dark:border-slate-700">{drug.split('@')[1].trim()}</span>
+                                                </>
+                                           ) : (
+                                               <span className="font-medium">{drug}</span>
+                                           )}
+                                       </li>
+                                   ))}
+                               </ul>
+                            </div>
+                        )}
+
+                        {/* Other Agents (No Time Listed) */}
+                        {history.suspectedAgents && history.suspectedAgents.length > 0 && (
+                            <div>
+                                <div className="text-slate-500 dark:text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-2 border-b border-slate-200 dark:border-slate-800 pb-1">
+                                    Other medication given (No listed time)
+                                </div>
                                 <div className="flex flex-wrap gap-2">
                                     {history.suspectedAgents.map((agent, i) => (
-                                        <span key={i} className="font-semibold text-danger-800 dark:text-red-300 text-xs bg-white dark:bg-slate-900 px-2 py-1 rounded border border-danger/20 dark:border-red-900/40 shadow-sm">
+                                        <span key={i} className="font-semibold text-slate-700 dark:text-slate-300 text-xs bg-white dark:bg-slate-900 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 shadow-sm">
                                             {agent}
                                         </span>
                                     ))}
                                 </div>
-                            ) : (
-                                <span className="text-slate-400 italic text-xs">None recorded</span>
-                            )}
-                        </div>
+                            </div>
+                        )}
+
+                         {/* Fallback */}
+                         {(!history.preInductionDrugs?.length && !history.postInductionDrugs?.length && !history.suspectedAgents?.length) && (
+                            <span className="text-slate-400 italic text-xs">None recorded</span>
+                        )}
                     </div>
                 </div>
 

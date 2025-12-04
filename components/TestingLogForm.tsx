@@ -12,6 +12,13 @@ interface TestingLogFormProps {
   interventionOptions: string[];
 }
 
+const FIELD_LABELS: Record<string, string> = {
+  sptWheal: 'SPT',
+  idt100: '1:100',
+  idt10: '1:10',
+  idtNeat: 'Neat'
+};
+
 const TestingLogForm: React.FC<TestingLogFormProps> = ({ 
   formData, 
   setFormData, 
@@ -247,7 +254,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
             {/* Data Entry Table */}
             {formData.testPanel.length > 0 ? (
               <div className={`border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden animate-in fade-in slide-in-from-top-2`}>
-                 <div className="grid grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-50 dark:bg-slate-900 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase border-b border-slate-100 dark:border-slate-800">
+                 <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-50 dark:bg-slate-900 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase border-b border-slate-100 dark:border-slate-800">
                     <div>Drug</div>
                     <div>SPT</div>
                     <div>1:100</div>
@@ -255,14 +262,17 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     <div>Neat</div>
                  </div>
 
-                 <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                 <div className="">
                    {formData.testPanel.map((row, index) => (
-                      <div key={row.id || row.drugName} className="grid grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 items-center bg-white dark:bg-slate-950 group">
-                         {/* Name Column */}
-                         <div className="flex items-center gap-2">
+                      <div 
+                        key={row.id || row.drugName} 
+                        className="grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800 last:border-0 group"
+                      >
+                         {/* Name Column (Full width on mobile) */}
+                         <div className="col-span-2 md:col-span-1 flex items-center gap-2">
                             {row.drugName === 'Other' ? (
                                 <Input 
-                                    className="h-9 text-sm flex-1 min-w-0 font-medium" 
+                                    className="h-10 md:h-9 text-sm flex-1 min-w-0 font-medium" 
                                     placeholder="Specify name..."
                                     value={row.customName || ''}
                                     onChange={(e) => updateDrugData(index, 'customName', e.target.value)}
@@ -276,24 +286,30 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                             
                             <button 
                                 onClick={() => removeRow(index)}
-                                className={`shrink-0 text-slate-300 hover:text-red-500 transition-opacity p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                                className={`shrink-0 text-slate-300 hover:text-red-500 transition-opacity p-2 md:p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-100 md:opacity-0 md:group-hover:opacity-100'}`}
                                 title="Remove drug"
                             >
-                                <X className="w-4 h-4" />
+                                <X className="w-5 h-5 md:w-4 md:h-4" />
                             </button>
                          </div>
 
-                         {/* Input Columns */}
+                         {/* Input Columns (Grid on mobile) */}
                          {['sptWheal', 'idt100', 'idt10', 'idtNeat'].map((field) => (
-                            <div key={field} className="relative">
-                                <Input 
-                                type="number" 
-                                className="h-9 pr-6 text-sm text-center"
-                                placeholder="0"
-                                value={(row as any)[field] || ''}
-                                onChange={(e) => updateDrugData(index, field, e.target.value)}
-                                />
-                                <span className="absolute right-2 top-2.5 text-xs text-slate-400">mm</span>
+                            <div key={field} className="relative flex flex-col gap-1.5 md:block">
+                                {/* Mobile Label */}
+                                <span className="md:hidden text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                                  {FIELD_LABELS[field]}
+                                </span>
+                                <div className="relative">
+                                  <Input 
+                                    type="number" 
+                                    className="h-10 md:h-9 pr-8 text-sm text-center font-medium md:font-normal"
+                                    placeholder="0"
+                                    value={(row as any)[field] || ''}
+                                    onChange={(e) => updateDrugData(index, field, e.target.value)}
+                                  />
+                                  <span className="absolute right-3 top-2.5 text-xs text-slate-400 pointer-events-none">mm</span>
+                                </div>
                             </div>
                          ))}
                       </div>

@@ -75,7 +75,10 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
       else if (grade.includes("I ") || grade === "Grade I") gradeCounts.I++;
       else gradeCounts.Ungraded++;
 
+      // Track agents from all sources (Pre, Post, Other)
       p.history.suspectedAgents?.forEach(agent => trackAgent(agent));
+      p.history.preInductionDrugs?.forEach(str => trackAgent(str.split('@')[0].trim()));
+      p.history.postInductionDrugs?.forEach(str => trackAgent(str.split('@')[0].trim()));
 
       p.history.symptoms?.forEach(sym => {
          const normalized = sym.trim();

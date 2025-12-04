@@ -14,6 +14,7 @@ export interface PatientHistory {
   inductionTime?: string;
   reactionTime?: string;
   preInductionDrugs?: string[];
+  postInductionDrugs?: string[]; // New field for drugs given after induction
   procedureOutcome?: string; // New field for "Completed" vs "Abandoned"
 }
 
