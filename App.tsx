@@ -140,6 +140,13 @@ function AnaestheticLogApp() {
     alert(`Successfully updated database with ${newPatients.length} records.`);
   };
 
+  // Handler for clicking a patient in the Dashboard
+  const handleDashboardPatientSelect = (patient: Patient) => {
+    handlePatientSelect(patient);
+    setScreen('log');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handlePrint = () => {
     window.print();
   };
@@ -156,7 +163,7 @@ function AnaestheticLogApp() {
   const renderScreenContent = () => {
     if (screen === 'changelog') {
         return (
-            <>
+            <div className="max-w-6xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 flex flex-col">
                 <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center no-print">
                     <h1 className="font-bold text-lg flex items-center gap-2">
                         <User className="w-5 h-5" /> Application Changelog
@@ -168,8 +175,10 @@ function AnaestheticLogApp() {
                         <ThemeToggle />
                     </div>
                 </div>
-                <Changelog setScreen={setScreen} databaseDate={databaseDate} />
-            </>
+                <div className="flex-1">
+                    <Changelog setScreen={setScreen} databaseDate={databaseDate} />
+                </div>
+            </div>
         );
     }
 
@@ -186,6 +195,7 @@ function AnaestheticLogApp() {
                     setScreen('summary');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
+                onSelectPatient={handleDashboardPatientSelect}
                 onUploadPatients={handleUploadPatients}
                 ThemeToggle={<ThemeToggle />}
                 databaseDate={databaseDate}
@@ -195,7 +205,7 @@ function AnaestheticLogApp() {
 
     if (screen === 'summary' && lastSavedRecord) {
         return (
-            <div className="max-w-4xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 pb-10 flex flex-col">
+            <div className="max-w-6xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 pb-10 flex flex-col">
                 <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center no-print">
                     <h1 className="font-bold text-lg flex items-center gap-2">
                         <FileText className="w-5 h-5" /> Clinical Report
@@ -230,7 +240,7 @@ function AnaestheticLogApp() {
 
     if (screen === 'patient-summary' && lastSavedRecord) {
         return (
-            <div className="max-w-3xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 pb-10 flex flex-col">
+            <div className="max-w-6xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 pb-10 flex flex-col">
                 <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center no-print">
                     <h1 className="font-bold text-lg flex items-center gap-2">
                         <User className="w-5 h-5" /> Patient Handout
@@ -265,7 +275,7 @@ function AnaestheticLogApp() {
 
     if (screen === 'testing') {
         return (
-            <div className="max-w-3xl mx-auto min-h-screen pb-10 flex flex-col relative bg-[#fbfaff] dark:bg-slate-950">
+            <div className="max-w-6xl mx-auto min-h-screen pb-10 flex flex-col relative bg-[#fbfaff] dark:bg-slate-950">
                 <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <Button onClick={() => setScreen('log')} variant="headerAction" size="sm" className="mr-2">
@@ -301,8 +311,8 @@ function AnaestheticLogApp() {
 
     // Default: 'log' screen (Patient Selection & History)
     return (
-        <div className="max-w-3xl mx-auto min-h-screen pb-10 flex flex-col relative">
-            <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center rounded-b-lg mb-6">
+        <div className="max-w-6xl mx-auto min-h-screen pb-10 flex flex-col relative">
+            <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center">
                 <div>
                     <h1 className="font-bold text-lg flex items-center gap-2">
                         <Stethoscope className="w-5 h-5" /> Anaesthetic Allergy Challenge Log

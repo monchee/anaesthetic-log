@@ -12,12 +12,13 @@ interface DashboardProps {
   drugOptions: string[];
   drugCategories: Record<string, string[]>;
   onViewLog: (log: LogFormData) => void;
+  onSelectPatient: (patient: Patient) => void;
   onUploadPatients: (patients: Patient[]) => void;
   ThemeToggle?: React.ReactNode;
   databaseDate: string;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onUploadPatients, ThemeToggle, databaseDate }) => {
+const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, ThemeToggle, databaseDate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
@@ -257,7 +258,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
   };
 
   return (
-    <div className="max-w-7xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 pb-10 flex flex-col">
+    <div className="max-w-6xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 pb-10 flex flex-col">
       <div className="flex-1">
         {/* Header */}
         <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center no-print">
@@ -670,11 +671,16 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                             {paginatedPatients.length > 0 ? (
                                 paginatedPatients.map((p) => {
                                     return (
-                                        <tr key={p.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-900/50 transition-colors">
+                                        <tr 
+                                            key={p.id} 
+                                            className="hover:bg-slate-50/80 dark:hover:bg-slate-900/50 transition-colors cursor-pointer group"
+                                            onClick={() => onSelectPatient(p)}
+                                            title="Click to view patient details"
+                                        >
                                             <td className="px-4 py-3 whitespace-nowrap text-slate-500 dark:text-slate-400 font-mono text-xs">
                                                 {formatDate(p.history.date)}
                                             </td>
-                                            <td className="px-4 py-3 font-medium text-[#441170] dark:text-purple-300">
+                                            <td className="px-4 py-3 font-medium text-[#441170] dark:text-purple-300 group-hover:text-[#6b42d1] dark:group-hover:text-purple-200">
                                                 {p.lastName}, {p.firstName}
                                                 <div className="text-xs text-slate-400 font-normal block sm:hidden">{p.history.hospital}</div>
                                             </td>

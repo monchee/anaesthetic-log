@@ -72,14 +72,14 @@ const PatientHandout: React.FC<PatientHandoutProps> = ({ data }) => {
            </div>
 
            {/* Department Info */}
-           <div className="bg-slate-50 p-6 rounded-lg border border-slate-200 text-sm space-y-1 print:bg-slate-50">
-              <h3 className="font-bold text-[#441170] mb-2 uppercase tracking-wide">Contact Information</h3>
-              <p className="font-bold">Department of Clinical Immunology & Allergy</p>
-              <p>Royal Prince Alfred Hospital</p>
-              <p>Clinic location: Level 5, Gloucester House</p>
-              <p>Phone: (02) 9515 8814</p>
-              <p>Email: SLHD-RPA-ClinicalImmunology@health.nsw.gov.au</p>
-              <p className="pt-2 text-slate-600 italic">If you have any questions about these results, please contact the clinic.</p>
+           <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-lg border border-slate-200 dark:border-slate-700 text-sm space-y-1 print:bg-slate-50">
+              <h3 className="font-bold text-[#441170] dark:text-purple-300 mb-2 uppercase tracking-wide">Contact Information</h3>
+              <p className="font-bold dark:text-slate-200">Department of Clinical Immunology & Allergy</p>
+              <p className="dark:text-slate-300">Royal Prince Alfred Hospital</p>
+              <p className="dark:text-slate-300">Clinic location: Level 5, Gloucester House</p>
+              <p className="dark:text-slate-300">Phone: (02) 9515 8814</p>
+              <p className="dark:text-slate-300">Email: SLHD-RPA-ClinicalImmunology@health.nsw.gov.au</p>
+              <p className="pt-2 text-slate-600 dark:text-slate-400 italic">If you have any questions about these results, please contact the clinic.</p>
            </div>
 
            <div className="text-xs text-slate-400 pt-8 text-center border-t border-slate-200 mt-8">

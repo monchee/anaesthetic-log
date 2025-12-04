@@ -12,6 +12,15 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
     {
+      version: "v0.3.6",
+      changes: [
+        "UI: Standardised page width across Dashboard, Log, and Reports for a uniform experience.",
+        "UI: Adjusted header styling to be consistent across all screens.",
+        "Fix: Resolved readability issues in Patient Handout contact section in Dark Mode.",
+        "System: General layout optimisations."
+      ]
+    },
+    {
       version: "v0.3.5",
       changes: [
         "Patient History: Enhanced visual design with card-based layout and improved information hierarchy.",
@@ -113,7 +122,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 pb-10 flex flex-col">
+    <div className="max-w-6xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 pb-10 flex flex-col">
       <div className="flex-1">
         
         {/* Header (Note: App.tsx handles the main header, this is nested content logic usually, but Changelog renders its own header in App.tsx switch, so we just render content here) */}

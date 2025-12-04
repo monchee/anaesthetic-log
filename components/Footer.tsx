@@ -14,7 +14,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => (
         onClick={() => setScreen('changelog')} 
         className="hover:text-[#8055f1] hover:underline transition-colors focus:outline-none dark:hover:text-purple-300"
     >
-        Anaesthetic Allergy Testing Log v0.3.5
+        Anaesthetic Allergy Testing Log v0.3.6
     </button>
   </div>
 );
