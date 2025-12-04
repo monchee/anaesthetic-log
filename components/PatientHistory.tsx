@@ -12,9 +12,11 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
   const { history } = patient;
 
   const getGradeColor = (grade: string) => {
-    if (grade.includes("IV") || grade.includes("III") || grade.includes("Cardiac Arrest")) return "danger";
-    if (grade.includes("II")) return "warning";
-    return "default"; 
+    if (grade.includes("IV") || grade.includes("Cardiac Arrest")) return "grade4";
+    if (grade.includes("III")) return "grade3";
+    if (grade.includes("II")) return "grade2";
+    if (grade.includes("I ") || grade === "Grade I") return "grade1";
+    return "ungraded"; 
   };
 
   // Helper to strip seconds from time string (e.g. "12:00:00" -> "12:00")
@@ -39,11 +41,11 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
   const { label: gradeLabel, description: gradeDesc } = splitGrade(history.grade);
 
   return (
-    <Card className="border-t-4 border-brand shadow-md bg-white">
-      <CardHeader className="pb-4 border-b border-slate-100 bg-slate-50/50">
-        <CardTitle className="text-brand-dark flex items-center gap-2">
-          <div className="bg-brand-light p-1.5 rounded-md">
-            <History className="h-4 w-4 text-brand" />
+    <Card className="border-t-4 border-brand shadow-md bg-white dark:bg-slate-900">
+      <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+        <CardTitle className="text-brand-dark dark:text-purple-300 flex items-center gap-2">
+          <div className="bg-brand-light dark:bg-purple-900/40 p-1.5 rounded-md">
+            <History className="h-4 w-4 text-brand dark:text-purple-300" />
           </div>
           Reaction History
         </CardTitle>
@@ -53,9 +55,9 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
           title={
             <div className="flex flex-wrap items-center gap-3 w-full pr-4">
               <div className="flex items-center gap-3">
-                <span className="font-bold text-slate-900 text-base">{formatDate(history.date)}</span>
+                <span className="font-bold text-slate-900 dark:text-slate-100 text-base">{formatDate(history.date)}</span>
                 <span className="text-slate-300 text-2xl font-light">|</span>
-                <span className="text-sm text-slate-600 font-medium truncate max-w-[200px] sm:max-w-md">{history.procedure}</span>
+                <span className="text-sm text-slate-600 dark:text-slate-300 font-medium truncate max-w-[200px] sm:max-w-md">{history.procedure}</span>
               </div>
               <div className="ml-auto flex items-center">
                  <div className="group relative">
@@ -76,15 +78,15 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
           defaultOpen={true}
           className="px-6 border-b-0" 
         >
-          <div className="space-y-6 pt-2 pb-6 text-sm text-slate-700">
+          <div className="space-y-6 pt-2 pb-6 text-sm text-slate-700 dark:text-slate-300">
             
             {/* Reaction Summary */}
             <div className="space-y-2">
-                <h4 className="font-semibold text-slate-900 flex items-center gap-2 text-sm">
-                    <FileText className="h-4 w-4 text-brand" /> 
+                <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-sm">
+                    <FileText className="h-4 w-4 text-brand dark:text-purple-400" /> 
                     Reaction Summary
                 </h4>
-                <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 text-slate-700 leading-relaxed shadow-sm">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-lg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 leading-relaxed shadow-sm">
                     {history.reactionSummary || "No summary provided."}
                 </div>
             </div>
@@ -94,19 +96,19 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 
                 {/* 1. Timeline (Top Left) */}
                 <div className="flex flex-col gap-2 h-full">
-                    <h4 className="font-semibold text-slate-900 flex items-center gap-2 text-sm">
-                        <Clock className="h-4 w-4 text-brand" /> 
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-sm">
+                        <Clock className="h-4 w-4 text-brand dark:text-purple-400" /> 
                         Timeline
                     </h4>
-                    <div className="bg-slate-50 p-5 rounded-lg border border-slate-100 flex flex-col gap-4 text-xs shadow-sm flex-1">
+                    <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col gap-4 text-xs shadow-sm flex-1">
                         
-                        <div className="flex justify-between items-center border-b border-slate-200 pb-3 pt-1">
-                            <span className="text-slate-500 font-medium uppercase tracking-wide">Induction</span>
-                            <span className="text-slate-900 font-bold font-mono text-sm">{formatTime(history.inductionTime)}</span>
+                        <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3 pt-1">
+                            <span className="text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wide">Induction</span>
+                            <span className="text-slate-900 dark:text-slate-100 font-bold font-mono text-sm">{formatTime(history.inductionTime)}</span>
                         </div>
                         <div className="flex justify-between items-center pt-1">
-                            <span className="text-slate-500 font-medium uppercase tracking-wide">Reaction Onset</span>
-                            <span className="text-slate-900 font-bold font-mono text-sm">{formatTime(history.reactionTime)}</span>
+                            <span className="text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wide">Reaction Onset</span>
+                            <span className="text-slate-900 dark:text-slate-100 font-bold font-mono text-sm">{formatTime(history.reactionTime)}</span>
                         </div>
                         
                     </div>
@@ -114,14 +116,14 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
 
                 {/* 2. Clinical Features (Top Right) */}
                 <div className="flex flex-col gap-2 h-full">
-                    <h4 className="font-semibold text-slate-900 flex items-center gap-2 text-sm">
-                        <Activity className="h-4 w-4 text-brand" /> 
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-sm">
+                        <Activity className="h-4 w-4 text-brand dark:text-purple-400" /> 
                         Clinical Features
                     </h4>
-                    <div className="bg-slate-50 p-5 rounded-lg border border-slate-100 flex flex-wrap gap-2 content-start shadow-sm flex-1">
+                    <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-wrap gap-2 content-start shadow-sm flex-1">
                         {history.symptoms && history.symptoms.length > 0 ? (
                             history.symptoms.map((s, i) => (
-                                <span key={i} className="inline-flex items-center rounded-full bg-white border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm">
+                                <span key={i} className="inline-flex items-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
                                 {s}
                                 </span>
                             ))
@@ -131,26 +133,26 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
 
                 {/* 3. Medications (Bottom Left) */}
                 <div className="flex flex-col gap-2 h-full">
-                    <h4 className="font-semibold text-slate-900 flex items-center gap-2 text-sm">
-                        <Pill className="h-4 w-4 text-brand" /> 
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-sm">
+                        <Pill className="h-4 w-4 text-brand dark:text-purple-400" /> 
                         Suspected Agents & Meds
                     </h4>
-                    <div className="bg-slate-50 p-5 rounded-lg border border-slate-100 flex flex-col gap-5 shadow-sm flex-1">
+                    <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col gap-5 shadow-sm flex-1">
                         
                         {/* Pre-induction Meds */}
                         <div>
-                           <div className="text-red-900/70 text-[10px] uppercase font-bold tracking-wider mb-2 flex items-center gap-1 border-b border-red-100 pb-1">
+                           <div className="text-red-900/70 dark:text-red-400 text-[10px] uppercase font-bold tracking-wider mb-2 flex items-center gap-1 border-b border-red-100 dark:border-red-900/30 pb-1">
                                 Pre-induction
                            </div>
                            {history.preInductionDrugs && history.preInductionDrugs.length > 0 ? (
                                <ul className="space-y-1.5">
                                    {history.preInductionDrugs.map((drug, idx) => (
-                                       <li key={idx} className="flex justify-between items-center bg-red-50 border border-red-100 rounded px-2 py-1.5 text-red-900">
+                                       <li key={idx} className="flex justify-between items-center bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/40 rounded px-2 py-1.5 text-red-900 dark:text-red-300">
                                            {/* Handle "Drug @ Time" format if present */}
                                            {drug.includes('@') ? (
                                                 <>
                                                     <span className="font-medium">{drug.split('@')[0].trim()}</span>
-                                                    <span className="font-mono text-red-800/70 text-[10px] bg-white/50 px-1 rounded border border-red-100">{drug.split('@')[1].trim()}</span>
+                                                    <span className="font-mono text-red-800/70 dark:text-red-300/70 text-[10px] bg-white/50 dark:bg-black/20 px-1 rounded border border-red-100 dark:border-red-900/30">{drug.split('@')[1].trim()}</span>
                                                 </>
                                            ) : (
                                                <span className="font-medium">{drug}</span>
@@ -165,13 +167,13 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
 
                         {/* Post-induction */}
                         <div>
-                            <div className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-2 border-b border-slate-200 pb-1">
+                            <div className="text-slate-500 dark:text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-2 border-b border-slate-200 dark:border-slate-800 pb-1">
                                 Post-induction
                             </div>
                             {history.suspectedAgents && history.suspectedAgents.length > 0 ? (
                                 <div className="flex flex-wrap gap-2">
                                     {history.suspectedAgents.map((agent, i) => (
-                                        <span key={i} className="font-semibold text-danger-800 text-xs bg-white px-2 py-1 rounded border border-danger/20 shadow-sm">
+                                        <span key={i} className="font-semibold text-danger-800 dark:text-red-300 text-xs bg-white dark:bg-slate-900 px-2 py-1 rounded border border-danger/20 dark:border-red-900/40 shadow-sm">
                                             {agent}
                                         </span>
                                     ))}
@@ -185,13 +187,13 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
 
                 {/* 4. Treatment (Bottom Right) */}
                 <div className="flex flex-col gap-2 h-full">
-                    <h4 className="font-semibold text-slate-900 flex items-center gap-2 text-sm">
-                        <Syringe className="h-4 w-4 text-brand" /> 
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-sm">
+                        <Syringe className="h-4 w-4 text-brand dark:text-purple-400" /> 
                         Treatment
                     </h4>
-                    <div className="bg-slate-50 p-5 rounded-lg border border-slate-100 shadow-sm flex-1">
+                    <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm flex-1">
                         {history.treatment && history.treatment.length > 0 ? (
-                            <ul className="list-disc list-inside text-slate-700 text-xs space-y-2">
+                            <ul className="list-disc list-inside text-slate-700 dark:text-slate-300 text-xs space-y-2">
                                 {history.treatment.map((t, i) => <li key={i}>{t}</li>)}
                             </ul>
                         ) : <span className="text-slate-400 italic text-xs">None recorded</span>}
@@ -201,35 +203,35 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
             </div>
 
              {/* Outcome Block */}
-             <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-lg p-3">
+             <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
                     {history.procedureOutcome === 'Abandoned' ? (
-                        <div className="p-1.5 rounded-full shrink-0 bg-red-100 text-red-600">
+                        <div className="p-1.5 rounded-full shrink-0 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
                             <XCircle className="w-4 h-4" />
                         </div>
                     ) : (
-                         <div className="p-1.5 rounded-full shrink-0 bg-green-100 text-green-600">
+                         <div className="p-1.5 rounded-full shrink-0 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
                             <CheckCircle2 className="w-4 h-4" />
                         </div>
                     )}
                     
                     <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Outcome:</span>
-                        <span className={`font-semibold ${history.procedureOutcome === 'Abandoned' ? 'text-red-700' : 'text-green-700'}`}>
+                        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Outcome:</span>
+                        <span className={`font-semibold ${history.procedureOutcome === 'Abandoned' ? 'text-red-700 dark:text-red-400' : 'text-green-700 dark:text-green-400'}`}>
                             {history.procedureOutcome ? `Procedure ${history.procedureOutcome}` : "Outcome not recorded"}
                         </span>
                     </div>
             </div>
 
             {/* Footer Metadata */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pt-6 border-t border-slate-100 mt-6 text-xs text-slate-500">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pt-6 border-t border-slate-100 dark:border-slate-800 mt-6 text-xs text-slate-500 dark:text-slate-400">
                <div className="flex items-center gap-2">
                  <Stethoscope className="h-3.5 w-3.5 text-slate-400" />
-                 <span className="font-medium text-slate-700">Anaesthetist:</span> {history.anaesthetist || "Unknown"}
+                 <span className="font-medium text-slate-700 dark:text-slate-300">Anaesthetist:</span> {history.anaesthetist || "Unknown"}
                </div>
                {history.hospital && (
                    <div className="flex items-center gap-2">
                         <Building2 className="h-3.5 w-3.5 text-slate-400" />
-                        <span className="font-medium text-slate-700">Hospital:</span> {history.hospital}
+                        <span className="font-medium text-slate-700 dark:text-slate-300">Hospital:</span> {history.hospital}
                    </div>
                )}
             </div>

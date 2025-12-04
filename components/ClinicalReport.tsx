@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import { Card, CardContent } from './ui';
 import { LogFormData } from '../types';
@@ -109,7 +111,9 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                    ? 'bg-green-50 border-green-500 print:bg-green-50' 
                    : 'bg-red-50 border-red-500 print:bg-red-50'}`}>
                   <div className="flex justify-between items-center mb-2">
-                     <span className="font-bold text-lg">{data.challengeDrug}</span>
+                     <span className="font-bold text-lg">
+                        {data.challengeDrug === 'Other' ? (data.challengeDrugCustom || 'Other') : data.challengeDrug}
+                     </span>
                      <div className={`px-2 py-1 rounded text-xs font-bold text-white ${data.outcome === 'SUCCESS' ? 'bg-green-600' : 'bg-red-600'}`}>
                         {data.outcome === 'SUCCESS' ? 'NEGATIVE (Safe)' : 'POSITIVE (Reaction)'}
                      </div>

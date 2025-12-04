@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2 } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, Sun, Moon } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from './components/ui';
 import PatientSelector from './components/PatientSelector';
 import PatientHistory from './components/PatientHistory';
@@ -9,8 +8,10 @@ import ClinicalReport from './components/ClinicalReport';
 import PatientHandout from './components/PatientHandout';
 import Dashboard from './components/Dashboard';
 import Changelog from './components/Changelog';
-import DisclaimerBanner from './components/DisclaimerBanner'; // Import Disclaimer
-import TestingPlanGenerator from './components/TestingPlanGenerator'; // Import Plan Generator
+import DisclaimerBanner from './components/DisclaimerBanner';
+import TestingPlanGenerator from './components/TestingPlanGenerator';
+import Footer from './components/Footer';
+import { ThemeProvider, useTheme } from './components/ThemeProvider';
 import { LogFormData, Patient, Screen } from './types';
 import { formatDate } from './lib/utils';
 import { MOCK_PATIENTS } from './data/mockPatients';
@@ -28,6 +29,7 @@ const INITIAL_FORM_STATE: LogFormData = {
     testPanel: [],
     proceedToChallenge: false,
     challengeDrug: '',
+    challengeDrugCustom: '',
     outcome: null,
     reactionTime: '',
     symptoms: [],
@@ -68,7 +70,17 @@ const DRUG_CATEGORIES: Record<string, string[]> = {
 // Flattened list for Dashboard filters and dropdowns
 const FLAT_DRUG_OPTIONS = Object.values(DRUG_CATEGORIES).flat();
 
-export default function AnaestheticLogApp() {
+// --- Theme Toggle Component ---
+const ThemeToggle = () => {
+    const { theme, toggleTheme } = useTheme();
+    return (
+        <Button variant="headerAction" size="sm" onClick={toggleTheme} className="ml-2 w-9 px-0" title="Toggle Dark Mode">
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </Button>
+    );
+};
+
+function AnaestheticLogApp() {
   const [screen, setScreen] = useState<Screen>('log');
   const [formData, setFormData] = useState<LogFormData>(INITIAL_FORM_STATE);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
@@ -80,8 +92,21 @@ export default function AnaestheticLogApp() {
   // State for NEWLY added logs (separate from the static database)
   const [recentLogs, setRecentLogs] = useState<LogFormData[]>([]);
 
-  // Disclaimer Visibility State
-  const [showDisclaimer, setShowDisclaimer] = useState(true);
+  // Disclaimer Visibility State - Check localStorage first
+  const [showDisclaimer, setShowDisclaimer] = useState(() => {
+    // Only access localStorage in browser environment
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('disclaimerDismissed') !== 'true';
+    }
+    return true;
+  });
+
+  const handleDismissDisclaimer = () => {
+    setShowDisclaimer(false);
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('disclaimerDismissed', 'true');
+    }
+  };
 
   const symptomOptions = ['Urticaria', 'Angioedema', 'Bronchospasm', 'Hypotension', 'Flushing', 'Desaturation', 'Other'];
   const interventionOptions = ['None (Observation)', 'Adrenaline', 'Antihistamine', 'Other'];
@@ -128,7 +153,22 @@ export default function AnaestheticLogApp() {
   // Render content based on screen state
   const renderScreenContent = () => {
     if (screen === 'changelog') {
-        return <Changelog setScreen={setScreen} />;
+        return (
+            <>
+                <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center no-print">
+                    <h1 className="font-bold text-lg flex items-center gap-2">
+                        <User className="w-5 h-5" /> Application Changelog
+                    </h1>
+                    <div className="flex items-center">
+                        <Button onClick={() => setScreen('log')} variant="headerAction" size="sm">
+                            <ArrowLeft className="w-4 h-4 mr-1" /> Back to Log
+                        </Button>
+                        <ThemeToggle />
+                    </div>
+                </div>
+                <Changelog setScreen={setScreen} />
+            </>
+        );
     }
 
     if (screen === 'dashboard') {
@@ -138,28 +178,33 @@ export default function AnaestheticLogApp() {
                 existingPatients={patients}
                 recentLogs={recentLogs}
                 drugOptions={FLAT_DRUG_OPTIONS}
+                drugCategories={DRUG_CATEGORIES}
                 onViewLog={(log) => {
                     setLastSavedRecord(log);
                     setScreen('summary');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 onUploadPatients={handleUploadPatients}
+                ThemeToggle={<ThemeToggle />}
             />
         );
     }
 
     if (screen === 'summary' && lastSavedRecord) {
         return (
-            <div className="max-w-4xl mx-auto min-h-screen bg-[#fbfaff] pb-10">
+            <div className="max-w-4xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 pb-10 flex flex-col">
                 <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center no-print">
                     <h1 className="font-bold text-lg flex items-center gap-2">
                         <FileText className="w-5 h-5" /> Clinical Report
                     </h1>
-                    <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
-                        <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
-                    </Button>
+                    <div className="flex items-center">
+                        <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
+                            <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
+                        </Button>
+                        <ThemeToggle />
+                    </div>
                 </div>
-                <div className="p-6 space-y-6">
+                <div className="p-6 space-y-6 flex-1">
                     <ClinicalReport data={lastSavedRecord} />
                     <div className="flex flex-col sm:flex-row gap-4 no-print mt-8">
                         <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1">
@@ -169,28 +214,32 @@ export default function AnaestheticLogApp() {
                             <User className="w-4 h-4 mr-2" /> View Patient Handout
                         </Button>
                     </div>
-                    <div className="no-print border-t border-slate-200 pt-6 mt-6">
+                    <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-6">
                         <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg shadow-md">
                             <Plus className="w-5 h-5 mr-2" /> Start New Log
                         </Button>
                     </div>
                 </div>
+                <Footer setScreen={setScreen} />
             </div>
         );
     }
 
     if (screen === 'patient-summary' && lastSavedRecord) {
         return (
-            <div className="max-w-3xl mx-auto min-h-screen bg-[#fbfaff] pb-10">
+            <div className="max-w-3xl mx-auto min-h-screen bg-[#fbfaff] dark:bg-slate-950 pb-10 flex flex-col">
                 <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center no-print">
                     <h1 className="font-bold text-lg flex items-center gap-2">
                         <User className="w-5 h-5" /> Patient Handout
                     </h1>
-                    <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
-                        <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
-                    </Button>
+                    <div className="flex items-center">
+                        <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
+                            <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
+                        </Button>
+                        <ThemeToggle />
+                    </div>
                 </div>
-                <div className="p-6 space-y-6">
+                <div className="p-6 space-y-6 flex-1">
                     <PatientHandout data={lastSavedRecord} />
                     <div className="flex flex-col sm:flex-row gap-4 no-print mt-8">
                         <Button onClick={() => setScreen('summary')} size="lg" variant="ghost" className="flex-1">
@@ -200,19 +249,20 @@ export default function AnaestheticLogApp() {
                             <Printer className="w-4 h-4 mr-2" /> Print Handout
                         </Button>
                     </div>
-                    <div className="no-print border-t border-slate-200 pt-6 mt-6">
+                    <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-6">
                         <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg shadow-md">
                             <Plus className="w-5 h-5 mr-2" /> Start New Log
                         </Button>
                     </div>
                 </div>
+                <Footer setScreen={setScreen} />
             </div>
         );
     }
 
     if (screen === 'testing') {
         return (
-            <div className="max-w-3xl mx-auto min-h-screen pb-10 flex flex-col relative bg-[#fbfaff]">
+            <div className="max-w-3xl mx-auto min-h-screen pb-10 flex flex-col relative bg-[#fbfaff] dark:bg-slate-950">
                 <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <Button onClick={() => setScreen('log')} variant="headerAction" size="sm" className="mr-2">
@@ -229,6 +279,7 @@ export default function AnaestheticLogApp() {
                             )}
                         </div>
                     </div>
+                    <ThemeToggle />
                 </div>
                 <div className="p-4 flex-1">
                     <TestingLogForm 
@@ -240,6 +291,7 @@ export default function AnaestheticLogApp() {
                         interventionOptions={interventionOptions}
                     />
                 </div>
+                <Footer setScreen={setScreen} />
             </div>
         );
     }
@@ -249,22 +301,25 @@ export default function AnaestheticLogApp() {
         <div className="max-w-3xl mx-auto min-h-screen pb-10 flex flex-col relative">
             <div className="sticky top-0 z-50 bg-[#441170] text-white p-4 shadow-md flex justify-between items-center rounded-b-lg mb-6">
                 <div>
-                <h1 className="font-bold text-lg flex items-center gap-2">
-                    <Stethoscope className="w-5 h-5" /> Anaesthetic Allergy Challenge Log
-                </h1>
-                <p className="text-xs text-[#cebfff]">RPAH Immunology & Allergy</p>
+                    <h1 className="font-bold text-lg flex items-center gap-2">
+                        <Stethoscope className="w-5 h-5" /> Anaesthetic Allergy Challenge Log
+                    </h1>
+                    <p className="text-xs text-[#cebfff]">RPAH Immunology & Allergy</p>
                 </div>
-                <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
-                    <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
-                </Button>
+                <div className="flex items-center">
+                    <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
+                        <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
+                    </Button>
+                    <ThemeToggle />
+                </div>
             </div>
 
             <div className="p-4 space-y-6 flex-1">
-                <Card className="border-t-4 border-[#8055f1] shadow-md">
-                    <CardHeader className="pb-3 border-b border-slate-100 bg-slate-50/50">
-                        <CardTitle className="text-[#441170] flex items-center gap-2">
-                            <div className="bg-[#e6e1fd] p-1.5 rounded-md">
-                                <User className="w-4 h-4 text-[#8055f1]" />
+                <Card className="border-t-4 border-[#8055f1] shadow-md dark:border-t-[#8055f1]">
+                    <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+                        <CardTitle className="text-[#441170] dark:text-purple-300 flex items-center gap-2">
+                            <div className="bg-[#e6e1fd] dark:bg-[#441170] p-1.5 rounded-md">
+                                <User className="w-4 h-4 text-[#8055f1] dark:text-white" />
                             </div>
                             Patient Selection
                         </CardTitle>
@@ -276,21 +331,21 @@ export default function AnaestheticLogApp() {
                                 selectedPatientId={selectedPatient?.id}
                                 patients={patients} 
                             />
-                            <div className="grid grid-cols-3 gap-4 bg-slate-50 p-4 rounded-md border border-slate-100">
+                            <div className="grid grid-cols-3 gap-4 bg-slate-50 dark:bg-slate-900 p-4 rounded-md border border-slate-100 dark:border-slate-800">
                                 <div>
-                                    <span className="text-xs text-slate-500 uppercase font-bold">Name</span>
-                                    <p className="font-medium text-slate-900 truncate">
-                                        {selectedPatient ? <span className="text-slate-400 mr-1 font-mono text-xs">[{selectedPatient.id}]</span> : ''}
+                                    <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">Name</span>
+                                    <p className="font-medium text-slate-900 dark:text-slate-100 truncate">
+                                        {selectedPatient ? <span className="text-slate-400 dark:text-slate-500 mr-1 font-mono text-xs">[{selectedPatient.id}]</span> : ''}
                                         {formData.firstName} {formData.lastName || '-'}
                                     </p>
                                 </div>
                                 <div>
-                                    <span className="text-xs text-slate-500 uppercase font-bold">City</span>
-                                    <p className="text-slate-900 text-sm truncate" title={selectedPatient?.city}>{selectedPatient?.city || '-'}</p>
+                                    <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">City</span>
+                                    <p className="text-slate-900 dark:text-slate-100 text-sm truncate" title={selectedPatient?.city}>{selectedPatient?.city || '-'}</p>
                                 </div>
                                 <div>
-                                    <span className="text-xs text-slate-500 uppercase font-bold">DOB</span>
-                                    <p className="text-slate-900">{selectedPatient ? formatDate(selectedPatient.dob) : '-'}</p>
+                                    <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">DOB</span>
+                                    <p className="text-slate-900 dark:text-slate-100">{selectedPatient ? formatDate(selectedPatient.dob) : '-'}</p>
                                 </div>
                             </div>
                         </div>
@@ -307,7 +362,7 @@ export default function AnaestheticLogApp() {
                         <div className="flex justify-end pt-4">
                             <Button 
                                 size="lg" 
-                                className="w-full sm:w-auto shadow-lg shadow-purple-200 text-base py-6"
+                                className="w-full sm:w-auto shadow-lg shadow-purple-200 dark:shadow-purple-900/50 text-base py-6"
                                 onClick={() => setScreen('testing')}
                             >
                                 Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
@@ -316,25 +371,20 @@ export default function AnaestheticLogApp() {
                     </div>
                 )}
             </div>
-
-            <div className="mt-8 pt-4 border-t border-slate-200 text-center text-xs text-slate-400 pb-6 flex flex-col items-center gap-1">
-                <p className="font-medium text-[#441170]">RPAH Clinical Immunology & Allergy</p>
-                <p className="italic opacity-80">Dataset updated: 03/12/2025</p>
-                <button 
-                    onClick={() => setScreen('changelog')} 
-                    className="hover:text-[#8055f1] hover:underline transition-colors focus:outline-none"
-                >
-                    Anaesthetic Allergy Testing Log v0.3.0
-                </button>
-            </div>
+            
+            <Footer setScreen={setScreen} />
+            {showDisclaimer && <DisclaimerBanner onClose={handleDismissDisclaimer} />}
         </div>
     );
   };
+  
+  return renderScreenContent();
+}
 
-  return (
-    <>
-      {showDisclaimer && <DisclaimerBanner onClose={() => setShowDisclaimer(false)} />}
-      {renderScreenContent()}
-    </>
-  );
+export default function App() {
+    return (
+        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+            <AnaestheticLogApp />
+        </ThemeProvider>
+    );
 }

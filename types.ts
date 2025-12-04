@@ -1,4 +1,5 @@
 
+
 export interface PatientHistory {
   date: string;
   grade: string;
@@ -54,6 +55,7 @@ export interface LogFormData {
   testPanel: DrugTestRow[];
   proceedToChallenge: boolean;
   challengeDrug: string;
+  challengeDrugCustom?: string;
   outcome: 'SUCCESS' | 'UNSUCCESS' | null;
   reactionTime: string;
   symptoms: string[];
