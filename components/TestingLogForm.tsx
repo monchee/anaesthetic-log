@@ -1,13 +1,14 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select, Badge } from './ui';
 import { LogFormData } from '../types';
-import { Check, X, History, Activity, Save, AlertTriangle, CheckCircle2, Calendar, Stethoscope } from 'lucide-react';
+import { Check, X, History, Activity, Save, AlertTriangle, CheckCircle2, Calendar, Stethoscope, Plus } from 'lucide-react';
 
 interface TestingLogFormProps {
   formData: LogFormData;
   setFormData: React.Dispatch<React.SetStateAction<LogFormData>>;
   onSubmit: () => void;
-  drugOptions: string[];
+  drugCategories: Record<string, string[]>;
   symptomOptions: string[];
   interventionOptions: string[];
 }
@@ -16,7 +17,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   formData, 
   setFormData, 
   onSubmit, 
-  drugOptions, 
+  drugCategories, 
   symptomOptions, 
   interventionOptions 
 }) => {
@@ -37,11 +38,13 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
   const toggleDrug = (drugName: string) => {
     setFormData(prev => {
-      const exists = prev.testPanel.find(row => row.drugName === drugName);
+      // Find if this standard drug already exists (excluding custom 'Other' entries which have IDs)
+      const exists = prev.testPanel.find(row => row.drugName === drugName && !row.id);
+      
       if (exists) {
         return {
           ...prev,
-          testPanel: prev.testPanel.filter(row => row.drugName !== drugName)
+          testPanel: prev.testPanel.filter(row => row.drugName !== drugName || row.id) // Keep custom rows
         };
       } else {
         return {
@@ -52,11 +55,36 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     });
   };
 
-  const updateDrugData = (drugName: string, field: string, value: string) => {
+  const addCustomDrug = () => {
     setFormData(prev => ({
       ...prev,
-      testPanel: prev.testPanel.map(row => 
-        row.drugName === drugName ? { ...row, [field]: value } : row
+      testPanel: [
+        ...prev.testPanel, 
+        { 
+            id: `custom-${Date.now()}-${Math.random()}`,
+            drugName: 'Other', 
+            sptWheal: '', 
+            idt100: '', 
+            idt10: '', 
+            idtNeat: '', 
+            customName: '' 
+        }
+      ]
+    }));
+  };
+
+  const removeRow = (index: number) => {
+    setFormData(prev => ({
+        ...prev,
+        testPanel: prev.testPanel.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateDrugData = (index: number, field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      testPanel: prev.testPanel.map((row, i) => 
+        i === index ? { ...row, [field]: value } : row
       )
     }));
   };
@@ -72,6 +100,9 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       };
     });
   };
+
+  // Helper to get a flat list for dropdowns
+  const allDrugsFlat = [...Object.values(drugCategories).flat(), 'Other'];
 
   return (
     <div className="space-y-6 mt-8">
@@ -148,27 +179,51 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
               </div>
             </div>
 
-            {/* Selection Area: Pills */}
-            <div className="space-y-2 mb-6">
-               <Label className="text-xs uppercase text-slate-500 font-semibold tracking-wider">Select Drugs to Test:</Label>
-               <div className="flex flex-wrap gap-2">
-                  {drugOptions.map(drug => {
-                    const isSelected = formData.testPanel.some(r => r.drugName === drug);
-                    return (
-                      <button
-                        key={drug}
-                        onClick={() => toggleDrug(drug)}
-                        className={`text-xs px-3 py-1.5 rounded-full border transition-all duration-200 flex items-center gap-1.5 ${
-                          isSelected 
-                           ? 'bg-[#8055f1] text-white border-[#8055f1] shadow-sm ring-2 ring-purple-100' 
-                           : 'bg-white text-slate-600 border-slate-200 hover:border-[#8055f1] hover:text-[#8055f1]'
-                        }`}
-                      >
-                         {isSelected && <Check className="w-3 h-3" />}
-                         {drug}
-                      </button>
-                    );
-                  })}
+            {/* Selection Area: Categories */}
+            <div className="space-y-4 mb-6">
+               <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                   <Label className="text-xs uppercase text-slate-500 font-semibold tracking-wider">Select Drugs to Test:</Label>
+               </div>
+               
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                  {Object.entries(drugCategories).map(([category, drugs]) => (
+                    <div key={category} className="space-y-2">
+                        <h4 className="text-xs font-bold text-[#441170] uppercase tracking-wide border-b border-dashed border-slate-200 pb-1 mb-2">
+                            {category}
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                            {drugs.map(drug => {
+                                // Only highlight if it's a standard drug entry (no ID)
+                                const isSelected = formData.testPanel.some(r => r.drugName === drug && !r.id);
+                                return (
+                                <button
+                                    key={drug}
+                                    onClick={() => toggleDrug(drug)}
+                                    className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-200 flex items-center gap-1.5 text-left ${
+                                    isSelected 
+                                    ? 'bg-[#8055f1] text-white border-[#8055f1] shadow-sm ring-1 ring-purple-100 font-medium' 
+                                    : 'bg-white text-slate-600 border-slate-200 hover:border-[#8055f1] hover:text-[#8055f1] hover:bg-slate-50'
+                                    }`}
+                                >
+                                    {isSelected && <Check className="w-3 h-3 shrink-0" />}
+                                    {drug}
+                                </button>
+                                );
+                            })}
+                            
+                            {/* "Add Other" Button at the bottom of Others category */}
+                            {category === 'Others' && (
+                                <button
+                                    onClick={addCustomDrug}
+                                    className="text-xs px-2.5 py-1.5 rounded border border-dashed border-slate-300 text-slate-500 hover:border-[#8055f1] hover:text-[#8055f1] hover:bg-slate-50 transition-all duration-200 flex items-center gap-1.5 font-medium"
+                                >
+                                    <Plus className="w-3 h-3 shrink-0" />
+                                    Other (Not listed)
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                  ))}
                </div>
             </div>
 
@@ -184,27 +239,31 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                  </div>
 
                  <div className="divide-y divide-slate-100">
-                   {formData.testPanel.map((row) => (
-                      <div key={row.drugName} className="grid grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 items-start bg-white group">
+                   {formData.testPanel.map((row, index) => (
+                      <div key={row.id || row.drugName} className="grid grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 items-center bg-white group">
                          {/* Name Column */}
-                         <div className="space-y-1 pt-1">
-                            <div className="font-medium text-sm text-[#441170] flex items-center gap-2">
-                              {row.drugName}
-                              <button 
-                                onClick={() => toggleDrug(row.drugName)}
-                                className="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 transition-opacity"
-                              >
-                                <X className="w-3 h-3" />
-                              </button>
-                            </div>
-                            {row.drugName === 'Other' && (
-                               <Input 
-                                 className="h-7 text-xs mt-1" 
-                                 placeholder="Specify name..."
-                                 value={row.customName || ''}
-                                 onChange={(e) => updateDrugData(row.drugName, 'customName', e.target.value)}
-                               />
+                         <div className="flex items-center gap-2">
+                            {row.drugName === 'Other' ? (
+                                <Input 
+                                    className="h-9 text-sm" 
+                                    placeholder="Specify name..."
+                                    value={row.customName || ''}
+                                    onChange={(e) => updateDrugData(index, 'customName', e.target.value)}
+                                    autoFocus
+                                />
+                            ) : (
+                                <span className="font-medium text-sm text-[#441170] flex-1">
+                                    {row.drugName}
+                                </span>
                             )}
+                            
+                            <button 
+                                onClick={() => removeRow(index)}
+                                className={`shrink-0 text-slate-300 hover:text-red-500 transition-opacity p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                                title="Remove drug"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
                          </div>
 
                          {/* Input Columns */}
@@ -215,7 +274,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                 className="h-9 pr-6 text-sm text-center"
                                 placeholder="0"
                                 value={(row as any)[field] || ''}
-                                onChange={(e) => updateDrugData(row.drugName, field, e.target.value)}
+                                onChange={(e) => updateDrugData(index, field, e.target.value)}
                                 />
                                 <span className="absolute right-2 top-2.5 text-xs text-slate-400">mm</span>
                             </div>
@@ -255,7 +314,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
               <div className="space-y-2">
                 <Label>Challenge Drug</Label>
                 <Select 
-                  options={[...new Set([...(formData.testPanel || []).map(r => r.drugName === 'Other' && r.customName ? r.customName : r.drugName).filter(Boolean), ...drugOptions])]}
+                  options={[...new Set([...(formData.testPanel || []).map(r => r.drugName === 'Other' && r.customName ? r.customName : r.drugName).filter(Boolean), ...allDrugsFlat])]}
                   placeholder="Select drug being challenged..."
                   value={formData.challengeDrug}
                   onChange={(e) => handleInputChange('challengeDrug', e.target.value)}

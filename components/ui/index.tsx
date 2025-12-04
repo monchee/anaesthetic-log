@@ -134,7 +134,7 @@ export const AccordionItem = ({ title, children, defaultOpen = false, className 
     <div className={`border-b border-slate-200 last:border-0 ${className || ''}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between py-4 px-6 font-medium transition-all hover:underline"
+        className="flex w-full items-center justify-between py-4 px-6 font-medium transition-colors hover:bg-slate-50 rounded-lg"
       >
         <div className="flex-1 text-left pr-4">
             {title}

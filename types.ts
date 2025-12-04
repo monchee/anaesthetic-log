@@ -1,3 +1,4 @@
+
 export interface PatientHistory {
   date: string;
   grade: string;
@@ -11,6 +12,8 @@ export interface PatientHistory {
   hospital?: string;
   inductionTime?: string;
   reactionTime?: string;
+  preInductionDrugs?: string[];
+  procedureOutcome?: string; // New field for "Completed" vs "Abandoned"
 }
 
 export interface Patient {
@@ -25,6 +28,7 @@ export interface Patient {
 }
 
 export interface DrugTestRow {
+  id?: string; // Unique ID for row, especially for multiple custom "Other" entries
   drugName: string;
   sptWheal: string;
   idt100: string;
@@ -59,4 +63,4 @@ export interface LogFormData {
   plan: string;
 }
 
-export type Screen = 'log' | 'summary' | 'patient-summary' | 'dashboard' | 'changelog';
+export type Screen = 'log' | 'summary' | 'patient-summary' | 'dashboard' | 'changelog' | 'testing';

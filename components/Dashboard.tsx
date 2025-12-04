@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Input, Badge } from './ui';
 import { LayoutDashboard, Users, AlertTriangle, Activity, Search, ArrowLeft, Ban, Syringe, FileText, Thermometer, Clock, Upload, ChevronLeft, ChevronRight, BarChart3, PieChart } from 'lucide-react';
@@ -117,7 +118,12 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
     const topAgentsByCount = Object.entries(drugStats)
         .map(([name, stats]) => ({ name, count: stats.total }))
-        .sort((a, b) => b.count - a.count)
+        .sort((a, b) => {
+             // Force Other to bottom
+             if (a.name === 'Other') return 1;
+             if (b.name === 'Other') return -1;
+             return b.count - a.count;
+        })
         .slice(0, 5);
 
     const mostCommonAgentEntry = Object.entries(drugStats).sort(([, a], [, b]) => b.total - a.total)[0];
@@ -197,8 +203,8 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="border-l-4 border-l-[#8055f1] shadow-sm hover:shadow-md transition-shadow h-full">
-                <CardContent className="p-6 flex items-center h-full">
-                    <div className="flex items-center gap-4 w-full">
+                <CardContent className="p-6 flex flex-col justify-center items-start h-full">
+                    <div className="flex items-center gap-4 w-full mb-2">
                         <div className="p-3 bg-[#e6e1fd] rounded-full shrink-0">
                             <Users className="w-6 h-6 text-[#8055f1]" />
                         </div>
@@ -211,23 +217,23 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             </Card>
 
             <Card className="border-l-4 border-l-red-500 shadow-sm hover:shadow-md transition-shadow h-full">
-                <CardContent className="p-6 flex items-center h-full">
-                    <div className="flex items-center gap-4 w-full">
+                <CardContent className="p-6 flex flex-col justify-center items-start h-full">
+                    <div className="flex items-center gap-4 w-full mb-2">
                         <div className="p-3 bg-red-50 rounded-full shrink-0">
                             <AlertTriangle className="w-6 h-6 text-red-600" />
                         </div>
                         <div className="overflow-hidden">
                             <p className="text-sm font-medium text-slate-500 truncate">Severe Reactions</p>
                             <h3 className="text-2xl font-bold text-slate-900">{analytics.grade3PlusCount}</h3>
-                            <p className="text-xs text-slate-400 truncate">Grade III / IV</p>
                         </div>
                     </div>
+                    <p className="text-xs text-slate-400 truncate pl-[3.5rem]">Grade III / IV</p>
                 </CardContent>
             </Card>
 
             <Card className="border-l-4 border-l-orange-500 shadow-sm hover:shadow-md transition-shadow h-full">
-                <CardContent className="p-6 flex items-center h-full">
-                    <div className="flex items-center gap-4 w-full">
+                <CardContent className="p-6 flex flex-col justify-center items-start h-full">
+                    <div className="flex items-center gap-4 w-full mb-2">
                         <div className="p-3 bg-orange-50 rounded-full shrink-0">
                             <Syringe className="w-6 h-6 text-orange-600" />
                         </div>
@@ -236,15 +242,15 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                             <h3 className="text-xl font-bold text-slate-900 truncate" title={analytics.mostCommonAgent}>
                                 {analytics.mostCommonAgent}
                             </h3>
-                            <p className="text-xs text-slate-400 truncate">{analytics.mostCommonAgentCount} cases</p>
                         </div>
                     </div>
+                    <p className="text-xs text-slate-400 truncate pl-[3.5rem]">{analytics.mostCommonAgentCount} cases</p>
                 </CardContent>
             </Card>
 
             <Card className="border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-shadow h-full">
-                <CardContent className="p-6 flex items-center h-full">
-                    <div className="flex items-center gap-4 w-full">
+                <CardContent className="p-6 flex flex-col justify-center items-start h-full">
+                    <div className="flex items-center gap-4 w-full mb-2">
                         <div className="p-3 bg-blue-50 rounded-full shrink-0">
                             <Activity className="w-6 h-6 text-blue-600" />
                         </div>
