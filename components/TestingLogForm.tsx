@@ -319,7 +319,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 <div className={`p-1.5 rounded-md transition-colors ${formData.proceedToChallenge ? 'bg-[#e6e1fd] dark:bg-purple-900/40' : 'bg-slate-100 dark:bg-slate-800'}`}>
                   <History className={`w-4 h-4 ${formData.proceedToChallenge ? 'text-[#8055f1] dark:text-purple-300' : 'text-slate-400'}`} />
                 </div>
-                IV Challenge Phase
+                Challenge Phase
              </CardTitle>
              <div className={`w-11 h-6 rounded-full transition-colors relative ${formData.proceedToChallenge ? 'bg-[#8055f1]' : 'bg-slate-200 dark:bg-slate-700'}`}>
                 <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow transition-transform ${formData.proceedToChallenge ? 'translate-x-5' : ''}`} />

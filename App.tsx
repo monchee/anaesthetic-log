@@ -39,13 +39,13 @@ const INITIAL_FORM_STATE: LogFormData = {
     plan: ''
 };
 
-// Categorized Drug Options based on user request
+// Categorised Drug Options based on user request
 const DRUG_CATEGORIES: Record<string, string[]> = {
   "Muscle Relaxants": [
     "Cis-atracurium", "Rocuronium", "Pancuronium", "Vecuronium", "Suxamethonium"
   ],
   "Penicillins": [
-    "Major/Minor Determinants", "Ampicillin", "Amoxycillin"
+    "Major/Minor Determinants", "Ampicillin", "Amoxicillin"
   ],
   "Cephalosporins": [
     "Cefotaxime", "Cefazolin", "Ceftazidime", "Ceftriaxone", "Cefepime"
@@ -88,6 +88,7 @@ function AnaestheticLogApp() {
   
   // State for Patients Database (Initialized with Mock, can be updated via CSV)
   const [patients, setPatients] = useState<Patient[]>(MOCK_PATIENTS);
+  const [databaseDate, setDatabaseDate] = useState<string>("03/12/2025");
 
   // State for NEWLY added logs (separate from the static database)
   const [recentLogs, setRecentLogs] = useState<LogFormData[]>([]);
@@ -135,6 +136,7 @@ function AnaestheticLogApp() {
 
   const handleUploadPatients = (newPatients: Patient[]) => {
     setPatients(newPatients);
+    setDatabaseDate(new Date().toLocaleDateString('en-GB'));
     alert(`Successfully updated database with ${newPatients.length} records.`);
   };
 
@@ -166,7 +168,7 @@ function AnaestheticLogApp() {
                         <ThemeToggle />
                     </div>
                 </div>
-                <Changelog setScreen={setScreen} />
+                <Changelog setScreen={setScreen} databaseDate={databaseDate} />
             </>
         );
     }
@@ -186,6 +188,7 @@ function AnaestheticLogApp() {
                 }}
                 onUploadPatients={handleUploadPatients}
                 ThemeToggle={<ThemeToggle />}
+                databaseDate={databaseDate}
             />
         );
     }
@@ -220,7 +223,7 @@ function AnaestheticLogApp() {
                         </Button>
                     </div>
                 </div>
-                <Footer setScreen={setScreen} />
+                <Footer setScreen={setScreen} databaseDate={databaseDate} />
             </div>
         );
     }
@@ -255,7 +258,7 @@ function AnaestheticLogApp() {
                         </Button>
                     </div>
                 </div>
-                <Footer setScreen={setScreen} />
+                <Footer setScreen={setScreen} databaseDate={databaseDate} />
             </div>
         );
     }
@@ -291,7 +294,7 @@ function AnaestheticLogApp() {
                         interventionOptions={interventionOptions}
                     />
                 </div>
-                <Footer setScreen={setScreen} />
+                <Footer setScreen={setScreen} databaseDate={databaseDate} />
             </div>
         );
     }
@@ -372,7 +375,7 @@ function AnaestheticLogApp() {
                 )}
             </div>
             
-            <Footer setScreen={setScreen} />
+            <Footer setScreen={setScreen} databaseDate={databaseDate} />
             {showDisclaimer && <DisclaimerBanner onClose={handleDismissDisclaimer} />}
         </div>
     );

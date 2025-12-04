@@ -36,6 +36,7 @@ export interface DrugTestRow {
   idt10: string;
   idtNeat: string;
   customName?: string;
+  [key: string]: string | undefined; // Allow string indexing for form updates
 }
 
 export interface Controls {

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Input, Badge } from './ui';
-import { LayoutDashboard, Users, AlertTriangle, Activity, Search, ArrowLeft, Ban, Syringe, FileText, Thermometer, Clock, Upload, ChevronLeft, ChevronRight, BarChart3, PieChart, ChevronDown, ChevronUp } from 'lucide-react';
-import { formatDate, parseRedcapCSV } from '../lib/utils';
+import { LayoutDashboard, Users, AlertTriangle, Activity, Search, ArrowLeft, Syringe, FileText, Thermometer, Clock, Upload, ChevronLeft, ChevronRight, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2 } from 'lucide-react';
+import { formatDate, parseRedcapCSV, getGradeVariant, isSkinTestPositive } from '../lib/utils';
 import { Screen, Patient, LogFormData } from '../types';
 import Footer from './Footer';
 
@@ -14,12 +14,14 @@ interface DashboardProps {
   onViewLog: (log: LogFormData) => void;
   onUploadPatients: (patients: Patient[]) => void;
   ThemeToggle?: React.ReactNode;
+  databaseDate: string;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onUploadPatients, ThemeToggle }) => {
+const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onUploadPatients, ThemeToggle, databaseDate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const [uploadStatus, setUploadStatus] = useState<{ type: 'success' | 'error', message: string, details?: string[] } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const ITEMS_PER_PAGE = 10;
@@ -61,14 +63,15 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
     // 1. Process Existing Static Patients
     existingPatients.forEach(p => {
-      if (p.history.grade.includes("III") || p.history.grade.includes("IV") || p.history.grade.includes("Cardiac Arrest")) {
+      const grade = p.history.grade;
+      if (grade.includes("III") || grade.includes("IV") || grade.includes("Cardiac Arrest")) {
         grade3PlusCount++;
       }
       
-      if (p.history.grade.includes("IV") || p.history.grade.includes("Cardiac Arrest")) gradeCounts.IV++;
-      else if (p.history.grade.includes("III")) gradeCounts.III++;
-      else if (p.history.grade.includes("II")) gradeCounts.II++;
-      else if (p.history.grade.includes("I ") || p.history.grade === "Grade I") gradeCounts.I++;
+      if (grade.includes("IV") || grade.includes("Cardiac Arrest")) gradeCounts.IV++;
+      else if (grade.includes("III")) gradeCounts.III++;
+      else if (grade.includes("II")) gradeCounts.II++;
+      else if (grade.includes("I ") || grade === "Grade I") gradeCounts.I++;
       else gradeCounts.Ungraded++;
 
       p.history.suspectedAgents?.forEach(agent => trackAgent(agent));
@@ -103,15 +106,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         log.testPanel.forEach(test => {
             const drugName = test.drugName === 'Other' ? (test.customName || 'Other') : test.drugName;
             
-            let isPositive = false;
-            if ((test.sptWheal && parseInt(test.sptWheal) >= 3) || 
-                (test.idt100 && parseInt(test.idt100) >= 3) ||
-                (test.idt10 && parseInt(test.idt10) >= 3) || 
-                (test.idtNeat && parseInt(test.idtNeat) >= 3)) {
-                isPositive = true;
-            }
-
-            if (isPositive) {
+            if (isSkinTestPositive(test)) {
                 const key = trackAgent(drugName);
                 // Update specific stats if we tracked it
                 if (key) {
@@ -150,7 +145,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
     });
     
     // Add "Uncategorized / Other" stats if any events in 'Other' bucket
-    // Note: Standard 'Others' category is already in drugCategories, this 'Other' key is for unexpected strings
     if (drugStats['Other'].total > 0) {
         // Find if "Others" category exists to append, or create new
         const othersCatIndex = statsByCategory.findIndex(c => c.category === 'Others');
@@ -178,19 +172,40 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
   // --- Handle File Upload ---
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
+      setUploadStatus(null);
+      
       if (file) {
           const reader = new FileReader();
           reader.onload = (event) => {
-              const text = event.target?.result as string;
-              const parsedPatients = parseRedcapCSV(text);
-              if (parsedPatients.length > 0) {
-                  onUploadPatients(parsedPatients);
-              } else {
-                  alert("No valid patient records found in CSV.");
+              try {
+                const text = event.target?.result as string;
+                const result = parseRedcapCSV(text);
+                
+                if (result.success) {
+                    onUploadPatients(result.data);
+                    setUploadStatus({ 
+                        type: 'success', 
+                        message: `Successfully loaded ${result.data.length} records into the database.` 
+                    });
+                } else {
+                    setUploadStatus({ 
+                        type: 'error', 
+                        message: result.error || "Failed to parse CSV file.",
+                        details: result.details
+                    });
+                }
+              } catch (err) {
+                  setUploadStatus({ 
+                      type: 'error', 
+                      message: "An unexpected error occurred while processing the file." 
+                  });
               }
           };
           reader.readAsText(file);
       }
+      
+      // Reset input so same file can be selected again if needed
+      if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   // --- Filtering & Pagination ---
@@ -438,11 +453,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                     const negatives: string[] = [];
 
                                     log.testPanel.forEach(t => {
-                                        const isPos = (parseInt(t.sptWheal || '0') >= 3) || 
-                                                    (parseInt(t.idt100 || '0') >= 3) || 
-                                                    (parseInt(t.idt10 || '0') >= 3) || 
-                                                    (parseInt(t.idtNeat || '0') >= 3);
-                                        if (isPos) {
+                                        if (isSkinTestPositive(t)) {
                                             positives.push(t.drugName);
                                         } else {
                                             negatives.push(t.drugName);
@@ -585,7 +596,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                         <div className="flex items-center gap-4">
                             <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
                                 <FileText className="w-5 h-5" /> REDCap Record Database
-                                <span className="text-xs font-normal text-slate-400 ml-2">(Updated 03/12/2025)</span>
+                                <span className="text-xs font-normal text-slate-400 ml-2">(Updated {databaseDate})</span>
                             </CardTitle>
                             <Button 
                                 variant="outline" 
@@ -616,6 +627,33 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                         </div>
                     </div>
                 </CardHeader>
+
+                {/* Upload Status Banner */}
+                {uploadStatus && (
+                    <div className={`p-4 mx-6 mt-4 rounded-md flex items-start gap-3 text-sm animate-in fade-in slide-in-from-top-2 ${
+                        uploadStatus.type === 'error' 
+                        ? 'bg-red-50 text-red-900 border border-red-200 dark:bg-red-900/30 dark:text-red-200 dark:border-red-900/50' 
+                        : 'bg-green-50 text-green-900 border border-green-200 dark:bg-green-900/30 dark:text-green-200 dark:border-green-900/50'
+                    }`}>
+                        <div className="shrink-0 mt-0.5">
+                            {uploadStatus.type === 'error' ? <AlertTriangle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
+                        </div>
+                        <div className="flex-1 space-y-1">
+                            <p className="font-semibold">{uploadStatus.message}</p>
+                            {uploadStatus.details && (
+                                <ul className="list-disc list-inside opacity-90 text-xs space-y-0.5 ml-1">
+                                    {uploadStatus.details.map((d, i) => <li key={i}>{d}</li>)}
+                                </ul>
+                            )}
+                        </div>
+                        <button 
+                            onClick={() => setUploadStatus(null)}
+                            className="shrink-0 hover:bg-black/5 rounded p-1 transition-colors"
+                        >
+                            <X className="w-4 h-4 opacity-50" />
+                        </button>
+                    </div>
+                )}
                 
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
@@ -631,13 +669,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
                             {paginatedPatients.length > 0 ? (
                                 paginatedPatients.map((p) => {
-                                    let variant: "grade4" | "grade3" | "grade2" | "grade1" | "ungraded" = "ungraded";
-                                    const grade = p.history.grade;
-                                    if (grade.includes("IV") || grade.includes("Cardiac Arrest")) variant = "grade4";
-                                    else if (grade.includes("III")) variant = "grade3";
-                                    else if (grade.includes("II")) variant = "grade2";
-                                    else if (grade.includes("I ") || grade === "Grade I") variant = "grade1";
-                                    
                                     return (
                                         <tr key={p.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-900/50 transition-colors">
                                             <td className="px-4 py-3 whitespace-nowrap text-slate-500 dark:text-slate-400 font-mono text-xs">
@@ -651,7 +682,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                                 {p.history.hospital || '-'}
                                             </td>
                                             <td className="px-4 py-3 text-center">
-                                                <Badge variant={variant} className="whitespace-nowrap text-[10px]">
+                                                <Badge variant={getGradeVariant(p.history.grade)} className="whitespace-nowrap text-[10px]">
                                                     {p.history.grade.split(' -')[0]}
                                                 </Badge>
                                             </td>
@@ -714,7 +745,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         </div>
       </div>
       
-      <Footer setScreen={setScreen} />
+      <Footer setScreen={setScreen} databaseDate={databaseDate} />
     </div>
   );
 };

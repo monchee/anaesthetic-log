@@ -526,7 +526,7 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Following administration of IV cephazolin metaraminol requirements increased and staff noted erythematous urticarial rash on whole body. 10microg of adrenaline improved BP.",
       symptoms: ["Hypotension", "Urticaria", "Rash"],
       treatment: ["Adrenaline", "Metaraminol"],
-      suspectedAgents: ["Cephazolin", "Heparin"]
+      suspectedAgents: ["Cefazolin", "Heparin"]
     }
   },
   {

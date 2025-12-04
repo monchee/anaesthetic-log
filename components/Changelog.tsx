@@ -6,10 +6,21 @@ import Footer from './Footer';
 
 interface ChangelogProps {
   setScreen: (screen: Screen) => void;
+  databaseDate: string;
 }
 
-const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
+const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
+    {
+      version: "v0.3.5",
+      changes: [
+        "Patient History: Enhanced visual design with card-based layout and improved information hierarchy.",
+        "System: Centralised logic for reaction grading and test interpretation to improve performance and consistency.",
+        "Data: Added robust error handling and validation for CSV database uploads.",
+        "Data: Database 'Updated Date' now dynamically reflects the last CSV upload time.",
+        "UI: Refined reaction grade colour palette for better accessibility and distinction."
+      ]
+    },
     {
       version: "v0.3.4",
       changes: [
@@ -53,7 +64,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
         "Major Refactor: Split 'Patient History' and 'Testing' into separate screens for better workflow.",
         "Introduced 'Testing Plan Generator' to creating printable request forms.",
         "Enhanced 'Patient Selection' with search filtering.",
-        "Improved 'Reaction Grade' visualization with tooltips."
+        "Improved 'Reaction Grade' visualisation with tooltips."
       ]
     },
     {
@@ -170,7 +181,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
         </div>
       </div>
       
-      <Footer setScreen={setScreen} />
+      <Footer setScreen={setScreen} databaseDate={databaseDate} />
     </div>
   );
 };

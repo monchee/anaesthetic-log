@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, AccordionItem, Badge } from './ui';
 import { Patient } from '../types';
-import { Activity, Syringe, FileText, AlertCircle, History, Stethoscope, Clock, Pill, Building2, AlertTriangle, CheckCircle2, XCircle } from 'lucide-react';
-import { formatDate } from '../lib/utils';
+import { Activity, Syringe, FileText, History, Stethoscope, Clock, Pill, Building2, CheckCircle2, XCircle } from 'lucide-react';
+import { formatDate, getGradeVariant } from '../lib/utils';
 
 interface PatientHistoryProps {
   patient: Patient;
@@ -10,14 +10,6 @@ interface PatientHistoryProps {
 
 const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
   const { history } = patient;
-
-  const getGradeColor = (grade: string) => {
-    if (grade.includes("IV") || grade.includes("Cardiac Arrest")) return "grade4";
-    if (grade.includes("III")) return "grade3";
-    if (grade.includes("II")) return "grade2";
-    if (grade.includes("I ") || grade === "Grade I") return "grade1";
-    return "ungraded"; 
-  };
 
   // Helper to strip seconds from time string (e.g. "12:00:00" -> "12:00")
   const formatTime = (time?: string) => {
@@ -61,7 +53,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
               </div>
               <div className="ml-auto flex items-center">
                  <div className="group relative">
-                    <Badge variant={getGradeColor(history.grade)} className="shadow-sm cursor-help">
+                    <Badge variant={getGradeVariant(history.grade)} className="shadow-sm cursor-help">
                         {gradeLabel}
                     </Badge>
                     {gradeDesc && (
