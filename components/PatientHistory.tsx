@@ -159,7 +159,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         {history.postInductionDrugs && history.postInductionDrugs.length > 0 && (
                             <div>
                                <div className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold tracking-wider mb-2 flex items-center gap-1 border-b border-slate-200 dark:border-slate-700 pb-1">
-                                    Post-induction
+                                    Induction & Post-induction
                                </div>
                                <ul className="space-y-1.5">
                                    {history.postInductionDrugs.map((drug, idx) => (

@@ -11,6 +11,15 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
     {
+        version: "v0.3.10",
+        changes: [
+            "UI: Renamed 'Post-induction' section in Patient History to 'Induction & Post-induction' for clarity.",
+            "Fix: Improved CSV import time parsing logic to ensure medications are correctly categorized based on induction time.",
+            "Data: Updated sample patient data to include examples of induction/post-induction medications.",
+            "System: Standardized time comparison to handle mixed time formats (e.g. 9:00 vs 09:00)."
+        ]
+    },
+    {
         version: "v0.3.9",
         changes: [
             "UI: Fixed inconsistent header heights between Dashboard and Log screens by standardizing subtitles.",

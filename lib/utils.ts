@@ -119,6 +119,20 @@ export interface CsvParseResult {
     details?: string[];
 }
 
+/**
+ * Normalizes a time string to HH:MM format for string comparison.
+ * e.g., "9:05" -> "09:05", "13:30" -> "13:30"
+ */
+const normalizeTime = (timeStr: string): string => {
+    if (!timeStr) return "";
+    const parts = timeStr.trim().split(':');
+    if (parts.length < 2) return timeStr; // Return original if parsing fails
+    
+    const h = parts[0].padStart(2, '0');
+    const m = parts[1].padStart(2, '0');
+    return `${h}:${m}`;
+};
+
 export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   const lines = csvText.split(/\r?\n/).filter(l => l.trim());
   if (lines.length < 2) {
@@ -223,14 +237,17 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
     }
 
     // FIX: Clean Induction Time (remove date if present, e.g. "2024-05-07 13:10" -> "13:10")
-    // This prevents string comparison errors where date string > time string
-    let inductionTime = row[idxInduction] || '';
-    if (inductionTime.includes(' ') && inductionTime.includes(':')) {
-        const parts = inductionTime.split(' ');
+    let inductionTimeRaw = row[idxInduction] || '';
+    let inductionTimeClean = inductionTimeRaw;
+    
+    if (inductionTimeRaw.includes(' ') && inductionTimeRaw.includes(':')) {
+        const parts = inductionTimeRaw.split(' ');
         // Assuming format YYYY-MM-DD HH:MM, take the time part. 
         const timePart = parts.find(p => p.includes(':'));
-        if (timePart) inductionTime = timePart;
+        if (timePart) inductionTimeClean = timePart;
     }
+
+    const normInduction = normalizeTime(inductionTimeClean);
     
     // Extract Suspected Agents and Split into Pre/Post Induction
     const suspectedAgents: string[] = [];
@@ -247,13 +264,13 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
                 const timeIdx = timeColumnMap[drugName.toLowerCase()];
                 const drugTime = timeIdx !== undefined ? row[timeIdx] : null;
 
-                // FIX: Time comparison logic
-                // inductionTime is now strictly HH:MM (e.g. "13:10")
                 if (drugTime) {
-                    if (inductionTime && drugTime < inductionTime) {
+                    const normDrugTime = normalizeTime(drugTime);
+                    // Compare normalized times to avoid "9:00" > "09:05" issues
+                    if (normInduction && normDrugTime < normInduction) {
                          preInductionDrugs.push(`${drugName} @ ${drugTime}`);
                     } else {
-                         // Post-induction or exact time match
+                         // Post-induction or exact time match (e.g. at induction)
                          postInductionDrugs.push(`${drugName} @ ${drugTime}`);
                     }
                 } else {
