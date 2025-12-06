@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Screen, Patient } from '../types';
-import { Database, ShieldCheck, Upload } from 'lucide-react';
+import { Database, Upload } from 'lucide-react';
 import { parseRedcapCSV } from '../lib/utils';
 
 interface FooterProps {
@@ -42,7 +42,6 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, onUploadPatien
           {/* Branding Section */}
           <div className="text-center md:text-left space-y-1">
             <h3 className="font-bold text-slate-900 dark:text-slate-100 text-lg tracking-tight flex items-center justify-center md:justify-start gap-2">
-              <ShieldCheck className="w-5 h-5 text-[#8055f1]" />
               Anaesthetic Allergy Clinic
             </h3>
             <p className="text-sm text-[#441170] dark:text-purple-400 font-medium">
