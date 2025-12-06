@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Input, Badge } from './ui';
-import { Users, AlertTriangle, Activity, Search, Syringe, FileText, Thermometer, Clock, Upload, ChevronLeft, ChevronRight, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight as ChevronRightIcon } from 'lucide-react';
+import { Users, AlertTriangle, Activity, Search, Syringe, FileText, Thermometer, Clock, Upload, ChevronLeft, ChevronRight, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight as ChevronRightIcon, Ban } from 'lucide-react';
 import { formatDate, parseRedcapCSV, getGradeVariant, isSkinTestPositive } from '../lib/utils';
 import { Screen, Patient, LogFormData } from '../types';
 
@@ -16,19 +16,45 @@ interface DashboardProps {
   databaseDate: string;
 }
 
+// Hook for counting up numbers
+const useCountUp = (end: number, duration = 1500) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let startTime: number | null = null;
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      // Ease out quart
+      const ease = 1 - Math.pow(1 - progress, 4);
+      setCount(Math.round(ease * end));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [end, duration]);
+  return count;
+};
+
 const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [uploadStatus, setUploadStatus] = useState<{ type: 'success' | 'error', message: string, details?: string[] } | null>(null);
+  const [animateCharts, setAnimateCharts] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const ITEMS_PER_PAGE = 10;
+
+  // Trigger chart animations on mount
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimateCharts(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // --- Analytics Calculation ---
   const analytics = useMemo(() => {
     const totalPatients = existingPatients.length + recentLogs.length;
     let grade3PlusCount = 0;
+    let abandonedCount = 0;
     
     // Initialize stats for ALL standard drugs so they appear in the table (even with 0 count)
     const drugStats: Record<string, { spt: number, idt100: number, idt10: number, idtNeat: number, challenge: number, total: number }> = {};
@@ -47,9 +73,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         const normalized = agentName.trim();
         if (!normalized) return null;
         
-        // Check if agent is in our standard list (keys of drugStats)
-        // If it exists in drugStats (even with 0 count), use that key. Otherwise 'Other'.
-        // This handles standard drugs appearing in history.
         let key = 'Other';
         if (Object.prototype.hasOwnProperty.call(drugStats, normalized)) {
             key = normalized;
@@ -67,13 +90,16 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         grade3PlusCount++;
       }
       
+      if (p.history.procedureOutcome === 'Abandoned') {
+          abandonedCount++;
+      }
+      
       if (grade.includes("IV") || grade.includes("Cardiac Arrest")) gradeCounts.IV++;
       else if (grade.includes("III")) gradeCounts.III++;
       else if (grade.includes("II")) gradeCounts.II++;
       else if (grade.includes("I ") || grade === "Grade I") gradeCounts.I++;
       else gradeCounts.Ungraded++;
 
-      // Track agents from all sources (Pre, Post, Other)
       p.history.suspectedAgents?.forEach(agent => trackAgent(agent));
       p.history.preInductionDrugs?.forEach(str => trackAgent(str.split('@')[0].trim()));
       p.history.postInductionDrugs?.forEach(str => trackAgent(str.split('@')[0].trim()));
@@ -88,7 +114,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
     // 2. Process Newly Added Logs
     recentLogs.forEach(log => {
-        // Grade Estimation for new logs
         if (log.outcome === 'UNSUCCESS') {
              if (log.interventionType === 'Adrenaline') {
                  gradeCounts.III++;
@@ -110,7 +135,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             
             if (isSkinTestPositive(test)) {
                 const key = trackAgent(drugName);
-                // Update specific stats if we tracked it
                 if (key) {
                     if (test.sptWheal && parseInt(test.sptWheal) >= 3) drugStats[key].spt++;
                     if (test.idt100 && parseInt(test.idt100) >= 3) drugStats[key].idt100++;
@@ -121,9 +145,8 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         });
     });
 
-    // Sort Agents for Chart (By Count Descending), filtering out 0 counts
     const topAgentsByCount = Object.entries(drugStats)
-        .filter(([name, stats]) => stats.total > 0 && name !== 'Other') // Filter out 0 counts and 'Other' for cleaner top 5
+        .filter(([name, stats]) => stats.total > 0 && name !== 'Other')
         .map(([name, stats]) => ({ name, count: stats.total }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 5);
@@ -137,7 +160,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         
     const mostCommonSymptomEntry = Object.entries(symptomCounts).sort(([, a], [, b]) => b - a)[0];
 
-    // Prepare Categorized Stats
     const statsByCategory = Object.entries(drugCategories).map(([category, drugs]) => {
         const categoryStats = (drugs as string[]).map(drugName => ({
             name: drugName,
@@ -146,12 +168,9 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         return { category, stats: categoryStats };
     });
     
-    // Add "Uncategorized / Other" stats if any events in 'Other' bucket
     if (drugStats['Other'].total > 0) {
-        // Find if "Others" category exists to append, or create new
         const othersCatIndex = statsByCategory.findIndex(c => c.category === 'Others');
         const otherItem = { name: 'Other (Unlisted)', ...drugStats['Other'] };
-        
         if (othersCatIndex >= 0) {
             statsByCategory[othersCatIndex].stats.push(otherItem);
         } else {
@@ -162,6 +181,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
     return {
       totalPatients,
       grade3PlusCount,
+      abandonedCount,
       mostCommonAgent: mostCommonAgentEntry?.[1].total > 0 ? mostCommonAgentEntry?.[0] : 'N/A',
       mostCommonAgentCount: mostCommonAgentEntry?.[1]?.total || 0,
       mostCommonSymptom: mostCommonSymptomEntry?.[0] || 'N/A',
@@ -170,6 +190,21 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
       topAgentsByCount
     };
   }, [existingPatients, recentLogs, drugOptions, drugCategories]);
+
+  // Animated numbers
+  const animatedTotalPatients = useCountUp(analytics.totalPatients);
+  const animatedSevereCount = useCountUp(analytics.grade3PlusCount);
+  const animatedAbandonedCount = useCountUp(analytics.abandonedCount);
+
+  // Rate of severe reactions
+  const severeRate = analytics.totalPatients > 0 
+    ? ((analytics.grade3PlusCount / analytics.totalPatients) * 100).toFixed(1) 
+    : "0";
+
+  // Rate of abandoned procedures (Use existing patients as denominator since history comes from there)
+  const abandonedRate = existingPatients.length > 0 
+    ? ((analytics.abandonedCount / existingPatients.length) * 100).toFixed(1)
+    : "0";
 
   // --- Handle File Upload ---
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,8 +240,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
           };
           reader.readAsText(file);
       }
-      
-      // Reset input so same file can be selected again if needed
       if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -218,7 +251,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
     p.history.suspectedAgents.some(a => a.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Reset page when search or data changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, existingPatients]);
@@ -237,7 +269,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
     if (currentPage > 1) setCurrentPage(prev => prev - 1);
   };
 
-  // Toggle Category Accordion
   const toggleCategory = (category: string) => {
     setExpandedCategories(prev => 
         prev.includes(category) 
@@ -246,7 +277,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
     );
   };
 
-  // Toggle All Categories
   const allCategories = useMemo(() => analytics.statsByCategory.map(c => c.category), [analytics.statsByCategory]);
   const areAllExpanded = allCategories.length > 0 && expandedCategories.length === allCategories.length;
 
@@ -261,119 +291,194 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
   return (
     <div className="p-6 space-y-8">
         
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="border-l-4 border-l-[#8055f1] shadow-sm hover:shadow-md transition-shadow h-full">
-                <CardContent className="p-6 flex flex-col justify-center items-start h-full">
-                    <div className="flex items-center gap-4 w-full mb-2">
-                        <div className="p-3 bg-[#e6e1fd] dark:bg-purple-900/40 rounded-full shrink-0">
-                            <Users className="w-6 h-6 text-[#8055f1] dark:text-purple-300" />
+        {/* Modern Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            {/* Total Records */}
+            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-purple-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '0ms' }}>
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Users className="w-24 h-24 text-[#8055f1]" />
+                </div>
+                <CardContent className="p-6">
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="p-3 bg-[#f0ebff] dark:bg-[#441170]/30 rounded-xl text-[#8055f1] dark:text-purple-300 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                            <Users className="w-6 h-6" />
                         </div>
-                        <div className="overflow-hidden">
-                            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 truncate">Total Records</p>
-                            <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{analytics.totalPatients}</h3>
-                        </div>
+                        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Database</span>
+                    </div>
+                    <div className="space-y-1">
+                        <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
+                            {animatedTotalPatients}
+                        </h3>
+                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                             <CheckCircle2 className="w-3 h-3 text-green-500" /> Active Records
+                        </p>
                     </div>
                 </CardContent>
             </Card>
 
-            <Card className="border-l-4 border-l-red-500 shadow-sm hover:shadow-md transition-shadow h-full">
-                <CardContent className="p-6 flex flex-col justify-center items-start h-full">
-                    <div className="flex items-center gap-4 w-full mb-2">
-                        <div className="p-3 bg-red-50 dark:bg-red-900/30 rounded-full shrink-0">
-                            <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
+            {/* Severe Reactions */}
+            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-red-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '100ms' }}>
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <AlertTriangle className="w-24 h-24 text-red-500" />
+                </div>
+                <CardContent className="p-6">
+                    <div className="flex items-center gap-4 mb-4">
+                         <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl text-red-600 dark:text-red-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                            <AlertTriangle className="w-6 h-6" />
                         </div>
-                        <div className="overflow-hidden">
-                            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 truncate">Severe Reactions</p>
-                            <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{analytics.grade3PlusCount}</h3>
-                        </div>
+                        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Anaphylaxis</span>
                     </div>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 truncate pl-[3.5rem]">Grade III / IV</p>
-                </CardContent>
-            </Card>
-
-            <Card className="border-l-4 border-l-orange-500 shadow-sm hover:shadow-md transition-shadow h-full">
-                <CardContent className="p-6 flex flex-col justify-center items-start h-full">
-                    <div className="flex items-center gap-4 w-full mb-2">
-                        <div className="p-3 bg-orange-50 dark:bg-orange-900/30 rounded-full shrink-0">
-                            <Syringe className="w-6 h-6 text-orange-600 dark:text-orange-400" />
-                        </div>
-                        <div className="overflow-hidden">
-                            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 truncate">Top Suspected Agent</p>
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 truncate" title={analytics.mostCommonAgent}>
-                                {analytics.mostCommonAgent}
+                     <div className="space-y-1">
+                        <div className="flex items-end gap-2">
+                             <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
+                                {animatedSevereCount}
                             </h3>
+                            <span className="text-sm font-medium text-red-600 dark:text-red-400 mb-1 bg-red-50 dark:bg-red-900/30 px-1.5 rounded">
+                                {severeRate}%
+                            </span>
+                        </div>
+                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                             Grade III / IV Reactions
+                        </p>
+                        {/* Progress bar visual */}
+                        <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full mt-3 overflow-hidden">
+                            <div 
+                                className="h-full bg-red-500 rounded-full transition-all duration-1000 ease-out" 
+                                style={{ width: animateCharts ? `${Math.min(parseFloat(severeRate), 100)}%` : '0%' }}
+                            ></div>
                         </div>
                     </div>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 truncate pl-[3.5rem]">{analytics.mostCommonAgentCount} cases</p>
                 </CardContent>
             </Card>
 
-            <Card className="border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-shadow h-full">
-                <CardContent className="p-6 flex flex-col justify-center items-start h-full">
-                    <div className="flex items-center gap-4 w-full mb-2">
-                        <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-full shrink-0">
-                            <Activity className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            {/* Procedures Abandoned */}
+            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-amber-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '200ms' }}>
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Ban className="w-24 h-24 text-amber-500" />
+                </div>
+                <CardContent className="p-6">
+                     <div className="flex items-center gap-4 mb-4">
+                         <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl text-amber-600 dark:text-amber-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                            <Ban className="w-6 h-6" />
                         </div>
-                        <div className="overflow-hidden">
-                            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 truncate">Common Symptom</p>
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 truncate" title={analytics.mostCommonSymptom}>
-                                {analytics.mostCommonSymptom}
+                        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Procedures Abandoned</span>
+                    </div>
+                     <div className="space-y-1">
+                        <div className="flex items-end gap-2">
+                            <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
+                                {animatedAbandonedCount}
                             </h3>
+                            <span className="text-sm font-medium text-amber-600 dark:text-amber-400 mb-1 bg-amber-50 dark:bg-amber-900/30 px-1.5 rounded">
+                                {abandonedRate}%
+                            </span>
                         </div>
+                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                             Due to reaction severity
+                        </p>
+                         {/* Progress bar visual */}
+                        <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full mt-3 overflow-hidden">
+                            <div 
+                                className="h-full bg-amber-500 rounded-full transition-all duration-1000 ease-out" 
+                                style={{ width: animateCharts ? `${Math.min(parseFloat(abandonedRate), 100)}%` : '0%' }}
+                            ></div>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+             {/* Top Symptom */}
+             <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-blue-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '300ms' }}>
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Activity className="w-24 h-24 text-blue-500" />
+                </div>
+                <CardContent className="p-6">
+                     <div className="flex items-center gap-4 mb-4">
+                         <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                            <Activity className="w-6 h-6" />
+                        </div>
+                        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Top Symptom</span>
+                    </div>
+                     <div className="space-y-1">
+                        <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight truncate" title={analytics.mostCommonSymptom}>
+                            {analytics.mostCommonSymptom}
+                        </h3>
+                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                             Most frequently reported
+                        </p>
                     </div>
                 </CardContent>
             </Card>
         </div>
 
         {/* --- Charts Section --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-enter" style={{ animationDelay: '400ms' }}>
             
             {/* Reaction Grade Distribution */}
-            <Card className="shadow-sm">
+            <Card className="shadow-sm h-full">
                 <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                     <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
                         <PieChart className="w-5 h-5" /> Reaction Severity Distribution
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
-                    <div className="flex h-12 w-full rounded-lg overflow-hidden mb-6">
+                    <div className="flex h-12 w-full rounded-lg overflow-hidden mb-6 bg-slate-50 dark:bg-slate-800/50">
                         {analytics.gradeCounts.I > 0 && (
-                            <div style={{ width: `${(analytics.gradeCounts.I / analytics.totalPatients) * 100}%` }} className="bg-blue-400 dark:bg-blue-500 h-full" title={`Grade I: ${analytics.gradeCounts.I}`} />
+                            <div 
+                                style={{ width: animateCharts ? `${(analytics.gradeCounts.I / analytics.totalPatients) * 100}%` : '0%' }} 
+                                className="bg-blue-400 dark:bg-blue-500 h-full transition-all duration-1000 ease-out" 
+                                title={`Grade I: ${analytics.gradeCounts.I}`} 
+                            />
                         )}
                         {analytics.gradeCounts.II > 0 && (
-                            <div style={{ width: `${(analytics.gradeCounts.II / analytics.totalPatients) * 100}%` }} className="bg-amber-400 dark:bg-amber-500 h-full" title={`Grade II: ${analytics.gradeCounts.II}`} />
+                            <div 
+                                style={{ width: animateCharts ? `${(analytics.gradeCounts.II / analytics.totalPatients) * 100}%` : '0%' }} 
+                                className="bg-amber-400 dark:bg-amber-500 h-full transition-all duration-1000 ease-out delay-100" 
+                                title={`Grade II: ${analytics.gradeCounts.II}`} 
+                            />
                         )}
                         {analytics.gradeCounts.III > 0 && (
-                            <div style={{ width: `${(analytics.gradeCounts.III / analytics.totalPatients) * 100}%` }} className="bg-orange-500 dark:bg-orange-600 h-full" title={`Grade III: ${analytics.gradeCounts.III}`} />
+                            <div 
+                                style={{ width: animateCharts ? `${(analytics.gradeCounts.III / analytics.totalPatients) * 100}%` : '0%' }} 
+                                className="bg-orange-500 dark:bg-orange-600 h-full transition-all duration-1000 ease-out delay-200" 
+                                title={`Grade III: ${analytics.gradeCounts.III}`} 
+                            />
                         )}
                         {analytics.gradeCounts.IV > 0 && (
-                            <div style={{ width: `${(analytics.gradeCounts.IV / analytics.totalPatients) * 100}%` }} className="bg-red-600 dark:bg-red-600 h-full" title={`Grade IV: ${analytics.gradeCounts.IV}`} />
+                            <div 
+                                style={{ width: animateCharts ? `${(analytics.gradeCounts.IV / analytics.totalPatients) * 100}%` : '0%' }} 
+                                className="bg-red-600 dark:bg-red-600 h-full transition-all duration-1000 ease-out delay-300" 
+                                title={`Grade IV: ${analytics.gradeCounts.IV}`} 
+                            />
                         )}
                         {analytics.gradeCounts.Ungraded > 0 && (
-                            <div style={{ width: `${(analytics.gradeCounts.Ungraded / analytics.totalPatients) * 100}%` }} className="bg-slate-200 dark:bg-slate-700 h-full" title={`Ungraded: ${analytics.gradeCounts.Ungraded}`} />
+                            <div 
+                                style={{ width: animateCharts ? `${(analytics.gradeCounts.Ungraded / analytics.totalPatients) * 100}%` : '0%' }} 
+                                className="bg-slate-200 dark:bg-slate-700 h-full transition-all duration-1000 ease-out delay-400" 
+                                title={`Ungraded: ${analytics.gradeCounts.Ungraded}`} 
+                            />
                         )}
                     </div>
                     
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-blue-400 dark:bg-blue-500"></span>
+                        <div className="flex items-center gap-2 group cursor-default">
+                            <span className="w-3 h-3 rounded-full bg-blue-400 dark:bg-blue-500 group-hover:scale-125 transition-transform"></span>
                             <span className="text-slate-600 dark:text-slate-400">Grade I: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.I}</span></span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-amber-400 dark:bg-amber-500"></span>
+                        <div className="flex items-center gap-2 group cursor-default">
+                            <span className="w-3 h-3 rounded-full bg-amber-400 dark:bg-amber-500 group-hover:scale-125 transition-transform"></span>
                             <span className="text-slate-600 dark:text-slate-400">Grade II: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.II}</span></span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-orange-500 dark:bg-orange-600"></span>
+                        <div className="flex items-center gap-2 group cursor-default">
+                            <span className="w-3 h-3 rounded-full bg-orange-500 dark:bg-orange-600 group-hover:scale-125 transition-transform"></span>
                             <span className="text-slate-600 dark:text-slate-400">Grade III: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.III}</span></span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-red-600"></span>
+                        <div className="flex items-center gap-2 group cursor-default">
+                            <span className="w-3 h-3 rounded-full bg-red-600 group-hover:scale-125 transition-transform"></span>
                             <span className="text-slate-600 dark:text-slate-400">Grade IV: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.IV}</span></span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700"></span>
+                        <div className="flex items-center gap-2 group cursor-default">
+                            <span className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700 group-hover:scale-125 transition-transform"></span>
                             <span className="text-slate-600 dark:text-slate-400">Ungraded: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.Ungraded}</span></span>
                         </div>
                     </div>
@@ -381,7 +486,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             </Card>
 
             {/* Top Suspected Agents Chart */}
-            <Card className="shadow-sm">
+            <Card className="shadow-sm h-full">
                 <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                     <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
                         <BarChart3 className="w-5 h-5" /> Top 5 Suspected Agents
@@ -393,15 +498,18 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                             const max = analytics.topAgentsByCount[0]?.count || 1;
                             const percentage = (agent.count / max) * 100;
                             return (
-                                <div key={idx} className="space-y-1">
+                                <div key={idx} className="space-y-1 group">
                                     <div className="flex justify-between text-sm font-medium text-slate-700 dark:text-slate-300">
                                         <span>{agent.name}</span>
                                         <span>{agent.count}</span>
                                     </div>
                                     <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                         <div 
-                                            className="h-full bg-[#8055f1] dark:bg-purple-500 rounded-full" 
-                                            style={{ width: `${percentage}%` }}
+                                            className="h-full bg-[#8055f1] dark:bg-purple-500 rounded-full transition-all duration-1000 ease-out group-hover:bg-[#6b42d1] dark:group-hover:bg-purple-400" 
+                                            style={{ 
+                                                width: animateCharts ? `${percentage}%` : '0%',
+                                                transitionDelay: `${idx * 100}ms`
+                                            }}
                                         />
                                     </div>
                                 </div>
@@ -417,7 +525,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         </div>
 
         {/* Recent Skin Testing Activity Card */}
-        <Card className="w-full shadow-sm border-t-4 border-t-green-500">
+        <Card className="w-full shadow-sm border-t-4 border-t-green-500 animate-enter" style={{ animationDelay: '500ms' }}>
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-green-50/50 dark:bg-green-900/10">
                 <CardTitle className="text-lg text-green-800 dark:text-green-400 flex items-center gap-2">
                     <Clock className="w-5 h-5" /> Recent Skin Testing Activity
@@ -485,7 +593,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         </Card>
 
         {/* Positive Skin Test Breakdown Table (Grouped by Category + Accordion) */}
-        <Card className="w-full shadow-sm">
+        <Card className="w-full shadow-sm animate-enter" style={{ animationDelay: '600ms' }}>
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
@@ -577,7 +685,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         </Card>
 
         {/* Patient Database Table (Full Width) - Paginated */}
-        <Card className="w-full shadow-sm">
+        <Card className="w-full shadow-sm animate-enter" style={{ animationDelay: '700ms' }}>
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-4">

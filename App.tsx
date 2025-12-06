@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2 } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from './components/ui';
 import PatientSelector from './components/PatientSelector';
 import PatientHistory from './components/PatientHistory';
@@ -8,15 +8,16 @@ import ClinicalReport from './components/ClinicalReport';
 import PatientHandout from './components/PatientHandout';
 import Dashboard from './components/Dashboard';
 import Changelog from './components/Changelog';
-import DisclaimerBanner from './components/DisclaimerBanner';
 import TestingPlanGenerator from './components/TestingPlanGenerator';
+import TestingPlanPrintView from './components/TestingPlanPrintView';
 import { ScreenLayout } from './components/ScreenLayout';
 import { ThemeProvider } from './components/ThemeProvider';
-import { LogFormData, Patient, Screen } from './types';
+import { FontSizeProvider } from './components/FontSizeProvider';
+import { LogFormData, Patient, Screen, TestingPlanData } from './types';
 import { formatDate } from './lib/utils';
 import { MOCK_PATIENTS } from './data/mockPatients';
 
-const APP_SUBTITLE = "RPAH Immunology & Allergy";
+const APP_SUBTITLE = "RPAH Department of Clinical Immunology & Allergy";
 
 const INITIAL_FORM_STATE: LogFormData = {
     mrn: '',
@@ -77,6 +78,7 @@ function AnaestheticLogApp() {
   const [formData, setFormData] = useState<LogFormData>(INITIAL_FORM_STATE);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [lastSavedRecord, setLastSavedRecord] = useState<LogFormData | null>(null);
+  const [testingPlanData, setTestingPlanData] = useState<TestingPlanData | null>(null);
   
   // State for Patients Database (Initialized with Mock, can be updated via CSV)
   const [patients, setPatients] = useState<Patient[]>(MOCK_PATIENTS);
@@ -161,6 +163,9 @@ function AnaestheticLogApp() {
                 icon={<User className="w-5 h-5" />}
                 setScreen={setScreen}
                 databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
                 actions={
                     <Button onClick={() => setScreen('log')} variant="headerAction" size="sm">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back to Log
@@ -180,6 +185,9 @@ function AnaestheticLogApp() {
                 icon={<LayoutDashboard className="w-5 h-5" />}
                 setScreen={setScreen}
                 databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
                 actions={
                     <Button onClick={() => setScreen('log')} variant="headerAction" size="sm">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back to Log
@@ -213,6 +221,9 @@ function AnaestheticLogApp() {
                 icon={<FileText className="w-5 h-5" />}
                 setScreen={setScreen}
                 databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
                 actions={
                     <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
                         <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
@@ -246,6 +257,9 @@ function AnaestheticLogApp() {
                 icon={<User className="w-5 h-5" />}
                 setScreen={setScreen}
                 databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
                 actions={
                     <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
                         <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
@@ -271,6 +285,34 @@ function AnaestheticLogApp() {
         );
     }
 
+    if (screen === 'print-plan' && selectedPatient && testingPlanData) {
+        return (
+            <ScreenLayout
+                title="Testing Plan Preview"
+                subtitle={APP_SUBTITLE}
+                icon={<ClipboardList className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showFooter={false}
+                showDisclaimer={showDisclaimer}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen('log')} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <TestingPlanPrintView 
+                    patient={selectedPatient}
+                    data={testingPlanData}
+                    drugCategories={DRUG_CATEGORIES}
+                    onProceed={() => setScreen('testing')}
+                />
+            </ScreenLayout>
+        );
+    }
+
     if (screen === 'testing') {
         return (
             <ScreenLayout
@@ -279,6 +321,9 @@ function AnaestheticLogApp() {
                 subtitle={selectedPatient ? `Patient: ${selectedPatient.lastName}, ${selectedPatient.firstName} (ID: ${selectedPatient.id})` : APP_SUBTITLE}
                 setScreen={setScreen}
                 databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
                 actions={
                     <Button onClick={() => setScreen('log')} variant="headerAction" size="sm" className="mr-2">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
@@ -302,11 +347,14 @@ function AnaestheticLogApp() {
     // Default: 'log' screen (Patient Selection & History)
     return (
         <ScreenLayout
-            title="Anaesthetic Allergy Challenge Log"
+            title="Anaesthetic Allergy Clinic"
             subtitle={APP_SUBTITLE}
             icon={<Stethoscope className="w-5 h-5" />}
             setScreen={setScreen}
             databaseDate={databaseDate}
+            showDisclaimer={showDisclaimer}
+            onDismissDisclaimer={handleDismissDisclaimer}
+            onUploadPatients={handleUploadPatients}
             actions={
                 <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
                     <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
@@ -331,7 +379,10 @@ function AnaestheticLogApp() {
                             selectedPatientId={selectedPatient?.id}
                             patients={patients} 
                         />
-                        <div className="grid grid-cols-3 gap-4 bg-slate-50 dark:bg-slate-900 p-4 rounded-md border border-slate-100 dark:border-slate-800">
+                        <div 
+                            key={selectedPatient?.id ?? 'no-patient'}
+                            className="grid grid-cols-3 gap-4 bg-slate-50 dark:bg-slate-900 p-4 rounded-md border border-slate-100 dark:border-slate-800 animate-fade-in"
+                        >
                             <div>
                                 <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">Name</span>
                                 <p className="font-medium text-slate-900 dark:text-slate-100 truncate">
@@ -353,11 +404,16 @@ function AnaestheticLogApp() {
             </Card>
 
             {selectedPatient && (
-                <div className="animate-in fade-in slide-in-from-top-4 duration-500 space-y-8">
+                <div key={selectedPatient.id} className="animate-enter space-y-8">
                     <PatientHistory patient={selectedPatient} />
                     <TestingPlanGenerator 
                         patient={selectedPatient} 
-                        drugCategories={DRUG_CATEGORIES} 
+                        drugCategories={DRUG_CATEGORIES}
+                        onPreview={(data) => {
+                            setTestingPlanData(data);
+                            setScreen('print-plan');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }} 
                     />
                     <div className="flex justify-end pt-4">
                         <Button 
@@ -370,8 +426,6 @@ function AnaestheticLogApp() {
                     </div>
                 </div>
             )}
-            
-            {showDisclaimer && <DisclaimerBanner onClose={handleDismissDisclaimer} />}
         </ScreenLayout>
     );
   };
@@ -379,10 +433,14 @@ function AnaestheticLogApp() {
   return renderScreenContent();
 }
 
-export default function App() {
-    return (
-        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+function App() {
+  return (
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <FontSizeProvider>
             <AnaestheticLogApp />
-        </ThemeProvider>
-    );
+        </FontSizeProvider>
+    </ThemeProvider>
+  );
 }
+
+export default App;

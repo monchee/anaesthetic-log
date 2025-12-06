@@ -28,11 +28,23 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   interventionOptions 
 }) => {
 
+  const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Prevent minus sign and 'e' which allows exponential notation
+    if (["-", "e", "E", "+"].includes(e.key)) {
+        e.preventDefault();
+    }
+  };
+
   const handleInputChange = (field: keyof LogFormData, value: any) => {
+    if (field === 'reactionTime') {
+        // Validation for simple top-level numbers
+        if (value && parseFloat(value) < 0) return;
+    }
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleControlChange = (field: string, value: string) => {
+    if (value && parseFloat(value) < 0) return;
     setFormData(prev => ({
         ...prev, 
         controls: {
@@ -87,6 +99,11 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   };
 
   const updateDrugData = (index: number, field: string, value: string) => {
+    // Validation for grid numbers
+    if (['sptWheal', 'idt100', 'idt10', 'idtNeat'].includes(field)) {
+        if (value && parseFloat(value) < 0) return;
+    }
+
     setFormData(prev => ({
       ...prev,
       testPanel: prev.testPanel.map((row, i) => 
@@ -166,40 +183,47 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
           </CardHeader>
           <CardContent className="pt-4 space-y-6">
             
-            {/* Controls */}
-            <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-200 dark:border-slate-800">
-              <Label className="mb-3 block text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Reference Controls (mm)</Label>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="space-y-1">
-                  <span className="text-xs font-medium text-slate-600 dark:text-slate-400 sm:text-left text-center block leading-tight">Histamine<br />(SPT)</span>
+            {/* Controls - Compact Single Line */}
+            <div className="bg-slate-50 dark:bg-slate-900 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-x-6 gap-y-2">
+              <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mr-2">Reference Controls (mm):</span>
+              
+              <div className="flex items-center gap-2">
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300">Histamine (SPT)</label>
                   <Input 
                     type="number" 
+                    min="0"
+                    onKeyDown={preventNegativeInput}
                     placeholder="0" 
-                    className="bg-white h-8 text-center"
+                    className="bg-white h-8 w-16 text-center text-xs"
                     value={formData.controls.histamineSpt}
                     onChange={(e) => handleControlChange('histamineSpt', e.target.value)}
                   />
-                </div>
-                <div className="space-y-1">
-                  <span className="text-xs font-medium text-slate-600 dark:text-slate-400 sm:text-left text-center block leading-tight">Saline<br />(SPT)</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (SPT)</label>
                   <Input 
                     type="number" 
+                    min="0"
+                    onKeyDown={preventNegativeInput}
                     placeholder="0" 
-                    className="bg-white h-8 text-center"
+                    className="bg-white h-8 w-16 text-center text-xs"
                     value={formData.controls.salineSpt}
                     onChange={(e) => handleControlChange('salineSpt', e.target.value)}
                   />
-                </div>
-                <div className="space-y-1">
-                  <span className="text-xs font-medium text-slate-600 dark:text-slate-400 sm:text-left text-center block leading-tight">Saline<br />(IDT)</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (IDT)</label>
                   <Input 
                     type="number" 
+                    min="0"
+                    onKeyDown={preventNegativeInput}
                     placeholder="0" 
-                    className="bg-white h-8 text-center"
+                    className="bg-white h-8 w-16 text-center text-xs"
                     value={formData.controls.salineIdt}
                     onChange={(e) => handleControlChange('salineIdt', e.target.value)}
                   />
-                </div>
               </div>
             </div>
 
@@ -266,7 +290,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                    {formData.testPanel.map((row, index) => (
                       <div 
                         key={row.id || row.drugName} 
-                        className="grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800 last:border-0 group"
+                        className="grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800 last:border-0 group animate-enter"
                       >
                          {/* Name Column (Full width on mobile) */}
                          <div className="col-span-2 md:col-span-1 flex items-center gap-2">
@@ -303,6 +327,8 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                 <div className="relative">
                                   <Input 
                                     type="number" 
+                                    min="0"
+                                    onKeyDown={preventNegativeInput}
                                     className="h-10 md:h-9 pr-8 text-sm text-center font-medium md:font-normal"
                                     placeholder="0"
                                     value={(row as any)[field] || ''}
@@ -395,6 +421,8 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                       <Label className="text-red-800 dark:text-red-300">Reaction Time (min)</Label>
                       <Input 
                         type="number" 
+                        min="0"
+                        onKeyDown={preventNegativeInput}
                         className="bg-white border-red-200 focus-visible:ring-red-500"
                         value={formData.reactionTime}
                         onChange={(e) => handleInputChange('reactionTime', e.target.value)}

@@ -11,6 +11,43 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
     {
+        version: "v0.3.15",
+        changes: [
+            "Rebranding: Updated application title to 'Anaesthetic Allergy Clinic' and department subtitle to 'RPAH Department of Clinical Immunology & Allergy'.",
+            "Data: Standardized mock patient data so all dates of birth default to the 1st of the month for consistency.",
+            "UI: Redesigned the application footer for a more professional appearance and improved information hierarchy."
+        ]
+    },
+    {
+        version: "v0.3.14",
+        changes: [
+            "Data: Complete restoration of the 92-record mock patient dataset, covering a wider geographical area (NSW Regional Hospitals) and diverse reaction types.",
+            "UI: Global animation improvements for smoother transitions."
+        ]
+    },
+    {
+        version: "v0.3.13",
+        changes: [
+            "Data: Restored and expanded mock patient database to 40 records, covering a wider range of agents (Antibiotics, NMBAs, Dyes, Latex).",
+            "Data: Added specific cases for Chlorhexidine, Patent Blue, Protamine, and Sugammadex reactions."
+        ]
+    },
+    {
+        version: "v0.3.12",
+        changes: [
+            "UI: Added spacing to the top of the Testing Plan Preview for better visibility.",
+            "Feature: Added 'Proceed to Testing Panel' button to the Testing Plan Preview screen to streamline workflow."
+        ]
+    },
+    {
+        version: "v0.3.11",
+        changes: [
+            "Fix: Resolved an issue where printing the Testing Plan Request Form would result in empty pages.",
+            "Refactor: Moved the Testing Plan printing view to a dedicated screen to ensure reliable rendering.",
+            "UI: Improved the 'Testing Plan Preview' interface."
+        ]
+    },
+    {
         version: "v0.3.10",
         changes: [
             "UI: Renamed 'Post-induction' section in Patient History to 'Induction & Post-induction' for clarity.",

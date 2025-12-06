@@ -45,15 +45,26 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
       <CardContent className="p-0">
         <AccordionItem 
           title={
-            <div className="flex flex-wrap items-center gap-3 w-full pr-4">
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-slate-900 dark:text-slate-100 text-base">{formatDate(history.date)}</span>
-                <span className="text-slate-300 text-2xl font-light">|</span>
-                <span className="text-sm text-slate-600 dark:text-slate-300 font-medium truncate max-w-[200px] sm:max-w-md">{history.procedure}</span>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 w-full pr-2">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 min-w-0 w-full">
+                {/* Date Section */}
+                <div className="flex items-center gap-3 shrink-0">
+                    <span className="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg tracking-tight whitespace-nowrap">
+                        {formatDate(history.date)}
+                    </span>
+                    <span className="hidden sm:inline text-slate-300 dark:text-slate-700 text-xl sm:text-2xl font-light">|</span>
+                </div>
+                
+                {/* Procedure Name - Allows wrapping on mobile */}
+                <span className="text-sm sm:text-base text-[#441170] dark:text-purple-300 font-bold uppercase tracking-wide leading-tight break-words whitespace-normal text-left">
+                    {history.procedure}
+                </span>
               </div>
-              <div className="ml-auto flex items-center">
+              
+              {/* Grade Badge */}
+              <div className="flex items-center self-start sm:self-center shrink-0 mt-1 sm:mt-0">
                  <div className="group relative">
-                    <Badge variant={getGradeVariant(history.grade)} className="shadow-sm cursor-help">
+                    <Badge variant={getGradeVariant(history.grade)} className="shadow-sm cursor-help whitespace-nowrap">
                         {gradeLabel}
                     </Badge>
                     {gradeDesc && (
@@ -68,9 +79,9 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
             </div>
           }
           defaultOpen={true}
-          className="px-6 border-b-0" 
+          className="border-b-0" 
         >
-          <div className="space-y-6 pt-2 pb-6 text-sm text-slate-700 dark:text-slate-300">
+          <div className="space-y-6 pt-2 pb-6 px-6 text-sm text-slate-700 dark:text-slate-300">
             
             {/* Reaction Summary */}
             <div className="space-y-2">
@@ -220,7 +231,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
             </div>
 
              {/* Outcome Block */}
-             <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
+             <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-3">
                     {history.procedureOutcome === 'Abandoned' ? (
                         <div className="p-1.5 rounded-full shrink-0 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
                             <XCircle className="w-4 h-4" />

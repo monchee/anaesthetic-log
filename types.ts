@@ -67,4 +67,10 @@ export interface LogFormData {
   plan: string;
 }
 
-export type Screen = 'log' | 'summary' | 'patient-summary' | 'dashboard' | 'changelog' | 'testing';
+export interface TestingPlanData {
+  selectedDrugs: string[];
+  customDrugs: string[];
+  notes: string;
+}
+
+export type Screen = 'log' | 'summary' | 'patient-summary' | 'dashboard' | 'changelog' | 'testing' | 'print-plan';

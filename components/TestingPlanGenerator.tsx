@@ -1,20 +1,19 @@
-import React, { useState, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Button, Label } from './ui';
-import { Patient } from '../types';
-import { FileText, Printer, Check, X, ClipboardList, ChevronDown, ChevronRight, Plus } from 'lucide-react';
-import { formatDate } from '../lib/utils';
+import React, { useState } from 'react';
+import { Card, CardContent, Button, Label } from './ui';
+import { Patient, TestingPlanData } from '../types';
+import { Printer, Check, X, ClipboardList, ChevronDown, Plus } from 'lucide-react';
 
 interface TestingPlanGeneratorProps {
   patient: Patient;
   drugCategories: Record<string, string[]>;
+  onPreview: (data: TestingPlanData) => void;
 }
 
-const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, drugCategories }) => {
+const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, drugCategories, onPreview }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDrugs, setSelectedDrugs] = useState<string[]>([]);
   const [customDrugs, setCustomDrugs] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
-  const [showPreview, setShowPreview] = useState(false);
   const [newCustomDrug, setNewCustomDrug] = useState('');
 
   const toggleDrug = (drug: string) => {
@@ -47,13 +46,16 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
     setSelectedDrugs(prev => prev.filter(d => d !== drug));
   };
 
-  const handlePrint = () => {
-    window.print();
+  const handlePreview = () => {
+    onPreview({
+        selectedDrugs,
+        customDrugs,
+        notes
+    });
   };
 
   return (
     <>
-      {/* 1. Main Card in the Flow */}
       <Card className="border-t-4 border-slate-400 dark:border-slate-500 bg-white dark:bg-slate-900 shadow-md overflow-hidden">
         <div 
             className="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
@@ -68,11 +70,11 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     <p className="text-xs text-slate-500 dark:text-slate-400">Select drugs to generate a printable testing plan</p>
                 </div>
              </div>
-             <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+             <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
         </div>
 
         {isOpen && (
-            <CardContent className="pt-0 pb-6 px-6 animate-in slide-in-from-top-2">
+            <CardContent className="pt-0 pb-6 px-6 animate-enter">
                 <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-6">
                     
                     {/* Notes Section */}
@@ -111,8 +113,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                                 onClick={() => toggleDrug(drug)}
                                                 className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-200 flex items-center gap-1.5 text-left ${
                                                 selectedDrugs.includes(drug) 
-                                                ? 'bg-slate-800 text-white border-slate-800 shadow-sm font-medium dark:bg-purple-900 dark:border-purple-800 dark:text-purple-100' 
-                                                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800'
+                                                ? 'bg-[#8055f1] text-white border-[#8055f1] shadow-sm font-medium ring-1 ring-purple-100 dark:ring-purple-900' 
+                                                : 'bg-white text-slate-600 border-slate-200 hover:border-[#8055f1] hover:text-[#8055f1] hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:border-[#8055f1] dark:hover:text-purple-300'
                                                 }`}
                                             >
                                                 {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
@@ -136,8 +138,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         onClick={() => toggleDrug(drug)}
                                         className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-200 flex items-center gap-1.5 text-left group ${
                                             selectedDrugs.includes(drug) 
-                                            ? 'bg-slate-800 text-white border-slate-800 shadow-sm font-medium dark:bg-purple-900 dark:border-purple-800 dark:text-purple-100' 
-                                            : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400'
+                                            ? 'bg-[#8055f1] text-white border-[#8055f1] shadow-sm font-medium ring-1 ring-purple-100 dark:ring-purple-900' 
+                                            : 'bg-white text-slate-600 border-slate-200 hover:border-[#8055f1] hover:text-[#8055f1] dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400 dark:hover:border-[#8055f1] dark:hover:text-purple-300'
                                         }`}
                                     >
                                         {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
@@ -168,7 +170,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     </div>
 
                     <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <Button onClick={() => setShowPreview(true)} className="bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600">
+                        <Button onClick={handlePreview} className="bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600">
                             <Printer className="w-4 h-4 mr-2" /> Preview & Print Plan
                         </Button>
                     </div>
@@ -176,181 +178,6 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
             </CardContent>
         )}
       </Card>
-
-      {/* Print Preview Modal */}
-      {showPreview && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 print:p-0 print:bg-white print:static">
-            
-            {/* Modal Content / Printable Area */}
-            {/* Note: Kept strictly white bg for document preview fidelity */}
-            <div 
-                id="printable-plan"
-                className="bg-white w-full max-w-3xl rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh] print:max-h-none print:shadow-none print:w-full print:max-w-none text-slate-900"
-            >
-                {/* Screen-only Header */}
-                <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 print:hidden">
-                    <h3 className="font-bold text-slate-800">Print Preview</h3>
-                    <div className="flex items-center gap-2">
-                        <Button size="sm" onClick={handlePrint} className="bg-[#441170]">
-                            <Printer className="w-4 h-4 mr-2" /> Print
-                        </Button>
-                        <button 
-                            onClick={() => setShowPreview(false)}
-                            className="ml-2 p-2 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                            title="Close Preview"
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
-                    </div>
-                </div>
-
-                {/* Actual Document Content */}
-                <div className="p-8 overflow-y-auto print:overflow-visible print:p-0 space-y-6">
-                    
-                    {/* Document Header */}
-                    <div className="flex justify-between items-start border-b-2 border-slate-800 pb-4">
-                        <div>
-                            <h1 className="text-2xl font-bold text-slate-900">Anaesthetic Allergy Testing Request</h1>
-                            <p className="text-slate-500 font-medium">Department of Clinical Immunology & Allergy</p>
-                            <p className="text-sm text-slate-400">Royal Prince Alfred Hospital</p>
-                        </div>
-                        <div className="text-right">
-                             <div className="bg-slate-100 px-4 py-2 rounded mb-2">
-                                <p className="text-xs uppercase font-bold text-slate-500">Date of Request</p>
-                                <p className="font-mono font-bold text-lg">{formatDate(new Date().toISOString())}</p>
-                             </div>
-                        </div>
-                    </div>
-
-                    {/* Patient Banner */}
-                    <div className="bg-slate-50 border border-slate-200 p-4 rounded-md grid grid-cols-2 gap-4">
-                        <div>
-                            <p className="text-xs uppercase font-bold text-slate-400">Patient Name</p>
-                            <p className="text-xl font-bold text-slate-900">{patient.firstName} {patient.lastName}</p>
-                        </div>
-                        <div>
-                            <p className="text-xs uppercase font-bold text-slate-400">MRN / Record ID</p>
-                            <p className="text-lg font-mono text-slate-700">{patient.mrn}</p>
-                        </div>
-                        <div>
-                             <p className="text-xs uppercase font-bold text-slate-400">DOB</p>
-                             <p className="text-slate-700">{formatDate(patient.dob)}</p>
-                        </div>
-                        <div>
-                             <p className="text-xs uppercase font-bold text-slate-400">Gender</p>
-                             <p className="text-slate-700">{patient.gender}</p>
-                        </div>
-                    </div>
-
-                    {/* Notes */}
-                    {notes && (
-                        <div>
-                            <h4 className="font-bold text-slate-800 border-b border-slate-100 mb-2 uppercase text-sm tracking-wide">Clinical Notes</h4>
-                            <p className="text-slate-700 whitespace-pre-wrap">{notes}</p>
-                        </div>
-                    )}
-
-                    {/* Selected Drugs List */}
-                    <div>
-                        <h4 className="font-bold text-slate-800 border-b-2 border-slate-800 mb-4 uppercase text-sm tracking-wide flex items-center gap-2">
-                            <FileText className="w-4 h-4" /> Requested Panel
-                        </h4>
-                        
-                        {selectedDrugs.length > 0 ? (
-                            <div className="columns-2 gap-8 space-y-4">
-                                {/* Group selected drugs by category for display */}
-                                {Object.entries(drugCategories).map(([category, drugs]) => {
-                                    const activeInCat = (drugs as string[]).filter(d => selectedDrugs.includes(d));
-                                    if (activeInCat.length === 0) return null;
-                                    
-                                    return (
-                                        <div key={category} className="break-inside-avoid mb-4">
-                                            <h5 className="font-bold text-slate-600 text-sm mb-2">{category}</h5>
-                                            <ul className="list-disc pl-5 space-y-1">
-                                                {activeInCat.map(d => (
-                                                    <li key={d} className="text-sm pl-1">
-                                                        {d}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    );
-                                })}
-
-                                {/* Custom Drugs Group */}
-                                {customDrugs.filter(d => selectedDrugs.includes(d)).length > 0 && (
-                                    <div className="break-inside-avoid mb-4">
-                                        <h5 className="font-bold text-slate-600 text-sm mb-2">Additional</h5>
-                                        <ul className="list-disc pl-5 space-y-1">
-                                            {customDrugs.filter(d => selectedDrugs.includes(d)).map(d => (
-                                                <li key={d} className="text-sm pl-1">
-                                                    {d}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <p className="text-slate-400 italic">No drugs selected.</p>
-                        )}
-                    </div>
-                    
-                    {/* Signature Area */}
-                    <div className="mt-12 pt-8 border-t border-slate-200 flex justify-between gap-12 print:flex hidden">
-                        <div className="flex-1 border-t border-black pt-2">
-                            <p className="text-xs uppercase font-bold text-slate-500">Requested By (Name & Signature)</p>
-                        </div>
-                        <div className="w-40 border-t border-black pt-2">
-                            <p className="text-xs uppercase font-bold text-slate-500">Date</p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <style>{`
-                @media print {
-                    /* Hide everything in body using visibility to allow absolute positioning of children to work */
-                    body * {
-                        visibility: hidden;
-                    }
-                    
-                    /* Make the printable area visible */
-                    #printable-plan, #printable-plan * {
-                        visibility: visible;
-                    }
-                    
-                    /* Position the printable area at top left of page */
-                    #printable-plan {
-                        position: absolute !important;
-                        left: 0 !important;
-                        top: 0 !important;
-                        width: 100% !important;
-                        margin: 0 !important;
-                        padding: 0 !important;
-                        background: white !important;
-                        color: black !important;
-                        box-shadow: none !important;
-                        max-width: none !important;
-                        max-height: none !important;
-                        overflow: visible !important;
-                    }
-
-                    /* Restore layout properties */
-                    #printable-plan .flex { display: flex !important; }
-                    #printable-plan .grid { display: grid !important; }
-                    #printable-plan .columns-2 { columns: 2 !important; }
-                    #printable-plan .hidden.print\\:flex { display: flex !important; }
-                    #printable-plan .print\\:hidden { display: none !important; }
-                    
-                    /* Ensure bullets are visible */
-                    #printable-plan ul { list-style-type: disc !important; }
-                    #printable-plan li { display: list-item !important; }
-                }
-            `}</style>
-        </div>
-      )}
     </>
   );
 };
