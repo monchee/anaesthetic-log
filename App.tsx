@@ -269,10 +269,10 @@ function AnaestheticLogApp() {
             >
                 <PatientHandout data={lastSavedRecord} />
                 <div className="flex flex-col sm:flex-row gap-4 no-print mt-8">
-                    <Button onClick={() => setScreen('summary')} size="lg" variant="ghost" className="flex-1">
+                    <Button onClick={() => setScreen('summary')} size="lg" variant="ghost" className="flex-1 py-6 h-auto text-base">
                         <ArrowLeft className="w-4 h-4 mr-2" /> Back to Clinical Report
                     </Button>
-                    <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1">
+                    <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base border-2">
                         <Printer className="w-4 h-4 mr-2" /> Print Handout
                     </Button>
                 </div>
@@ -330,7 +330,7 @@ function AnaestheticLogApp() {
                     </Button>
                 }
                 contentClassName="p-4"
-                className="pb-10"
+                className="pb-32"
             >
                 <TestingLogForm 
                     formData={formData}
@@ -381,22 +381,24 @@ function AnaestheticLogApp() {
                         />
                         <div 
                             key={selectedPatient?.id ?? 'no-patient'}
-                            className="grid grid-cols-3 gap-4 bg-slate-50 dark:bg-slate-900 p-4 rounded-md border border-slate-100 dark:border-slate-800 animate-fade-in"
+                            className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md border border-slate-100 dark:border-slate-800 animate-fade-in"
                         >
-                            <div>
-                                <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">Name</span>
-                                <p className="font-medium text-slate-900 dark:text-slate-100 truncate">
-                                    {selectedPatient ? <span className="text-slate-400 dark:text-slate-500 mr-1 font-mono text-xs">[{selectedPatient.id}]</span> : ''}
-                                    {formData.firstName} {formData.lastName || '-'}
-                                </p>
-                            </div>
-                            <div>
-                                <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">City</span>
-                                <p className="text-slate-900 dark:text-slate-100 text-sm truncate" title={selectedPatient?.city}>{selectedPatient?.city || '-'}</p>
-                            </div>
-                            <div>
-                                <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">DOB</span>
-                                <p className="text-slate-900 dark:text-slate-100">{selectedPatient ? formatDate(selectedPatient.dob) : '-'}</p>
+                            <div className="flex flex-col sm:grid sm:grid-cols-3 gap-4">
+                                <div className="sm:col-span-1">
+                                    <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">Name</span>
+                                    <p className="font-medium text-slate-900 dark:text-slate-100 text-base leading-tight break-words">
+                                        {selectedPatient ? <span className="text-slate-400 dark:text-slate-500 mr-1.5 font-mono text-xs">[{selectedPatient.id}]</span> : ''}
+                                        {formData.firstName} {formData.lastName || '-'}
+                                    </p>
+                                </div>
+                                <div>
+                                    <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">City</span>
+                                    <p className="text-slate-900 dark:text-slate-100 text-sm break-words leading-tight" title={selectedPatient?.city}>{selectedPatient?.city || '-'}</p>
+                                </div>
+                                <div>
+                                    <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">DOB</span>
+                                    <p className="text-slate-900 dark:text-slate-100 text-sm">{selectedPatient ? formatDate(selectedPatient.dob) : '-'}</p>
+                                </div>
                             </div>
                         </div>
                     </div>

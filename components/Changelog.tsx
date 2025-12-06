@@ -11,6 +11,14 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
     {
+        version: "v0.3.16",
+        changes: [
+            "UI: Fixed an issue where the Outcome and Save Record sections in the Testing Log were cut off or inaccessible on some mobile devices by significantly increasing bottom spacing.",
+            "UI: Improved responsiveness of the Outcome selection buttons in the Testing Log to prevent text truncation on small screens.",
+            "UI: Enhanced patient detail visibility on mobile view."
+        ]
+    },
+    {
         version: "v0.3.15",
         changes: [
             "Rebranding: Updated application title to 'Anaesthetic Allergy Clinic' and department subtitle to 'RPAH Department of Clinical Immunology & Allergy'.",
@@ -226,7 +234,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
                         </div>
                     ))}
                 </div>
-            </CardContent>
+            CardContent>
         </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

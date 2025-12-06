@@ -40,7 +40,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
       <CardContent className="p-4 md:p-8 space-y-6 md:space-y-8">
          
          {/* Patient Details */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 border-b border-slate-100 pb-6 print:grid-cols-2">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 border-b border-slate-100 pb-6 pt-6 print:grid-cols-2">
             <div>
                <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold block mb-1">Patient Name</label>
                <p className="text-xl md:text-2xl font-bold text-[#441170]">{data.firstName} {data.lastName}</p>

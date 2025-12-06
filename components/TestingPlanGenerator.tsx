@@ -156,7 +156,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             <div className="flex gap-2">
                                 <input 
                                     type="text" 
-                                    className="flex-1 h-8 rounded text-xs border border-slate-200 px-2 dark:bg-slate-950 dark:border-slate-800 dark:text-white"
+                                    className="flex-1 h-8 rounded text-xs border border-slate-200 px-2 bg-white text-slate-900 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100"
                                     placeholder="Add custom drug..."
                                     value={newCustomDrug}
                                     onChange={(e) => setNewCustomDrug(e.target.value)}

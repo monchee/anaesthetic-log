@@ -1,0 +1,22 @@
+{
+  "name": "RPAH Anaesthetic Allergy Log",
+  "short_name": "Anaesthetic Log",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8055f1",
+  "description": "A clinical application for logging anaesthetic allergy testing, viewing patient reaction history, and generating reports.",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3063/3063176.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3063/3063176.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

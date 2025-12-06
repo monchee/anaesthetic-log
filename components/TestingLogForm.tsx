@@ -233,11 +233,17 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                    <Label className="text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold tracking-wider">Select Drugs to Test:</Label>
                </div>
                
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                  {Object.entries(drugCategories).map(([category, drugs]) => (
-                    <div key={category} className="space-y-2">
-                        <h4 className="text-xs font-bold text-[#441170] dark:text-purple-300 uppercase tracking-wide border-b border-dashed border-slate-200 dark:border-slate-800 pb-1 mb-2">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                  {Object.entries(drugCategories).map(([category, drugs]) => {
+                    const hasActiveSelection = (drugs as string[]).some(drug => 
+                        formData.testPanel.some(r => r.drugName === drug && !r.id)
+                    );
+
+                    return (
+                    <div key={category} className={`space-y-2 rounded-xl p-3 transition-colors duration-300 ${hasActiveSelection ? 'bg-purple-50/80 dark:bg-purple-900/20 ring-1 ring-purple-100 dark:ring-purple-900/50' : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
+                        <h4 className={`text-xs font-bold uppercase tracking-wide border-b border-dashed pb-1 mb-2 flex justify-between items-center ${hasActiveSelection ? 'text-[#8055f1] border-purple-200 dark:text-purple-300 dark:border-purple-800' : 'text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800'}`}>
                             {category}
+                            {hasActiveSelection && <span className="flex h-2 w-2 rounded-full bg-[#8055f1] animate-pulse"></span>}
                         </h4>
                         <div className="flex flex-wrap gap-2">
                             {(drugs as string[]).map(drug => {
@@ -266,19 +272,19 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                     className="text-xs px-2.5 py-1.5 rounded border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-[#8055f1] hover:text-[#8055f1] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 flex items-center gap-1.5 font-medium"
                                 >
                                     <Plus className="w-3 h-3 shrink-0" />
-                                    Other (Not listed)
+                                    Other
                                 </button>
                             )}
                         </div>
                     </div>
-                  ))}
+                  )})}
                </div>
             </div>
 
             {/* Data Entry Table */}
             {formData.testPanel.length > 0 ? (
-              <div className={`border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden animate-in fade-in slide-in-from-top-2`}>
-                 <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-50 dark:bg-slate-900 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase border-b border-slate-100 dark:border-slate-800">
+              <div className={`rounded-lg overflow-hidden animate-in fade-in slide-in-from-top-2`}>
+                 <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-100/50 dark:bg-slate-900/50 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase border-b border-slate-200 dark:border-slate-800 mb-2 rounded-t-lg">
                     <div>Drug</div>
                     <div>SPT</div>
                     <div>1:100</div>
@@ -286,11 +292,11 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     <div>Neat</div>
                  </div>
 
-                 <div className="">
+                 <div className="space-y-3">
                    {formData.testPanel.map((row, index) => (
                       <div 
                         key={row.id || row.drugName} 
-                        className="grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800 last:border-0 group animate-enter"
+                        className="grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] border-l-[#8055f1] shadow-sm rounded-r-md group animate-enter"
                       >
                          {/* Name Column (Full width on mobile) */}
                          <div className="col-span-2 md:col-span-1 flex items-center gap-2">
@@ -389,7 +395,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                  <div 
                    onClick={() => handleInputChange('outcome', 'SUCCESS')}
                    className={`cursor-pointer rounded-lg border-2 p-3 text-center transition-all ${
