@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Input, Badge } from './ui';
-import { Users, AlertTriangle, Activity, Search, Syringe, FileText, Thermometer, Clock, Upload, ChevronLeft, ChevronRight, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight as ChevronRightIcon, Ban } from 'lucide-react';
+import { Users, AlertTriangle, Activity, Search, Thermometer, Clock, Upload, ChevronLeft, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, Ban, FileText } from 'lucide-react';
 import { formatDate, parseRedcapCSV, getGradeVariant, isSkinTestPositive } from '../lib/utils';
 import { Screen, Patient, LogFormData } from '../types';
 
@@ -16,21 +16,33 @@ interface DashboardProps {
   databaseDate: string;
 }
 
-// Hook for counting up numbers
+// Hook for counting up numbers with cleanup
 const useCountUp = (end: number, duration = 1500) => {
   const [count, setCount] = useState(0);
+  
   useEffect(() => {
     let startTime: number | null = null;
+    let animationFrameId: number;
+
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime;
       const progress = Math.min((currentTime - startTime) / duration, 1);
       // Ease out quart
       const ease = 1 - Math.pow(1 - progress, 4);
       setCount(Math.round(ease * end));
-      if (progress < 1) requestAnimationFrame(animate);
+      
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
     };
-    requestAnimationFrame(animate);
+    
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }, [end, duration]);
+  
   return count;
 };
 
@@ -642,7 +654,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                         >
                                             <td colSpan={6} className="px-4 py-2.5">
                                                 <div className="flex items-center gap-2 text-xs font-bold text-[#441170] dark:text-purple-300 uppercase tracking-wide">
-                                                    {isExpanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRightIcon className="w-4 h-4 text-slate-400" />}
+                                                    {isExpanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
                                                     {categoryGroup.category}
                                                 </div>
                                             </td>
@@ -687,38 +699,48 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         {/* Patient Database Table (Full Width) - Paginated */}
         <Card className="w-full shadow-sm animate-enter" style={{ animationDelay: '700ms' }}>
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                        <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
-                            <FileText className="w-5 h-5" /> REDCap Record Database
-                            <span className="text-xs font-normal text-slate-400 ml-2">(Updated {databaseDate})</span>
-                        </CardTitle>
-                        <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                fileInputRef.current?.click();
-                            }}
-                        >
-                            <Upload className="w-3 h-3 mr-1" /> Update DB
-                        </Button>
-                        <input 
-                            type="file" 
-                            ref={fileInputRef} 
-                            onChange={handleFileUpload} 
-                            accept=".csv" 
-                            className="hidden" 
-                        />
-                    </div>
-                    <div className="relative w-full sm:w-72">
-                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <Input 
-                            placeholder="Search by Name, MRN, Agent..." 
-                            className="pl-9 h-9 bg-white" 
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+                <div className="flex flex-col gap-4">
+                    {/* Header Top Row: Title + Update Button */}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div className="space-y-1">
+                             <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
+                                <FileText className="w-5 h-5" /> REDCap Record Database
+                             </CardTitle>
+                             <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                                <span>Updated {databaseDate}</span>
+                             </div>
+                        </div>
+                        
+                        {/* Action Buttons & Search */}
+                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto items-stretch sm:items-center">
+                             <Button 
+                                variant="outline" 
+                                size="sm" 
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    fileInputRef.current?.click();
+                                }}
+                                className="shrink-0"
+                            >
+                                <Upload className="w-3 h-3 mr-1" /> Update DB
+                            </Button>
+                            <input 
+                                type="file" 
+                                ref={fileInputRef} 
+                                onChange={handleFileUpload} 
+                                accept=".csv" 
+                                className="hidden" 
+                            />
+                            <div className="relative w-full sm:w-64">
+                                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                <Input 
+                                    placeholder="Search by Name, MRN..." 
+                                    className="pl-9 h-9 bg-white" 
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </CardHeader>
@@ -750,7 +772,8 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                 </div>
             )}
             
-            <div className="overflow-x-auto">
+            {/* Desktop View (Table) */}
+            <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-sm text-left">
                     <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
                         <tr>
@@ -776,9 +799,8 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                         </td>
                                         <td className="px-4 py-3 font-medium text-[#441170] dark:text-purple-300 group-hover:text-[#6b42d1] dark:group-hover:text-purple-200">
                                             {p.lastName}, {p.firstName}
-                                            <div className="text-xs text-slate-400 font-normal block sm:hidden">{p.history.hospital}</div>
                                         </td>
-                                        <td className="px-4 py-3 text-slate-600 dark:text-slate-400 hidden sm:table-cell">
+                                        <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
                                             {p.history.hospital || '-'}
                                         </td>
                                         <td className="px-4 py-3 text-center">
@@ -810,11 +832,59 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                 </table>
             </div>
 
+            {/* Mobile View (Card List) */}
+            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+                {paginatedPatients.length > 0 ? (
+                    paginatedPatients.map(p => (
+                        <div 
+                            key={p.id} 
+                            className="p-4 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800"
+                            onClick={() => onSelectPatient(p)}
+                        >
+                            <div className="flex justify-between items-start mb-2 gap-2">
+                                <div>
+                                    <div className="font-bold text-[#441170] dark:text-purple-300">
+                                        {p.lastName}, {p.firstName}
+                                    </div>
+                                    <div className="text-xs text-slate-500 font-mono mt-0.5">
+                                        {formatDate(p.history.date)} • {p.history.hospital || 'Unknown Hospital'}
+                                    </div>
+                                </div>
+                                <Badge variant={getGradeVariant(p.history.grade)} className="whitespace-nowrap text-[10px] shrink-0">
+                                    {p.history.grade.split(' -')[0]}
+                                </Badge>
+                            </div>
+                            <div className="text-sm text-slate-600 dark:text-slate-400 mt-3">
+                                <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1.5 tracking-wide">Suspected Agents</span>
+                                <div className="flex flex-wrap gap-1.5">
+                                    {p.history.suspectedAgents.length > 0 ? (
+                                        p.history.suspectedAgents.map((agent, i) => (
+                                            <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                                {agent}
+                                            </span>
+                                        ))
+                                    ) : (
+                                        <span className="text-slate-400 italic text-xs">None recorded</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className="p-8 text-center text-slate-500 italic text-sm">
+                        No matching records found.
+                    </div>
+                )}
+            </div>
+
             {/* Pagination Controls */}
             {filteredPatients.length > 0 && (
                 <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-                    <div className="text-xs text-slate-500 dark:text-slate-400">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
                         Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredPatients.length)} of {filteredPatients.length} records
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400 sm:hidden">
+                        Page {currentPage} of {Math.ceil(filteredPatients.length / ITEMS_PER_PAGE)}
                     </div>
                     <div className="flex items-center gap-2">
                         <Button
@@ -826,7 +896,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                         >
                             <ChevronLeft className="h-4 w-4" />
                         </Button>
-                        <div className="text-xs font-medium text-slate-700 dark:text-slate-300 px-2">
+                        <div className="text-xs font-medium text-slate-700 dark:text-slate-300 px-2 hidden sm:block">
                             Page {currentPage} of {Math.ceil(filteredPatients.length / ITEMS_PER_PAGE)}
                         </div>
                         <Button
@@ -836,7 +906,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                             disabled={currentPage * ITEMS_PER_PAGE >= filteredPatients.length}
                             className="h-8 px-2"
                         >
-                            <ChevronRightIcon className="h-4 w-4" />
+                            <ChevronRight className="h-4 w-4" />
                         </Button>
                     </div>
                 </div>

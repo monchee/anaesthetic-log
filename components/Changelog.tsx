@@ -11,6 +11,23 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
     {
+      version: "v0.3.18",
+      changes: [
+        "Feature: Added 'Select All' / 'Select None' functionality for drug categories in the Testing Log to speed up data entry.",
+        "Feature: Added 'Manual Patient Entry' option for walk-in patients or those not currently in the database.",
+        "UI: Refactored REDCap Database card on Dashboard for better mobile responsiveness, switching to a card view on smaller screens.",
+        "System: Optimized chart animations and cleaned up data processing logic for better performance."
+      ]
+    },
+    {
+        version: "v0.3.17",
+        changes: [
+            "Refactor: Centralized color themes and drug category configurations to reduce code duplication.",
+            "Cleanup: Improved maintainability by moving shared constants to a dedicated utility file.",
+            "System: Optimized application structure for better performance."
+        ]
+    },
+    {
         version: "v0.3.16",
         changes: [
             "UI: Fixed an issue where the Outcome and Save Record sections in the Testing Log were cut off or inaccessible on some mobile devices by significantly increasing bottom spacing.",
@@ -234,7 +251,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
                         </div>
                     ))}
                 </div>
-            CardContent>
+            </CardContent>
         </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

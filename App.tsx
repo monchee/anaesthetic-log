@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle } from './components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from './components/ui';
 import PatientSelector from './components/PatientSelector';
 import PatientHistory from './components/PatientHistory';
 import TestingLogForm from './components/TestingLogForm';
@@ -16,6 +16,7 @@ import { FontSizeProvider } from './components/FontSizeProvider';
 import { LogFormData, Patient, Screen, TestingPlanData } from './types';
 import { formatDate } from './lib/utils';
 import { MOCK_PATIENTS } from './data/mockPatients';
+import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS } from './lib/constants';
 
 const APP_SUBTITLE = "RPAH Department of Clinical Immunology & Allergy";
 
@@ -41,37 +42,6 @@ const INITIAL_FORM_STATE: LogFormData = {
     interventionOther: '',
     plan: ''
 };
-
-// Categorised Drug Options based on user request
-const DRUG_CATEGORIES: Record<string, string[]> = {
-  "Muscle Relaxants": [
-    "Cis-atracurium", "Rocuronium", "Pancuronium", "Vecuronium", "Suxamethonium"
-  ],
-  "Penicillins": [
-    "Major/Minor Determinants", "Ampicillin", "Amoxicillin"
-  ],
-  "Cephalosporins": [
-    "Cefotaxime", "Cefazolin", "Ceftazidime", "Ceftriaxone", "Cefepime"
-  ],
-  "Hypnotics": [
-    "Midazolam", "Propofol"
-  ],
-  "Local Anaesthetics": [
-    "Lignocaine", "Mepivacaine", "Bupivacaine", "Ropivacaine"
-  ],
-  "Opioids": [
-    "Alfentanil", "Fentanyl", "Morphine", "Remifentanil", "Oxycodone"
-  ],
-  "Antiseptics": [
-    "Chlorhexidine", "Povidone Iodine"
-  ],
-  "Others": [
-    "Latex", "Paracetamol", "Patent Blue", "Methylene Blue", "Atropine", "Neostigmine"
-  ]
-};
-
-// Flattened list for Dashboard filters and dropdowns
-const FLAT_DRUG_OPTIONS = Object.values(DRUG_CATEGORIES).flat();
 
 function AnaestheticLogApp() {
   const [screen, setScreen] = useState<Screen>('log');
@@ -108,16 +78,40 @@ function AnaestheticLogApp() {
 
   const handlePatientSelect = (patient: Patient) => {
     setSelectedPatient(patient);
-    setFormData(prev => ({
-        ...prev,
-        firstName: patient.firstName,
-        lastName: patient.lastName,
-        mrn: patient.mrn,
-        testPanel: [],
-        proceedToChallenge: false,
-        outcome: null,
-        plan: ''
-    }));
+    
+    // If manual, clear form but keep structure. If existing, pre-fill.
+    if (patient.id === 'manual') {
+        setFormData(prev => ({
+            ...INITIAL_FORM_STATE,
+            visitDate: prev.visitDate // Keep current date if set
+        }));
+    } else {
+        setFormData(prev => ({
+            ...prev,
+            firstName: patient.firstName,
+            lastName: patient.lastName,
+            mrn: patient.mrn,
+            testPanel: [],
+            proceedToChallenge: false,
+            outcome: null,
+            plan: ''
+        }));
+    }
+  };
+
+  const handleManualDetailChange = (field: keyof Patient | 'dob', value: string) => {
+    if (!selectedPatient) return;
+
+    // Update local patient object state (for UI display and Testing Plan)
+    setSelectedPatient(prev => {
+        if (!prev) return null;
+        return { ...prev, [field]: value };
+    });
+
+    // Update form data state (for Report)
+    if (field === 'firstName' || field === 'lastName' || field === 'mrn') {
+        setFormData(prev => ({ ...prev, [field]: value }));
+    }
   };
 
   const handleSubmit = () => {
@@ -318,7 +312,7 @@ function AnaestheticLogApp() {
             <ScreenLayout
                 title="Testing Session"
                 icon={<TestTube2 className="w-5 h-5" />}
-                subtitle={selectedPatient ? `Patient: ${selectedPatient.lastName}, ${selectedPatient.firstName} (ID: ${selectedPatient.id})` : APP_SUBTITLE}
+                subtitle={selectedPatient ? `Patient: ${selectedPatient.lastName}, ${selectedPatient.firstName} (ID: ${selectedPatient.id === 'manual' ? 'New' : selectedPatient.id})` : APP_SUBTITLE}
                 setScreen={setScreen}
                 databaseDate={databaseDate}
                 showDisclaimer={showDisclaimer}
@@ -379,27 +373,83 @@ function AnaestheticLogApp() {
                             selectedPatientId={selectedPatient?.id}
                             patients={patients} 
                         />
+                        
+                        {/* Patient Details Display (Static or Editable) */}
                         <div 
                             key={selectedPatient?.id ?? 'no-patient'}
                             className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md border border-slate-100 dark:border-slate-800 animate-fade-in"
                         >
-                            <div className="flex flex-col sm:grid sm:grid-cols-3 gap-4">
-                                <div className="sm:col-span-1">
-                                    <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">Name</span>
-                                    <p className="font-medium text-slate-900 dark:text-slate-100 text-base leading-tight break-words">
-                                        {selectedPatient ? <span className="text-slate-400 dark:text-slate-500 mr-1.5 font-mono text-xs">[{selectedPatient.id}]</span> : ''}
-                                        {formData.firstName} {formData.lastName || '-'}
-                                    </p>
+                            {selectedPatient?.id === 'manual' ? (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <Label className="text-xs uppercase mb-1.5 block text-slate-500">First Name</Label>
+                                            <Input 
+                                                value={selectedPatient.firstName} 
+                                                onChange={(e) => handleManualDetailChange('firstName', e.target.value)}
+                                                placeholder="Enter first name"
+                                                className="bg-white"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label className="text-xs uppercase mb-1.5 block text-slate-500">Last Name</Label>
+                                            <Input 
+                                                value={selectedPatient.lastName} 
+                                                onChange={(e) => handleManualDetailChange('lastName', e.target.value)}
+                                                placeholder="Enter last name"
+                                                className="bg-white"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                        <div>
+                                            <Label className="text-xs uppercase mb-1.5 block text-slate-500">MRN / ID</Label>
+                                            <Input 
+                                                value={selectedPatient.mrn} 
+                                                onChange={(e) => handleManualDetailChange('mrn', e.target.value)}
+                                                placeholder="MRN..."
+                                                className="bg-white"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label className="text-xs uppercase mb-1.5 block text-slate-500">Date of Birth</Label>
+                                            <Input 
+                                                type="date"
+                                                value={selectedPatient.dob} 
+                                                onChange={(e) => handleManualDetailChange('dob', e.target.value)}
+                                                className="bg-white"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label className="text-xs uppercase mb-1.5 block text-slate-500">City / Suburb</Label>
+                                            <Input 
+                                                value={selectedPatient.city} 
+                                                onChange={(e) => handleManualDetailChange('city', e.target.value)}
+                                                placeholder="City..."
+                                                className="bg-white"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">City</span>
-                                    <p className="text-slate-900 dark:text-slate-100 text-sm break-words leading-tight" title={selectedPatient?.city}>{selectedPatient?.city || '-'}</p>
+                            ) : (
+                                <div className="flex flex-col sm:grid sm:grid-cols-3 gap-4">
+                                    <div className="sm:col-span-1">
+                                        <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">Name</span>
+                                        <p className="font-medium text-slate-900 dark:text-slate-100 text-base leading-tight break-words">
+                                            {selectedPatient ? <span className="text-slate-400 dark:text-slate-500 mr-1.5 font-mono text-xs">[{selectedPatient.id}]</span> : ''}
+                                            {formData.firstName} {formData.lastName || '-'}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">City</span>
+                                        <p className="text-slate-900 dark:text-slate-100 text-sm break-words leading-tight" title={selectedPatient?.city}>{selectedPatient?.city || '-'}</p>
+                                    </div>
+                                    <div>
+                                        <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">DOB</span>
+                                        <p className="text-slate-900 dark:text-slate-100 text-sm">{selectedPatient ? formatDate(selectedPatient.dob) : '-'}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">DOB</span>
-                                    <p className="text-slate-900 dark:text-slate-100 text-sm">{selectedPatient ? formatDate(selectedPatient.dob) : '-'}</p>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </CardContent>
@@ -407,7 +457,11 @@ function AnaestheticLogApp() {
 
             {selectedPatient && (
                 <div key={selectedPatient.id} className="animate-enter space-y-8">
-                    <PatientHistory patient={selectedPatient} />
+                    {/* Only show History for existing DB patients */}
+                    {selectedPatient.id !== 'manual' && (
+                        <PatientHistory patient={selectedPatient} />
+                    )}
+                    
                     <TestingPlanGenerator 
                         patient={selectedPatient} 
                         drugCategories={DRUG_CATEGORIES}
