@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select, Badge } from './ui';
 import { LogFormData } from '../types';
 import { Check, X, History, Activity, Save, AlertTriangle, CheckCircle2, Calendar, Stethoscope, Plus } from 'lucide-react';
@@ -19,6 +19,101 @@ const FIELD_LABELS: Record<string, string> = {
   idtNeat: 'Neat'
 };
 
+// Professional Color Themes for Categories
+const CATEGORY_THEMES: Record<string, any> = {
+  "Muscle Relaxants": {
+    activeBg: "bg-sky-50 dark:bg-sky-900/20",
+    activeRing: "ring-sky-100 dark:ring-sky-900/50",
+    headerText: "text-sky-700 dark:text-sky-300",
+    headerBorder: "border-sky-200 dark:border-sky-800",
+    btnSelected: "bg-sky-600 border-sky-600 text-white shadow-sm ring-1 ring-sky-100 dark:ring-sky-900",
+    btnHover: "hover:border-sky-500 hover:text-sky-600 dark:hover:text-sky-400 dark:hover:border-sky-400",
+    pulse: "bg-sky-600",
+    rowBorder: "border-l-sky-600"
+  },
+  "Penicillins": {
+    activeBg: "bg-orange-50 dark:bg-orange-900/20",
+    activeRing: "ring-orange-100 dark:ring-orange-900/50",
+    headerText: "text-orange-700 dark:text-orange-300",
+    headerBorder: "border-orange-200 dark:border-orange-800",
+    btnSelected: "bg-orange-500 border-orange-500 text-white shadow-sm ring-1 ring-orange-100 dark:ring-orange-900",
+    btnHover: "hover:border-orange-500 hover:text-orange-600 dark:hover:text-orange-400 dark:hover:border-orange-400",
+    pulse: "bg-orange-500",
+    rowBorder: "border-l-orange-500"
+  },
+  "Cephalosporins": {
+    activeBg: "bg-emerald-50 dark:bg-emerald-900/20",
+    activeRing: "ring-emerald-100 dark:ring-emerald-900/50",
+    headerText: "text-emerald-700 dark:text-emerald-300",
+    headerBorder: "border-emerald-200 dark:border-emerald-800",
+    btnSelected: "bg-emerald-600 border-emerald-600 text-white shadow-sm ring-1 ring-emerald-100 dark:ring-emerald-900",
+    btnHover: "hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 dark:hover:border-emerald-400",
+    pulse: "bg-emerald-600",
+    rowBorder: "border-l-emerald-600"
+  },
+  "Hypnotics": {
+    activeBg: "bg-indigo-50 dark:bg-indigo-900/20",
+    activeRing: "ring-indigo-100 dark:ring-indigo-900/50",
+    headerText: "text-indigo-700 dark:text-indigo-300",
+    headerBorder: "border-indigo-200 dark:border-indigo-800",
+    btnSelected: "bg-indigo-600 border-indigo-600 text-white shadow-sm ring-1 ring-indigo-100 dark:ring-indigo-900",
+    btnHover: "hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 dark:hover:border-indigo-400",
+    pulse: "bg-indigo-600",
+    rowBorder: "border-l-indigo-600"
+  },
+  "Local Anaesthetics": {
+    activeBg: "bg-cyan-50 dark:bg-cyan-900/20",
+    activeRing: "ring-cyan-100 dark:ring-cyan-900/50",
+    headerText: "text-cyan-700 dark:text-cyan-300",
+    headerBorder: "border-cyan-200 dark:border-cyan-800",
+    btnSelected: "bg-cyan-600 border-cyan-600 text-white shadow-sm ring-1 ring-cyan-100 dark:ring-cyan-900",
+    btnHover: "hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 dark:hover:border-cyan-400",
+    pulse: "bg-cyan-600",
+    rowBorder: "border-l-cyan-600"
+  },
+  "Opioids": {
+    activeBg: "bg-rose-50 dark:bg-rose-900/20",
+    activeRing: "ring-rose-100 dark:ring-rose-900/50",
+    headerText: "text-rose-700 dark:text-rose-300",
+    headerBorder: "border-rose-200 dark:border-rose-800",
+    btnSelected: "bg-rose-600 border-rose-600 text-white shadow-sm ring-1 ring-rose-100 dark:ring-rose-900",
+    btnHover: "hover:border-rose-500 hover:text-rose-600 dark:hover:text-rose-400 dark:hover:border-rose-400",
+    pulse: "bg-rose-600",
+    rowBorder: "border-l-rose-600"
+  },
+  "Antiseptics": {
+    activeBg: "bg-teal-50 dark:bg-teal-900/20",
+    activeRing: "ring-teal-100 dark:ring-teal-900/50",
+    headerText: "text-teal-700 dark:text-teal-300",
+    headerBorder: "border-teal-200 dark:border-teal-800",
+    btnSelected: "bg-teal-600 border-teal-600 text-white shadow-sm ring-1 ring-teal-100 dark:ring-teal-900",
+    btnHover: "hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 dark:hover:border-teal-400",
+    pulse: "bg-teal-600",
+    rowBorder: "border-l-teal-600"
+  },
+  "Others": {
+    activeBg: "bg-slate-100 dark:bg-slate-800",
+    activeRing: "ring-slate-200 dark:ring-slate-700",
+    headerText: "text-slate-700 dark:text-slate-300",
+    headerBorder: "border-slate-300 dark:border-slate-700",
+    btnSelected: "bg-slate-600 border-slate-600 text-white shadow-sm ring-1 ring-slate-200 dark:ring-slate-500",
+    btnHover: "hover:border-slate-500 hover:text-slate-700 dark:hover:text-slate-300 dark:hover:border-slate-500",
+    pulse: "bg-slate-600",
+    rowBorder: "border-l-slate-600"
+  }
+};
+
+const DEFAULT_THEME = {
+    activeBg: "bg-purple-50/80 dark:bg-purple-900/20",
+    activeRing: "ring-purple-100 dark:ring-purple-900/50",
+    headerText: "text-[#8055f1] dark:text-purple-300",
+    headerBorder: "border-purple-200 dark:border-purple-800",
+    btnSelected: "bg-[#8055f1] border-[#8055f1] text-white",
+    btnHover: "hover:border-[#8055f1] hover:text-[#8055f1] dark:hover:text-purple-300",
+    pulse: "bg-[#8055f1]",
+    rowBorder: "border-l-[#8055f1]"
+};
+
 const TestingLogForm: React.FC<TestingLogFormProps> = ({ 
   formData, 
   setFormData, 
@@ -27,6 +122,17 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   symptomOptions, 
   interventionOptions 
 }) => {
+
+  // Create a map of Drug -> Category for quick lookup
+  const drugToCategoryMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    Object.entries(drugCategories).forEach(([cat, drugs]) => {
+      (drugs as string[]).forEach(d => {
+        map[d] = cat;
+      });
+    });
+    return map;
+  }, [drugCategories]);
 
   const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Prevent minus sign and 'e' which allows exponential notation
@@ -238,12 +344,14 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     const hasActiveSelection = (drugs as string[]).some(drug => 
                         formData.testPanel.some(r => r.drugName === drug && !r.id)
                     );
+                    
+                    const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
 
                     return (
-                    <div key={category} className={`space-y-2 rounded-xl p-3 transition-colors duration-300 ${hasActiveSelection ? 'bg-purple-50/80 dark:bg-purple-900/20 ring-1 ring-purple-100 dark:ring-purple-900/50' : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
-                        <h4 className={`text-xs font-bold uppercase tracking-wide border-b border-dashed pb-1 mb-2 flex justify-between items-center ${hasActiveSelection ? 'text-[#8055f1] border-purple-200 dark:text-purple-300 dark:border-purple-800' : 'text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800'}`}>
+                    <div key={category} className={`space-y-2 rounded-xl p-3 transition-colors duration-300 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
+                        <h4 className={`text-xs font-bold uppercase tracking-wide border-b border-dashed pb-1 mb-2 flex justify-between items-center ${hasActiveSelection ? `${theme.headerText} ${theme.headerBorder}` : 'text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800'}`}>
                             {category}
-                            {hasActiveSelection && <span className="flex h-2 w-2 rounded-full bg-[#8055f1] animate-pulse"></span>}
+                            {hasActiveSelection && <span className={`flex h-2 w-2 rounded-full ${theme.pulse} animate-pulse`}></span>}
                         </h4>
                         <div className="flex flex-wrap gap-2">
                             {(drugs as string[]).map(drug => {
@@ -255,8 +363,8 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                     onClick={() => toggleDrug(drug)}
                                     className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-200 flex items-center gap-1.5 text-left ${
                                     isSelected 
-                                    ? 'bg-[#8055f1] text-white border-[#8055f1] shadow-sm ring-1 ring-purple-100 font-medium' 
-                                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#8055f1] dark:hover:border-[#8055f1] hover:text-[#8055f1] dark:hover:text-purple-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                                    ? theme.btnSelected
+                                    : `bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 ${theme.btnHover}`
                                     }`}
                                 >
                                     {isSelected && <Check className="w-3 h-3 shrink-0" />}
@@ -269,7 +377,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                             {category === 'Others' && (
                                 <button
                                     onClick={addCustomDrug}
-                                    className="text-xs px-2.5 py-1.5 rounded border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:border-[#8055f1] hover:text-[#8055f1] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 flex items-center gap-1.5 font-medium"
+                                    className={`text-xs px-2.5 py-1.5 rounded border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
                                 >
                                     <Plus className="w-3 h-3 shrink-0" />
                                     Other
@@ -293,10 +401,16 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                  </div>
 
                  <div className="space-y-3">
-                   {formData.testPanel.map((row, index) => (
+                   {formData.testPanel.map((row, index) => {
+                      // Determine row border color based on category
+                      const category = drugToCategoryMap[row.drugName] || 'Others';
+                      const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
+                      const borderClass = row.drugName === 'Other' ? DEFAULT_THEME.rowBorder : theme.rowBorder;
+
+                      return (
                       <div 
                         key={row.id || row.drugName} 
-                        className="grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] border-l-[#8055f1] shadow-sm rounded-r-md group animate-enter"
+                        className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-r-md group animate-enter`}
                       >
                          {/* Name Column (Full width on mobile) */}
                          <div className="col-span-2 md:col-span-1 flex items-center gap-2">
@@ -309,7 +423,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                     autoFocus
                                 />
                             ) : (
-                                <span className="font-medium text-sm text-[#441170] dark:text-purple-300 flex-1">
+                                <span className="font-medium text-sm text-slate-700 dark:text-slate-200 flex-1">
                                     {row.drugName}
                                 </span>
                             )}
@@ -345,7 +459,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                             </div>
                          ))}
                       </div>
-                   ))}
+                   )})}
                  </div>
               </div>
             ) : (
