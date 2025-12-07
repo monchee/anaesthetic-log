@@ -11,6 +11,12 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
     {
+      version: "v0.3.19",
+      changes: [
+        "Internal: Minor codebase adjustments for consistency and future feature readiness."
+      ]
+    },
+    {
       version: "v0.3.18",
       changes: [
         "Feature: Added 'Select All' / 'Select None' functionality for drug categories in the Testing Log to speed up data entry.",

@@ -50,13 +50,15 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   const handleInputChange = (field: keyof LogFormData, value: any) => {
     if (field === 'reactionTime') {
         // Validation for simple top-level numbers
-        if (value && parseFloat(value) < 0) return;
+        // Check if value is not an empty string, is a valid number, and is less than 0
+        if (value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) < 0) return;
     }
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleControlChange = (field: string, value: string) => {
-    if (value && parseFloat(value) < 0) return;
+    // Check if value is not an empty string, is a valid number, and is less than 0
+    if (value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) < 0) return;
     setFormData(prev => ({
         ...prev, 
         controls: {
@@ -146,7 +148,8 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   const updateDrugData = (index: number, field: string, value: string) => {
     // Validation for grid numbers
     if (['sptWheal', 'idt100', 'idt10', 'idtNeat'].includes(field)) {
-        if (value && parseFloat(value) < 0) return;
+        // Check if value is not an empty string, is a valid number, and is less than 0
+        if (value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) < 0) return;
     }
 
     setFormData(prev => ({
@@ -208,7 +211,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 </Label>
                 <Input 
                     type="date" 
-                    className="max-w-[200px]"
+                    className="max-w-[200px] font-mono"
                     value={formData.visitDate}
                     onChange={(e) => handleInputChange('visitDate', e.target.value)}
                 />
@@ -229,7 +232,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
           <CardContent className="pt-4 space-y-6">
             
             {/* Controls - Compact Single Line */}
-            <div className="bg-slate-50 dark:bg-slate-900 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-x-6 gap-y-2">
+            <div className="bg-slate-50 dark:bg-slate-900 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 flex flex-wrap items-baseline gap-x-6 gap-y-2">
               <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mr-2">Reference Controls (mm):</span>
               
               <div className="flex items-center gap-2">
@@ -239,7 +242,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     min="0"
                     onKeyDown={preventNegativeInput}
                     placeholder="0" 
-                    className="bg-white h-8 w-16 text-center text-xs"
+                    className="bg-white h-8 w-16 text-center text-xs font-mono"
                     value={formData.controls.histamineSpt}
                     onChange={(e) => handleControlChange('histamineSpt', e.target.value)}
                   />
@@ -252,7 +255,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     min="0"
                     onKeyDown={preventNegativeInput}
                     placeholder="0" 
-                    className="bg-white h-8 w-16 text-center text-xs"
+                    className="bg-white h-8 w-16 text-center text-xs font-mono"
                     value={formData.controls.salineSpt}
                     onChange={(e) => handleControlChange('salineSpt', e.target.value)}
                   />
@@ -265,7 +268,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     min="0"
                     onKeyDown={preventNegativeInput}
                     placeholder="0" 
-                    className="bg-white h-8 w-16 text-center text-xs"
+                    className="bg-white h-8 w-16 text-center text-xs font-mono"
                     value={formData.controls.salineIdt}
                     onChange={(e) => handleControlChange('salineIdt', e.target.value)}
                   />
@@ -367,7 +370,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                          <div className="col-span-2 md:col-span-1 flex items-center gap-2">
                             {row.drugName === 'Other' ? (
                                 <Input 
-                                    className="h-10 md:h-9 text-sm flex-1 min-w-0 font-medium" 
+                                    className="h-10 md:h-9 text-sm flex-1 min-w-0 font-medium font-mono"
                                     placeholder="Specify name..."
                                     value={row.customName || ''}
                                     onChange={(e) => updateDrugData(index, 'customName', e.target.value)}
@@ -400,7 +403,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                     type="number" 
                                     min="0"
                                     onKeyDown={preventNegativeInput}
-                                    className="h-10 md:h-9 pr-8 text-sm text-center font-medium md:font-normal"
+                                    className="h-10 md:h-9 pr-8 text-sm text-center font-medium md:font-normal font-mono"
                                     placeholder="0"
                                     value={(row as any)[field] || ''}
                                     onChange={(e) => updateDrugData(index, field, e.target.value)}
@@ -494,7 +497,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                         type="number" 
                         min="0"
                         onKeyDown={preventNegativeInput}
-                        className="bg-white border-red-200 focus-visible:ring-red-500"
+                        className="bg-white border-red-200 focus-visible:ring-red-500 font-mono"
                         value={formData.reactionTime}
                         onChange={(e) => handleInputChange('reactionTime', e.target.value)}
                       />
