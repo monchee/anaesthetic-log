@@ -93,37 +93,43 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
 
         {isOpen && (
           <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm animate-in fade-in zoom-in-95 duration-100 dark:bg-slate-900 dark:border-slate-800 dark:shadow-xl">
-            <div className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
-                <div className="px-2 py-1.5">
-                    <div className="relative">
-                        <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
-                        <input
-                            type="text"
-                            className="w-full rounded-md border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-2 text-xs focus:outline-none focus:ring-1 focus:ring-slate-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:focus:ring-slate-500"
-                            placeholder="Filter by ID or Name..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            autoFocus
-                        />
+            {/* Sticky Search Header */}
+            <div className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 px-2 py-1.5">
+                <div className="relative">
+                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+                    <input
+                        type="text"
+                        className="w-full rounded-md border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-2 text-xs focus:outline-none focus:ring-1 focus:ring-slate-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:focus:ring-slate-500"
+                        placeholder="Filter by ID or Name..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        autoFocus
+                    />
+                </div>
+            </div>
+
+            {/* Manual Entry Option - Static List Item */}
+            <div 
+                className="cursor-pointer select-none py-2 px-3 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300 transition-colors"
+                onClick={handleManualEntry}
+            >
+                <div className="bg-slate-100 dark:bg-slate-800 p-1.5 rounded-md text-slate-500 dark:text-slate-400">
+                    <UserPlus className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col">
+                    <span className="font-medium">New Patient (Manual Entry)</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-500">Create a record without database ID</span>
+                </div>
+                {isManualSelection && (
+                    <div className="ml-auto text-[#8055f1] dark:text-[#a686f5]">
+                        <Check className="h-4 w-4" />
                     </div>
-                </div>
-                {/* Manual Entry Option */}
-                <div 
-                    className="px-2 py-1.5 border-t border-slate-100 dark:border-slate-800"
-                >
-                    <button
-                        className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold text-white bg-[#8055f1] hover:bg-[#6b42d1] rounded transition-colors"
-                        onClick={handleManualEntry}
-                    >
-                        <UserPlus className="w-3.5 h-3.5" />
-                        New Patient (Manual Entry)
-                    </button>
-                </div>
+                )}
             </div>
             
             {filteredPatients.length === 0 ? (
                 <div className="px-2 py-4 text-center text-xs text-slate-500 dark:text-slate-400">
-                    No matching records. Use manual entry above.
+                    No matching records found.
                 </div>
             ) : (
                 filteredPatients.map((patient) => (

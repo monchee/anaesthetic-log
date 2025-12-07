@@ -96,10 +96,10 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                             variant="ghost" 
                             size="sm" 
                             onClick={toggleTheme} 
-                            className="h-8 w-8 px-0 ml-1 rounded-lg bg-white/5 hover:bg-white/20 text-yellow-300 hover:text-yellow-200 border border-white/5 shadow-inner" 
+                            className="h-10 w-10 px-0 ml-1 rounded-lg bg-white/5 hover:bg-white/20 text-yellow-300 hover:text-yellow-200 border border-white/5 shadow-inner" 
                             title="Toggle Dark Mode"
                         >
-                            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5 text-purple-100" />}
+                            {theme === 'dark' ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6 text-purple-100" />}
                         </Button>
                     </div>
                 </div>
