@@ -19,6 +19,7 @@ interface ScreenLayoutProps {
     className?: string;
     contentClassName?: string;
     showDisclaimer?: boolean;
+    isCustomData?: boolean;
     onDismissDisclaimer?: () => void;
     onUploadPatients?: (patients: Patient[]) => void;
 }
@@ -35,6 +36,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     className,
     contentClassName,
     showDisclaimer,
+    isCustomData = false,
     onDismissDisclaimer,
     onUploadPatients
 }) => {
@@ -111,7 +113,8 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 </div>
 
                 {/* Disclaimer Banner - Attached to Header */}
-                {showDisclaimer && onDismissDisclaimer && (
+                {/* Only show if enabled AND user has not uploaded their own data */}
+                {showDisclaimer && !isCustomData && onDismissDisclaimer && (
                     <DisclaimerBanner onClose={onDismissDisclaimer} />
                 )}
             </header>

@@ -81,7 +81,8 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
     const gradeCounts = { I: 0, II: 0, III: 0, IV: 0, Ungraded: 0 };
 
     // Helper to normalize and count agent usage
-    const trackAgent = (agentName: string, isChallenge = false) => {
+    // Modified to return the key only, counting logic moved to loop
+    const normalizeAgent = (agentName: string) => {
         const normalized = agentName.trim();
         if (!normalized) return null;
         
@@ -89,9 +90,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         if (Object.prototype.hasOwnProperty.call(drugStats, normalized)) {
             key = normalized;
         }
-
-        drugStats[key].total += 1;
-        if (isChallenge) drugStats[key].challenge += 1;
         return key;
     };
 
@@ -112,9 +110,26 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
       else if (grade.includes("I ") || grade === "Grade I") gradeCounts.I++;
       else gradeCounts.Ungraded++;
 
-      p.history.suspectedAgents?.forEach(agent => trackAgent(agent));
-      p.history.preInductionDrugs?.forEach(str => trackAgent(str.split('@')[0].trim()));
-      p.history.postInductionDrugs?.forEach(str => trackAgent(str.split('@')[0].trim()));
+      // Use Set to track unique agents for THIS patient to avoid double counting
+      const uniqueAgentsForPatient = new Set<string>();
+
+      p.history.suspectedAgents?.forEach(agent => {
+          const key = normalizeAgent(agent);
+          if (key) uniqueAgentsForPatient.add(key);
+      });
+      p.history.preInductionDrugs?.forEach(str => {
+          const key = normalizeAgent(str.split('@')[0].trim());
+          if (key) uniqueAgentsForPatient.add(key);
+      });
+      p.history.postInductionDrugs?.forEach(str => {
+          const key = normalizeAgent(str.split('@')[0].trim());
+          if (key) uniqueAgentsForPatient.add(key);
+      });
+
+      // Increment totals based on unique set
+      uniqueAgentsForPatient.forEach(key => {
+          drugStats[key].total += 1;
+      });
 
       p.history.symptoms?.forEach(sym => {
          const normalized = sym.trim();
@@ -139,15 +154,21 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
         if (log.proceedToChallenge && log.outcome === 'UNSUCCESS') {
              const drugName = log.challengeDrug === 'Other' ? (log.challengeDrugCustom || 'Other') : log.challengeDrug;
-             trackAgent(drugName, true);
+             const key = normalizeAgent(drugName);
+             if (key) {
+                 drugStats[key].total += 1;
+                 drugStats[key].challenge += 1;
+             }
         }
 
         log.testPanel.forEach(test => {
             const drugName = test.drugName === 'Other' ? (test.customName || 'Other') : test.drugName;
             
             if (isSkinTestPositive(test)) {
-                const key = trackAgent(drugName);
+                const key = normalizeAgent(drugName);
                 if (key) {
+                    // Note: Here we might double count if same drug tested multiple times in same patient log, but panel usually unique
+                    drugStats[key].total += 1; 
                     if (test.sptWheal && parseInt(test.sptWheal) >= 3) drugStats[key].spt++;
                     if (test.idt100 && parseInt(test.idt100) >= 3) drugStats[key].idt100++;
                     if (test.idt10 && parseInt(test.idt10) >= 3) drugStats[key].idt10++;
@@ -301,7 +322,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
   };
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="space-y-8">
         
         {/* Modern Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -311,7 +332,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                     <Users className="w-24 h-24 text-[#8055f1]" />
                 </div>
-                <CardContent className="p-6">
+                <CardContent className="pb-6 px-6 pt-6">
                     <div className="flex items-center gap-4 mb-4">
                         <div className="p-3 bg-[#f0ebff] dark:bg-[#441170]/30 rounded-xl text-[#8055f1] dark:text-purple-300 shadow-inner group-hover:scale-110 transition-transform duration-300">
                             <Users className="w-6 h-6" />
@@ -334,7 +355,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                     <AlertTriangle className="w-24 h-24 text-red-500" />
                 </div>
-                <CardContent className="p-6">
+                <CardContent className="pb-6 px-6 pt-6">
                     <div className="flex items-center gap-4 mb-4">
                          <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl text-red-600 dark:text-red-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
                             <AlertTriangle className="w-6 h-6" />
@@ -369,7 +390,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                     <Ban className="w-24 h-24 text-amber-500" />
                 </div>
-                <CardContent className="p-6">
+                <CardContent className="pb-6 px-6 pt-6">
                      <div className="flex items-center gap-4 mb-4">
                          <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl text-amber-600 dark:text-amber-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
                             <Ban className="w-6 h-6" />
@@ -404,7 +425,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                     <Activity className="w-24 h-24 text-blue-500" />
                 </div>
-                <CardContent className="p-6">
+                <CardContent className="pb-6 px-6 pt-6">
                      <div className="flex items-center gap-4 mb-4">
                          <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
                             <Activity className="w-6 h-6" />
@@ -747,7 +768,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
             {/* Upload Status Banner */}
             {uploadStatus && (
-                <div className={`p-4 mx-6 mt-4 rounded-md flex items-start gap-3 text-sm animate-in fade-in slide-in-from-top-2 ${
+                <div className={`p-4 mx-6 mt-4 mb-2 rounded-md flex items-start gap-3 text-sm animate-in fade-in slide-in-from-top-2 ${
                     uploadStatus.type === 'error' 
                     ? 'bg-red-50 text-red-900 border border-red-200 dark:bg-red-900/30 dark:text-red-200 dark:border-red-900/50' 
                     : 'bg-green-50 text-green-900 border border-green-200 dark:bg-green-900/30 dark:text-green-200 dark:border-green-900/50'

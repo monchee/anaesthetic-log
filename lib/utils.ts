@@ -1,8 +1,8 @@
 import { DrugTestRow, LogFormData, Patient } from '../types';
+import { FLAT_DRUG_OPTIONS } from './constants';
 
 export const formatDate = (dateStr: string): string => {
   if (!dateStr) return '';
-  // Check if it matches YYYY-MM-DD patterns usually found in ISO strings
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) return dateStr;
   
@@ -13,9 +13,6 @@ export const formatDate = (dateStr: string): string => {
   return `${day}-${month}-${year}`;
 };
 
-/**
- * Determines the UI badge variant based on the grade string.
- */
 export const getGradeVariant = (grade: string): "grade4" | "grade3" | "grade2" | "grade1" | "ungraded" => {
     if (!grade) return "ungraded";
     const g = grade.toUpperCase();
@@ -26,9 +23,6 @@ export const getGradeVariant = (grade: string): "grade4" | "grade3" | "grade2" |
     return "ungraded";
 };
 
-/**
- * Checks if a skin test row contains any positive result (>= 3mm).
- */
 export const isSkinTestPositive = (row: DrugTestRow): boolean => {
     const spt = parseInt(row.sptWheal || '0');
     const idt100 = parseInt(row.idt100 || '0');
@@ -39,23 +33,15 @@ export const isSkinTestPositive = (row: DrugTestRow): boolean => {
 
 export const getPositiveResults = (record: LogFormData) => {
   const drugs: string[] = [];
-  
-  // Resolve actual challenge name
   const challengeName = record.challengeDrug === 'Other' ? (record.challengeDrugCustom || 'Other') : record.challengeDrug;
 
-  // 1. Challenge Positive
   if (record.proceedToChallenge && record.outcome === 'UNSUCCESS') {
       drugs.push(challengeName);
   }
 
-  // 2. Skin Test Positive (Arbitrary >=3mm)
   (record.testPanel || []).forEach((t) => {
       const drugName = t.drugName === 'Other' ? (t.customName || 'Other') : t.drugName;
-      
-      // If challenged drug was tested in panel, rely on challenge outcome logic above if it was the specific target
-      // But typically we list it if skin test positive regardless unless cleared by challenge.
       if (record.proceedToChallenge && drugName === challengeName) return;
-
       if (isSkinTestPositive(t)) {
           drugs.push(drugName);
       }
@@ -66,20 +52,15 @@ export const getPositiveResults = (record: LogFormData) => {
 
 export const getNegativeResults = (record: LogFormData) => {
   const drugs: string[] = [];
-
-  // Resolve actual challenge name
   const challengeName = record.challengeDrug === 'Other' ? (record.challengeDrugCustom || 'Other') : record.challengeDrug;
 
-  // 1. Challenge Negative
   if (record.proceedToChallenge && record.outcome === 'SUCCESS') {
       drugs.push(challengeName);
   }
 
-  // 2. Skin Test Negative (Arbitrary <3mm)
   (record.testPanel || []).forEach((t) => {
       const drugName = t.drugName === 'Other' ? (t.customName || 'Other') : t.drugName;
       if (record.proceedToChallenge && drugName === challengeName) return;
-
       if (!isSkinTestPositive(t)) {
           drugs.push(drugName);
       }
@@ -120,17 +101,140 @@ export interface CsvParseResult {
 }
 
 /**
- * Normalizes a time string to HH:MM format for string comparison.
- * e.g., "9:05" -> "09:05", "13:30" -> "13:30"
+ * Robustly extracts HH:MM from various string formats.
+ * Handles: "2024-04-24 12:00:50", "12:00", "1200", "12.00"
  */
 const normalizeTime = (timeStr: string): string => {
     if (!timeStr) return "";
-    const parts = timeStr.trim().split(':');
-    if (parts.length < 2) return timeStr; // Return original if parsing fails
     
-    const h = parts[0].padStart(2, '0');
-    const m = parts[1].padStart(2, '0');
-    return `${h}:${m}`;
+    // Clean up "Drug @ Time" format if passed accidentally
+    const cleanStr = timeStr.includes('@') ? timeStr.split('@')[1] : timeStr;
+    
+    // Look for HH:MM pattern (colons or dots) inside the string
+    const match = cleanStr.match(/(?:^|\s|T)(\d{1,2})[:.](\d{2})(?::(\d{2}))?/);
+    if (match) {
+        const h = match[1].padStart(2, '0');
+        const m = match[2].padStart(2, '0');
+        return `${h}:${m}`;
+    }
+
+    // Fallback: Check for 4 digit time without separator (e.g. 0800) if strict string
+    const strictFourDigit = cleanStr.trim().match(/^(\d{2})(\d{2})$/);
+    if (strictFourDigit) {
+         const h = strictFourDigit[1];
+         const m = strictFourDigit[2];
+         // Basic validity check
+         if (parseInt(h) < 24 && parseInt(m) < 60) {
+             return `${h}:${m}`;
+         }
+    }
+
+    return "";
+};
+
+// Helper to compare times "HH:MM"
+const isTimeBefore = (t1: string, t2: string): boolean => {
+    if (!t1 || !t2) return false;
+    // Simple string comparison works for HH:MM format 24h
+    return t1 < t2;
+};
+
+interface ExtractedDrug {
+    name: string;
+    time?: string;
+}
+
+/**
+ * Extracts potential drug names from a text block and looks for associated times.
+ */
+const extractDrugsWithContext = (text: string): ExtractedDrug[] => {
+    if (!text) return [];
+    // Replace newlines with spaces to ensure regex works across lines
+    const cleanText = text.replace(/\n/g, ' '); 
+    const lowerText = cleanText.toLowerCase();
+    const found: ExtractedDrug[] = [];
+    
+    const aliases: Record<string, string> = {
+        'sux': 'Suxamethonium',
+        'roc': 'Rocuronium',
+        'vec': 'Vecuronium',
+        'cis': 'Cis-atracurium',
+        'atr': 'Atracurium',
+        'prop': 'Propofol',
+        'midaz': 'Midazolam',
+        'fent': 'Fentanyl',
+        'remi': 'Remifentanil',
+        'cef': 'Cefazolin',
+        'ceph': 'Cefazolin',
+        'co-amoxiclav': 'Augmentin',
+        'augmentin': 'Augmentin',
+        'tazocin': 'Piperacillin/Tazobactam',
+        'vanc': 'Vancomycin',
+        'gent': 'Gentamicin',
+        'chlorhex': 'Chlorhexidine',
+        'blue': 'Patent Blue',
+        'sugammadex': 'Sugammadex',
+        'bridion': 'Sugammadex'
+    };
+
+    const checkAndAdd = (term: string, canonicalName: string) => {
+        // Regex to find the term as a whole word
+        const drugRegex = new RegExp(`\\b${term}\\b`, 'gi');
+        let match;
+        
+        while ((match = drugRegex.exec(cleanText)) !== null) {
+            // Found a drug match. 
+            // Look for time in wider proximity (prev 15 chars, next 30 chars) to catch "08:00 Drug" or "Drug 08:00"
+            const startSearch = Math.max(0, match.index - 20);
+            const endSearch = Math.min(cleanText.length, match.index + term.length + 30);
+            const snippet = cleanText.substring(startSearch, endSearch);
+            
+            // Regex for time: HH:MM or HH.MM or @ HHMM or just HHMM
+            const timeRegex = /(?:@|at)?\s*(\b(?:[01]?\d|2[0-3])[:.][0-5]\d\b|\b(?:0\d|1\d|2[0-3])[0-5]\d\b)/i;
+            const timeMatch = snippet.match(timeRegex);
+            
+            let time = undefined;
+            if (timeMatch) {
+                let rawTime = timeMatch[1];
+                // Normalize 1400 to 14:00
+                if (/^\d{4}$/.test(rawTime)) {
+                    rawTime = `${rawTime.substring(0,2)}:${rawTime.substring(2)}`;
+                }
+                time = rawTime.replace('.', ':');
+            }
+
+            // Avoid duplicates with same time
+            const existing = found.find(f => f.name === canonicalName && f.time === time);
+            if (!existing) {
+                found.push({ name: canonicalName, time });
+            }
+        }
+    };
+
+    // Check standard list
+    FLAT_DRUG_OPTIONS.forEach(drug => {
+        if (lowerText.includes(drug.toLowerCase())) {
+            checkAndAdd(drug, drug);
+        }
+    });
+
+    // Check aliases
+    Object.entries(aliases).forEach(([alias, canonical]) => {
+        if (lowerText.includes(alias.toLowerCase())) {
+            checkAndAdd(alias, canonical);
+        }
+    });
+
+    // Deduplicate by preference (if same drug found with and without time, prefer with time)
+    const uniqueMap = new Map<string, ExtractedDrug>();
+    found.forEach(item => {
+        const existing = uniqueMap.get(item.name);
+        if (!existing || (!existing.time && item.time)) {
+            uniqueMap.set(item.name, item);
+        }
+    });
+
+    return Array.from(uniqueMap.values());
 };
 
 export const parseRedcapCSV = (csvText: string): CsvParseResult => {
@@ -142,210 +246,180 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   const headers = splitCSVLine(lines[0]);
   const data: Patient[] = [];
 
-  // Helper to find index safely by checking multiple possible header names (Label or Raw)
   const getIndex = (candidates: string[]) => {
       for (const c of candidates) {
-          // Exact match (trim whitespace)
           let idx = headers.findIndex(h => h.trim() === c.trim());
           if (idx !== -1) return idx;
-          
-          // Case-insensitive match
           idx = headers.findIndex(h => h.trim().toLowerCase() === c.trim().toLowerCase());
           if (idx !== -1) return idx;
-          
-          // Partial match (Label headers often contain extra info)
-          // Only if candidate is reasonably specific (>3 chars) to avoid false positives
-          if (c.length > 3) {
-             idx = headers.findIndex(h => h.toLowerCase().includes(c.toLowerCase()));
-             if (idx !== -1) return idx;
-          }
       }
       return -1;
   };
 
-  // Map Critical Columns (Label Name, Raw Name)
-  const idxId = getIndex(["Record ID", "record_id"]);
+  const idxId = getIndex(["record_id", "Record ID"]);
   
   if (idxId === -1) {
       return { 
           success: false, 
           data: [], 
-          error: "Missing critical column: 'Record ID' or 'record_id'.",
+          error: "Missing critical column: 'record_id' or 'Record ID'.",
           details: ["The file must be a REDCap export containing the Record ID."] 
       };
   }
 
-  const idxFirst = getIndex(["First Name", "first_name"]);
-  const idxLast = getIndex(["Last Name", "last_name"]);
-  const idxDob = getIndex(["Date of birth", "dob"]);
-  const idxGender = getIndex(["Gender", "sex"]);
-  const idxCity = getIndex(["City", "city"]);
-  const idxHospital = getIndex(["Hospital where reaction occurred", "hospital"]);
-  const idxDate = getIndex(["Date of Reaction", "datereaction"]);
-  const idxInduction = getIndex(["Time of Induction", "time_induction"]);
-  const idxReactionTime = getIndex(["Time Reaction First Noted", "time_reaction"]);
-  const idxGrade = getIndex(["Severity of Allergic Reaction", "severity_of_allergic_react"]);
-  const idxSummary = getIndex(["Write a brief summary", "write_a_brief_summary_of_t", "reaction_summary"]);
-  const idxProcedure = getIndex(["Procedure:", "procedure"]);
-  const idxAnaesthetist = getIndex(["Name of Person Completing Form", "namecompleter"]);
-  const idxAnaesthetist2 = getIndex(["Anaesthetic Consultant", "referring_doc"]);
+  const idxFirst = getIndex(["first_name", "First Name"]);
+  const idxLast = getIndex(["last_name", "Last Name"]);
+  const idxDob = getIndex(["dob", "Date of birth"]);
+  const idxGender = getIndex(["sex", "Gender"]);
+  const idxCity = getIndex(["city", "City"]);
+  const idxHospital = getIndex(["hospital", "Hospital where reaction occurred"]);
+  const idxDate = getIndex(["datereaction", "Date of Reaction"]);
+  const idxInduction = getIndex(["time_induction", "Time of Induction"]);
+  const idxReactionTime = getIndex(["time_reaction", "Time Reaction First Noted"]);
+  const idxGrade = getIndex(["severity_of_allergic_react", "Severity of Allergic Reaction"]);
+  const idxSummary = getIndex(["write_a_brief_summary_of_t", "reaction_summary", "Write a brief summary"]);
+  const idxProcedure = getIndex(["procedure", "Procedure:"]);
+  const idxAnaesthetist = getIndex(["namecompleter", "Name of Person Completing Form"]);
+  const idxOutcome = getIndex(["outcome", "Outcome"]);
 
-  // Identify columns for suspected agents (columns with "choice=")
-  // FIX: Exclude acknowledgment/condition fields
-  const excludedPhrases = ["acknowledge", "relevant conditions", "tick if patient taking", "documents to chase", "follow up", "checklist", "please acknowledge"];
-  const agentCols = headers.map((h, i) => ({ h, i })).filter(col => 
-      col.h.includes("(choice=") && 
-      !excludedPhrases.some(phrase => col.h.toLowerCase().includes(phrase))
-  );
+  const symptomMap: Record<string, string> = {
+      'hypotension': 'Hypotension',
+      'tachycardia_100bpm_before': 'Tachycardia',
+      'bradycardia_60bpm': 'Bradycardia',
+      'cardiac_arrest': 'Cardiac Arrest',
+      'bronchospasm': 'Bronchospasm',
+      'low_oxygen_saturations': 'Desaturation',
+      'flushing_erythema': 'Flushing/Erythema',
+      'uticaria': 'Urticaria',
+      'angioedema': 'Angioedema',
+      'rash': 'Rash'
+  };
 
-  // Map Agent Names to their Time Administration columns
-  // We scan headers for patterns like "Midazolam - Time of Administration"
-  const timeColumnMap: Record<string, number> = {};
-  headers.forEach((h, i) => {
-      const lowerH = h.toLowerCase();
-      if (lowerH.includes("time of administration")) {
-          // Attempt to extract drug name. E.g., "Midazolam - Time of Administration" -> "Midazolam"
-          const parts = h.split(/[-:]/); // Split by dash or colon
-          let potentialDrugName = parts[0].trim();
-          
-          // Cleanup common suffixes if split didn't catch them or formatting varies
-          potentialDrugName = potentialDrugName.replace(/time of administration/i, "").trim();
-          
-          if (potentialDrugName) {
-              timeColumnMap[potentialDrugName.toLowerCase()] = i;
-          }
-      }
-  });
-
-  // Identify columns for symptoms
-  const symptomKeywords = ["Hypotension", "Tachycardia", "Bronchospasm", "Urticaria", "Rash", "Cardiac Arrest", "Desaturation", "Erythema", "Angioedema", "Swelling", "Wheeze"];
-  const symptomCols = headers.map((h, i) => ({ h, i })).filter(col => symptomKeywords.some(k => col.h.toLowerCase().includes(k.toLowerCase())) && !col.h.includes("Treatment"));
-
-  // Identify columns for treatment
-  const treatmentKeywords = ["Adrenaline", "Fluids", "CPR", "Steroids", "Antihistamines", "Metaraminol", "Ephedrine", "Noradrenaline", "Vasopressin"];
-  const treatmentCols = headers.map((h, i) => ({ h, i })).filter(col => treatmentKeywords.some(k => col.h.includes(k)));
-
-  let skippedRows = 0;
+  const treatmentMap: Record<string, string> = {
+      'adrenaline_given': 'Adrenaline',
+      'iv_fluids_for_resuscitatio': 'Fluids',
+      'cardiac_compressions': 'CPR',
+      'steroids1': 'Steroids',
+      'antihistamines': 'Antihistamines',
+      'bronchospasm_treatment': 'Bronchodilators'
+  };
 
   for (let i = 1; i < lines.length; i++) {
     const row = splitCSVLine(lines[i]);
-    
-    // Skip completely malformed rows
-    if (row.length <= idxId) {
-        skippedRows++;
-        continue;
-    }
+    if (row.length <= idxId) continue;
+    const id = row[idxId];
+    if (!id) continue;
 
-    // FIX: Clean Induction Time (remove date if present, e.g. "2024-05-07 13:10" -> "13:10")
-    let inductionTimeRaw = row[idxInduction] || '';
-    let inductionTimeClean = inductionTimeRaw;
-    
-    if (inductionTimeRaw.includes(' ') && inductionTimeRaw.includes(':')) {
-        const parts = inductionTimeRaw.split(' ');
-        // Assuming format YYYY-MM-DD HH:MM, take the time part. 
-        const timePart = parts.find(p => p.includes(':'));
-        if (timePart) inductionTimeClean = timePart;
-    }
+    // Apply strict normalization to these columns
+    const inductionTimeClean = normalizeTime(row[idxInduction]);
+    const reactionTimeClean = normalizeTime(row[idxReactionTime]);
 
-    const normInduction = normalizeTime(inductionTimeClean);
-    
-    // Extract Suspected Agents and Split into Pre/Post Induction
+    const symptoms: string[] = [];
+    Object.keys(symptomMap).forEach(key => {
+        const colIdx = getIndex([key]);
+        if (colIdx !== -1 && (row[colIdx] === '1' || row[colIdx]?.toLowerCase() === 'checked' || row[colIdx]?.toLowerCase() === 'yes')) {
+            symptoms.push(symptomMap[key]);
+        }
+    });
+
+    const treatment: string[] = [];
+    Object.keys(treatmentMap).forEach(key => {
+        const colIdx = getIndex([key]);
+        if (colIdx !== -1 && (row[colIdx] === '1' || row[colIdx]?.toLowerCase() === 'checked' || row[colIdx]?.toLowerCase() === 'yes')) {
+            treatment.push(treatmentMap[key]);
+        }
+    });
+
+    let grade = "Ungraded";
+    const rawGrade = row[idxGrade];
+    if (rawGrade === "1") grade = "Grade I";
+    else if (rawGrade === "2") grade = "Grade II";
+    else if (rawGrade === "3") grade = "Grade III";
+    else if (rawGrade === "4") grade = "Grade IV";
+    else if (rawGrade) grade = rawGrade;
+
+    let outcome = "Unknown";
+    if (row[idxOutcome] === "1") outcome = "Abandoned";
+    else if (row[idxOutcome] === "2") outcome = "Completed";
+    else if (row[idxOutcome]) outcome = row[idxOutcome];
+
+    // --- Extract Drugs ---
     const suspectedAgents: string[] = [];
     const preInductionDrugs: string[] = [];
     const postInductionDrugs: string[] = [];
 
-    agentCols.forEach(col => {
-        if (row[col.i] === "Checked") {
-            const match = col.h.match(/choice=(.+)\)/);
-            if (match && match[1]) {
-                const drugName = match[1];
+    // 1. Explicit columns
+    const idxOtherDrugs = getIndex(["other_drugs", "other_drugs_given"]);
+    if (idxOtherDrugs !== -1 && row[idxOtherDrugs]) {
+        const explicit = row[idxOtherDrugs];
+        if (explicit.includes('@')) {
+             const parts = explicit.split('@');
+             const dName = parts[0].trim();
+             const dTime = normalizeTime(parts[1].trim());
+             
+             if (inductionTimeClean && isTimeBefore(dTime, inductionTimeClean)) {
+                 preInductionDrugs.push(explicit);
+             } else {
+                 postInductionDrugs.push(explicit);
+             }
+             if (!suspectedAgents.includes(dName)) suspectedAgents.push(dName);
+        } else {
+             if (!suspectedAgents.includes(explicit)) suspectedAgents.push(explicit);
+        }
+    }
+
+    // 2. Scan Summary for drugs and times
+    const summaryText = row[idxSummary] || '';
+    if (summaryText) {
+        const extracted = extractDrugsWithContext(summaryText);
+        extracted.forEach(item => {
+            // Always add to suspected list (name only) for analytics
+            if (!suspectedAgents.includes(item.name)) suspectedAgents.push(item.name);
+
+            // If time found, sort into timeline
+            if (item.time) {
+                const normDrugTime = normalizeTime(item.time);
+                const formatted = `${item.name} @ ${normDrugTime}`;
                 
-                // Check if we have a time for this drug
-                const timeIdx = timeColumnMap[drugName.toLowerCase()];
-                const drugTime = timeIdx !== undefined ? row[timeIdx] : null;
-
-                if (drugTime) {
-                    const normDrugTime = normalizeTime(drugTime);
-                    // Compare normalized times to avoid "9:00" > "09:05" issues
-                    if (normInduction && normDrugTime < normInduction) {
-                         preInductionDrugs.push(`${drugName} @ ${drugTime}`);
-                    } else {
-                         // Post-induction or exact time match (e.g. at induction)
-                         postInductionDrugs.push(`${drugName} @ ${drugTime}`);
-                    }
+                // Only sort if we have a valid induction time to compare against
+                if (inductionTimeClean && isTimeBefore(normDrugTime, inductionTimeClean)) {
+                    if (!preInductionDrugs.includes(formatted)) preInductionDrugs.push(formatted);
                 } else {
-                    // No time recorded
-                    suspectedAgents.push(drugName);
+                    if (!postInductionDrugs.includes(formatted)) postInductionDrugs.push(formatted);
                 }
+            } else {
+               // No time found, do not add to timeline lists, leave in suspectedAgents
             }
-        }
-    });
-
-    // Extract Symptoms
-    const symptoms: string[] = [];
-    symptomCols.forEach(col => {
-        const val = row[col.i]?.toLowerCase();
-        // Check for "Checked" (Label), "Yes" (Label), or "1" (Raw)
-        if (val === "checked" || val === "yes" || val === "1") {
-            const keyword = symptomKeywords.find(k => col.h.toLowerCase().includes(k.toLowerCase()));
-            if (keyword) symptoms.push(keyword);
-        }
-        // Handle "Other" text fields
-        if (col.h.includes("Other") && row[col.i] && row[col.i] !== "Unchecked" && row[col.i] !== "0") {
-             symptoms.push(row[col.i]);
-        }
-    });
-
-    // Extract Treatment
-    const treatment: string[] = [];
-    treatmentCols.forEach(col => {
-         const val = row[col.i];
-         const lowerVal = val?.toLowerCase();
-         // Check for "Checked", "Yes", "1" or text content
-         if (lowerVal === "checked" || lowerVal === "yes" || lowerVal === "1" || (val && lowerVal !== "unchecked" && lowerVal !== "0" && val.length > 1)) {
-              // Use header name if it's a checkbox, otherwise use value
-              const displayVal = (lowerVal === "checked" || lowerVal === "yes" || lowerVal === "1") 
-                ? col.h.split('(')[0].trim() // Clean "Adrenaline (choice=IV)" to "Adrenaline"
-                : val;
-              treatment.push(displayVal);
-         }
-    });
-
-    // Normalize Grade from Raw Code (1-4) to Label if needed
-    let grade = row[idxGrade] ? row[idxGrade].split('-')[0].trim() : "Ungraded";
-    if (grade === "1") grade = "Grade I";
-    if (grade === "2") grade = "Grade II";
-    if (grade === "3") grade = "Grade III";
-    if (grade === "4") grade = "Grade IV";
+        });
+    }
 
     const patient: Patient = {
-      id: row[idxId] || `CSV-${i}`,
+      id: id,
       firstName: row[idxFirst] || '',
       lastName: row[idxLast] || '',
       dob: row[idxDob] || '',
-      mrn: row[idxId] || '',
-      gender: row[idxGender] || 'Unknown',
+      mrn: id,
+      gender: row[idxGender] === '0' ? 'Female' : row[idxGender] === '1' ? 'Male' : 'Other',
       city: row[idxCity] || '',
       history: {
         date: row[idxDate] || '',
         grade: grade,
-        reactionSummary: row[idxSummary] || '',
-        symptoms: [...new Set(symptoms)],
-        treatment: [...new Set(treatment)],
-        suspectedAgents: [...new Set(suspectedAgents)],
-        preInductionDrugs: [...new Set(preInductionDrugs)],
-        postInductionDrugs: [...new Set(postInductionDrugs)],
+        reactionSummary: summaryText,
+        symptoms: symptoms,
+        treatment: treatment,
+        suspectedAgents: suspectedAgents,
+        preInductionDrugs: preInductionDrugs, 
+        postInductionDrugs: postInductionDrugs,
         procedure: row[idxProcedure] || 'Unknown',
-        anaesthetist: row[idxAnaesthetist] || row[idxAnaesthetist2] || 'Unknown',
+        anaesthetist: row[idxAnaesthetist] || 'Unknown',
         hospital: row[idxHospital] || '',
-        inductionTime: row[idxInduction] || '', // Keep original detailed string for display if needed
-        reactionTime: row[idxReactionTime] || ''
+        inductionTime: inductionTimeClean, // Use the cleaned time
+        reactionTime: reactionTimeClean,   // Use the cleaned time
+        procedureOutcome: outcome
       }
     };
     
-    if (patient.id) {
-        data.push(patient);
-    }
+    data.push(patient);
   }
 
   if (data.length === 0) {

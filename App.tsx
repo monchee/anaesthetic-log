@@ -53,6 +53,7 @@ function AnaestheticLogApp() {
   // State for Patients Database (Initialized with Mock, can be updated via CSV)
   const [patients, setPatients] = useState<Patient[]>(MOCK_PATIENTS);
   const [databaseDate, setDatabaseDate] = useState<string>("03/12/2025");
+  const [hasUploadedData, setHasUploadedData] = useState(false);
 
   // State for NEWLY added logs (separate from the static database)
   const [recentLogs, setRecentLogs] = useState<LogFormData[]>([]);
@@ -125,6 +126,7 @@ function AnaestheticLogApp() {
   const handleUploadPatients = (newPatients: Patient[]) => {
     setPatients(newPatients);
     setDatabaseDate(new Date().toLocaleDateString('en-GB'));
+    setHasUploadedData(true);
     alert(`Successfully updated database with ${newPatients.length} records.`);
   };
 
@@ -158,6 +160,7 @@ function AnaestheticLogApp() {
                 setScreen={setScreen}
                 databaseDate={databaseDate}
                 showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
@@ -180,6 +183,7 @@ function AnaestheticLogApp() {
                 setScreen={setScreen}
                 databaseDate={databaseDate}
                 showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
@@ -216,6 +220,7 @@ function AnaestheticLogApp() {
                 setScreen={setScreen}
                 databaseDate={databaseDate}
                 showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
@@ -252,6 +257,7 @@ function AnaestheticLogApp() {
                 setScreen={setScreen}
                 databaseDate={databaseDate}
                 showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
@@ -289,6 +295,7 @@ function AnaestheticLogApp() {
                 databaseDate={databaseDate}
                 showFooter={false}
                 showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
@@ -316,6 +323,7 @@ function AnaestheticLogApp() {
                 setScreen={setScreen}
                 databaseDate={databaseDate}
                 showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
@@ -347,6 +355,7 @@ function AnaestheticLogApp() {
             setScreen={setScreen}
             databaseDate={databaseDate}
             showDisclaimer={showDisclaimer}
+            isCustomData={hasUploadedData}
             onDismissDisclaimer={handleDismissDisclaimer}
             onUploadPatients={handleUploadPatients}
             actions={
