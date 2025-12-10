@@ -13,9 +13,10 @@ export interface PatientHistory {
   hospital?: string;
   inductionTime?: string;
   reactionTime?: string;
-  preInductionDrugs?: string[];
-  postInductionDrugs?: string[]; // New field for drugs given after induction
-  procedureOutcome?: string; // New field for "Completed" vs "Abandoned"
+  medications?: string[]; // Unified list of drugs with timings
+  preInductionDrugs?: string[]; // Legacy: kept for mock data compatibility
+  postInductionDrugs?: string[]; // Legacy: kept for mock data compatibility
+  procedureOutcome?: string;
 }
 
 export interface Patient {

@@ -81,7 +81,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
     const gradeCounts = { I: 0, II: 0, III: 0, IV: 0, Ungraded: 0 };
 
     // Helper to normalize and count agent usage
-    // Modified to return the key only, counting logic moved to loop
     const normalizeAgent = (agentName: string) => {
         const normalized = agentName.trim();
         if (!normalized) return null;
@@ -95,7 +94,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
     // 1. Process Existing Static Patients
     existingPatients.forEach(p => {
-      const grade = p.history.grade;
+      const grade = p.history.grade || 'Ungraded';
       if (grade.includes("III") || grade.includes("IV") || grade.includes("Cardiac Arrest")) {
         grade3PlusCount++;
       }
@@ -113,15 +112,19 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
       // Use Set to track unique agents for THIS patient to avoid double counting
       const uniqueAgentsForPatient = new Set<string>();
 
-      p.history.suspectedAgents?.forEach(agent => {
+      (p.history.suspectedAgents || []).forEach(agent => {
           const key = normalizeAgent(agent);
           if (key) uniqueAgentsForPatient.add(key);
       });
-      p.history.preInductionDrugs?.forEach(str => {
-          const key = normalizeAgent(str.split('@')[0].trim());
-          if (key) uniqueAgentsForPatient.add(key);
-      });
-      p.history.postInductionDrugs?.forEach(str => {
+      
+      // Consolidate drugs from multiple possible fields
+      const allDrugs = [
+          ...(p.history.medications || []),
+          ...(p.history.preInductionDrugs || []),
+          ...(p.history.postInductionDrugs || [])
+      ];
+
+      allDrugs.forEach(str => {
           const key = normalizeAgent(str.split('@')[0].trim());
           if (key) uniqueAgentsForPatient.add(key);
       });
@@ -131,7 +134,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
           drugStats[key].total += 1;
       });
 
-      p.history.symptoms?.forEach(sym => {
+      (p.history.symptoms || []).forEach(sym => {
          const normalized = sym.trim();
          if (normalized) {
             symptomCounts[normalized] = (symptomCounts[normalized] || 0) + 1;
@@ -278,10 +281,10 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
   // --- Filtering & Pagination ---
   const filteredPatients = existingPatients.filter(p => 
-    p.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.mrn.includes(searchTerm) ||
-    p.history.suspectedAgents.some(a => a.toLowerCase().includes(searchTerm.toLowerCase()))
+    (p.firstName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (p.lastName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (p.mrn || '').includes(searchTerm) ||
+    (p.history.suspectedAgents || []).some(a => (a || '').toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   useEffect(() => {
@@ -825,18 +828,18 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                             {p.history.hospital || '-'}
                                         </td>
                                         <td className="px-4 py-3 text-center">
-                                            <Badge variant={getGradeVariant(p.history.grade)} className="whitespace-nowrap text-[10px]">
-                                                {p.history.grade.split(' -')[0]}
+                                            <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-[10px]">
+                                                {(p.history.grade || 'Ungraded').split(' -')[0]}
                                             </Badge>
                                         </td>
                                         <td className="px-4 py-3 max-w-[300px] text-slate-600 dark:text-slate-400">
                                             <div className="flex flex-wrap gap-1">
-                                                {p.history.suspectedAgents.map((agent, i) => (
+                                                {(p.history.suspectedAgents || []).map((agent, i) => (
                                                     <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300">
                                                         {agent}
                                                     </span>
                                                 ))}
-                                                {p.history.suspectedAgents.length === 0 && '-'}
+                                                {(p.history.suspectedAgents || []).length === 0 && '-'}
                                             </div>
                                         </td>
                                     </tr>
@@ -871,14 +874,14 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                         {formatDate(p.history.date)} • {p.history.hospital || 'Unknown Hospital'}
                                     </div>
                                 </div>
-                                <Badge variant={getGradeVariant(p.history.grade)} className="whitespace-nowrap text-[10px] shrink-0">
-                                    {p.history.grade.split(' -')[0]}
+                                <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-[10px] shrink-0">
+                                    {(p.history.grade || 'Ungraded').split(' -')[0]}
                                 </Badge>
                             </div>
                             <div className="text-sm text-slate-600 dark:text-slate-400 mt-3">
                                 <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1.5 tracking-wide">Suspected Agents</span>
                                 <div className="flex flex-wrap gap-1.5">
-                                    {p.history.suspectedAgents.length > 0 ? (
+                                    {(p.history.suspectedAgents || []).length > 0 ? (
                                         p.history.suspectedAgents.map((agent, i) => (
                                             <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                                                 {agent}
