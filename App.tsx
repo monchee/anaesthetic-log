@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from './components/ui';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil } from 'lucide-react';
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './components/ui';
 import PatientSelector from './components/PatientSelector';
 import PatientHistory from './components/PatientHistory';
 import TestingLogForm from './components/TestingLogForm';
@@ -49,6 +49,7 @@ function AnaestheticLogApp() {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [lastSavedRecord, setLastSavedRecord] = useState<LogFormData | null>(null);
   const [testingPlanData, setTestingPlanData] = useState<TestingPlanData | null>(null);
+  const [isPatientDialogOpen, setIsPatientDialogOpen] = useState(false);
   
   // State for Patients Database (Initialized with Mock, can be updated via CSV)
   const [patients, setPatients] = useState<Patient[]>(MOCK_PATIENTS);
@@ -86,6 +87,7 @@ function AnaestheticLogApp() {
             ...INITIAL_FORM_STATE,
             visitDate: prev.visitDate // Keep current date if set
         }));
+        setIsPatientDialogOpen(true); // Auto-open dialog for new manual entries
     } else {
         setFormData(prev => ({
             ...prev,
@@ -377,92 +379,89 @@ function AnaestheticLogApp() {
                 </CardHeader>
                 <CardContent className="pt-6">
                     <div className="flex flex-col gap-6">
-                        <PatientSelector 
-                            onSelectPatient={handlePatientSelect} 
-                            selectedPatientId={selectedPatient?.id}
-                            patients={patients} 
-                        />
-                        
-                        {/* Patient Details Display (Static or Editable) */}
-                        <div 
-                            key={selectedPatient?.id ?? 'no-patient'}
-                            className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md border border-slate-100 dark:border-slate-800 animate-fade-in"
-                        >
-                            {selectedPatient?.id === 'manual' ? (
-                                <div className="space-y-4">
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div>
-                                            <Label className="text-xs uppercase mb-1.5 block text-slate-500">First Name</Label>
-                                            <Input 
-                                                value={selectedPatient.firstName} 
-                                                onChange={(e) => handleManualDetailChange('firstName', e.target.value)}
-                                                placeholder="Enter first name"
-                                                className="bg-white"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label className="text-xs uppercase mb-1.5 block text-slate-500">Last Name</Label>
-                                            <Input 
-                                                value={selectedPatient.lastName} 
-                                                onChange={(e) => handleManualDetailChange('lastName', e.target.value)}
-                                                placeholder="Enter last name"
-                                                className="bg-white"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                        <div>
-                                            <Label className="text-xs uppercase mb-1.5 block text-slate-500">MRN / ID</Label>
-                                            <Input 
-                                                value={selectedPatient.mrn} 
-                                                onChange={(e) => handleManualDetailChange('mrn', e.target.value)}
-                                                placeholder="MRN..."
-                                                className="bg-white"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label className="text-xs uppercase mb-1.5 block text-slate-500">Date of Birth</Label>
-                                            <Input 
-                                                type="date"
-                                                value={selectedPatient.dob} 
-                                                onChange={(e) => handleManualDetailChange('dob', e.target.value)}
-                                                className="bg-white"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label className="text-xs uppercase mb-1.5 block text-slate-500">City / Suburb</Label>
-                                            <Input 
-                                                value={selectedPatient.city} 
-                                                onChange={(e) => handleManualDetailChange('city', e.target.value)}
-                                                placeholder="City..."
-                                                className="bg-white"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="flex flex-col sm:grid sm:grid-cols-3 gap-4">
-                                    <div className="sm:col-span-1">
-                                        <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">Name</span>
-                                        <p className="font-medium text-slate-900 dark:text-slate-100 text-base leading-tight break-words">
-                                            {selectedPatient ? <span className="text-slate-400 dark:text-slate-500 mr-1.5 font-mono text-xs">[{selectedPatient.id}]</span> : ''}
-                                            {formData.firstName} {formData.lastName || '-'}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">City</span>
-                                        <p className="text-slate-900 dark:text-slate-100 text-sm break-words leading-tight" title={selectedPatient?.city}>{selectedPatient?.city || '-'}</p>
-                                    </div>
-                                    <div>
-                                        <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold block mb-1">DOB</span>
-                                        <p className="text-slate-900 dark:text-slate-100 text-sm">{selectedPatient ? formatDate(selectedPatient.dob) : '-'}</p>
-                                    </div>
-                                </div>
+                        <div className="flex items-end gap-2 w-full">
+                            <PatientSelector 
+                                onSelectPatient={handlePatientSelect} 
+                                selectedPatientId={selectedPatient?.id}
+                                patients={patients} 
+                            />
+                            {selectedPatient?.id === 'manual' && (
+                                <Button 
+                                    variant="outline" 
+                                    size="icon" 
+                                    onClick={() => setIsPatientDialogOpen(true)}
+                                    className="mb-[1px] shrink-0 h-10 w-10"
+                                    title="Edit Details"
+                                >
+                                    <Pencil className="w-4 h-4" />
+                                </Button>
                             )}
                         </div>
+                        
+                        {/* REMOVED: Name, city, dob box */}
                     </div>
                 </CardContent>
             </Card>
+
+            {/* Manual Patient Entry Dialog */}
+            {selectedPatient?.id === 'manual' && (
+                <Dialog open={isPatientDialogOpen} onOpenChange={setIsPatientDialogOpen}>
+                    <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                            <DialogTitle>New Patient Details</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">First Name</Label>
+                                    <Input 
+                                        value={selectedPatient.firstName} 
+                                        onChange={(e) => handleManualDetailChange('firstName', e.target.value)}
+                                        placeholder="Enter first name"
+                                    />
+                                </div>
+                                <div>
+                                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">Last Name</Label>
+                                    <Input 
+                                        value={selectedPatient.lastName} 
+                                        onChange={(e) => handleManualDetailChange('lastName', e.target.value)}
+                                        placeholder="Enter last name"
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">MRN / ID</Label>
+                                    <Input 
+                                        value={selectedPatient.mrn} 
+                                        onChange={(e) => handleManualDetailChange('mrn', e.target.value)}
+                                        placeholder="MRN..."
+                                    />
+                                </div>
+                                <div>
+                                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">Date of Birth</Label>
+                                    <Input 
+                                        type="date"
+                                        value={selectedPatient.dob} 
+                                        onChange={(e) => handleManualDetailChange('dob', e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">City / Suburb</Label>
+                                    <Input 
+                                        value={selectedPatient.city} 
+                                        onChange={(e) => handleManualDetailChange('city', e.target.value)}
+                                        placeholder="City..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button onClick={() => setIsPatientDialogOpen(false)}>Save & Close</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
 
             {selectedPatient && (
                 <div key={selectedPatient.id} className="animate-enter space-y-8">

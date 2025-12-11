@@ -9,7 +9,11 @@ export interface PatientHistory {
   suspectedAgents: string[];
   tryptase?: string;
   procedure: string;
-  anaesthetist: string;
+  anaesthetist: string; // Kept for legacy/completer support
+  referringDoctor?: string;
+  providerNumber?: string;
+  referringEmail?: string;
+  referringPhone?: string;
   hospital?: string;
   inductionTime?: string;
   reactionTime?: string;

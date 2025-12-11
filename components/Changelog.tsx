@@ -11,6 +11,32 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
     {
+      version: "v0.3.22",
+      changes: [
+        "UI: Fixed header overflow in Patient History by adding consistent horizontal padding to the accordion title.",
+        "UI: Further refined Patient History header spacing to improve alignment and prevent content overflow.",
+        "UI: Consolidated the 'Referring Doctor' and 'Hospital' information into a single, more streamlined context box."
+      ]
+    },
+    {
+      version: "v0.3.21",
+      changes: [
+        "UI: Refined Patient History layout to fix overflow issues in the date/procedure header.",
+        "UI: Moved 'Procedure Outcome' to the Timeline & Medications footer for better context placement.",
+        "UI: Restyled 'Suspected Agents' box to match the consistent card design language.",
+        "UI: Optimized the 'Referring Doctor' and 'Hospital' context box to better handle long names and conserve space."
+      ]
+    },
+    {
+      version: "v0.3.20",
+      changes: [
+        "UI: Refactored Manual Patient Entry to use a streamlined modal dialog instead of an inline form.",
+        "UI: Removed redundant patient details box (Name/City/DOB) from the main selection screen to reduce clutter.",
+        "UI: Simplified Patient History view by removing the 'Location' and city fields.",
+        "UI: Relocated the 'Edit Details' button for manual entries to the patient selector bar for better accessibility."
+      ]
+    },
+    {
       version: "v0.3.19",
       changes: [
         "Internal: Minor codebase adjustments for consistency and future feature readiness."

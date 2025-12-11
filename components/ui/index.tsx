@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
 
 // --- Card ---
 export const Card = ({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
@@ -78,55 +78,56 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ classN
 });
 Button.displayName = "Button";
 
-// --- Select ---
-export const Select = ({ options, placeholder, value, onChange, className }: { options: string[], placeholder: string, value: any, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, className?: string }) => (
-  <div className="relative">
-    <select
-      value={value}
-      onChange={onChange}
-      className={`flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none transition-all duration-200 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus:ring-slate-300 ${className || ''}`}
-    >
-      <option value="" disabled>{placeholder}</option>
-      {options.map((opt) => (
-        <option key={opt} value={opt}>{opt}</option>
-      ))}
-    </select>
-    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-      <ChevronDown className="h-4 w-4 opacity-50" />
-    </div>
-  </div>
-);
-
 // --- Badge ---
-interface BadgeProps {
-  variant?: "default" | "success" | "danger" | "warning" | "outline" | "grade1" | "grade2" | "grade3" | "grade4" | "ungraded";
-  children?: React.ReactNode;
+interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "secondary" | "destructive" | "outline" | "success" | "danger" | "grade4" | "grade3" | "grade2" | "grade1" | "ungraded";
   className?: string;
+  children?: React.ReactNode;
 }
 
-export const Badge: React.FC<BadgeProps> = ({ variant = "default", children, className }) => {
-  const styles = {
-    default: "border-transparent bg-[#8055f1] text-white hover:bg-[#8055f1]/80 dark:bg-[#8055f1] dark:text-white",
-    success: "border-transparent bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/50 dark:text-green-300",
-    danger: "border-transparent bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900/50 dark:text-red-300",
-    warning: "border-transparent bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900/50 dark:text-yellow-300",
-    outline: "text-slate-950 border border-slate-200 dark:text-slate-50 dark:border-slate-800",
-    
-    // New Grade System Palette
-    grade1: "border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-200",
-    grade2: "border-transparent bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/50 dark:text-amber-200",
-    grade3: "border-transparent bg-orange-100 text-orange-800 hover:bg-orange-200 dark:bg-orange-900/50 dark:text-orange-200",
-    grade4: "border-transparent bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900/50 dark:text-red-200",
-    ungraded: "border-transparent bg-slate-100 text-slate-800 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400",
+export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(({ className, variant = "default", ...props }, ref) => {
+  const variants = {
+    default: "border-transparent bg-slate-900 text-slate-50 hover:bg-slate-900/80 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/80",
+    secondary: "border-transparent bg-slate-100 text-slate-900 hover:bg-slate-100/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80",
+    destructive: "border-transparent bg-red-500 text-slate-50 hover:bg-red-500/80 dark:bg-red-900 dark:text-slate-50 dark:hover:bg-red-900/80",
+    outline: "text-slate-950 dark:text-slate-50",
+    success: "border-transparent bg-green-500 text-white hover:bg-green-600 dark:bg-green-600",
+    danger: "border-transparent bg-red-500 text-white hover:bg-red-600 dark:bg-red-600",
+    grade4: "border-transparent bg-red-600 text-white hover:bg-red-700",
+    grade3: "border-transparent bg-orange-500 text-white hover:bg-orange-600",
+    grade2: "border-transparent bg-amber-400 text-black hover:bg-amber-500",
+    grade1: "border-transparent bg-blue-400 text-white hover:bg-blue-500",
+    ungraded: "border-transparent bg-slate-200 text-slate-600 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-300",
   };
-  return (
-    <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 ${styles[variant]} ${className || ''}`}>
-      {children}
-    </div>
-  );
-};
 
-// --- Accordion ---
+  return (
+    <div ref={ref} className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 dark:focus:ring-slate-300 ${variants[variant]} ${className || ''}`} {...props} />
+  );
+});
+Badge.displayName = "Badge";
+
+// --- Select ---
+interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  options?: string[];
+  placeholder?: string;
+}
+
+export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({ className, options, placeholder, children, ...props }, ref) => (
+  <div className="relative">
+    <select
+      ref={ref}
+      className={`flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus:ring-slate-300 ${className || ''}`}
+      {...props}
+    >
+      {placeholder && <option value="" disabled>{placeholder}</option>}
+      {options ? options.map(opt => <option key={opt} value={opt}>{opt}</option>) : children}
+    </select>
+    <ChevronDown className="absolute right-3 top-3 h-4 w-4 opacity-50 pointer-events-none" />
+  </div>
+));
+Select.displayName = "Select";
+
+// --- AccordionItem ---
 interface AccordionItemProps {
   title: React.ReactNode;
   children?: React.ReactNode;
@@ -138,23 +139,62 @@ export const AccordionItem = ({ title, children, defaultOpen = false, className 
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className={`border-b border-slate-200 last:border-0 dark:border-slate-800 ${className || ''}`}>
+    <div className={`border-b border-slate-200 dark:border-slate-800 last:border-0 ${className || ''}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between py-4 px-6 font-medium transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg"
+        className="flex flex-1 items-center justify-between py-4 px-5 font-medium transition-all w-full text-left"
       >
-        <div className="flex-1 text-left pr-4">
-            {title}
-        </div>
-        <ChevronDown className={`h-5 w-5 shrink-0 text-slate-500 transition-transform duration-200 dark:text-slate-400 ${isOpen ? "rotate-180" : ""}`} />
+        {title}
+        <ChevronDown className={`h-4 w-4 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
-      <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-[5000px] opacity-100 pb-4" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="pt-0">{children}</div>
+      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[2000px] opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
+        {children}
       </div>
     </div>
   );
 };
+
+// --- Dialog ---
+export const Dialog = ({ open, onOpenChange, children }: { open: boolean; onOpenChange: (open: boolean) => void; children?: React.ReactNode }) => {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 flex items-center justify-center p-4">
+      <div 
+         className="relative w-full max-w-lg gap-4 border bg-white p-6 shadow-lg duration-200 rounded-lg dark:bg-slate-950 dark:border-slate-800"
+         onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+        <button
+            onClick={() => onOpenChange(false)}
+            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 data-[state=open]:text-slate-500 dark:ring-offset-slate-950 dark:focus:ring-slate-300 dark:data-[state=open]:bg-slate-800 dark:data-[state=open]:text-slate-400"
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </button>
+      </div>
+      <div className="fixed inset-0 -z-10" onClick={() => onOpenChange(false)} />
+    </div>
+  );
+};
+
+export const DialogContent = ({ className, children }: { className?: string; children?: React.ReactNode }) => (
+    <div className={className}>{children}</div>
+);
+
+export const DialogHeader = ({ className, children }: { className?: string; children?: React.ReactNode }) => (
+  <div className={`flex flex-col space-y-1.5 text-center sm:text-left ${className || ''}`}>
+    {children}
+  </div>
+);
+
+export const DialogTitle = ({ className, children }: { className?: string; children?: React.ReactNode }) => (
+  <h2 className={`text-lg font-semibold leading-none tracking-tight ${className || ''}`}>
+    {children}
+  </h2>
+);
+
+export const DialogFooter = ({ className, children }: { className?: string; children?: React.ReactNode }) => (
+  <div className={`flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 ${className || ''}`}>
+    {children}
+  </div>
+);

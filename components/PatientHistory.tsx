@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, AccordionItem, Badge } from './ui';
 import { Patient } from '../types';
-import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle } from 'lucide-react';
+import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, Hash, CheckCircle2, AlertCircle, HelpCircle } from 'lucide-react';
 import { formatDate, getGradeVariant } from '../lib/utils';
 
 interface PatientHistoryProps {
@@ -28,7 +28,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
     return { label, description };
   };
 
-  const { label: gradeLabel, description: gradeDesc } = splitGrade(history.grade);
+  const { label: gradeLabel } = splitGrade(history.grade);
 
   // --- Construct Timeline Events ---
   interface TimelineEvent {
@@ -56,14 +56,12 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
       }
   };
 
-  // Consolidate drugs from new unified array AND legacy pre/post arrays (for mock data compatibility)
   const allMedications = [
       ...(history.medications || []),
       ...(history.preInductionDrugs || []),
       ...(history.postInductionDrugs || [])
   ];
 
-  // Deduplicate strings
   const uniqueMedications = [...new Set(allMedications)];
 
   uniqueMedications.forEach(d => processDrug(d));
@@ -73,27 +71,24 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
 
   const sortedEvents = events.sort((a, b) => a.time.localeCompare(b.time));
 
-  // Determine Outcome Style
-  const getOutcomeStyle = (outcome?: string) => {
-      if (!outcome) return "text-slate-400 dark:text-slate-500 font-normal italic";
+  const getOutcomeConfig = (outcome?: string) => {
+      if (!outcome) return { text: "Not recorded", color: "text-slate-500", icon: HelpCircle };
       const lower = outcome.toLowerCase();
-      if (lower.includes('completed') || lower === '2') return "text-green-600 dark:text-green-400 font-bold";
-      if (lower.includes('abandoned') || lower === '1') return "text-red-600 dark:text-red-400 font-bold";
-      return "text-slate-600 dark:text-slate-300 font-medium";
+      if (lower.includes('completed') || lower === '2') return { text: "Completed", color: "text-green-600 dark:text-green-400", icon: CheckCircle2 };
+      if (lower.includes('abandoned') || lower === '1') return { text: "Abandoned", color: "text-red-600 dark:text-red-400", icon: AlertCircle };
+      return { text: outcome, color: "text-slate-600", icon: HelpCircle };
   };
 
-  const formatOutcomeText = (outcome?: string) => {
-      if (!outcome) return "Not recorded";
-      const lower = outcome.toLowerCase();
-      if (lower === '1' || lower.includes('abandoned')) return "Abandoned";
-      if (lower === '2' || lower.includes('completed')) return "Completed";
-      return outcome;
-  };
+  const outcomeConfig = getOutcomeConfig(history.procedureOutcome);
+  const OutcomeIcon = outcomeConfig.icon;
+
+  // Logic to determine which doctor name to show
+  const doctorName = history.referringDoctor || history.anaesthetist || "Unknown";
 
   return (
     <Card className="border-t-4 border-brand shadow-md bg-white dark:bg-slate-900">
-      <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-        <CardTitle className="text-brand-dark dark:text-purple-300 flex items-center gap-2">
+      <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+        <CardTitle className="text-brand-dark dark:text-purple-300 flex items-center gap-2 text-base">
           <div className="bg-brand-light dark:bg-purple-900/40 p-1.5 rounded-md">
             <History className="h-4 w-4 text-brand dark:text-purple-300" />
           </div>
@@ -103,19 +98,17 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
       <CardContent className="p-0">
         <AccordionItem 
           title={
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 w-full pr-2">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 min-w-0 w-full">
-                <div className="flex items-center gap-3 shrink-0">
-                    <span className="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg tracking-tight whitespace-nowrap">
-                        {formatDate(history.date)}
-                    </span>
-                    <span className="hidden sm:inline text-slate-300 dark:text-slate-700 text-xl sm:text-2xl font-light">|</span>
-                </div>
-                <span className="text-sm sm:text-base text-[#441170] dark:text-purple-300 font-bold uppercase tracking-wide leading-tight break-words whitespace-normal text-left">
+            <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-3 w-full">
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
+                <span className="font-extrabold text-slate-900 dark:text-white text-lg tracking-tight">
+                    {formatDate(history.date)}
+                </span>
+                <span className="text-slate-300 dark:text-slate-700 text-xl font-light hidden sm:inline">|</span>
+                <span className="text-base text-[#441170] dark:text-purple-300 font-bold uppercase tracking-wide leading-tight break-words">
                     {history.procedure}
                 </span>
               </div>
-              <div className="flex items-center self-start sm:self-center shrink-0 mt-1 sm:mt-0">
+              <div className="shrink-0">
                  <Badge variant={getGradeVariant(history.grade)} className="shadow-sm cursor-help whitespace-nowrap">
                     {gradeLabel}
                  </Badge>
@@ -125,163 +118,182 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
           defaultOpen={true}
           className="border-b-0" 
         >
-          <div className="space-y-6 pt-2 pb-6 px-6 text-sm text-slate-700 dark:text-slate-300">
+          <div className="pt-4 pb-6 px-5 text-sm text-slate-700 dark:text-slate-300 space-y-6">
             
-            {/* 1. Suspected Agents Banner */}
-            {history.suspectedAgents && history.suspectedAgents.length > 0 && (
-                <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 rounded-r-md">
-                    <h4 className="font-bold text-red-800 dark:text-red-300 flex items-center gap-2 text-sm mb-1">
-                        <AlertTriangle className="h-4 w-4" /> Suspected Culprit Agents
-                    </h4>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                        {history.suspectedAgents.map((agent, i) => (
-                            <Badge key={i} variant="danger" className="text-sm px-2 py-0.5">{agent}</Badge>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* 2. Reaction Summary & Context */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-2">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-sm">
-                        <FileText className="h-4 w-4 text-brand dark:text-purple-400" /> 
-                        Reaction Summary
-                    </h4>
-                    <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-lg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 leading-relaxed shadow-sm min-h-[100px]">
-                        {history.reactionSummary || "No summary provided."}
-                    </div>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-sm">
-                        <Building2 className="h-4 w-4 text-brand dark:text-purple-400" /> 
-                        Case Context
-                    </h4>
-                    <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-lg border border-slate-100 dark:border-slate-800 space-y-3 shadow-sm flex-1">
-                        <div>
-                            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-0.5">Anaesthetist</span>
-                            <span className="font-medium text-slate-800 dark:text-slate-200">{history.anaesthetist || "Unknown"}</span>
-                        </div>
-                        <div>
-                            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-0.5">Hospital</span>
-                            <span className="font-medium text-slate-800 dark:text-slate-200">{history.hospital || "Unknown"}</span>
-                        </div>
-                        <div>
-                            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block mb-0.5">Operation/Procedure Outcome</span>
-                            <span className={getOutcomeStyle(history.procedureOutcome)}>
-                                {formatOutcomeText(history.procedureOutcome)}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* 3. Timeline & Medications */}
-            <div className="space-y-3">
-                <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-sm">
-                    <Clock className="h-4 w-4 text-brand dark:text-purple-400" /> 
-                    Anaesthetic Timeline & Medications
-                </h4>
-                <div className="bg-slate-50 dark:bg-slate-950 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                {/* LEFT COLUMN (Details) */}
+                <div className="lg:col-span-7 flex flex-col gap-5">
                     
-                    <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex flex-wrap gap-6 text-xs">
-                        <div className="flex items-center gap-2">
-                            <span className="font-bold uppercase text-slate-500 dark:text-slate-400">Induction:</span>
-                            <span className="font-mono font-medium bg-white dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
-                                {formatTime(history.inductionTime)}
-                            </span>
+                    {/* 1. Suspected Agents (Matches card aesthetic now) */}
+                    {history.suspectedAgents && history.suspectedAgents.length > 0 && (
+                        <div className="space-y-2">
+                             <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wide">
+                                <AlertTriangle className="h-3.5 w-3.5 text-red-500" /> 
+                                Suspected Culprit Agents
+                            </h4>
+                            <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-wrap gap-2 shadow-sm min-h-[44px] items-center">
+                                {history.suspectedAgents.map((agent, i) => (
+                                    <Badge key={i} variant="danger" className="text-xs px-2.5 py-0.5">{agent}</Badge>
+                                ))}
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="font-bold uppercase text-slate-500 dark:text-slate-400">Reaction:</span>
-                            <span className="font-mono font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded border border-red-100 dark:border-red-900/30">
-                                {formatTime(history.reactionTime)}
-                            </span>
+                    )}
+
+                    {/* 2. Reaction Summary */}
+                    <div className="space-y-2">
+                        <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wide">
+                            <FileText className="h-3.5 w-3.5 text-brand dark:text-purple-400" /> 
+                            Reaction Summary
+                        </h4>
+                        <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 leading-relaxed shadow-sm text-sm">
+                            {history.reactionSummary || "No summary provided."}
                         </div>
                     </div>
 
-                    <div className="p-4 sm:p-6">
-                        {sortedEvents.length > 0 ? (
-                            <div className="relative border-l-2 border-slate-200 dark:border-slate-700 ml-3 space-y-6">
-                                {sortedEvents.map((event, idx) => (
-                                    <div key={idx} className="relative pl-6">
-                                        <div className={`absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 shadow-sm z-10 
-                                            ${event.type === 'reaction' ? 'bg-red-500 border-white dark:border-slate-900' : 
-                                              event.type === 'induction' ? 'bg-purple-500 border-white dark:border-slate-900' :
-                                              'bg-slate-300 dark:bg-slate-600 border-white dark:border-slate-900'}`} 
-                                        />
-                                        
-                                        <div className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4">
-                                            <div className="font-mono text-xs font-bold text-slate-500 dark:text-slate-400 pt-1 w-12 shrink-0">
-                                                {formatTime(event.time)}
-                                            </div>
-                                            <div className={`flex-1 p-3 rounded-md border text-sm ${
-                                                event.type === 'reaction' ? 'bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-900/30' :
-                                                event.type === 'induction' ? 'bg-purple-50 dark:bg-purple-900/20 border-purple-100 dark:border-purple-900/30' :
-                                                'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700'
-                                            }`}>
-                                                <div className={`font-semibold ${event.type === 'reaction' ? 'text-red-700 dark:text-red-300' : 'text-slate-800 dark:text-slate-200'}`}>
-                                                    {event.label}
+                    {/* 3. Clinical Features & Treatment (Grid 1x2) */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-2 h-full">
+                            <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wide">
+                                <Activity className="h-3.5 w-3.5 text-brand dark:text-purple-400" /> 
+                                Clinical Features
+                            </h4>
+                            <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-wrap gap-1.5 content-start shadow-sm flex-1">
+                                {history.symptoms && history.symptoms.length > 0 ? (
+                                    history.symptoms.map((s, i) => (
+                                        <span key={i} className="inline-flex items-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
+                                        {s}
+                                        </span>
+                                    ))
+                                ) : <span className="text-slate-400 italic text-xs">None recorded</span>}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-2 h-full">
+                            <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wide">
+                                <Syringe className="h-3.5 w-3.5 text-brand dark:text-purple-400" /> 
+                                Treatment
+                            </h4>
+                            <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm flex-1">
+                                {history.treatment && history.treatment.length > 0 ? (
+                                    <ul className="list-disc list-inside text-slate-700 dark:text-slate-300 text-xs space-y-1">
+                                        {history.treatment.map((t, i) => <li key={i}>{t}</li>)}
+                                    </ul>
+                                ) : <span className="text-slate-400 italic text-xs">None recorded</span>}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 4. Context Bar (Streamlined) */}
+                    <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row gap-4 shadow-sm">
+                        {/* Referring Doctor */}
+                        <div className="space-y-1 flex-1 min-w-0">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1.5">
+                                <User className="h-3 w-3" /> Referring Doctor
+                            </span>
+                            <div className="font-medium text-slate-900 dark:text-slate-100 text-sm break-words leading-snug">
+                                {doctorName}
+                            </div>
+                            {(history.providerNumber || history.referringPhone) && (
+                                <div className="text-[10px] text-slate-500 dark:text-slate-400 flex flex-wrap gap-2 mt-0.5">
+                                    {history.providerNumber && <span className="opacity-80">#{history.providerNumber}</span>}
+                                    {history.referringPhone && <span className="opacity-80 flex items-center gap-0.5"><Phone className="h-2 w-2" /> {history.referringPhone}</span>}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Hospital */}
+                        <div className="space-y-1 flex-1 min-w-0 sm:border-l sm:border-slate-200 sm:dark:border-slate-800 sm:pl-4">
+                            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1.5">
+                                <Building2 className="h-3 w-3" /> Hospital
+                            </span>
+                            <div className="font-medium text-slate-900 dark:text-slate-100 text-sm">{history.hospital || "Unknown"}</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* RIGHT COLUMN (Timeline) */}
+                <div className="lg:col-span-5 flex flex-col gap-2 h-full">
+                     <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wide">
+                        <Clock className="h-3.5 w-3.5 text-brand dark:text-purple-400" /> 
+                        Timeline & Medications
+                    </h4>
+                    <div className="bg-slate-50 dark:bg-slate-950 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex-1 flex flex-col">
+                        
+                        {/* Key Times Header */}
+                        <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 py-2 flex justify-between gap-2 text-xs shrink-0">
+                            <div className="flex items-center gap-1.5">
+                                <span className="font-bold text-slate-500 dark:text-slate-400">INDUCTION:</span>
+                                <span className="font-mono font-medium text-slate-800 dark:text-slate-200">
+                                    {formatTime(history.inductionTime)}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <span className="font-bold text-slate-500 dark:text-slate-400">REACTION:</span>
+                                <span className="font-mono font-bold text-red-600 dark:text-red-400">
+                                    {formatTime(history.reactionTime)}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Scrollable Timeline Area */}
+                        <div className="p-3 overflow-y-auto max-h-[300px] lg:max-h-none flex-1">
+                            {sortedEvents.length > 0 ? (
+                                <div className="relative border-l-2 border-slate-200 dark:border-slate-700 ml-2 space-y-3">
+                                    {sortedEvents.map((event, idx) => (
+                                        <div key={idx} className="relative pl-5">
+                                            <div className={`absolute -left-[7px] top-1.5 h-3.5 w-3.5 rounded-full border-2 shadow-sm z-10 
+                                                ${event.type === 'reaction' ? 'bg-red-500 border-white dark:border-slate-900' : 
+                                                  event.type === 'induction' ? 'bg-purple-500 border-white dark:border-slate-900' :
+                                                  'bg-slate-300 dark:bg-slate-600 border-white dark:border-slate-900'}`} 
+                                            />
+                                            
+                                            <div className="flex flex-col gap-0.5">
+                                                <div className="flex items-baseline justify-between gap-2">
+                                                    <span className={`text-xs font-semibold ${event.type === 'reaction' ? 'text-red-700 dark:text-red-300' : 'text-slate-800 dark:text-slate-200'}`}>
+                                                        {event.label}
+                                                    </span>
+                                                    <span className="font-mono text-[10px] font-bold text-slate-400 dark:text-slate-500">
+                                                        {formatTime(event.time)}
+                                                    </span>
                                                 </div>
                                                 {event.subtext && (
-                                                    <div className="text-xs opacity-80 mt-0.5">{event.subtext}</div>
+                                                    <div className="text-[10px] opacity-80 text-slate-500">{event.subtext}</div>
                                                 )}
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-slate-400 italic text-center py-4">No timeline events recorded</div>
-                        )}
-
-                        {untimedAdministered.length > 0 && (
-                            <div className="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800">
-                                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2 block">Other Administered Agents (Time Unspecified)</span>
-                                <div className="flex flex-wrap gap-2">
-                                    {untimedAdministered.map((med, i) => (
-                                        <span key={i} className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
-                                            {med}
-                                        </span>
                                     ))}
                                 </div>
+                            ) : (
+                                <div className="text-slate-400 italic text-center py-4 text-xs">No timed events.</div>
+                            )}
+
+                            {untimedAdministered.length > 0 && (
+                                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800">
+                                    <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider mb-1.5 block">Untimed Agents</span>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {untimedAdministered.map((med, i) => (
+                                            <span key={i} className="text-[10px] bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+                                                {med}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                         {/* Outcome Footer */}
+                        <div className="bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-3 py-2 flex items-center justify-between shrink-0">
+                             <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Outcome</span>
+                             <div className={`font-bold text-xs flex items-center gap-1.5 ${outcomeConfig.color}`}>
+                                <OutcomeIcon className="h-3 w-3" />
+                                {outcomeConfig.text}
                             </div>
-                        )}
-                    </div>
-                </div>
-            </div>
+                        </div>
 
-            {/* 4. Clinical Features & Treatment (Grid) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col gap-2 h-full">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-sm">
-                        <Activity className="h-4 w-4 text-brand dark:text-purple-400" /> 
-                        Clinical Features
-                    </h4>
-                    <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-wrap gap-2 content-start shadow-sm flex-1">
-                        {history.symptoms && history.symptoms.length > 0 ? (
-                            history.symptoms.map((s, i) => (
-                                <span key={i} className="inline-flex items-center rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
-                                {s}
-                                </span>
-                            ))
-                        ) : <span className="text-slate-400 italic text-xs">None recorded</span>}
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-2 h-full">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-sm">
-                        <Syringe className="h-4 w-4 text-brand dark:text-purple-400" /> 
-                        Treatment
-                    </h4>
-                    <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm flex-1">
-                        {history.treatment && history.treatment.length > 0 ? (
-                            <ul className="list-disc list-inside text-slate-700 dark:text-slate-300 text-xs space-y-2">
-                                {history.treatment.map((t, i) => <li key={i}>{t}</li>)}
-                            </ul>
-                        ) : <span className="text-slate-400 italic text-xs">None recorded</span>}
-                    </div>
-                </div>
             </div>
 
           </div>

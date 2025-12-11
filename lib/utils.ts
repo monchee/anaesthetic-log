@@ -134,19 +134,46 @@ const DRUG_HEADER_MAP: Record<string, string> = {
     'morphine': 'Morphine', 'oxycodon': 'Oxycodone', 'alfentanil': 'Alfentanil',
     'ketamine': 'Ketamine', 'thiopent': 'Thiopentone',
     'sugamma': 'Sugammadex', 'neostig': 'Neostigmine', 'atropine': 'Atropine', 'glycopyr': 'Glycopyrrolate',
+    'complex': 'Roc/Sugammadex Complex', 'further cis': 'Cisatracurium (Repeat)',
+    
+    // Antibiotics
     'cefazolin': 'Cefazolin', 'cephazoli': 'Cefazolin', 'gentamic': 'Gentamicin', 
     'amoxicill': 'Amoxicillin', 'ampicilli': 'Ampicillin', 'benzylpen': 'Benzylpenicillin',
     'cefotaxim': 'Cefotaxime', 'ceftazid': 'Ceftazidime', 'ceftriax': 'Ceftriaxone', 'cephaloth': 'Cephalothin',
-    'ciproflox': 'Ciprofloxacin', 'flucoxacil': 'Flucloxacillin', 'meropena': 'Meropenem', 
+    'cefepime': 'Cefepime', 'ciproflox': 'Ciprofloxacin', 'flucoxacil': 'Flucloxacillin', 'meropena': 'Meropenem', 
     'metronida': 'Metronidazole', 'tazocin': 'Tazocin', 'teicoplan': 'Teicoplanin', 'vancomyc': 'Vancomycin',
-    'metoclopr': 'Metoclopramide', 'ondanset': 'Ondansetron', 'cyclizine': 'Cyclizine', 'dexametha': 'Dexamethasone', 'dexmetha': 'Dexamethasone',
-    'chlorhex': 'Chlorhexidine', 'betadine': 'Betadine',
-    'lignocain': 'Lignocaine', 'bupivacai': 'Bupivacaine', 'ropivacai': 'Ropivacaine', 'mepivacai': 'Mepivacaine', 'prilocain': 'Prilocaine',
-    'parecoxib': 'Parecoxib', 'paracetam': 'Paracetamol', 'tramadol': 'Tramadol', 'ibuprofen': 'Ibuprofen',
-    'albumin': 'Albumin', 'patent blu': 'Patent Blue', 'ultravist': 'Ultravist', 'omnipaqu': 'Omnipaque', 'iodinated': 'Contrast',
-    'heparin': 'Heparin', 'protamine': 'Protamine', 'tirofiban': 'Tirofiban', 'txa': 'Tranexamic Acid',
-    'latex': 'Latex', 'gelofusine': 'Gelofusine',
+    'other abs': 'Other Antibiotic', 'other abx': 'Other Antibiotic',
 
+    // Anti-emetics & Steroids
+    'metoclopr': 'Metoclopramide', 'ondanset': 'Ondansetron', 'cyclizine': 'Cyclizine', 
+    'tropisetron': 'Tropisetron', 'granisetron': 'Granisetron',
+    'dexametha': 'Dexamethasone', 'dexmetha': 'Dexamethasone',
+    
+    // Antiseptics
+    'chlorhex': 'Chlorhexidine', 'betadine': 'Betadine',
+    
+    // Local Anaesthetics
+    'lignocain': 'Lignocaine', 'bupivacai': 'Bupivacaine', 'ropivacai': 'Ropivacaine', 
+    'mepivacai': 'Mepivacaine', 'prilocain': 'Prilocaine', 'hyaluronidase': 'Hyaluronidase',
+    
+    // Non-opioid analgesia
+    'parecoxib': 'Parecoxib', 'paracetam': 'Paracetamol', 'tramadol': 'Tramadol', 'ibuprofen': 'Ibuprofen',
+    
+    // Fluids & Blood
+    'albumin': 'Albumin', 'rbc': 'Red Blood Cells', 'ffp': 'FFP', 'platelets': 'Platelets', 'cryo': 'Cryoprecipitate',
+    'gelofusine': 'Gelofusine',
+    
+    // Dyes & Contrast
+    'patent blu': 'Patent Blue', 'methylene': 'Methylene Blue', 'gadolinium': 'Gadolinium',
+    'ultravist': 'Ultravist', 'omnipaqu': 'Omnipaque', 'visipaque': 'Visipaque', 'iodinated': 'Contrast',
+    
+    // Vasoactives & Coagulants
+    'heparin': 'Heparin', 'protamine': 'Protamine', 'tirofiban': 'Tirofiban', 'txa': 'Tranexamic Acid',
+    'anti-hyp': 'Anti-hypertensive', 'inotrope': 'Inotrope/Vasopressor', 'vasopressor': 'Inotrope/Vasopressor',
+    
+    // Others
+    'latex': 'Latex', 'bone cement': 'Bone Cement', 'syntocinon': 'Syntocinon',
+    
     // Raw Variable Code mappings (Exact matches required)
     'hypnotics___4': 'Propofol',
     'hypnotics___2': 'Midazolam',
@@ -236,6 +263,27 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
      if (hContains(header, 'city') || hContains(header, 'suburb')) { colMap.set(idx, { type: 'info', key: 'city' }); return; }
      if (hContains(header, 'hospital') || hContains(header, 'location')) { colMap.set(idx, { type: 'info', key: 'hospital' }); return; }
      
+     // Referring Doctor - STRICT MATCHING
+     // Try to match specific 'name' columns first, or fall back to general 'referring_doc' but exclude 'number'
+     if (hContains(header, 'referring_name') || hContains(header, 'ref_name') || hContains(header, 'name_referring') || hContains(header, 'ref_doc_name')) {
+         colMap.set(idx, { type: 'info', key: 'referringDoctor' }); 
+         return; 
+     }
+     
+     if (hContains(header, 'referring_doc') && !hContains(header, 'provider') && !hContains(header, 'number') && !hContains(header, 'num')) { 
+         colMap.set(idx, { type: 'info', key: 'referringDoctor' }); 
+         return; 
+     }
+     
+     // Provider Number
+     if (hContains(header, 'docnumber') || hContains(header, 'provider_number') || h === 'provider' || (hContains(header, 'referring_doc') && (hContains(header, 'provider') || hContains(header, 'number') || hContains(header, 'num')))) { 
+         colMap.set(idx, { type: 'info', key: 'providerNumber' }); 
+         return; 
+     }
+     
+     if (hContains(header, 'conemail') || (h === 'email' && !hContains(header, 'patient'))) { colMap.set(idx, { type: 'info', key: 'referringEmail' }); return; }
+     if (hContains(header, 'conphone') || (hContains(header, 'phone') && !hContains(header, 'patient') && !hContains(header, 'guardian'))) { colMap.set(idx, { type: 'info', key: 'referringPhone' }); return; }
+
      // Dates & Times
      if (h === 'datereaction' || hContains(header, 'date of re') || hContains(header, 'date_reaction')) { colMap.set(idx, { type: 'info', key: 'date' }); return; }
      if (h === 'time_induction' || hContains(header, 'time of in') || hContains(header, 'induction_time')) { colMap.set(idx, { type: 'info', key: 'induction_time' }); return; }
@@ -244,7 +292,6 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
      if (hContains(header, 'procedure')) { colMap.set(idx, { type: 'info', key: 'procedure' }); return; }
      
      // Robust Anaesthetist Matching
-     // Prioritize specific REDCap variable 'namecompleter' which is often the Anaesthetist name in this dataset
      if (h === 'namecompleter' || hContains(header, 'namecompleter') || hContains(header, 'anaesthetist') || hContains(header, 'completer')) { 
          colMap.set(idx, { type: 'info', key: 'anaesthetist' }); 
          return; 
@@ -277,12 +324,10 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
      }
 
      // 5. Drugs
-     // Look for specific timing indicators in the header
      const isTime = hContains(header, 'time') || hContains(header, 'date') || hContains(header, 'start') || hContains(header, '@') || hContains(header, '- tir');
      
-     // Check for exact matches in the raw code map (e.g. hypnotics___4)
      if (DRUG_HEADER_MAP[header]) {
-         colMap.set(idx, { type: 'drug', key: DRUG_HEADER_MAP[header], isTime: false }); // Checkboxes are untimed by default
+         colMap.set(idx, { type: 'drug', key: DRUG_HEADER_MAP[header], isTime: false }); 
          return;
      }
 
@@ -300,7 +345,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
     
     // Find ID first
     const idEntry = Array.from(colMap.entries()).find(([_, meta]) => meta.key === 'id');
-    const id = idEntry && row[idEntry[0]] ? row[idEntry[0]] : `REC-${i}`; // Fallback ID if missing
+    const id = idEntry && row[idEntry[0]] ? row[idEntry[0]] : `REC-${i}`;
 
     const p: any = { 
         id, 
@@ -308,7 +353,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
             symptoms: [], 
             treatment: [], 
             suspectedAgents: [], 
-            medications: [], // Unified list
+            medications: [],
             preInductionDrugs: [], 
             postInductionDrugs: [],
             grade: 'Ungraded', 
@@ -317,7 +362,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
             procedure: 'Unknown',
             anaesthetist: 'Unknown',
             hospital: 'Unknown',
-            date: new Date().toISOString() // Fallback date
+            date: new Date().toISOString()
         } 
     };
     
@@ -325,14 +370,12 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
     const foundDrugs: { name: string, time?: string }[] = [];
     const suspected: string[] = [];
 
-    // Check for Name Columns
     const firstNameEntry = Array.from(colMap.entries()).find(([_, meta]) => meta.key === 'first_name');
     const lastNameEntry = Array.from(colMap.entries()).find(([_, meta]) => meta.key === 'last_name');
     
     p.firstName = firstNameEntry && row[firstNameEntry[0]] ? row[firstNameEntry[0]] : 'Patient';
     p.lastName = lastNameEntry && row[lastNameEntry[0]] ? row[lastNameEntry[0]] : id;
 
-    // Parsing Row
     colMap.forEach((meta, idx) => {
         const value = row[idx]?.trim();
         if (!value) return;
@@ -350,12 +393,15 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
                  else p.history.procedureOutcome = value;
             } else if (meta.key === 'gender') {
                  p.gender = value === '0' ? 'Female' : value === '1' ? 'Male' : value;
-            } else if (meta.key.includes('time')) {
-                 p.history[meta.key === 'induction_time' ? 'inductionTime' : 'reactionTime'] = normalizeTime(value);
+            } else if (meta.key.includes('time') && !meta.key.includes('induction') && !meta.key.includes('reaction')) {
+                 // Skip generic time fields if mapped elsewhere
+            } else if (meta.key === 'induction_time') {
+                 p.history.inductionTime = normalizeTime(value);
+            } else if (meta.key === 'reaction_time') {
+                 p.history.reactionTime = normalizeTime(value);
             } else if (meta.key === 'summary') {
                  p.history.reactionSummary = value;
             } else if (meta.key === 'date') {
-                 // Try to normalize date format if needed
                  p.history.date = value;
             } else if (meta.key === 'dob') {
                  p.dob = value;
@@ -367,6 +413,22 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
                  p.history.procedure = value;
             } else if (meta.key === 'anaesthetist') {
                  p.history.anaesthetist = value;
+            } else if (meta.key === 'referringDoctor') {
+                 const isNumeric = /^\d+$/.test(value);
+                 const current = p.history.referringDoctor;
+                 const currentIsNumeric = /^\d+$/.test(current || '') || current === 'Unknown';
+
+                 if (!isNumeric) {
+                     p.history.referringDoctor = value;
+                 } else if (!current || currentIsNumeric) {
+                     p.history.referringDoctor = value;
+                 }
+            } else if (meta.key === 'providerNumber') {
+                 p.history.providerNumber = value;
+            } else if (meta.key === 'referringEmail') {
+                 p.history.referringEmail = value;
+            } else if (meta.key === 'referringPhone') {
+                 p.history.referringPhone = value;
             }
         } else if (meta.type === 'suspected') {
             if (value && value !== '0' && !suspected.includes(value)) suspected.push(value);
@@ -379,8 +441,6 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
                 if (!p.history.treatment.includes(meta.key)) p.history.treatment.push(meta.key);
             }
         } else if (meta.type === 'drug') {
-            // Drug Parsing
-            // If it's a suspected agent column (mapped via agents___X), add to suspected list instead of medications
             if (meta.key.includes('(Suspected)')) {
                 if (value === '1' || value.toLowerCase() === 'yes') {
                     const agentName = meta.key.replace(' (Suspected)', '');
@@ -394,17 +454,15 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
                     }
                 } else {
                     if (value === '1' || value.toLowerCase().includes('checked') || value.toLowerCase() === 'yes') {
-                        foundDrugs.push({ name: meta.key }); // Untimed
+                        foundDrugs.push({ name: meta.key }); 
                     }
                 }
             }
         }
     });
 
-    // Post-process drugs for timeline - Unified List
     const uniqueDrugs = new Map<string, string | undefined>();
     foundDrugs.forEach(d => {
-        // Prefer entries with time
         if (!uniqueDrugs.has(d.name) || (d.time && !uniqueDrugs.get(d.name))) {
             uniqueDrugs.set(d.name, d.time);
         }
@@ -418,7 +476,6 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
     p.history.medications.sort();
     p.history.suspectedAgents = suspected.length > 0 ? suspected : [];
     
-    // Fallbacks
     if (!p.mrn) p.mrn = id;
     
     data.push(p as Patient);
