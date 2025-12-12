@@ -1,9 +1,10 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Button, Input, Badge } from './ui';
-import { Users, AlertTriangle, Activity, Search, Thermometer, Clock, Upload, ChevronLeft, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, Ban, FileText } from 'lucide-react';
-import { formatDate, parseRedcapCSV, getGradeVariant, isSkinTestPositive } from '../lib/utils';
+import { Card, CardContent, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui';
+import { Users, AlertTriangle, Activity, Search, Thermometer, Clock, Upload, ChevronLeft, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, Ban, FileText, ExternalLink, FileUp, Timer } from 'lucide-react';
+import { formatDate, parseRedcapCSV, getGradeVariant, isSkinTestPositive, parsePatientTimeline, calculateTimeDifference } from '../lib/utils';
 import { Screen, Patient, LogFormData } from '../types';
+import toast from 'react-hot-toast';
 
 interface DashboardProps {
   setScreen: (screen: Screen) => void;
@@ -47,45 +48,13 @@ const useCountUp = (end: number, duration = 1500) => {
   return count;
 };
 
-// Helper to extract timeline events for the dashboard visualization
-const getTimelineEvents = (history: any) => {
-    const events: { time: string, type: 'med' | 'induction' | 'reaction', label: string }[] = [];
-    
-    // Medications
-    const allMedications = [
-      ...(history.medications || []),
-      ...(history.preInductionDrugs || []),
-      ...(history.postInductionDrugs || [])
-    ];
-    
-    const uniqueMedications = [...new Set(allMedications)];
-    
-    uniqueMedications.forEach((d: any) => {
-        const drugStr = typeof d === 'string' ? d : '';
-        if (!drugStr.trim()) return;
-        
-        if (drugStr.includes('@')) {
-            const parts = drugStr.split('@');
-            const drugName = parts[0].trim();
-            const timeStr = (parts[1] || '').trim();
-            if (timeStr && drugName) {
-                events.push({ time: timeStr, type: 'med', label: drugName });
-            }
-        }
-    });
-
-    if (history.inductionTime) events.push({ time: history.inductionTime, type: 'induction', label: 'Induction' });
-    if (history.reactionTime) events.push({ time: history.reactionTime, type: 'reaction', label: 'Reaction Onset' });
-
-    return events.sort((a, b) => a.time.localeCompare(b.time));
-};
-
 const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [uploadStatus, setUploadStatus] = useState<{ type: 'success' | 'error', message: string, details?: string[] } | null>(null);
   const [animateCharts, setAnimateCharts] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const ITEMS_PER_PAGE = 10;
@@ -102,6 +71,10 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
     let grade3PlusCount = 0;
     let abandonedCount = 0;
     
+    // Time Analytics
+    let totalReactionTime = 0;
+    let reactionTimeCount = 0;
+
     // Initialize stats for ALL standard drugs so they appear in the table (even with 0 count)
     const drugStats: Record<string, { spt: number, idt100: number, idt10: number, idtNeat: number, challenge: number, total: number }> = {};
     
@@ -111,7 +84,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
     // Ensure 'Other' exists
     drugStats['Other'] = { spt: 0, idt100: 0, idt10: 0, idtNeat: 0, challenge: 0, total: 0 };
 
-    const symptomCounts: Record<string, number> = {};
     const gradeCounts = { I: 0, II: 0, III: 0, IV: 0, Ungraded: 0 };
 
     // Helper to normalize and count agent usage
@@ -133,7 +105,9 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         grade3PlusCount++;
       }
       
-      if (p.history.procedureOutcome === 'Abandoned') {
+      // Robust check for abandoned procedures
+      const outcome = (p.history.procedureOutcome || '').toLowerCase();
+      if (outcome.includes('abandoned') || outcome.includes('adandoned') || outcome === '1') {
           abandonedCount++;
       }
       
@@ -142,6 +116,14 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
       else if (grade.includes("II")) gradeCounts.II++;
       else if (grade.includes("I ") || grade === "Grade I") gradeCounts.I++;
       else gradeCounts.Ungraded++;
+
+      // Time Calculation
+      const timeDiff = calculateTimeDifference(p.history.inductionTime, p.history.reactionTime);
+      // Only include if positive difference and less than 4 hours (240 mins) to filter out outliers/delayed reactions for this average
+      if (timeDiff !== null && timeDiff >= 0 && timeDiff <= 240) {
+          totalReactionTime += timeDiff;
+          reactionTimeCount++;
+      }
 
       // Use Set to track unique agents for THIS patient to avoid double counting
       const uniqueAgentsForPatient = new Set<string>();
@@ -167,13 +149,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
       uniqueAgentsForPatient.forEach(key => {
           drugStats[key].total += 1;
       });
-
-      (p.history.symptoms || []).forEach(sym => {
-         const normalized = sym.label.trim();
-         if (normalized) {
-            symptomCounts[normalized] = (symptomCounts[normalized] || 0) + 1;
-         }
-      });
     });
 
     // 2. Process Newly Added Logs
@@ -187,6 +162,11 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
              }
         } else {
             gradeCounts.Ungraded++;
+        }
+
+        if (log.reactionTime && !isNaN(parseInt(log.reactionTime))) {
+             totalReactionTime += parseInt(log.reactionTime);
+             reactionTimeCount++;
         }
 
         if (log.proceedToChallenge && log.outcome === 'UNSUCCESS') {
@@ -204,7 +184,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             if (isSkinTestPositive(test)) {
                 const key = normalizeAgent(drugName);
                 if (key) {
-                    // Note: Here we might double count if same drug tested multiple times in same patient log, but panel usually unique
                     drugStats[key].total += 1; 
                     if (test.sptWheal && parseInt(test.sptWheal) >= 3) drugStats[key].spt++;
                     if (test.idt100 && parseInt(test.idt100) >= 3) drugStats[key].idt100++;
@@ -214,6 +193,8 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             }
         });
     });
+
+    const avgReactionTime = reactionTimeCount > 0 ? Math.round(totalReactionTime / reactionTimeCount) : 0;
 
     const topAgentsByCount = Object.entries(drugStats)
         .filter(([name, stats]) => stats.total > 0 && name !== 'Other')
@@ -227,8 +208,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
     const mostCommonAgentEntry = Object.entries(drugStats)
         .sort(([, a], [, b]) => b.total - a.total)[0];
-        
-    const mostCommonSymptomEntry = Object.entries(symptomCounts).sort(([, a], [, b]) => b - a)[0];
 
     const statsByCategory = Object.entries(drugCategories).map(([category, drugs]) => {
         const categoryStats = (drugs as string[]).map(drugName => ({
@@ -252,9 +231,9 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
       totalPatients,
       grade3PlusCount,
       abandonedCount,
+      avgReactionTime,
       mostCommonAgent: mostCommonAgentEntry?.[1].total > 0 ? mostCommonAgentEntry?.[0] : 'N/A',
       mostCommonAgentCount: mostCommonAgentEntry?.[1]?.total || 0,
-      mostCommonSymptom: mostCommonSymptomEntry?.[0] || 'N/A',
       statsByCategory,
       gradeCounts,
       topAgentsByCount
@@ -265,13 +244,14 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
   const animatedTotalPatients = useCountUp(analytics.totalPatients);
   const animatedSevereCount = useCountUp(analytics.grade3PlusCount);
   const animatedAbandonedCount = useCountUp(analytics.abandonedCount);
+  const animatedAvgTime = useCountUp(analytics.avgReactionTime);
 
   // Rate of severe reactions
   const severeRate = analytics.totalPatients > 0 
     ? ((analytics.grade3PlusCount / analytics.totalPatients) * 100).toFixed(1) 
     : "0";
 
-  // Rate of abandoned procedures (Use existing patients as denominator since history comes from there)
+  // Rate of abandoned procedures
   const abandonedRate = existingPatients.length > 0 
     ? ((analytics.abandonedCount / existingPatients.length) * 100).toFixed(1)
     : "0";
@@ -290,22 +270,28 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                 
                 if (result.success) {
                     onUploadPatients(result.data);
-                    setUploadStatus({ 
-                        type: 'success', 
-                        message: `Successfully loaded ${result.data.length} records into the database.` 
-                    });
+                    toast.success(
+                        <div className="flex flex-col gap-1">
+                            <span className="font-bold">Database updated</span>
+                            <span className="text-sm font-normal">Successfully loaded {result.data.length} records from CSV.</span>
+                        </div>
+                    );
+                    setIsSheetOpen(false);
                 } else {
-                    setUploadStatus({ 
-                        type: 'error', 
-                        message: result.error || "Failed to parse CSV file.",
-                        details: result.details
-                    });
+                    toast.error(
+                        <div className="flex flex-col gap-1">
+                             <span className="font-bold">Failed to parse CSV</span>
+                             <span className="text-sm font-normal">{result.error || "Please check the file format."}</span>
+                        </div>
+                    );
                 }
               } catch (err) {
-                  setUploadStatus({ 
-                      type: 'error', 
-                      message: "An unexpected error occurred while processing the file." 
-                  });
+                  toast.error(
+                    <div className="flex flex-col gap-1">
+                         <span className="font-bold">Error processing file</span>
+                         <span className="text-sm font-normal">An unexpected error occurred.</span>
+                    </div>
+                  );
               }
           };
           reader.readAsText(file);
@@ -314,22 +300,27 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
   };
 
   // --- Filtering & Pagination ---
-  const filteredPatients = existingPatients.filter(p => 
-    (p.firstName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (p.lastName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (p.mrn || '').includes(searchTerm) ||
-    (p.history.suspectedAgents || []).some(a => (a || '').toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredPatients = useMemo(() => {
+    const lowerSearch = searchTerm.toLowerCase();
+    return existingPatients.filter(p => 
+      (p.firstName || '').toLowerCase().includes(lowerSearch) ||
+      (p.lastName || '').toLowerCase().includes(lowerSearch) ||
+      (p.mrn || '').includes(lowerSearch) ||
+      (p.history.suspectedAgents || []).some(a => (a || '').toLowerCase().includes(lowerSearch))
+    );
+  }, [existingPatients, searchTerm]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, existingPatients]);
 
   const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
-  const paginatedPatients = filteredPatients.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  const paginatedPatients = useMemo(() => {
+    return filteredPatients.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE
+    );
+  }, [filteredPatients, currentPage, ITEMS_PER_PAGE]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
@@ -363,7 +354,6 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         
         {/* Modern Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            
             {/* Total Records */}
             <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-purple-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '0ms' }}>
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -457,34 +447,33 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                 </CardContent>
             </Card>
 
-             {/* Top Symptom */}
-             <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-blue-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '300ms' }}>
+             {/* Avg Reaction Onset */}
+             <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-cyan-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '300ms' }}>
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Activity className="w-24 h-24 text-blue-500" />
+                    <Timer className="w-24 h-24 text-cyan-600" />
                 </div>
                 <CardContent className="pb-6 px-6 pt-6">
                      <div className="flex items-center gap-4 mb-4">
-                         <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-blue-600 dark:text-blue-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                            <Activity className="w-6 h-6" />
+                         <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl text-cyan-600 dark:text-cyan-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                            <Timer className="w-6 h-6" />
                         </div>
-                        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Top Symptom</span>
+                        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Avg. Reaction Onset</span>
                     </div>
                      <div className="space-y-1">
-                        <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-50 tracking-tight truncate" title={analytics.mostCommonSymptom}>
-                            {analytics.mostCommonSymptom}
+                        <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight flex items-baseline gap-1">
+                            {animatedAvgTime} <span className="text-lg font-medium text-slate-500 dark:text-slate-400">min</span>
                         </h3>
                         <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                             Most frequently reported
+                             From induction to first sign
                         </p>
                     </div>
                 </CardContent>
             </Card>
         </div>
 
-        {/* --- Charts Section --- */}
+        {/* ... (Charts Section) ... */}
+        {/* Reaction Grade Distribution */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-enter" style={{ animationDelay: '400ms' }}>
-            
-            {/* Reaction Grade Distribution */}
             <Card className="shadow-sm h-full">
                 <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                     <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
@@ -531,6 +520,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                     </div>
                     
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+                         {/* Legend Items */}
                         <div className="flex items-center gap-2 group cursor-default">
                             <span className="w-3 h-3 rounded-full bg-blue-400 dark:bg-blue-500 group-hover:scale-125 transition-transform"></span>
                             <span className="text-slate-600 dark:text-slate-400">Grade I: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.I}</span></span>
@@ -662,7 +652,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             </div>
         </Card>
 
-        {/* Positive Skin Test Breakdown Table (Grouped by Category + Accordion) */}
+        {/* Positive Skin Test Breakdown Table */}
         <Card className="w-full shadow-sm animate-enter" style={{ animationDelay: '600ms' }}>
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -728,7 +718,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                         </tr>
                                         {isExpanded && categoryGroup.stats.map((item, i) => (
                                             <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors border-b border-slate-50 dark:border-slate-900 animate-in fade-in slide-in-from-top-1">
-                                                <td className="px-4 py-3 font-medium text-slate-700 dark:text-slate-300 pl-10 border-l-4 border-l-transparent hover:border-l-[#8055f1] transition-all">{item.name}</td>
+                                                <td className="px-4 py-3 font-medium text-slate-700 dark:text-slate-300 pl-10 border-l-4 border-l-[#8055f1] hover:border-l-[#8055f1] transition-all">{item.name}</td>
                                                 <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.spt || '-'}</td>
                                                 <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idt100 || '-'}</td>
                                                 <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idt10 || '-'}</td>
@@ -771,17 +761,102 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                         
                         {/* Action Buttons & Search */}
                         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto items-stretch sm:items-center">
-                             <Button 
-                                variant="outline" 
-                                size="sm" 
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    fileInputRef.current?.click();
-                                }}
-                                className="shrink-0"
-                            >
-                                <Upload className="w-3 h-3 mr-1" /> Update DB
-                            </Button>
+                             
+                             <div className="flex gap-2">
+                                 <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                                    <SheetTrigger>
+                                        <Button variant="outline" size="sm" className="shrink-0 h-9">
+                                            <Upload className="w-3 h-3 mr-1.5" /> Update DB
+                                        </Button>
+                                    </SheetTrigger>
+                                    <SheetContent>
+                                        <SheetHeader className="mb-6">
+                                            <SheetTitle className="flex items-center gap-2">
+                                                <FileUp className="w-5 h-5 text-red-600" />
+                                                Update Database
+                                            </SheetTitle>
+                                            <SheetDescription>
+                                                Instructions for exporting patient data from REDCap and importing it here.
+                                            </SheetDescription>
+                                        </SheetHeader>
+                                        
+                                        <div className="space-y-6">
+                                            <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800">
+                                                <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
+                                                    <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
+                                                </h4>
+                                                <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
+                                                    Go to <a href="https://redcap.slhd.nsw.gov.au/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline font-medium">redcap.slhd.nsw.gov.au</a> and log in with your credentials.
+                                                </p>
+                                                <p className="text-xs text-slate-500 italic">(You must have data export rights)</p>
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <div className="flex gap-3">
+                                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                        2
+                                                    </div>
+                                                    <div className="text-sm text-slate-600 dark:text-slate-300">
+                                                        Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Data Exports, Reports, and Stats</span> on the sidebar.
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex gap-3">
+                                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                        3
+                                                    </div>
+                                                    <div className="text-sm text-slate-600 dark:text-slate-300">
+                                                        Find the <span className="font-semibold text-slate-900 dark:text-slate-100">All data (all records and fields)</span> row.
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex gap-3">
+                                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                        4
+                                                    </div>
+                                                    <div className="text-sm text-slate-600 dark:text-slate-300">
+                                                        Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span>.
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex gap-3">
+                                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                        5
+                                                    </div>
+                                                    <div className="text-sm text-slate-600 dark:text-slate-300">
+                                                        Choose <span className="font-semibold text-slate-900 dark:text-slate-100">CSV / Microsoft Excel (labels)</span> as the export format.
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex gap-3">
+                                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                        6
+                                                    </div>
+                                                    <div className="text-sm text-slate-600 dark:text-slate-300">
+                                                        Click <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span> and download the file.
+                                                    </div>
+                                                </div>
+                                                
+                                                <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-100 dark:border-blue-900/40 text-xs text-blue-700 dark:text-blue-300">
+                                                    Filename format should resemble:<br/>
+                                                    <span className="font-mono">AnaestheticAllergyCl_DATA_LABELS_YYYY-MM-DD_time.csv</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+                                                <Button 
+                                                    className="w-full h-12 text-base shadow-lg hover:shadow-red-500/20 transition-all bg-red-600 hover:bg-red-700 text-white" 
+                                                    size="lg"
+                                                    onClick={() => fileInputRef.current?.click()}
+                                                >
+                                                    <Upload className="w-4 h-4 mr-2" /> Select CSV File
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </SheetContent>
+                                </Sheet>
+                             </div>
+
                             <input 
                                 type="file" 
                                 ref={fileInputRef} 
@@ -822,10 +897,10 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                         )}
                     </div>
                     <button 
+                        className="opacity-50 hover:opacity-100" 
                         onClick={() => setUploadStatus(null)}
-                        className="shrink-0 hover:bg-black/5 rounded p-1 transition-colors"
                     >
-                        <X className="w-4 h-4 opacity-50" />
+                        <X className="w-4 h-4" />
                     </button>
                 </div>
             )}
@@ -845,7 +920,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
                         {paginatedPatients.length > 0 ? (
                             paginatedPatients.map((p) => {
-                                const timelineEvents = getTimelineEvents(p.history);
+                                const { events: timelineEvents } = parsePatientTimeline(p.history);
                                 return (
                                     <tr 
                                         key={p.id} 
@@ -893,7 +968,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                             })
                         ) : (
                             <tr>
-                                <td colSpan={5} className="px-4 py-8 text-center text-slate-500 italic">
+                                <td colSpan={5} className="px-4 py-8 text-center text-slate-500 dark:text-slate-400 italic">
                                     No matching records found.
                                 </td>
                             </tr>
@@ -906,7 +981,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
                 {paginatedPatients.length > 0 ? (
                     paginatedPatients.map(p => {
-                        const timelineEvents = getTimelineEvents(p.history);
+                        const { events: timelineEvents } = parsePatientTimeline(p.history);
                         return (
                             <div 
                                 key={p.id} 

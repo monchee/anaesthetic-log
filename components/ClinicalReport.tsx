@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from './ui';
 import { LogFormData } from '../types';
@@ -138,7 +139,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
          {/* Challenge Results */}
          <div>
             <h3 className="text-[#441170] font-bold text-lg mb-3 flex items-center gap-2">
-              <History className="w-5 h-5" /> IV Challenge Details
+              <History className="w-5 h-5" /> Drug Challenge Details
             </h3>
             {data.proceedToChallenge ? (
                <div className={`p-4 rounded-lg border-l-4 ${data.outcome === 'SUCCESS' 
@@ -162,7 +163,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                   )}
                </div>
             ) : (
-               <p className="text-slate-500 italic">No IV challenge performed.</p>
+               <p className="text-slate-500 italic">No drug challenge performed.</p>
             )}
          </div>
 

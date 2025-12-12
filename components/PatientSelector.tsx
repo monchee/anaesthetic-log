@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Patient } from '../types';
 import { formatDate } from '../lib/utils';
 import { Search, ChevronDown, Check, UserPlus } from 'lucide-react';
@@ -14,15 +14,27 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
   const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Sort patients by Record ID (numeric sort)
-  const sortedPatients = [...patients].sort((a, b) => 
-    parseInt(a.id) - parseInt(b.id)
-  );
+  // Memoize sorted patients to avoid recalculating on every render
+  // Handle non-numeric IDs gracefully
+  const sortedPatients = useMemo(() => {
+    return [...patients].sort((a, b) => {
+        const idA = parseInt(a.id);
+        const idB = parseInt(b.id);
+        if (isNaN(idA) || isNaN(idB)) {
+            return a.id.localeCompare(b.id);
+        }
+        return idA - idB;
+    });
+  }, [patients]);
 
-  const filteredPatients = sortedPatients.filter(p => {
-    const searchString = `${p.id} ${p.firstName} ${p.lastName} ${formatDate(p.dob)}`.toLowerCase();
-    return searchString.includes(searchTerm.toLowerCase());
-  });
+  // Memoize filtered patients based on search term
+  const filteredPatients = useMemo(() => {
+      const lowerSearch = searchTerm.toLowerCase();
+      return sortedPatients.filter(p => {
+        const searchString = `${p.id} ${p.firstName} ${p.lastName} ${formatDate(p.dob)}`.toLowerCase();
+        return searchString.includes(lowerSearch);
+      });
+  }, [sortedPatients, searchTerm]);
 
   const selectedPatient = sortedPatients.find(p => p.id === selectedPatientId);
   const isManualSelection = selectedPatientId === 'manual';

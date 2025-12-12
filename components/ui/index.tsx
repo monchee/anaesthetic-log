@@ -1,6 +1,50 @@
 
-import React, { useState } from 'react';
+import React, { useState, createContext, useContext, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronDown, X } from 'lucide-react';
+import { Toaster as HotToaster } from "react-hot-toast"
+
+// --- Toaster (React Hot Toast) ---
+export const Toaster = () => {
+  return (
+    <HotToaster
+      position="top-center"
+      reverseOrder={false}
+      gutter={8}
+      containerStyle={{
+        zIndex: 100000, // Ensure it's above everything
+      }}
+      toastOptions={{
+        duration: 5000,
+        className: 'dark:bg-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-xl rounded-lg text-sm font-medium',
+        style: {
+          padding: '12px 16px',
+          maxWidth: '500px',
+        },
+        success: {
+          duration: 4000,
+          iconTheme: {
+            primary: '#10b981', // Emerald-500
+            secondary: '#ffffff',
+          },
+          style: {
+            borderLeft: '4px solid #10b981',
+          }
+        },
+        error: {
+          duration: 6000,
+          iconTheme: {
+            primary: '#ef4444', // Red-500
+            secondary: '#ffffff',
+          },
+          style: {
+            borderLeft: '4px solid #ef4444',
+          }
+        },
+      }}
+    />
+  )
+}
 
 // --- Card ---
 export const Card = ({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
@@ -117,7 +161,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({ classN
   <div className="relative">
     <select
       ref={ref}
-      className={`flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus:ring-slate-300 ${className || ''}`}
+      className={`flex h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 ${className || ''}`}
       {...props}
     >
       {placeholder && <option value="" disabled>{placeholder}</option>}
@@ -156,16 +200,16 @@ export const AccordionItem = ({ title, children, defaultOpen = false, className 
 };
 
 // --- HoverCard ---
-export const HoverCard = ({ children }: { children: React.ReactNode }) => (
-  <div className="relative group inline-block">{children}</div>
+export const HoverCard = ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`relative group inline-block ${className || ''}`} {...props}>{children}</div>
 );
 
-export const HoverCardTrigger = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <div className={`cursor-help ${className}`}>{children}</div>
+export const HoverCardTrigger = ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`cursor-help ${className || ''}`} {...props}>{children}</div>
 );
 
-export const HoverCardContent = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[200px] p-2 bg-slate-800 text-slate-100 text-[10px] rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none text-center leading-tight ${className}`}>
+export const HoverCardContent = ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[200px] p-2 bg-slate-800 text-slate-100 text-[10px] rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none text-center leading-tight ${className || ''}`} {...props}>
     {children}
     <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-800"></div>
   </div>
@@ -174,8 +218,8 @@ export const HoverCardContent = ({ children, className }: { children: React.Reac
 // --- Dialog ---
 export const Dialog = ({ open, onOpenChange, children }: { open: boolean; onOpenChange: (open: boolean) => void; children?: React.ReactNode }) => {
   if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 flex items-center justify-center p-4">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 flex items-center justify-center p-4">
       <div 
          className="relative w-full max-w-lg gap-4 border bg-white p-6 shadow-lg duration-200 rounded-lg dark:bg-slate-950 dark:border-slate-800"
          onClick={(e) => e.stopPropagation()}
@@ -190,7 +234,8 @@ export const Dialog = ({ open, onOpenChange, children }: { open: boolean; onOpen
         </button>
       </div>
       <div className="fixed inset-0 -z-10" onClick={() => onOpenChange(false)} />
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -214,4 +259,119 @@ export const DialogFooter = ({ className, children }: { className?: string; chil
   <div className={`flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 ${className || ''}`}>
     {children}
   </div>
+);
+
+// --- Sheet ---
+const ANIMATION_DURATION = 300; // ms
+
+type SheetContextType = { 
+  open: boolean; 
+  setOpen: (open: boolean) => void;
+};
+const SheetContext = createContext<SheetContextType | null>(null);
+
+export const Sheet = ({ children, open, onOpenChange }: { children?: React.ReactNode, open?: boolean, onOpenChange?: (open: boolean) => void }) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  // Controlled vs Uncontrolled logic
+  const isControlled = open !== undefined;
+  const currentOpen = isControlled ? open : internalOpen;
+  const setOpenState = isControlled ? onOpenChange : setInternalOpen;
+
+  const handleSetOpen = (newOpen: boolean) => {
+    if (setOpenState) {
+        setOpenState(newOpen);
+    }
+  };
+
+  return (
+    <SheetContext.Provider value={{ open: !!currentOpen, setOpen: handleSetOpen }}>
+      {children}
+    </SheetContext.Provider>
+  );
+};
+
+export const SheetTrigger = ({ children }: { children?: React.ReactNode }) => {
+  const context = useContext(SheetContext);
+  if (!context) throw new Error("SheetTrigger must be used within Sheet");
+  
+  return (
+    <div onClick={() => context.setOpen(true)} className="inline-block cursor-pointer">
+      {children}
+    </div>
+  );
+};
+
+export const SheetContent = ({ children, className }: { children?: React.ReactNode, className?: string }) => {
+  const context = useContext(SheetContext);
+  if (!context) throw new Error("SheetContent must be used within Sheet");
+  
+  const { open, setOpen } = context;
+  const [shouldRender, setShouldRender] = useState(false);
+
+  useEffect(() => {
+    let timeoutId: number;
+    if (open) {
+      setShouldRender(true);
+    } else if (shouldRender) {
+      // If open becomes false but we are currently rendering,
+      // wait for animation to finish before unmounting
+      timeoutId = window.setTimeout(() => {
+        setShouldRender(false);
+      }, ANIMATION_DURATION);
+    }
+    return () => {
+        if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [open, shouldRender]);
+
+  if (!shouldRender) return null;
+
+  // If we are rendering but open is false, we are animating out
+  const animationClass = open ? 'animate-sheet-in' : 'animate-sheet-out';
+  const backdropOpacity = open ? 'opacity-100' : 'opacity-0';
+
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex justify-end">
+       {/* Backdrop */}
+       <div 
+         className={`fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${backdropOpacity}`} 
+         onClick={() => setOpen(false)} 
+       />
+       
+       {/* Panel */}
+       <div 
+         className={`relative z-50 h-full w-full max-w-sm bg-white p-6 shadow-xl dark:bg-slate-950 dark:border-l dark:border-slate-800 sm:max-w-md 
+            ${className || ''} ${animationClass} `}
+       >
+          <button 
+            onClick={() => setOpen(false)}
+            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 data-[state=open]:text-slate-500 dark:ring-offset-slate-950 dark:focus:ring-slate-300 dark:data-[state=open]:bg-slate-800 dark:data-[state=open]:text-slate-400"
+          >
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </button>
+          {children}
+       </div>
+    </div>,
+    document.body
+  );
+};
+
+export const SheetHeader = ({ className, children }: { className?: string; children?: React.ReactNode }) => (
+  <div className={`flex flex-col space-y-2 text-center sm:text-left ${className || ''}`}>
+    {children}
+  </div>
+);
+
+export const SheetTitle = ({ className, children }: { className?: string; children?: React.ReactNode }) => (
+  <h2 className={`text-lg font-semibold text-slate-950 dark:text-slate-50 ${className || ''}`}>
+    {children}
+  </h2>
+);
+
+export const SheetDescription = ({ className, children }: { className?: string; children?: React.ReactNode }) => (
+  <p className={`text-sm text-slate-500 dark:text-slate-400 ${className || ''}`}>
+    {children}
+  </p>
 );

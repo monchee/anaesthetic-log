@@ -13,6 +13,7 @@ export interface PatientHistory {
   procedure: string;
   anaesthetist: string; // Kept for legacy/completer support
   referringDoctor?: string;
+  referringDoctorPosition?: string; // Anaesthetic Consultant, Trainee, GP, Other
   providerNumber?: string;
   referringEmail?: string;
   referringPhone?: string;
@@ -23,6 +24,7 @@ export interface PatientHistory {
   preInductionDrugs?: string[]; // Legacy: kept for mock data compatibility
   postInductionDrugs?: string[]; // Legacy: kept for mock data compatibility
   procedureOutcome?: string;
+  anaesthesiaType?: string[]; // New field for General, Regional, Local, IV Sedation
 }
 
 export interface Patient {

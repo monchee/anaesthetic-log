@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui';
 import { ShieldCheck, LayoutDashboard, Database } from 'lucide-react';
+// Fixed: Corrected the import statement from `=>` to `from`
 import { Screen } from '../types';
 
 interface ChangelogProps {
@@ -11,6 +12,115 @@ interface ChangelogProps {
 
 const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
+    {
+      version: "v0.3.40",
+      changes: [
+        "Feature: Added 'Referring Doctor Position' field (Consultant, Trainee, GP, etc.) to the Patient History view.",
+        "Data: Enhanced CSV parser to automatically detect and import referring doctor position data.",
+      ]
+    },
+    {
+      version: "v0.3.39",
+      changes: [
+        "Data: Updated mock patient database to include specific 'Type of Anaesthesia' (General, Regional, IV Sedation, etc.) for better timeline context.",
+        "UI: The timeline now displays the anaesthesia type in a streamlined hover card.",
+      ]
+    },
+    {
+      version: "v0.3.38",
+      changes: [
+        "UI: Renamed 'IV Challenge' to 'Drug Challenge' to better accommodate oral and intravenous testing protocols.",
+        "UI: Centered column headers in the SPT & IDT Panel for improved data readability.",
+        "Fix: Updated modal dialog positioning (z-index) to ensure 'New Patient' form appears above the sticky header."
+      ]
+    },
+    {
+      version: "v0.3.37",
+      changes: [
+        "Optimization: Centralized timeline parsing logic to improve performance and consistency.",
+        "Refactor: Moved static CSV configuration to module scope, reducing memory allocation during file uploads.",
+        "Cleanup: Removed duplicated code across Dashboard and Patient History views."
+      ]
+    },
+    {
+      version: "v0.3.36",
+      changes: [
+        "Fix: Resolved an issue with redundant closing animations in the slide-out sheet component.",
+        "System: Refactored Sheet state management to eliminate race conditions between open state and animation timers."
+      ]
+    },
+    {
+      version: "v0.3.35",
+      changes: [
+        "System: Migrated notification system from Sonner to React Hot Toast for improved reliability and style consistency.",
+        "Fix: Resolved persistent visibility issues with upload notifications by leveraging a more robust stacking context strategy."
+      ]
+    },
+    {
+      version: "v0.3.34",
+      changes: [
+        "Fix: Critical fix for notification visibility by injecting missing external CSS styles.",
+        "UI: Enhanced CSV upload experience with 'toast.promise' to show loading, success, and error states clearly.",
+        "UX: Added a natural delay before closing the upload sheet to allow users to see the confirmation message."
+      ]
+    },
+    {
+      version: "v0.3.33",
+      changes: [
+        "Fix: Added richColors and aggressive CSS overrides to ensure upload notifications are visible above all modal layers.",
+        "UI: Enabled close button on notifications for better user control."
+      ]
+    },
+    {
+      version: "v0.3.32",
+      changes: [
+        "Fix: Forcefully increased toast notification z-index using global style injection.",
+        "UI: Moved notifications to 'top-center' for better visibility during overlay interactions."
+      ]
+    },
+    {
+      version: "v0.3.31",
+      changes: [
+        "Fix: Resolved an issue where notifications were hidden behind the upload sheet.",
+        "System: Ensure toast notifications have the highest visual priority."
+      ]
+    },
+    {
+      version: "v0.3.30",
+      changes: [
+        "Feature: Improved CSV upload experience. The upload sheet now closes automatically upon successful update.",
+        "Feature: Added a specific 'Database updated' confirmation toast for clearer feedback."
+      ]
+    },
+    {
+      version: "v0.3.29",
+      changes: [
+        "UI: Decreased font size for 'Additional Comments' in Patient History for subtle emphasis and better flow.",
+      ]
+    },
+    {
+      version: "v0.3.28",
+      changes: [
+        "UI: Reduced text size of 'Additional Comments' in Patient History for better distinction.",
+      ]
+    },
+    {
+      version: "v0.3.27",
+      changes: [
+        "Feature: Upon successful CSV upload, a Sonner toast notification confirms the database update.",
+        "Feature: CSV upload now automatically closes the upload sheet after successful import.",
+        "Data: The database date has been fixed to 12/12/2025 for consistency.",
+      ]
+    },
+    {
+      version: "v0.3.26",
+      changes: [
+        "Performance: Significant optimizations to patient list rendering, filtering, and sorting to handle large datasets smoothly.",
+        "System: Fixed a critical issue with duplicate React versions in the bootloader preventing application startup.",
+        "Codebase: Refactored input event handlers in the Testing Log to improve typing performance and reduce re-renders.",
+        "Stability: Enhanced component cleanup to prevent memory leaks during rapid navigation."
+      ]
+    },
     {
       version: "v0.3.25",
       changes: [
@@ -207,7 +317,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
         "Dashboard: Top Suspected Agents chart filters out zero-count agents and sorts 'Other' to bottom.",
         "UI: Added standardized footer to all screens.",
         "UI: Fixed print preview formatting in Testing Plan Generator (bullets instead of checkboxes).",
-        "UI: Demo Disclaimer now persists on all screens until dismissed."
+        "UI: Demo disclaimer now persists on all screens until dismissed."
       ]
     },
     {

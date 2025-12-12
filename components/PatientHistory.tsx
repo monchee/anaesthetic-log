@@ -1,9 +1,9 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Badge, HoverCard, HoverCardContent, HoverCardTrigger } from './ui';
 import { Patient } from '../types';
-import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare } from 'lucide-react';
-import { formatDate, getGradeVariant } from '../lib/utils';
+import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck } from 'lucide-react';
+import { formatDate, getGradeVariant, parsePatientTimeline } from '../lib/utils';
 
 interface PatientHistoryProps {
   patient: Patient;
@@ -31,53 +31,10 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
 
   const { label: gradeLabel, description: gradeDesc } = splitGrade(history.grade);
 
-  // --- Construct Timeline Events ---
-  interface TimelineEvent {
-      time: string;
-      type: 'med' | 'induction' | 'reaction' | 'info';
-      label: string;
-      subtext?: string;
-  }
-
-  const events: TimelineEvent[] = [];
-  const untimedAdministered: string[] = [];
-
-  const processDrug = (d: string) => {
-      const trimmedD = d.trim(); 
-      if (!trimmedD) return; 
-      
-      // Check for "@" delimiter used by parser
-      if (trimmedD.includes('@')) {
-          const parts = trimmedD.split('@');
-          const drugLabel = parts[0].trim();
-          const time = (parts[1] || '').trim();
-          
-          if (time) {
-             events.push({ time, type: 'med', label: drugLabel });
-          } else {
-             // Fallback if @ exists but time is empty
-             if (drugLabel) untimedAdministered.push(drugLabel);
-          }
-      } else {
-          // No time delimiter found -> Untimed
-          untimedAdministered.push(trimmedD);
-      }
-  };
-
-  const allMedications = [
-      ...(history.medications || []),
-      ...(history.preInductionDrugs || []),
-      ...(history.postInductionDrugs || [])
-  ];
-
-  const uniqueMedications = [...new Set(allMedications)];
-
-  uniqueMedications.forEach(d => processDrug(d));
-  
-  if (history.inductionTime) events.push({ time: history.inductionTime, type: 'induction', label: 'Anaesthetic Induction' });
-  if (history.reactionTime) events.push({ time: history.reactionTime, type: 'reaction', label: 'Reaction Onset' });
-
-  const sortedEvents = events.sort((a, b) => a.time.localeCompare(b.time));
+  // Use centralized parsing logic
+  const { events: sortedEvents, untimedMedications: untimedAdministered } = useMemo(() => 
+    parsePatientTimeline(history), 
+  [history]);
 
   const getOutcomeConfig = (outcome?: string) => {
       if (!outcome) return { text: "Not recorded", color: "text-slate-500", icon: HelpCircle };
@@ -168,7 +125,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                 <MessageSquare className="h-3.5 w-3.5 text-slate-500" /> 
                                 Additional Comments
                             </h4>
-                            <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 leading-relaxed shadow-sm text-sm italic">
+                            <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 leading-relaxed shadow-sm text-xs italic">
                                 {history.comments}
                             </div>
                         </div>
@@ -250,12 +207,16 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         <div className="font-medium text-slate-900 dark:text-slate-100 text-sm break-words leading-snug">
                             {doctorName}
                         </div>
-                        {(history.providerNumber || history.referringPhone) && (
-                            <div className="text-[10px] text-slate-500 dark:text-slate-400 flex flex-wrap gap-2 mt-0.5">
-                                {history.providerNumber && <span className="opacity-80">#{history.providerNumber}</span>}
-                                {history.referringPhone && <span className="opacity-80 flex items-center gap-0.5"><Phone className="h-2 w-2" /> {history.referringPhone}</span>}
-                            </div>
-                        )}
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 flex flex-wrap gap-2 mt-0.5">
+                            {history.referringDoctorPosition && (
+                                <span className="font-medium text-slate-600 dark:text-slate-300">{history.referringDoctorPosition}</span>
+                            )}
+                            {(history.referringDoctorPosition && (history.providerNumber || history.referringPhone)) && (
+                                <span className="text-slate-300 dark:text-slate-600">|</span>
+                            )}
+                            {history.providerNumber && <span className="opacity-80">#{history.providerNumber}</span>}
+                            {history.referringPhone && <span className="opacity-80 flex items-center gap-0.5"><Phone className="h-2 w-2" /> {history.referringPhone}</span>}
+                        </div>
                     </div>
 
                     <div className="space-y-1 flex-1 min-w-0 sm:border-l sm:border-slate-200 sm:dark:border-slate-800 sm:pl-4">
@@ -273,26 +234,27 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     <Clock className="h-3.5 w-3.5 text-brand dark:text-purple-400" /> 
                     Timeline & Medications
                 </h4>
-                <div className="bg-slate-50 dark:bg-slate-950 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex-1 flex flex-col">
+                {/* Removed overflow-hidden and overflow-y-auto to allow tooltips to display without clipping */}
+                <div className="bg-slate-50 dark:bg-slate-950 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm overflow-visible flex-1 flex flex-col">
                     
                     {/* Key Times Header */}
-                    <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 py-2 flex justify-between gap-2 text-xs shrink-0">
+                    <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 py-2 flex justify-between gap-2 text-xs shrink-0 rounded-t-lg">
                         <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-slate-500 dark:text-slate-400">INDUCTION:</span>
-                            <span className="font-mono font-medium text-purple-600 dark:text-purple-400">
+                            <span className="font-bold text-slate-500 dark:text-slate-400 text-xs">INDUCTION:</span>
+                            <span className="font-mono font-medium text-purple-600 dark:text-purple-400 text-xs">
                                 {formatTime(history.inductionTime)}
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-slate-500 dark:text-slate-400">REACTION:</span>
-                            <span className="font-mono font-bold text-red-600 dark:text-red-400">
+                            <span className="font-bold text-slate-500 dark:text-slate-400 text-xs">REACTION:</span>
+                            <span className="font-mono font-bold text-red-600 dark:text-red-400 text-xs">
                                 {formatTime(history.reactionTime)}
                             </span>
                         </div>
                     </div>
 
-                    {/* Scrollable Timeline Area */}
-                    <div className="p-3 overflow-y-auto max-h-[300px] lg:max-h-none flex-1">
+                    {/* Timeline Area - Removed max-height constraints to prevent scrolling and clipping */}
+                    <div className="p-3 flex-1">
                         {sortedEvents.length > 0 ? (
                             <div className="relative border-l-2 border-slate-200 dark:border-slate-700 ml-2 space-y-3">
                                 {sortedEvents.map((event, idx) => (
@@ -306,25 +268,44 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                         <div className="flex flex-col gap-0.5">
                                             <div className="flex items-center justify-between gap-2">
                                                 <div className="flex items-center gap-1.5">
-                                                    <span className={`font-semibold ${
-                                                        event.type === 'reaction' ? 'text-red-700 dark:text-red-300 text-sm' : 
-                                                        event.type === 'induction' ? 'text-purple-700 dark:text-purple-300 text-sm' :
-                                                        'text-slate-800 dark:text-slate-200 text-xs'
-                                                    }`}>
-                                                        {event.label}
-                                                    </span>
-                                                    {event.type === 'reaction' && (
+                                                    {event.type === 'induction' ? (
                                                         <HoverCard>
-                                                            <HoverCardTrigger>
-                                                                <Info className="w-3.5 h-3.5 text-red-500 cursor-help" />
+                                                            <HoverCardTrigger className="cursor-help flex items-center gap-1.5 group">
+                                                                <span className="font-semibold text-xs text-purple-700 dark:text-purple-300 group-hover:underline decoration-dashed underline-offset-2">
+                                                                    {event.label}
+                                                                </span>
+                                                                <MonitorCheck className="w-3.5 h-3.5 text-purple-500 opacity-70" />
                                                             </HoverCardTrigger>
-                                                            <HoverCardContent>
-                                                                {history.grade}
+                                                            <HoverCardContent className="w-auto px-3 py-1.5 z-50">
+                                                                <span className="font-medium text-xs text-slate-100 whitespace-nowrap">
+                                                                    {(history.anaesthesiaType && history.anaesthesiaType.length > 0) 
+                                                                        ? history.anaesthesiaType.join(', ') 
+                                                                        : 'Not specified'}
+                                                                </span>
                                                             </HoverCardContent>
                                                         </HoverCard>
+                                                    ) : (
+                                                        <div className="flex items-center gap-1.5">
+                                                            <span className={`font-semibold text-xs ${
+                                                                event.type === 'reaction' ? 'text-red-700 dark:text-red-300' : 
+                                                                'text-slate-800 dark:text-slate-200'
+                                                            }`}>
+                                                                {event.label}
+                                                            </span>
+                                                            {event.type === 'reaction' && (
+                                                                <HoverCard>
+                                                                    <HoverCardTrigger>
+                                                                        <Info className="w-3.5 h-3.5 text-red-500 cursor-help" />
+                                                                    </HoverCardTrigger>
+                                                                    <HoverCardContent>
+                                                                        {history.grade}
+                                                                    </HoverCardContent>
+                                                                </HoverCard>
+                                                            )}
+                                                        </div>
                                                     )}
                                                 </div>
-                                                <span className={`font-mono text-[10px] font-bold ${
+                                                <span className={`font-mono text-xs font-bold ${
                                                     event.type === 'reaction' ? 'text-red-600 dark:text-red-400' : 
                                                     event.type === 'induction' ? 'text-purple-600 dark:text-purple-400' :
                                                     'text-slate-400 dark:text-slate-500'
@@ -347,13 +328,13 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     {/* Untimed Agents Section */}
                     {untimedAdministered.length > 0 && (
                         <div className="border-t border-slate-100 dark:border-slate-800 px-3 py-3 bg-white/50 dark:bg-slate-900/50">
-                            <h5 className="text-[10px] uppercase font-bold text-slate-400 mb-2 tracking-wider">Medication with no listed time</h5>
+                            <h5 className="text-xs uppercase font-bold text-slate-400 mb-2 tracking-wider">Medication with no listed time</h5>
                             <div className="flex flex-wrap gap-1.5">
                                 {untimedAdministered.map((drug, idx) => (
                                     <Badge 
                                         key={idx} 
                                         variant="secondary"
-                                        className="text-[11px] font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                                        className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
                                     >
                                         {drug}
                                     </Badge>
@@ -363,8 +344,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     )}
 
                         {/* Outcome Footer */}
-                    <div className="bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-3 py-2 flex items-center justify-between shrink-0">
-                            <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Outcome</span>
+                    <div className="bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-3 py-2 flex items-center justify-between shrink-0 rounded-b-lg">
+                            <span className="text-xs uppercase font-bold text-slate-500 tracking-wider">Outcome</span>
                             <div className={`font-bold text-xs flex items-center gap-1.5 ${outcomeConfig.color}`}>
                             <OutcomeIcon className="h-3 w-3" />
                             {outcomeConfig.text}

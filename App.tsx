@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from './components/PatientSelector';
 import PatientHistory from './components/PatientHistory';
 import TestingLogForm from './components/TestingLogForm';
@@ -53,7 +54,7 @@ function AnaestheticLogApp() {
   
   // State for Patients Database (Initialized with Mock, can be updated via CSV)
   const [patients, setPatients] = useState<Patient[]>(MOCK_PATIENTS);
-  const [databaseDate, setDatabaseDate] = useState<string>("03/12/2025");
+  const [databaseDate, setDatabaseDate] = useState<string>("12/12/2025"); // Updated dataset date
   const [hasUploadedData, setHasUploadedData] = useState(false);
 
   // State for NEWLY added logs (separate from the static database)
@@ -127,9 +128,8 @@ function AnaestheticLogApp() {
 
   const handleUploadPatients = (newPatients: Patient[]) => {
     setPatients(newPatients);
-    setDatabaseDate(new Date().toLocaleDateString('en-GB'));
+    setDatabaseDate("12/12/2025"); // Set to the specific date
     setHasUploadedData(true);
-    alert(`Successfully updated database with ${newPatients.length} records.`);
   };
 
   // Handler for clicking a patient in the Dashboard
@@ -502,6 +502,7 @@ function App() {
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <FontSizeProvider>
             <AnaestheticLogApp />
+            <Toaster /> {/* Render Toaster globally */}
         </FontSizeProvider>
     </ThemeProvider>
   );

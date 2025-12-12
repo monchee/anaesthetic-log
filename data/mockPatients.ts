@@ -16,6 +16,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Appendectomy",
       anaesthetist: "Dr Sarah Connor",
       referringDoctor: "Dr John Smith",
+      referringDoctorPosition: "Anaesthetic Consultant",
       providerNumber: "1234567A",
       referringEmail: "j.smith@health.nsw.gov.au",
       referringPhone: "0400111222",
@@ -31,7 +32,8 @@ export const MOCK_PATIENTS: Patient[] = [
       predominantSymptom: "Hypotension",
       treatment: ["Adrenaline", "Hydrocortisone", "Salbutamol nebuliser", "IV Fluids"],
       suspectedAgents: ["Rocuronium"],
-      tryptase: "Pending"
+      tryptase: "Pending",
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -48,6 +50,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Laparoscopic Cholecystectomy",
       anaesthetist: "Assoc Prof Charles Pittwater",
       referringDoctor: "Assoc Prof Charles Pittwater",
+      referringDoctorPosition: "Anaesthetic Consultant",
       providerNumber: "4625039A",
       referringEmail: "c.pittwater@gmail.com",
       referringPhone: "0451077482",
@@ -60,7 +63,8 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Cardiac Arrest", detail: "5 mins CPR" }, { label: "Bronchospasm" }, { label: "Tachycardia" }, { label: "Erythema", detail: "Trunk and torso" }],
       treatment: ["Adrenaline infusion", "Fluids", "CPR", "Hydrocortisone", "Antihistamine"],
       suspectedAgents: ["Rocuronium", "Cefazolin"],
-      tryptase: ">200 ng/mL"
+      tryptase: ">200 ng/mL",
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -77,6 +81,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Knee Arthroscopy",
       anaesthetist: "Dr James Wilson",
       referringDoctor: "Dr James Wilson",
+      referringDoctorPosition: "Anaesthetic Trainee",
       providerNumber: "9876543B",
       hospital: "Mater Hospital",
       inductionTime: "07:30",
@@ -87,7 +92,8 @@ export const MOCK_PATIENTS: Patient[] = [
       comments: "Patient has a history of eczema. Noted skin irritation from bandaids previously.",
       symptoms: [{ label: "Urticaria", detail: "Chest and arms" }],
       treatment: ["Promethazine", "Observation"],
-      suspectedAgents: ["Chlorhexidine", "Cefazolin"]
+      suspectedAgents: ["Chlorhexidine", "Cefazolin"],
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -104,6 +110,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Right elbow loose body removal & capsule release",
       anaesthetist: "Dr Cameron Dunn",
       referringDoctor: "Dr Cameron Dunn",
+      referringDoctorPosition: "GP Anaesthetist",
       providerNumber: "4769724J",
       referringEmail: "camjdunn@gmail.com",
       referringPhone: "0408393003",
@@ -115,7 +122,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Immediate tachycardia (HR 120), severe hypotension (SBP 60mmHg) on first reading post intubation. Cutaneous reaction with widespread erythema across trunk and torso. Mild wheeze with bronchospasm, but able to ventilate easily.",
       symptoms: [{ label: "Tachycardia" }, { label: "Hypotension" }, { label: "Erythema" }, { label: "Wheeze" }, { label: "Bronchospasm" }],
       treatment: ["Adrenaline infusion", "Fluids", "Hydrocortisone"],
-      suspectedAgents: ["Cefazolin", "Hartmanns"]
+      suspectedAgents: ["Cefazolin", "Hartmanns"],
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -142,7 +150,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Spinal ineffective once peritoneum manipulated, converted to GA. Urticarial rash on face noted immediately after rocuronium at induction but larger reaction only evident once drapes removed. Suspected Latex allergy due to surgeon's gloves.",
       symptoms: [{ label: "Urticaria" }, { label: "Rash", detail: "Face initially, then generalized" }],
       treatment: ["Dexamethasone", "Observation", "Antihistamine"],
-      suspectedAgents: ["Rocuronium", "Latex"]
+      suspectedAgents: ["Rocuronium", "Latex"],
+      anaesthesiaType: ["Regional", "General"]
     }
   },
   {
@@ -159,6 +168,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Prostatectomy",
       anaesthetist: "Dr Mary Fujg",
       referringDoctor: "Dr Mary Fujg",
+      referringDoctorPosition: "Anaesthetic Consultant",
       providerNumber: "247689GH",
       referringEmail: "mpyfung@hotmail.com",
       hospital: "Chris O'Brien Lifehouse",
@@ -170,7 +180,8 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Cough" }, { label: "Erythema" }, { label: "Tachycardia" }, { label: "Hypotension", detail: "SBP 44mmHg" }],
       treatment: ["Adrenaline", "Fluids", "Hydrocortisone", "Phenylephrine"],
       suspectedAgents: ["Rocuronium", "Sugammadex"],
-      tryptase: "45 ng/mL"
+      tryptase: "45 ng/mL",
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -195,7 +206,8 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Difficult ventilation" }, { label: "Bronchospasm" }],
       treatment: ["Adrenaline infusion", "Hydrocortisone", "Intubation"],
       suspectedAgents: ["Rocuronium", "Vecuronium"],
-      tryptase: "Elevated"
+      tryptase: "Elevated",
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -219,7 +231,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Drop in BP to 80/40, HR 110. Widespread flush initially attributed to vasodilation, but persistent despite initial vasopressor support. Responded to metaraminol and fluids. Surgery proceeded with caution.",
       symptoms: [{ label: "Hypotension" }, { label: "Tachycardia" }, { label: "Flushing" }],
       treatment: ["Metaraminol", "Fluids", "Observation"],
-      suspectedAgents: ["Cefazolin", "Chlorhexidine"]
+      suspectedAgents: ["Cefazolin", "Chlorhexidine"],
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -236,6 +249,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Hysteroscopy, Novasure Endometrial Ablation",
       anaesthetist: "Dr Jonathan Byrne",
       referringDoctor: "Dr Jonathan Byrne",
+      referringDoctorPosition: "Anaesthetic Consultant",
       providerNumber: "2033721B",
       hospital: "Strathfield Private",
       inductionTime: "08:17",
@@ -245,7 +259,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Mild intraoperative hypotension/bradycardia. Post-discharge patient retrospectively reported generalised pruritus post-emergence/in PACU. Chills, nausea, vomiting post-discharge. ED diagnosed 'probable anaesthetic reaction'. Suspected Fentanyl due to timing of pruritus.",
       symptoms: [{ label: "Pruritus" }, { label: "Cough" }, { label: "Hypotension" }, { label: "Nausea" }, { label: "Vomiting" }],
       treatment: ["Prednisone", "Loratadine", "Salbutamol (post-discharge)"],
-      suspectedAgents: ["Fentanyl", "Propofol"]
+      suspectedAgents: ["Fentanyl", "Propofol"],
+      anaesthesiaType: ["IV Sedation"]
     }
   },
   {
@@ -270,7 +285,8 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Cardiac Arrest", detail: "Asystole" }, { label: "Hypotension" }],
       treatment: ["CPR", "Adrenaline", "IV Fluids"],
       suspectedAgents: ["Suxamethonium"],
-      tryptase: ">200 ng/mL"
+      tryptase: ">200 ng/mL",
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -294,7 +310,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Severe hypotension after CVC insertion and skin prep. No response to phenylephrine. Suspected anaphylaxis to Chlorhexidine used for skin preparation, given the timing.",
       symptoms: [{ label: "Hypotension" }, { label: "Tachycardia" }, { label: "Flushing" }],
       treatment: ["Adrenaline Infusion", "Fluids", "Hydrocortisone"],
-      suspectedAgents: ["Chlorhexidine", "Pancuronium"]
+      suspectedAgents: ["Chlorhexidine", "Pancuronium"],
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -318,7 +335,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Lip swelling and urticaria noted after procedure completed. Surgical team confirmed use of latex gloves. Local anaesthetic was bupivacaine which was well tolerated.",
       symptoms: [{ label: "Angioedema", detail: "Lip Swelling" }, { label: "Urticaria" }],
       treatment: ["Antihistamines", "Observation"],
-      suspectedAgents: ["Latex"]
+      suspectedAgents: ["Latex"],
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -342,7 +360,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Acute profound hypotension and high airway pressures immediately after Protamine administration for heparin reversal. Patient had known fish allergy, increasing suspicion.",
       symptoms: [{ label: "Hypotension" }, { label: "Bronchospasm" }, { label: "High Airway Pressures" }],
       treatment: ["Fluids", "Adrenaline (small dose)", "Vasopressors"],
-      suspectedAgents: ["Protamine"]
+      suspectedAgents: ["Protamine"],
+      anaesthesiaType: ["IV Sedation", "Local"]
     }
   },
   {
@@ -359,6 +378,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "C3/4 Laminectomy and Lateral Mass Fusion",
       anaesthetist: "Dr Jodi Murphy",
       referringDoctor: "Dr Jodi Murphy",
+      referringDoctorPosition: "Anaesthetic Consultant",
       hospital: "Westmead Hospital",
       inductionTime: "14:43",
       reactionTime: "14:49",
@@ -368,7 +388,8 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Cardiac Arrest", detail: "PEA" }, { label: "Bradycardia" }],
       treatment: ["Adrenaline", "Fluids", "CPR"],
       suspectedAgents: ["Dexmedetomidine", "Remifentanil", "Plasmalyte"],
-      tryptase: "15 ng/mL"
+      tryptase: "15 ng/mL",
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -392,7 +413,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Acute desaturation to 88% and significant hypotension (70/40) 5 minutes after Patent Blue dye injection. Diffuse blue hives noted across chest and arms. Responded to adrenaline. Procedure completed after stabilization.",
       symptoms: [{ label: "Hypotension" }, { label: "Desaturation" }, { label: "Urticaria" }, { label: "Blue Hives" }],
       treatment: ["Adrenaline", "Oxygen", "Hydrocortisone"],
-      suspectedAgents: ["Patent Blue", "Cefazolin"]
+      suspectedAgents: ["Patent Blue", "Cefazolin"],
+      anaesthesiaType: ["IV Sedation"]
     }
   },
   {
@@ -409,6 +431,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Total Laparoscopic Hysterectomy with Bilateral Salpingo-Oophorectomy (TLHBSO)",
       anaesthetist: "Dr Kate FitzSimons",
       referringDoctor: "Dr Kate FitzSimons",
+      referringDoctorPosition: "Anaesthetic Trainee",
       hospital: "Chris O'Brien Lifehouse",
       inductionTime: "11:40",
       reactionTime: "11:41",
@@ -419,7 +442,8 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Cough" }, { label: "Hypoxaemia" }, { label: "Difficult Ventilation" }],
       treatment: ["Bronchospasm Treatment", "Adrenaline (empiric)", "Hydrocortisone"],
       suspectedAgents: ["Unknown"],
-      tryptase: "120 ng/mL"
+      tryptase: "120 ng/mL",
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -443,7 +467,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Generalised rash and mild wheeze noted 5 minutes after induction. Easily settled with hydrocortisone. Procedure completed quickly without further incident.",
       symptoms: [{ label: "Rash" }, { label: "Wheeze" }],
       treatment: ["Hydrocortisone"],
-      suspectedAgents: ["Propofol", "Midazolam", "Fentanyl"]
+      suspectedAgents: ["Propofol", "Midazolam", "Fentanyl"],
+      anaesthesiaType: ["IV Sedation"]
     }
   },
   {
@@ -460,6 +485,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Cystoscopy and Ureteric Stent Insertion",
       anaesthetist: "Dr Kim Hanna",
       referringDoctor: "Dr Kim Hanna",
+      referringDoctorPosition: "Anaesthetic Consultant",
       hospital: "RPA Hospital",
       inductionTime: "00:30",
       reactionTime: "00:45",
@@ -468,7 +494,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Hypotension (SBP 70mmHg), hypoxia (SPO2 88%), and elevated airway pressures (peak 35) following induction of anaesthesia with endotracheal intubation. Managed with fluids and minimal adrenaline. Suspected Cefazolin or Latex (catheter).",
       symptoms: [{ label: "Hypotension" }, { label: "Bronchospasm" }, { label: "Hypoxia" }, { label: "Elevated Airway Pressures" }],
       treatment: ["Adrenaline (low dose)", "Fluids", "Hydrocortisone"],
-      suspectedAgents: ["Cefazolin", "Latex"]
+      suspectedAgents: ["Cefazolin", "Latex"],
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -485,6 +512,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "LSCS",
       anaesthetist: "Dr Robert Heavener",
       referringDoctor: "Dr Robert Heavener",
+      referringDoctorPosition: "Anaesthetic Consultant",
       hospital: "RPA",
       inductionTime: "08:00",
       reactionTime: "08:00",
@@ -493,7 +521,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Red neck and face reported immediately after spinal. Itch attributed to intrathecal morphine vs delayed reaction to chlorhexidine skin prep. Haemodynamically stable.",
       symptoms: [{ label: "Itch" }, { label: "Erythema", detail: "Red Neck/Face" }],
       treatment: ["Loratadine"],
-      suspectedAgents: ["Morphine", "Chlorhexidine"]
+      suspectedAgents: ["Morphine", "Chlorhexidine"],
+      anaesthesiaType: ["Regional"]
     }
   },
   {
@@ -510,6 +539,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Pneumonectomy",
       anaesthetist: "Dr Stella Graham",
       referringDoctor: "Dr Stella Graham",
+      referringDoctorPosition: "Anaesthetic Consultant",
       hospital: "RPAH",
       inductionTime: "12:16",
       reactionTime: "12:30",
@@ -518,7 +548,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Sedation with midazolam/fentanyl/propofol. Coughing noted with fentanyl bolus, followed by erythema on chest after induction. Progressive urticarial rash on scalp and face developed. Tachycardia but haemodynamically stable.",
       symptoms: [{ label: "Erythema" }, { label: "Urticaria" }, { label: "Tachycardia" }, { label: "Cough" }],
       treatment: ["Fluids", "Antihistamine", "Observation"],
-      suspectedAgents: ["Fentanyl", "Propofol"]
+      suspectedAgents: ["Fentanyl", "Propofol"],
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -535,6 +566,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Conduitoscopy",
       anaesthetist: "Dr Michael Paleologos",
       referringDoctor: "Dr Michael Paleologos",
+      referringDoctorPosition: "Anaesthetic Consultant",
       hospital: "Strathfield Private Hospital",
       inductionTime: "08:25",
       reactionTime: "08:35",
@@ -544,7 +576,8 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Cardiac Arrest" }, { label: "Unresponsive" }, { label: "Tachycardia" }, { label: "Hypotension" }],
       treatment: ["Adrenaline", "CPR", "Fluids", "Vasopressors"],
       suspectedAgents: ["Rocuronium", "Propofol", "Fentanyl"],
-      tryptase: ">180 ng/mL"
+      tryptase: ">180 ng/mL",
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -561,6 +594,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Laparoscopic Bilateral Salpingo-oophorectomy",
       anaesthetist: "Dr Neha Mahajan",
       referringDoctor: "Dr Neha Mahajan",
+      referringDoctorPosition: "Anaesthetic Trainee",
       hospital: "St George Private",
       inductionTime: "10:00",
       reactionTime: "10:05",
@@ -569,7 +603,8 @@ export const MOCK_PATIENTS: Patient[] = [
       reactionSummary: "Profound hypotension (SBP 65mmHg) and tachycardia (>150bpm) post-Vecuronium. Patient admitted to ICU post-op for observation and metaraminol support. Did not require adrenaline. Procedure completed cautiously.",
       symptoms: [{ label: "Hypotension", detail: "SBP 65mmHg" }, { label: "Tachycardia", detail: ">150bpm" }],
       treatment: ["Metaraminol", "Fluids", "ICU Admission"],
-      suspectedAgents: ["Cefazolin", "Vecuronium"]
+      suspectedAgents: ["Cefazolin", "Vecuronium"],
+      anaesthesiaType: ["General"]
     }
   },
   {
@@ -586,6 +621,7 @@ export const MOCK_PATIENTS: Patient[] = [
       procedure: "Colonoscopy + Diagnostic Laparoscopy",
       anaesthetist: "Dr George Wells",
       referringDoctor: "Dr George Wells",
+      referringDoctorPosition: "GP Anaesthetist",
       hospital: "Royal Prince Alfred Hospital",
       inductionTime: "07:59",
       reactionTime: "08:10",
@@ -595,7 +631,8 @@ export const MOCK_PATIENTS: Patient[] = [
       comments: "Patient reports similar rash after eating eggs.",
       symptoms: [{ label: "Urticaria" }, { label: "Wheals" }],
       treatment: ["Observation", "Antihistamine"],
-      suspectedAgents: ["Propofol"]
+      suspectedAgents: ["Propofol"],
+      anaesthesiaType: ["IV Sedation"]
     }
   }
 ];

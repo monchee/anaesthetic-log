@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from './ui';
 import { Sun, Moon } from 'lucide-react';
@@ -45,8 +46,8 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
     return (
         <div className={`min-h-screen bg-[#fbfaff] dark:bg-slate-950 flex flex-col ${className || ''}`}>
-            {/* Full Width Sticky Header */}
-            <header className="w-full sticky top-0 z-50 flex flex-col shadow-md shadow-purple-900/5">
+            {/* Full Width Header (Static) */}
+            <header className="w-full flex flex-col shadow-md shadow-purple-900/5 z-50 relative">
                 {/* Main Navigation Bar */}
                 <div className="bg-[#441170] text-white border-b border-purple-800/50 w-full">
                     {/* Safe Area Padding for mobile notch support */}
