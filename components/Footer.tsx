@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import { Screen, Patient } from '../types';
 import { Database, Upload } from 'lucide-react';
@@ -65,7 +66,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, onUploadPatien
                   className="hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors flex items-center gap-1.5"
               >
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                  App v0.3.22
+                  App v0.3.25
               </button>
 
               {onUploadPatients && (

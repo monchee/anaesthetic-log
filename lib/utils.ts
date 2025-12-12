@@ -1,3 +1,4 @@
+
 import { DrugTestRow, LogFormData, Patient } from '../types';
 import { FLAT_DRUG_OPTIONS } from './constants';
 
@@ -18,10 +19,10 @@ export const formatDate = (dateStr: string): string => {
 export const getGradeVariant = (grade: string): "grade4" | "grade3" | "grade2" | "grade1" | "ungraded" => {
     if (!grade) return "ungraded";
     const g = grade.toUpperCase();
-    if (g === "4" || g.includes("IV") || g.includes("CARDIAC ARREST")) return "grade4";
-    if (g === "3" || g.includes("III")) return "grade3";
-    if (g === "2" || g.includes("II")) return "grade2";
-    if (g === "1" || g.includes("I ") || g === "GRADE I") return "grade1";
+    if (g.includes("GRADE IV") || g.includes("CARDIAC ARREST") || g === "4") return "grade4";
+    if (g.includes("GRADE III") || g.includes("LIFE THREATENING") || g === "3") return "grade3";
+    if (g.includes("GRADE II") || g.includes("MODERATE") || g === "2") return "grade2";
+    if (g.includes("GRADE I") || g.includes("CUTANEOUS") || g === "1") return "grade1";
     return "ungraded";
 };
 
@@ -104,139 +105,55 @@ export interface CsvParseResult {
 
 const normalizeTime = (timeStr: string): string => {
     if (!timeStr) return "";
-    // Handle "2024-04-24 12:00:50" -> extract 12:00
-    const dateTimeMatch = timeStr.match(/\d{4}-\d{2}-\d{2}\s+(\d{1,2}):(\d{2})/);
-    if (dateTimeMatch) return `${dateTimeMatch[1].padStart(2, '0')}:${dateTimeMatch[2]}`;
-
-    const cleanStr = timeStr.includes('@') ? timeStr.split('@')[1] : timeStr;
-    const isoMatch = cleanStr.match(/\s(\d{1,2})[:.](\d{2})/);
-    if (isoMatch) return `${isoMatch[1].padStart(2, '0')}:${isoMatch[2].padStart(2, '0')}`;
+    const cleanStr = timeStr.trim();
     
-    // HH:MM or HH.MM
-    const match = cleanStr.match(/^(\d{1,2})[:.](\d{2})/);
-    if (match) return `${match[1].padStart(2, '0')}:${match[2].padStart(2, '0')}`;
+    // Check for HH:MM:SS
+    let match = cleanStr.match(/(\d{1,2}):(\d{2})(?::\d{2})?/);
+    if (match) return `${match[1].padStart(2, '0')}:${match[2]}`;
     
-    // HHMM
-    const strictFourDigit = cleanStr.trim().match(/^(\d{2})(\d{2})$/);
-    if (strictFourDigit && parseInt(strictFourDigit[1]) < 24 && parseInt(strictFourDigit[2]) < 60) {
-         return `${strictFourDigit[1]}:${strictFourDigit[2]}`;
+    // Check for HHMM
+    match = cleanStr.match(/^(\d{2})(\d{2})$/);
+    if (match) {
+        const h = parseInt(match[1]);
+        const m = parseInt(match[2]);
+        if (h < 24 && m < 60) return `${match[1]}:${match[2]}`;
     }
-    return "";
+
+    return cleanStr; // Return as is if we can't strictly parse, to preserve data
 };
 
-// Extensive mapping for Drug Headers -> Canonical Names
-// Includes both Text Labels (e.g. 'propofol') and Raw Variable Codes (e.g. 'hypnotics___4')
-const DRUG_HEADER_MAP: Record<string, string> = {
-    // Label-based mappings (partial matches)
-    'propofol': 'Propofol', 'midaz': 'Midazolam', 'fent': 'Fentanyl', 'remi': 'Remifentanil',
-    'sux': 'Suxamethonium', 'roc': 'Rocuronium', 'vec': 'Vecuronium', 'cis': 'Cisatracurium',
-    'atr': 'Atracurium', 'pancuron': 'Pancuronium', 'miva': 'Mivacurium',
-    'morphine': 'Morphine', 'oxycodon': 'Oxycodone', 'alfentanil': 'Alfentanil',
-    'ketamine': 'Ketamine', 'thiopent': 'Thiopentone',
-    'sugamma': 'Sugammadex', 'neostig': 'Neostigmine', 'atropine': 'Atropine', 'glycopyr': 'Glycopyrrolate',
-    'complex': 'Roc/Sugammadex Complex', 'further cis': 'Cisatracurium (Repeat)',
-    
-    // Antibiotics
-    'cefazolin': 'Cefazolin', 'cephazoli': 'Cefazolin', 'gentamic': 'Gentamicin', 
-    'amoxicill': 'Amoxicillin', 'ampicilli': 'Ampicillin', 'benzylpen': 'Benzylpenicillin',
-    'cefotaxim': 'Cefotaxime', 'ceftazid': 'Ceftazidime', 'ceftriax': 'Ceftriaxone', 'cephaloth': 'Cephalothin',
-    'cefepime': 'Cefepime', 'ciproflox': 'Ciprofloxacin', 'flucoxacil': 'Flucloxacillin', 'meropena': 'Meropenem', 
-    'metronida': 'Metronidazole', 'tazocin': 'Tazocin', 'teicoplan': 'Teicoplanin', 'vancomyc': 'Vancomycin',
-    'other abs': 'Other Antibiotic', 'other abx': 'Other Antibiotic',
-
-    // Anti-emetics & Steroids
-    'metoclopr': 'Metoclopramide', 'ondanset': 'Ondansetron', 'cyclizine': 'Cyclizine', 
-    'tropisetron': 'Tropisetron', 'granisetron': 'Granisetron',
-    'dexametha': 'Dexamethasone', 'dexmetha': 'Dexamethasone',
-    
-    // Antiseptics
-    'chlorhex': 'Chlorhexidine', 'betadine': 'Betadine',
-    
-    // Local Anaesthetics
-    'lignocain': 'Lignocaine', 'bupivacai': 'Bupivacaine', 'ropivacai': 'Ropivacaine', 
-    'mepivacai': 'Mepivacaine', 'prilocain': 'Prilocaine', 'hyaluronidase': 'Hyaluronidase',
-    
-    // Non-opioid analgesia
-    'parecoxib': 'Parecoxib', 'paracetam': 'Paracetamol', 'tramadol': 'Tramadol', 'ibuprofen': 'Ibuprofen',
-    
-    // Fluids & Blood
-    'albumin': 'Albumin', 'rbc': 'Red Blood Cells', 'ffp': 'FFP', 'platelets': 'Platelets', 'cryo': 'Cryoprecipitate',
-    'gelofusine': 'Gelofusine',
-    
-    // Dyes & Contrast
-    'patent blu': 'Patent Blue', 'methylene': 'Methylene Blue', 'gadolinium': 'Gadolinium',
-    'ultravist': 'Ultravist', 'omnipaqu': 'Omnipaque', 'visipaque': 'Visipaque', 'iodinated': 'Contrast',
-    
-    // Vasoactives & Coagulants
-    'heparin': 'Heparin', 'protamine': 'Protamine', 'tirofiban': 'Tirofiban', 'txa': 'Tranexamic Acid',
-    'anti-hyp': 'Anti-hypertensive', 'inotrope': 'Inotrope/Vasopressor', 'vasopressor': 'Inotrope/Vasopressor',
-    
-    // Others
-    'latex': 'Latex', 'bone cement': 'Bone Cement', 'syntocinon': 'Syntocinon',
-    
-    // Raw Variable Code mappings (Exact matches required)
-    'hypnotics___4': 'Propofol',
-    'hypnotics___2': 'Midazolam',
-    'hypnotics___1': 'Thiopentone',
-    'opioids___2': 'Fentanyl',
-    'opioids___5': 'Remifentanil',
-    'opioids___3': 'Alfentanil',
-    'opioids___4': 'Morphine',
-    'opioids___7': 'Oxycodone',
-    'nmba___1': 'Suxamethonium',
-    'nmba___2': 'Rocuronium',
-    'nmba___3': 'Vecuronium',
-    'nmba___4': 'Atracurium',
-    'nmba___5': 'Cisatracurium',
-    'nmba___6': 'Mivacurium',
-    'nmba___7': 'Pancuronium',
-    'nmba_reversal___1': 'Sugammadex',
-    'nmba_reversal___2': 'Neostigmine',
-    'iv_abs___1': 'Cefazolin',
-    'iv_abs___10': 'Gentamicin',
-    'iv_abs___14': 'Metronidazole',
-    'iv_abs___17': 'Vancomycin',
-    'iv_abs___16': 'Teicoplanin',
-    'antiemetic___1': 'Dexamethasone',
-    'antiemetic___2': 'Ondansetron',
-    'local___5': 'Lignocaine',
-    'dyes___1': 'Patent Blue',
-    'dyes___2': 'Methylene Blue',
-    'agents___1': 'Rocuronium (Suspected)', 
-    'agents___2': 'Cefazolin (Suspected)',
-    'agents___3': 'Chlorhexidine (Suspected)',
-    'agents___4': 'Patent Blue (Suspected)',
-    'agents___5': 'Suxamethonium (Suspected)',
-    'agents___6': 'Atracurium (Suspected)',
-    'agents___7': 'Vecuronium (Suspected)'
+// Map Drug Names (from 'choice=...') to possible Time Column prefixes/substrings
+const DRUG_TIME_MATCHERS: Record<string, string[]> = {
+    'Suxamethonium': ['Sux', 'Suxamethonium'],
+    'Rocuronium': ['Roc', 'Rocuronium'],
+    'Vecuronium': ['Vec', 'Vecuronium'],
+    'Cisatracurium': ['Cisatracurium', 'Cis', 'Cisatracurirum'],
+    'Atracurium': ['Atracurirum', 'Atracurium', 'Atr'],
+    'Mivacurium': ['Miva', 'Mivacurium'],
+    'Thiopentine': ['Thiopentine', 'Thiopentone'],
+    'Dexamethasone': ['Dexmethasone', 'Dexamethasone'],
+    'Chlorhexidine': ['Chlorhex', 'Chlorhexidine'],
+    'Amoxicillin': ['Amoxicillin', 'Amoxycillin'],
+    'Cephazolin': ['Cephazolin', 'Cefazolin'],
+    'Metoclopramide': ['Metoclopramide', 'Metoclopr'],
+    'Ondansetron': ['Ondansetron'],
+    'Parecoxib': ['Parecoxib'],
+    'Paracetamol': ['Paracetamol'],
+    'Tramadol': ['Tramadol'],
+    'Lignocaine': ['Lignocaine', 'Lidocaine'],
+    'Patent Blue': ['Patent Blue'],
+    'Methylene Blue': ['Methylene Blue'],
+    'Heparin': ['Heparin'],
+    'Protamine': ['Protamine'],
+    'Sugammadex': ['Sugammadex', 'Sugamma'],
+    'Neostigmine': ['Neostigmine'],
+    'Atropine': ['Atropine'],
+    'Glycopyrrolate': ['Glycopyrrolate', 'Glycopyrrolate'],
+    'Rocuronium/ Sugammadex complex': ['Roc/Sugammadex complex'],
+    'Anti-hypertensive': ['Ant-hypertensive', 'Anti-hypertensive'],
+    'Inotrope/vasopressor': ['Inotrope/vasopressor'],
+    'Iodinated Contrast Media': ['Iodinated contrast']
 };
-
-const SYMPTOM_MATCHERS = [
-    { key: 'Hypotension', terms: ['hypotensi'] },
-    { key: 'Tachycardia', terms: ['tachycar'] },
-    { key: 'Bradycardia', terms: ['bradycar'] },
-    { key: 'Cardiac Arrest', terms: ['cardiac a', 'arrest'] },
-    { key: 'Bronchospasm', terms: ['bronchos'] },
-    { key: 'Desaturation', terms: ['low oxyge', 'desat'] },
-    { key: 'Flushing', terms: ['flushing'] },
-    { key: 'Urticaria', terms: ['urticaria', 'uticaria'] },
-    { key: 'Angioedema', terms: ['angioeder', 'swelling', 'oedema'] },
-    { key: 'Rash', terms: ['rash'] },
-    { key: 'Arrhythmia', terms: ['arrhythmi'] },
-    { key: 'Cough', terms: ['cough'] },
-    { key: 'Gastrointestinal', terms: ['gastrointe', 'vomiting'] }
-];
-
-const TREATMENT_MATCHERS = [
-    { key: 'Adrenaline', terms: ['adrenalin'] },
-    { key: 'Fluids', terms: ['iv fluids f', 'fluids'] },
-    { key: 'CPR', terms: ['cardiac c', 'compressions'] },
-    { key: 'Cardioversion', terms: ['cardiover'] },
-    { key: 'Vasopressors', terms: ['vasopress', 'metaraminol', 'ephedrine'] },
-    { key: 'Steroids', terms: ['steroids', 'hydrocortisone'] },
-    { key: 'Antihistamines', terms: ['antihistan'] },
-    { key: 'Bronchodilators', terms: ['salbutamol'] }
-];
 
 export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   const lines = csvText.split(/\r?\n/).filter(l => l.trim());
@@ -245,240 +162,385 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   const headers = splitCSVLine(lines[0]);
   const data: Patient[] = [];
 
-  // Dynamic Header Mapping
-  const colMap = new Map<number, { type: 'drug'|'symptom'|'treatment'|'suspected'|'info', key: string, isTime?: boolean }>();
-
-  // Helper to check for specific substrings in headers
-  const hContains = (h: string, match: string) => h.toLowerCase().includes(match.toLowerCase());
-
+  // --- 1. Map Information Columns ---
+  const colIndices: Record<string, number> = {};
+  
   headers.forEach((h, idx) => {
-     const header = h.toLowerCase().trim();
-     
-     // 1. Info Columns (Robust Matching including Raw Headers)
-     if (h === 'record_id' || hContains(header, 'record_id') || header === 'id') { colMap.set(idx, { type: 'info', key: 'id' }); return; }
-     if (h === 'first_name' || hContains(header, 'first name') || hContains(header, 'firstname')) { colMap.set(idx, { type: 'info', key: 'first_name' }); return; }
-     if (h === 'last_name' || hContains(header, 'last name') || hContains(header, 'surname') || hContains(header, 'lastname')) { colMap.set(idx, { type: 'info', key: 'last_name' }); return; }
-     if (hContains(header, 'dob') || hContains(header, 'date of birth')) { colMap.set(idx, { type: 'info', key: 'dob' }); return; }
-     if (hContains(header, 'gender') || hContains(header, 'sex')) { colMap.set(idx, { type: 'info', key: 'gender' }); return; }
-     if (hContains(header, 'city') || hContains(header, 'suburb')) { colMap.set(idx, { type: 'info', key: 'city' }); return; }
-     if (hContains(header, 'hospital') || hContains(header, 'location')) { colMap.set(idx, { type: 'info', key: 'hospital' }); return; }
-     
-     // Referring Doctor - STRICT MATCHING
-     // Try to match specific 'name' columns first, or fall back to general 'referring_doc' but exclude 'number'
-     if (hContains(header, 'referring_name') || hContains(header, 'ref_name') || hContains(header, 'name_referring') || hContains(header, 'ref_doc_name')) {
-         colMap.set(idx, { type: 'info', key: 'referringDoctor' }); 
-         return; 
-     }
-     
-     if (hContains(header, 'referring_doc') && !hContains(header, 'provider') && !hContains(header, 'number') && !hContains(header, 'num')) { 
-         colMap.set(idx, { type: 'info', key: 'referringDoctor' }); 
-         return; 
-     }
-     
-     // Provider Number
-     if (hContains(header, 'docnumber') || hContains(header, 'provider_number') || h === 'provider' || (hContains(header, 'referring_doc') && (hContains(header, 'provider') || hContains(header, 'number') || hContains(header, 'num')))) { 
-         colMap.set(idx, { type: 'info', key: 'providerNumber' }); 
-         return; 
-     }
-     
-     if (hContains(header, 'conemail') || (h === 'email' && !hContains(header, 'patient'))) { colMap.set(idx, { type: 'info', key: 'referringEmail' }); return; }
-     if (hContains(header, 'conphone') || (hContains(header, 'phone') && !hContains(header, 'patient') && !hContains(header, 'guardian'))) { colMap.set(idx, { type: 'info', key: 'referringPhone' }); return; }
-
-     // Dates & Times
-     if (h === 'datereaction' || hContains(header, 'date of re') || hContains(header, 'date_reaction')) { colMap.set(idx, { type: 'info', key: 'date' }); return; }
-     if (h === 'time_induction' || hContains(header, 'time of in') || hContains(header, 'induction_time')) { colMap.set(idx, { type: 'info', key: 'induction_time' }); return; }
-     if (h === 'time_reaction' || hContains(header, 'time reac') || hContains(header, 'reaction_time')) { colMap.set(idx, { type: 'info', key: 'reaction_time' }); return; }
-     
-     if (hContains(header, 'procedure')) { colMap.set(idx, { type: 'info', key: 'procedure' }); return; }
-     
-     // Robust Anaesthetist Matching
-     if (h === 'namecompleter' || hContains(header, 'namecompleter') || hContains(header, 'anaesthetist') || hContains(header, 'completer')) { 
-         colMap.set(idx, { type: 'info', key: 'anaesthetist' }); 
-         return; 
-     }
-     
-     if (hContains(header, 'grade') || hContains(header, 'severity')) { colMap.set(idx, { type: 'info', key: 'grade' }); return; }
-     if (hContains(header, 'summary') || hContains(header, 'comment') || hContains(header, 'description')) { colMap.set(idx, { type: 'info', key: 'summary' }); return; }
-     if (hContains(header, 'outcome') || hContains(header, 'abandoned')) { colMap.set(idx, { type: 'info', key: 'outcome' }); return; }
-
-     // 2. Suspected Agents
-     if (hContains(header, 'agent nam') || hContains(header, 'suspected agent') || h === 'other_drugs_given' || h === 'other_drugs') {
-         colMap.set(idx, { type: 'suspected', key: 'Suspected Agent' });
-         return;
-     }
-
-     // 3. Symptoms
-     for (const s of SYMPTOM_MATCHERS) {
-         if (s.terms.some(t => hContains(header, t))) {
-             colMap.set(idx, { type: 'symptom', key: s.key });
-             return;
-         }
-     }
-
-     // 4. Treatments
-     for (const t of TREATMENT_MATCHERS) {
-         if (t.terms.some(m => hContains(header, m))) {
-             colMap.set(idx, { type: 'treatment', key: t.key });
-             return;
-         }
-     }
-
-     // 5. Drugs
-     const isTime = hContains(header, 'time') || hContains(header, 'date') || hContains(header, 'start') || hContains(header, '@') || hContains(header, '- tir');
-     
-     if (DRUG_HEADER_MAP[header]) {
-         colMap.set(idx, { type: 'drug', key: DRUG_HEADER_MAP[header], isTime: false }); 
-         return;
-     }
-
-     for (const [alias, canonical] of Object.entries(DRUG_HEADER_MAP)) {
-         if (hContains(header, alias)) {
-             colMap.set(idx, { type: 'drug', key: canonical, isTime });
-             return;
-         }
-     }
+      const header = h.trim();
+      
+      if (header === 'Record ID') colIndices['id'] = idx;
+      else if (header === 'First Name') colIndices['firstName'] = idx;
+      else if (header === 'Last Name') colIndices['lastName'] = idx;
+      else if (header === 'Date of birth') colIndices['dob'] = idx;
+      else if (header === 'Gender') colIndices['gender'] = idx;
+      else if (header === 'City') colIndices['city'] = idx;
+      else if (header === 'Hospital where reaction occurred:') colIndices['hospital'] = idx;
+      else if (header === 'Procedure:') colIndices['procedure'] = idx;
+      else if (header === 'Date of Reaction:') colIndices['date'] = idx;
+      else if (header === 'Time of Induction:') colIndices['inductionTime'] = idx;
+      else if (header === 'Time Reaction First Noted:') colIndices['reactionTime'] = idx;
+      else if (header === 'Referring Doctor (Name)') colIndices['referringDoctor'] = idx;
+      else if (header === 'Provider Number:') colIndices['providerNumber'] = idx;
+      else if (header === 'Email Address:') colIndices['referringEmail'] = idx;
+      else if (header === 'Phone Number:') colIndices['referringPhone'] = idx;
+      else if (header.includes('Severity of Allergic Reaction')) colIndices['grade'] = idx;
+      else if (header.includes('Write a brief summary')) colIndices['summary'] = idx;
+      else if (header.includes('Comment')) colIndices['comments'] = idx;
+      else if (header === 'Outcome?') colIndices['outcome'] = idx;
+      else if (header === 'What was first symptom noticed?') colIndices['firstSymptom'] = idx;
+      else if (header === 'What was predominant symptom?') colIndices['predominantSymptom'] = idx;
   });
 
+  // --- 2. Map Symptoms & Treatments ---
+  interface SymptomMapConfig {
+      key: string;
+      label: string;
+      detailKey?: string;
+      detailCheckboxes?: string[];
+  }
+
+  const symptomConfigs: SymptomMapConfig[] = [
+      { key: "Tachycardia (>100bpm before adrenaline)", label: "Tachycardia" },
+      { key: "Bradycardia (< 60bpm)", label: "Bradycardia" },
+      { key: "Arrhythmia", label: "Arrhythmia", detailKey: "Arrhythmia Type:" },
+      { key: "Hypotension", label: "Hypotension" },
+      { key: "Cardiac Arrest", label: "Cardiac Arrest" },
+      { key: "Cough", label: "Cough" },
+      { 
+          key: "Bronchospasm", 
+          label: "Bronchospasm",
+          detailCheckboxes: [
+              "Mild Wheeze", 
+              "Moderate Wheeze", 
+              "Severe Wheeze", 
+              "Dyspnoea reported by patient", 
+              "Difficult to ventilate", 
+              "Very difficult to ventilate"
+          ] 
+      },
+      { key: "Low Oxygen Saturations", label: "Desaturation" },
+      { 
+          key: "Flushing/Erythema", 
+          label: "Flushing/Erythema",
+          detailCheckboxes: ["Local", "Generalised"]
+      },
+      { key: "Urticaria", label: "Urticaria", detailCheckboxes: ["Local", "Generalised"] },
+      { key: "Piloerection", label: "Piloerection" },
+      { key: "Angioedema", label: "Angioedema" },
+      { key: "Swelling", label: "Swelling", detailKey: "Swelling - Site/Duration:" },
+      { key: "Other Cutaneous Signs", label: "Other Cutaneous", detailKey: "Other cutaneous signs:" },
+      { key: "Gastrointestinal Signs", label: "GI Symptoms", detailKey: "GIT Symptoms Other" },
+  ];
+
+  const symptomMap: { 
+      label: string, 
+      boolIndex: number, 
+      textIndex?: number, 
+      checkboxIndices?: { label: string, index: number }[] 
+  }[] = [];
+
+  // Config for Treatments
+  const treatmentConfigs = [
+      { key: "Adrenaline Given", label: "Adrenaline" },
+      { key: "IV Fluids for Resuscitation", label: "IV Fluids" },
+      { key: "Cardiac Compressions", label: "CPR" },
+      { key: "Cardioversion/Defib", label: "Defibrillation" },
+      { key: "Vasopressors/second line agents other than adrenaline", label: "Vasopressors" },
+      { key: "Steroids", label: "Steroids" },
+      { key: "Antihistamines", label: "Antihistamines" },
+      { key: "Bronchospasm Treatment", label: "Bronchodilators" },
+      { key: "Other Treatment/Management", label: "Other Treatment" }
+  ];
+
+  const treatmentMap: { label: string, index: number }[] = [];
+
+  symptomConfigs.forEach(conf => {
+      const boolIdx = headers.findIndex(h => h.trim() === conf.key);
+      const textIdx = conf.detailKey ? headers.findIndex(h => h.trim() === conf.detailKey) : -1;
+      
+      const checkboxIndices: { label: string, index: number }[] = [];
+      if (conf.detailCheckboxes) {
+          conf.detailCheckboxes.forEach(cbLabel => {
+              // Look for header that contains the label, usually in the format like "Bronchospasm (choice=Mild Wheeze)" or just "Mild Wheeze"
+              const cbIdx = headers.findIndex(h => h.includes(cbLabel) && (h.includes(conf.key) || h.includes(conf.key.split('/')[0])));
+              if (cbIdx !== -1) {
+                  checkboxIndices.push({ label: cbLabel, index: cbIdx });
+              } else {
+                  // Fallback: search just by label if unique enough
+                  const looseIdx = headers.findIndex(h => h.includes(cbLabel));
+                  if (looseIdx !== -1) checkboxIndices.push({ label: cbLabel, index: looseIdx });
+              }
+          });
+      }
+
+      if (boolIdx !== -1 || textIdx !== -1 || checkboxIndices.length > 0) {
+          symptomMap.push({ 
+              label: conf.label, 
+              boolIndex: boolIdx, 
+              textIndex: textIdx !== -1 ? textIdx : undefined,
+              checkboxIndices: checkboxIndices.length > 0 ? checkboxIndices : undefined
+          });
+      }
+  });
+
+  treatmentConfigs.forEach(conf => {
+      const idx = headers.findIndex(h => h.includes(conf.key));
+      if (idx !== -1) {
+          treatmentMap.push({ label: conf.label, index: idx });
+      }
+  });
+
+  // --- 3. Map Drug Checkboxes & Timings ---
+  interface DrugMapping {
+      name: string;
+      checkIndex: number;
+      timeIndex: number;
+  }
+  
+  const drugMap: DrugMapping[] = [];
+
+  headers.forEach((h, idx) => {
+      const match = h.match(/\(choice=(.+)\)/);
+      if (match) {
+          const drugName = match[1].trim();
+          if (h.includes('Relevant Conditions') || h.includes('Patient Taking') || h.includes('acknowledge')) return;
+
+          let timeIdx = -1;
+          const searchTerms = DRUG_TIME_MATCHERS[drugName] || [drugName];
+          
+          for (let i = 0; i < headers.length; i++) {
+              const targetH = headers[i];
+              if (!targetH.includes('Time')) continue;
+              const matches = searchTerms.some(term => {
+                  const prefix = targetH.split(/[- ]Time/)[0].trim();
+                  return prefix.toLowerCase() === term.toLowerCase() || targetH.toLowerCase().startsWith(term.toLowerCase());
+              });
+              if (matches) {
+                  timeIdx = i;
+                  break; 
+              }
+          }
+
+          // Fallbacks for shared time columns
+          if (timeIdx === -1) {
+              if (drugName === 'Cyclizine' || drugName === 'Tropisetron') timeIdx = headers.findIndex(h => h.includes('Cyclizine/Tropisetron'));
+              else if (drugName === 'Granisetron') timeIdx = headers.findIndex(h => h.includes('Other/Granisetron'));
+              else if (drugName === 'Ibuprofen') timeIdx = headers.findIndex(h => h.includes('Ibuprofen/Other'));
+              else if (drugName === 'Methylene Blue' || drugName === 'Patent Blue') timeIdx = headers.findIndex(h => h.includes('Patent Blue/Methylene Blue'));
+              else if (drugName === 'Omnipaque' || drugName === 'Visipaque') timeIdx = headers.findIndex(h => h.includes('Omnipaque/Visipaque'));
+              else if (drugName === 'Ultravist' || drugName === 'Gadolinium') timeIdx = headers.findIndex(h => h.includes('Ultravist/Gadolinium'));
+          }
+
+          drugMap.push({ name: drugName, checkIndex: idx, timeIndex: timeIdx });
+      }
+  });
+
+  // --- 4. Map "Other" Free Text Columns ---
+  const otherDrugColumns: { nameIndex: number, timeIndex: number, label: string }[] = [
+      { label: 'Other Opioid', nameIndex: -1, timeIndex: -1 },
+      { label: 'Other NMB', nameIndex: -1, timeIndex: -1 },
+      { label: 'Other abs', nameIndex: -1, timeIndex: -1 },
+      { label: 'Anti-emetic Other', nameIndex: -1, timeIndex: -1 },
+      { label: 'Steroid Other', nameIndex: -1, timeIndex: -1 },
+      { label: 'Other Non-Opioid', nameIndex: -1, timeIndex: -1 },
+      { label: 'Local Other', nameIndex: -1, timeIndex: -1 },
+      { label: 'Fluids Other', nameIndex: -1, timeIndex: -1 }
+  ];
+
+  otherDrugColumns.forEach(config => {
+      config.nameIndex = headers.findIndex(h => h.trim() === config.label);
+      if (config.nameIndex !== -1) {
+          for (let i = config.nameIndex + 1; i < headers.length && i < config.nameIndex + 5; i++) {
+              if (headers[i].includes('Time') && (headers[i].includes('Other') || headers[i].includes(' - Time'))) {
+                  config.timeIndex = i;
+                  break;
+              }
+          }
+      }
+  });
+
+  const genericOtherIndex = headers.findIndex(h => h.includes('Other Drugs (please specify drug and time'));
+
+  // --- 4b. Map "Agent Name" and "Exposure Time" pairs (New Request) ---
+  interface AgentTimePair {
+      nameIndex: number;
+      timeIndex: number;
+  }
+  const agentTimePairs: AgentTimePair[] = [];
+
+  headers.forEach((h, idx) => {
+      const lowerH = h.toLowerCase();
+      // Look for headers that contain "Agent Name" but usually not "Suspected" (which are typically results)
+      // and match them with a nearby "Exposure Time"
+      if (lowerH.includes('agent name')) {
+          let timeIdx = -1;
+          // Check up to 5 columns ahead for corresponding time
+          for (let offset = 1; offset <= 5; offset++) {
+              if (idx + offset < headers.length) {
+                  const candidateH = headers[idx + offset].toLowerCase();
+                  if (candidateH.includes('exposure time') || (candidateH.includes('time') && !candidateH.includes('agent name'))) {
+                      timeIdx = idx + offset;
+                      break;
+                  }
+              }
+          }
+          
+          if (timeIdx !== -1) {
+              agentTimePairs.push({ nameIndex: idx, timeIndex: timeIdx });
+          }
+      }
+  });
+
+  // --- 5. Process Rows ---
   for (let i = 1; i < lines.length; i++) {
     const row = splitCSVLine(lines[i]);
-    if (row.length < 2) continue; // Skip empty rows
-    
-    // Find ID first
-    const idEntry = Array.from(colMap.entries()).find(([_, meta]) => meta.key === 'id');
-    const id = idEntry && row[idEntry[0]] ? row[idEntry[0]] : `REC-${i}`;
+    if (row.length < 2) continue;
 
-    const p: any = { 
-        id, 
-        history: { 
-            symptoms: [], 
-            treatment: [], 
-            suspectedAgents: [], 
-            medications: [],
-            preInductionDrugs: [], 
-            postInductionDrugs: [],
-            grade: 'Ungraded', 
-            procedureOutcome: 'Unknown',
-            reactionSummary: '',
-            procedure: 'Unknown',
-            anaesthetist: 'Unknown',
-            hospital: 'Unknown',
-            date: new Date().toISOString()
-        } 
+    const getVal = (key: string) => {
+        const idx = colIndices[key];
+        return (idx !== undefined && row[idx]) ? row[idx].trim() : '';
     };
-    
-    // Temp storage
-    const foundDrugs: { name: string, time?: string }[] = [];
-    const suspected: string[] = [];
 
-    const firstNameEntry = Array.from(colMap.entries()).find(([_, meta]) => meta.key === 'first_name');
-    const lastNameEntry = Array.from(colMap.entries()).find(([_, meta]) => meta.key === 'last_name');
-    
-    p.firstName = firstNameEntry && row[firstNameEntry[0]] ? row[firstNameEntry[0]] : 'Patient';
-    p.lastName = lastNameEntry && row[lastNameEntry[0]] ? row[lastNameEntry[0]] : id;
+    const id = getVal('id') || `REC-${i}`;
+    const p: Patient = {
+        id,
+        firstName: getVal('firstName') || 'Unknown',
+        lastName: getVal('lastName') || 'Unknown',
+        dob: getVal('dob'),
+        mrn: id,
+        gender: getVal('gender'),
+        city: getVal('city'),
+        history: {
+            date: getVal('date') || new Date().toISOString(),
+            grade: getVal('grade'),
+            reactionSummary: getVal('summary'),
+            comments: getVal('comments'),
+            procedure: getVal('procedure') || 'Unknown',
+            hospital: getVal('hospital') || 'Unknown',
+            anaesthetist: 'Unknown', 
+            referringDoctor: getVal('referringDoctor'),
+            providerNumber: getVal('providerNumber'),
+            referringEmail: getVal('referringEmail'),
+            referringPhone: getVal('referringPhone'),
+            inductionTime: normalizeTime(getVal('inductionTime')),
+            reactionTime: normalizeTime(getVal('reactionTime')),
+            procedureOutcome: getVal('outcome'),
+            firstSymptom: getVal('firstSymptom'),
+            predominantSymptom: getVal('predominantSymptom'),
+            medications: [],
+            symptoms: [],
+            treatment: [],
+            suspectedAgents: []
+        }
+    };
 
-    colMap.forEach((meta, idx) => {
-        const value = row[idx]?.trim();
-        if (!value) return;
+    // Extract Symptoms
+    symptomMap.forEach(s => {
+        let isPresent = false;
+        let detailParts: string[] = [];
 
-        if (meta.type === 'info') {
-            if (meta.key === 'grade') {
-                 if (value === '1') p.history.grade = 'Grade I';
-                 else if (value === '2') p.history.grade = 'Grade II';
-                 else if (value === '3') p.history.grade = 'Grade III';
-                 else if (value === '4') p.history.grade = 'Grade IV';
-                 else p.history.grade = value;
-            } else if (meta.key === 'outcome') {
-                 if (value === '1' || value.toLowerCase().includes('abandon')) p.history.procedureOutcome = 'Abandoned';
-                 else if (value === '2' || value.toLowerCase().includes('complet')) p.history.procedureOutcome = 'Completed';
-                 else p.history.procedureOutcome = value;
-            } else if (meta.key === 'gender') {
-                 p.gender = value === '0' ? 'Female' : value === '1' ? 'Male' : value;
-            } else if (meta.key.includes('time') && !meta.key.includes('induction') && !meta.key.includes('reaction')) {
-                 // Skip generic time fields if mapped elsewhere
-            } else if (meta.key === 'induction_time') {
-                 p.history.inductionTime = normalizeTime(value);
-            } else if (meta.key === 'reaction_time') {
-                 p.history.reactionTime = normalizeTime(value);
-            } else if (meta.key === 'summary') {
-                 p.history.reactionSummary = value;
-            } else if (meta.key === 'date') {
-                 p.history.date = value;
-            } else if (meta.key === 'dob') {
-                 p.dob = value;
-            } else if (meta.key === 'city') {
-                 p.city = value;
-            } else if (meta.key === 'hospital') {
-                 p.history.hospital = value;
-            } else if (meta.key === 'procedure') {
-                 p.history.procedure = value;
-            } else if (meta.key === 'anaesthetist') {
-                 p.history.anaesthetist = value;
-            } else if (meta.key === 'referringDoctor') {
-                 const isNumeric = /^\d+$/.test(value);
-                 const current = p.history.referringDoctor;
-                 const currentIsNumeric = /^\d+$/.test(current || '') || current === 'Unknown';
-
-                 if (!isNumeric) {
-                     p.history.referringDoctor = value;
-                 } else if (!current || currentIsNumeric) {
-                     p.history.referringDoctor = value;
-                 }
-            } else if (meta.key === 'providerNumber') {
-                 p.history.providerNumber = value;
-            } else if (meta.key === 'referringEmail') {
-                 p.history.referringEmail = value;
-            } else if (meta.key === 'referringPhone') {
-                 p.history.referringPhone = value;
+        // Check boolean column
+        if (s.boolIndex !== -1) {
+            const val = row[s.boolIndex]?.trim().toLowerCase();
+            if (['checked', 'yes', 'true', '1'].includes(val)) {
+                isPresent = true;
             }
-        } else if (meta.type === 'suspected') {
-            if (value && value !== '0' && !suspected.includes(value)) suspected.push(value);
-        } else if (meta.type === 'symptom') {
-            if (value === '1' || value.toLowerCase().includes('checked') || value.toLowerCase() === 'yes') {
-                if (!p.history.symptoms.includes(meta.key)) p.history.symptoms.push(meta.key);
-            }
-        } else if (meta.type === 'treatment') {
-            if (value === '1' || value.toLowerCase().includes('checked') || value.toLowerCase() === 'yes') {
-                if (!p.history.treatment.includes(meta.key)) p.history.treatment.push(meta.key);
-            }
-        } else if (meta.type === 'drug') {
-            if (meta.key.includes('(Suspected)')) {
-                if (value === '1' || value.toLowerCase() === 'yes') {
-                    const agentName = meta.key.replace(' (Suspected)', '');
-                    if (!suspected.includes(agentName)) suspected.push(agentName);
+        }
+
+        // Check checkbox detail columns
+        if (s.checkboxIndices) {
+            s.checkboxIndices.forEach(cb => {
+                const val = row[cb.index]?.trim().toLowerCase();
+                if (['checked', 'yes', 'true', '1'].includes(val)) {
+                    detailParts.push(cb.label);
+                    isPresent = true; // Implicit presence if detail is checked
                 }
-            } else {
-                if (meta.isTime) {
-                    const normTime = normalizeTime(value);
-                    if (normTime) {
-                        foundDrugs.push({ name: meta.key, time: normTime });
-                    }
-                } else {
-                    if (value === '1' || value.toLowerCase().includes('checked') || value.toLowerCase() === 'yes') {
-                        foundDrugs.push({ name: meta.key }); 
-                    }
+            });
+        }
+
+        // Check text detail column
+        if (s.textIndex !== undefined && row[s.textIndex]) {
+            const textVal = row[s.textIndex].trim();
+            if (textVal) {
+                detailParts.push(textVal);
+                // If we have text detail, imply presence if not already checked (often the case with REDCap branching logic)
+                if (s.boolIndex === -1 || row[s.boolIndex]?.trim().toLowerCase() !== 'unchecked') {
+                    isPresent = true;
                 }
+            }
+        }
+
+        if (isPresent) {
+            p.history.symptoms.push({ 
+                label: s.label, 
+                detail: detailParts.length > 0 ? detailParts.join(', ') : undefined 
+            });
+        }
+    });
+
+    // Extract Treatments
+    treatmentMap.forEach(t => {
+        const val = row[t.index]?.trim().toLowerCase();
+        if (['checked', 'yes', 'true', '1'].includes(val)) {
+            p.history.treatment.push(t.label);
+        }
+    });
+
+    // Extract Medications
+    drugMap.forEach(d => {
+        const checkVal = row[d.checkIndex]?.trim().toLowerCase();
+        if (checkVal === 'checked') {
+            let entry = d.name;
+            if (d.timeIndex !== -1 && row[d.timeIndex]) {
+                const time = normalizeTime(row[d.timeIndex]);
+                if (time) entry += ` @ ${time}`;
+            }
+            p.history.medications?.push(entry);
+        }
+    });
+
+    otherDrugColumns.forEach(d => {
+        if (d.nameIndex !== -1 && row[d.nameIndex]) {
+            const name = row[d.nameIndex].trim();
+            if (name && name.toLowerCase() !== 'unchecked') {
+                let entry = name;
+                if (d.timeIndex !== -1 && row[d.timeIndex]) {
+                    const time = normalizeTime(row[d.timeIndex]);
+                    if (time) entry += ` @ ${time}`;
+                }
+                p.history.medications?.push(entry);
             }
         }
     });
 
-    const uniqueDrugs = new Map<string, string | undefined>();
-    foundDrugs.forEach(d => {
-        if (!uniqueDrugs.has(d.name) || (d.time && !uniqueDrugs.get(d.name))) {
-            uniqueDrugs.set(d.name, d.time);
+    // Process generic other free text
+    if (genericOtherIndex !== -1 && row[genericOtherIndex]) {
+        const val = row[genericOtherIndex].trim();
+        if (val) p.history.medications?.push(val);
+    }
+
+    // Process Agent/Time pairs
+    agentTimePairs.forEach(pair => {
+        const name = row[pair.nameIndex]?.trim();
+        const timeVal = row[pair.timeIndex]?.trim();
+        
+        if (name && name.toLowerCase() !== 'unchecked') {
+            let entry = name;
+            if (timeVal) {
+                const time = normalizeTime(timeVal);
+                if (time) entry += ` @ ${time}`;
+            }
+            p.history.medications?.push(entry);
         }
     });
 
-    uniqueDrugs.forEach((time, name) => {
-        const entry = time ? `${name} @ ${time}` : name;
-        p.history.medications.push(entry);
+    p.history.medications?.sort((a, b) => {
+        const timeA = a.includes('@') ? a.split('@')[1].trim() : '99:99';
+        const timeB = b.includes('@') ? b.split('@')[1].trim() : '99:99';
+        return timeA.localeCompare(timeB);
     });
 
-    p.history.medications.sort();
-    p.history.suspectedAgents = suspected.length > 0 ? suspected : [];
-    
-    if (!p.mrn) p.mrn = id;
-    
-    data.push(p as Patient);
+    data.push(p);
   }
 
   return { success: true, data };

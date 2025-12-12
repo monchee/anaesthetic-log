@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui';
 import { ShieldCheck, LayoutDashboard, Database } from 'lucide-react';
@@ -10,6 +11,27 @@ interface ChangelogProps {
 
 const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
   const versions = [
+    {
+      version: "v0.3.25",
+      changes: [
+        "Feature: Added 'Additional Comments' field to the Patient History view, pulling data from CSV comments.",
+        "Data: Updated mock database with sample comments.",
+        "System: Refined CSV parser to automatically detect and map comment columns."
+      ]
+    },
+    {
+      version: "v0.3.24",
+      changes: [
+        "UI: Enhanced Patient History to filter out empty or whitespace-only entries from the 'Untimed Agents' list, improving data clarity."
+      ]
+    },
+    {
+      version: "v0.3.23",
+      changes: [
+        "UI: Improved visual prominence of 'Reaction Onset' in the Patient History timeline for better readability.",
+        "UI: Adjusted font sizing for subtext within timeline events to enhance clarity."
+      ]
+    },
     {
       version: "v0.3.22",
       changes: [
@@ -206,7 +228,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
       ]
     },
     {
-      version: "v0.2.9",
+      version: "0.2.9",
       changes: [
         "Added CSV upload functionality to update the patient database.",
         "Implemented pagination for the Patient Database in Dashboard.",
@@ -215,7 +237,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
       ]
     },
     {
-      version: "v0.2.8",
+      version: "0.2.8",
       changes: [
         "Added Changelog page accessible from footer.",
         "Updated Dashboard to include recent skin testing activity.",
@@ -224,7 +246,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
       ]
     },
     {
-      version: "v0.2.7",
+      version: "0.2.7",
       changes: [
         "Implemented dynamic patient database search.",
         "Added 'Hospital' field to demographics display.",
@@ -233,7 +255,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
       ]
     },
     {
-      version: "v0.2.6",
+      version: "0.2.6",
       changes: [
         "Integrated full REDCap dataset (92 records).",
         "Added logic to parse induction and reaction times.",
@@ -241,7 +263,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen, databaseDate }) => {
       ]
     },
      {
-      version: "v0.2.5",
+      version: "0.2.5",
       changes: [
         "Migrated application to React with Shadcn UI components.",
         "Implemented accordion view for patient history.",

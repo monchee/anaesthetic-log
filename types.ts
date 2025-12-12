@@ -1,10 +1,12 @@
 
-
 export interface PatientHistory {
   date: string;
   grade: string;
   reactionSummary: string;
-  symptoms: string[];
+  comments?: string; // Additional comments from CSV
+  symptoms: Array<{ label: string; detail?: string }>;
+  firstSymptom?: string;
+  predominantSymptom?: string;
   treatment: string[];
   suspectedAgents: string[];
   tryptase?: string;

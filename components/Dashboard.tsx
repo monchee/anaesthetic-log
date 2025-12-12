@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Input, Badge } from './ui';
 import { Users, AlertTriangle, Activity, Search, Thermometer, Clock, Upload, ChevronLeft, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, Ban, FileText } from 'lucide-react';
@@ -44,6 +45,39 @@ const useCountUp = (end: number, duration = 1500) => {
   }, [end, duration]);
   
   return count;
+};
+
+// Helper to extract timeline events for the dashboard visualization
+const getTimelineEvents = (history: any) => {
+    const events: { time: string, type: 'med' | 'induction' | 'reaction', label: string }[] = [];
+    
+    // Medications
+    const allMedications = [
+      ...(history.medications || []),
+      ...(history.preInductionDrugs || []),
+      ...(history.postInductionDrugs || [])
+    ];
+    
+    const uniqueMedications = [...new Set(allMedications)];
+    
+    uniqueMedications.forEach((d: any) => {
+        const drugStr = typeof d === 'string' ? d : '';
+        if (!drugStr.trim()) return;
+        
+        if (drugStr.includes('@')) {
+            const parts = drugStr.split('@');
+            const drugName = parts[0].trim();
+            const timeStr = (parts[1] || '').trim();
+            if (timeStr && drugName) {
+                events.push({ time: timeStr, type: 'med', label: drugName });
+            }
+        }
+    });
+
+    if (history.inductionTime) events.push({ time: history.inductionTime, type: 'induction', label: 'Induction' });
+    if (history.reactionTime) events.push({ time: history.reactionTime, type: 'reaction', label: 'Reaction Onset' });
+
+    return events.sort((a, b) => a.time.localeCompare(b.time));
 };
 
 const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate }) => {
@@ -135,7 +169,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
       });
 
       (p.history.symptoms || []).forEach(sym => {
-         const normalized = sym.trim();
+         const normalized = sym.label.trim();
          if (normalized) {
             symptomCounts[normalized] = (symptomCounts[normalized] || 0) + 1;
          }
@@ -801,16 +835,17 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                 <table className="w-full text-sm text-left">
                     <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
                         <tr>
-                            <th className="px-4 py-3 w-32">Date</th>
-                            <th className="px-4 py-3">Patient</th>
-                            <th className="px-4 py-3">Hospital</th>
-                            <th className="px-4 py-3 text-center w-32">Grade</th>
-                            <th className="px-4 py-3">Suspected Agent(s)</th>
+                            <th className="px-4 py-3 w-28">Date</th>
+                            <th className="px-4 py-3 w-48">Patient</th>
+                            <th className="px-4 py-3">Procedure</th> {/* Flexible width */}
+                            <th className="px-4 py-3 w-48">Timeline</th>
+                            <th className="px-4 py-3 text-center w-28">Grade</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
                         {paginatedPatients.length > 0 ? (
                             paginatedPatients.map((p) => {
+                                const timelineEvents = getTimelineEvents(p.history);
                                 return (
                                     <tr 
                                         key={p.id} 
@@ -822,25 +857,36 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                             {formatDate(p.history.date)}
                                         </td>
                                         <td className="px-4 py-3 font-medium text-[#441170] dark:text-purple-300 group-hover:text-[#6b42d1] dark:group-hover:text-purple-200">
-                                            {p.lastName}, {p.firstName}
+                                            <div className="truncate max-w-[180px]" title={`${p.lastName}, ${p.firstName}`}>
+                                                {p.lastName}, {p.firstName}
+                                            </div>
                                         </td>
                                         <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
-                                            {p.history.hospital || '-'}
+                                            <div className="line-clamp-1 max-w-xs" title={p.history.procedure}>
+                                                {p.history.procedure || <span className="italic text-slate-400">Unknown</span>}
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <div className="flex items-center gap-1.5 flex-wrap">
+                                                {timelineEvents.map((e, idx) => (
+                                                    <div 
+                                                        key={idx}
+                                                        className={`
+                                                            h-2.5 w-2.5 rounded-full cursor-help transition-all hover:scale-150
+                                                            ${e.type === 'reaction' ? 'bg-red-500 shadow-sm shadow-red-200 ring-1 ring-white dark:ring-slate-900 z-10' : ''}
+                                                            ${e.type === 'induction' ? 'bg-purple-500 ring-1 ring-white dark:ring-slate-900' : ''}
+                                                            ${e.type === 'med' ? 'bg-slate-300 dark:bg-slate-600' : ''}
+                                                        `}
+                                                        title={`${e.time} - ${e.label}`}
+                                                    />
+                                                ))}
+                                                {timelineEvents.length === 0 && <span className="text-slate-300 text-xs">-</span>}
+                                            </div>
                                         </td>
                                         <td className="px-4 py-3 text-center">
                                             <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-[10px]">
                                                 {(p.history.grade || 'Ungraded').split(' -')[0]}
                                             </Badge>
-                                        </td>
-                                        <td className="px-4 py-3 max-w-[300px] text-slate-600 dark:text-slate-400">
-                                            <div className="flex flex-wrap gap-1">
-                                                {(p.history.suspectedAgents || []).map((agent, i) => (
-                                                    <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300">
-                                                        {agent}
-                                                    </span>
-                                                ))}
-                                                {(p.history.suspectedAgents || []).length === 0 && '-'}
-                                            </div>
                                         </td>
                                     </tr>
                                 );
@@ -859,41 +905,49 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             {/* Mobile View (Card List) */}
             <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
                 {paginatedPatients.length > 0 ? (
-                    paginatedPatients.map(p => (
-                        <div 
-                            key={p.id} 
-                            className="p-4 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800"
-                            onClick={() => onSelectPatient(p)}
-                        >
-                            <div className="flex justify-between items-start mb-2 gap-2">
-                                <div>
-                                    <div className="font-bold text-[#441170] dark:text-purple-300">
-                                        {p.lastName}, {p.firstName}
+                    paginatedPatients.map(p => {
+                        const timelineEvents = getTimelineEvents(p.history);
+                        return (
+                            <div 
+                                key={p.id} 
+                                className="p-4 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800"
+                                onClick={() => onSelectPatient(p)}
+                            >
+                                <div className="flex justify-between items-start mb-2 gap-2">
+                                    <div>
+                                        <div className="font-bold text-[#441170] dark:text-purple-300">
+                                            {p.lastName}, {p.firstName}
+                                        </div>
+                                        <div className="text-xs text-slate-500 font-mono mt-0.5 truncate max-w-[200px]">
+                                            {formatDate(p.history.date)}
+                                        </div>
                                     </div>
-                                    <div className="text-xs text-slate-500 font-mono mt-0.5">
-                                        {formatDate(p.history.date)} • {p.history.hospital || 'Unknown Hospital'}
-                                    </div>
+                                    <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-[10px] shrink-0">
+                                        {(p.history.grade || 'Ungraded').split(' -')[0]}
+                                    </Badge>
                                 </div>
-                                <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-[10px] shrink-0">
-                                    {(p.history.grade || 'Ungraded').split(' -')[0]}
-                                </Badge>
-                            </div>
-                            <div className="text-sm text-slate-600 dark:text-slate-400 mt-3">
-                                <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1.5 tracking-wide">Suspected Agents</span>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {(p.history.suspectedAgents || []).length > 0 ? (
-                                        p.history.suspectedAgents.map((agent, i) => (
-                                            <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                                                {agent}
-                                            </span>
-                                        ))
-                                    ) : (
-                                        <span className="text-slate-400 italic text-xs">None recorded</span>
-                                    )}
+                                
+                                <div className="text-sm text-slate-600 dark:text-slate-400 mt-2 line-clamp-1 italic">
+                                    {p.history.procedure || 'Unknown Procedure'}
+                                </div>
+
+                                <div className="flex items-center gap-1.5 mt-3">
+                                    {timelineEvents.map((e, idx) => (
+                                        <div 
+                                            key={idx}
+                                            className={`
+                                                h-2 w-2 rounded-full
+                                                ${e.type === 'reaction' ? 'bg-red-500' : ''}
+                                                ${e.type === 'induction' ? 'bg-purple-500' : ''}
+                                                ${e.type === 'med' ? 'bg-slate-300 dark:bg-slate-600' : ''}
+                                            `}
+                                        />
+                                    ))}
+                                    {timelineEvents.length === 0 && <span className="text-xs text-slate-400">No timed events</span>}
                                 </div>
                             </div>
-                        </div>
-                    ))
+                        );
+                    })
                 ) : (
                     <div className="p-8 text-center text-slate-500 italic text-sm">
                         No matching records found.
