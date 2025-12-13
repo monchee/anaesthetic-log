@@ -1,19 +1,18 @@
+import { Patient } from '../types';
 
-import { DrugTestRow, LogFormData, Patient, PatientHistory } from '../types';
+// CSV parsing utilities
 
-// Re-export utilities from specialized modules for backward compatibility
-export { formatDate, calculateTimeDifference } from './dateUtils';
-export { getGradeVariant, type GradeVariant } from './gradingUtils';
-export { isSkinTestPositive, getPositiveResults, getNegativeResults } from './testingUtils';
-export { parsePatientTimeline, type TimelineEvent } from './timelineUtils';
-export { parseRedcapCSV, type CsvParseResult } from './csvUtils';
-
-// --- CSV Parsing Utilities ---
-
-const CSV_LINE_SPLIT_REGEX = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/; 
+const CSV_LINE_SPLIT_REGEX = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 const TIME_HHMMSS_REGEX = /(\d{1,2}):(\d{2})(?::\d{2})?/;
 const TIME_HHMM_REGEX = /^(\d{2})(\d{2})$/;
 const DRUG_CHOICE_REGEX = /\(choice=(.+)\)/;
+
+export interface CsvParseResult {
+    success: boolean;
+    data: Patient[];
+    error?: string;
+    details?: string[];
+}
 
 const splitCSVLine = (line: string) => {
   const result = [];
@@ -37,21 +36,14 @@ const splitCSVLine = (line: string) => {
   return result;
 };
 
-export interface CsvParseResult {
-    success: boolean;
-    data: Patient[];
-    error?: string;
-    details?: string[];
-}
-
 const normalizeTime = (timeStr: string): string => {
     if (!timeStr) return "";
     const cleanStr = timeStr.trim();
-    
+
     // Check for HH:MM:SS
     let match = cleanStr.match(TIME_HHMMSS_REGEX);
     if (match) return `${match[1].padStart(2, '0')}:${match[2]}`;
-    
+
     // Check for HHMM
     match = cleanStr.match(TIME_HHMM_REGEX);
     if (match) {
@@ -60,11 +52,10 @@ const normalizeTime = (timeStr: string): string => {
         if (h < 24 && m < 60) return `${match[1]}:${match[2]}`;
     }
 
-    return cleanStr; 
+    return cleanStr;
 };
 
-// --- Static Configuration Constants for CSV Parsing ---
-
+// Configuration for CSV parsing (moved from utils.ts)
 const DRUG_TIME_MATCHERS: Record<string, string[]> = {
     'Suxamethonium': ['Sux', 'Suxamethonium'],
     'Rocuronium': ['Roc', 'Rocuronium'],
@@ -111,21 +102,21 @@ const SYMPTOM_CONFIGS: SymptomMapConfig[] = [
     { key: "Hypotension", label: "Hypotension" },
     { key: "Cardiac Arrest", label: "Cardiac Arrest" },
     { key: "Cough", label: "Cough" },
-    { 
-        key: "Bronchospasm", 
+    {
+        key: "Bronchospasm",
         label: "Bronchospasm",
         detailCheckboxes: [
-            "Mild Wheeze", 
-            "Moderate Wheeze", 
-            "Severe Wheeze", 
-            "Dyspnoea reported by patient", 
-            "Difficult to ventilate", 
+            "Mild Wheeze",
+            "Moderate Wheeze",
+            "Severe Wheeze",
+            "Dyspnoea reported by patient",
+            "Difficult to ventilate",
             "Very difficult to ventilate"
-        ] 
+        ]
     },
     { key: "Low Oxygen Saturations", label: "Desaturation" },
-    { 
-        key: "Flushing/Erythema", 
+    {
+        key: "Flushing/Erythema",
         label: "Flushing/Erythema",
         detailCheckboxes: ["Local", "Generalised"]
     },
@@ -171,13 +162,13 @@ const ANAESTHESIA_MAP_CONFIG = [
 export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   const lines = csvText.split(/\r?\n/).filter(l => l.trim());
   if (lines.length < 2) return { success: false, data: [], error: "Empty or invalid CSV." };
-  
+
   const headers = splitCSVLine(lines[0]);
   const data: Patient[] = [];
 
   // --- 1. Map Information Columns ---
   const colIndices: Record<string, number> = {};
-  
+
   headers.forEach((h, idx) => {
       const header = h.trim();
       if (header === 'Record ID') colIndices['id'] = idx;
@@ -195,7 +186,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
       else if (header.includes('Position') && (header.includes('Referring') || header.includes('Doctor'))) colIndices['referringDoctorPosition'] = idx;
       else if (header === 'Provider Number:') colIndices['providerNumber'] = idx;
       else if (header === 'Email Address:') colIndices['referringEmail'] = idx;
-      else if (header === 'Phone Number:') colIndices['referringPhone'] = idx;
+      else if (header === 'Phone Number:') colIndices['phoneNumber'] = idx;
       else if (header.includes('Severity of Allergic Reaction')) colIndices['grade'] = idx;
       else if (header.includes('Write a brief summary')) colIndices['summary'] = idx;
       else if (header.includes('Comment')) colIndices['comments'] = idx;
@@ -205,17 +196,17 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   });
 
   // --- 2. Map Symptoms & Treatments ---
-  const symptomMap: { 
-      label: string, 
-      boolIndex: number, 
-      textIndex?: number, 
-      checkboxIndices?: { label: string, index: number }[] 
+  const symptomMap: {
+      label: string,
+      boolIndex: number,
+      textIndex?: number,
+      checkboxIndices?: { label: string, index: number }[]
   }[] = [];
 
   SYMPTOM_CONFIGS.forEach(conf => {
       const boolIdx = headers.findIndex(h => h.trim() === conf.key);
       const textIdx = conf.detailKey ? headers.findIndex(h => h.trim() === conf.detailKey) : -1;
-      
+
       const checkboxIndices: { label: string, index: number }[] = [];
       if (conf.detailCheckboxes) {
           conf.detailCheckboxes.forEach(cbLabel => {
@@ -230,9 +221,9 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
       }
 
       if (boolIdx !== -1 || textIdx !== -1 || checkboxIndices.length > 0) {
-          symptomMap.push({ 
-              label: conf.label, 
-              boolIndex: boolIdx, 
+          symptomMap.push({
+              label: conf.label,
+              boolIndex: boolIdx,
               textIndex: textIdx !== -1 ? textIdx : undefined,
               checkboxIndices: checkboxIndices.length > 0 ? checkboxIndices : undefined
           });
@@ -259,7 +250,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
 
           let timeIdx = -1;
           const searchTerms = DRUG_TIME_MATCHERS[drugName] || [drugName];
-          
+
           for (let i = 0; i < headers.length; i++) {
               const targetH = headers[i];
               if (!targetH.includes('Time')) continue;
@@ -269,7 +260,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
               });
               if (matches) {
                   timeIdx = i;
-                  break; 
+                  break;
               }
           }
 
@@ -365,7 +356,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
             comments: getVal('comments'),
             procedure: getVal('procedure') || 'Unknown',
             hospital: getVal('hospital') || 'Unknown',
-            anaesthetist: 'Unknown', 
+            anaesthetist: 'Unknown',
             referringDoctor: getVal('referringDoctor'),
             referringDoctorPosition: getVal('referringDoctorPosition'),
             providerNumber: getVal('providerNumber'),
@@ -399,7 +390,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
                 const val = row[cb.index]?.trim().toLowerCase();
                 if (['checked', 'yes', 'true', '1'].includes(val)) {
                     detailParts.push(cb.label);
-                    isPresent = true; 
+                    isPresent = true;
                 }
             });
         }
@@ -415,9 +406,9 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
         }
 
         if (isPresent) {
-            p.history.symptoms.push({ 
-                label: s.label, 
-                detail: detailParts.length > 0 ? detailParts.join(', ') : undefined 
+            p.history.symptoms.push({
+                label: s.label,
+                detail: detailParts.length > 0 ? detailParts.join(', ') : undefined
             });
         }
     });

@@ -55,6 +55,21 @@ export interface Controls {
   salineIdt: string;
 }
 
+export enum TestOutcome {
+  SUCCESS = 'SUCCESS',
+  UNSUCCESS = 'UNSUCCESS'
+}
+
+export enum Screen {
+  LOG = 'log',
+  SUMMARY = 'summary',
+  PATIENT_SUMMARY = 'patient-summary',
+  DASHBOARD = 'dashboard',
+  CHANGELOG = 'changelog',
+  TESTING = 'testing',
+  PRINT_PLAN = 'print-plan'
+}
+
 export interface LogFormData {
   id?: string;
   timestamp?: string;
@@ -67,7 +82,7 @@ export interface LogFormData {
   proceedToChallenge: boolean;
   challengeDrug: string;
   challengeDrugCustom?: string;
-  outcome: 'SUCCESS' | 'UNSUCCESS' | null;
+  outcome: TestOutcome | null;
   reactionTime: string;
   symptoms: string[];
   symptomsOther: string;
@@ -82,4 +97,14 @@ export interface TestingPlanData {
   notes: string;
 }
 
-export type Screen = 'log' | 'summary' | 'patient-summary' | 'dashboard' | 'changelog' | 'testing' | 'print-plan';
+export interface CategoryTheme {
+  activeBg: string;
+  activeRing: string;
+  headerText: string;
+  headerBorder: string;
+  btnSelected: string;
+  btnHover: string;
+  pulse: string;
+  rowBorder: string;
+  actionText: string;
+}

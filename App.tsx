@@ -14,12 +14,13 @@ import TestingPlanPrintView from './components/TestingPlanPrintView';
 import { ScreenLayout } from './components/ScreenLayout';
 import { ThemeProvider } from './components/ThemeProvider';
 import { FontSizeProvider } from './components/FontSizeProvider';
+import ErrorBoundary from './components/ErrorBoundary';
 import { LogFormData, Patient, Screen, TestingPlanData } from './types';
 import { formatDate } from './lib/utils';
 import { MOCK_PATIENTS } from './data/mockPatients';
-import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS } from './lib/constants';
+import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from './lib/constants';
 
-const APP_SUBTITLE = "RPAH Department of Clinical Immunology & Allergy";
+const APP_SUBTITLE = APP_CONFIG.SUBTITLE;
 
 const INITIAL_FORM_STATE: LogFormData = {
     mrn: '',
@@ -45,7 +46,7 @@ const INITIAL_FORM_STATE: LogFormData = {
 };
 
 function AnaestheticLogApp() {
-  const [screen, setScreen] = useState<Screen>('log');
+  const [screen, setScreen] = useState<Screen>(Screen.LOG);
   const [formData, setFormData] = useState<LogFormData>(INITIAL_FORM_STATE);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [lastSavedRecord, setLastSavedRecord] = useState<LogFormData | null>(null);
@@ -54,7 +55,7 @@ function AnaestheticLogApp() {
   
   // State for Patients Database (Initialized with Mock, can be updated via CSV)
   const [patients, setPatients] = useState<Patient[]>(MOCK_PATIENTS);
-  const [databaseDate, setDatabaseDate] = useState<string>("12/12/2025"); // Updated dataset date
+  const [databaseDate, setDatabaseDate] = useState<string>(APP_CONFIG.DEFAULT_DATABASE_DATE);
   const [hasUploadedData, setHasUploadedData] = useState(false);
 
   // State for NEWLY added logs (separate from the static database)
@@ -64,7 +65,7 @@ function AnaestheticLogApp() {
   const [showDisclaimer, setShowDisclaimer] = useState(() => {
     // Only access localStorage in browser environment
     if (typeof window !== 'undefined') {
-        return localStorage.getItem('disclaimerDismissed') !== 'true';
+        return localStorage.getItem(APP_CONFIG.LOCAL_STORAGE_KEYS.DISCLAIMER_DISMISSED) !== 'true';
     }
     return true;
   });
@@ -72,7 +73,7 @@ function AnaestheticLogApp() {
   const handleDismissDisclaimer = () => {
     setShowDisclaimer(false);
     if (typeof window !== 'undefined') {
-        localStorage.setItem('disclaimerDismissed', 'true');
+        localStorage.setItem(APP_CONFIG.LOCAL_STORAGE_KEYS.DISCLAIMER_DISMISSED, 'true');
     }
   };
 
@@ -122,7 +123,7 @@ function AnaestheticLogApp() {
     const recordToSave = { ...formData };
     setLastSavedRecord(recordToSave);
     setRecentLogs(prev => [recordToSave, ...prev]);
-    setScreen('summary');
+    setScreen(Screen.SUMMARY);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -135,7 +136,7 @@ function AnaestheticLogApp() {
   // Handler for clicking a patient in the Dashboard
   const handleDashboardPatientSelect = (patient: Patient) => {
     handlePatientSelect(patient);
-    setScreen('log');
+    setScreen(Screen.LOG);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -147,13 +148,13 @@ function AnaestheticLogApp() {
     setFormData(INITIAL_FORM_STATE);
     setSelectedPatient(null);
     setLastSavedRecord(null);
-    setScreen('log');
+    setScreen(Screen.LOG);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Render content based on screen state
   const renderScreenContent = () => {
-    if (screen === 'changelog') {
+    if (screen === Screen.CHANGELOG) {
         return (
             <ScreenLayout
                 title="Application Changelog"
@@ -166,7 +167,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen('log')} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back to Log
                     </Button>
                 }
@@ -176,7 +177,7 @@ function AnaestheticLogApp() {
         );
     }
 
-    if (screen === 'dashboard') {
+    if (screen === Screen.DASHBOARD) {
         return (
             <ScreenLayout
                 title="Clinical Dashboard"
@@ -189,7 +190,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen('log')} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back to Log
                     </Button>
                 }
@@ -202,7 +203,7 @@ function AnaestheticLogApp() {
                     drugCategories={DRUG_CATEGORIES}
                     onViewLog={(log) => {
                         setLastSavedRecord(log);
-                        setScreen('summary');
+                        setScreen(Screen.SUMMARY);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     onSelectPatient={handleDashboardPatientSelect}
@@ -213,7 +214,7 @@ function AnaestheticLogApp() {
         );
     }
 
-    if (screen === 'summary' && lastSavedRecord) {
+    if (screen === Screen.SUMMARY && lastSavedRecord) {
         return (
             <ScreenLayout
                 title="Clinical Report"
@@ -226,7 +227,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="headerAction" size="sm">
                         <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
                     </Button>
                 }
@@ -237,7 +238,7 @@ function AnaestheticLogApp() {
                     <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base border-2">
                         <Printer className="w-5 h-5 mr-2" /> Print Clinical Report
                     </Button>
-                    <Button onClick={() => setScreen('patient-summary')} size="lg" variant="secondary" className="flex-1 py-6 h-auto text-base border-2 border-[#e6e1fd] dark:border-[#441170]">
+                    <Button onClick={() => setScreen(Screen.PATIENT_SUMMARY)} size="lg" variant="secondary" className="flex-1 py-6 h-auto text-base border-2 border-[#e6e1fd] dark:border-[#441170]">
                         <User className="w-5 h-5 mr-2" /> View Patient Handout
                     </Button>
                 </div>
@@ -250,7 +251,7 @@ function AnaestheticLogApp() {
         );
     }
 
-    if (screen === 'patient-summary' && lastSavedRecord) {
+    if (screen === Screen.PATIENT_SUMMARY && lastSavedRecord) {
         return (
              <ScreenLayout
                 title="Patient Handout"
@@ -263,7 +264,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="headerAction" size="sm">
                         <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
                     </Button>
                 }
@@ -271,7 +272,7 @@ function AnaestheticLogApp() {
             >
                 <PatientHandout data={lastSavedRecord} />
                 <div className="flex flex-col sm:flex-row gap-4 no-print mt-8">
-                    <Button onClick={() => setScreen('summary')} size="lg" variant="ghost" className="flex-1 py-6 h-auto text-base">
+                    <Button onClick={() => setScreen(Screen.SUMMARY)} size="lg" variant="ghost" className="flex-1 py-6 h-auto text-base">
                         <ArrowLeft className="w-4 h-4 mr-2" /> Back to Clinical Report
                     </Button>
                     <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base border-2">
@@ -287,7 +288,7 @@ function AnaestheticLogApp() {
         );
     }
 
-    if (screen === 'print-plan' && selectedPatient && testingPlanData) {
+    if (screen === Screen.PRINT_PLAN && selectedPatient && testingPlanData) {
         return (
             <ScreenLayout
                 title="Testing Plan Preview"
@@ -301,7 +302,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen('log')} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -310,13 +311,13 @@ function AnaestheticLogApp() {
                     patient={selectedPatient}
                     data={testingPlanData}
                     drugCategories={DRUG_CATEGORIES}
-                    onProceed={() => setScreen('testing')}
+                    onProceed={() => setScreen(Screen.TESTING)}
                 />
             </ScreenLayout>
         );
     }
 
-    if (screen === 'testing') {
+    if (screen === Screen.TESTING) {
         return (
             <ScreenLayout
                 title="Testing Session"
@@ -329,7 +330,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen('log')} variant="headerAction" size="sm" className="mr-2">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm" className="mr-2">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -361,7 +362,7 @@ function AnaestheticLogApp() {
             onDismissDisclaimer={handleDismissDisclaimer}
             onUploadPatients={handleUploadPatients}
             actions={
-                <Button onClick={() => setScreen('dashboard')} variant="headerAction" size="sm">
+                <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="headerAction" size="sm">
                     <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
                 </Button>
             }
@@ -475,7 +476,7 @@ function AnaestheticLogApp() {
                         drugCategories={DRUG_CATEGORIES}
                         onPreview={(data) => {
                             setTestingPlanData(data);
-                            setScreen('print-plan');
+                            setScreen(Screen.PRINT_PLAN);
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }} 
                     />
@@ -483,7 +484,7 @@ function AnaestheticLogApp() {
                         <Button 
                             size="lg" 
                             className="w-full sm:w-auto shadow-lg shadow-purple-200 dark:shadow-purple-900/50 text-base py-6"
-                            onClick={() => setScreen('testing')}
+                            onClick={() => setScreen(Screen.TESTING)}
                         >
                             Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
                         </Button>
@@ -499,12 +500,14 @@ function AnaestheticLogApp() {
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <FontSizeProvider>
-            <AnaestheticLogApp />
-            <Toaster /> {/* Render Toaster globally */}
-        </FontSizeProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="light" storageKey={APP_CONFIG.LOCAL_STORAGE_KEYS.THEME}>
+          <FontSizeProvider>
+              <AnaestheticLogApp />
+              <Toaster /> {/* Render Toaster globally */}
+          </FontSizeProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

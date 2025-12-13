@@ -1,6 +1,8 @@
+import { CategoryTheme } from '../types';
+
 // Shared Constants and Configuration
 
-export const CATEGORY_THEMES: Record<string, any> = {
+export const CATEGORY_THEMES: Record<string, CategoryTheme> = {
   "Muscle Relaxants": {
     activeBg: "bg-sky-50 dark:bg-sky-900/20",
     activeRing: "ring-sky-100 dark:ring-sky-900/50",
@@ -91,7 +93,7 @@ export const CATEGORY_THEMES: Record<string, any> = {
   }
 };
 
-export const DEFAULT_THEME = {
+export const DEFAULT_THEME: CategoryTheme = {
     activeBg: "bg-purple-50/80 dark:bg-purple-900/20",
     activeRing: "ring-purple-100 dark:ring-purple-900/50",
     headerText: "text-[#8055f1] dark:text-purple-300",
@@ -131,3 +133,13 @@ export const DRUG_CATEGORIES: Record<string, string[]> = {
 };
 
 export const FLAT_DRUG_OPTIONS = Object.values(DRUG_CATEGORIES).flat();
+
+// App Configuration
+export const APP_CONFIG = {
+  SUBTITLE: "RPAH Department of Clinical Immunology & Allergy",
+  DEFAULT_DATABASE_DATE: "12/12/2025",
+  LOCAL_STORAGE_KEYS: {
+    DISCLAIMER_DISMISSED: 'disclaimerDismissed',
+    THEME: 'vite-ui-theme'
+  }
+} as const;

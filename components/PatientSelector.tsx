@@ -177,4 +177,4 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
   );
 };
 
-export default PatientSelector;
+export default React.memo(PatientSelector);
