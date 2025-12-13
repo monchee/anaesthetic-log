@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# This clinical application contains sensitive patient data
+# and should not be indexed by search engines or crawled by bots

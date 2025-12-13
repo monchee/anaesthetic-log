@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Card, CardContent } from './ui';
-import { LogFormData } from '../types';
+import { LogFormData, TestOutcome } from '../types';
 import { formatDate } from '../lib/utils';
-import { Activity, History, FileText, Printer, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { FileText, Activity } from 'lucide-react';
 
 interface ClinicalReportProps {
   data: LogFormData;
@@ -142,19 +142,19 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
               <History className="w-5 h-5" /> Drug Challenge Details
             </h3>
             {data.proceedToChallenge ? (
-               <div className={`p-4 rounded-lg border-l-4 ${data.outcome === 'SUCCESS' 
+               <div className={`p-4 rounded-lg border-l-4 ${data.outcome === TestOutcome.SUCCESS 
                    ? 'bg-green-50 border-green-500 print:bg-green-50' 
                    : 'bg-red-50 border-red-500 print:bg-red-50'}`}>
                   <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2 gap-2">
                      <span className="font-bold text-lg">
                         {data.challengeDrug === 'Other' ? (data.challengeDrugCustom || 'Other') : data.challengeDrug}
                      </span>
-                     <div className={`px-2 py-1 rounded text-xs font-bold text-white self-start md:self-auto ${data.outcome === 'SUCCESS' ? 'bg-green-600' : 'bg-red-600'}`}>
-                        {data.outcome === 'SUCCESS' ? 'NEGATIVE (Safe)' : 'POSITIVE (Reaction)'}
+                     <div className={`px-2 py-1 rounded text-xs font-bold text-white self-start md:self-auto ${data.outcome === TestOutcome.SUCCESS ? 'bg-green-600' : 'bg-red-600'}`}>
+                        {data.outcome === TestOutcome.SUCCESS ? 'NEGATIVE (Safe)' : 'POSITIVE (Reaction)'}
                      </div>
                   </div>
                   
-                  {data.outcome === 'UNSUCCESS' && (
+                  {data.outcome === TestOutcome.UNSUCCESS && (
                     <div className="mt-2 text-sm space-y-1">
                        <p><span className="font-semibold">Reaction Time:</span> {data.reactionTime} mins</p>
                        <p><span className="font-semibold">Symptoms:</span> {formatSymptoms(data)}</p>

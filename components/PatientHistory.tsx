@@ -271,7 +271,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                     {event.type === 'induction' ? (
                                                         <HoverCard>
                                                             <HoverCardTrigger className="cursor-help flex items-center gap-1.5 group">
-                                                                <span className="font-semibold text-xs text-purple-700 dark:text-purple-300 group-hover:underline decoration-dashed underline-offset-2">
+                                                                <span className="font-semibold text-xs text-purple-700 dark:text-purple-300">
                                                                     {event.label}
                                                                 </span>
                                                                 <MonitorCheck className="w-3.5 h-3.5 text-purple-500 opacity-70" />
@@ -286,21 +286,22 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                         </HoverCard>
                                                     ) : (
                                                         <div className="flex items-center gap-1.5">
-                                                            <span className={`font-semibold text-xs ${
-                                                                event.type === 'reaction' ? 'text-red-700 dark:text-red-300' : 
-                                                                'text-slate-800 dark:text-slate-200'
-                                                            }`}>
-                                                                {event.label}
-                                                            </span>
-                                                            {event.type === 'reaction' && (
+                                                            {event.type === 'reaction' ? (
                                                                 <HoverCard>
-                                                                    <HoverCardTrigger>
-                                                                        <Info className="w-3.5 h-3.5 text-red-500 cursor-help" />
+                                                                    <HoverCardTrigger className="flex items-center gap-1.5 cursor-help">
+                                                                        <span className="font-semibold text-xs text-red-700 dark:text-red-300">
+                                                                            {event.label}
+                                                                        </span>
+                                                                        <Info className="w-3.5 h-3.5 text-red-500" />
                                                                     </HoverCardTrigger>
                                                                     <HoverCardContent>
-                                                                        {history.grade}
+                                                                        <span className="text-xs">{history.grade}</span>
                                                                     </HoverCardContent>
                                                                 </HoverCard>
+                                                            ) : (
+                                                                <span className="font-semibold text-xs text-slate-800 dark:text-slate-200">
+                                                                    {event.label}
+                                                                </span>
                                                             )}
                                                         </div>
                                                     )}

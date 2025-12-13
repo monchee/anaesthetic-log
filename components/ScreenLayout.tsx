@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Button } from './ui';
 import { Sun, Moon } from 'lucide-react';
 import Footer from './Footer';
@@ -9,11 +9,11 @@ import { useFontSize } from './FontSizeProvider';
 import { Screen, Patient } from '../types';
 
 interface ScreenLayoutProps {
-    title: React.ReactNode;
-    subtitle?: React.ReactNode;
-    icon?: React.ReactNode;
-    actions?: React.ReactNode;
-    children: React.ReactNode;
+    title: ReactNode;
+    subtitle?: ReactNode;
+    icon?: ReactNode;
+    actions?: ReactNode;
+    children: ReactNode;
     setScreen: (screen: Screen) => void;
     databaseDate: string;
     showFooter?: boolean;
@@ -25,14 +25,14 @@ interface ScreenLayoutProps {
     onUploadPatients?: (patients: Patient[]) => void;
 }
 
-export const ScreenLayout: React.FC<ScreenLayoutProps> = ({ 
-    title, 
-    subtitle, 
-    icon, 
-    actions, 
-    children, 
-    setScreen, 
-    databaseDate, 
+export const ScreenLayout = ({
+    title,
+    subtitle,
+    icon,
+    actions,
+    children,
+    setScreen,
+    databaseDate,
     showFooter = true,
     className,
     contentClassName,

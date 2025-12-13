@@ -2,7 +2,6 @@ import { Patient } from '../types';
 
 // CSV parsing utilities
 
-const CSV_LINE_SPLIT_REGEX = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 const TIME_HHMMSS_REGEX = /(\d{1,2}):(\d{2})(?::\d{2})?/;
 const TIME_HHMM_REGEX = /^(\d{2})(\d{2})$/;
 const DRUG_CHOICE_REGEX = /\(choice=(.+)\)/;
@@ -280,7 +279,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
 
   // --- 4. Map "Other" Free Text Columns ---
   const otherDrugColumns = OTHER_DRUG_COLUMNS_CONFIG.map(config => {
-      let nameIndex = headers.findIndex(h => h.trim() === config.label);
+      const nameIndex = headers.findIndex(h => h.trim() === config.label);
       let timeIndex = -1;
       if (nameIndex !== -1) {
           for (let i = nameIndex + 1; i < headers.length && i < nameIndex + 5; i++) {
@@ -378,7 +377,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
     // Extract Symptoms
     symptomMap.forEach(s => {
         let isPresent = false;
-        let detailParts: string[] = [];
+        const detailParts: string[] = [];
 
         if (s.boolIndex !== -1) {
             const val = row[s.boolIndex]?.trim().toLowerCase();

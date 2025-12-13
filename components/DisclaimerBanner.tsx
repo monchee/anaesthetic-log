@@ -5,7 +5,7 @@ interface DisclaimerBannerProps {
   onClose: () => void;
 }
 
-const DisclaimerBanner: React.FC<DisclaimerBannerProps> = ({ onClose }) => {
+const DisclaimerBanner = ({ onClose }: DisclaimerBannerProps) => {
   return (
     <div className="w-full bg-amber-100 dark:bg-amber-900/40 border-b border-amber-200 dark:border-amber-800 animate-in slide-in-from-top-2 duration-300">
       <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between gap-3">

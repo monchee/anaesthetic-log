@@ -11,7 +11,7 @@ interface TestingPlanPrintViewProps {
   onProceed: () => void;
 }
 
-const TestingPlanPrintView: React.FC<TestingPlanPrintViewProps> = ({ patient, data, drugCategories, onProceed }) => {
+const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: TestingPlanPrintViewProps) => {
   const { selectedDrugs, customDrugs, notes } = data;
 
   const handlePrint = () => {

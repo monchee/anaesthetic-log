@@ -16,11 +16,10 @@ import { ThemeProvider } from './components/ThemeProvider';
 import { FontSizeProvider } from './components/FontSizeProvider';
 import ErrorBoundary from './components/ErrorBoundary';
 import { LogFormData, Patient, Screen, TestingPlanData } from './types';
-import { formatDate } from './lib/utils';
 import { MOCK_PATIENTS } from './data/mockPatients';
 import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from './lib/constants';
 
-const APP_SUBTITLE = APP_CONFIG.SUBTITLE;
+const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
 const INITIAL_FORM_STATE: LogFormData = {
     mrn: '',
@@ -77,8 +76,8 @@ function AnaestheticLogApp() {
     }
   };
 
-  const symptomOptions = ['Urticaria', 'Angioedema', 'Bronchospasm', 'Hypotension', 'Flushing', 'Desaturation', 'Other'];
-  const interventionOptions = ['None (Observation)', 'Adrenaline', 'Antihistamine', 'Other'];
+  const symptomOptions = APP_CONFIG.SYMPTOM_OPTIONS;
+  const interventionOptions = APP_CONFIG.INTERVENTION_OPTIONS;
 
   const handlePatientSelect = (patient: Patient) => {
     setSelectedPatient(patient);
@@ -502,11 +501,11 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" storageKey={APP_CONFIG.LOCAL_STORAGE_KEYS.THEME}>
-          <FontSizeProvider>
-              <AnaestheticLogApp />
-              <Toaster /> {/* Render Toaster globally */}
-          </FontSizeProvider>
-      </ThemeProvider>
+        <FontSizeProvider>
+            <AnaestheticLogApp />
+            <Toaster /> {/* Render Toaster globally */}
+        </FontSizeProvider>
+    </ThemeProvider>
     </ErrorBoundary>
   );
 }

@@ -1,9 +1,9 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui';
-import { Users, AlertTriangle, Activity, Search, Thermometer, Clock, Upload, ChevronLeft, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, Ban, FileText, ExternalLink, FileUp, Timer } from 'lucide-react';
+import { Users, AlertTriangle, Search, Thermometer, Clock, Upload, ChevronLeft, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, Ban, FileText, ExternalLink, FileUp, Timer } from 'lucide-react';
 import { formatDate, parseRedcapCSV, getGradeVariant, isSkinTestPositive, parsePatientTimeline, calculateTimeDifference } from '../lib/utils';
-import { Screen, Patient, LogFormData } from '../types';
+import { Screen, Patient, LogFormData, TestOutcome } from '../types';
 import toast from 'react-hot-toast';
 
 interface DashboardProps {
@@ -18,10 +18,10 @@ interface DashboardProps {
   databaseDate: string;
 }
 
-// Hook for counting up numbers with cleanup
-const useCountUp = (end: number, duration = 1500) => {
+// Hook for counting up numbers with cleanup - reduced duration for less aggressive animation
+const useCountUp = (end: number, duration = 800) => {
   const [count, setCount] = useState(0);
-  
+
   useEffect(() => {
     let startTime: number | null = null;
     let animationFrameId: number;
@@ -29,26 +29,26 @@ const useCountUp = (end: number, duration = 1500) => {
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime;
       const progress = Math.min((currentTime - startTime) / duration, 1);
-      // Ease out quart
-      const ease = 1 - Math.pow(1 - progress, 4);
+      // Ease out cubic - smoother than quart
+      const ease = 1 - Math.pow(1 - progress, 3);
       setCount(Math.round(ease * end));
-      
+
       if (progress < 1) {
         animationFrameId = requestAnimationFrame(animate);
       }
     };
-    
+
     animationFrameId = requestAnimationFrame(animate);
 
     return () => {
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, [end, duration]);
-  
+
   return count;
 };
 
-const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate }) => {
+const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
@@ -59,9 +59,9 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
   const ITEMS_PER_PAGE = 10;
 
-  // Trigger chart animations on mount
+  // Trigger chart animations on mount - reduced delay for less aggressive animation
   useEffect(() => {
-    const timer = setTimeout(() => setAnimateCharts(true), 100);
+    const timer = setTimeout(() => setAnimateCharts(true), 50);
     return () => clearTimeout(timer);
   }, []);
 
@@ -153,7 +153,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
     // 2. Process Newly Added Logs
     recentLogs.forEach(log => {
-        if (log.outcome === 'UNSUCCESS') {
+        if (log.outcome === TestOutcome.UNSUCCESS) {
              if (log.interventionType === 'Adrenaline') {
                  gradeCounts.III++;
                  grade3PlusCount++;
@@ -169,7 +169,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
              reactionTimeCount++;
         }
 
-        if (log.proceedToChallenge && log.outcome === 'UNSUCCESS') {
+        if (log.proceedToChallenge && log.outcome === TestOutcome.UNSUCCESS) {
              const drugName = log.challengeDrug === 'Other' ? (log.challengeDrugCustom || 'Other') : log.challengeDrug;
              const key = normalizeAgent(drugName);
              if (key) {
@@ -285,7 +285,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                         </div>
                     );
                 }
-              } catch (err) {
+              } catch {
                   toast.error(
                     <div className="flex flex-col gap-1">
                          <span className="font-bold">Error processing file</span>
@@ -355,48 +355,48 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         {/* Modern Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Total Records */}
-            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-purple-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '0ms' }}>
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Users className="w-24 h-24 text-[#8055f1]" />
-                </div>
-                <CardContent className="pb-6 px-6 pt-6">
-                    <div className="flex items-center gap-4 mb-4">
-                        <div className="p-3 bg-[#f0ebff] dark:bg-[#441170]/30 rounded-xl text-[#8055f1] dark:text-purple-300 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                            <Users className="w-6 h-6" />
+            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-purple-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter-subtle">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <Users className="w-24 h-24 text-[#8055f1]" />
                         </div>
-                        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Database</span>
-                    </div>
-                    <div className="space-y-1">
-                        <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
-                            {animatedTotalPatients}
-                        </h3>
-                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                             <CheckCircle2 className="w-3 h-3 text-green-500" /> Active Records
-                        </p>
-                    </div>
-                </CardContent>
-            </Card>
+                        <CardContent className="pb-6 px-6 pt-6">
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className="p-3 bg-[#f0ebff] dark:bg-[#441170]/30 rounded-xl text-[#8055f1] dark:text-purple-300 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                                    <Users className="w-6 h-6" />
+                                </div>
+                                <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Database</span>
+                            </div>
+                            <div className="space-y-1">
+                                <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
+                                    {animatedTotalPatients}
+                                </h3>
+                                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                                     <CheckCircle2 className="w-3 h-3 text-green-500" /> Active Records
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
 
             {/* Severe Reactions */}
-            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-red-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '100ms' }}>
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <AlertTriangle className="w-24 h-24 text-red-500" />
-                </div>
-                <CardContent className="pb-6 px-6 pt-6">
-                    <div className="flex items-center gap-4 mb-4">
-                         <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl text-red-600 dark:text-red-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                            <AlertTriangle className="w-6 h-6" />
+            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-red-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter-subtle">
+                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <AlertTriangle className="w-24 h-24 text-red-500" />
                         </div>
-                        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Anaphylaxis</span>
-                    </div>
-                     <div className="space-y-1">
-                        <div className="flex items-end gap-2">
-                             <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
-                                {animatedSevereCount}
-                            </h3>
-                            <span className="text-sm font-medium text-red-600 dark:text-red-400 mb-1 bg-red-50 dark:bg-red-900/30 px-1.5 rounded">
-                                {severeRate}%
-                            </span>
+                        <CardContent className="pb-6 px-6 pt-6">
+                            <div className="flex items-center gap-4 mb-4">
+                                 <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl text-red-600 dark:text-red-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
+                                    <AlertTriangle className="w-6 h-6" />
+                                </div>
+                                <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Anaphylaxis</span>
+                            </div>
+                             <div className="space-y-1">
+                                <div className="flex items-end gap-2">
+                                     <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
+                                        {animatedSevereCount}
+                                    </h3>
+                                    <span className="text-sm font-medium text-red-600 dark:text-red-400 mb-1 bg-red-50 dark:bg-red-900/30 px-1.5 rounded">
+                                        {severeRate}%
+                                    </span>
                         </div>
                         <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
                              Grade III / IV Reactions
@@ -413,7 +413,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             </Card>
 
             {/* Procedures Abandoned */}
-            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-amber-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '200ms' }}>
+            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-amber-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter-subtle">
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                     <Ban className="w-24 h-24 text-amber-500" />
                 </div>
@@ -448,7 +448,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             </Card>
 
              {/* Avg Reaction Onset */}
-             <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-cyan-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter" style={{ animationDelay: '300ms' }}>
+             <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-cyan-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter-subtle">
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                     <Timer className="w-24 h-24 text-cyan-600" />
                 </div>
@@ -473,7 +473,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
 
         {/* ... (Charts Section) ... */}
         {/* Reaction Grade Distribution */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-enter" style={{ animationDelay: '400ms' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-enter-subtle">
             <Card className="shadow-sm h-full">
                 <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                     <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
@@ -584,8 +584,9 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
             </Card>
         </div>
 
+
         {/* Recent Skin Testing Activity Card */}
-        <Card className="w-full shadow-sm border-t-4 border-t-green-500 animate-enter" style={{ animationDelay: '500ms' }}>
+        <Card className="w-full shadow-sm border-t-4 border-t-green-500 animate-enter-subtle">
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-green-50/50 dark:bg-green-900/10">
                 <CardTitle className="text-lg text-green-800 dark:text-green-400 flex items-center gap-2">
                     <Clock className="w-5 h-5" /> Recent Skin Testing Activity
@@ -632,7 +633,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                         </td>
                                         <td className="px-4 py-3 text-xs">
                                             {log.proceedToChallenge ? (
-                                                log.outcome === 'SUCCESS' 
+                                                log.outcome === TestOutcome.SUCCESS 
                                                 ? <Badge variant="success" className="text-[10px]">Negative Challenge</Badge> 
                                                 : <Badge variant="danger" className="text-[10px]">Positive Challenge</Badge>
                                             ) : <span className="text-slate-500 dark:text-slate-400">No Challenge</span>}
@@ -653,7 +654,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         </Card>
 
         {/* Positive Skin Test Breakdown Table */}
-        <Card className="w-full shadow-sm animate-enter" style={{ animationDelay: '600ms' }}>
+        <Card className="w-full shadow-sm animate-enter-subtle">
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
@@ -745,7 +746,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
         </Card>
 
         {/* Patient Database Table (Full Width) - Paginated */}
-        <Card className="w-full shadow-sm animate-enter" style={{ animationDelay: '700ms' }}>
+        <Card className="w-full shadow-sm animate-enter-subtle">
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                 <div className="flex flex-col gap-4">
                     {/* Header Top Row: Title + Update Button */}
@@ -944,13 +945,13 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-1.5 flex-wrap">
                                                 {timelineEvents.map((e, idx) => (
-                                                    <div 
+                                                    <div
                                                         key={idx}
                                                         className={`
-                                                            h-2.5 w-2.5 rounded-full cursor-help transition-all hover:scale-150
-                                                            ${e.type === 'reaction' ? 'bg-red-500 shadow-sm shadow-red-200 ring-1 ring-white dark:ring-slate-900 z-10' : ''}
-                                                            ${e.type === 'induction' ? 'bg-purple-500 ring-1 ring-white dark:ring-slate-900' : ''}
-                                                            ${e.type === 'med' ? 'bg-slate-300 dark:bg-slate-600' : ''}
+                                                            h-2.5 w-2.5 rounded-full cursor-help inline-block
+                                                            ${e.type === 'reaction' ? 'bg-red-500' : ''}
+                                                            ${e.type === 'induction' ? 'bg-purple-500' : ''}
+                                                            ${e.type === 'med' ? 'bg-slate-400' : ''}
                                                         `}
                                                         title={`${e.time} - ${e.label}`}
                                                     />
@@ -959,7 +960,11 @@ const Dashboard: React.FC<DashboardProps> = ({ setScreen, existingPatients, rece
                                             </div>
                                         </td>
                                         <td className="px-4 py-3 text-center">
-                                            <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-[10px]">
+                                            <Badge
+                                                variant={getGradeVariant(p.history.grade || 'Ungraded')}
+                                                className="whitespace-nowrap text-[10px] cursor-help"
+                                                title={p.history.grade || 'Ungraded'}
+                                            >
                                                 {(p.history.grade || 'Ungraded').split(' -')[0]}
                                             </Badge>
                                         </td>

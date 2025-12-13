@@ -1,8 +1,8 @@
 
 import React, { useMemo, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select, Badge } from './ui';
-import { LogFormData } from '../types';
-import { Check, X, History, Activity, Save, AlertTriangle, CheckCircle2, Calendar, Stethoscope, Plus, Syringe, Clock, AlertOctagon, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select } from './ui';
+import { LogFormData, TestOutcome } from '../types';
+import { Check, X, Save, CheckCircle2, Calendar, Stethoscope, Plus, Syringe, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Activity } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '../lib/constants';
 
 interface TestingLogFormProps {
@@ -328,7 +328,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                       return (
                       <div 
                         key={row.id || row.drugName} 
-                        className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-r-md group animate-enter`}
+                        className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-r-md group`}
                       >
                          {/* Name Column (Full width on mobile) */}
                          <div className="col-span-2 md:col-span-1 flex items-center gap-2">
@@ -466,15 +466,15 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                              <button 
                                 type="button" 
-                                onClick={() => handleInputChange('outcome', 'SUCCESS')}
+                                onClick={() => handleInputChange('outcome', TestOutcome.SUCCESS)}
                                 className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
-                                    formData.outcome === 'SUCCESS' 
+                                    formData.outcome === TestOutcome.SUCCESS 
                                     ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300' 
                                     : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400'
                                 }`}
                              >
                                  <div className={`p-3 rounded-full ${
-                                     formData.outcome === 'SUCCESS' ? 'bg-green-100 text-green-600 dark:bg-green-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
+                                     formData.outcome === TestOutcome.SUCCESS ? 'bg-green-100 text-green-600 dark:bg-green-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
                                  }`}>
                                      <ThumbsUp className="w-6 h-6" />
                                  </div>
@@ -488,15 +488,15 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
                              <button 
                                 type="button" 
-                                onClick={() => handleInputChange('outcome', 'UNSUCCESS')}
+                                onClick={() => handleInputChange('outcome', TestOutcome.UNSUCCESS)}
                                 className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
-                                    formData.outcome === 'UNSUCCESS' 
+                                    formData.outcome === TestOutcome.UNSUCCESS 
                                     ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300' 
                                     : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400'
                                 }`}
                              >
                                  <div className={`p-3 rounded-full ${
-                                     formData.outcome === 'UNSUCCESS' ? 'bg-red-100 text-red-600 dark:bg-red-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
+                                     formData.outcome === TestOutcome.UNSUCCESS ? 'bg-red-100 text-red-600 dark:bg-red-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
                                  }`}>
                                      <ThumbsDown className="w-6 h-6" />
                                  </div>

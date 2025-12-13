@@ -136,8 +136,10 @@ export const FLAT_DRUG_OPTIONS = Object.values(DRUG_CATEGORIES).flat();
 
 // App Configuration
 export const APP_CONFIG = {
-  SUBTITLE: "RPAH Department of Clinical Immunology & Allergy",
-  DEFAULT_DATABASE_DATE: "12/12/2025",
+  APP_SUBTITLE: "RPAH Department of Clinical Immunology & Allergy",
+  DATABASE_DEFAULT_DATE: "12/12/2025",
+  SYMPTOM_OPTIONS: ['Urticaria', 'Angioedema', 'Bronchospasm', 'Hypotension', 'Flushing', 'Desaturation', 'Other'],
+  INTERVENTION_OPTIONS: ['None (Observation)', 'Adrenaline', 'Antihistamine', 'Other'],
   LOCAL_STORAGE_KEYS: {
     DISCLAIMER_DISMISSED: 'disclaimerDismissed',
     THEME: 'vite-ui-theme'

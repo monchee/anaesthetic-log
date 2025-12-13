@@ -37,7 +37,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, onUploadPatien
                         reject(new Error(result.error || "Failed to parse CSV structure."));
                     }
                 }, 800); 
-              } catch (err) {
+              } catch {
                   reject(new Error("Unexpected error parsing file."));
               }
           };
@@ -93,7 +93,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, onUploadPatien
                   className="hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors flex items-center gap-1.5"
               >
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                  App v0.3.40
+                  App v0.5.0
               </button>
 
               {onUploadPatients && (

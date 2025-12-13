@@ -10,7 +10,7 @@ interface TestingPlanGeneratorProps {
   onPreview: (data: TestingPlanData) => void;
 }
 
-const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, drugCategories, onPreview }) => {
+const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _patient, drugCategories, onPreview }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDrugs, setSelectedDrugs] = useState<string[]>([]);
   const [customDrugs, setCustomDrugs] = useState<string[]>([]);
@@ -78,7 +78,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
         </div>
 
         {isOpen && (
-            <CardContent className="pt-0 pb-6 px-6 animate-enter">
+            <CardContent className="pt-0 pb-6 px-6">
                 <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-6">
                     
                     {/* Notes Section */}

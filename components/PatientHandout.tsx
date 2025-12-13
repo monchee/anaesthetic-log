@@ -8,7 +8,7 @@ interface PatientHandoutProps {
   data: LogFormData;
 }
 
-const PatientHandout: React.FC<PatientHandoutProps> = ({ data }) => {
+const PatientHandout = ({ data }: PatientHandoutProps) => {
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
 
