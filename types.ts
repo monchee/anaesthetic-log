@@ -82,7 +82,7 @@ export interface LogFormData {
   proceedToChallenge: boolean;
   challengeDrug: string;
   challengeDrugCustom?: string;
-  outcome: TestOutcome | null;
+  outcome: 'SUCCESS' | 'UNSUCCESS' | null;
   reactionTime: string;
   symptoms: string[];
   symptomsOther: string;

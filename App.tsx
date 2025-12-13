@@ -119,11 +119,75 @@ function AnaestheticLogApp() {
   };
 
   const handleSubmit = () => {
-    const recordToSave = { ...formData };
-    setLastSavedRecord(recordToSave);
-    setRecentLogs(prev => [recordToSave, ...prev]);
-    setScreen(Screen.SUMMARY);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      // Use JSON serialization to ensure everything is plain data
+      // This strips any getters, setters, or non-serializable properties
+      const serialized = JSON.stringify(formData);
+      const parsed = JSON.parse(serialized) as LogFormData;
+      
+      // Now ensure all values are properly typed and outcome is correct
+      const recordToSave: LogFormData = {
+        id: parsed.id ? String(parsed.id) : undefined,
+        timestamp: parsed.timestamp ? String(parsed.timestamp) : undefined,
+        mrn: String(parsed.mrn || ''),
+        firstName: String(parsed.firstName || ''),
+        lastName: String(parsed.lastName || ''),
+        visitDate: String(parsed.visitDate || ''),
+        controls: {
+          histamineSpt: String(parsed.controls?.histamineSpt || ''),
+          salineSpt: String(parsed.controls?.salineSpt || ''),
+          salineIdt: String(parsed.controls?.salineIdt || ''),
+        },
+        testPanel: (parsed.testPanel || []).map(row => ({
+          id: row.id ? String(row.id) : undefined,
+          drugName: String(row.drugName || ''),
+          sptWheal: String(row.sptWheal || ''),
+          idt100: String(row.idt100 || ''),
+          idt10: String(row.idt10 || ''),
+          idtNeat: String(row.idtNeat || ''),
+          customName: row.customName ? String(row.customName) : undefined,
+        })),
+        proceedToChallenge: Boolean(parsed.proceedToChallenge),
+        challengeDrug: String(parsed.challengeDrug || ''),
+        challengeDrugCustom: parsed.challengeDrugCustom ? String(parsed.challengeDrugCustom) : undefined,
+        outcome: (parsed.outcome === 'SUCCESS' || parsed.outcome === 'UNSUCCESS') ? parsed.outcome : null,
+        reactionTime: String(parsed.reactionTime || ''),
+        symptoms: (parsed.symptoms || []).map(s => String(s)),
+        symptomsOther: String(parsed.symptomsOther || ''),
+        interventionType: String(parsed.interventionType || ''),
+        interventionOther: String(parsed.interventionOther || ''),
+        plan: String(parsed.plan || ''),
+      };
+      
+      // Final validation - ensure outcome is a valid string literal
+      if (recordToSave.outcome !== null && recordToSave.outcome !== 'SUCCESS' && recordToSave.outcome !== 'UNSUCCESS') {
+        recordToSave.outcome = null;
+      }
+      
+      // Create a completely fresh plain object
+      const finalRecord: LogFormData = { ...recordToSave };
+      
+      // Set state updates - wrap in try-catch for safety
+      try {
+        setLastSavedRecord(finalRecord);
+        setRecentLogs(prev => [finalRecord, ...prev]);
+        setScreen(Screen.SUMMARY);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (stateError) {
+        console.error('Error setting state:', stateError);
+        // If state update fails, try with a completely fresh JSON round-trip
+        const fallbackRecord = JSON.parse(JSON.stringify(recordToSave)) as LogFormData;
+        setLastSavedRecord(fallbackRecord);
+        setRecentLogs(prev => [fallbackRecord, ...prev]);
+        setScreen(Screen.SUMMARY);
+      }
+    } catch (error) {
+      console.error('Error saving clinical record:', error);
+      console.error('Error details:', error instanceof Error ? error.message : String(error));
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+      console.error('FormData at error:', formData);
+      alert(`Error saving record: ${error instanceof Error ? error.message : String(error)}. Please check the console for details.`);
+    }
   };
 
   const handleUploadPatients = (newPatients: Patient[]) => {

@@ -12,14 +12,26 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.6.0",
+      changes: [
+        "Bug Fix: Resolved illegal constructor error by fixing missing History icon import in ClinicalReport component.",
+        "Bug Fix: Fixed form submission issues with improved data serialisation and type handling.",
+        "Error Handling: Enhanced error boundary with detailed error logging and user-friendly error display.",
+        "UI: Improved changelog navigation links with better alignment and modern card design.",
+        "Localisation: Updated all user-facing text to Australian English spelling (optimisation, centralised, etc.).",
+        "Deployment: Configured production deployment to main branch with custom domain support.",
+        "Code Quality: Improved form data handling with explicit type conversions and defensive programming.",
+      ]
+    },
+    {
       version: "v0.5.0",
       changes: [
-        "Codebase Optimization: Comprehensive cleanup and optimization of the entire project structure.",
+        "Codebase Optimisation: Comprehensive cleanup and optimisation of the entire project structure.",
         "Performance: Removed unnecessary React imports using modern JSX transform for better bundle size.",
         "Dependencies: Cleaned up unused development dependencies and removed unnecessary configuration files.",
-        "Architecture: Centralized application constants and removed redundant code across components.",
+        "Architecture: Centralised application constants and removed redundant code across components.",
         "Security: Enhanced SEO protection with comprehensive robots.txt and security headers for clinical data privacy.",
-        "Build: Streamlined build process by removing unused assets and optimizing asset loading.",
+        "Build: Streamlined build process by removing unused assets and optimising asset loading.",
         "UX: Improved hover interactions with native tooltips for better accessibility and performance.",
         "System: Eliminated service worker and PWA features to focus on web application stability.",
       ]
@@ -27,14 +39,14 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
     {
       version: "v0.4.0",
       changes: [
-        "Performance: Optimized dashboard animations with reduced duration and eliminated repeating animations.",
+        "Performance: Optimised dashboard animations with reduced duration and eliminated repeating animations.",
         "Code Quality: Improved type safety with proper enums for Screen and TestOutcome types.",
-        "Architecture: Split monolithic utils.ts into specialized modules for better maintainability.",
+        "Architecture: Split monolithic utils.ts into specialised modules for better maintainability.",
         "UI: Added ErrorBoundary component for robust error handling and user experience.",
         "Build: Fixed deployment issues with proper base path configuration for Cloudflare Pages.",
         "Linting: Added comprehensive ESLint configuration with TypeScript support.",
         "Documentation: Completely rewrote README.md to reflect the anaesthetic allergy clinic application.",
-        "System: Enhanced component performance with React.memo and optimized re-renders.",
+        "System: Enhanced component performance with React.memo and optimised re-renders.",
       ]
     },
     {
@@ -102,27 +114,37 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
             </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="hover:shadow-md transition-shadow cursor-pointer h-full border-l-4 border-l-blue-500" onClick={() => setScreen('dashboard')}>
-                <CardContent className="p-6 flex items-center gap-4 h-full">
-                    <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-full shrink-0">
-                        <LayoutDashboard className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-slate-900 dark:text-slate-100">View Dashboard</h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">See aggregate statistics and recent activity.</p>
+        <div className="flex flex-col sm:flex-row gap-4">
+            <Card 
+                className="hover:shadow-md transition-all cursor-pointer flex-1 border-l-4 border-l-blue-500 hover:border-l-blue-600" 
+                onClick={() => setScreen('dashboard')}
+            >
+                <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                        <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg shrink-0">
+                            <LayoutDashboard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <h3 className="font-bold text-base text-slate-900 dark:text-slate-100 mb-1">View Dashboard</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">See aggregate statistics and recent activity.</p>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
 
-            <Card className="hover:shadow-md transition-shadow cursor-pointer h-full border-l-4 border-l-green-500" onClick={() => setScreen('log')}>
-                <CardContent className="p-6 flex items-center gap-4 h-full">
-                    <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-full shrink-0">
-                        <Database className="w-6 h-6 text-green-600 dark:text-green-400" />
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-slate-900 dark:text-slate-100">Return to Log</h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Enter new patient data or testing results.</p>
+            <Card 
+                className="hover:shadow-md transition-all cursor-pointer flex-1 border-l-4 border-l-green-500 hover:border-l-green-600" 
+                onClick={() => setScreen('log')}
+            >
+                <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                        <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg shrink-0">
+                            <Database className="w-5 h-5 text-green-600 dark:text-green-400" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <h3 className="font-bold text-base text-slate-900 dark:text-slate-100 mb-1">Return to Log</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Enter new patient data or testing results.</p>
+                        </div>
                     </div>
                 </CardContent>
             </Card>

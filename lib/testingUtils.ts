@@ -1,4 +1,4 @@
-import { DrugTestRow, LogFormData, TestOutcome } from '../types';
+import { DrugTestRow, LogFormData } from '../types';
 
 // Testing utility functions
 
@@ -14,7 +14,7 @@ export const getPositiveResults = (record: LogFormData) => {
   const drugs: string[] = [];
   const challengeName = record.challengeDrug === 'Other' ? (record.challengeDrugCustom || 'Other') : record.challengeDrug;
 
-  if (record.proceedToChallenge && record.outcome === TestOutcome.UNSUCCESS) {
+  if (record.proceedToChallenge && record.outcome === 'UNSUCCESS') {
       drugs.push(challengeName);
   }
 
@@ -33,7 +33,7 @@ export const getNegativeResults = (record: LogFormData) => {
   const drugs: string[] = [];
   const challengeName = record.challengeDrug === 'Other' ? (record.challengeDrugCustom || 'Other') : record.challengeDrug;
 
-  if (record.proceedToChallenge && record.outcome === TestOutcome.SUCCESS) {
+  if (record.proceedToChallenge && record.outcome === 'SUCCESS') {
       drugs.push(challengeName);
   }
 

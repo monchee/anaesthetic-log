@@ -1,7 +1,7 @@
 
 import React, { useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select } from './ui';
-import { LogFormData, TestOutcome } from '../types';
+import { LogFormData } from '../types';
 import { Check, X, Save, CheckCircle2, Calendar, Stethoscope, Plus, Syringe, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Activity } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '../lib/constants';
 
@@ -20,6 +20,74 @@ const FIELD_LABELS: Record<string, string> = {
   idt10: '1:10',
   idtNeat: 'Neat'
 };
+
+// Memoized drug row component for better performance
+const DrugRow = React.memo(({
+  row,
+  index,
+  drugToCategoryMap,
+  updateDrugData,
+  removeRow
+}: {
+  row: DrugTestRow;
+  index: number;
+  drugToCategoryMap: Record<string, string>;
+  updateDrugData: (index: number, field: string, value: string) => void;
+  removeRow: (index: number) => void;
+}) => {
+  const category = drugToCategoryMap[row.drugName] || 'Others';
+  const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
+  const borderClass = row.drugName === 'Other' ? DEFAULT_THEME.rowBorder : theme.rowBorder;
+
+  return (
+    <div
+      className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-r-md group`}
+    >
+      {/* Name Column (Full width on mobile) */}
+      <div className="col-span-2 md:col-span-1 flex items-center gap-2">
+        {row.drugName === 'Other' ? (
+          <Input
+            className="h-10 md:h-9 text-sm flex-1 min-w-0 font-medium font-mono"
+            placeholder="Specify name..."
+            value={row.customName || ''}
+            onChange={(e) => updateDrugData(index, 'customName', e.target.value)}
+            autoFocus
+          />
+        ) : (
+          <span className="font-medium text-sm text-slate-700 dark:text-slate-200 flex-1">
+            {row.drugName}
+          </span>
+        )}
+
+        <button
+          onClick={() => removeRow(index)}
+          className={`shrink-0 text-slate-300 hover:text-red-500 transition-opacity p-2 md:p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-100 md:opacity-0 md:group-hover:opacity-100'}`}
+          title="Remove drug"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Result Columns - 4 Grid Layout */}
+      <div className="col-span-2 md:col-span-4 grid grid-cols-4 gap-2">
+        {['sptWheal', 'idt100', 'idt10', 'idtNeat'].map((field) => (
+          <div key={field} className="relative">
+            <span className="md:hidden text-[10px] text-slate-400 absolute -top-3 left-0 uppercase font-bold">{FIELD_LABELS[field]}</span>
+            <Input
+              type="number"
+              min="0"
+              onKeyDown={preventNegativeInput}
+              className={`h-9 text-center font-mono ${parseInt((row as any)[field]) >= 3 ? 'text-red-600 font-bold bg-red-50 border-red-200' : ''}`}
+              placeholder="-"
+              value={(row as any)[field]}
+              onChange={(e) => updateDrugData(index, field, e.target.value)}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+});
 
 const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (["-", "e", "E", "+"].includes(e.key)) {
@@ -320,61 +388,16 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                  </div>
 
                  <div className="space-y-3">
-                   {formData.testPanel.map((row, index) => {
-                      const category = drugToCategoryMap[row.drugName] || 'Others';
-                      const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
-                      const borderClass = row.drugName === 'Other' ? DEFAULT_THEME.rowBorder : theme.rowBorder;
-
-                      return (
-                      <div 
-                        key={row.id || row.drugName} 
-                        className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-r-md group`}
-                      >
-                         {/* Name Column (Full width on mobile) */}
-                         <div className="col-span-2 md:col-span-1 flex items-center gap-2">
-                            {row.drugName === 'Other' ? (
-                                <Input 
-                                    className="h-10 md:h-9 text-sm flex-1 min-w-0 font-medium font-mono"
-                                    placeholder="Specify name..."
-                                    value={row.customName || ''}
-                                    onChange={(e) => updateDrugData(index, 'customName', e.target.value)}
-                                    autoFocus
-                                />
-                            ) : (
-                                <span className="font-medium text-sm text-slate-700 dark:text-slate-200 flex-1">
-                                    {row.drugName}
-                                </span>
-                            )}
-                            
-                            <button 
-                                onClick={() => removeRow(index)}
-                                className={`shrink-0 text-slate-300 hover:text-red-500 transition-opacity p-2 md:p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-100 md:opacity-0 md:group-hover:opacity-100'}`}
-                                title="Remove drug"
-                            >
-                                <X className="w-5 h-5" />
-                            </button>
-                         </div>
-
-                         {/* Result Columns - 4 Grid Layout */}
-                         <div className="col-span-2 md:col-span-4 grid grid-cols-4 gap-2">
-                             {['sptWheal', 'idt100', 'idt10', 'idtNeat'].map((field) => (
-                                 <div key={field} className="relative">
-                                     <span className="md:hidden text-[10px] text-slate-400 absolute -top-3 left-0 uppercase font-bold">{FIELD_LABELS[field]}</span>
-                                     <Input 
-                                         type="number" 
-                                         min="0"
-                                         onKeyDown={preventNegativeInput}
-                                         className={`h-9 text-center font-mono ${parseInt((row as any)[field]) >= 3 ? 'text-red-600 font-bold bg-red-50 border-red-200' : ''}`}
-                                         placeholder="-"
-                                         value={(row as any)[field]}
-                                         onChange={(e) => updateDrugData(index, field, e.target.value)}
-                                     />
-                                 </div>
-                             ))}
-                         </div>
-                      </div>
-                      );
-                   })}
+                   {formData.testPanel.map((row, index) => (
+                     <DrugRow
+                       key={row.id || row.drugName}
+                       row={row}
+                       index={index}
+                       drugToCategoryMap={drugToCategoryMap}
+                       updateDrugData={updateDrugData}
+                       removeRow={removeRow}
+                     />
+                   ))}
                  </div>
               </div>
             ) : (
@@ -466,15 +489,15 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                              <button 
                                 type="button" 
-                                onClick={() => handleInputChange('outcome', TestOutcome.SUCCESS)}
+                                onClick={() => handleInputChange('outcome', 'SUCCESS')}
                                 className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
-                                    formData.outcome === TestOutcome.SUCCESS 
+                                    formData.outcome === 'SUCCESS' 
                                     ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300' 
                                     : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400'
                                 }`}
                              >
                                  <div className={`p-3 rounded-full ${
-                                     formData.outcome === TestOutcome.SUCCESS ? 'bg-green-100 text-green-600 dark:bg-green-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
+                                     formData.outcome === 'SUCCESS' ? 'bg-green-100 text-green-600 dark:bg-green-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
                                  }`}>
                                      <ThumbsUp className="w-6 h-6" />
                                  </div>
@@ -488,15 +511,15 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
                              <button 
                                 type="button" 
-                                onClick={() => handleInputChange('outcome', TestOutcome.UNSUCCESS)}
+                                onClick={() => handleInputChange('outcome', 'UNSUCCESS')}
                                 className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
-                                    formData.outcome === TestOutcome.UNSUCCESS 
+                                    formData.outcome === 'UNSUCCESS' 
                                     ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300' 
                                     : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400'
                                 }`}
                              >
                                  <div className={`p-3 rounded-full ${
-                                     formData.outcome === TestOutcome.UNSUCCESS ? 'bg-red-100 text-red-600 dark:bg-red-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
+                                     formData.outcome === 'UNSUCCESS' ? 'bg-red-100 text-red-600 dark:bg-red-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
                                  }`}>
                                      <ThumbsDown className="w-6 h-6" />
                                  </div>

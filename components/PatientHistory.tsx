@@ -329,7 +329,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     {/* Untimed Agents Section */}
                     {untimedAdministered.length > 0 && (
                         <div className="border-t border-slate-100 dark:border-slate-800 px-3 py-3 bg-white/50 dark:bg-slate-900/50">
-                            <h5 className="text-xs uppercase font-bold text-slate-400 mb-2 tracking-wider">Medication with no listed time</h5>
+                            <h5 className="text-xs uppercase font-bold text-slate-400 mb-2 tracking-wider">Agents with no listed time</h5>
                             <div className="flex flex-wrap gap-1.5">
                                 {untimedAdministered.map((drug, idx) => (
                                     <Badge 

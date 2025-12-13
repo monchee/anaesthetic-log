@@ -3,7 +3,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui';
 import { Users, AlertTriangle, Search, Thermometer, Clock, Upload, ChevronLeft, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, Ban, FileText, ExternalLink, FileUp, Timer } from 'lucide-react';
 import { formatDate, parseRedcapCSV, getGradeVariant, isSkinTestPositive, parsePatientTimeline, calculateTimeDifference } from '../lib/utils';
-import { Screen, Patient, LogFormData, TestOutcome } from '../types';
+import { Screen, Patient, LogFormData } from '../types';
 import toast from 'react-hot-toast';
 
 interface DashboardProps {
@@ -153,7 +153,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
     // 2. Process Newly Added Logs
     recentLogs.forEach(log => {
-        if (log.outcome === TestOutcome.UNSUCCESS) {
+        if (log.outcome === 'UNSUCCESS') {
              if (log.interventionType === 'Adrenaline') {
                  gradeCounts.III++;
                  grade3PlusCount++;
@@ -169,7 +169,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
              reactionTimeCount++;
         }
 
-        if (log.proceedToChallenge && log.outcome === TestOutcome.UNSUCCESS) {
+        if (log.proceedToChallenge && log.outcome === 'UNSUCCESS') {
              const drugName = log.challengeDrug === 'Other' ? (log.challengeDrugCustom || 'Other') : log.challengeDrug;
              const key = normalizeAgent(drugName);
              if (key) {
@@ -584,167 +584,6 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
             </Card>
         </div>
 
-
-        {/* Recent Skin Testing Activity Card */}
-        <Card className="w-full shadow-sm border-t-4 border-t-green-500 animate-enter-subtle">
-            <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-green-50/50 dark:bg-green-900/10">
-                <CardTitle className="text-lg text-green-800 dark:text-green-400 flex items-center gap-2">
-                    <Clock className="w-5 h-5" /> Recent Skin Testing Activity
-                </CardTitle>
-            </CardHeader>
-            <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                    <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
-                        <tr>
-                            <th className="px-4 py-3">Date</th>
-                            <th className="px-4 py-3">Patient</th>
-                            <th className="px-4 py-3">Results (SPT/IDT)</th>
-                            <th className="px-4 py-3">Challenge Outcome</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
-                        {recentLogs.length > 0 ? (
-                            recentLogs.map((log, idx) => {
-                                const positives: string[] = [];
-                                const negatives: string[] = [];
-
-                                log.testPanel.forEach(t => {
-                                    if (isSkinTestPositive(t)) {
-                                        positives.push(t.drugName);
-                                    } else {
-                                        negatives.push(t.drugName);
-                                    }
-                                });
-                                
-                                return (
-                                    <tr 
-                                        key={idx} 
-                                        className="hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer transition-colors group"
-                                        onClick={() => onViewLog(log)}
-                                    >
-                                        <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300">{formatDate(log.visitDate)}</td>
-                                        <td className="px-4 py-3 font-medium text-[#441170] dark:text-purple-300 group-hover:text-[#6b42d1] dark:group-hover:text-purple-200">{log.lastName}, {log.firstName}</td>
-                                        <td className="px-4 py-3">
-                                            <div className="flex flex-wrap gap-1 items-center">
-                                                {positives.map(p => <Badge key={p} variant="danger" className="text-[10px] px-1.5 py-0 h-5">{p}</Badge>)}
-                                                {negatives.map(n => <span key={n} className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">{n}</span>)}
-                                                {positives.length === 0 && negatives.length === 0 && <span className="text-slate-400 italic text-xs">-</span>}
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs">
-                                            {log.proceedToChallenge ? (
-                                                log.outcome === TestOutcome.SUCCESS 
-                                                ? <Badge variant="success" className="text-[10px]">Negative Challenge</Badge> 
-                                                : <Badge variant="danger" className="text-[10px]">Positive Challenge</Badge>
-                                            ) : <span className="text-slate-500 dark:text-slate-400">No Challenge</span>}
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                        ) : (
-                            <tr>
-                                <td colSpan={4} className="px-4 py-8 text-center text-slate-500 dark:text-slate-400 italic">
-                                    No recent activity recorded in this session.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </Card>
-
-        {/* Positive Skin Test Breakdown Table */}
-        <Card className="w-full shadow-sm animate-enter-subtle">
-            <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                        <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
-                            <Thermometer className="w-5 h-5" /> Positive Skin Test Breakdown
-                        </CardTitle>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">Number of positive patient reactions by drug (SPT/IDT &gt; 3mm or Positive Challenge).</p>
-                    </div>
-                    <Button variant="outline" size="sm" onClick={toggleAllCategories} className="shrink-0 h-8">
-                        {areAllExpanded ? (
-                            <>
-                                <ChevronUp className="w-4 h-4 mr-1.5" /> Collapse All
-                            </>
-                        ) : (
-                            <>
-                                <ChevronDown className="w-4 h-4 mr-1.5" /> Expand All
-                            </>
-                        )}
-                    </Button>
-                </div>
-            </CardHeader>
-            <div className="overflow-x-auto max-h-[800px]">
-                <table className="min-w-full text-sm relative border-collapse">
-                    <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold sticky top-0 z-10 shadow-sm">
-                        <tr>
-                            <th className="px-4 py-3 text-left bg-slate-50 dark:bg-slate-900 w-1/3">Drug</th>
-                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">SPT</th>
-                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">IDT 1:100</th>
-                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">IDT 1:10</th>
-                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">IDT Neat</th>
-                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">Challenge Pos</th>
-                            <th className="px-4 py-3 text-center bg-slate-100/50 dark:bg-slate-800/50 border-l border-slate-200 dark:border-slate-800">Total Cases</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-slate-950">
-                        {analytics.statsByCategory.length > 0 ? (
-                            analytics.statsByCategory.map((categoryGroup, cIdx) => {
-                                const isExpanded = expandedCategories.includes(categoryGroup.category);
-                                const totalCategoryPositives = categoryGroup.stats.reduce((acc, curr) => acc + curr.total, 0);
-
-                                return (
-                                    <React.Fragment key={cIdx}>
-                                        <tr 
-                                            className="bg-slate-50 dark:bg-slate-900 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 cursor-pointer transition-colors"
-                                            onClick={() => toggleCategory(categoryGroup.category)}
-                                        >
-                                            <td colSpan={6} className="px-4 py-2.5">
-                                                <div className="flex items-center gap-2 text-xs font-bold text-[#441170] dark:text-purple-300 uppercase tracking-wide">
-                                                    {isExpanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
-                                                    {categoryGroup.category}
-                                                </div>
-                                            </td>
-                                            <td className="px-4 py-2.5 text-center border-l border-slate-200 dark:border-slate-800">
-                                                {totalCategoryPositives > 0 ? (
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">
-                                                        {totalCategoryPositives}
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-slate-400 text-xs">-</span>
-                                                )}
-                                            </td>
-                                        </tr>
-                                        {isExpanded && categoryGroup.stats.map((item, i) => (
-                                            <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors border-b border-slate-50 dark:border-slate-900 animate-in fade-in slide-in-from-top-1">
-                                                <td className="px-4 py-3 font-medium text-slate-700 dark:text-slate-300 pl-10 border-l-4 border-l-[#8055f1] hover:border-l-[#8055f1] transition-all">{item.name}</td>
-                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.spt || '-'}</td>
-                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idt100 || '-'}</td>
-                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idt10 || '-'}</td>
-                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idtNeat || '-'}</td>
-                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.challenge || '-'}</td>
-                                                <td className="px-4 py-3 text-center font-bold text-slate-900 dark:text-slate-100 bg-slate-50/30 dark:bg-slate-900/30 border-l border-slate-100 dark:border-slate-800">
-                                                    {item.total || <span className="text-slate-300 dark:text-slate-600 font-normal">-</span>}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </React.Fragment>
-                                );
-                            })
-                        ) : (
-                            <tr>
-                                <td colSpan={7} className="px-4 py-8 text-center text-slate-500 italic">
-                                    No data available.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </Card>
-
         {/* Patient Database Table (Full Width) - Paginated */}
         <Card className="w-full shadow-sm animate-enter-subtle">
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
@@ -1070,6 +909,167 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                 </div>
             )}
         </Card>
+
+        {/* Recent Skin Testing Activity Card */}
+        <Card className="w-full shadow-sm border-t-4 border-t-green-500 animate-enter-subtle">
+            <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-green-50/50 dark:bg-green-900/10">
+                <CardTitle className="text-lg text-green-800 dark:text-green-400 flex items-center gap-2">
+                    <Clock className="w-5 h-5" /> Recent Skin Testing Activity
+                </CardTitle>
+            </CardHeader>
+            <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                    <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
+                        <tr>
+                            <th className="px-4 py-3">Date</th>
+                            <th className="px-4 py-3">Patient</th>
+                            <th className="px-4 py-3">Results (SPT/IDT)</th>
+                            <th className="px-4 py-3">Challenge Outcome</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
+                        {recentLogs.length > 0 ? (
+                            recentLogs.map((log, idx) => {
+                                const positives: string[] = [];
+                                const negatives: string[] = [];
+
+                                log.testPanel.forEach(t => {
+                                    if (isSkinTestPositive(t)) {
+                                        positives.push(t.drugName);
+                                    } else {
+                                        negatives.push(t.drugName);
+                                    }
+                                });
+                                
+                                return (
+                                    <tr 
+                                        key={idx} 
+                                        className="hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer transition-colors group"
+                                        onClick={() => onViewLog(log)}
+                                    >
+                                        <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300">{formatDate(log.visitDate)}</td>
+                                        <td className="px-4 py-3 font-medium text-[#441170] dark:text-purple-300 group-hover:text-[#6b42d1] dark:group-hover:text-purple-200">{log.lastName}, {log.firstName}</td>
+                                        <td className="px-4 py-3">
+                                            <div className="flex flex-wrap gap-1 items-center">
+                                                {positives.map(p => <Badge key={p} variant="danger" className="text-[10px] px-1.5 py-0 h-5">{p}</Badge>)}
+                                                {negatives.map(n => <span key={n} className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">{n}</span>)}
+                                                {positives.length === 0 && negatives.length === 0 && <span className="text-slate-400 italic text-xs">-</span>}
+                                            </div>
+                                        </td>
+                                        <td className="px-4 py-3 text-xs">
+                                            {log.proceedToChallenge ? (
+                                                log.outcome === 'SUCCESS' 
+                                                ? <Badge variant="success" className="text-[10px]">Negative Challenge</Badge> 
+                                                : <Badge variant="danger" className="text-[10px]">Positive Challenge</Badge>
+                                            ) : <span className="text-slate-500 dark:text-slate-400">No Challenge</span>}
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        ) : (
+                            <tr>
+                                <td colSpan={4} className="px-4 py-8 text-center text-slate-500 dark:text-slate-400 italic">
+                                    No recent activity recorded in this session.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </Card>
+
+        {/* Positive Skin Test Breakdown Table */}
+        <Card className="w-full shadow-sm animate-enter-subtle">
+            <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
+                            <Thermometer className="w-5 h-5" /> Positive Skin Test Breakdown
+                        </CardTitle>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">Number of positive patient reactions by drug (SPT/IDT &gt; 3mm or Positive Challenge).</p>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={toggleAllCategories} className="shrink-0 h-8">
+                        {areAllExpanded ? (
+                            <>
+                                <ChevronUp className="w-4 h-4 mr-1.5" /> Collapse All
+                            </>
+                        ) : (
+                            <>
+                                <ChevronDown className="w-4 h-4 mr-1.5" /> Expand All
+                            </>
+                        )}
+                    </Button>
+                </div>
+            </CardHeader>
+            <div className="overflow-x-auto">
+                <table className="min-w-full text-sm relative border-collapse">
+                    <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold sticky top-0 z-10 shadow-sm">
+                        <tr>
+                            <th className="px-4 py-3 text-left bg-slate-50 dark:bg-slate-900 w-1/3">Drug</th>
+                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">SPT</th>
+                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">IDT 1:100</th>
+                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">IDT 1:10</th>
+                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">IDT Neat</th>
+                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">Challenge Pos</th>
+                            <th className="px-4 py-3 text-center bg-slate-100/50 dark:bg-slate-800/50 border-l border-slate-200 dark:border-slate-800">Total Cases</th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white dark:bg-slate-950">
+                        {analytics.statsByCategory.length > 0 ? (
+                            analytics.statsByCategory.map((categoryGroup, cIdx) => {
+                                const isExpanded = expandedCategories.includes(categoryGroup.category);
+                                const totalCategoryPositives = categoryGroup.stats.reduce((acc, curr) => acc + curr.total, 0);
+
+                                return (
+                                    <React.Fragment key={cIdx}>
+                                        <tr 
+                                            className="bg-slate-50 dark:bg-slate-900 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 cursor-pointer transition-colors"
+                                            onClick={() => toggleCategory(categoryGroup.category)}
+                                        >
+                                            <td colSpan={6} className="px-4 py-2.5">
+                                                <div className="flex items-center gap-2 text-xs font-bold text-[#441170] dark:text-purple-300 uppercase tracking-wide">
+                                                    {isExpanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
+                                                    {categoryGroup.category}
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-2.5 text-center border-l border-slate-200 dark:border-slate-800">
+                                                {totalCategoryPositives > 0 ? (
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">
+                                                        {totalCategoryPositives}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-slate-400 text-xs">-</span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                        {isExpanded && categoryGroup.stats.map((item, i) => (
+                                            <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors border-b border-slate-50 dark:border-slate-900 animate-in fade-in slide-in-from-top-1">
+                                                <td className="px-4 py-3 font-medium text-slate-700 dark:text-slate-300 pl-10 border-l-4 border-l-[#8055f1] hover:border-l-[#8055f1] transition-all">{item.name}</td>
+                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.spt || '-'}</td>
+                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idt100 || '-'}</td>
+                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idt10 || '-'}</td>
+                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idtNeat || '-'}</td>
+                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.challenge || '-'}</td>
+                                                <td className="px-4 py-3 text-center font-bold text-slate-900 dark:text-slate-100 bg-slate-50/30 dark:bg-slate-900/30 border-l border-slate-100 dark:border-slate-800">
+                                                    {item.total || <span className="text-slate-300 dark:text-slate-600 font-normal">-</span>}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </React.Fragment>
+                                );
+                            })
+                        ) : (
+                            <tr>
+                                <td colSpan={7} className="px-4 py-8 text-center text-slate-500 italic">
+                                    No data available.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </Card>
+
     </div>
   );
 };
