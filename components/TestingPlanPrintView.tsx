@@ -28,69 +28,69 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </Button>
         </div>
 
-        <CardContent className="p-8 md:p-12 print:p-0">
+        <CardContent className="p-8 md:p-12 print:p-2">
              {/* Document Header */}
-             <div className="flex justify-between items-start border-b-2 border-slate-800 pb-4">
+             <div className="flex justify-between items-start border-b-2 border-slate-800 pb-4 print:pb-2 print:border-b">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Anaesthetic Allergy Testing Request</h1>
-                    <p className="text-slate-500 font-medium">Department of Clinical Immunology & Allergy</p>
-                    <p className="text-sm text-slate-400">Royal Prince Alfred Hospital</p>
+                    <h1 className="text-2xl font-bold text-slate-900 print:text-sm">Anaesthetic Allergy Testing Request</h1>
+                    <p className="text-slate-500 font-medium print:text-xs">Department of Clinical Immunology & Allergy</p>
+                    <p className="text-sm text-slate-400 print:text-[9px]">Royal Prince Alfred Hospital</p>
                 </div>
                 <div className="text-right">
-                        <div className="bg-slate-100 px-4 py-2 rounded mb-2 print:bg-slate-100">
-                        <p className="text-xs uppercase font-bold text-slate-500">Date of Request</p>
-                        <p className="font-mono font-bold text-lg">{formatDate(new Date().toISOString())}</p>
+                        <div className="bg-slate-100 px-4 py-2 rounded mb-2 print:bg-slate-100 print:px-2 print:py-1 print:mb-1">
+                        <p className="text-xs uppercase font-bold text-slate-500 print:text-[9px]">Date of Request</p>
+                        <p className="font-mono font-bold text-lg print:text-xs">{formatDate(new Date().toISOString())}</p>
                         </div>
                 </div>
             </div>
 
             {/* Patient Banner */}
-            <div className="bg-slate-50 border border-slate-200 p-4 rounded-md grid grid-cols-2 gap-4 mt-8 print:bg-slate-50">
+            <div className="bg-slate-50 border border-slate-200 p-4 rounded-md grid grid-cols-2 gap-4 mt-8 print:bg-slate-50 print:p-2 print:mt-2 print:gap-2">
                 <div>
-                    <p className="text-xs uppercase font-bold text-slate-400">Patient Name</p>
-                    <p className="text-xl font-bold text-slate-900">{patient.firstName} {patient.lastName}</p>
+                    <p className="text-xs uppercase font-bold text-slate-400 print:text-[9px]">Patient Name</p>
+                    <p className="text-xl font-bold text-slate-900 print:text-sm">{patient.firstName} {patient.lastName}</p>
                 </div>
                 <div>
-                    <p className="text-xs uppercase font-bold text-slate-400">MRN / Record ID</p>
-                    <p className="text-lg font-mono text-slate-700">{patient.mrn}</p>
+                    <p className="text-xs uppercase font-bold text-slate-400 print:text-[9px]">MRN / Record ID</p>
+                    <p className="text-lg font-mono text-slate-700 print:text-xs">{patient.mrn}</p>
                 </div>
                 <div>
-                        <p className="text-xs uppercase font-bold text-slate-400">DOB</p>
-                        <p className="text-slate-700">{formatDate(patient.dob)}</p>
+                        <p className="text-xs uppercase font-bold text-slate-400 print:text-[9px]">DOB</p>
+                        <p className="text-slate-700 print:text-xs">{formatDate(patient.dob)}</p>
                 </div>
                 <div>
-                        <p className="text-xs uppercase font-bold text-slate-400">Gender</p>
-                        <p className="text-slate-700">{patient.gender}</p>
+                        <p className="text-xs uppercase font-bold text-slate-400 print:text-[9px]">Gender</p>
+                        <p className="text-slate-700 print:text-xs">{patient.gender}</p>
                 </div>
             </div>
 
             {/* Notes */}
             {notes && (
-                <div className="mt-8">
-                    <h4 className="font-bold text-slate-800 border-b border-slate-100 mb-2 uppercase text-sm tracking-wide">Clinical Notes</h4>
-                    <p className="text-slate-700 whitespace-pre-wrap">{notes}</p>
+                <div className="mt-8 print:mt-2">
+                    <h4 className="font-bold text-slate-800 border-b border-slate-100 mb-2 uppercase text-sm tracking-wide print:text-xs print:mb-1 print:pb-0.5">Clinical Notes</h4>
+                    <p className="text-slate-700 whitespace-pre-wrap print:text-xs">{notes}</p>
                 </div>
             )}
 
             {/* Selected Drugs List */}
-            <div className="mt-8">
-                <h4 className="font-bold text-slate-800 border-b-2 border-slate-800 mb-4 uppercase text-sm tracking-wide flex items-center gap-2">
-                    <FileText className="w-4 h-4" /> Requested Panel
+            <div className="mt-8 print:mt-2">
+                <h4 className="font-bold text-slate-800 border-b-2 border-slate-800 mb-4 uppercase text-sm tracking-wide flex items-center gap-2 print:text-xs print:mb-2 print:pb-1 print:border-b">
+                    <FileText className="w-4 h-4 print:w-3 print:h-3" /> Requested Panel
                 </h4>
                 
                 {selectedDrugs.length > 0 ? (
-                    <div className="columns-2 gap-8 space-y-4">
+                    <div className="columns-2 gap-8 space-y-4 print:columns-3 print:gap-4 print:space-y-1">
                         {/* Group selected drugs by category for display */}
                         {Object.entries(drugCategories).map(([category, drugs]) => {
                             const activeInCat = (drugs as string[]).filter(d => selectedDrugs.includes(d));
                             if (activeInCat.length === 0) return null;
                             
                             return (
-                                <div key={category} className="break-inside-avoid mb-4">
-                                    <h5 className="font-bold text-slate-600 text-sm mb-2">{category}</h5>
-                                    <ul className="list-disc pl-5 space-y-1">
+                                <div key={category} className="break-inside-avoid mb-4 print:mb-1">
+                                    <h5 className="font-bold text-slate-600 text-sm mb-2 print:text-xs print:mb-0.5">{category}</h5>
+                                    <ul className="list-disc pl-5 space-y-1 print:pl-3 print:space-y-0">
                                         {activeInCat.map(d => (
-                                            <li key={d} className="text-sm pl-1">
+                                            <li key={d} className="text-sm pl-1 print:text-xs print:pl-0.5">
                                                 {d}
                                             </li>
                                         ))}
@@ -101,11 +101,11 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
                         {/* Custom Drugs Group */}
                         {customDrugs.filter(d => selectedDrugs.includes(d)).length > 0 && (
-                            <div className="break-inside-avoid mb-4">
-                                <h5 className="font-bold text-slate-600 text-sm mb-2">Additional</h5>
-                                <ul className="list-disc pl-5 space-y-1">
+                            <div className="break-inside-avoid mb-4 print:mb-1">
+                                <h5 className="font-bold text-slate-600 text-sm mb-2 print:text-xs print:mb-0.5">Additional</h5>
+                                <ul className="list-disc pl-5 space-y-1 print:pl-3 print:space-y-0">
                                     {customDrugs.filter(d => selectedDrugs.includes(d)).map(d => (
-                                        <li key={d} className="text-sm pl-1">
+                                        <li key={d} className="text-sm pl-1 print:text-xs print:pl-0.5">
                                             {d}
                                         </li>
                                     ))}
@@ -114,17 +114,17 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                         )}
                     </div>
                 ) : (
-                    <p className="text-slate-400 italic">No drugs selected.</p>
+                    <p className="text-slate-400 italic print:text-xs">No drugs selected.</p>
                 )}
             </div>
             
             {/* Signature Area */}
-            <div className="mt-12 pt-8 border-t border-slate-200 flex justify-between gap-12 print:flex hidden">
-                <div className="flex-1 border-t border-black pt-2">
-                    <p className="text-xs uppercase font-bold text-slate-500">Requested By (Name & Signature)</p>
+            <div className="mt-12 pt-8 border-t border-slate-200 flex justify-between gap-12 print:flex print:mt-4 print:pt-3 print:gap-8">
+                <div className="flex-1 border-t border-black pt-2 print:pt-1">
+                    <p className="text-xs uppercase font-bold text-slate-500 print:text-[9px]">Requested By (Name & Signature)</p>
                 </div>
-                <div className="w-40 border-t border-black pt-2">
-                    <p className="text-xs uppercase font-bold text-slate-500">Date</p>
+                <div className="w-40 border-t border-black pt-2 print:pt-1 print:w-32">
+                    <p className="text-xs uppercase font-bold text-slate-500 print:text-[9px]">Date</p>
                 </div>
             </div>
 
