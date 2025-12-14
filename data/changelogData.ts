@@ -1,0 +1,370 @@
+export const versions = [
+    {
+      version: "v0.3.40",
+      changes: [
+        "Feature: Added 'Referring Doctor Position' field (Consultant, Trainee, GP, etc.) to the Patient History view.",
+        "Data: Enhanced CSV parser to automatically detect and import referring doctor position data.",
+      ]
+    },
+    {
+      version: "v0.3.39",
+      changes: [
+        "Data: Updated mock patient database to include specific 'Type of Anaesthesia' (General, Regional, IV Sedation, etc.) for better timeline context.",
+        "UI: The timeline now displays the anaesthesia type in a streamlined hover card.",
+      ]
+    },
+    {
+      version: "v0.3.38",
+      changes: [
+        "UI: Renamed 'IV Challenge' to 'Drug Challenge' to better accommodate oral and intravenous testing protocols.",
+        "UI: Centered column headers in the SPT & IDT Panel for improved data readability.",
+        "Fix: Updated modal dialog positioning (z-index) to ensure 'New Patient' form appears above the sticky header."
+      ]
+    },
+    {
+      version: "v0.3.37",
+      changes: [
+        "Optimization: Centralized timeline parsing logic to improve performance and consistency.",
+        "Refactor: Moved static CSV configuration to module scope, reducing memory allocation during file uploads.",
+        "Cleanup: Removed duplicated code across Dashboard and Patient History views."
+      ]
+    },
+    {
+      version: "v0.3.36",
+      changes: [
+        "Fix: Resolved an issue with redundant closing animations in the slide-out sheet component.",
+        "System: Refactored Sheet state management to eliminate race conditions between open state and animation timers."
+      ]
+    },
+    {
+      version: "v0.3.35",
+      changes: [
+        "System: Migrated notification system from Sonner to React Hot Toast for improved reliability and style consistency.",
+        "Fix: Resolved persistent visibility issues with upload notifications by leveraging a more robust stacking context strategy."
+      ]
+    },
+    {
+      version: "v0.3.34",
+      changes: [
+        "Fix: Critical fix for notification visibility by injecting missing external CSS styles.",
+        "UI: Enhanced CSV upload experience with 'toast.promise' to show loading, success, and error states clearly.",
+        "UX: Added a natural delay before closing the upload sheet to allow users to see the confirmation message."
+      ]
+    },
+    {
+      version: "v0.3.33",
+      changes: [
+        "Fix: Added richColors and aggressive CSS overrides to ensure upload notifications are visible above all modal layers.",
+        "UI: Enabled close button on notifications for better user control."
+      ]
+    },
+    {
+      version: "v0.3.32",
+      changes: [
+        "Fix: Forcefully increased toast notification z-index using global style injection.",
+        "UI: Moved notifications to 'top-center' for better visibility during overlay interactions."
+      ]
+    },
+    {
+      version: "v0.3.31",
+      changes: [
+        "Fix: Resolved an issue where notifications were hidden behind the upload sheet.",
+        "System: Ensure toast notifications have the highest visual priority."
+      ]
+    },
+    {
+      version: "v0.3.30",
+      changes: [
+        "Feature: Improved CSV upload experience. The upload sheet now closes automatically upon successful update.",
+        "Feature: Added a specific 'Database updated' confirmation toast for clearer feedback."
+      ]
+    },
+    {
+      version: "v0.3.29",
+      changes: [
+        "UI: Decreased font size for 'Additional Comments' in Patient History for subtle emphasis and better flow.",
+      ]
+    },
+    {
+      version: "v0.3.28",
+      changes: [
+        "UI: Reduced text size of 'Additional Comments' in Patient History for better distinction.",
+      ]
+    },
+    {
+      version: "v0.3.27",
+      changes: [
+        "Feature: Upon successful CSV upload, a Sonner toast notification confirms the database update.",
+        "Feature: CSV upload now automatically closes the upload sheet after successful import.",
+        "Data: The database date has been fixed to 12/12/2025 for consistency.",
+      ]
+    },
+    {
+      version: "v0.3.26",
+      changes: [
+        "Performance: Significant optimizations to patient list rendering, filtering, and sorting to handle large datasets smoothly.",
+        "System: Fixed a critical issue with duplicate React versions in the bootloader preventing application startup.",
+        "Codebase: Refactored input event handlers in the Testing Log to improve typing performance and reduce re-renders.",
+        "Stability: Enhanced component cleanup to prevent memory leaks during rapid navigation."
+      ]
+    },
+    {
+      version: "v0.3.25",
+      changes: [
+        "Feature: Added 'Additional Comments' field to the Patient History view, pulling data from CSV comments.",
+        "Data: Updated mock database with sample comments.",
+        "System: Refined CSV parser to automatically detect and map comment columns."
+      ]
+    },
+    {
+      version: "v0.3.24",
+      changes: [
+        "UI: Enhanced Patient History to filter out empty or whitespace-only entries from the 'Untimed Agents' list, improving data clarity."
+      ]
+    },
+    {
+      version: "v0.3.23",
+      changes: [
+        "UI: Improved visual prominence of 'Reaction Onset' in the Patient History timeline for better readability.",
+        "UI: Adjusted font sizing for subtext within timeline events to enhance clarity."
+      ]
+    },
+    {
+      version: "v0.3.22",
+      changes: [
+        "UI: Fixed header overflow in Patient History by adding consistent horizontal padding to the accordion title.",
+        "UI: Further refined Patient History header spacing to improve alignment and prevent content overflow.",
+        "UI: Consolidated the 'Referring Doctor' and 'Hospital' information into a single, more streamlined context box."
+      ]
+    },
+    {
+      version: "v0.3.21",
+      changes: [
+        "UI: Refined Patient History layout to fix overflow issues in the date/procedure header.",
+        "UI: Moved 'Procedure Outcome' to the Timeline & Medications footer for better context placement.",
+        "UI: Restyled 'Suspected Agents' box to match the consistent card design language.",
+        "UI: Optimized the 'Referring Doctor' and 'Hospital' context box to better handle long names and conserve space."
+      ]
+    },
+    {
+      version: "v0.3.20",
+      changes: [
+        "UI: Refactored Manual Patient Entry to use a streamlined modal dialog instead of an inline form.",
+        "UI: Removed redundant patient details box (Name/City/DOB) from the main selection screen to reduce clutter.",
+        "UI: Simplified Patient History view by removing the 'Location' and city fields.",
+        "UI: Relocated the 'Edit Details' button for manual entries to the patient selector bar for better accessibility."
+      ]
+    },
+    {
+      version: "v0.3.19",
+      changes: [
+        "Internal: Minor codebase adjustments for consistency and future feature readiness."
+      ]
+    },
+    {
+      version: "v0.3.18",
+      changes: [
+        "Feature: Added 'Select All' / 'Select None' functionality for drug categories in the Testing Log to speed up data entry.",
+        "Feature: Added 'Manual Patient Entry' option for walk-in patients or those not currently in the database.",
+        "UI: Refactored REDCap Database card on Dashboard for better mobile responsiveness, switching to a card view on smaller screens.",
+        "System: Optimized chart animations and cleaned up data processing logic for better performance."
+      ]
+    },
+    {
+        version: "v0.3.17",
+        changes: [
+            "Refactor: Centralized color themes and drug category configurations to reduce code duplication.",
+            "Cleanup: Improved maintainability by moving shared constants to a dedicated utility file.",
+            "System: Optimized application structure for better performance."
+        ]
+    },
+    {
+        version: "v0.3.16",
+        changes: [
+            "UI: Fixed an issue where the Outcome and Save Record sections in the Testing Log were cut off or inaccessible on some mobile devices by significantly increasing bottom spacing.",
+            "UI: Improved responsiveness of the Outcome selection buttons in the Testing Log to prevent text truncation on small screens.",
+            "UI: Enhanced patient detail visibility on mobile view."
+        ]
+    },
+    {
+        version: "v0.3.15",
+        changes: [
+            "Rebranding: Updated application title to 'Anaesthetic Allergy Clinic' and department subtitle to 'RPAH Department of Clinical Immunology & Allergy'.",
+            "Data: Standardized mock patient data so all dates of birth default to the 1st of the month for consistency.",
+            "UI: Redesigned the application footer for a more professional appearance and improved information hierarchy."
+        ]
+    },
+    {
+        version: "v0.3.14",
+        changes: [
+            "Data: Complete restoration of the 92-record mock patient dataset, covering a wider geographical area (NSW Regional Hospitals) and diverse reaction types.",
+            "UI: Global animation improvements for smoother transitions."
+        ]
+    },
+    {
+        version: "v0.3.13",
+        changes: [
+            "Data: Restored and expanded mock patient database to 40 records, covering a wider range of agents (Antibiotics, NMBAs, Dyes, Latex).",
+            "Data: Added specific cases for Chlorhexidine, Patent Blue, Protamine, and Sugammadex reactions."
+        ]
+    },
+    {
+        version: "v0.3.12",
+        changes: [
+            "UI: Added spacing to the top of the Testing Plan Preview for better visibility.",
+            "Feature: Added 'Proceed to Testing Panel' button to the Testing Plan Preview screen to streamline workflow."
+        ]
+    },
+    {
+        version: "v0.3.11",
+        changes: [
+            "Fix: Resolved an issue where printing the Testing Plan Request Form would result in empty pages.",
+            "Refactor: Moved the Testing Plan printing view to a dedicated screen to ensure reliable rendering.",
+            "UI: Improved the 'Testing Plan Preview' interface."
+        ]
+    },
+    {
+        version: "v0.3.10",
+        changes: [
+            "UI: Renamed 'Post-induction' section in Patient History to 'Induction & Post-induction' for clarity.",
+            "Fix: Improved CSV import time parsing logic to ensure medications are correctly categorized based on induction time.",
+            "Data: Updated sample patient data to include examples of induction/post-induction medications.",
+            "System: Standardized time comparison to handle mixed time formats (e.g. 9:00 vs 09:00)."
+        ]
+    },
+    {
+        version: "v0.3.9",
+        changes: [
+            "UI: Fixed inconsistent header heights between Dashboard and Log screens by standardizing subtitles.",
+            "UI: Added 'RPAH Immunology & Allergy' subtitle to all main application screens for consistent branding.",
+            "System: Minor layout optimizations in App.tsx."
+        ]
+    },
+    {
+        version: "v0.3.8",
+        changes: [
+            "Refactor: Implemented centralized ScreenLayout component to standardize page structure.",
+            "Fix: Resolved duplicate header issue on Dashboard screen.",
+            "Cleanup: Optimized App.tsx and child components by removing redundant layout code.",
+            "UI: Improved consistency of theme toggles and header actions across all screens."
+        ]
+    },
+    {
+      version: "v0.3.7",
+      changes: [
+        "Mobile: Completely refactored Skin Testing Log for small screens. Now uses a card-based layout with clearer labels to prevent cramping.",
+        "Mobile: Optimised Clinical Report layout for mobile devices, switching tables to stacked lists.",
+        "UI: Increased touch target sizes for primary action buttons on the Clinical Report screen.",
+        "Fix: Resolved an issue where the Testing Plan / Request Form print preview would appear blank.",
+        "UI: Replaced 'Cancel' button with a close icon in the Testing Plan modal."
+      ]
+    },
+    {
+      version: "v0.3.6",
+      changes: [
+        "UI: Standardised page width across Dashboard, Log, and Reports for a uniform experience.",
+        "UI: Adjusted header styling to be consistent across all screens.",
+        "Fix: Resolved readability issues in Patient Handout contact section in Dark Mode.",
+        "System: General layout optimisations."
+      ]
+    },
+    {
+      version: "v0.3.5",
+      changes: [
+        "Patient History: Enhanced visual design with card-based layout and improved information hierarchy.",
+        "System: Centralised logic for reaction grading and test interpretation to improve performance and consistency.",
+        "Data: Added robust error handling and validation for CSV database uploads.",
+        "Data: Database 'Updated Date' now dynamically reflects the last CSV upload time.",
+        "UI: Refined reaction grade colour palette for better accessibility and distinction."
+      ]
+    },
+    {
+      version: "v0.3.4",
+      changes: [
+        "Feature: Added full Dark Mode support across the entire application.",
+        "System: Theme preference (Light/Dark) is now persisted between sessions.",
+        "UI: Added Theme Toggle button to the header of all screens.",
+        "UI: Updated all components (Cards, Inputs, Tables) for high contrast in dark mode."
+      ]
+    },
+    {
+      version: "v0.3.3",
+      changes: [
+        "Testing Log: Enhanced 'IV Challenge' dropdown with custom text input for 'Other' drugs.",
+        "Dashboard: Implemented accordion layout for 'Positive Skin Test Breakdown' to save space.",
+        "Dashboard: Added 'Expand/Collapse All' controls for the breakdown table.",
+        "UI: Improved alignment of custom drug inputs in the testing grid.",
+        "System: Demo disclaimer dismissal is now remembered across sessions."
+      ]
+    },
+    {
+      version: "v0.3.2",
+      changes: [
+        "Dashboard: Positive Skin Test Breakdown is now grouped by drug category.",
+        "Dashboard: Top Suspected Agents chart filters out zero-count agents and sorts 'Other' to bottom.",
+        "UI: Added standardized footer to all screens.",
+        "UI: Fixed print preview formatting in Testing Plan Generator (bullets instead of checkboxes).",
+        "UI: Demo disclaimer now persists on all screens until dismissed."
+      ]
+    },
+    {
+      version: "v0.3.1",
+      changes: [
+        "Updated Dashboard to display skin test statistics grouped by drug category.",
+        "Added consistent footer across all application screens.",
+        "Refined printing layouts for reports."
+      ]
+    },
+    {
+      version: "v0.3.0",
+      changes: [
+        "Major Refactor: Split 'Patient History' and 'Testing' into separate screens for better workflow.",
+        "Introduced 'Testing Plan Generator' to creating printable request forms.",
+        "Enhanced 'Patient Selection' with search filtering.",
+        "Improved 'Reaction Grade' visualisation with tooltips."
+      ]
+    },
+    {
+      version: "0.2.9",
+      changes: [
+        "Added CSV upload functionality to update the patient database.",
+        "Implemented pagination for the Patient Database in Dashboard.",
+        "Added visual charts for Reaction Severity and Top Suspected Agents.",
+        "Refined Dashboard layout for better information density."
+      ]
+    },
+    {
+      version: "0.2.8",
+      changes: [
+        "Added Changelog page accessible from footer.",
+        "Updated Dashboard to include recent skin testing activity.",
+        "Enhanced 'Positive Skin Test Breakdown' table with specific test columns.",
+        "Improved layout for statistics cards in Dashboard."
+      ]
+    },
+    {
+      version: "0.2.7",
+      changes: [
+        "Implemented dynamic patient database search.",
+        "Added 'Hospital' field to demographics display.",
+        "Refined Patient History card styling with better spacing and layout.",
+        "Added 'Anaesthetic Allergy Testing' section header."
+      ]
+    },
+    {
+      version: "0.2.6",
+      changes: [
+        "Integrated full REDCap dataset (92 records).",
+        "Added logic to parse induction and reaction times.",
+        "Implemented 'Other' grouping for non-standard drugs in dashboard analytics."
+      ]
+    },
+     {
+      version: "0.2.5",
+      changes: [
+        "Migrated application to React with Shadcn UI components.",
+        "Implemented accordion view for patient history.",
+        "Added PDF-style print layouts for Clinical Report and Patient Handout."
+      ]
+    }
+  ];

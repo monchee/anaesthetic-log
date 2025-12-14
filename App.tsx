@@ -54,7 +54,7 @@ function AnaestheticLogApp() {
   
   // State for Patients Database (Initialized with Mock, can be updated via CSV)
   const [patients, setPatients] = useState<Patient[]>(MOCK_PATIENTS);
-  const [databaseDate, setDatabaseDate] = useState<string>("12/12/2025"); // Updated dataset date
+  const [databaseDate, setDatabaseDate] = useState<string>(new Date().toLocaleDateString()); // Updated dataset date
   const [hasUploadedData, setHasUploadedData] = useState(false);
 
   // State for NEWLY added logs (separate from the static database)
@@ -128,7 +128,7 @@ function AnaestheticLogApp() {
 
   const handleUploadPatients = (newPatients: Patient[]) => {
     setPatients(newPatients);
-    setDatabaseDate("12/12/2025"); // Set to the specific date
+    setDatabaseDate(new Date().toLocaleDateString()); // Set to the specific date
     setHasUploadedData(true);
   };
 
@@ -171,7 +171,7 @@ function AnaestheticLogApp() {
                     </Button>
                 }
             >
-                <Changelog setScreen={setScreen} databaseDate={databaseDate} />
+                <Changelog setScreen={setScreen} />
             </ScreenLayout>
         );
     }
