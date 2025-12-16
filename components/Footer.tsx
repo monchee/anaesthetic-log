@@ -27,10 +27,10 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
             </div>
 
             <button
-              onClick={() => setScreen('changelog')}
+              onClick={() => setScreen(Screen.CHANGELOG)}
               className="hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors"
             >
-              v0.6.0
+              v0.7.0
             </button>
           </div>
         </div>
