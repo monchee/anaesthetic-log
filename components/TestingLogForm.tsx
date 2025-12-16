@@ -1,7 +1,7 @@
 
 import React, { useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select } from './ui';
-import { LogFormData } from '../types';
+import { LogFormData, DrugTestRow } from '../types';
 import { Check, X, Save, CheckCircle2, Calendar, Stethoscope, Plus, Syringe, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Activity } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '../lib/constants';
 

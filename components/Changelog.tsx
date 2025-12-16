@@ -12,6 +12,14 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.7.0",
+      changes: [
+        "Hide demo system alert during print preview for cleaner printed documents.",
+        "Added Cloudflare Pages deployment configuration.",
+        "Minor code formatting improvements.",
+      ]
+    },
+    {
       version: "v0.6.0",
       changes: [
         "Fixed issues with saving clinical records - forms now save correctly without errors.",
@@ -105,7 +113,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
 
         <div className="flex justify-center pt-4">
             <Button 
-                onClick={() => setScreen('log')}
+                onClick={() => setScreen(Screen.LOG)}
                 size="lg"
                 className="bg-[#441170] hover:bg-[#5a1a8a] text-white px-8"
             >

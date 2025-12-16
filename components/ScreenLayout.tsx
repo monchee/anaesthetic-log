@@ -1,29 +1,11 @@
 
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { Button } from './ui';
 import { Sun, Moon } from 'lucide-react';
 import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
 import { useTheme } from './ThemeProvider';
 import { useFontSize } from './FontSizeProvider';
-import { Screen, Patient } from '../types';
-
-interface ScreenLayoutProps {
-    title: ReactNode;
-    subtitle?: ReactNode;
-    icon?: ReactNode;
-    actions?: ReactNode;
-    children: ReactNode;
-    setScreen: (screen: Screen) => void;
-    databaseDate: string;
-    showFooter?: boolean;
-    className?: string;
-    contentClassName?: string;
-    showDisclaimer?: boolean;
-    isCustomData?: boolean;
-    onDismissDisclaimer?: () => void;
-    onUploadPatients?: (patients: Patient[]) => void;
-}
 
 export const ScreenLayout = ({
     title,
@@ -116,7 +98,9 @@ export const ScreenLayout = ({
                 {/* Disclaimer Banner - Attached to Header */}
                 {/* Only show if enabled AND user has not uploaded their own data */}
                 {showDisclaimer && !isCustomData && onDismissDisclaimer && (
-                    <DisclaimerBanner onClose={onDismissDisclaimer} />
+                    <div className="print:hidden">
+                        <DisclaimerBanner onClose={onDismissDisclaimer} />
+                    </div>
                 )}
             </header>
 
