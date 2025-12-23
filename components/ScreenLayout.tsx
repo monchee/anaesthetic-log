@@ -6,8 +6,26 @@ import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
 import { useTheme } from './ThemeProvider';
 import { useFontSize } from './FontSizeProvider';
+import { Screen } from '../types';
 
-export const ScreenLayout = ({
+interface ScreenLayoutProps {
+    title: string;
+    subtitle?: string;
+    icon?: React.ReactNode;
+    actions?: React.ReactNode;
+    children: React.ReactNode;
+    setScreen: (screen: Screen) => void;
+    databaseDate: string;
+    showFooter?: boolean;
+    className?: string;
+    contentClassName?: string;
+    showDisclaimer?: boolean;
+    isCustomData?: boolean;
+    onDismissDisclaimer?: () => void;
+    onUploadPatients?: (patients: any[]) => void;
+}
+
+export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     title,
     subtitle,
     icon,
@@ -29,7 +47,7 @@ export const ScreenLayout = ({
     return (
         <div className={`min-h-screen bg-[#fbfaff] dark:bg-slate-950 flex flex-col ${className || ''}`}>
             {/* Full Width Header (Static) */}
-            <header className="w-full flex flex-col shadow-md shadow-purple-900/5 z-50 relative print:hidden">
+            <header className="w-full flex flex-col shadow-md shadow-purple-900/5 z-50 relative no-print">
                 {/* Main Navigation Bar */}
                 <div className="bg-[#441170] text-white border-b border-purple-800/50 w-full">
                     {/* Safe Area Padding for mobile notch support */}

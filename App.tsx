@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from './components/PatientSelector';
@@ -15,204 +15,41 @@ import { ScreenLayout } from './components/ScreenLayout';
 import { ThemeProvider } from './components/ThemeProvider';
 import { FontSizeProvider } from './components/FontSizeProvider';
 import ErrorBoundary from './components/ErrorBoundary';
-import { LogFormData, Patient, Screen, TestingPlanData } from './types';
-import { MOCK_PATIENTS } from './data/mockPatients';
+import { Screen } from './types';
 import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from './lib/constants';
+import { useAnaestheticApp } from './hooks/useAnaestheticApp';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
-const INITIAL_FORM_STATE: LogFormData = {
-    mrn: '',
-    firstName: '',
-    lastName: '',
-    visitDate: new Date().toISOString().split('T')[0],
-    controls: {
-      histamineSpt: '',
-      salineSpt: '',
-      salineIdt: '',
-    },
-    testPanel: [],
-    proceedToChallenge: false,
-    challengeDrug: '',
-    challengeDrugCustom: '',
-    outcome: null,
-    reactionTime: '',
-    symptoms: [],
-    symptomsOther: '',
-    interventionType: '',
-    interventionOther: '',
-    plan: ''
-};
-
 function AnaestheticLogApp() {
-  const [screen, setScreen] = useState<Screen>(Screen.LOG);
-  const [formData, setFormData] = useState<LogFormData>(INITIAL_FORM_STATE);
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [lastSavedRecord, setLastSavedRecord] = useState<LogFormData | null>(null);
-  const [testingPlanData, setTestingPlanData] = useState<TestingPlanData | null>(null);
-  const [isPatientDialogOpen, setIsPatientDialogOpen] = useState(false);
-  
-  // State for Patients Database (Initialized with Mock, can be updated via CSV)
-  const [patients, setPatients] = useState<Patient[]>(MOCK_PATIENTS);
-  const [databaseDate, setDatabaseDate] = useState<string>(APP_CONFIG.DEFAULT_DATABASE_DATE);
-  const [hasUploadedData, setHasUploadedData] = useState(false);
-
-  // State for NEWLY added logs (separate from the static database)
-  const [recentLogs, setRecentLogs] = useState<LogFormData[]>([]);
-
-  // Disclaimer Visibility State - Check localStorage first
-  const [showDisclaimer, setShowDisclaimer] = useState(() => {
-    // Only access localStorage in browser environment
-    if (typeof window !== 'undefined') {
-        return localStorage.getItem(APP_CONFIG.LOCAL_STORAGE_KEYS.DISCLAIMER_DISMISSED) !== 'true';
-    }
-    return true;
-  });
-
-  const handleDismissDisclaimer = () => {
-    setShowDisclaimer(false);
-    if (typeof window !== 'undefined') {
-        localStorage.setItem(APP_CONFIG.LOCAL_STORAGE_KEYS.DISCLAIMER_DISMISSED, 'true');
-    }
-  };
-
-  const symptomOptions = APP_CONFIG.SYMPTOM_OPTIONS;
-  const interventionOptions = APP_CONFIG.INTERVENTION_OPTIONS;
-
-  const handlePatientSelect = (patient: Patient) => {
-    setSelectedPatient(patient);
-    
-    // If manual, clear form but keep structure. If existing, pre-fill.
-    if (patient.id === 'manual') {
-        setFormData(prev => ({
-            ...INITIAL_FORM_STATE,
-            visitDate: prev.visitDate // Keep current date if set
-        }));
-        setIsPatientDialogOpen(true); // Auto-open dialog for new manual entries
-    } else {
-        setFormData(prev => ({
-            ...prev,
-            firstName: patient.firstName,
-            lastName: patient.lastName,
-            mrn: patient.mrn,
-            testPanel: [],
-            proceedToChallenge: false,
-            outcome: null,
-            plan: ''
-        }));
-    }
-  };
-
-  const handleManualDetailChange = (field: keyof Patient | 'dob', value: string) => {
-    if (!selectedPatient) return;
-
-    // Update local patient object state (for UI display and Testing Plan)
-    setSelectedPatient(prev => {
-        if (!prev) return null;
-        return { ...prev, [field]: value };
-    });
-
-    // Update form data state (for Report)
-    if (field === 'firstName' || field === 'lastName' || field === 'mrn') {
-        setFormData(prev => ({ ...prev, [field]: value }));
-    }
-  };
-
-  const handleSubmit = () => {
-    try {
-      // Use JSON serialization to ensure everything is plain data
-      // This strips any getters, setters, or non-serializable properties
-      const serialized = JSON.stringify(formData);
-      const parsed = JSON.parse(serialized) as LogFormData;
-      
-      // Now ensure all values are properly typed and outcome is correct
-      const recordToSave: LogFormData = {
-        id: parsed.id ? String(parsed.id) : undefined,
-        timestamp: parsed.timestamp ? String(parsed.timestamp) : undefined,
-        mrn: String(parsed.mrn || ''),
-        firstName: String(parsed.firstName || ''),
-        lastName: String(parsed.lastName || ''),
-        visitDate: String(parsed.visitDate || ''),
-        controls: {
-          histamineSpt: String(parsed.controls?.histamineSpt || ''),
-          salineSpt: String(parsed.controls?.salineSpt || ''),
-          salineIdt: String(parsed.controls?.salineIdt || ''),
-        },
-        testPanel: (parsed.testPanel || []).map(row => ({
-          id: row.id ? String(row.id) : undefined,
-          drugName: String(row.drugName || ''),
-          sptWheal: String(row.sptWheal || ''),
-          idt100: String(row.idt100 || ''),
-          idt10: String(row.idt10 || ''),
-          idtNeat: String(row.idtNeat || ''),
-          customName: row.customName ? String(row.customName) : undefined,
-        })),
-        proceedToChallenge: Boolean(parsed.proceedToChallenge),
-        challengeDrug: String(parsed.challengeDrug || ''),
-        challengeDrugCustom: parsed.challengeDrugCustom ? String(parsed.challengeDrugCustom) : undefined,
-        outcome: (parsed.outcome === 'SUCCESS' || parsed.outcome === 'UNSUCCESS') ? parsed.outcome : null,
-        reactionTime: String(parsed.reactionTime || ''),
-        symptoms: (parsed.symptoms || []).map(s => String(s)),
-        symptomsOther: String(parsed.symptomsOther || ''),
-        interventionType: String(parsed.interventionType || ''),
-        interventionOther: String(parsed.interventionOther || ''),
-        plan: String(parsed.plan || ''),
-      };
-      
-      // Final validation - ensure outcome is a valid string literal
-      if (recordToSave.outcome !== null && recordToSave.outcome !== 'SUCCESS' && recordToSave.outcome !== 'UNSUCCESS') {
-        recordToSave.outcome = null;
-      }
-      
-      // Create a completely fresh plain object
-      const finalRecord: LogFormData = { ...recordToSave };
-      
-      // Set state updates - wrap in try-catch for safety
-      try {
-        setLastSavedRecord(finalRecord);
-        setRecentLogs(prev => [finalRecord, ...prev]);
-        setScreen(Screen.SUMMARY);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } catch (stateError) {
-        console.error('Error setting state:', stateError);
-        // If state update fails, try with a completely fresh JSON round-trip
-        const fallbackRecord = JSON.parse(JSON.stringify(recordToSave)) as LogFormData;
-        setLastSavedRecord(fallbackRecord);
-        setRecentLogs(prev => [fallbackRecord, ...prev]);
-        setScreen(Screen.SUMMARY);
-      }
-    } catch (error) {
-      console.error('Error saving clinical record:', error);
-      console.error('Error details:', error instanceof Error ? error.message : String(error));
-      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
-      console.error('FormData at error:', formData);
-      alert(`Error saving record: ${error instanceof Error ? error.message : String(error)}. Please check the console for details.`);
-    }
-  };
-
-  const handleUploadPatients = (newPatients: Patient[]) => {
-    setPatients(newPatients);
-    setDatabaseDate("12/12/2025"); // Set to the specific date
-    setHasUploadedData(true);
-  };
-
-  // Handler for clicking a patient in the Dashboard
-  const handleDashboardPatientSelect = (patient: Patient) => {
-    handlePatientSelect(patient);
-    setScreen(Screen.LOG);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const {
+    screen,
+    setScreen,
+    formData,
+    setFormData,
+    selectedPatient,
+    lastSavedRecord,
+    setLastSavedRecord,
+    testingPlanData,
+    setTestingPlanData,
+    isPatientDialogOpen,
+    setIsPatientDialogOpen,
+    patients,
+    databaseDate,
+    hasUploadedData,
+    recentLogs,
+    showDisclaimer,
+    handleDismissDisclaimer,
+    handlePatientSelect,
+    handleManualDetailChange,
+    handleSubmit,
+    handleUploadPatients,
+    handleDashboardPatientSelect,
+    resetForm,
+  } = useAnaestheticApp();
 
   const handlePrint = () => {
     window.print();
-  };
-
-  const resetForm = () => {
-    setFormData(INITIAL_FORM_STATE);
-    setSelectedPatient(null);
-    setLastSavedRecord(null);
-    setScreen(Screen.LOG);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Render content based on screen state
@@ -405,8 +242,8 @@ function AnaestheticLogApp() {
                     setFormData={setFormData}
                     onSubmit={handleSubmit}
                     drugCategories={DRUG_CATEGORIES}
-                    symptomOptions={symptomOptions}
-                    interventionOptions={interventionOptions}
+                    symptomOptions={APP_CONFIG.SYMPTOM_OPTIONS}
+                    interventionOptions={APP_CONFIG.INTERVENTION_OPTIONS}
                 />
             </ScreenLayout>
         );

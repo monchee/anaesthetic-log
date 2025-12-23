@@ -28,7 +28,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
 
             <button
               onClick={() => setScreen(Screen.CHANGELOG)}
-              className="hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors"
+              className="hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors font-medium"
             >
               v0.7.0
             </button>

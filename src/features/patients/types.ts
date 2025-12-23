@@ -1,0 +1,38 @@
+export interface Patient {
+  id: string;
+  firstName: string;
+  lastName: string;
+  dob: string;
+  mrn: string;
+  gender: string;
+  city: string;
+  history: PatientHistory;
+}
+
+export interface PatientHistory {
+  date: string;
+  grade: string;
+  reactionSummary: string;
+  comments?: string;
+  symptoms: Array<{ label: string; detail?: string }>;
+  firstSymptom?: string;
+  predominantSymptom?: string;
+  treatment: string[];
+  suspectedAgents: string[];
+  tryptase?: string;
+  procedure: string;
+  anaesthetist: string;
+  referringDoctor?: string;
+  referringDoctorPosition?: string;
+  providerNumber?: string;
+  referringEmail?: string;
+  referringPhone?: string;
+  hospital?: string;
+  inductionTime?: string;
+  reactionTime?: string;
+  medications?: string[];
+  preInductionDrugs?: string[];
+  postInductionDrugs?: string[];
+  procedureOutcome?: string;
+  anaesthesiaType?: string[];
+}

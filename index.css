@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .print-break-inside-avoid { 
+    break-inside: avoid; 
+  }
+}
+
+/* Print Utilities */
+@media print {
+  @page { 
+    margin: 4mm; 
+    size: A4; 
+  }
+  body { 
+    -webkit-print-color-adjust: exact; 
+    print-color-adjust: exact; 
+    font-size: 10px;
+    line-height: 1.3;
+  }
+  .no-print { display: none !important; }
+  .print-break-inside-avoid { break-inside: avoid; }
+  * {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    margin-top: 0.5em;
+    margin-bottom: 0.3em;
+  }
+  table {
+    page-break-inside: avoid;
+  }
+  tr {
+    page-break-inside: avoid;
+  }
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}

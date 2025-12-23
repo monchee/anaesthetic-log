@@ -1,10 +1,16 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui';
-import { Users, AlertTriangle, Search, Thermometer, Clock, Upload, ChevronLeft, BarChart3, PieChart, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, Ban, FileText, ExternalLink, FileUp, Timer } from 'lucide-react';
-import { formatDate, parseRedcapCSV, getGradeVariant, isSkinTestPositive, parsePatientTimeline, calculateTimeDifference } from '../lib/utils';
+import { Card, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui';
+import { Search, Thermometer, Upload, ChevronLeft, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, FileText, ExternalLink, FileUp, AlertTriangle } from 'lucide-react';
+import { formatDate, parseRedcapCSV, getGradeVariant, parsePatientTimeline } from '../lib/utils';
 import { Screen, Patient, LogFormData } from '../types';
 import toast from 'react-hot-toast';
+import { useCountUp } from '../hooks/useCountUp';
+import { useDashboardAnalytics } from '../hooks/useDashboardAnalytics';
+import { AnalyticsPanel } from '../src/features/dashboard/components/AnalyticsPanel';
+import { GradeDistributionChart } from '../src/features/dashboard/components/GradeDistributionChart';
+import { TopAgentsChart } from '../src/features/dashboard/components/TopAgentsChart';
+import { RecentTestingActivity } from '../src/features/dashboard/components/RecentTestingActivity';
 
 interface DashboardProps {
   setScreen: (screen: Screen) => void;
@@ -17,36 +23,6 @@ interface DashboardProps {
   onUploadPatients: (patients: Patient[]) => void;
   databaseDate: string;
 }
-
-// Hook for counting up numbers with cleanup - reduced duration for less aggressive animation
-const useCountUp = (end: number, duration = 800) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let startTime: number | null = null;
-    let animationFrameId: number;
-
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-      // Ease out cubic - smoother than quart
-      const ease = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.round(ease * end));
-
-      if (progress < 1) {
-        animationFrameId = requestAnimationFrame(animate);
-      }
-    };
-
-    animationFrameId = requestAnimationFrame(animate);
-
-    return () => {
-        if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    };
-  }, [end, duration]);
-
-  return count;
-};
 
 const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -66,179 +42,13 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
   }, []);
 
   // --- Analytics Calculation ---
-  const analytics = useMemo(() => {
-    const totalPatients = existingPatients.length + recentLogs.length;
-    let grade3PlusCount = 0;
-    let abandonedCount = 0;
-    
-    // Time Analytics
-    let totalReactionTime = 0;
-    let reactionTimeCount = 0;
-
-    // Initialize stats for ALL standard drugs so they appear in the table (even with 0 count)
-    const drugStats: Record<string, { spt: number, idt100: number, idt10: number, idtNeat: number, challenge: number, total: number }> = {};
-    
-    drugOptions.forEach(drug => {
-        drugStats[drug] = { spt: 0, idt100: 0, idt10: 0, idtNeat: 0, challenge: 0, total: 0 };
-    });
-    // Ensure 'Other' exists
-    drugStats['Other'] = { spt: 0, idt100: 0, idt10: 0, idtNeat: 0, challenge: 0, total: 0 };
-
-    const gradeCounts = { I: 0, II: 0, III: 0, IV: 0, Ungraded: 0 };
-
-    // Helper to normalize and count agent usage
-    const normalizeAgent = (agentName: string) => {
-        const normalized = agentName.trim();
-        if (!normalized) return null;
-        
-        let key = 'Other';
-        if (Object.prototype.hasOwnProperty.call(drugStats, normalized)) {
-            key = normalized;
-        }
-        return key;
-    };
-
-    // 1. Process Existing Static Patients
-    existingPatients.forEach(p => {
-      const grade = p.history.grade || 'Ungraded';
-      if (grade.includes("III") || grade.includes("IV") || grade.includes("Cardiac Arrest")) {
-        grade3PlusCount++;
-      }
-      
-      // Robust check for abandoned procedures
-      const outcome = (p.history.procedureOutcome || '').toLowerCase();
-      if (outcome.includes('abandoned') || outcome.includes('adandoned') || outcome === '1') {
-          abandonedCount++;
-      }
-      
-      if (grade.includes("IV") || grade.includes("Cardiac Arrest")) gradeCounts.IV++;
-      else if (grade.includes("III")) gradeCounts.III++;
-      else if (grade.includes("II")) gradeCounts.II++;
-      else if (grade.includes("I ") || grade === "Grade I") gradeCounts.I++;
-      else gradeCounts.Ungraded++;
-
-      // Time Calculation
-      const timeDiff = calculateTimeDifference(p.history.inductionTime, p.history.reactionTime);
-      // Only include if positive difference and less than 4 hours (240 mins) to filter out outliers/delayed reactions for this average
-      if (timeDiff !== null && timeDiff >= 0 && timeDiff <= 240) {
-          totalReactionTime += timeDiff;
-          reactionTimeCount++;
-      }
-
-      // Use Set to track unique agents for THIS patient to avoid double counting
-      const uniqueAgentsForPatient = new Set<string>();
-
-      (p.history.suspectedAgents || []).forEach(agent => {
-          const key = normalizeAgent(agent);
-          if (key) uniqueAgentsForPatient.add(key);
-      });
-      
-      // Consolidate drugs from multiple possible fields
-      const allDrugs = [
-          ...(p.history.medications || []),
-          ...(p.history.preInductionDrugs || []),
-          ...(p.history.postInductionDrugs || [])
-      ];
-
-      allDrugs.forEach(str => {
-          const key = normalizeAgent(str.split('@')[0].trim());
-          if (key) uniqueAgentsForPatient.add(key);
-      });
-
-      // Increment totals based on unique set
-      uniqueAgentsForPatient.forEach(key => {
-          drugStats[key].total += 1;
-      });
-    });
-
-    // 2. Process Newly Added Logs
-    recentLogs.forEach(log => {
-        if (log.outcome === 'UNSUCCESS') {
-             if (log.interventionType === 'Adrenaline') {
-                 gradeCounts.III++;
-                 grade3PlusCount++;
-             } else {
-                 gradeCounts.I++;
-             }
-        } else {
-            gradeCounts.Ungraded++;
-        }
-
-        if (log.reactionTime && !isNaN(parseInt(log.reactionTime))) {
-             totalReactionTime += parseInt(log.reactionTime);
-             reactionTimeCount++;
-        }
-
-        if (log.proceedToChallenge && log.outcome === 'UNSUCCESS') {
-             const drugName = log.challengeDrug === 'Other' ? (log.challengeDrugCustom || 'Other') : log.challengeDrug;
-             const key = normalizeAgent(drugName);
-             if (key) {
-                 drugStats[key].total += 1;
-                 drugStats[key].challenge += 1;
-             }
-        }
-
-        log.testPanel.forEach(test => {
-            const drugName = test.drugName === 'Other' ? (test.customName || 'Other') : test.drugName;
-            
-            if (isSkinTestPositive(test)) {
-                const key = normalizeAgent(drugName);
-                if (key) {
-                    drugStats[key].total += 1; 
-                    if (test.sptWheal && parseInt(test.sptWheal) >= 3) drugStats[key].spt++;
-                    if (test.idt100 && parseInt(test.idt100) >= 3) drugStats[key].idt100++;
-                    if (test.idt10 && parseInt(test.idt10) >= 3) drugStats[key].idt10++;
-                    if (test.idtNeat && parseInt(test.idtNeat) >= 3) drugStats[key].idtNeat++;
-                }
-            }
-        });
-    });
-
-    const avgReactionTime = reactionTimeCount > 0 ? Math.round(totalReactionTime / reactionTimeCount) : 0;
-
-    const topAgentsByCount = Object.entries(drugStats)
-        .filter(([name, stats]) => stats.total > 0 && name !== 'Other')
-        .map(([name, stats]) => ({ name, count: stats.total }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 5);
-    
-    if (topAgentsByCount.length < 5 && drugStats['Other'].total > 0) {
-        topAgentsByCount.push({ name: 'Other', count: drugStats['Other'].total });
-    }
-
-    const mostCommonAgentEntry = Object.entries(drugStats)
-        .sort(([, a], [, b]) => b.total - a.total)[0];
-
-    const statsByCategory = Object.entries(drugCategories).map(([category, drugs]) => {
-        const categoryStats = (drugs as string[]).map(drugName => ({
-            name: drugName,
-            ...drugStats[drugName]
-        }));
-        return { category, stats: categoryStats };
-    });
-    
-    if (drugStats['Other'].total > 0) {
-        const othersCatIndex = statsByCategory.findIndex(c => c.category === 'Others');
-        const otherItem = { name: 'Other (Unlisted)', ...drugStats['Other'] };
-        if (othersCatIndex >= 0) {
-            statsByCategory[othersCatIndex].stats.push(otherItem);
-        } else {
-            statsByCategory.push({ category: 'Others', stats: [otherItem] });
-        }
-    }
-
-    return {
-      totalPatients,
-      grade3PlusCount,
-      abandonedCount,
-      avgReactionTime,
-      mostCommonAgent: mostCommonAgentEntry?.[1].total > 0 ? mostCommonAgentEntry?.[0] : 'N/A',
-      mostCommonAgentCount: mostCommonAgentEntry?.[1]?.total || 0,
-      statsByCategory,
-      gradeCounts,
-      topAgentsByCount
-    };
-  }, [existingPatients, recentLogs, drugOptions, drugCategories]);
+  // --- Analytics Calculation ---
+  const analytics = useDashboardAnalytics({
+    existingPatients,
+    recentLogs,
+    drugOptions,
+    drugCategories
+  });
 
   // Animated numbers
   const animatedTotalPatients = useCountUp(analytics.totalPatients);
@@ -353,235 +163,28 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
     <div className="space-y-8">
         
         {/* Modern Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Total Records */}
-            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-purple-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter-subtle">
-                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <Users className="w-24 h-24 text-[#8055f1]" />
-                        </div>
-                        <CardContent className="pb-6 px-6 pt-6">
-                            <div className="flex items-center gap-4 mb-4">
-                                <div className="p-3 bg-[#f0ebff] dark:bg-[#441170]/30 rounded-xl text-[#8055f1] dark:text-purple-300 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                                    <Users className="w-6 h-6" />
-                                </div>
-                                <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Database</span>
-                            </div>
-                            <div className="space-y-1">
-                                <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
-                                    {animatedTotalPatients}
-                                </h3>
-                                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                                     <CheckCircle2 className="w-3 h-3 text-green-500" /> Active Records
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
+        <AnalyticsPanel
+          animatedTotalPatients={animatedTotalPatients}
+          animatedSevereCount={animatedSevereCount}
+          severeRate={severeRate}
+          animatedAbandonedCount={animatedAbandonedCount}
+          abandonedRate={abandonedRate}
+          animatedAvgTime={animatedAvgTime}
+          animateCharts={animateCharts}
+        />
 
-            {/* Severe Reactions */}
-            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-red-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter-subtle">
-                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                            <AlertTriangle className="w-24 h-24 text-red-500" />
-                        </div>
-                        <CardContent className="pb-6 px-6 pt-6">
-                            <div className="flex items-center gap-4 mb-4">
-                                 <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl text-red-600 dark:text-red-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                                    <AlertTriangle className="w-6 h-6" />
-                                </div>
-                                <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Anaphylaxis</span>
-                            </div>
-                             <div className="space-y-1">
-                                <div className="flex items-end gap-2">
-                                     <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
-                                        {animatedSevereCount}
-                                    </h3>
-                                    <span className="text-sm font-medium text-red-600 dark:text-red-400 mb-1 bg-red-50 dark:bg-red-900/30 px-1.5 rounded">
-                                        {severeRate}%
-                                    </span>
-                        </div>
-                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                             Grade III / IV Reactions
-                        </p>
-                        {/* Progress bar visual */}
-                        <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full mt-3 overflow-hidden">
-                            <div 
-                                className="h-full bg-red-500 rounded-full transition-all duration-1000 ease-out" 
-                                style={{ width: animateCharts ? `${Math.min(parseFloat(severeRate), 100)}%` : '0%' }}
-                            ></div>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
 
-            {/* Procedures Abandoned */}
-            <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-amber-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter-subtle">
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Ban className="w-24 h-24 text-amber-500" />
-                </div>
-                <CardContent className="pb-6 px-6 pt-6">
-                     <div className="flex items-center gap-4 mb-4">
-                         <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl text-amber-600 dark:text-amber-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                            <Ban className="w-6 h-6" />
-                        </div>
-                        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Procedures Abandoned</span>
-                    </div>
-                     <div className="space-y-1">
-                        <div className="flex items-end gap-2">
-                            <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
-                                {animatedAbandonedCount}
-                            </h3>
-                            <span className="text-sm font-medium text-amber-600 dark:text-amber-400 mb-1 bg-amber-50 dark:bg-amber-900/30 px-1.5 rounded">
-                                {abandonedRate}%
-                            </span>
-                        </div>
-                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                             Due to reaction severity
-                        </p>
-                         {/* Progress bar visual */}
-                        <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full mt-3 overflow-hidden">
-                            <div 
-                                className="h-full bg-amber-500 rounded-full transition-all duration-1000 ease-out" 
-                                style={{ width: animateCharts ? `${Math.min(parseFloat(abandonedRate), 100)}%` : '0%' }}
-                            ></div>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-             {/* Avg Reaction Onset */}
-             <Card className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 border-none shadow-md bg-gradient-to-br from-white to-cyan-50/50 dark:from-slate-900 dark:to-slate-900/50 animate-enter-subtle">
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Timer className="w-24 h-24 text-cyan-600" />
-                </div>
-                <CardContent className="pb-6 px-6 pt-6">
-                     <div className="flex items-center gap-4 mb-4">
-                         <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl text-cyan-600 dark:text-cyan-400 shadow-inner group-hover:scale-110 transition-transform duration-300">
-                            <Timer className="w-6 h-6" />
-                        </div>
-                        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Avg. Reaction Onset</span>
-                    </div>
-                     <div className="space-y-1">
-                        <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight flex items-baseline gap-1">
-                            {animatedAvgTime} <span className="text-lg font-medium text-slate-500 dark:text-slate-400">min</span>
-                        </h3>
-                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                             From induction to first sign
-                        </p>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-
-        {/* ... (Charts Section) ... */}
-        {/* Reaction Grade Distribution */}
+        {/* Reaction Grade Distribution & Top Agents */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-enter-subtle">
-            <Card className="shadow-sm h-full">
-                <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-                    <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
-                        <PieChart className="w-5 h-5" /> Reaction Severity Distribution
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                    <div className="flex h-12 w-full rounded-lg overflow-hidden mb-6 bg-slate-50 dark:bg-slate-800/50">
-                        {analytics.gradeCounts.I > 0 && (
-                            <div 
-                                style={{ width: animateCharts ? `${(analytics.gradeCounts.I / analytics.totalPatients) * 100}%` : '0%' }} 
-                                className="bg-blue-400 dark:bg-blue-500 h-full transition-all duration-1000 ease-out" 
-                                title={`Grade I: ${analytics.gradeCounts.I}`} 
-                            />
-                        )}
-                        {analytics.gradeCounts.II > 0 && (
-                            <div 
-                                style={{ width: animateCharts ? `${(analytics.gradeCounts.II / analytics.totalPatients) * 100}%` : '0%' }} 
-                                className="bg-amber-400 dark:bg-amber-500 h-full transition-all duration-1000 ease-out delay-100" 
-                                title={`Grade II: ${analytics.gradeCounts.II}`} 
-                            />
-                        )}
-                        {analytics.gradeCounts.III > 0 && (
-                            <div 
-                                style={{ width: animateCharts ? `${(analytics.gradeCounts.III / analytics.totalPatients) * 100}%` : '0%' }} 
-                                className="bg-orange-500 dark:bg-orange-600 h-full transition-all duration-1000 ease-out delay-200" 
-                                title={`Grade III: ${analytics.gradeCounts.III}`} 
-                            />
-                        )}
-                        {analytics.gradeCounts.IV > 0 && (
-                            <div 
-                                style={{ width: animateCharts ? `${(analytics.gradeCounts.IV / analytics.totalPatients) * 100}%` : '0%' }} 
-                                className="bg-red-600 dark:bg-red-600 h-full transition-all duration-1000 ease-out delay-300" 
-                                title={`Grade IV: ${analytics.gradeCounts.IV}`} 
-                            />
-                        )}
-                        {analytics.gradeCounts.Ungraded > 0 && (
-                            <div 
-                                style={{ width: animateCharts ? `${(analytics.gradeCounts.Ungraded / analytics.totalPatients) * 100}%` : '0%' }} 
-                                className="bg-slate-200 dark:bg-slate-700 h-full transition-all duration-1000 ease-out delay-400" 
-                                title={`Ungraded: ${analytics.gradeCounts.Ungraded}`} 
-                            />
-                        )}
-                    </div>
-                    
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
-                         {/* Legend Items */}
-                        <div className="flex items-center gap-2 group cursor-default">
-                            <span className="w-3 h-3 rounded-full bg-blue-400 dark:bg-blue-500 group-hover:scale-125 transition-transform"></span>
-                            <span className="text-slate-600 dark:text-slate-400">Grade I: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.I}</span></span>
-                        </div>
-                        <div className="flex items-center gap-2 group cursor-default">
-                            <span className="w-3 h-3 rounded-full bg-amber-400 dark:bg-amber-500 group-hover:scale-125 transition-transform"></span>
-                            <span className="text-slate-600 dark:text-slate-400">Grade II: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.II}</span></span>
-                        </div>
-                        <div className="flex items-center gap-2 group cursor-default">
-                            <span className="w-3 h-3 rounded-full bg-orange-500 dark:bg-orange-600 group-hover:scale-125 transition-transform"></span>
-                            <span className="text-slate-600 dark:text-slate-400">Grade III: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.III}</span></span>
-                        </div>
-                        <div className="flex items-center gap-2 group cursor-default">
-                            <span className="w-3 h-3 rounded-full bg-red-600 group-hover:scale-125 transition-transform"></span>
-                            <span className="text-slate-600 dark:text-slate-400">Grade IV: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.IV}</span></span>
-                        </div>
-                        <div className="flex items-center gap-2 group cursor-default">
-                            <span className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700 group-hover:scale-125 transition-transform"></span>
-                            <span className="text-slate-600 dark:text-slate-400">Ungraded: <span className="font-bold text-slate-900 dark:text-slate-100">{analytics.gradeCounts.Ungraded}</span></span>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Top Suspected Agents Chart */}
-            <Card className="shadow-sm h-full">
-                <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-                    <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
-                        <BarChart3 className="w-5 h-5" /> Top 5 Suspected Agents
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 space-y-4">
-                    {analytics.topAgentsByCount.length > 0 ? (
-                        analytics.topAgentsByCount.map((agent, idx) => {
-                            const max = analytics.topAgentsByCount[0]?.count || 1;
-                            const percentage = (agent.count / max) * 100;
-                            return (
-                                <div key={idx} className="space-y-1 group">
-                                    <div className="flex justify-between text-sm font-medium text-slate-700 dark:text-slate-300">
-                                        <span>{agent.name}</span>
-                                        <span>{agent.count}</span>
-                                    </div>
-                                    <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                        <div 
-                                            className="h-full bg-[#8055f1] dark:bg-purple-500 rounded-full transition-all duration-1000 ease-out group-hover:bg-[#6b42d1] dark:group-hover:bg-purple-400" 
-                                            style={{ 
-                                                width: animateCharts ? `${percentage}%` : '0%',
-                                                transitionDelay: `${idx * 100}ms`
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            );
-                        })
-                    ) : (
-                        <div className="text-center py-8 text-slate-400 italic">
-                            No positive agents recorded yet.
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
+            <GradeDistributionChart
+              gradeCounts={analytics.gradeCounts}
+              totalPatients={analytics.totalPatients}
+              animateCharts={animateCharts}
+            />
+            <TopAgentsChart
+              topAgents={analytics.topAgentsByCount}
+              animateCharts={animateCharts}
+            />
         </div>
 
         {/* Patient Database Table (Full Width) - Paginated */}
@@ -910,73 +513,12 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
             )}
         </Card>
 
-        {/* Recent Skin Testing Activity Card */}
-        <Card className="w-full shadow-sm border-t-4 border-t-green-500 animate-enter-subtle">
-            <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-green-50/50 dark:bg-green-900/10">
-                <CardTitle className="text-lg text-green-800 dark:text-green-400 flex items-center gap-2">
-                    <Clock className="w-5 h-5" /> Recent Skin Testing Activity
-                </CardTitle>
-            </CardHeader>
-            <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                    <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
-                        <tr>
-                            <th className="px-4 py-3">Date</th>
-                            <th className="px-4 py-3">Patient</th>
-                            <th className="px-4 py-3">Results (SPT/IDT)</th>
-                            <th className="px-4 py-3">Challenge Outcome</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
-                        {recentLogs.length > 0 ? (
-                            recentLogs.map((log, idx) => {
-                                const positives: string[] = [];
-                                const negatives: string[] = [];
 
-                                log.testPanel.forEach(t => {
-                                    if (isSkinTestPositive(t)) {
-                                        positives.push(t.drugName);
-                                    } else {
-                                        negatives.push(t.drugName);
-                                    }
-                                });
-                                
-                                return (
-                                    <tr 
-                                        key={idx} 
-                                        className="hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer transition-colors group"
-                                        onClick={() => onViewLog(log)}
-                                    >
-                                        <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300">{formatDate(log.visitDate)}</td>
-                                        <td className="px-4 py-3 font-medium text-[#441170] dark:text-purple-300 group-hover:text-[#6b42d1] dark:group-hover:text-purple-200">{log.lastName}, {log.firstName}</td>
-                                        <td className="px-4 py-3">
-                                            <div className="flex flex-wrap gap-1 items-center">
-                                                {positives.map(p => <Badge key={p} variant="danger" className="text-[10px] px-1.5 py-0 h-5">{p}</Badge>)}
-                                                {negatives.map(n => <span key={n} className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">{n}</span>)}
-                                                {positives.length === 0 && negatives.length === 0 && <span className="text-slate-400 italic text-xs">-</span>}
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs">
-                                            {log.proceedToChallenge ? (
-                                                log.outcome === 'SUCCESS' 
-                                                ? <Badge variant="success" className="text-[10px]">Negative Challenge</Badge> 
-                                                : <Badge variant="danger" className="text-[10px]">Positive Challenge</Badge>
-                                            ) : <span className="text-slate-500 dark:text-slate-400">No Challenge</span>}
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                        ) : (
-                            <tr>
-                                <td colSpan={4} className="px-4 py-8 text-center text-slate-500 dark:text-slate-400 italic">
-                                    No recent activity recorded in this session.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </Card>
+        {/* Recent Skin Testing Activity Card */}
+        <RecentTestingActivity
+          recentLogs={recentLogs}
+          onViewLog={onViewLog}
+        />
 
         {/* Positive Skin Test Breakdown Table */}
         <Card className="w-full shadow-sm animate-enter-subtle">

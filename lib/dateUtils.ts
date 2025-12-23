@@ -9,7 +9,7 @@ export const formatDate = (dateStr: string): string => {
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const year = date.getFullYear();
 
-  return `${day}-${month}-${year}`;
+  return `${day}/${month}/${year}`;
 };
 
 export const calculateTimeDifference = (start?: string, end?: string): number | null => {

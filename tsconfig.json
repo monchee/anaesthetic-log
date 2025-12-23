@@ -21,7 +21,10 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "@features/*": ["./src/features/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@core/*": ["./src/core/*"]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true

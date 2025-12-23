@@ -34,7 +34,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
          </div>
          <div className="text-left md:text-right print:text-right">
            <h2 className="font-semibold text-lg print:text-sm">Anaesthetic Testing Report</h2>
-           <p className="text-sm opacity-80 text-white print:text-xs">Generated: {new Date().toLocaleDateString()}</p>
+           <p className="text-sm opacity-80 text-white print:text-xs">Generated: {new Date().toLocaleDateString('en-AU')}</p>
          </div>
       </div>
 

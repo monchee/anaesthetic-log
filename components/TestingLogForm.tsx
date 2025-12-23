@@ -1,17 +1,17 @@
-
-import React, { useMemo, useCallback } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select } from './ui';
 import { LogFormData, DrugTestRow } from '../types';
-import { Check, X, Save, CheckCircle2, Calendar, Stethoscope, Plus, Syringe, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Activity } from 'lucide-react';
+import { Calendar, Activity, Syringe, CheckCircle2, Check, X, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '../lib/constants';
+import { useTestingLogLogic } from '../hooks/useTestingLogLogic';
 
 interface TestingLogFormProps {
   formData: LogFormData;
   setFormData: React.Dispatch<React.SetStateAction<LogFormData>>;
   onSubmit: () => void;
   drugCategories: Record<string, string[]>;
-  symptomOptions: string[];
-  interventionOptions: string[];
+  symptomOptions: readonly string[] | string[];
+  interventionOptions: readonly string[] | string[];
 }
 
 const FIELD_LABELS: Record<string, string> = {
@@ -77,9 +77,9 @@ const DrugRow = React.memo(({
               type="number"
               min="0"
               onKeyDown={preventNegativeInput}
-              className={`h-9 text-center font-mono ${parseInt((row as any)[field]) >= 3 ? 'text-red-600 font-bold bg-red-50 border-red-200' : ''}`}
+              className={`h-9 text-center font-mono ${parseInt(row[field] || '0') >= 3 ? 'text-red-600 font-bold bg-red-50 border-red-200' : ''}`}
               placeholder="-"
-              value={(row as any)[field]}
+              value={row[field] || ''}
               onChange={(e) => updateDrugData(index, field, e.target.value)}
             />
           </div>
@@ -104,129 +104,18 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   interventionOptions 
 }) => {
 
-  const drugToCategoryMap = useMemo(() => {
-    const map: Record<string, string> = {};
-    Object.entries(drugCategories).forEach(([cat, drugs]) => {
-      (drugs as string[]).forEach(d => {
-        map[d] = cat;
-      });
-    });
-    return map;
-  }, [drugCategories]);
-
-  const handleInputChange = useCallback((field: keyof LogFormData, value: any) => {
-    if (field === 'reactionTime' && value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) < 0) return;
-    setFormData(prev => ({ ...prev, [field]: value }));
-  }, [setFormData]);
-
-  const handleControlChange = useCallback((field: string, value: string) => {
-    if (value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) < 0) return;
-    setFormData(prev => ({
-        ...prev, 
-        controls: { ...prev.controls, [field]: value }
-    }));
-  }, [setFormData]);
-
-  const toggleDrug = useCallback((drugName: string) => {
-    setFormData(prev => {
-      const exists = prev.testPanel.find(row => row.drugName === drugName && !row.id);
-      if (exists) {
-        return {
-          ...prev,
-          testPanel: prev.testPanel.filter(row => row.drugName !== drugName || row.id) 
-        };
-      } else {
-        return {
-          ...prev,
-          testPanel: [...prev.testPanel, { drugName, sptWheal: '', idt100: '', idt10: '', idtNeat: '', customName: '' }]
-        };
-      }
-    });
-  }, [setFormData]);
-
-  const toggleCategory = useCallback((categoryDrugs: string[]) => {
-    setFormData(prev => {
-      const currentPanelDrugs = prev.testPanel.filter(r => !r.id).map(row => row.drugName);
-      const allSelected = categoryDrugs.every(d => currentPanelDrugs.includes(d));
-
-      if (allSelected) {
-        return {
-          ...prev,
-          testPanel: prev.testPanel.filter(row => row.id || !categoryDrugs.includes(row.drugName))
-        };
-      } else {
-        const missingDrugs = categoryDrugs.filter(d => !currentPanelDrugs.includes(d));
-        const newRows = missingDrugs.map(d => ({
-            drugName: d,
-            sptWheal: '',
-            idt100: '',
-            idt10: '',
-            idtNeat: '',
-            customName: ''
-        }));
-        return {
-          ...prev,
-          testPanel: [...prev.testPanel, ...newRows]
-        };
-      }
-    });
-  }, [setFormData]);
-
-  const addCustomDrug = useCallback(() => {
-    setFormData(prev => ({
-      ...prev,
-      testPanel: [
-        ...prev.testPanel, 
-        { 
-            id: `custom-${Date.now()}-${Math.random()}`,
-            drugName: 'Other', 
-            sptWheal: '', 
-            idt100: '', 
-            idt10: '', 
-            idtNeat: '', 
-            customName: '' 
-        }
-      ]
-    }));
-  }, [setFormData]);
-
-  const removeRow = useCallback((index: number) => {
-    setFormData(prev => ({
-        ...prev,
-        testPanel: prev.testPanel.filter((_, i) => i !== index)
-    }));
-  }, [setFormData]);
-
-  const updateDrugData = useCallback((index: number, field: string, value: string) => {
-    if (['sptWheal', 'idt100', 'idt10', 'idtNeat'].includes(field)) {
-        if (value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) < 0) return;
-    }
-    setFormData(prev => ({
-      ...prev,
-      testPanel: prev.testPanel.map((row, i) => i === index ? { ...row, [field]: value } : row)
-    }));
-  }, [setFormData]);
-
-  const toggleSymptom = useCallback((symptom: string) => {
-    setFormData(prev => {
-      const exists = prev.symptoms.includes(symptom);
-      return {
-        ...prev,
-        symptoms: exists ? prev.symptoms.filter(s => s !== symptom) : [...prev.symptoms, symptom]
-      };
-    });
-  }, [setFormData]);
-
-  const challengeOptions = useMemo(() => {
-    const panelDrugs = (formData.testPanel || [])
-        .map(r => r.drugName === 'Other' && r.customName ? r.customName : r.drugName)
-        .filter((d): d is string => !!d);
-    
-    const standardDrugs = Object.values(drugCategories).flat();
-    const uniqueDrugs = Array.from(new Set([...panelDrugs, ...standardDrugs])).filter(d => d !== 'Other');
-    uniqueDrugs.sort();
-    return [...uniqueDrugs, 'Other'];
-  }, [formData.testPanel, drugCategories]);
+  const {
+    drugToCategoryMap,
+    handleInputChange,
+    handleControlChange,
+    toggleDrug,
+    toggleCategory,
+    addCustomDrug,
+    removeRow,
+    updateDrugData,
+    toggleSymptom,
+    challengeOptions
+  } = useTestingLogLogic({ formData, setFormData, drugCategories });
 
   return (
     <div className="space-y-6 mt-8">
@@ -267,46 +156,50 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
           <CardContent className="pt-4 space-y-6">
             
             {/* Controls */}
-            <div className="bg-slate-50 dark:bg-slate-900 px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-800 flex flex-wrap items-baseline gap-x-6 gap-y-2">
-              <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mr-2">Reference Controls (mm):</span>
+            <div className="bg-slate-50 dark:bg-slate-900 px-4 py-4 rounded-lg border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
+              <div className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">
+                Reference Controls (mm):
+              </div>
               
-              <div className="flex items-center gap-2">
-                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300">Histamine (SPT)</label>
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+                <div className="flex items-center gap-3">
+                  <Label className="text-xs font-medium text-slate-700 dark:text-slate-300">Histamine (SPT)</Label>
                   <Input 
                     type="number" 
                     min="0"
                     onKeyDown={preventNegativeInput}
                     placeholder="0" 
-                    className="bg-white h-8 w-16 text-center text-xs font-mono"
+                    className="bg-white dark:bg-slate-950 h-9 w-20 text-center text-sm font-mono"
                     value={formData.controls.histamineSpt}
                     onChange={(e) => handleControlChange('histamineSpt', e.target.value)}
                   />
-              </div>
+                </div>
 
-              <div className="flex items-center gap-2">
-                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (SPT)</label>
+                <div className="flex items-center gap-3">
+                  <Label className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (SPT)</Label>
                   <Input 
                     type="number" 
                     min="0"
                     onKeyDown={preventNegativeInput}
                     placeholder="0" 
-                    className="bg-white h-8 w-16 text-center text-xs font-mono"
+                    className="bg-white dark:bg-slate-950 h-9 w-20 text-center text-sm font-mono"
                     value={formData.controls.salineSpt}
                     onChange={(e) => handleControlChange('salineSpt', e.target.value)}
                   />
-              </div>
+                </div>
 
-              <div className="flex items-center gap-2">
-                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (IDT)</label>
+                <div className="flex items-center gap-3">
+                  <Label className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (IDT)</Label>
                   <Input 
                     type="number" 
                     min="0"
                     onKeyDown={preventNegativeInput}
                     placeholder="0" 
-                    className="bg-white h-8 w-16 text-center text-xs font-mono"
+                    className="bg-white dark:bg-slate-950 h-9 w-20 text-center text-sm font-mono"
                     value={formData.controls.salineIdt}
                     onChange={(e) => handleControlChange('salineIdt', e.target.value)}
                   />
+                </div>
               </div>
             </div>
 
