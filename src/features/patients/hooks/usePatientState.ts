@@ -29,7 +29,7 @@ export function usePatientState() {
 
   const handleUploadPatients = (newPatients: Patient[]) => {
     setPatients(newPatients);
-    setDatabaseDate("12/12/2025");
+    setDatabaseDate(new Date().toLocaleDateString('en-AU'));
     setHasUploadedData(true);
   };
 
