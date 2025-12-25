@@ -11,9 +11,31 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
-      version: "v0.7.0",
-      date: "December 2024",
+      version: "v0.9.0",
+      codename: "Desflurane",
       highlight: true,
+      changes: [
+        "Added new clinician pages: About, FAQ, Drug Reference, Contact, and Resources.",
+        "Redesigned dashboard statistics for a more compact, visually appealing layout.",
+        "Improved filter panel - now expanded by default for easier access.",
+        "Added anaesthetic-themed codenames to changelog versions.",
+        "Updated Quick Start Guide to open automatically on every visit.",
+      ]
+    },
+    {
+      version: "v0.8.0",
+      codename: "Propofol",
+      changes: [
+        "Added a Quick Start Guide that appears when you first visit the application.",
+        "Created an Advanced Search feature with filters for reaction grade, date range, hospital, outcome, and suspected agents.",
+        "Improved the dashboard with better search capabilities and patient filtering.",
+        "Made the Help button easily accessible from the top navigation bar.",
+        "Enhanced the user experience for new clinicians with guided onboarding.",
+      ]
+    },
+    {
+      version: "v0.7.0",
+      codename: "Sevoflurane",
       changes: [
         "Reorganised the application structure to make it easier to maintain and update.",
         "Improved the testing form layout with better spacing and clearer labels.",
@@ -25,7 +47,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
     },
     {
       version: "v0.6.0",
-      date: "November 2024",
+      codename: "Fentanyl",
       changes: [
         "Fixed issues with saving clinical records - forms now save correctly without errors.",
         "Improved error messages to be more helpful when something goes wrong.",
@@ -36,7 +58,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
     },
     {
       version: "v0.5.0",
-      date: "October 2024",
+      codename: "Midazolam",
       changes: [
         "Improved application security to better protect patient information.",
         "Made the application load faster and use less data.",
@@ -46,7 +68,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
     },
     {
       version: "v0.4.0",
-      date: "September 2024",
+      codename: "Rocuronium",
       changes: [
         "Made the dashboard animations smoother and less distracting.",
         "Added better error handling to prevent crashes.",
@@ -55,7 +77,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
     },
     {
       version: "v0.3.0",
-      date: "August 2024",
+      codename: "Ketamine",
       changes: [
         "Reorganised the workflow to make it easier to view patient history and enter test results.",
         "Added the Testing Plan Generator to create printable request forms.",
@@ -65,7 +87,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
     },
     {
       version: "v0.2.0",
-      date: "July 2024",
+      codename: "Atracurium",
       changes: [
         "Added ability to upload patient databases from CSV files.",
         "Created the dashboard with statistics and patient overview.",
@@ -75,7 +97,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
     },
     {
       version: "v0.1.0",
-      date: "June 2024",
+      codename: "Lignocaine",
       changes: [
         "Initial release of the Anaesthetic Allergy Clinic application.",
         "Basic functionality for recording skin tests and drug challenges.",
@@ -108,18 +130,20 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                               v.highlight ? 'bg-gradient-to-r from-[#8055f1] to-[#6b42d1] animate-pulse' : 'bg-[#8055f1]'
                             }`} />
                             
-                            <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-3">
+                            <div className="flex items-center gap-2 mb-3">
                                 <div className="flex items-center gap-2">
-                                    <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">{v.version}</h3>
-                                    {v.highlight && (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-[#8055f1] to-[#6b42d1] text-white">
-                                            <Sparkles className="w-3 h-3" />
-                                            Latest
-                                        </span>
-                                    )}
+                                  <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">{v.version}</h3>
+                                  {v.codename && (
+                                    <span className="text-sm font-bold text-slate-500 dark:text-slate-400">
+                                      {v.codename}
+                                    </span>
+                                  )}
                                 </div>
-                                {v.date && (
-                                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">{v.date}</span>
+                                {v.highlight && (
+                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-[#8055f1] to-[#6b42d1] text-white">
+                                        <Sparkles className="w-3 h-3" />
+                                        Latest
+                                    </span>
                                 )}
                             </div>
                             

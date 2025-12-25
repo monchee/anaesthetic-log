@@ -5,7 +5,12 @@ export enum Screen {
   DASHBOARD = 'dashboard',
   CHANGELOG = 'changelog',
   TESTING = 'testing',
-  PRINT_PLAN = 'print-plan'
+  PRINT_PLAN = 'print-plan',
+  ABOUT = 'about',
+  FAQ = 'faq',
+  DRUG_REFERENCE = 'drug-reference',
+  CONTACT = 'contact',
+  RESOURCES = 'resources'
 }
 
 export interface CategoryTheme {

@@ -8,9 +8,9 @@ import toast from 'react-hot-toast';
 import { useCountUp } from '../hooks/useCountUp';
 import { useDashboardAnalytics } from '../hooks/useDashboardAnalytics';
 import { AnalyticsPanel } from '../src/features/dashboard/components/AnalyticsPanel';
-import { GradeDistributionChart } from '../src/features/dashboard/components/GradeDistributionChart';
-import { TopAgentsChart } from '../src/features/dashboard/components/TopAgentsChart';
 import { RecentTestingActivity } from '../src/features/dashboard/components/RecentTestingActivity';
+import { useAdvancedSearch } from '../src/features/dashboard/hooks/useAdvancedSearch';
+import { AdvancedSearchFilters, AdvancedSearchPanel } from '../src/features/dashboard/components/AdvancedSearchFilters';
 
 interface DashboardProps {
   setScreen: (screen: Screen) => void;
@@ -25,13 +25,16 @@ interface DashboardProps {
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate }) => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [uploadStatus, setUploadStatus] = useState<{ type: 'success' | 'error', message: string, details?: string[] } | null>(null);
   const [animateCharts, setAnimateCharts] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isFiltersExpanded, setIsFiltersExpanded] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Advanced Search Hook
+  const { filteredPatients, suggestions, filters, updateFilter, clearFilters, activeFilterCount } = useAdvancedSearch(existingPatients);
 
   const ITEMS_PER_PAGE = 10;
 
@@ -109,20 +112,11 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
       if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // --- Filtering & Pagination ---
-  const filteredPatients = useMemo(() => {
-    const lowerSearch = searchTerm.toLowerCase();
-    return existingPatients.filter(p => 
-      (p.firstName || '').toLowerCase().includes(lowerSearch) ||
-      (p.lastName || '').toLowerCase().includes(lowerSearch) ||
-      (p.mrn || '').includes(lowerSearch) ||
-      (p.history.suspectedAgents || []).some(a => (a || '').toLowerCase().includes(lowerSearch))
-    );
-  }, [existingPatients, searchTerm]);
-
+  // --- Pagination ---
+  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, existingPatients]);
+  }, [filters, existingPatients]);
 
   const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
   const paginatedPatients = useMemo(() => {
@@ -170,22 +164,10 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
           animatedAbandonedCount={animatedAbandonedCount}
           abandonedRate={abandonedRate}
           animatedAvgTime={animatedAvgTime}
+          gradeCounts={analytics.gradeCounts}
+          topAgents={analytics.topAgentsByCount}
           animateCharts={animateCharts}
         />
-
-
-        {/* Reaction Grade Distribution & Top Agents */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-enter-subtle">
-            <GradeDistributionChart
-              gradeCounts={analytics.gradeCounts}
-              totalPatients={analytics.totalPatients}
-              animateCharts={animateCharts}
-            />
-            <TopAgentsChart
-              topAgents={analytics.topAgentsByCount}
-              animateCharts={animateCharts}
-            />
-        </div>
 
         {/* Patient Database Table (Full Width) - Paginated */}
         <Card className="w-full shadow-sm animate-enter-subtle">
@@ -202,104 +184,8 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                              </div>
                         </div>
                         
-                        {/* Action Buttons & Search */}
-                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto items-stretch sm:items-center">
-                             
-                             <div className="flex gap-2">
-                                 <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-                                    <SheetTrigger>
-                                        <Button variant="outline" size="sm" className="shrink-0 h-9">
-                                            <Upload className="w-3 h-3 mr-1.5" /> Update DB
-                                        </Button>
-                                    </SheetTrigger>
-                                    <SheetContent>
-                                        <SheetHeader className="mb-6">
-                                            <SheetTitle className="flex items-center gap-2">
-                                                <FileUp className="w-5 h-5 text-red-600" />
-                                                Update Database
-                                            </SheetTitle>
-                                            <SheetDescription>
-                                                Instructions for exporting patient data from REDCap and importing it here.
-                                            </SheetDescription>
-                                        </SheetHeader>
-                                        
-                                        <div className="space-y-6">
-                                            <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800">
-                                                <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
-                                                    <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
-                                                </h4>
-                                                <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                                                    Go to <a href="https://redcap.slhd.nsw.gov.au/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline font-medium">redcap.slhd.nsw.gov.au</a> and log in with your credentials.
-                                                </p>
-                                                <p className="text-xs text-slate-500 italic">(You must have data export rights)</p>
-                                            </div>
-
-                                            <div className="space-y-4">
-                                                <div className="flex gap-3">
-                                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                                                        2
-                                                    </div>
-                                                    <div className="text-sm text-slate-600 dark:text-slate-300">
-                                                        Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Data Exports, Reports, and Stats</span> on the sidebar.
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex gap-3">
-                                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                                                        3
-                                                    </div>
-                                                    <div className="text-sm text-slate-600 dark:text-slate-300">
-                                                        Find the <span className="font-semibold text-slate-900 dark:text-slate-100">All data (all records and fields)</span> row.
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex gap-3">
-                                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                                                        4
-                                                    </div>
-                                                    <div className="text-sm text-slate-600 dark:text-slate-300">
-                                                        Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span>.
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex gap-3">
-                                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                                                        5
-                                                    </div>
-                                                    <div className="text-sm text-slate-600 dark:text-slate-300">
-                                                        Choose <span className="font-semibold text-slate-900 dark:text-slate-100">CSV / Microsoft Excel (labels)</span> as the export format.
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex gap-3">
-                                                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                                                        6
-                                                    </div>
-                                                    <div className="text-sm text-slate-600 dark:text-slate-300">
-                                                        Click <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span> and download the file.
-                                                    </div>
-                                                </div>
-                                                
-                                                <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-100 dark:border-blue-900/40 text-xs text-blue-700 dark:text-blue-300">
-                                                    Filename format should resemble:<br/>
-                                                    <span className="font-mono">AnaestheticAllergyCl_DATA_LABELS_YYYY-MM-DD_time.csv</span>
-                                                </div>
-                                            </div>
-
-                                            <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
-                                                <Button 
-                                                    className="w-full h-12 text-base shadow-lg hover:shadow-red-500/20 transition-all bg-red-600 hover:bg-red-700 text-white" 
-                                                    size="lg"
-                                                    onClick={() => fileInputRef.current?.click()}
-                                                >
-                                                    <Upload className="w-4 h-4 mr-2" /> Select CSV File
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </SheetContent>
-                                </Sheet>
-                             </div>
-
+                        {/* Action Buttons */}
+                        <div className="flex gap-2 items-center">
                             <input 
                                 type="file" 
                                 ref={fileInputRef} 
@@ -307,16 +193,133 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                 accept=".csv" 
                                 className="hidden" 
                             />
-                            <div className="relative w-full sm:w-64">
+                            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                                <SheetTrigger>
+                                    <Button variant="outline" size="sm" className="shrink-0 h-9">
+                                        <Upload className="w-3 h-3 mr-1.5" /> Update DB
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent>
+                                    <SheetHeader className="mb-6">
+                                        <SheetTitle className="flex items-center gap-2">
+                                            <FileUp className="w-5 h-5 text-red-600" />
+                                            Update Database
+                                        </SheetTitle>
+                                        <SheetDescription>
+                                            Instructions for exporting patient data from REDCap and importing it here.
+                                        </SheetDescription>
+                                    </SheetHeader>
+                                    
+                                    <div className="space-y-6">
+                                        <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800">
+                                            <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
+                                                <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
+                                            </h4>
+                                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
+                                                Go to <a href="https://redcap.slhd.nsw.gov.au/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline font-medium">redcap.slhd.nsw.gov.au</a> and log in with your credentials.
+                                            </p>
+                                            <p className="text-xs text-slate-500 italic">(You must have data export rights)</p>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="flex gap-3">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                    2
+                                                </div>
+                                                <div className="text-sm text-slate-600 dark:text-slate-300">
+                                                    Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Data Exports, Reports, and Stats</span> on the sidebar.
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-3">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                    3
+                                                </div>
+                                                <div className="text-sm text-slate-600 dark:text-slate-300">
+                                                    Find the <span className="font-semibold text-slate-900 dark:text-slate-100">All data (all records and fields)</span> row.
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-3">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                    4
+                                                </div>
+                                                <div className="text-sm text-slate-600 dark:text-slate-300">
+                                                    Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span>.
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-3">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                    5
+                                                </div>
+                                                <div className="text-sm text-slate-600 dark:text-slate-300">
+                                                    Choose <span className="font-semibold text-slate-900 dark:text-slate-100">CSV / Microsoft Excel (labels)</span> as the export format.
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-3">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                    6
+                                                </div>
+                                                <div className="text-sm text-slate-600 dark:text-slate-300">
+                                                    Click <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span> and download the file.
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-100 dark:border-blue-900/40 text-xs text-blue-700 dark:text-blue-300">
+                                                Filename format should resemble:<br/>
+                                                <span className="font-mono">AnaestheticAllergyCl_DATA_LABELS_YYYY-MM-DD_time.csv</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+                                            <Button 
+                                                className="w-full h-12 text-base shadow-lg hover:shadow-red-500/20 transition-all bg-red-600 hover:bg-red-700 text-white" 
+                                                size="lg"
+                                                onClick={() => fileInputRef.current?.click()}
+                                            >
+                                                <Upload className="w-4 h-4 mr-2" /> Select CSV File
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </SheetContent>
+                            </Sheet>
+                        </div>
+                    </div>
+                    {/* Search & Filters Section */}
+                    <div className="space-y-3">
+                        {/* Row 1: Search Box + Filter Button Toggle */}
+                        <div className="flex flex-wrap gap-2 items-center">
+                            <div className="relative flex-1 sm:flex-none sm:w-64">
                                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                 <Input 
                                     placeholder="Search by Name, MRN..." 
                                     className="pl-9 h-9 bg-white" 
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    value={filters.textQuery}
+                                    onChange={(e) => updateFilter('textQuery', e.target.value)}
                                 />
                             </div>
+                            <AdvancedSearchFilters
+                                isExpanded={isFiltersExpanded} 
+                                setIsExpanded={setIsFiltersExpanded}
+                                activeFilterCount={activeFilterCount}
+                                clearFilters={clearFilters}
+                            />
                         </div>
+
+                        {/* Row 2: Expanded Filter Panel Content - Guaranteed to be below */}
+                        {isFiltersExpanded && (
+                            <div className="w-full animate-in fade-in slide-in-from-top-2 duration-200">
+                                <AdvancedSearchPanel
+                                    filters={filters}
+                                    updateFilter={updateFilter}
+                                    suggestions={suggestions}
+                                    clearFilters={clearFilters}
+                                    activeFilterCount={activeFilterCount}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </CardHeader>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from './ui';
 import { Sun, Moon } from 'lucide-react';
@@ -7,6 +6,7 @@ import DisclaimerBanner from './DisclaimerBanner';
 import { useTheme } from './ThemeProvider';
 import { useFontSize } from './FontSizeProvider';
 import { Screen } from '../types';
+import { HelpModal } from './HelpModal';
 
 interface ScreenLayoutProps {
     title: string;
@@ -103,11 +103,14 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                     variant="ghost" 
                                     size="sm" 
                                     onClick={toggleTheme} 
-                                    className="h-10 w-10 px-0 ml-1 rounded-lg bg-white/5 hover:bg-white/20 text-yellow-300 hover:text-yellow-200 border border-white/5 shadow-inner" 
+                                    className="h-10 w-10 px-0 rounded-lg bg-white/5 hover:bg-white/20 text-yellow-300 hover:text-yellow-200 border border-white/5 shadow-inner" 
                                     title="Toggle Dark Mode"
                                 >
                                     {theme === 'dark' ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6 text-purple-100" />}
                                 </Button>
+
+                                {/* Help Button */}
+                                <HelpModal />
                             </div>
                         </div>
                     </div>

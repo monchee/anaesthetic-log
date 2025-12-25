@@ -216,12 +216,12 @@ export const HoverCardContent = ({ children, className, ...props }: React.HTMLAt
 );
 
 // --- Dialog ---
-export const Dialog = ({ open, onOpenChange, children }: { open: boolean; onOpenChange: (open: boolean) => void; children?: React.ReactNode }) => {
+export const Dialog = ({ open, onOpenChange, children, className }: { open: boolean; onOpenChange: (open: boolean) => void; children?: React.ReactNode; className?: string }) => {
   if (!open) return null;
   return createPortal(
     <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 flex items-center justify-center p-4">
       <div 
-         className="relative w-full max-w-lg gap-4 border bg-white p-6 shadow-lg duration-200 rounded-lg dark:bg-slate-950 dark:border-slate-800"
+         className={`relative w-full max-w-lg gap-4 border bg-white p-6 shadow-lg duration-200 rounded-lg dark:bg-slate-950 dark:border-slate-800 ${className || ''}`}
          onClick={(e) => e.stopPropagation()}
       >
         {children}

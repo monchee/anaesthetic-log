@@ -11,6 +11,11 @@ import Dashboard from './components/Dashboard';
 import Changelog from './components/Changelog';
 import TestingPlanGenerator from './components/TestingPlanGenerator';
 import TestingPlanPrintView from './components/TestingPlanPrintView';
+import AboutPage from './components/AboutPage';
+import FAQPage from './components/FAQPage';
+import DrugReferencePage from './components/DrugReferencePage';
+import ContactPage from './components/ContactPage';
+import ResourcesPage from './components/ResourcesPage';
 import { ScreenLayout } from './components/ScreenLayout';
 import { ThemeProvider } from './components/ThemeProvider';
 import { FontSizeProvider } from './components/FontSizeProvider';
@@ -73,6 +78,121 @@ function AnaestheticLogApp() {
                 }
             >
                 <Changelog setScreen={setScreen} databaseDate={databaseDate} />
+            </ScreenLayout>
+        );
+    }
+
+    if (screen === Screen.ABOUT) {
+        return (
+            <ScreenLayout
+                title="About"
+                subtitle={APP_SUBTITLE}
+                icon={<User className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <AboutPage setScreen={setScreen} />
+            </ScreenLayout>
+        );
+    }
+
+    if (screen === Screen.FAQ) {
+        return (
+            <ScreenLayout
+                title="FAQ"
+                subtitle={APP_SUBTITLE}
+                icon={<User className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <FAQPage setScreen={setScreen} />
+            </ScreenLayout>
+        );
+    }
+
+    if (screen === Screen.DRUG_REFERENCE) {
+        return (
+            <ScreenLayout
+                title="Drug Reference"
+                subtitle={APP_SUBTITLE}
+                icon={<User className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <DrugReferencePage setScreen={setScreen} />
+            </ScreenLayout>
+        );
+    }
+
+    if (screen === Screen.CONTACT) {
+        return (
+            <ScreenLayout
+                title="Contact"
+                subtitle={APP_SUBTITLE}
+                icon={<User className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <ContactPage setScreen={setScreen} />
+            </ScreenLayout>
+        );
+    }
+
+    if (screen === Screen.RESOURCES) {
+        return (
+            <ScreenLayout
+                title="Resources"
+                subtitle={APP_SUBTITLE}
+                icon={<User className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <ResourcesPage setScreen={setScreen} />
             </ScreenLayout>
         );
     }
