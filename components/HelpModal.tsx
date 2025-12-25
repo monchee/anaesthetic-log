@@ -86,7 +86,7 @@ export const HelpModal: React.FC = () => {
         <HelpCircle className="w-5 h-5" />
       </Button>
 
-      <Dialog open={isOpen} onOpenChange={handleClose} className="max-w-3xl max-h-[85vh] overflow-y-auto">
+      <Dialog open={isOpen} onOpenChange={handleClose} className="max-w-5xl max-h-[90vh] overflow-y-auto">
         <DialogContent>
           <DialogHeader className="pb-4">
             <DialogTitle className="flex items-center gap-2 text-lg">
@@ -113,7 +113,8 @@ export const HelpModal: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-4">
+          {/* Two-column grid on desktop */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {HELP_SECTIONS.map((section) => (
               <div 
                 key={section.title}
@@ -140,26 +141,26 @@ export const HelpModal: React.FC = () => {
                 </ul>
               </div>
             ))}
+          </div>
 
-            {/* Quick Tips */}
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-900/40">
-              <div className="flex items-center gap-2 mb-2">
-                <MousePointer className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                <span className="font-medium text-blue-700 dark:text-blue-300 text-sm">
-                  Quick Tips
-                </span>
-              </div>
-              <ul className="space-y-1.5 text-sm text-blue-700 dark:text-blue-300">
-                <li className="flex items-start gap-2">
-                  <FileSpreadsheet className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>Export from REDCap using "CSV / Microsoft Excel (labels)" format.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Filter className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>The filter badge shows the number of active filter criteria.</span>
-                </li>
-              </ul>
+          {/* Quick Tips - Full Width */}
+          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-900/40 mt-4">
+            <div className="flex items-center gap-2 mb-2">
+              <MousePointer className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <span className="font-medium text-blue-700 dark:text-blue-300 text-sm">
+                Quick Tips
+              </span>
             </div>
+            <ul className="space-y-1.5 text-sm text-blue-700 dark:text-blue-300">
+              <li className="flex items-start gap-2">
+                <FileSpreadsheet className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>Export from REDCap using "CSV / Microsoft Excel (labels)" format.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Filter className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>The filter badge shows the number of active filter criteria.</span>
+              </li>
+            </ul>
           </div>
         </DialogContent>
       </Dialog>
