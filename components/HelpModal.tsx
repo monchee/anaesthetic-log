@@ -86,7 +86,7 @@ export const HelpModal: React.FC = () => {
         <HelpCircle className="w-5 h-5" />
       </Button>
 
-      <Dialog open={isOpen} onOpenChange={handleClose} className="max-w-5xl max-h-[90vh] overflow-y-auto">
+      <Dialog open={isOpen} onOpenChange={handleClose} className="!max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogContent>
           <DialogHeader className="pb-4">
             <DialogTitle className="flex items-center gap-2 text-lg">
