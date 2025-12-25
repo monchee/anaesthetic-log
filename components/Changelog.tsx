@@ -11,9 +11,22 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.10.0",
+      codename: "Sevoflurane",
+      highlight: true,
+      changes: [
+        "Enhanced PWA capabilities with comprehensive offline support and automatic updates.",
+        "Implemented smart caching strategies for faster loading and offline access.",
+        "Added custom app icons for all platforms (iOS, Android, desktop).",
+        "Replaced header controls with streamlined hamburger menu for cleaner interface.",
+        "Moved Quick Start Guide and navigation links to hamburger menu.",
+        "Changed 'Get Started' button to green for better visual distinction.",
+        "Improved update notifications - users are now prompted when new versions are available.",
+      ]
+    },
+    {
       version: "v0.9.0",
       codename: "Desflurane",
-      highlight: true,
       changes: [
         "Added new clinician pages: About, FAQ, Drug Reference, Contact, and Resources.",
         "Redesigned dashboard statistics for a more compact, visually appealing layout.",

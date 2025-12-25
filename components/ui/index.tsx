@@ -375,3 +375,6 @@ export const SheetDescription = ({ className, children }: { className?: string; 
     {children}
   </p>
 );
+
+// --- DropdownMenu ---
+export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from './dropdown-menu';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, Button } from './ui';
 import { 
   HelpCircle, 
@@ -13,11 +13,15 @@ import {
   Filter,
   Sparkles
 } from 'lucide-react';
+import { parseRedcapCSV } from '../lib/utils';
+import { Patient } from '../types';
+import toast from 'react-hot-toast';
 
 interface HelpSection {
   icon: React.ReactNode;
   title: string;
   steps: string[];
+  hasButton?: boolean;
 }
 
 const HELP_SECTIONS: HelpSection[] = [
@@ -44,8 +48,8 @@ const HELP_SECTIONS: HelpSection[] = [
     icon: <Upload className="w-5 h-5 text-[#441170]" />,
     title: "Update Database",
     steps: [
-      "Click the 'Update DB' button in the dashboard header.",
-      "Follow the instructions to export data from REDCap.",
+      "Click the 'Upload CSV' button at the bottom of this guide.",
+      "Export data from REDCap using 'CSV / Microsoft Excel (labels)' format.",
       "Select the exported CSV file to update the patient database.",
       "The dashboard will refresh with the new data automatically."
     ]
@@ -59,13 +63,38 @@ const HELP_SECTIONS: HelpSection[] = [
       "View the timeline of the patient's reaction and testing.",
       "Navigate back to the dashboard using the breadcrumb or back button."
     ]
+  },
+  {
+    icon: <Activity className="w-5 h-5 text-[#441170]" />,
+    title: "Allergy Testing",
+    steps: [
+      "Record skin prick test (SPT) and intradermal test (IDT) results.",
+      "Document drug challenge outcomes and observations.",
+      "Track positive and negative reactions to various agents.",
+      "Generate testing plans for upcoming clinic appointments."
+    ]
+  },
+  {
+    icon: <FileSpreadsheet className="w-5 h-5 text-[#441170]" />,
+    title: "Reaction History",
+    steps: [
+      "View detailed timelines of perioperative reactions.",
+      "Review suspected agents and medications administered.",
+      "Check reaction severity grading (Ring & Messmer classification).",
+      "Access procedure outcomes and follow-up information."
+    ]
   }
 ];
 
-export const HelpModal: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface HelpModalProps {
+  onUploadPatients?: (patients: Patient[]) => void;
+}
 
-  // Open on every visit
+export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-open on page load
   useEffect(() => {
     setIsOpen(true);
   }, []);
@@ -74,17 +103,67 @@ export const HelpModal: React.FC = () => {
     setIsOpen(open);
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    
+    if (file && onUploadPatients) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const text = event.target?.result as string;
+          const result = parseRedcapCSV(text);
+          
+          if (result.success) {
+            onUploadPatients(result.data);
+            toast.success(
+              <div className="flex flex-col gap-1">
+                <span className="font-bold">Database updated</span>
+                <span className="text-sm font-normal">Successfully loaded {result.data.length} records from CSV.</span>
+              </div>
+            );
+            setIsOpen(false);
+          } else {
+            toast.error(
+              <div className="flex flex-col gap-1">
+                <span className="font-bold">Failed to parse CSV</span>
+                <span className="text-sm font-normal">{result.error || "Please check the file format."}</span>
+              </div>
+            );
+          }
+        } catch {
+          toast.error("Error reading file");
+        }
+      };
+      reader.readAsText(file);
+    }
+    
+    // Reset file input
+    if (e.target) {
+      e.target.value = '';
+    }
+  };
+
   return (
     <>
       <Button 
         variant="ghost" 
         size="sm" 
-        className="h-10 w-10 px-0 rounded-lg bg-white/5 hover:bg-white/20 text-white/80 hover:text-white border border-white/5" 
-        title="Help"
+        className="w-full justify-start px-4 py-3 h-auto rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium" 
         onClick={() => setIsOpen(true)}
+        data-help-modal-trigger
       >
-        <HelpCircle className="w-5 h-5" />
+        <HelpCircle className="w-5 h-5 mr-2" />
+        Quick Start Guide
       </Button>
+
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".csv"
+        onChange={handleFileUpload}
+        className="hidden"
+      />
 
       <Dialog open={isOpen} onOpenChange={handleClose} className="!max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogContent>
@@ -161,6 +240,31 @@ export const HelpModal: React.FC = () => {
                 <span>The filter badge shows the number of active filter criteria.</span>
               </li>
             </ul>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-800">
+            {onUploadPatients && (
+              <Button
+                onClick={() => {
+                  setIsOpen(false);
+                  fileInputRef.current?.click();
+                }}
+                size="lg"
+                variant="outline"
+                className="flex-1 border-2 border-[#441170] text-[#441170] hover:bg-[#441170] hover:text-white dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-400 dark:hover:text-white"
+              >
+                <Upload className="w-5 h-5 mr-2" />
+                Upload CSV
+              </Button>
+            )}
+            <Button
+              onClick={() => setIsOpen(false)}
+              size="lg"
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+            >
+              Get Started
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

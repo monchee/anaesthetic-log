@@ -196,7 +196,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                                 <SheetTrigger>
                                     <Button variant="outline" size="sm" className="shrink-0 h-9">
-                                        <Upload className="w-3 h-3 mr-1.5" /> Update DB
+                                        <Upload className="w-3 h-3 mr-1.5" /> Upload CSV
                                     </Button>
                                 </SheetTrigger>
                                 <SheetContent>

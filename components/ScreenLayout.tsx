@@ -1,10 +1,9 @@
 import React from 'react';
-import { Button } from './ui';
-import { Sun, Moon } from 'lucide-react';
+import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from './ui';
+import { Sun, Moon, Menu, HelpCircle } from 'lucide-react';
 import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
 import { useTheme } from './ThemeProvider';
-import { useFontSize } from './FontSizeProvider';
 import { Screen } from '../types';
 import { HelpModal } from './HelpModal';
 
@@ -42,7 +41,6 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     onUploadPatients
 }) => {
     const { theme, toggleTheme } = useTheme();
-    const { increaseFontSize, decreaseFontSize, canIncrease, canDecrease } = useFontSize();
 
     return (
         <div className={`min-h-screen bg-[#fbfaff] dark:bg-slate-950 flex flex-col ${className || ''}`}>
@@ -73,44 +71,58 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                 
                                 <div className="h-6 w-px bg-white/10 mx-1 hidden sm:block"></div>
 
-                                {/* Font Size Controls */}
-                                <div className="flex items-center bg-black/20 rounded-lg p-0.5 border border-white/5">
-                                    <Button 
-                                        variant="ghost" 
-                                        size="sm" 
-                                        onClick={decreaseFontSize} 
-                                        disabled={!canDecrease}
-                                        className="h-7 w-8 px-0 text-white hover:bg-white/10 hover:text-white disabled:opacity-30 rounded-md" 
-                                        title="Decrease Font Size"
-                                    >
-                                        <span className="text-xs font-bold leading-none">A</span>
-                                    </Button>
-                                    <div className="w-px h-4 bg-white/10 mx-0.5"></div>
-                                    <Button 
-                                        variant="ghost" 
-                                        size="sm" 
-                                        onClick={increaseFontSize} 
-                                        disabled={!canIncrease}
-                                        className="h-7 w-8 px-0 text-white hover:bg-white/10 hover:text-white disabled:opacity-30 rounded-md" 
-                                        title="Increase Font Size"
-                                    >
-                                        <span className="text-lg font-bold leading-none">A</span>
-                                    </Button>
-                                </div>
-
-                                {/* Theme Toggle */}
-                                <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    onClick={toggleTheme} 
-                                    className="h-10 w-10 px-0 rounded-lg bg-white/5 hover:bg-white/20 text-yellow-300 hover:text-yellow-200 border border-white/5 shadow-inner" 
-                                    title="Toggle Dark Mode"
-                                >
-                                    {theme === 'dark' ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6 text-purple-100" />}
-                                </Button>
-
-                                {/* Help Button */}
-                                <HelpModal />
+                                {/* Hamburger Menu */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger>
+                                        <Button 
+                                            variant="ghost" 
+                                            size="sm" 
+                                            className="h-10 w-10 px-0 rounded-lg bg-white/5 hover:bg-white/20 text-white/80 hover:text-white border border-white/5" 
+                                            title="Menu"
+                                        >
+                                            <Menu className="w-5 h-5" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-56">
+                                        {/* Quick Start Guide */}
+                                        <DropdownMenuItem onClick={() => {
+                                            const helpButton = document.querySelector('[data-help-modal-trigger]') as HTMLButtonElement;
+                                            helpButton?.click();
+                                        }}>
+                                            <HelpCircle className="w-4 h-4 mr-2" />
+                                            Quick Start Guide
+                                        </DropdownMenuItem>
+                                        
+                                        <DropdownMenuSeparator />
+                                        
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.ABOUT)}>
+                                            About
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.FAQ)}>
+                                            FAQ
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.DRUG_REFERENCE)}>
+                                            Drug Reference
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.CONTACT)}>
+                                            Contact / Support
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.RESOURCES)}>
+                                            Resources / Links
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.CHANGELOG)}>
+                                            Changelog
+                                        </DropdownMenuItem>
+                                        
+                                        <DropdownMenuSeparator />
+                                        
+                                        {/* Dark Mode Toggle */}
+                                        <DropdownMenuItem onClick={toggleTheme}>
+                                            {theme === 'dark' ? <Sun className="w-4 h-4 mr-2" /> : <Moon className="w-4 h-4 mr-2" />}
+                                            {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         </div>
                     </div>
@@ -131,6 +143,11 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                     {children}
                 </div>
             </main>
+
+            {/* Hidden HelpModal - triggered from dropdown menu */}
+            <div className="hidden">
+                <HelpModal onUploadPatients={onUploadPatients} />
+            </div>
 
             {/* Footer */}
             {showFooter && <Footer setScreen={setScreen} databaseDate={databaseDate} onUploadPatients={onUploadPatients} />}
