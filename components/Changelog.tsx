@@ -15,111 +15,100 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
       codename: "Suxamethonium",
       highlight: true,
       changes: [
-        "Migrated all custom UI components to shadcn/ui for improved accessibility and consistency.",
-        "Replaced react-hot-toast with shadcn's Sonner for better toast notifications.",
-        "Added proper Radix UI primitives for Dialog, Sheet, DropdownMenu, and Accordion components.",
-        "Extended Button component with headerAction variant for header controls.",
-        "Extended Badge component with allergy-grade variants (grade4, grade3, grade2, grade1, ungraded).",
-        "Improved keyboard navigation and screen reader support throughout the application.",
-        "Added CSS variables for proper theming support in shadcn/ui components.",
-        "Created lib/utils.ts with cn() utility function for better className management.",
+        "Improved accessibility throughout the app - better keyboard navigation and screen reader support.",
+        "Updated notification messages to be clearer and less intrusive.",
+        "Enhanced visual consistency across all screens and menus.",
+        "Improved allergy grade badges with clearer colour coding for quick identification.",
+        "Better support for light and dark themes across all components.",
+        "Menu items are now easier to tap on mobile devices.",
       ]
     },
     {
       version: "v0.10.0",
       codename: "Sevoflurane",
       changes: [
-        "Enhanced PWA capabilities with comprehensive offline support and automatic updates.",
-        "Implemented smart caching strategies for faster loading and offline access.",
-        "Added custom app icons for all platforms (iOS, Android, desktop).",
-        "Replaced header controls with streamlined hamburger menu for cleaner interface.",
-        "Moved Quick Start Guide and navigation links to hamburger menu.",
-        "Changed 'Get Started' button to green for better visual distinction.",
-        "Improved update notifications - users are now prompted when new versions are available.",
+        "App now works offline - you can use it without an internet connection.",
+        "Faster loading times and quicker access to patient data.",
+        "Added proper app icons when installed on phones and tablets.",
+        "Cleaner header with a new menu button for easier navigation.",
+        "Quick Start Guide and other links moved to the new menu.",
+        "New version notifications - you'll be prompted when updates are available.",
       ]
     },
     {
       version: "v0.9.0",
       codename: "Desflurane",
       changes: [
-        "Added new clinician pages: About, FAQ, Drug Reference, Contact, and Resources.",
-        "Redesigned dashboard statistics for a more compact, visually appealing layout.",
-        "Improved filter panel - now expanded by default for easier access.",
-        "Added anaesthetic-themed codenames to changelog versions.",
-        "Updated Quick Start Guide to open automatically on every visit.",
+        "Added new information pages: About, FAQ, Drug Reference, Contact, and Resources.",
+        "Redesigned dashboard with cleaner statistics display.",
+        "Search filters are now visible by default for easier access.",
+        "Quick Start Guide opens automatically when you first use the app.",
       ]
     },
     {
       version: "v0.8.0",
       codename: "Propofol",
       changes: [
-        "Added a Quick Start Guide that appears when you first visit the application.",
-        "Created an Advanced Search feature with filters for reaction grade, date range, hospital, outcome, and suspected agents.",
-        "Improved the dashboard with better search capabilities and patient filtering.",
-        "Made the Help button easily accessible from the top navigation bar.",
-        "Enhanced the user experience for new clinicians with guided onboarding.",
+        "New Quick Start Guide to help you get started.",
+        "Advanced Search with filters for reaction grade, date range, hospital, outcome, and suspected agents.",
+        "Better patient search and filtering in the dashboard.",
+        "Help button moved to the top navigation bar.",
       ]
     },
     {
       version: "v0.7.0",
       codename: "Sevoflurane",
       changes: [
-        "Reorganised the application structure to make it easier to maintain and update.",
-        "Improved the testing form layout with better spacing and clearer labels.",
-        "Enhanced print layouts - the header now hides automatically when printing reports.",
-        "Updated version numbering to follow industry standards (semantic versioning).",
-        "Made the changelog easier to read with clear descriptions of what changed.",
-        "Added Cloudflare Pages deployment configuration.",
+        "Improved layout and spacing in the testing forms.",
+        "Printed reports no longer include the header - cleaner printed output.",
+        "Easier to read changelog with clearer descriptions.",
       ]
     },
     {
       version: "v0.6.0",
       codename: "Fentanyl",
       changes: [
-        "Fixed issues with saving clinical records - forms now save correctly without errors.",
-        "Improved error messages to be more helpful when something goes wrong.",
-        "Updated all text to use Australian English spelling throughout the application.",
-        "Optimised print layouts so reports fit on a single page when printed.",
-        "Made the application more stable and reliable for daily use.",
+        "Fixed issues with saving clinical records - forms now save correctly.",
+        "Better error messages when something goes wrong.",
+        "All text now uses Australian English spelling.",
+        "Printed reports now fit neatly on a single page.",
       ]
     },
     {
       version: "v0.5.0",
       codename: "Midazolam",
       changes: [
-        "Improved application security to better protect patient information.",
-        "Made the application load faster and use less data.",
-        "Enhanced tooltips and hover information for better usability.",
-        "Cleaned up the codebase for better long-term maintenance.",
+        "Enhanced security to better protect patient information.",
+        "Faster loading and uses less data.",
+        "Improved tooltips and helpful information when hovering over items.",
       ]
     },
     {
       version: "v0.4.0",
       codename: "Rocuronium",
       changes: [
-        "Made the dashboard animations smoother and less distracting.",
-        "Added better error handling to prevent crashes.",
-        "Improved the overall stability and performance of the application.",
+        "Smoother, less distracting animations in the dashboard.",
+        "More stable - fewer crashes and errors.",
       ]
     },
     {
       version: "v0.3.0",
       codename: "Ketamine",
       changes: [
-        "Reorganised the workflow to make it easier to view patient history and enter test results.",
-        "Added the Testing Plan Generator to create printable request forms.",
-        "Improved patient search to help you find patients faster.",
-        "Enhanced the display of reaction grades for better clarity.",
+        "Easier workflow for viewing patient history and entering test results.",
+        "New Testing Plan Generator for printable request forms.",
+        "Faster patient search.",
+        "Clearer display of reaction grades.",
       ]
     },
     {
       version: "v0.2.0",
       codename: "Atracurium",
       changes: [
-        "Added ability to upload patient databases from CSV files.",
-        "Created the dashboard with statistics and patient overview.",
-        "Added detailed patient history timeline showing medications and reactions.",
-        "Integrated support for REDCap patient records.",
+        "Upload patient databases from CSV files.",
+        "New dashboard with statistics and patient overview.",
+        "Detailed patient history timeline showing medications and reactions.",
+        "Support for REDCap patient records.",
       ]
     },
     {
@@ -127,9 +116,9 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
       codename: "Lignocaine",
       changes: [
         "Initial release of the Anaesthetic Allergy Clinic application.",
-        "Basic functionality for recording skin tests and drug challenges.",
-        "Ability to generate clinical reports and patient handouts.",
-        "Patient data management and testing result tracking.",
+        "Record skin tests and drug challenges.",
+        "Generate clinical reports and patient handouts.",
+        "Manage patient data and track testing results.",
       ]
     }
   ];

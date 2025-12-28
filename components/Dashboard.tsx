@@ -407,7 +407,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                         <td className="px-4 py-3 text-center">
                                             <Badge
                                                 variant={getGradeVariant(p.history.grade || 'Ungraded')}
-                                                className="whitespace-nowrap text-[10px] cursor-help"
+                                                className="whitespace-nowrap text-[10px] cursor-help w-20 justify-center"
                                                 title={p.history.grade || 'Ungraded'}
                                             >
                                                 {(p.history.grade || 'Ungraded').split(' -')[0]}
@@ -433,12 +433,12 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                     paginatedPatients.map(p => {
                         const { events: timelineEvents } = parsePatientTimeline(p.history);
                         return (
-                            <div 
-                                key={p.id} 
-                                className="p-4 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800"
+                            <div
+                                key={p.id}
+                                className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800"
                                 onClick={() => onSelectPatient(p)}
                             >
-                                <div className="flex justify-between items-start mb-2 gap-2">
+                                <div className="flex justify-between items-start mb-1 gap-2">
                                     <div>
                                         <div className="font-bold text-[#441170] dark:text-purple-300">
                                             {p.lastName}, {p.firstName}
@@ -447,18 +447,18 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             {formatDate(p.history.date)}
                                         </div>
                                     </div>
-                                    <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-[10px] shrink-0">
+                                    <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-[10px] shrink-0 w-20 justify-center">
                                         {(p.history.grade || 'Ungraded').split(' -')[0]}
                                     </Badge>
                                 </div>
-                                
-                                <div className="text-sm text-slate-600 dark:text-slate-400 mt-2 line-clamp-1 italic">
+
+                                <div className="text-sm text-slate-600 dark:text-slate-400 mt-1 line-clamp-1 italic">
                                     {p.history.procedure || 'Unknown Procedure'}
                                 </div>
 
-                                <div className="flex items-center gap-1.5 mt-3">
+                                <div className="flex items-center gap-1.5 mt-1.5">
                                     {timelineEvents.map((e, idx) => (
-                                        <div 
+                                        <div
                                             key={idx}
                                             className={`
                                                 h-2 w-2 rounded-full

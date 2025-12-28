@@ -34,7 +34,7 @@ export const DropdownMenuTrigger: React.FC<{ children: React.ReactNode }> = ({ c
     <button
       ref={context.triggerRef}
       onClick={() => context.setOpen(!context.open)}
-      className="inline-flex"
+      className="inline-flex transition-transform duration-200 active:scale-95"
     >
       {children}
     </button>
@@ -46,6 +46,7 @@ export const DropdownMenuContent: React.FC<{ children: React.ReactNode; classNam
   if (!context) throw new Error('DropdownMenuContent must be used within DropdownMenu');
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const [animationPhase, setAnimationPhase] = React.useState<'entering' | 'entered' | 'exiting'>('entering');
 
   useEffect(() => {
     if (!context.open) return;
@@ -65,19 +66,54 @@ export const DropdownMenuContent: React.FC<{ children: React.ReactNode; classNam
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [context]);
 
+  useEffect(() => {
+    if (context.open) {
+      setAnimationPhase('entering');
+      const timer = setTimeout(() => setAnimationPhase('entered'), 150);
+      return () => clearTimeout(timer);
+    }
+  }, [context.open]);
+
   if (!context.open) return null;
+
+  // Calculate position to prevent overflow
+  const getPosition = () => {
+    if (!context.triggerRef.current) return { top: 0, left: 0 };
+
+    const triggerRect = context.triggerRef.current.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const estimatedMenuWidth = 224; // w-56 = 14rem = 224px
+
+    const top = triggerRect.bottom + 8 + window.scrollY;
+    let left = triggerRect.left + window.scrollX;
+
+    // If menu would overflow the right edge, align it to the right
+    if (left + estimatedMenuWidth > viewportWidth) {
+      left = viewportWidth - estimatedMenuWidth - 16; // 16px padding from edge
+    }
+
+    // Ensure menu doesn't go off the left edge
+    if (left < 8) {
+      left = 8;
+    }
+
+    return { top, left };
+  };
+
+  const position = getPosition();
+
+  const animationClass = animationPhase === 'entering'
+    ? 'animate-in fade-in slide-in-from-top-1 zoom-in-95 duration-150'
+    : '';
 
   return createPortal(
     <div
       ref={contentRef}
-      className={`absolute z-50 min-w-[12rem] overflow-hidden rounded-md border border-slate-200 bg-white p-1 text-slate-950 shadow-md dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 ${className || ''}`}
+      className={`absolute z-50 min-w-[12rem] overflow-hidden rounded-md border border-slate-200 bg-white p-1 text-slate-950 shadow-md dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 ${className || ''} ${animationClass}`}
       style={{
-        top: context.triggerRef.current
-          ? context.triggerRef.current.getBoundingClientRect().bottom + 8
-          : 0,
-        left: context.triggerRef.current
-          ? context.triggerRef.current.getBoundingClientRect().left
-          : 0,
+        top: position.top,
+        left: position.left,
+        transformOrigin: 'top center',
       }}
     >
       {children}
@@ -101,7 +137,7 @@ export const DropdownMenuItem: React.FC<{
   return (
     <div
       onClick={handleClick}
-      className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50 ${className || ''}`}
+      className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-all duration-150 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50 hover:pl-3 ${className || ''}`}
     >
       {children}
     </div>
