@@ -11,9 +11,23 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.11.0",
+      codename: "Suxamethonium",
+      highlight: true,
+      changes: [
+        "Migrated all custom UI components to shadcn/ui for improved accessibility and consistency.",
+        "Replaced react-hot-toast with shadcn's Sonner for better toast notifications.",
+        "Added proper Radix UI primitives for Dialog, Sheet, DropdownMenu, and Accordion components.",
+        "Extended Button component with headerAction variant for header controls.",
+        "Extended Badge component with allergy-grade variants (grade4, grade3, grade2, grade1, ungraded).",
+        "Improved keyboard navigation and screen reader support throughout the application.",
+        "Added CSS variables for proper theming support in shadcn/ui components.",
+        "Created lib/utils.ts with cn() utility function for better className management.",
+      ]
+    },
+    {
       version: "v0.10.0",
       codename: "Sevoflurane",
-      highlight: true,
       changes: [
         "Enhanced PWA capabilities with comprehensive offline support and automatic updates.",
         "Implemented smart caching strategies for faster loading and offline access.",
