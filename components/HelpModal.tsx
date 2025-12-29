@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, Button } from './ui';
-import { 
-  HelpCircle, 
-  LayoutDashboard, 
-  Search, 
-  Upload, 
-  User, 
-  MousePointer,
+import { Dialog, DialogContent, DialogHeader, DialogTitle, Button, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui';
+import {
+  HelpCircle,
+  LayoutDashboard,
+  Search,
+  Upload,
+  User,
   ChevronRight,
   Activity,
   FileSpreadsheet,
   Filter,
-  Sparkles
+  Sparkles,
+  ExternalLink,
+  FileUp
 } from 'lucide-react';
 import { parseRedcapCSV } from '../lib/utils';
 import { Patient } from '../types';
@@ -21,67 +22,47 @@ interface HelpSection {
   icon: React.ReactNode;
   title: string;
   steps: string[];
-  hasButton?: boolean;
 }
 
 const HELP_SECTIONS: HelpSection[] = [
   {
     icon: <LayoutDashboard className="w-5 h-5 text-[#441170]" />,
-    title: "Dashboard Overview",
+    title: "Dashboard",
     steps: [
-      "View key statistics at the top: total patients, severe reactions, abandoned procedures, and average reaction time.",
-      "The patient list shows all records with date, name, procedure, timeline, and reaction grade.",
-      "Click any patient row to view their full clinical details."
+      "View key stats: total patients, severe reactions, abandoned procedures.",
+      "Click any patient row to view full clinical details."
     ]
   },
   {
     icon: <Search className="w-5 h-5 text-[#441170]" />,
-    title: "Search & Filters",
+    title: "Search & Filter",
     steps: [
-      "Use the search box to find patients by name, MRN, or suspected agent.",
-      "Click the 'Filters' button to open advanced filtering options.",
-      "Filter by reaction grade, date range, hospital, outcome, or suspected agents.",
-      "Selecting multiple agents will show only patients with ALL selected agents."
-    ]
-  },
-  {
-    icon: <Upload className="w-5 h-5 text-[#441170]" />,
-    title: "Update Database",
-    steps: [
-      "Click the 'Upload CSV' button at the bottom of this guide.",
-      "Export data from REDCap using 'CSV / Microsoft Excel (labels)' format.",
-      "Select the exported CSV file to update the patient database.",
-      "The dashboard will refresh with the new data automatically."
+      "Search by name, MRN, or suspected agent.",
+      "Use filters for grade, date range, hospital, outcome, or agents."
     ]
   },
   {
     icon: <User className="w-5 h-5 text-[#441170]" />,
     title: "Patient Details",
     steps: [
-      "Click on any patient row in the table to view their full record.",
       "Review clinical history, suspected agents, and test results.",
-      "View the timeline of the patient's reaction and testing.",
-      "Navigate back to the dashboard using the breadcrumb or back button."
+      "View reaction timeline and navigate back via breadcrumbs."
     ]
   },
   {
     icon: <Activity className="w-5 h-5 text-[#441170]" />,
-    title: "Allergy Testing",
+    title: "Testing",
     steps: [
-      "Record skin prick test (SPT) and intradermal test (IDT) results.",
-      "Document drug challenge outcomes and observations.",
-      "Track positive and negative reactions to various agents.",
-      "Generate testing plans for upcoming clinic appointments."
+      "Record SPT, IDT results and drug challenge outcomes.",
+      "Generate testing plans for upcoming appointments."
     ]
   },
   {
     icon: <FileSpreadsheet className="w-5 h-5 text-[#441170]" />,
-    title: "Reaction History",
+    title: "Database",
     steps: [
-      "View detailed timelines of perioperative reactions.",
-      "Review suspected agents and medications administered.",
-      "Check reaction severity grading (Ring & Messmer classification).",
-      "Access procedure outcomes and follow-up information."
+      "Upload CSV exports from REDCap to update patient data.",
+      "View detailed reaction timelines and severity grades."
     ]
   }
 ];
@@ -92,6 +73,7 @@ interface HelpModalProps {
 
 export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isUploadSheetOpen, setIsUploadSheetOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-open on page load
@@ -105,14 +87,14 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    
+
     if (file && onUploadPatients) {
       const reader = new FileReader();
       reader.onload = (event) => {
         try {
           const text = event.target?.result as string;
           const result = parseRedcapCSV(text);
-          
+
           if (result.success) {
             onUploadPatients(result.data);
             toast.success(
@@ -121,6 +103,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
                 <span className="text-sm font-normal">Successfully loaded {result.data.length} records from CSV.</span>
               </div>
             );
+            setIsUploadSheetOpen(false);
             setIsOpen(false);
           } else {
             toast.error(
@@ -136,8 +119,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
       };
       reader.readAsText(file);
     }
-    
-    // Reset file input
+
     if (e.target) {
       e.target.value = '';
     }
@@ -145,10 +127,10 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
 
   return (
     <>
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        className="w-full justify-start px-4 py-3 h-auto rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium" 
+      <Button
+        variant="ghost"
+        size="sm"
+        className="w-full justify-start px-4 py-3 h-auto rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium"
         onClick={() => setIsOpen(true)}
         data-help-modal-trigger
       >
@@ -165,7 +147,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
         className="hidden"
       />
 
-      <Dialog open={isOpen} onOpenChange={handleClose} className="!max-w-6xl max-h-[90vh] overflow-y-auto">
+      <Dialog open={isOpen} onOpenChange={handleClose} className="!max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogContent>
           <DialogHeader className="pb-4">
             <DialogTitle className="flex items-center gap-2 text-lg">
@@ -185,35 +167,34 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
                   Welcome to the RPAH Anaesthetic Allergy Clinic Tool
                 </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-300">
-                  This application helps you manage and explore patient data from the REDCap database. 
-                  Browse the guide below to get started, or click anywhere outside to begin.
+                  Browse patient data, record test results, and manage clinical records from REDCap.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Two-column grid on desktop */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {HELP_SECTIONS.map((section) => (
-              <div 
+              <div
                 key={section.title}
-                className="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800"
+                className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800"
               >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#441170]/10 dark:bg-purple-900/30">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#441170]/10 dark:bg-purple-900/30">
                     {section.icon}
                   </div>
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
                     {section.title}
                   </h3>
                 </div>
-                <ul className="space-y-2 ml-11">
+                <ul className="space-y-1.5 ml-9">
                   {section.steps.map((step, stepIndex) => (
-                    <li 
+                    <li
                       key={stepIndex}
-                      className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400"
+                      className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-400"
                     >
-                      <ChevronRight className="w-4 h-4 text-[#441170] shrink-0 mt-0.5" />
+                      <ChevronRight className="w-3.5 h-3.5 text-[#441170] shrink-0 mt-0.5" />
                       <span>{step}</span>
                     </li>
                   ))}
@@ -223,40 +204,125 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
           </div>
 
           {/* Quick Tips - Full Width */}
-          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-900/40 mt-4">
-            <div className="flex items-center gap-2 mb-2">
-              <MousePointer className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-900/40 mt-4">
+            <div className="flex items-center gap-2 mb-1.5">
+              <Filter className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span className="font-medium text-blue-700 dark:text-blue-300 text-sm">
                 Quick Tips
               </span>
             </div>
-            <ul className="space-y-1.5 text-sm text-blue-700 dark:text-blue-300">
+            <ul className="space-y-1 text-xs text-blue-700 dark:text-blue-300">
               <li className="flex items-start gap-2">
-                <FileSpreadsheet className="w-4 h-4 shrink-0 mt-0.5" />
+                <FileSpreadsheet className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                 <span>Export from REDCap using "CSV / Microsoft Excel (labels)" format.</span>
               </li>
               <li className="flex items-start gap-2">
-                <Filter className="w-4 h-4 shrink-0 mt-0.5" />
+                <Filter className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                 <span>The filter badge shows the number of active filter criteria.</span>
               </li>
             </ul>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <div className="flex flex-col sm:flex-row gap-3 mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
             {onUploadPatients && (
-              <Button
-                onClick={() => {
-                  setIsOpen(false);
-                  fileInputRef.current?.click();
-                }}
-                size="lg"
-                variant="outline"
-                className="flex-1 border-2 border-[#441170] text-[#441170] hover:bg-[#441170] hover:text-white dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-400 dark:hover:text-white"
-              >
-                <Upload className="w-5 h-5 mr-2" />
-                Upload CSV
-              </Button>
+              <Sheet open={isUploadSheetOpen} onOpenChange={setIsUploadSheetOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="flex-1 border-2 border-[#441170] text-[#441170] hover:bg-[#441170] hover:text-white dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-400 dark:hover:text-white"
+                  >
+                    <Upload className="w-5 h-5 mr-2" />
+                    Upload CSV
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader className="mb-6">
+                    <SheetTitle className="flex items-center gap-2">
+                      <FileUp className="w-5 h-5 text-red-600" />
+                      Update Database
+                    </SheetTitle>
+                    <SheetDescription>
+                      Instructions for exporting patient data from REDCap and importing it here.
+                    </SheetDescription>
+                  </SheetHeader>
+
+                  <div className="space-y-6">
+                    <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800">
+                      <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
+                        <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
+                      </h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
+                        Go to <a href="https://redcap.slhd.nsw.gov.au/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline font-medium">redcap.slhd.nsw.gov.au</a> and log in with your credentials.
+                      </p>
+                      <p className="text-xs text-slate-500 italic">(You must have data export rights)</p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex gap-3">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                          2
+                        </div>
+                        <div className="text-sm text-slate-600 dark:text-slate-300">
+                          Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Data Exports, Reports, and Stats</span> on the sidebar.
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                          3
+                        </div>
+                        <div className="text-sm text-slate-600 dark:text-slate-300">
+                          Find the <span className="font-semibold text-slate-900 dark:text-slate-100">All data (all records and fields)</span> row.
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                          4
+                        </div>
+                        <div className="text-sm text-slate-600 dark:text-slate-300">
+                          Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span>.
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                          5
+                        </div>
+                        <div className="text-sm text-slate-600 dark:text-slate-300">
+                          Choose <span className="font-semibold text-slate-900 dark:text-slate-100">CSV / Microsoft Excel (labels)</span> as the export format.
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                          6
+                        </div>
+                        <div className="text-sm text-slate-600 dark:text-slate-300">
+                          Click <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span> and download the file.
+                        </div>
+                      </div>
+
+                      <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-100 dark:border-blue-900/40 text-xs text-blue-700 dark:text-blue-300">
+                        Filename format should resemble:<br/>
+                        <span className="font-mono">AnaestheticAllergyCl_DATA_LABELS_YYYY-MM-DD_time.csv</span>
+                      </div>
+                    </div>
+
+                    <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+                      <Button
+                        className="w-full h-12 text-base shadow-lg hover:shadow-red-500/20 transition-all bg-red-600 hover:bg-red-700 text-white"
+                        size="lg"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <Upload className="w-4 h-4 mr-2" /> Select CSV File
+                      </Button>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             )}
             <Button
               onClick={() => setIsOpen(false)}
