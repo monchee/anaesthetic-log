@@ -11,9 +11,19 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.12.0",
+      codename: "Propofol",
+      highlight: true,
+      changes: [
+        "Condensed Quick Start Guide - now more compact and easier to scan.",
+        "Upload CSV now opens instruction side sheet (matches Dashboard).",
+        "Added step-by-step REDCap export instructions to upload flow.",
+      ]
+    },
+    {
       version: "v0.11.0",
       codename: "Suxamethonium",
-      highlight: true,
+      highlight: false,
       changes: [
         "Improved accessibility throughout the app - better keyboard navigation and screen reader support.",
         "Updated notification messages to be clearer and less intrusive.",
