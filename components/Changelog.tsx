@@ -11,9 +11,19 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.13.0",
+      codename: "Neostigmine",
+      highlight: true,
+      changes: [
+        "Added legal and governance documentation pages (Privacy Policy, Clinical Governance, Terms of Use, Technical Documentation, Disclaimer).",
+        "Content aligned with Australian healthcare standards (OAIC Privacy Principles, NSQHS Clinical Governance Standard, NSW Health guidelines).",
+        "New footer section with legal links for easy access to compliance information.",
+      ]
+    },
+    {
       version: "v0.12.0",
       codename: "Propofol",
-      highlight: true,
+      highlight: false,
       changes: [
         "Condensed Quick Start Guide - now more compact and easier to scan.",
         "Upload CSV now opens instruction side sheet (matches Dashboard).",

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, Shield, ShieldCheck, FileCheck, Cpu, AlertTriangle } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from './components/PatientSelector';
 import PatientHistory from './components/PatientHistory';
@@ -16,6 +16,11 @@ import FAQPage from './components/FAQPage';
 import DrugReferencePage from './components/DrugReferencePage';
 import ContactPage from './components/ContactPage';
 import ResourcesPage from './components/ResourcesPage';
+import PrivacyPolicyPage from './components/PrivacyPolicyPage';
+import ClinicalGovernancePage from './components/ClinicalGovernancePage';
+import TermsOfUsePage from './components/TermsOfUsePage';
+import TechnicalDocumentationPage from './components/TechnicalDocumentationPage';
+import DisclaimerPage from './components/DisclaimerPage';
 import { ScreenLayout } from './components/ScreenLayout';
 import { ThemeProvider } from './components/ThemeProvider';
 import { FontSizeProvider } from './components/FontSizeProvider';
@@ -193,6 +198,121 @@ function AnaestheticLogApp() {
                 }
             >
                 <ResourcesPage setScreen={setScreen} />
+            </ScreenLayout>
+        );
+    }
+
+    if (screen === Screen.PRIVACY_POLICY) {
+        return (
+            <ScreenLayout
+                title="Privacy Policy"
+                subtitle="How we protect your health information"
+                icon={<Shield className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <PrivacyPolicyPage setScreen={setScreen} />
+            </ScreenLayout>
+        );
+    }
+
+    if (screen === Screen.CLINICAL_GOVERNANCE) {
+        return (
+            <ScreenLayout
+                title="Clinical Governance"
+                subtitle="Our commitment to clinical safety and quality"
+                icon={<ShieldCheck className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <ClinicalGovernancePage setScreen={setScreen} />
+            </ScreenLayout>
+        );
+    }
+
+    if (screen === Screen.TERMS_OF_USE) {
+        return (
+            <ScreenLayout
+                title="Terms of Use"
+                subtitle="Legal terms for using this application"
+                icon={<FileCheck className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <TermsOfUsePage setScreen={setScreen} />
+            </ScreenLayout>
+        );
+    }
+
+    if (screen === Screen.TECHNICAL_DOCUMENTATION) {
+        return (
+            <ScreenLayout
+                title="Technical Documentation"
+                subtitle="Architecture, security, and technical specifications"
+                icon={<Cpu className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <TechnicalDocumentationPage setScreen={setScreen} />
+            </ScreenLayout>
+        );
+    }
+
+    if (screen === Screen.DISCLAIMER) {
+        return (
+            <ScreenLayout
+                title="Disclaimer"
+                subtitle="Important medical and legal information"
+                icon={<AlertTriangle className="w-5 h-5" />}
+                setScreen={setScreen}
+                databaseDate={databaseDate}
+                showDisclaimer={showDisclaimer}
+                isCustomData={hasUploadedData}
+                onDismissDisclaimer={handleDismissDisclaimer}
+                onUploadPatients={handleUploadPatients}
+                actions={
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    </Button>
+                }
+            >
+                <DisclaimerPage setScreen={setScreen} />
             </ScreenLayout>
         );
     }

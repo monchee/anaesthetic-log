@@ -10,7 +10,12 @@ export enum Screen {
   FAQ = 'faq',
   DRUG_REFERENCE = 'drug-reference',
   CONTACT = 'contact',
-  RESOURCES = 'resources'
+  RESOURCES = 'resources',
+  PRIVACY_POLICY = 'privacy-policy',
+  CLINICAL_GOVERNANCE = 'clinical-governance',
+  TERMS_OF_USE = 'terms-of-use',
+  TECHNICAL_DOCUMENTATION = 'technical-documentation',
+  DISCLAIMER = 'disclaimer'
 }
 
 export interface CategoryTheme {

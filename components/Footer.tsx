@@ -18,6 +18,14 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
     { label: 'Resources', screen: Screen.RESOURCES },
   ];
 
+  const legalLinks = [
+    { label: 'Privacy', screen: Screen.PRIVACY_POLICY },
+    { label: 'Governance', screen: Screen.CLINICAL_GOVERNANCE },
+    { label: 'Terms', screen: Screen.TERMS_OF_USE },
+    { label: 'Technical', screen: Screen.TECHNICAL_DOCUMENTATION },
+    { label: 'Disclaimer', screen: Screen.DISCLAIMER },
+  ];
+
   return (
     <footer className="border-t border-slate-200 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm no-print">
       <div className="max-w-6xl mx-auto px-6 py-4">
@@ -29,6 +37,19 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
                 key={link.screen}
                 onClick={() => setScreen(link.screen)}
                 className="text-slate-500 dark:text-slate-400 hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors"
+              >
+                {link.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Legal Links */}
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs">
+            {legalLinks.map((link) => (
+              <button
+                key={link.screen}
+                onClick={() => setScreen(link.screen)}
+                className="text-slate-400 dark:text-slate-500 hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors"
               >
                 {link.label}
               </button>
@@ -53,7 +74,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
                 onClick={() => setScreen(Screen.CHANGELOG)}
                 className="hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors font-medium"
               >
-                v0.12.0
+                v0.13.0
               </button>
             </div>
           </div>
