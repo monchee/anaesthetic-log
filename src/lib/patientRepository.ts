@@ -8,8 +8,9 @@ export function searchPatients(patients: Patient[] | null | undefined, searchTer
   if (!term) return patients;
 
   return patients.filter((patient) => {
+    const fullName = `${patient.firstName} ${patient.lastName}`.toLowerCase();
     const searchableText = [
-      patient.name,
+      fullName,
       patient.mrn,
       patient.city,
       patient.id,
@@ -23,7 +24,7 @@ export function filterByGrade(patients: Patient[], grade: string): Patient[] {
   if (grade === 'all') return patients;
 
   return patients.filter((patient) =>
-    patient.reaction_history?.some((reaction) => reaction.grade === grade)
+    patient.history?.grade === grade
   );
 }
 
@@ -31,7 +32,7 @@ export function filterByOutcome(patients: Patient[], outcome: string): Patient[]
   if (outcome === 'all') return patients;
 
   return patients.filter((patient) =>
-    patient.reaction_history?.some((reaction) => reaction.outcome === outcome)
+    patient.history?.grade === outcome // Using grade as outcome proxy
   );
 }
 
@@ -49,8 +50,16 @@ export function sortPatients(
   order: 'asc' | 'desc'
 ): Patient[] {
   return [...patients].sort((a, b) => {
-    const aValue = a[field];
-    const bValue = b[field];
+    let aValue: string;
+    let bValue: string;
+
+    if (field === 'name') {
+      aValue = `${a.firstName} ${a.lastName}`;
+      bValue = `${b.firstName} ${b.lastName}`;
+    } else {
+      aValue = a[field];
+      bValue = b[field];
+    }
 
     const comparison = aValue.localeCompare(bValue);
 
@@ -62,8 +71,8 @@ export function getUniqueDrugs(patients: Patient[]): string[] {
   const drugs = new Set<string>();
 
   patients.forEach((patient) => {
-    patient.reaction_history?.forEach((reaction) => {
-      drugs.add(reaction.drug);
+    patient.history?.suspectedAgents?.forEach((drug) => {
+      drugs.add(drug);
     });
   });
 
@@ -79,7 +88,7 @@ export function getDrugCategories(
   Object.entries(drugCategories).forEach(([category, drugs]) => {
     const usedDrugs = drugs.filter((drug) =>
       patients.some((patient) =>
-        patient.reaction_history?.some((reaction) => reaction.drug === drug)
+        patient.history?.suspectedAgents?.includes(drug)
       )
     );
 
@@ -94,7 +103,8 @@ export function getDrugCategories(
 export function validatePatient(patient: Patient): boolean {
   return !!(
     patient.id &&
-    patient.name &&
+    patient.firstName &&
+    patient.lastName &&
     patient.mrn
   );
 }

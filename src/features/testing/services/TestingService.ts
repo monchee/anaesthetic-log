@@ -77,7 +77,7 @@ export class TestingService {
       // Add timestamp
       const record: LogFormData = {
         ...formData,
-        submittedAt: new Date().toISOString()
+        timestamp: new Date().toISOString()
       };
 
       // Save to recent logs
