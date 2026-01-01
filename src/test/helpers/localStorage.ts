@@ -35,7 +35,6 @@ export class MockLocalStorage {
  */
 export function setupLocalStorageMock(): MockLocalStorage {
   const mockStorage = new MockLocalStorage();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   globalThis.localStorage = mockStorage as any;
   return mockStorage;
 }
@@ -50,7 +49,6 @@ export function clearLocalStorageMock(): void {
 /**
  * Set localStorage item for testing
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setLocalStorageItem(key: string, value: any): void {
   globalThis.localStorage.setItem(key, JSON.stringify(value));
 }

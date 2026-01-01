@@ -42,7 +42,6 @@ const localStorageMock = (() => {
   };
 })();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 globalThis.localStorage = localStorageMock as any;
 
 // Mock window.matchMedia
