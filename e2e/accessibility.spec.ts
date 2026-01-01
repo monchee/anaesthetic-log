@@ -115,7 +115,7 @@ test.describe('Accessibility Tests', () => {
           resolve(results.violations);
         });
       });
-    });
+    }) as any[];
 
     const contrastViolations = violations.filter((v: any) => v.id === 'color-contrast');
     expect(contrastViolations.length).toBe(0);
@@ -222,8 +222,7 @@ test.describe('Accessibility Tests', () => {
 
     const hasFocusIndicator =
       styles.outline !== 'none' ||
-      styles.boxShadow !== 'none' ||
-      styles.outline !== '';
+      styles.boxShadow !== 'none';
 
     expect(hasFocusIndicator).toBeTruthy();
   });
@@ -276,7 +275,7 @@ test.describe('Automated Accessibility Scans', () => {
           resolve(results.violations);
         });
       });
-    });
+    }) as any[];
 
     // Log violations for debugging
     if (violations.length > 0) {
@@ -297,7 +296,7 @@ test.describe('Automated Accessibility Scans', () => {
           resolve(results.violations);
         });
       });
-    });
+    }) as any[];
 
     expect(violations.length).toBe(0);
   });
@@ -313,7 +312,7 @@ test.describe('Automated Accessibility Scans', () => {
           resolve(results.violations);
         });
       });
-    });
+    }) as any[];
 
     expect(violations.length).toBe(0);
   });

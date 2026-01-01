@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger, LoadingSpinner } from './ui';
+import { Card, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui';
 import { Search, Thermometer, Upload, ChevronLeft, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, FileText, ExternalLink, FileUp, AlertTriangle } from 'lucide-react';
 import { formatDate, parseRedcapCSV, getGradeVariant, parsePatientTimeline } from '../lib/utils';
 import { Screen, Patient, LogFormData } from '../types';
@@ -313,7 +313,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             >
                                                 {isUploading ? (
                                                     <>
-                                                        <LoadingSpinner size="sm" className="mr-2" />
+                                                        <span className="animate-spin mr-2">⌛</span>
                                                         Processing...
                                                     </>
                                                 ) : (
@@ -422,7 +422,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                                 onSelectPatient(p);
                                             }
                                         }}
-                                        aria-label={`View details for patient: ${p.name}`}
+                                        aria-label={`View details for patient: ${p.firstName} ${p.lastName}`}
                                         title="Click to view patient details"
                                     >
                                         <td className="px-4 py-3 whitespace-nowrap text-slate-500 dark:text-slate-400 font-mono text-xs">

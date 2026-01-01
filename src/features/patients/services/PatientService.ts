@@ -1,4 +1,4 @@
-import { Patient } from '../../../types';
+import { Patient } from '../../../../types';
 import { PatientRepository } from './PatientRepository';
 
 /**

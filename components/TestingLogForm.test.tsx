@@ -6,32 +6,52 @@ import { LogFormData, Patient } from '../types';
 
 const mockPatient: Patient = {
   id: '1',
-  name: 'John Doe',
+  firstName: 'John',
+  lastName: 'Doe',
   dob: '1980-01-01',
   mrn: 'MRN001',
   gender: 'Male',
   city: 'Sydney',
-  reaction_history: [],
+  history: {
+    date: '',
+    grade: '',
+    reactionSummary: '',
+    symptoms: [],
+    treatment: [],
+    suspectedAgents: [],
+    procedure: '',
+    anaesthetist: '',
+  },
 };
 
 const mockFormData: LogFormData = {
-  patient: mockPatient,
-  testingDate: new Date().toISOString(),
-  drugs: ['Rocuronium'],
-  testTypes: {
-    Rocuronium: ['SPT', 'IDT'],
+  mrn: 'MRN001',
+  firstName: 'John',
+  lastName: 'Doe',
+  visitDate: new Date().toISOString().split('T')[0],
+  controls: {
+    histamineSpt: '5',
+    salineSpt: '0',
+    salineIdt: '0',
   },
-  testResults: {
-    Rocuronium: {
+  testPanel: [
+    {
+      drugName: 'Rocuronium',
       sptWheal: '3',
       idt100: '5',
       idt10: '8',
       idtNeat: '10',
     },
-  },
+  ],
+  proceedToChallenge: false,
+  challengeDrug: '',
+  outcome: null,
+  reactionTime: '',
   symptoms: [],
-  interventions: [],
-  challenge: null,
+  symptomsOther: '',
+  interventionType: '',
+  interventionOther: '',
+  plan: '',
 };
 
 const mockDrugCategories = {
@@ -270,14 +290,25 @@ describe('TestingLogForm', () => {
 
     it('validates required fields before submission', async () => {
       const emptyFormData: LogFormData = {
-        patient: mockPatient,
-        testingDate: new Date().toISOString(),
-        drugs: [],
-        testTypes: {},
-        testResults: {},
+        mrn: '',
+        firstName: '',
+        lastName: '',
+        visitDate: '',
+        controls: {
+          histamineSpt: '',
+          salineSpt: '',
+          salineIdt: '',
+        },
+        testPanel: [],
+        proceedToChallenge: false,
+        challengeDrug: '',
+        outcome: null,
+        reactionTime: '',
         symptoms: [],
-        interventions: [],
-        challenge: null,
+        symptomsOther: '',
+        interventionType: '',
+        interventionOther: '',
+        plan: '',
       };
 
       render(<TestingLogForm {...mockProps} formData={emptyFormData} />);
@@ -303,14 +334,25 @@ describe('TestingLogForm', () => {
 
     it('announces form errors to screen readers', async () => {
       const emptyFormData: LogFormData = {
-        patient: mockPatient,
-        testingDate: new Date().toISOString(),
-        drugs: [],
-        testTypes: {},
-        testResults: {},
+        mrn: '',
+        firstName: '',
+        lastName: '',
+        visitDate: '',
+        controls: {
+          histamineSpt: '',
+          salineSpt: '',
+          salineIdt: '',
+        },
+        testPanel: [],
+        proceedToChallenge: false,
+        challengeDrug: '',
+        outcome: null,
+        reactionTime: '',
         symptoms: [],
-        interventions: [],
-        challenge: null,
+        symptomsOther: '',
+        interventionType: '',
+        interventionOther: '',
+        plan: '',
       };
 
       render(<TestingLogForm {...mockProps} formData={emptyFormData} />);

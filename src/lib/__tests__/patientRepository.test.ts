@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Patient } from '../../types';
+import { Patient } from '../../../types';
 import * as patientRepository from '../patientRepository';
 
 describe('Patient Repository', () => {

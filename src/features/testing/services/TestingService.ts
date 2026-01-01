@@ -1,4 +1,4 @@
-import { LogFormData, DrugTestRow } from '../../../types';
+import { LogFormData, DrugTestRow } from '../../../../types';
 
 /**
  * Service for testing-related business logic

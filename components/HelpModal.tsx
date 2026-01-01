@@ -227,7 +227,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
           <div className="flex flex-col sm:flex-row gap-3 mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
             {onUploadPatients && (
               <Sheet open={isUploadSheetOpen} onOpenChange={setIsUploadSheetOpen}>
-                <SheetTrigger asChild>
+                <SheetTrigger>
                   <Button
                     size="lg"
                     variant="outline"

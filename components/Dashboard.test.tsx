@@ -26,41 +26,73 @@ vi.mock('../hooks/useCountUp', () => ({
 const mockPatients: Patient[] = [
   {
     id: '1',
-    name: 'John Doe',
+    firstName: 'John',
+    lastName: 'Doe',
     dob: '1980-01-01',
     mrn: 'MRN001',
     gender: 'Male',
     city: 'Sydney',
-    reaction_history: [
-      {
-        drug: 'Rocuronium',
-        grade: '3',
-        outcome: 'Abandoned',
-      },
-    ],
+    history: {
+      date: '2023-01-01',
+      grade: '3',
+      reactionSummary: 'Severe reaction to Rocuronium',
+      symptoms: [{ label: 'Anaphylaxis' }],
+      treatment: ['Adrenaline'],
+      suspectedAgents: ['Rocuronium'],
+      procedure: 'Surgery',
+      anaesthetist: 'Dr. Smith',
+    },
   },
   {
     id: '2',
-    name: 'Jane Smith',
+    firstName: 'Jane',
+    lastName: 'Smith',
     dob: '1990-05-15',
     mrn: 'MRN002',
     gender: 'Female',
     city: 'Melbourne',
-    reaction_history: [],
+    history: {
+      date: '',
+      grade: '',
+      reactionSummary: '',
+      symptoms: [],
+      treatment: [],
+      suspectedAgents: [],
+      procedure: '',
+      anaesthetist: '',
+    },
   },
 ];
 
 const mockLogs: LogFormData[] = [
   {
-    patient: mockPatients[0],
-    testingDate: new Date().toISOString(),
-    drugs: ['Rocuronium'],
-    testTypes: {
-      Rocuronium: ['SPT', 'IDT'],
+    mrn: 'MRN001',
+    firstName: 'John',
+    lastName: 'Doe',
+    visitDate: new Date().toISOString().split('T')[0],
+    controls: {
+      histamineSpt: '5',
+      salineSpt: '0',
+      salineIdt: '0',
     },
-    testResults: {},
+    testPanel: [
+      {
+        drugName: 'Rocuronium',
+        sptWheal: '8',
+        idt100: '5',
+        idt10: '0',
+        idtNeat: '0',
+      },
+    ],
+    proceedToChallenge: false,
+    challengeDrug: '',
+    outcome: null,
+    reactionTime: '',
     symptoms: [],
-    challenge: null,
+    symptomsOther: '',
+    interventionType: '',
+    interventionOther: '',
+    plan: '',
   },
 ];
 
@@ -174,7 +206,25 @@ describe('Dashboard', () => {
       const { parseRedcapCSV } = await import('../lib/utils');
       (parseRedcapCSV as any).mockReturnValue({
         success: true,
-        data: [...mockPatients, { id: '3', name: 'New Patient', dob: '1995-01-01', mrn: 'MRN003', gender: 'Male', city: 'Brisbane', reaction_history: [] }],
+        data: [...mockPatients, {
+          id: '3',
+          firstName: 'New',
+          lastName: 'Patient',
+          dob: '1995-01-01',
+          mrn: 'MRN003',
+          gender: 'Male',
+          city: 'Brisbane',
+          history: {
+            date: '',
+            grade: '',
+            reactionSummary: '',
+            symptoms: [],
+            treatment: [],
+            suspectedAgents: [],
+            procedure: '',
+            anaesthetist: '',
+          },
+        }],
       });
 
       render(<Dashboard {...mockProps} />);
@@ -209,7 +259,7 @@ describe('Dashboard', () => {
 
       fireEvent.change(fileInput, { target: { files: [file] } });
 
-      await waitFor(() => {
+      await waitFor(async () => {
         const toast = await import('react-hot-toast');
         expect(toast.default.error).toHaveBeenCalled();
       });
@@ -220,12 +270,22 @@ describe('Dashboard', () => {
     it('displays correct number of patients per page', () => {
       const manyPatients = Array.from({ length: 25 }, (_, i) => ({
         id: String(i + 1),
-        name: `Patient ${i + 1}`,
+        firstName: `Patient`,
+        lastName: `${i + 1}`,
         dob: '1980-01-01',
         mrn: `MRN${String(i + 1).padStart(3, '0')}`,
         gender: 'Male',
         city: 'Sydney',
-        reaction_history: [],
+        history: {
+          date: '',
+          grade: '',
+          reactionSummary: '',
+          symptoms: [],
+          treatment: [],
+          suspectedAgents: [],
+          procedure: '',
+          anaesthetist: '',
+        },
       }));
 
       render(<Dashboard {...mockProps} existingPatients={manyPatients} />);
@@ -238,12 +298,22 @@ describe('Dashboard', () => {
     it('navigates to next page', async () => {
       const manyPatients = Array.from({ length: 25 }, (_, i) => ({
         id: String(i + 1),
-        name: `Patient ${i + 1}`,
+        firstName: `Patient`,
+        lastName: `${i + 1}`,
         dob: '1980-01-01',
         mrn: `MRN${String(i + 1).padStart(3, '0')}`,
         gender: 'Male',
         city: 'Sydney',
-        reaction_history: [],
+        history: {
+          date: '',
+          grade: '',
+          reactionSummary: '',
+          symptoms: [],
+          treatment: [],
+          suspectedAgents: [],
+          procedure: '',
+          anaesthetist: '',
+        },
       }));
 
       render(<Dashboard {...mockProps} existingPatients={manyPatients} />);
@@ -260,12 +330,22 @@ describe('Dashboard', () => {
     it('navigates to previous page', async () => {
       const manyPatients = Array.from({ length: 25 }, (_, i) => ({
         id: String(i + 1),
-        name: `Patient ${i + 1}`,
+        firstName: `Patient`,
+        lastName: `${i + 1}`,
         dob: '1980-01-01',
         mrn: `MRN${String(i + 1).padStart(3, '0')}`,
         gender: 'Male',
         city: 'Sydney',
-        reaction_history: [],
+        history: {
+          date: '',
+          grade: '',
+          reactionSummary: '',
+          symptoms: [],
+          treatment: [],
+          suspectedAgents: [],
+          procedure: '',
+          anaesthetist: '',
+        },
       }));
 
       render(<Dashboard {...mockProps} existingPatients={manyPatients} />);

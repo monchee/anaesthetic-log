@@ -1,4 +1,4 @@
-import { Patient, LogFormData } from '../../../types';
+import { Patient, LogFormData } from '../../../../types';
 
 interface GradeCounts {
   I: number;

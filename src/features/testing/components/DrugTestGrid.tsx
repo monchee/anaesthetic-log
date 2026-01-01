@@ -1,8 +1,8 @@
 import React from 'react';
-import { Input } from '../../../components/ui';
+import { Input } from '../../../../components/ui';
 import { X } from 'lucide-react';
-import { DrugTestRow } from '../../../types';
-import { CATEGORY_THEMES, DEFAULT_THEME } from '../../../lib/constants';
+import { DrugTestRow } from '../../../../types';
+import { CATEGORY_THEMES, DEFAULT_THEME } from '../../../../lib/constants';
 
 interface DrugTestGridProps {
   testPanel: DrugTestRow[];
