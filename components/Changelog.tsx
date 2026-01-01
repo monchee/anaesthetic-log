@@ -17,7 +17,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
       changes: [
         "Internal improvements - code quality checks now run faster and more reliably.",
         "Better test coverage helps catch bugs before they reach you.",
-        "Performance optimizations make updates smoother.",
+        "Performance optimisations make updates smoother.",
       ]
     },
     {
