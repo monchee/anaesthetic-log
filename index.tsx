@@ -55,7 +55,7 @@ const createUpdateNotification = () => {
 };
 
 // Register Service Worker with improved update notification
-const updateSW = registerSW({
+registerSW({
   onNeedRefresh() {
     // Remove any existing notification first
     const existing = document.getElementById('pwa-update-notification');

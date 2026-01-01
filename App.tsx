@@ -29,7 +29,6 @@ import { Screen } from './types';
 import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from './lib/constants';
 import { useAnaestheticApp } from './hooks/useAnaestheticApp';
 import { reportWebVitals } from './src/lib/analytics';
-import * as Sentry from './src/lib/sentry';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
@@ -39,7 +38,7 @@ function AnaestheticLogApp() {
     reportWebVitals();
   }, []);
 
-  const [announcement, setAnnouncement] = React.useState('');
+  const [announcement, _setAnnouncement] = React.useState('');
 
   const {
     screen,
@@ -645,9 +644,9 @@ function AnaestheticLogApp() {
   };
 
   // Global announcement region for screen readers
-  const announce = (message: string) => {
-    setAnnouncement(message);
-    setTimeout(() => setAnnouncement(''), 1000);
+  const _announce = (message: string) => {
+    _setAnnouncement(message);
+    setTimeout(() => _setAnnouncement(''), 1000);
   };
 
   return (
