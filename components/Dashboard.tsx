@@ -359,14 +359,14 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
             
             {/* Desktop View (Table) */}
             <div className="hidden md:block overflow-x-auto">
-                <table className="w-full text-sm text-left">
+                <table role="table" aria-label="Patient database" className="w-full text-sm text-left">
                     <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
                         <tr>
-                            <th className="px-4 py-3 w-28">Date</th>
-                            <th className="px-4 py-3 w-48">Patient</th>
-                            <th className="px-4 py-3">Procedure</th> {/* Flexible width */}
-                            <th className="px-4 py-3 w-48">Timeline</th>
-                            <th className="px-4 py-3 text-center w-28">Grade</th>
+                            <th scope="col" className="px-4 py-3 w-28">Date</th>
+                            <th scope="col" className="px-4 py-3 w-48">Patient</th>
+                            <th scope="col" className="px-4 py-3">Procedure</th> {/* Flexible width */}
+                            <th scope="col" className="px-4 py-3 w-48">Timeline</th>
+                            <th scope="col" className="px-4 py-3 text-center w-28">Grade</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
@@ -374,10 +374,19 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                             paginatedPatients.map((p) => {
                                 const { events: timelineEvents } = parsePatientTimeline(p.history);
                                 return (
-                                    <tr 
-                                        key={p.id} 
+                                    <tr
+                                        key={p.id}
+                                        role="button"
+                                        tabIndex={0}
                                         className="hover:bg-slate-50/80 dark:hover:bg-slate-900/50 transition-colors cursor-pointer group"
                                         onClick={() => onSelectPatient(p)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault();
+                                                onSelectPatient(p);
+                                            }
+                                        }}
+                                        aria-label={`View details for patient: ${p.name}`}
                                         title="Click to view patient details"
                                     >
                                         <td className="px-4 py-3 whitespace-nowrap text-slate-500 dark:text-slate-400 font-mono text-xs">
@@ -492,7 +501,11 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                     <div className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
                         Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredPatients.length)} of {filteredPatients.length} records
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 sm:hidden">
+                    <div
+                        className="text-xs text-slate-500 dark:text-slate-400 sm:hidden"
+                        aria-live="polite"
+                        aria-atomic="true"
+                    >
                         Page {currentPage} of {Math.ceil(filteredPatients.length / ITEMS_PER_PAGE)}
                     </div>
                     <div className="flex items-center gap-2">
@@ -502,10 +515,15 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                             onClick={handlePrevPage}
                             disabled={currentPage === 1}
                             className="h-8 px-2"
+                            aria-label="Go to previous page"
                         >
-                            <ChevronLeft className="h-4 w-4" />
+                            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                         </Button>
-                        <div className="text-xs font-medium text-slate-700 dark:text-slate-300 px-2 hidden sm:block">
+                        <div
+                            className="text-xs font-medium text-slate-700 dark:text-slate-300 px-2 hidden sm:block"
+                            aria-live="polite"
+                            aria-atomic="true"
+                        >
                             Page {currentPage} of {Math.ceil(filteredPatients.length / ITEMS_PER_PAGE)}
                         </div>
                         <Button
@@ -514,8 +532,9 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                             onClick={handleNextPage}
                             disabled={currentPage * ITEMS_PER_PAGE >= filteredPatients.length}
                             className="h-8 px-2"
+                            aria-label="Go to next page"
                         >
-                            <ChevronRight className="h-4 w-4" />
+                            <ChevronRight className="h-4 w-4" aria-hidden="true" />
                         </Button>
                     </div>
                 </div>

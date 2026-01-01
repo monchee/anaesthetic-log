@@ -30,10 +30,20 @@ export const DropdownMenuTrigger: React.FC<{ children: React.ReactNode }> = ({ c
   const context = React.useContext(DropdownMenuContext);
   if (!context) throw new Error('DropdownMenuTrigger must be used within DropdownMenu');
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      context.setOpen(true);
+    }
+  };
+
   return (
     <button
       ref={context.triggerRef}
       onClick={() => context.setOpen(!context.open)}
+      onKeyDown={handleKeyDown}
+      aria-haspopup="true"
+      aria-expanded={context.open}
       className="inline-flex transition-transform duration-200 active:scale-95"
     >
       {children}
@@ -64,6 +74,21 @@ export const DropdownMenuContent: React.FC<{ children: React.ReactNode; classNam
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [context]);
+
+  // Close dropdown on ESC key
+  useEffect(() => {
+    if (!context.open) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        context.setOpen(false);
+        context.triggerRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, [context]);
 
   useEffect(() => {
@@ -109,6 +134,8 @@ export const DropdownMenuContent: React.FC<{ children: React.ReactNode; classNam
   return createPortal(
     <div
       ref={contentRef}
+      role="menu"
+      aria-orientation="vertical"
       className={`absolute z-50 min-w-[12rem] overflow-hidden rounded-md border border-slate-200 bg-white p-1 text-slate-950 shadow-md dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 ${className || ''} ${animationClass}`}
       style={{
         top: position.top,
@@ -134,10 +161,20 @@ export const DropdownMenuItem: React.FC<{
     context?.setOpen(false);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    }
+  };
+
   return (
     <div
+      role="menuitem"
+      tabIndex={0}
       onClick={handleClick}
-      className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-all duration-150 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50 hover:pl-3 ${className || ''}`}
+      onKeyDown={handleKeyDown}
+      className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-all duration-150 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50 hover:pl-3 focus:bg-slate-100 focus:text-slate-900 dark:focus:bg-slate-800 dark:focus:text-slate-50 ${className || ''}`}
     >
       {children}
     </div>

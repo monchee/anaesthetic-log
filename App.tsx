@@ -39,6 +39,8 @@ function AnaestheticLogApp() {
     reportWebVitals();
   }, []);
 
+  const [announcement, setAnnouncement] = React.useState('');
+
   const {
     screen,
     setScreen,
@@ -641,8 +643,27 @@ function AnaestheticLogApp() {
         </ScreenLayout>
     );
   };
-  
-  return renderScreenContent();
+
+  // Global announcement region for screen readers
+  const announce = (message: string) => {
+    setAnnouncement(message);
+    setTimeout(() => setAnnouncement(''), 1000);
+  };
+
+  return (
+    <>
+      {/* Screen reader announcement region */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {announcement}
+      </div>
+      {renderScreenContent()}
+    </>
+  );
 }
 
 function App() {

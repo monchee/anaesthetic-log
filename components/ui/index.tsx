@@ -342,9 +342,23 @@ export const Sheet = ({ children, open, onOpenChange }: { children?: React.React
 export const SheetTrigger = ({ children }: { children?: React.ReactNode }) => {
   const context = useContext(SheetContext);
   if (!context) throw new Error("SheetTrigger must be used within Sheet");
-  
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      context.setOpen(true);
+    }
+  };
+
   return (
-    <div onClick={() => context.setOpen(true)} className="inline-block cursor-pointer">
+    <div
+      onClick={() => context.setOpen(true)}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label="Open sheet"
+      className="inline-block cursor-pointer"
+    >
       {children}
     </div>
   );
