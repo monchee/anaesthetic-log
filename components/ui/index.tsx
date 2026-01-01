@@ -217,23 +217,68 @@ export const HoverCardContent = ({ children, className, ...props }: React.HTMLAt
 
 // --- Dialog ---
 export const Dialog = ({ open, onOpenChange, children, className }: { open: boolean; onOpenChange: (open: boolean) => void; children?: React.ReactNode; className?: string }) => {
+  const dialogRef = React.useRef<HTMLDivElement>(null);
+
+  // Focus trap implementation
+  React.useEffect(() => {
+    if (open && dialogRef.current) {
+      const focusableElements = dialogRef.current?.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements?.[0] as HTMLElement;
+      firstElement?.focus();
+
+      const handleTab = (e: KeyboardEvent) => {
+        if (e.key === 'Tab' && focusableElements) {
+          const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+          if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      };
+
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          onOpenChange(false);
+        }
+      };
+
+      document.addEventListener('keydown', handleTab);
+      document.addEventListener('keydown', handleEscape);
+      return () => {
+        document.removeEventListener('keydown', handleTab);
+        document.removeEventListener('keydown', handleEscape);
+      };
+    }
+  }, [open, onOpenChange]);
+
   if (!open) return null;
   return createPortal(
-    <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 flex items-center justify-center p-4">
-      <div 
+    <div
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 flex items-center justify-center p-4"
+    >
+      <div
+        ref={dialogRef}
          className={`relative w-full gap-4 border bg-white p-6 shadow-lg duration-200 rounded-lg dark:bg-slate-950 dark:border-slate-800 max-w-lg ${className || ''}`}
          onClick={(e) => e.stopPropagation()}
       >
         {children}
         <button
             onClick={() => onOpenChange(false)}
+            aria-label="Close dialog"
             className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 data-[state=open]:text-slate-500 dark:ring-offset-slate-950 dark:focus:ring-slate-300 dark:data-[state=open]:bg-slate-800 dark:data-[state=open]:text-slate-400"
         >
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </button>
       </div>
-      <div className="fixed inset-0 -z-10" onClick={() => onOpenChange(false)} />
+      <div className="fixed inset-0 -z-10" onClick={() => onOpenChange(false)} aria-hidden="true" />
     </div>,
     document.body
   );
@@ -249,11 +294,14 @@ export const DialogHeader = ({ className, children }: { className?: string; chil
   </div>
 );
 
-export const DialogTitle = ({ className, children }: { className?: string; children?: React.ReactNode }) => (
-  <h2 className={`text-lg font-semibold leading-none tracking-tight ${className || ''}`}>
-    {children}
-  </h2>
-);
+export const DialogTitle = ({ className, children }: { className?: string; children?: React.ReactNode }) => {
+  const titleId = React.useId();
+  return (
+    <h2 id={titleId} className={`text-lg font-semibold leading-none tracking-tight ${className || ''}`}>
+      {children}
+    </h2>
+  );
+};
 
 export const DialogFooter = ({ className, children }: { className?: string; children?: React.ReactNode }) => (
   <div className={`flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 ${className || ''}`}>

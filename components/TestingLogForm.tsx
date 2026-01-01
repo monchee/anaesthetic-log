@@ -130,15 +130,20 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       <Card>
         <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-                <Label className="whitespace-nowrap text-base font-semibold text-[#441170] dark:text-purple-300 flex items-center gap-2">
-                    <Calendar className="w-5 h-5" /> Visit Date:
+                <Label htmlFor="visit-date" className="whitespace-nowrap text-base font-semibold text-[#441170] dark:text-purple-300 flex items-center gap-2">
+                    <Calendar className="w-5 h-5" aria-hidden="true" /> Visit Date:
                 </Label>
-                <Input 
-                    type="date" 
+                <Input
+                    id="visit-date"
+                    type="date"
+                    aria-describedby="visit-date-hint"
                     className="max-w-[200px] font-mono"
                     value={formData.visitDate}
                     onChange={(e) => handleInputChange('visitDate', e.target.value)}
                 />
+                <span id="visit-date-hint" className="sr-only">
+                    Enter the date when the patient visited for testing
+                </span>
             </div>
         </CardContent>
       </Card>
@@ -453,13 +458,14 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-red-900 dark:text-red-200 font-semibold flex items-center gap-2">
-                                        <Stethoscope className="w-4 h-4" /> Treatment Required
+                                        <Stethoscope className="w-4 h-4" aria-hidden="true" /> Treatment Required
                                     </Label>
-                                    <Select 
-                                        value={formData.interventionType} 
+                                    <Select
+                                        value={formData.interventionType}
                                         onChange={(e) => handleInputChange('interventionType', e.target.value)}
                                         className="bg-white dark:bg-slate-950 border-red-200 focus:border-red-400 focus:ring-red-400"
                                         placeholder="Select intervention..."
+                                        aria-label="Select treatment intervention"
                                     >
                                         {interventionOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                                     </Select>
@@ -480,11 +486,14 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
                             <div className="space-y-3">
                                 <Label className="text-red-900 dark:text-red-200 font-semibold">Observed Symptoms</Label>
-                                <div className="flex flex-wrap gap-2">
+                                <div role="group" aria-label="Select observed symptoms" className="flex flex-wrap gap-2">
                                     {symptomOptions.map(sym => (
                                         <button
                                             key={sym}
                                             type="button"
+                                            role="checkbox"
+                                            aria-checked={formData.symptoms.includes(sym)}
+                                            aria-label={`${formData.symptoms.includes(sym) ? 'Remove' : 'Add'} ${sym}`}
                                             onClick={() => toggleSymptom(sym)}
                                             className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
                                                 formData.symptoms.includes(sym)
