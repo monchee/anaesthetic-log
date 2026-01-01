@@ -15,10 +15,9 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
       codename: "Rocuronium",
       highlight: true,
       changes: [
-        "Improved CI/CD pipeline - removed redundant workflows and optimized test execution.",
-        "Enhanced test coverage reporting with 80% threshold enforcement.",
-        "Removed E2E tests from automated CI (available manually for debugging).",
-        "Streamlined GitHub Actions workflow for faster builds.",
+        "Internal improvements - code quality checks now run faster and more reliably.",
+        "Better test coverage helps catch bugs before they reach you.",
+        "Performance optimizations make updates smoother.",
       ]
     },
     {
