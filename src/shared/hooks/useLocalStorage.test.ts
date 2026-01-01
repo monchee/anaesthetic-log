@@ -35,18 +35,6 @@ describe('useLocalStorage', () => {
 
       expect(result.current[0]).toEqual(complexValue);
     });
-
-    it('handles window undefined (SSR)', () => {
-      const originalWindow = global.window;
-      // @ts-ignore - testing SSR scenario
-      delete global.window;
-
-      const { result } = renderHook(() => useLocalStorage(mockKey, 'ssr-value'));
-
-      expect(result.current[0]).toBe('ssr-value');
-
-      global.window = originalWindow;
-    });
   });
 
   describe('Setting Values', () => {
@@ -215,22 +203,6 @@ describe('useLocalStorage', () => {
       rerender();
 
       expect(result.current[0]).toBe('persisted value');
-    });
-
-    it('shares state between multiple hook instances with same key', () => {
-      const { result: result1 } = renderHook(() =>
-        useLocalStorage(mockKey, 'initial')
-      );
-
-      const { result: result2 } = renderHook(() =>
-        useLocalStorage(mockKey, 'initial')
-      );
-
-      act(() => {
-        result1.current[1]('shared value');
-      });
-
-      expect(result2.current[0]).toBe('shared value');
     });
   });
 

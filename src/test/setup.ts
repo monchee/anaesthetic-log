@@ -1,27 +1,41 @@
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
-import { afterEach, vi } from 'vitest';
+import { afterEach, vi, beforeEach } from 'vitest';
 
 // Cleanup after each test
 afterEach(() => {
   cleanup();
 });
 
-// Mock localStorage
+// Store original window to restore after tests that mock it
+let originalWindow: typeof window | undefined;
+
+beforeEach(() => {
+  originalWindow = global.window;
+});
+
+afterEach(() => {
+  // Restore window if it was modified
+  if (!global.window && originalWindow) {
+    global.window = originalWindow;
+  }
+});
+
+// Mock localStorage with spies
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
 
   return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
+    getItem: vi.fn((key: string) => store[key] || null),
+    setItem: vi.fn((key: string, value: string) => {
       store[key] = value.toString();
-    },
-    removeItem: (key: string) => {
+    }),
+    removeItem: vi.fn((key: string) => {
       delete store[key];
-    },
-    clear: () => {
+    }),
+    clear: vi.fn(() => {
       store = {};
-    },
+    }),
   };
 })();
 
