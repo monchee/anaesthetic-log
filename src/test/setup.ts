@@ -8,15 +8,19 @@ afterEach(() => {
 });
 
 // Store original window to restore after tests that mock it
+/* eslint-disable-next-line no-restricted-globals */
 let originalWindow: typeof window | undefined;
 
 beforeEach(() => {
-  originalWindow = global.window;
+  /* eslint-disable-next-line no-restricted-globals */
+  originalWindow = globalThis.window;
 });
 
 afterEach(() => {
   // Restore window if it was modified
-  if (!global.window && originalWindow) {
+  /* eslint-disable-next-line no-restricted-globals */
+  if (!globalThis.window && originalWindow) {
+    /* eslint-disable-next-line no-restricted-globals */
     global.window = originalWindow;
   }
 });
