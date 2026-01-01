@@ -26,7 +26,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ children }) => {
   );
 };
 
-export const DropdownMenuTrigger: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const DropdownMenuTrigger: React.FC<{ children: React.ReactNode; className?: string; title?: string }> = ({ children, className = '', title }) => {
   const context = React.useContext(DropdownMenuContext);
   if (!context) throw new Error('DropdownMenuTrigger must be used within DropdownMenu');
 
@@ -44,7 +44,8 @@ export const DropdownMenuTrigger: React.FC<{ children: React.ReactNode }> = ({ c
       onKeyDown={handleKeyDown}
       aria-haspopup="true"
       aria-expanded={context.open}
-      className="inline-flex transition-transform duration-200 active:scale-95"
+      title={title}
+      className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 disabled:pointer-events-none disabled:opacity-50 ${className}`}
     >
       {children}
     </button>

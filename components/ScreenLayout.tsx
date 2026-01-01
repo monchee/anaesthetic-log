@@ -81,15 +81,11 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
                                 {/* Hamburger Menu */}
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="sm" 
-                                            className="h-10 w-10 px-0 rounded-lg bg-white/5 hover:bg-white/20 text-white/80 hover:text-white border border-white/5" 
-                                            title="Menu"
-                                        >
-                                            <Menu className="w-5 h-5" />
-                                        </Button>
+                                    <DropdownMenuTrigger
+                                        className="h-10 w-10 px-0 rounded-lg bg-white/5 hover:bg-white/20 text-white/80 hover:text-white border border-white/5"
+                                        title="Menu"
+                                    >
+                                        <Menu className="w-5 h-5" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56">
                                         {/* Quick Start Guide */}

@@ -1,0 +1,103 @@
+import React from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Button } from './index';
+
+interface ConfirmDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  message: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  variant?: 'danger' | 'warning' | 'info';
+  onConfirm: () => void;
+}
+
+export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
+  open,
+  onOpenChange,
+  title,
+  message,
+  confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
+  variant = 'danger',
+  onConfirm,
+}) => {
+  const handleConfirm = () => {
+    onConfirm();
+    onOpenChange(false);
+  };
+
+  const variantStyles = {
+    danger: 'bg-red-600 hover:bg-red-700 text-white',
+    warning: 'bg-amber-600 hover:bg-amber-700 text-white',
+    info: 'bg-blue-600 hover:bg-blue-700 text-white',
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="text-lg">{title}</DialogTitle>
+        </DialogHeader>
+        <div className="py-4">
+          <p className="text-sm text-slate-600 dark:text-slate-300">{message}</p>
+        </div>
+        <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            className="w-full sm:w-auto"
+          >
+            {cancelLabel}
+          </Button>
+          <Button
+            type="button"
+            onClick={handleConfirm}
+            className={`w-full sm:w-auto ${variantStyles[variant]}`}
+          >
+            {confirmLabel}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+// Hook for easier usage
+export const useConfirmDialog = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [config, setConfig] = React.useState<{
+    title: string;
+    message: string;
+    confirmLabel?: string;
+    cancelLabel?: string;
+    variant?: 'danger' | 'warning' | 'info';
+    onConfirm: () => void;
+  } | null>(null);
+
+  const confirm = (params: Omit<typeof config, 'onConfirm'> & { onConfirm: () => void }) => {
+    setConfig(params);
+    setIsOpen(true);
+  };
+
+  const handleConfirm = () => {
+    config?.onConfirm();
+    setIsOpen(false);
+  };
+
+  const ConfirmDialogComponent = config ? (
+    <ConfirmDialog
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      title={config.title}
+      message={config.message}
+      confirmLabel={config.confirmLabel}
+      cancelLabel={config.cancelLabel}
+      variant={config.variant}
+      onConfirm={handleConfirm}
+    />
+  ) : null;
+
+  return { confirm, ConfirmDialogComponent };
+};
