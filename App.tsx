@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, Shield, ShieldCheck, FileCheck, Cpu, AlertTriangle } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from './components/PatientSelector';
@@ -28,10 +28,17 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { Screen } from './types';
 import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from './lib/constants';
 import { useAnaestheticApp } from './hooks/useAnaestheticApp';
+import { reportWebVitals } from './src/lib/analytics';
+import * as Sentry from './src/lib/sentry';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
 function AnaestheticLogApp() {
+  // Initialize performance monitoring
+  useEffect(() => {
+    reportWebVitals();
+  }, []);
+
   const {
     screen,
     setScreen,
