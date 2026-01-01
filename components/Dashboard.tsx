@@ -169,6 +169,11 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
           animateCharts={animateCharts}
         />
 
+        {/* Screen reader announcement for search results */}
+        <div aria-live="polite" aria-atomic="true" className="sr-only">
+            {filteredPatients.length} patient{filteredPatients.length !== 1 ? 's' : ''} found
+        </div>
+
         {/* Patient Database Table (Full Width) - Paginated */}
         <Card className="w-full shadow-sm animate-enter-subtle">
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
@@ -292,10 +297,11 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                         {/* Row 1: Search Box + Filter Button Toggle */}
                         <div className="flex flex-wrap gap-2 items-center">
                             <div className="relative flex-1 sm:flex-none sm:w-64">
-                                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                                <Input 
-                                    placeholder="Search by Name, MRN..." 
-                                    className="pl-9 h-9 bg-white" 
+                                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" aria-hidden="true" />
+                                <Input
+                                    placeholder="Search by Name, MRN..."
+                                    aria-label="Search patients by name, medical record number (MRN), or city"
+                                    className="pl-9 h-9 bg-white"
                                     value={filters.textQuery}
                                     onChange={(e) => updateFilter('textQuery', e.target.value)}
                                 />

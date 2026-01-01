@@ -6,6 +6,17 @@
   body {
     font-family: 'Inter', sans-serif;
   }
+
+  /* Focus Visible Styles for Keyboard Navigation */
+  *:focus-visible {
+    outline: 2px solid #441170;
+    outline-offset: 2px;
+  }
+
+  /* Ensure focus styles are visible when navigating with keyboard */
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 
 @layer utilities {

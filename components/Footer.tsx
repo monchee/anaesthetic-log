@@ -27,7 +27,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
   ];
 
   return (
-    <footer className="border-t border-slate-200 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm no-print">
+    <footer role="contentinfo" aria-label="Application footer" className="border-t border-slate-200 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm no-print">
       <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex flex-col gap-3">
           {/* Navigation Links */}

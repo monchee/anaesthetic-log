@@ -44,8 +44,16 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
     return (
         <div className={`min-h-screen bg-[#fbfaff] dark:bg-slate-950 flex flex-col ${className || ''}`}>
+            {/* Skip to Main Content Link */}
+            <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[#441170] focus:text-white focus:rounded focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2"
+            >
+                Skip to main content
+            </a>
+
             {/* Full Width Header (Static) */}
-            <header className="w-full flex flex-col shadow-md shadow-purple-900/5 z-50 relative no-print">
+            <header role="banner" aria-label="Application header" className="w-full flex flex-col shadow-md shadow-purple-900/5 z-50 relative no-print">
                 {/* Main Navigation Bar */}
                 <div className="bg-[#441170] text-white border-b border-purple-800/50 w-full">
                     {/* Safe Area Padding for mobile notch support */}
@@ -138,7 +146,13 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
             </header>
 
             {/* Main Content */}
-            <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col relative z-10">
+            <main
+                id="main-content"
+                role="main"
+                aria-label="Main content"
+                tabIndex={-1}
+                className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col relative z-10"
+            >
                 <div className={`${contentClassName || ''} flex-1`}>
                     {children}
                 </div>
