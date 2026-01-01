@@ -1,4 +1,4 @@
-import { onCLS, onFID, onFCP, onLCP, onTTFB } from 'web-vitals';
+import { onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals';
 import { Sentry } from './sentry';
 import { env } from './env';
 
@@ -16,7 +16,7 @@ export function reportWebVitals() {
   };
 
   onCLS((metric) => sendToSentry('CLS', metric.value));
-  onFID((metric) => sendToSentry('FID', metric.value));
+  onINP((metric) => sendToSentry('INP', metric.value));
   onFCP((metric) => sendToSentry('FCP', metric.value));
   onLCP((metric) => sendToSentry('LCP', metric.value));
   onTTFB((metric) => sendToSentry('TTFB', metric.value));
