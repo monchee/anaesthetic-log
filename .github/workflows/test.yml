@@ -45,8 +45,13 @@ jobs:
           fi
           echo "✅ Coverage ${COVERAGE}% meets 80% threshold"
 
+      - name: Build application for E2E tests
+        run: npm run build
+
       - name: Run E2E tests
         run: npm run test:e2e
+        env:
+          CI: true
 
       - name: Build verification
         run: npm run build
