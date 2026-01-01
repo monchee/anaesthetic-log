@@ -11,9 +11,20 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.14.0",
+      codename: "Rocuronium",
+      highlight: true,
+      changes: [
+        "Improved CI/CD pipeline - removed redundant workflows and optimized test execution.",
+        "Enhanced test coverage reporting with 80% threshold enforcement.",
+        "Removed E2E tests from automated CI (available manually for debugging).",
+        "Streamlined GitHub Actions workflow for faster builds.",
+      ]
+    },
+    {
       version: "v0.13.0",
       codename: "Neostigmine",
-      highlight: true,
+      highlight: false,
       changes: [
         "Added legal and governance documentation pages (Privacy Policy, Clinical Governance, Terms of Use, Technical Documentation, Disclaimer).",
         "Content aligned with Australian healthcare standards (OAIC Privacy Principles, NSQHS Clinical Governance Standard, NSW Health guidelines).",
