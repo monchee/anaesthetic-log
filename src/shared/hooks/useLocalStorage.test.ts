@@ -264,9 +264,19 @@ describe('useLocalStorage', () => {
     it('stores patient data correctly', () => {
       const patientData = {
         id: '123',
-        name: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         mrn: 'MRN001',
-        reaction_history: [],
+        history: {
+          date: '',
+          grade: '',
+          reactionSummary: '',
+          symptoms: [],
+          treatment: [],
+          suspectedAgents: [],
+          procedure: '',
+          anaesthetist: '',
+        },
       };
 
       const { result } = renderHook(() =>
