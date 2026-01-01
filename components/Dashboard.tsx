@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui';
+import { Card, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger, LoadingSpinner } from './ui';
 import { Search, Thermometer, Upload, ChevronLeft, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, FileText, ExternalLink, FileUp, AlertTriangle } from 'lucide-react';
 import { formatDate, parseRedcapCSV, getGradeVariant, parsePatientTimeline } from '../lib/utils';
 import { Screen, Patient, LogFormData } from '../types';
@@ -28,6 +28,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [uploadStatus, setUploadStatus] = useState<{ type: 'success' | 'error', message: string, details?: string[] } | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [animateCharts, setAnimateCharts] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isFiltersExpanded, setIsFiltersExpanded] = useState(true);
@@ -73,14 +74,15 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       setUploadStatus(null);
-      
+
       if (file) {
+          setIsUploading(true);
           const reader = new FileReader();
           reader.onload = (event) => {
               try {
                 const text = event.target?.result as string;
                 const result = parseRedcapCSV(text);
-                
+
                 if (result.success) {
                     onUploadPatients(result.data);
                     toast.success(
@@ -93,19 +95,42 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                 } else {
                     toast.error(
                         <div className="flex flex-col gap-1">
-                             <span className="font-bold">Failed to parse CSV</span>
+                             <span className="font-bold">Failed to parse CSV file</span>
                              <span className="text-sm font-normal">{result.error || "Please check the file format."}</span>
-                        </div>
+                             <span className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                Make sure the CSV was exported from REDCap and has the correct headers.
+                             </span>
+                        </div>,
+                        { duration: 8000 }
                     );
                 }
               } catch {
                   toast.error(
                     <div className="flex flex-col gap-1">
                          <span className="font-bold">Error processing file</span>
-                         <span className="text-sm font-normal">An unexpected error occurred.</span>
-                    </div>
+                         <span className="text-sm font-normal">An unexpected error occurred while processing the file.</span>
+                         <span className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            Please check the file format and try again. If the issue persists, contact IT support.
+                         </span>
+                    </div>,
+                    { duration: 8000 }
                   );
+              } finally {
+                  setIsUploading(false);
               }
+          };
+          reader.onerror = () => {
+              toast.error(
+                <div className="flex flex-col gap-1">
+                     <span className="font-bold">Error reading file</span>
+                     <span className="text-sm font-normal">Failed to read the file. It may be corrupted or in an unsupported format.</span>
+                     <span className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        Please try exporting the CSV again from REDCap and upload the new file.
+                     </span>
+                </div>,
+                { duration: 8000 }
+              );
+              setIsUploading(false);
           };
           reader.readAsText(file);
       }
@@ -279,12 +304,23 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                         </div>
 
                                         <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
-                                            <Button 
-                                                className="w-full h-12 text-base shadow-lg hover:shadow-red-500/20 transition-all bg-red-600 hover:bg-red-700 text-white" 
+                                            <Button
+                                                className="w-full h-12 text-base shadow-lg hover:shadow-red-500/20 transition-all bg-red-600 hover:bg-red-700 text-white"
                                                 size="lg"
                                                 onClick={() => fileInputRef.current?.click()}
+                                                disabled={isUploading}
+                                                aria-label="Select CSV file to upload"
                                             >
-                                                <Upload className="w-4 h-4 mr-2" /> Select CSV File
+                                                {isUploading ? (
+                                                    <>
+                                                        <LoadingSpinner size="sm" className="mr-2" />
+                                                        Processing...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Upload className="w-4 h-4 mr-2" /> Select CSV File
+                                                    </>
+                                                )}
                                             </Button>
                                         </div>
                                     </div>
