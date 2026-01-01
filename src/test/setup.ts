@@ -20,7 +20,6 @@ afterEach(() => {
   // Restore window if it was modified
    
   if (!globalThis.window && originalWindow) {
-     
     global.window = originalWindow;
   }
 });

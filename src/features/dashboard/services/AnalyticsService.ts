@@ -31,7 +31,7 @@ export class AnalyticsService {
   /**
    * Calculate comprehensive analytics from patient data
    */
-  calculateAnalytics(patients: Patient[], logs?: LogFormData[]): Analytics {
+  calculateAnalytics(patients: Patient[], _logs?: LogFormData[]): Analytics {
     const totalPatients = patients.length;
     
     // Grade distribution
@@ -131,7 +131,7 @@ export class AnalyticsService {
         if (diff > 0 && diff < 300) { // Reasonable range: 0-5 hours
           times.push(diff);
         }
-      } catch (error) {
+      } catch {
         // Skip invalid time formats
       }
     });
@@ -202,7 +202,7 @@ export class AnalyticsService {
   /**
    * Helper: Get drug category (simplified)
    */
-  private getDrugCategory(drugName: string): string {
+  private getDrugCategory(_drugName: string): string {
     // This would ideally use DRUG_CATEGORIES constant
     // For now, return a default category
     return 'General';

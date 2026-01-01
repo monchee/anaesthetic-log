@@ -8,7 +8,7 @@ import { Patient, LogFormData } from '../types';
 vi.mock('../lib/utils', () => ({
   formatDate: (date: Date) => date.toLocaleDateString(),
   parseRedcapCSV: vi.fn(() => ({ success: true, data: [] })),
-  getGradeVariant: (grade: string) => 'default',
+  getGradeVariant: (_grade: string) => 'default',
   parsePatientTimeline: vi.fn(() => []),
 }));
 

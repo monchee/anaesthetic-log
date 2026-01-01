@@ -66,7 +66,7 @@ test.describe('Accessibility Tests', () => {
 
     let previousLevel = 1;
 
-    for (let i = 0; i < count; i++) => {
+    for (let i = 0; i < count; i++) {
       const heading = headings.nth(i);
       const tagName = await heading.evaluate((el) => el.tagName);
       const level = parseInt(tagName[1]);
@@ -110,7 +110,6 @@ test.describe('Accessibility Tests', () => {
     // Use axe-core to check color contrast
     const violations = await page.evaluate(() => {
       return new Promise((resolve) => {
-        // @ts-ignore - axe-core loaded via CDN in tests
         axe.run(document, { rules: { 'color-contrast': { enabled: true } } }, (err: any, results: any) => {
           if (err) resolve([]);
           resolve(results.violations);
@@ -272,7 +271,6 @@ test.describe('Automated Accessibility Scans', () => {
 
     const violations = await page.evaluate(() => {
       return new Promise((resolve) => {
-        // @ts-ignore - axe-core loaded via CDN in tests
         axe.run(document, (err: any, results: any) => {
           if (err) resolve([]);
           resolve(results.violations);
@@ -294,7 +292,6 @@ test.describe('Automated Accessibility Scans', () => {
 
     const violations = await page.evaluate(() => {
       return new Promise((resolve) => {
-        // @ts-ignore
         axe.run(document, (err: any, results: any) => {
           if (err) resolve([]);
           resolve(results.violations);
@@ -311,7 +308,6 @@ test.describe('Automated Accessibility Scans', () => {
 
     const violations = await page.evaluate(() => {
       return new Promise((resolve) => {
-        // @ts-ignore
         axe.run(document, (err: any, results: any) => {
           if (err) resolve([]);
           resolve(results.violations);

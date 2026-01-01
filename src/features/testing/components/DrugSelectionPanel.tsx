@@ -1,5 +1,5 @@
 import React from 'react';
-import { Label, Input } from '../../../../components/ui';
+import { Label } from '../../../../components/ui';
 import { Check, Plus } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '../../../../lib/constants';
 import { DrugTestRow } from '../../../../types';

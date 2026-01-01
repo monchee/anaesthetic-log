@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Badge } from '../../../../components/ui';
+import { Card, CardHeader, CardTitle, Badge } from '../../../../components/ui';
 import { Clock } from 'lucide-react';
 import { LogFormData } from '../../../../types';
 import { formatDate, isSkinTestPositive } from '../../../../lib/utils';

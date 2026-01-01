@@ -38,8 +38,6 @@ function AnaestheticLogApp() {
     reportWebVitals();
   }, []);
 
-  const [announcement, _setAnnouncement] = React.useState('');
-
   const {
     screen,
     setScreen,
@@ -643,23 +641,8 @@ function AnaestheticLogApp() {
     );
   };
 
-  // Global announcement region for screen readers
-  const _announce = (message: string) => {
-    _setAnnouncement(message);
-    setTimeout(() => _setAnnouncement(''), 1000);
-  };
-
   return (
     <>
-      {/* Screen reader announcement region */}
-      <div
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className="sr-only"
-      >
-        {announcement}
-      </div>
       {renderScreenContent()}
     </>
   );
