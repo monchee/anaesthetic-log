@@ -6,47 +6,60 @@ describe('Patient Repository', () => {
   const mockPatients: Patient[] = [
     {
       id: '1',
-      name: 'John Doe',
+      firstName: 'John',
+      lastName: 'Doe',
       dob: '1980-01-01',
       mrn: 'MRN001',
       gender: 'Male',
       city: 'Sydney',
-      reaction_history: [
-        {
-          drug: 'Rocuronium',
-          grade: '3',
-          outcome: 'Abandoned',
-        },
-      ],
+      history: {
+        date: '2023-01-01',
+        grade: '3',
+        reactionSummary: 'Severe reaction to Rocuronium',
+        symptoms: [{ label: 'Anaphylaxis' }],
+        treatment: ['Adrenaline'],
+        suspectedAgents: ['Rocuronium'],
+        procedure: 'Surgery',
+        anaesthetist: 'Dr. Smith',
+      },
     },
     {
       id: '2',
-      name: 'Jane Smith',
+      firstName: 'Jane',
+      lastName: 'Smith',
       dob: '1990-05-15',
       mrn: 'MRN002',
       gender: 'Female',
       city: 'Melbourne',
-      reaction_history: [],
+      history: {
+        date: '',
+        grade: '',
+        reactionSummary: '',
+        symptoms: [],
+        treatment: [],
+        suspectedAgents: [],
+        procedure: '',
+        anaesthetist: '',
+      },
     },
     {
       id: '3',
-      name: 'Bob Johnson',
+      firstName: 'Bob',
+      lastName: 'Johnson',
       dob: '1975-12-20',
       mrn: 'MRN003',
       gender: 'Male',
       city: 'Brisbane',
-      reaction_history: [
-        {
-          drug: 'Propofol',
-          grade: '1',
-          outcome: 'Completed',
-        },
-        {
-          drug: 'Fentanyl',
-          grade: '2',
-          outcome: 'Completed',
-        },
-      ],
+      history: {
+        date: '2023-02-01',
+        grade: '1',
+        reactionSummary: 'Mild reaction',
+        symptoms: [{ label: 'Rash' }],
+        treatment: ['Antihistamine'],
+        suspectedAgents: ['Propofol', 'Fentanyl'],
+        procedure: 'Surgery',
+        anaesthetist: 'Dr. Jones',
+      },
     },
   ];
 
@@ -59,7 +72,8 @@ describe('Patient Repository', () => {
       const result = patientRepository.searchPatients(mockPatients, 'john');
 
       expect(result).toHaveLength(2);
-      expect(result.every((p) => p.name.toLowerCase().includes('john'))).toBe(true);
+      expect(result.some((p) => p.firstName === 'John')).toBe(true);
+      expect(result.some((p) => p.lastName === 'Johnson')).toBe(true);
     });
 
     it('searches by MRN', () => {
@@ -92,7 +106,7 @@ describe('Patient Repository', () => {
       const result = patientRepository.searchPatients(mockPatients, 'Smith');
 
       expect(result).toHaveLength(1);
-      expect(result[0].name).toBe('Jane Smith');
+      expect(`${result[0].firstName} ${result[0].lastName}`).toBe('Jane Smith');
     });
   });
 
@@ -101,14 +115,14 @@ describe('Patient Repository', () => {
       const result = patientRepository.filterByGrade(mockPatients, '3');
 
       expect(result).toHaveLength(1);
-      expect(result[0].name).toBe('John Doe');
+      expect(`${result[0].firstName} ${result[0].lastName}`).toBe('John Doe');
     });
 
-    it('filters patients with grade 2 reactions', () => {
-      const result = patientRepository.filterByGrade(mockPatients, '2');
+    it('filters patients with grade 1 reactions', () => {
+      const result = patientRepository.filterByGrade(mockPatients, '1');
 
       expect(result).toHaveLength(1);
-      expect(result[0].name).toBe('Bob Johnson');
+      expect(`${result[0].firstName} ${result[0].lastName}`).toBe('Bob Johnson');
     });
 
     it('returns all patients when grade is "all"', () => {
@@ -125,18 +139,11 @@ describe('Patient Repository', () => {
   });
 
   describe('filterByOutcome', () => {
-    it('filters patients with abandoned procedures', () => {
-      const result = patientRepository.filterByOutcome(mockPatients, 'Abandoned');
+    it('filters patients by outcome (using grade as proxy)', () => {
+      const result = patientRepository.filterByOutcome(mockPatients, '3');
 
       expect(result).toHaveLength(1);
-      expect(result[0].name).toBe('John Doe');
-    });
-
-    it('filters patients with completed procedures', () => {
-      const result = patientRepository.filterByOutcome(mockPatients, 'Completed');
-
-      expect(result).toHaveLength(1);
-      expect(result[0].name).toBe('Bob Johnson');
+      expect(`${result[0].firstName} ${result[0].lastName}`).toBe('John Doe');
     });
 
     it('returns all patients when outcome is "all"', () => {
@@ -152,7 +159,7 @@ describe('Patient Repository', () => {
 
       expect(result).toBeDefined();
       expect(result?.id).toBe('1');
-      expect(result?.name).toBe('John Doe');
+      expect(`${result?.firstName} ${result?.lastName}`).toBe('John Doe');
     });
 
     it('returns undefined for non-existent ID', () => {
@@ -168,7 +175,7 @@ describe('Patient Repository', () => {
 
       expect(result).toBeDefined();
       expect(result?.mrn).toBe('MRN002');
-      expect(result?.name).toBe('Jane Smith');
+      expect(`${result?.firstName} ${result?.lastName}`).toBe('Jane Smith');
     });
 
     it('returns undefined for non-existent MRN', () => {
@@ -182,17 +189,17 @@ describe('Patient Repository', () => {
     it('sorts patients by name ascending', () => {
       const result = patientRepository.sortPatients(mockPatients, 'name', 'asc');
 
-      expect(result[0].name).toBe('Bob Johnson');
-      expect(result[1].name).toBe('Jane Smith');
-      expect(result[2].name).toBe('John Doe');
+      expect(`${result[0].firstName} ${result[0].lastName}`).toBe('Bob Johnson');
+      expect(`${result[1].firstName} ${result[1].lastName}`).toBe('Jane Smith');
+      expect(`${result[2].firstName} ${result[2].lastName}`).toBe('John Doe');
     });
 
     it('sorts patients by name descending', () => {
       const result = patientRepository.sortPatients(mockPatients, 'name', 'desc');
 
-      expect(result[0].name).toBe('John Doe');
-      expect(result[1].name).toBe('Jane Smith');
-      expect(result[2].name).toBe('Bob Johnson');
+      expect(`${result[0].firstName} ${result[0].lastName}`).toBe('John Doe');
+      expect(`${result[1].firstName} ${result[1].lastName}`).toBe('Jane Smith');
+      expect(`${result[2].firstName} ${result[2].lastName}`).toBe('Bob Johnson');
     });
 
     it('sorts patients by MRN', () => {
@@ -223,7 +230,10 @@ describe('Patient Repository', () => {
     it('returns empty array when no reactions exist', () => {
       const patientsWithoutReactions = mockPatients.map((p) => ({
         ...p,
-        reaction_history: [],
+        history: {
+          ...p.history,
+          suspectedAgents: [],
+        },
       }));
 
       const result = patientRepository.getUniqueDrugs(patientsWithoutReactions);
@@ -266,12 +276,22 @@ describe('Patient Repository', () => {
         ...mockPatients,
         {
           id: '4',
-          name: 'Test Patient',
+          firstName: 'Test',
+          lastName: 'Patient',
           dob: '1990-01-01',
           mrn: 'MRN004',
           gender: 'Male',
           city: 'Perth',
-          reaction_history: undefined as any,
+          history: {
+            date: '',
+            grade: '',
+            reactionSummary: '',
+            symptoms: [],
+            treatment: [],
+            suspectedAgents: undefined as any,
+            procedure: '',
+            anaesthetist: '',
+          },
         },
       ];
 
@@ -292,7 +312,11 @@ describe('Patient Repository', () => {
     });
 
     it('validates patient name is present', () => {
-      const invalidPatient = { ...mockPatients[0], name: '' };
+      const invalidPatient = {
+        ...mockPatients[0],
+        firstName: '',
+        lastName: '',
+      };
 
       const isValid = patientRepository.validatePatient(invalidPatient);
 
