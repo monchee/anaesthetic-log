@@ -148,7 +148,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#8055f1] mt-1">•</span>
-                  <span>Print-optimized layouts for clinical documentation</span>
+                  <span>Print-optimised layouts for clinical documentation</span>
                 </li>
               </ul>
             </div>
@@ -207,7 +207,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#8055f1] mt-1">•</span>
-                  <span>Print-optimized views</span>
+                  <span>Print-optimised views</span>
                 </li>
               </ul>
             </div>

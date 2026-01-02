@@ -32,7 +32,7 @@ A comprehensive web-based application for managing anaesthetic allergy clinic op
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Dark/Light Theme**: Toggle between themes for different lighting conditions
 - **Font Size Controls**: Adjustable text sizes for accessibility
-- **Print-Optimized**: All reports and handouts are print-ready
+- **Print-Optimised**: All reports and handouts are print-ready
 
 ## Technology Stack
 
@@ -83,7 +83,7 @@ A comprehensive web-based application for managing anaesthetic allergy clinic op
 - All testing logs are stored locally in the browser
 
 ### Printing & Export
-- Clinical reports and patient handouts are optimized for printing
+- Clinical reports and patient handouts are optimised for printing
 - Use your browser's print function (Ctrl/Cmd + P) for best results
 
 ## Project Structure
