@@ -1,6 +1,6 @@
-import React from 'react';
-import { ChevronDown, ChevronUp, X, Filter, Calendar, Building2, Activity } from 'lucide-react';
-import { Button, Badge, Input, Label } from '../../../../components/ui';
+import React, { useState } from 'react';
+import { X, Filter, Calendar, Building2, Activity, Search as SearchIcon } from 'lucide-react';
+import { Button, Badge, Input, Label, Popover, PopoverContent, PopoverTrigger } from '../../../../components/ui';
 import { AdvancedSearchFilters as Filters } from '../hooks/useAdvancedSearch';
 import { DRUG_CATEGORIES, CATEGORY_THEMES } from '../../../../lib/constants';
 
@@ -19,69 +19,49 @@ interface AdvancedSearchFiltersProps {
 }
 
 const GRADE_OPTIONS = [
-  { value: 'I', label: 'Grade I', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' },
-  { value: 'II', label: 'Grade II', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300' },
-  { value: 'III', label: 'Grade III', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300' },
-  { value: 'IV', label: 'Grade IV', color: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' },
-  { value: 'ungraded', label: 'Ungraded', color: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400' },
+  { value: 'I', label: 'Grade I', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border-blue-200 dark:border-blue-800' },
+  { value: 'II', label: 'Grade II', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800' },
+  { value: 'III', label: 'Grade III', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300 border-orange-200 dark:border-orange-800' },
+  { value: 'IV', label: 'Grade IV', color: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300 border-red-200 dark:border-red-800' },
+  { value: 'ungraded', label: 'Ungraded', color: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700' },
 ];
 
-/**
- * Toggle Button Component
- */
-export const AdvancedSearchFilters: React.FC<
-  Pick<AdvancedSearchFiltersProps, 'isExpanded' | 'setIsExpanded' | 'activeFilterCount' | 'clearFilters'>
-> = ({
+export const AdvancedSearchFilters: React.FC<Pick<AdvancedSearchFiltersProps, 'activeFilterCount' | 'isExpanded' | 'setIsExpanded'>> = ({
+  activeFilterCount,
   isExpanded,
   setIsExpanded,
-  activeFilterCount,
-  clearFilters,
 }) => {
   return (
-    <div className="flex items-center gap-2">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="h-9 text-xs"
-      >
-        <Filter className="w-3.5 h-3.5 mr-1.5" />
-        Filters
-        {activeFilterCount > 0 && (
-          <Badge variant="default" className="ml-2 h-4 px-1.5 text-[10px] bg-primary">
-            {activeFilterCount}
-          </Badge>
-        )}
-        {isExpanded ? (
-          <ChevronUp className="w-3.5 h-3.5 ml-1" />
-        ) : (
-          <ChevronDown className="w-3.5 h-3.5 ml-1" />
-        )}
-      </Button>
-
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={() => setIsExpanded(!isExpanded)}
+      className={`h-9 font-medium text-xs border-slate-200 dark:border-slate-800 transition-colors ${
+        isExpanded 
+          ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100' 
+          : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+      }`}
+    >
+      <Filter className="w-4 h-4 mr-2" />
+      Filters
       {activeFilterCount > 0 && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={clearFilters}
-          className="h-9 text-xs text-slate-500 hover:text-slate-700"
-        >
-          <X className="w-3.5 h-3.5 mr-1" />
-          Clear All
-        </Button>
+        <Badge variant="default" className="ml-2 h-5 px-1.5 min-w-5 justify-center text-[10px] bg-primary text-white">
+          {activeFilterCount}
+        </Badge>
       )}
-    </div>
+    </Button>
   );
 };
 
-/**
- * Expanded Panel Content Component
- */
 export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isExpanded' | 'setIsExpanded'>> = ({
   filters,
   updateFilter,
+  clearFilters,
+  activeFilterCount,
   suggestions,
 }) => {
+  const [agentSearch, setAgentSearch] = useState('');
+
   const toggleGrade = (grade: string) => {
     const newGrades = filters.grades.includes(grade)
       ? filters.grades.filter(g => g !== grade)
@@ -97,13 +77,13 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
   };
 
   const getOutcomeStyle = (outcome: string, isSelected: boolean) => {
-    if (!isSelected) return 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600';
+    if (!isSelected) return 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700';
     
     switch (outcome) {
-      case 'all': return 'bg-primary dark:bg-primary text-white shadow-sm';
-      case 'completed': return 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm';
-      case 'abandoned': return 'bg-rose-600 dark:bg-rose-500 text-white shadow-sm';
-      default: return 'bg-primary text-white';
+      case 'all': return 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border-transparent shadow-sm';
+      case 'completed': return 'bg-emerald-600 dark:bg-emerald-500 text-white border-transparent shadow-sm';
+      case 'abandoned': return 'bg-rose-600 dark:bg-rose-500 text-white border-transparent shadow-sm';
+      default: return 'bg-primary text-white border-transparent shadow-sm';
     }
   };
 
@@ -112,52 +92,86 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
     drugs.map(drug => ({ drug, category }))
   );
 
+  const filteredDrugs = allDrugs.filter(d => d.drug.toLowerCase().includes(agentSearch.toLowerCase()));
+
+  // Active status checks
+  const hasGrades = filters.grades.length > 0;
+  const isOutcomeActive = filters.outcomeFilter !== 'all';
+  const hasDates = !!filters.dateFrom || !!filters.dateTo;
+  const hasHospital = !!filters.hospital;
+  const hasAgents = filters.suspectedAgents.length > 0;
+
+  const triggerClassName = (isActive: boolean) => `
+    h-8 text-xs rounded-none border-dashed transition-all
+    ${isActive 
+      ? "border-primary/50 bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary" 
+      : "border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 hover:text-slate-900 dark:hover:text-slate-200"
+    }
+  `;
+
   return (
-    <div className="w-full p-4 bg-white dark:bg-slate-950 rounded-none border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+    <div className="flex flex-wrap items-center gap-2 mt-3 animate-in fade-in duration-200">
       
-      {/* Row 1: Reaction Grade and Outcome - Vertically Aligned */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Reaction Grade */}
-        <div className="flex flex-col">
-          <Label className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide flex items-center gap-1.5 mb-2">
-            <Activity className="w-3.5 h-3.5" />
-            Reaction Grade
+      {/* 1. Reaction Severity Popover */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm" className={triggerClassName(hasGrades)}>
+            <Activity className="w-3.5 h-3.5 mr-2" />
+            Severity
+            {hasGrades && (
+              <Badge variant="secondary" className="ml-2 px-1 text-[10px] rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
+                {filters.grades.length}
+              </Badge>
+            )}
+            {!hasGrades && <span className="ml-1 opacity-50">Any</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[340px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
+          <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
+            Reaction Severity
           </Label>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 min-h-9 items-center w-full">
             {GRADE_OPTIONS.map(grade => {
               const isSelected = filters.grades.includes(grade.value);
-              
               return (
                 <button
                   key={grade.value}
                   onClick={() => toggleGrade(grade.value)}
                   className={`
-                    px-3 py-1.5 rounded text-xs font-medium transition-all
+                    h-8 flex-1 min-w-[32px] rounded-none border text-[10px] font-bold transition-all flex items-center justify-center gap-1.5
                     ${isSelected
-                      ? `${grade.color} shadow-sm`
-                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                      ? `${grade.color} ring-1 ring-inset ring-current shadow-sm`
+                      : 'bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                     }
                   `}
                 >
-                  {grade.label}
+                  {grade.label.replace('Grade ', '')}
+                  {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />}
                 </button>
               );
             })}
           </div>
-        </div>
+        </PopoverContent>
+      </Popover>
 
-        {/* Procedure Outcome */}
-        <div className="flex flex-col">
-          <Label className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-2">
-            Outcome
+      {/* 2. Procedure Outcome Popover */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm" className={triggerClassName(isOutcomeActive)}>
+            Outcome: <span className={`ml-1 ${!isOutcomeActive ? 'opacity-50' : 'capitalize'}`}>{filters.outcomeFilter}</span>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[280px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
+          <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
+            Procedure Outcome
           </Label>
-          <div className="flex gap-1.5">
+          <div className="flex bg-slate-100 dark:bg-slate-900 p-1 border border-slate-200 dark:border-slate-800 h-9">
             {(['all', 'completed', 'abandoned'] as const).map(outcome => (
               <button
                 key={outcome}
                 onClick={() => updateFilter('outcomeFilter', outcome)}
                 className={`
-                  flex-1 px-3 py-1.5 rounded text-xs font-medium transition-all capitalize
+                  flex-1 px-3 text-[10px] font-bold transition-all capitalize whitespace-nowrap flex items-center justify-center
                   ${getOutcomeStyle(outcome, filters.outcomeFilter === outcome)}
                 `}
               >
@@ -165,87 +179,173 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
               </button>
             ))}
           </div>
-        </div>
-      </div>
+        </PopoverContent>
+      </Popover>
 
-      {/* Row 2: Date Range + Hospital - True Single Row */}
-      <div className="flex flex-col sm:flex-row gap-3 items-end">
-        <div className="flex-1 min-w-0">
-          <Label className="text-xs font-medium text-slate-600 dark:text-slate-400 flex items-center gap-1.5 mb-1.5">
-            <Calendar className="w-3.5 h-3.5" />
-            From
+      {/* 3. Date Range Popover */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm" className={triggerClassName(hasDates)}>
+            <Calendar className="w-3.5 h-3.5 mr-2" />
+            Date
+            {(filters.dateFrom || filters.dateTo) && (
+              <span className="ml-1 opacity-70">
+                : {filters.dateFrom ? new Date(filters.dateFrom).toLocaleDateString() : 'Start'} 
+                {' - '} 
+                {filters.dateTo ? new Date(filters.dateTo).toLocaleDateString() : 'End'}
+              </span>
+            )}
+            {!hasDates && <span className="ml-1 opacity-50">All Time</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
+          <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 opacity-70 flex items-center gap-1.5">
+            Date Range
           </Label>
-          <Input
-            type="date"
-            value={filters.dateFrom}
-            onChange={(e) => updateFilter('dateFrom', e.target.value)}
-            className="h-9 text-sm bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700"
-          />
-        </div>
-        <div className="flex-1 min-w-0">
-          <Label className="text-xs font-medium text-slate-600 dark:text-slate-400 flex items-center gap-1.5 mb-1.5">
-            <Calendar className="w-3.5 h-3.5" />
-            To
-          </Label>
-          <Input
-            type="date"
-            value={filters.dateTo}
-            onChange={(e) => updateFilter('dateTo', e.target.value)}
-            className="h-9 text-sm bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700"
-          />
-        </div>
-        <div className="flex-1 min-w-0">
-          <Label className="text-xs font-medium text-slate-600 dark:text-slate-400 flex items-center gap-1.5 mb-1.5">
-            <Building2 className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-2 h-9">
+            <Input
+              type="date"
+              value={filters.dateFrom}
+              onChange={(e) => updateFilter('dateFrom', e.target.value)}
+              className="h-full flex-1 text-[11px] px-2 rounded-none border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-white dark:bg-slate-900"
+            />
+            <span className="text-[9px] text-slate-400 font-black uppercase shrink-0 px-0.5">To</span>
+            <Input
+              type="date"
+              value={filters.dateTo}
+              onChange={(e) => updateFilter('dateTo', e.target.value)}
+              className="h-full flex-1 text-[11px] px-2 rounded-none border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-white dark:bg-slate-900"
+            />
+          </div>
+        </PopoverContent>
+      </Popover>
+
+      {/* 4. Hospital Popover */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm" className={triggerClassName(hasHospital)}>
+            <Building2 className="w-3.5 h-3.5 mr-2" />
             Hospital
+            <span className={`ml-1 truncate max-w-[120px] ${!hasHospital ? 'opacity-50' : 'capitalize'}`}>
+              {filters.hospital || 'All Locations'}
+            </span>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[280px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
+          <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
+            Hospital Location
           </Label>
-          <select
-            value={filters.hospital}
-            onChange={(e) => updateFilter('hospital', e.target.value)}
-            className="w-full h-9 px-3 text-sm rounded-none border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary"
-          >
-            <option value="">All Hospitals</option>
-            {suggestions.hospitals.map(h => (
-              <option key={h} value={h}>{h}</option>
-            ))}
-          </select>
-        </div>
-      </div>
+          <div className="relative h-9">
+            <select
+              value={filters.hospital}
+              onChange={(e) => updateFilter('hospital', e.target.value)}
+              className="w-full h-full px-3 text-[11px] appearance-none rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-primary transition-colors cursor-pointer pr-10"
+            >
+              <option value="">All Hospitals</option>
+              {suggestions.hospitals.map(h => (
+                <option key={h} value={h}>{h}</option>
+              ))}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <Building2 className="w-3 h-3" />
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
 
-      {/* Row 3: Suspected Agents - All Drugs Always Visible */}
-      <div className="space-y-2">
-        <Label className="text-xs font-medium text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
-          Suspected Agents
-          {filters.suspectedAgents.length > 0 && (
-            <Badge variant="secondary" className="text-[10px] h-4 px-1.5 bg-primary/10 dark:bg-slate-900/30 text-primary dark:text-primary border-none">
-              {filters.suspectedAgents.length}
-            </Badge>
-          )}
-        </Label>
-        <div className="flex flex-wrap gap-1">
-          {allDrugs.map(({ drug, category }) => {
-            const isSelected = filters.suspectedAgents.includes(drug);
-            const theme = CATEGORY_THEMES[category];
-            
-            return (
-              <button
-                key={drug}
-                onClick={() => toggleAgent(drug)}
-                className={`
-                  px-2.5 py-1 rounded text-xs font-medium transition-all
-                  ${isSelected
-                    ? theme.btnSelected
-                    : `bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-slate-300 ${theme.btnHover}`
-                  }
-                `}
-                title={category}
+      {/* 5. Suspected Agents Popover */}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm" className={triggerClassName(hasAgents)}>
+            <SearchIcon className="w-3.5 h-3.5 mr-2" />
+            Agents
+            {hasAgents && (
+              <Badge variant="secondary" className="ml-2 px-1 text-[10px] rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
+                {filters.suspectedAgents.length}
+              </Badge>
+            )}
+            {!hasAgents && <span className="ml-1 opacity-50">0 Selected</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[420px] max-w-screen p-0 rounded-none border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex flex-col" align="start">
+          <div className="p-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 relative">
+            <SearchIcon className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input 
+              placeholder="Search specific drugs or agents..." 
+              value={agentSearch}
+              onChange={(e) => setAgentSearch(e.target.value)}
+              className="pl-9 h-10 text-xs rounded-none border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary bg-white dark:bg-slate-950"
+            />
+            {agentSearch && (
+              <button 
+                onClick={() => setAgentSearch('')}
+                className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
               >
-                {drug}
+                <X className="w-4 h-4" />
               </button>
-            );
-          })}
-        </div>
-      </div>
+            )}
+          </div>
+          
+          <div className="p-3 bg-white dark:bg-slate-950 min-h-[100px] max-h-[300px] overflow-y-auto custom-scrollbar">
+            <div className="flex flex-wrap gap-2">
+              {filteredDrugs.length > 0 ? (
+                filteredDrugs.map(({ drug, category }) => {
+                  const isSelected = filters.suspectedAgents.includes(drug);
+                  const theme = CATEGORY_THEMES[category];
+                  
+                  return (
+                    <button
+                      key={drug}
+                      onClick={(e) => {
+                        e.preventDefault(); // keep popover open when selecting/deselecting
+                        toggleAgent(drug);
+                      }}
+                      className={`
+                        px-3 py-1.5 text-[10px] font-bold transition-all relative overflow-hidden group
+                        ${isSelected
+                          ? `${theme.btnSelected} ring-1 ring-inset ring-black/5 dark:ring-white/5 shadow-sm scale-[1.02]`
+                          : `bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 hover:bg-white dark:hover:bg-slate-950`
+                        }
+                      `}
+                      title={category}
+                    >
+                      <span className="relative z-10">{drug}</span>
+                      {isSelected && (
+                        <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-white/30 -mr-0.5 -mt-0.5 rotate-45" />
+                      )}
+                    </button>
+                  );
+                })
+              ) : (
+                <div className="text-xs text-slate-400 py-8 text-center w-full font-medium italic">
+                  No agents found matching "{agentSearch}"
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <div className="p-2 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center text-[10px] text-slate-500">
+            <span>Select multiple agents to filter</span>
+            {hasAgents && (
+              <span className="font-bold text-primary">{filters.suspectedAgents.length} Active</span>
+            )}
+          </div>
+        </PopoverContent>
+      </Popover>
+
+      {/* Clear All action (only visible when filters are active) */}
+      {activeFilterCount > 0 && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={clearFilters}
+          className="h-8 px-2.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 ml-auto transition-colors"
+        >
+          <X className="w-3 h-3 mr-1" />
+          Clear All
+        </Button>
+      )}
+
     </div>
   );
 };
