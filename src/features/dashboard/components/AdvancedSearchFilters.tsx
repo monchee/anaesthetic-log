@@ -61,6 +61,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
   suggestions,
 }) => {
   const [agentSearch, setAgentSearch] = useState('');
+  const [isAgentsExpanded, setIsAgentsExpanded] = useState(false);
 
   const toggleGrade = (grade: string) => {
     const newGrades = filters.grades.includes(grade)
@@ -110,183 +111,206 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
   `;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 mt-3 animate-in fade-in duration-200">
-      
-      {/* 1. Reaction Severity Popover */}
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" size="sm" className={triggerClassName(hasGrades)}>
-            <Activity className="w-3.5 h-3.5 mr-2" />
-            Severity
-            {hasGrades && (
-              <Badge variant="secondary" className="ml-2 px-1 text-[10px] rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
-                {filters.grades.length}
-              </Badge>
-            )}
-            {!hasGrades && <span className="ml-1 opacity-50">Any</span>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[340px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
-          <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
-            Reaction Severity
-          </Label>
-          <div className="flex flex-wrap gap-1.5 min-h-9 items-center w-full">
-            {GRADE_OPTIONS.map(grade => {
-              const isSelected = filters.grades.includes(grade.value);
-              return (
+    <div className="w-full mt-3 animate-in fade-in duration-200 space-y-3">
+      <div className="flex flex-wrap items-center gap-2">
+        {/* 1. Reaction Severity Popover */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className={triggerClassName(hasGrades)}>
+              <Activity className="w-3.5 h-3.5 mr-2" />
+              Severity
+              {hasGrades && (
+                <Badge variant="secondary" className="ml-2 px-1 text-[10px] rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
+                  {filters.grades.length}
+                </Badge>
+              )}
+              {!hasGrades && <span className="ml-1 opacity-50">Any</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[380px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
+            <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
+              Reaction Severity
+            </Label>
+            <div className="flex w-full h-9 gap-1.5 justify-between">
+              {GRADE_OPTIONS.map(grade => {
+                const isSelected = filters.grades.includes(grade.value);
+                return (
+                  <button
+                    key={grade.value}
+                    onClick={() => toggleGrade(grade.value)}
+                    className={`
+                      flex-1 h-full min-w-0 rounded-none border text-[10px] font-bold transition-all flex items-center justify-center gap-1
+                      ${isSelected
+                        ? `${grade.color} ring-1 ring-inset ring-current shadow-sm`
+                        : 'bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                      }
+                    `}
+                  >
+                    {grade.label.replace('Grade ', '')}
+                    {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse shrink-0" />}
+                  </button>
+                );
+              })}
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* 2. Procedure Outcome Popover */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className={triggerClassName(isOutcomeActive)}>
+              Outcome: <span className={`ml-1 ${!isOutcomeActive ? 'opacity-50' : 'capitalize'}`}>{filters.outcomeFilter}</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[280px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
+            <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
+              Procedure Outcome
+            </Label>
+            <div className="flex bg-slate-100 dark:bg-slate-900 p-1 border border-slate-200 dark:border-slate-800 h-9">
+              {(['all', 'completed', 'abandoned'] as const).map(outcome => (
                 <button
-                  key={grade.value}
-                  onClick={() => toggleGrade(grade.value)}
+                  key={outcome}
+                  onClick={() => updateFilter('outcomeFilter', outcome)}
                   className={`
-                    h-8 flex-1 min-w-[32px] rounded-none border text-[10px] font-bold transition-all flex items-center justify-center gap-1.5
-                    ${isSelected
-                      ? `${grade.color} ring-1 ring-inset ring-current shadow-sm`
-                      : 'bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-                    }
+                    flex-1 px-3 text-[10px] font-bold transition-all capitalize whitespace-nowrap flex items-center justify-center
+                    ${getOutcomeStyle(outcome, filters.outcomeFilter === outcome)}
                   `}
                 >
-                  {grade.label.replace('Grade ', '')}
-                  {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />}
+                  {outcome}
                 </button>
-              );
-            })}
-          </div>
-        </PopoverContent>
-      </Popover>
-
-      {/* 2. Procedure Outcome Popover */}
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" size="sm" className={triggerClassName(isOutcomeActive)}>
-            Outcome: <span className={`ml-1 ${!isOutcomeActive ? 'opacity-50' : 'capitalize'}`}>{filters.outcomeFilter}</span>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[280px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
-          <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
-            Procedure Outcome
-          </Label>
-          <div className="flex bg-slate-100 dark:bg-slate-900 p-1 border border-slate-200 dark:border-slate-800 h-9">
-            {(['all', 'completed', 'abandoned'] as const).map(outcome => (
-              <button
-                key={outcome}
-                onClick={() => updateFilter('outcomeFilter', outcome)}
-                className={`
-                  flex-1 px-3 text-[10px] font-bold transition-all capitalize whitespace-nowrap flex items-center justify-center
-                  ${getOutcomeStyle(outcome, filters.outcomeFilter === outcome)}
-                `}
-              >
-                {outcome}
-              </button>
-            ))}
-          </div>
-        </PopoverContent>
-      </Popover>
-
-      {/* 3. Date Range Popover */}
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" size="sm" className={triggerClassName(hasDates)}>
-            <Calendar className="w-3.5 h-3.5 mr-2" />
-            Date
-            {(filters.dateFrom || filters.dateTo) && (
-              <span className="ml-1 opacity-70">
-                : {filters.dateFrom ? new Date(filters.dateFrom).toLocaleDateString() : 'Start'} 
-                {' - '} 
-                {filters.dateTo ? new Date(filters.dateTo).toLocaleDateString() : 'End'}
-              </span>
-            )}
-            {!hasDates && <span className="ml-1 opacity-50">All Time</span>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
-          <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 opacity-70 flex items-center gap-1.5">
-            Date Range
-          </Label>
-          <div className="flex items-center gap-2 h-9">
-            <Input
-              type="date"
-              value={filters.dateFrom}
-              onChange={(e) => updateFilter('dateFrom', e.target.value)}
-              className="h-full flex-1 text-[11px] px-2 rounded-none border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-white dark:bg-slate-900"
-            />
-            <span className="text-[9px] text-slate-400 font-black uppercase shrink-0 px-0.5">To</span>
-            <Input
-              type="date"
-              value={filters.dateTo}
-              onChange={(e) => updateFilter('dateTo', e.target.value)}
-              className="h-full flex-1 text-[11px] px-2 rounded-none border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-white dark:bg-slate-900"
-            />
-          </div>
-        </PopoverContent>
-      </Popover>
-
-      {/* 4. Hospital Popover */}
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" size="sm" className={triggerClassName(hasHospital)}>
-            <Building2 className="w-3.5 h-3.5 mr-2" />
-            Hospital
-            <span className={`ml-1 truncate max-w-[120px] ${!hasHospital ? 'opacity-50' : 'capitalize'}`}>
-              {filters.hospital || 'All Locations'}
-            </span>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[280px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
-          <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
-            Hospital Location
-          </Label>
-          <div className="relative h-9">
-            <select
-              value={filters.hospital}
-              onChange={(e) => updateFilter('hospital', e.target.value)}
-              className="w-full h-full px-3 text-[11px] appearance-none rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-primary transition-colors cursor-pointer pr-10"
-            >
-              <option value="">All Hospitals</option>
-              {suggestions.hospitals.map(h => (
-                <option key={h} value={h}>{h}</option>
               ))}
-            </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-              <Building2 className="w-3 h-3" />
             </div>
-          </div>
-        </PopoverContent>
-      </Popover>
+          </PopoverContent>
+        </Popover>
 
-      {/* 5. Suspected Agents Popover */}
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" size="sm" className={triggerClassName(hasAgents)}>
-            <SearchIcon className="w-3.5 h-3.5 mr-2" />
-            Agents
-            {hasAgents && (
-              <Badge variant="secondary" className="ml-2 px-1 text-[10px] rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
-                {filters.suspectedAgents.length}
-              </Badge>
-            )}
-            {!hasAgents && <span className="ml-1 opacity-50">0 Selected</span>}
+        {/* 3. Date Range Popover */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className={triggerClassName(hasDates)}>
+              <Calendar className="w-3.5 h-3.5 mr-2" />
+              Date
+              {(filters.dateFrom || filters.dateTo) && (
+                <span className="ml-1 opacity-70">
+                  : {filters.dateFrom ? new Date(filters.dateFrom).toLocaleDateString() : 'Start'} 
+                  {' - '} 
+                  {filters.dateTo ? new Date(filters.dateTo).toLocaleDateString() : 'End'}
+                </span>
+              )}
+              {!hasDates && <span className="ml-1 opacity-50">All Time</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
+            <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 opacity-70 flex items-center gap-1.5">
+              Date Range
+            </Label>
+            <div className="flex items-center gap-2 h-9">
+              <Input
+                type="date"
+                value={filters.dateFrom}
+                onChange={(e) => updateFilter('dateFrom', e.target.value)}
+                className="h-full flex-1 text-[11px] px-2 rounded-none border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-white dark:bg-slate-900"
+              />
+              <span className="text-[9px] text-slate-400 font-black uppercase shrink-0 px-0.5">To</span>
+              <Input
+                type="date"
+                value={filters.dateTo}
+                onChange={(e) => updateFilter('dateTo', e.target.value)}
+                className="h-full flex-1 text-[11px] px-2 rounded-none border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-white dark:bg-slate-900"
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* 4. Hospital Popover */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className={triggerClassName(hasHospital)}>
+              <Building2 className="w-3.5 h-3.5 mr-2" />
+              Hospital
+              <span className={`ml-1 truncate max-w-[120px] ${!hasHospital ? 'opacity-50' : 'capitalize'}`}>
+                {filters.hospital || 'All Locations'}
+              </span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[280px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
+            <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
+              Hospital Location
+            </Label>
+            <div className="relative h-9">
+              <select
+                value={filters.hospital}
+                onChange={(e) => updateFilter('hospital', e.target.value)}
+                className="w-full h-full px-3 text-[11px] appearance-none rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-primary transition-colors cursor-pointer pr-10"
+              >
+                <option value="">All Hospitals</option>
+                {suggestions.hospitals.map(h => (
+                  <option key={h} value={h}>{h}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                <Building2 className="w-3 h-3" />
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* 5. Suspected Agents Toggle (Expanded Below) */}
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => setIsAgentsExpanded((prev) => !prev)}
+          className={triggerClassName(hasAgents || isAgentsExpanded)}
+        >
+          <SearchIcon className="w-3.5 h-3.5 mr-2" />
+          Agents
+          {hasAgents && (
+            <Badge variant="secondary" className="ml-2 px-1 text-[10px] rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
+              {filters.suspectedAgents.length}
+            </Badge>
+          )}
+          {!hasAgents && <span className="ml-1 opacity-50">0 Selected</span>}
+        </Button>
+
+        {/* Clear All action (only visible when filters are active) */}
+        {activeFilterCount > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearFilters}
+            className="h-8 px-2.5 text-[10px] font-bold uppercase tracking-[0.05em] text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 ml-auto transition-colors"
+          >
+            <X className="w-3 h-3 mr-1" />
+            Clear All
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[420px] max-w-screen p-0 rounded-none border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex flex-col" align="start">
-          <div className="p-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 relative">
-            <SearchIcon className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        )}
+      </div>
+
+      {/* Expanded Agents Panel */}
+      {isAgentsExpanded && (
+        <div className="w-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-sm flex flex-col animate-in slide-in-from-top-2 fade-in duration-200">
+          <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 relative flex items-center gap-4">
+            <SearchIcon className="absolute left-7 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input 
               placeholder="Search specific drugs or agents..." 
               value={agentSearch}
               onChange={(e) => setAgentSearch(e.target.value)}
-              className="pl-9 h-10 text-xs rounded-none border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary bg-white dark:bg-slate-950"
+              className="pl-9 h-10 text-xs rounded-none border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary bg-white dark:bg-slate-950 flex-1 max-w-md"
             />
             {agentSearch && (
               <button 
                 onClick={() => setAgentSearch('')}
-                className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-[calc(100%-28rem)] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
               >
                 <X className="w-4 h-4" />
               </button>
             )}
+            
+            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 opacity-70 ml-auto flex gap-2">
+               {hasAgents && <span className="text-primary">{filters.suspectedAgents.length} Selected</span>}
+            </div>
           </div>
           
-          <div className="p-3 bg-white dark:bg-slate-950 min-h-[100px] max-h-[300px] overflow-y-auto custom-scrollbar">
+          <div className="p-4 min-h-[100px] max-h-[300px] overflow-y-auto custom-scrollbar">
             <div className="flex flex-wrap gap-2">
               {filteredDrugs.length > 0 ? (
                 filteredDrugs.map(({ drug, category }) => {
@@ -297,7 +321,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                     <button
                       key={drug}
                       onClick={(e) => {
-                        e.preventDefault(); // keep popover open when selecting/deselecting
+                        e.preventDefault();
                         toggleAgent(drug);
                       }}
                       className={`
@@ -323,29 +347,8 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
               )}
             </div>
           </div>
-          
-          <div className="p-2 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center text-[10px] text-slate-500">
-            <span>Select multiple agents to filter</span>
-            {hasAgents && (
-              <span className="font-bold text-primary">{filters.suspectedAgents.length} Active</span>
-            )}
-          </div>
-        </PopoverContent>
-      </Popover>
-
-      {/* Clear All action (only visible when filters are active) */}
-      {activeFilterCount > 0 && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={clearFilters}
-          className="h-8 px-2.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 ml-auto transition-colors"
-        >
-          <X className="w-3 h-3 mr-1" />
-          Clear All
-        </Button>
+        </div>
       )}
-
     </div>
   );
 };
