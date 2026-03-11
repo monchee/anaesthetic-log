@@ -11,9 +11,20 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.15.0",
+      codename: "Lignocaine",
+      highlight: true,
+      changes: [
+        "Comprehensive typography overhaul aligning with NSW Health standards.",
+        "Integrated 'Public Sans' font and NSW Health Blue branding throughout the application.",
+        "Standardized clinical form layouts (Testing Log, Patient History) and print views for professional presentation.",
+        "Unified top bar button styling and internal accessibility labels for improved usability.",
+      ]
+    },
+    {
       version: "v0.14.0",
       codename: "Rocuronium",
-      highlight: true,
+      highlight: false,
       changes: [
         "Internal improvements - code quality checks now run faster and more reliably.",
         "Better test coverage helps catch bugs before they reach you.",
