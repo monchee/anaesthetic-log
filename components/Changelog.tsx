@@ -11,9 +11,20 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.18.0",
+      codename: "Sugammadex",
+      highlight: true,
+      changes: [
+        "Implemented 'Utility Belt' horizontal filter bar with Popover-based controls for severity, outcome, date, and hospital.",
+        "Redesigned filter navigation to reclaim dashboard space while ensuring filters apply instantly (auto-apply).",
+        "Enhanced Reaction Severity selection with a custom grid-wrap layout for improved touch ergonomics.",
+        "Refactored Suspected Agents selection into an inline expandable panel with integrated search.",
+      ]
+    },
+    {
       version: "v0.17.0",
       codename: "Remifentanil",
-      highlight: true,
+      highlight: false,
       changes: [
         "Implemented Route-based Code Splitting using React.lazy and Suspense, reducing initial bundle size by ~85KB.",
         "Conducted comprehensive Security Review against OWASP Top 10 standards.",
