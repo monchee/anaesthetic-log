@@ -290,25 +290,28 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
       {/* Expanded Agents Panel */}
       {isAgentsExpanded && (
         <div className="w-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-sm flex flex-col animate-in slide-in-from-top-2 fade-in duration-200">
-          <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 relative flex items-center gap-4">
-            <SearchIcon className="absolute left-7 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <Input 
-              placeholder="Search specific drugs or agents..." 
-              value={agentSearch}
-              onChange={(e) => setAgentSearch(e.target.value)}
-              className="pl-9 h-10 text-xs rounded-none border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary bg-white dark:bg-slate-950 flex-1 max-w-md"
-            />
-            {agentSearch && (
-              <button 
-                onClick={() => setAgentSearch('')}
-                className="absolute right-[calc(100%-28rem)] top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
+          <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-wrap items-center gap-4 justify-between">
+            <div className="relative w-full max-w-[320px]">
+              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Input 
+                placeholder="Search specific drugs or agents..." 
+                value={agentSearch}
+                onChange={(e) => setAgentSearch(e.target.value)}
+                className="pl-9 pr-9 h-8 text-xs rounded-sm border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-primary bg-white dark:bg-slate-950 w-full shadow-sm"
+              />
+              {agentSearch && (
+                <button 
+                  onClick={() => setAgentSearch('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 flex items-center justify-center p-1 rounded-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
             
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 opacity-70 ml-auto flex gap-2">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 opacity-70 flex items-center gap-2">
                {hasAgents && <span className="text-primary">{filters.suspectedAgents.length} Selected</span>}
+               {!hasAgents && <span>0 Selected</span>}
             </div>
           </div>
           
