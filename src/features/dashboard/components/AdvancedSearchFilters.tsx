@@ -127,19 +127,21 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
               {!hasGrades && <span className="ml-1 opacity-50">Any</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[380px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
+          <PopoverContent className="w-[360px] p-4 rounded-none border-slate-200 dark:border-slate-800 shadow-md" align="start">
             <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
               Reaction Severity
             </Label>
-            <div className="flex w-full h-9 gap-1.5 justify-between">
+            <div className="grid grid-cols-6 gap-2 w-full h-9">
               {GRADE_OPTIONS.map(grade => {
                 const isSelected = filters.grades.includes(grade.value);
+                const isUngraded = grade.value === 'ungraded';
                 return (
                   <button
                     key={grade.value}
                     onClick={() => toggleGrade(grade.value)}
                     className={`
-                      flex-1 h-full min-w-0 rounded-none border text-[10px] font-bold transition-all flex items-center justify-center gap-1
+                      ${isUngraded ? 'col-span-2' : 'col-span-1'}
+                      h-full rounded-none border text-[10px] font-bold transition-all flex items-center justify-center gap-1
                       ${isSelected
                         ? `${grade.color} ring-1 ring-inset ring-current shadow-sm`
                         : 'bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
