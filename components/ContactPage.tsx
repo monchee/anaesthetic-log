@@ -13,7 +13,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
               <Mail className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
@@ -25,7 +25,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
         <CardContent className="pt-6 space-y-6">
           
           {/* Clinic Contact */}
-          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-lg p-6 border border-slate-900/10 dark:border-primary/30">
+          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
             <div className="flex items-start gap-4">
               <Building2 className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
@@ -40,7 +40,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
 
           {/* Support Options */}
           <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-3">
                 <MessageSquare className="w-5 h-5 text-blue-500" />
                 <h4 className="font-semibold text-slate-900 dark:text-white">General Enquiries</h4>
@@ -53,7 +53,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
               </p>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-3">
                 <Bug className="w-5 h-5 text-red-500" />
                 <h4 className="font-semibold text-slate-900 dark:text-white">Report an Issue</h4>
@@ -66,7 +66,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
               </p>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-3">
                 <Lightbulb className="w-5 h-5 text-amber-500" />
                 <h4 className="font-semibold text-slate-900 dark:text-white">Feature Requests</h4>
@@ -81,7 +81,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Tips for Reporting Issues */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-5 border border-blue-100 dark:border-blue-800/40">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-none p-5 border border-blue-100 dark:border-blue-800/40">
             <h4 className="font-semibold text-blue-800 dark:text-blue-300 mb-3">Tips for Reporting Issues</h4>
             <ul className="space-y-2 text-sm text-blue-700 dark:text-blue-300">
               {[

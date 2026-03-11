@@ -47,7 +47,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
               <Pill className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
@@ -69,7 +69,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
                 return (
                   <div 
                     key={category}
-                    className="bg-slate-50 dark:bg-slate-900 rounded-lg p-4 border border-slate-200 dark:border-slate-800"
+                    className="bg-slate-50 dark:bg-slate-900 rounded-none p-4 border border-slate-200 dark:border-slate-800"
                   >
                     <h4 className={`font-semibold mb-2 ${theme?.headerText || 'text-slate-900 dark:text-white'}`}>
                       {category}
@@ -95,7 +95,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
             <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
               Cross-Reactivity & Alternatives
             </h3>
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800">
               {crossReactivityInfo.map((item, idx) => (
                 <AccordionItem 
                   key={idx}
@@ -121,7 +121,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Disclaimer */}
-          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 border border-amber-200 dark:border-amber-800/40">
+          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-none p-4 border border-amber-200 dark:border-amber-800/40">
             <p className="text-sm text-amber-800 dark:text-amber-200">
               <strong>Note:</strong> This reference is for general guidance only. Always consult current guidelines 
               and consider individual patient factors when making clinical decisions.

@@ -46,7 +46,7 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
         <CardContent className="p-4 pt-6">
           <div className="grid grid-cols-2 gap-3">
             {/* Total */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-1">
                 <Users className="w-4 h-4 text-primary" />
                 <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Records</span>
@@ -55,7 +55,7 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             </div>
 
             {/* Severe */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-1">
                 <AlertTriangle className="w-4 h-4 text-status-grade3" />
                 <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Severe</span>
@@ -67,7 +67,7 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             </div>
 
             {/* Abandoned */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-1">
                 <Ban className="w-4 h-4 text-status-grade2" />
                 <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Abandoned</span>
@@ -79,7 +79,7 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             </div>
 
             {/* Avg Time */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-1">
                 <Timer className="w-4 h-4 text-primary" />
                 <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Onset</span>
@@ -102,7 +102,7 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
         </CardHeader>
         <CardContent className="p-4 pt-6">
           {/* Stacked Bar */}
-          <div className="flex h-8 w-full rounded-lg overflow-hidden mb-4 bg-slate-100 dark:bg-slate-800">
+          <div className="flex h-8 w-full rounded-none overflow-hidden mb-4 bg-slate-100 dark:bg-slate-800">
             {gradeCounts.I > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.I / totalPatients) * 100}%` : '0%' }} 
@@ -137,23 +137,23 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
           
           <div className="grid grid-cols-3 gap-2 text-xs mt-4">
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm bg-status-grade1"></span>
+              <span className="w-2.5 h-2.5 rounded-none bg-status-grade1"></span>
               <span className="text-slate-600 dark:text-slate-400">I: <b className="text-slate-900 dark:text-white">{gradeCounts.I}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm bg-status-grade2"></span>
+              <span className="w-2.5 h-2.5 rounded-none bg-status-grade2"></span>
               <span className="text-slate-600 dark:text-slate-400">II: <b className="text-slate-900 dark:text-white">{gradeCounts.II}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm bg-status-grade3"></span>
+              <span className="w-2.5 h-2.5 rounded-none bg-status-grade3"></span>
               <span className="text-slate-600 dark:text-slate-400">III: <b className="text-slate-900 dark:text-white">{gradeCounts.III}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm bg-status-grade4"></span>
+              <span className="w-2.5 h-2.5 rounded-none bg-status-grade4"></span>
               <span className="text-slate-600 dark:text-slate-400">IV: <b className="text-slate-900 dark:text-white">{gradeCounts.IV}</b></span>
             </div>
             <div className="flex items-center gap-1.5 col-span-2">
-              <span className="w-2.5 h-2.5 rounded-sm bg-slate-300"></span>
+              <span className="w-2.5 h-2.5 rounded-none bg-slate-300"></span>
               <span className="text-slate-600 dark:text-slate-400">Ungraded: <b className="text-slate-900 dark:text-white">{gradeCounts.Ungraded}</b></span>
             </div>
           </div>
@@ -178,9 +178,9 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                       <span className="font-medium text-slate-700 dark:text-slate-300 truncate pr-2">{agent.name}</span>
                       <span className="font-bold text-slate-900 dark:text-white shrink-0">{agent.count}</span>
                     </div>
-                    <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-sm overflow-hidden">
+                    <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-none overflow-hidden">
                       <div 
-                        className="h-full bg-primary rounded-sm transition-all duration-700" 
+                        className="h-full bg-primary rounded-none transition-all duration-700" 
                         style={{ 
                           width: animateCharts ? `${percentage}%` : '0%',
                           transitionDelay: `${idx * 50}ms`

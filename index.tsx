@@ -20,15 +20,15 @@ root.render(
 const createUpdateNotification = () => {
   const notification = document.createElement('div');
   notification.id = 'pwa-update-notification';
-  notification.className = 'fixed top-4 right-4 z-[9999] bg-gradient-to-r from-[#8055f1] to-[#6b42d1] text-white px-6 py-4 rounded-lg shadow-2xl flex items-center gap-4 max-w-md animate-in slide-in-from-top-2 fade-in duration-300';
+  notification.className = 'fixed top-4 right-4 z-[9999] bg-gradient-to-r from-[#8055f1] to-[#6b42d1] text-white px-6 py-4 rounded-none shadow-2xl flex items-center gap-4 max-w-md animate-in slide-in-from-top-2 fade-in duration-300';
   notification.innerHTML = `
     <div class="flex-1">
       <div class="font-bold text-sm mb-1">New Version Available</div>
       <div class="text-xs text-white/90">A new version of the application is ready to install.</div>
     </div>
     <div class="flex gap-2">
-      <button id="pwa-update-dismiss" class="px-3 py-1.5 text-xs font-semibold bg-white/10 hover:bg-white/20 rounded-md transition-colors">Later</button>
-      <button id="pwa-update-refresh" class="px-3 py-1.5 text-xs font-semibold bg-white text-[#8055f1] hover:bg-white/90 rounded-md transition-colors">Update Now</button>
+      <button id="pwa-update-dismiss" class="px-3 py-1.5 text-xs font-semibold bg-white/10 hover:bg-white/20 rounded-none transition-colors">Later</button>
+      <button id="pwa-update-refresh" class="px-3 py-1.5 text-xs font-semibold bg-white text-[#8055f1] hover:bg-white/90 rounded-none transition-colors">Update Now</button>
     </div>
   `;
   document.body.appendChild(notification);

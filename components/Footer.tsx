@@ -63,7 +63,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-none border border-slate-200 dark:border-slate-700">
                 <Database className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                 <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
                   Dataset: <span className="font-mono">{databaseDate || '13/12/2025'}</span>
@@ -74,7 +74,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
                 onClick={() => setScreen(Screen.CHANGELOG)}
                 className="hover:text-primary dark:hover:text-primary transition-colors font-semibold"
               >
-                v0.15.0
+                v0.16.0
               </button>
             </div>
           </div>

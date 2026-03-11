@@ -113,7 +113,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
   );
 
   return (
-    <div className="w-full p-4 bg-white dark:bg-slate-950 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+    <div className="w-full p-4 bg-white dark:bg-slate-950 rounded-none border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
       
       {/* Row 1: Reaction Grade and Outcome - Vertically Aligned */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -202,7 +202,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
           <select
             value={filters.hospital}
             onChange={(e) => updateFilter('hospital', e.target.value)}
-            className="w-full h-9 px-3 text-sm rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary"
+            className="w-full h-9 px-3 text-sm rounded-none border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary"
           >
             <option value="">All Hospitals</option>
             {suggestions.hospitals.map(h => (

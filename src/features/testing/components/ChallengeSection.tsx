@@ -48,14 +48,14 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
       {/* Main Toggle */}
       <div 
         onClick={onToggleChallenge}
-        className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 group ${
+        className={`flex items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-all duration-300 group ${
           proceedToChallenge 
           ? 'border-primary bg-slate-50 dark:bg-slate-900/10 shadow-sm' 
           : 'border-slate-100 hover:border-slate-300 dark:border-slate-800 dark:hover:border-slate-700 bg-white dark:bg-slate-950'
         }`}
       >
         <div className="flex items-center gap-4">
-          <div className={`p-2.5 rounded-full transition-colors ${
+          <div className={`p-2.5 rounded-none transition-colors ${
             proceedToChallenge 
             ? 'bg-primary text-white' 
             : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'
@@ -71,8 +71,8 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
         </div>
         
         {/* Visual Switch */}
-        <div className={`w-12 h-7 rounded-full p-1 transition-colors duration-300 ease-in-out ${proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}>
-          <div className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ease-in-out ${proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
+        <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-300 ease-in-out ${proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}>
+          <div className={`w-5 h-5 bg-white rounded-none shadow-sm transform transition-transform duration-300 ease-in-out ${proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
         </div>
       </div>
 
@@ -90,7 +90,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                 <select 
                   value={challengeDrug} 
                   onChange={(e) => onChange('challengeDrug', e.target.value)}
-                  className="w-full pl-10 h-11 border-slate-200 border rounded-md focus:border-primary focus:ring-primary dark:bg-slate-950 dark:border-slate-800 focus:outline-none focus:ring-2"
+                  className="w-full pl-10 h-11 border-slate-200 border rounded-none focus:border-primary focus:ring-primary dark:bg-slate-950 dark:border-slate-800 focus:outline-none focus:ring-2"
                 >
                   <option value="" disabled>Choose drug from list...</option>
                   {challengeOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
@@ -115,13 +115,13 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
               <button 
                 type="button" 
                 onClick={() => onChange('outcome', 'SUCCESS')}
-                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
+                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-all duration-200 hover:shadow-md ${
                   outcome === 'SUCCESS' 
                   ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300' 
                   : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400'
                 }`}
               >
-                <div className={`p-3 rounded-full ${
+                <div className={`p-3 rounded-none ${
                   outcome === 'SUCCESS' ? 'bg-green-100 text-green-600 dark:bg-green-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
                 }`}>
                   <ThumbsUp className="w-6 h-6" />
@@ -137,13 +137,13 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
               <button 
                 type="button" 
                 onClick={() => onChange('outcome', 'UNSUCCESS')}
-                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
+                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-all duration-200 hover:shadow-md ${
                   outcome === 'UNSUCCESS' 
                   ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300' 
                   : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400'
                 }`}
               >
-                <div className={`p-3 rounded-full ${
+                <div className={`p-3 rounded-none ${
                   outcome === 'UNSUCCESS' ? 'bg-red-100 text-red-600 dark:bg-red-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
                 }`}>
                   <ThumbsDown className="w-6 h-6" />
@@ -160,7 +160,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
 
           {/* Reaction Details */}
           {outcome === 'UNSUCCESS' && (
-            <div className="bg-red-50 dark:bg-red-900/10 p-5 rounded-xl border border-red-200 dark:border-red-900/30 space-y-6 animate-in fade-in slide-in-from-top-1 shadow-sm">
+            <div className="bg-red-50 dark:bg-red-900/10 p-5 rounded-none border border-red-200 dark:border-red-900/30 space-y-6 animate-in fade-in slide-in-from-top-1 shadow-sm">
               <div className="flex items-center gap-2 pb-2 border-b border-red-200 dark:border-red-900/30">
                 <Activity className="w-5 h-5 text-red-600" />
                 <h4 className="font-bold text-red-800 dark:text-red-300 text-sm uppercase tracking-wide">
@@ -190,7 +190,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                   <select 
                     value={interventionType} 
                     onChange={(e) => onChange('interventionType', e.target.value)}
-                    className="w-full h-11 px-3 border-red-200 border rounded-md focus:border-red-400 focus:ring-red-400 bg-white dark:bg-slate-950 dark:border-red-900/30 focus:outline-none focus:ring-2"
+                    className="w-full h-11 px-3 border-red-200 border rounded-none focus:border-red-400 focus:ring-red-400 bg-white dark:bg-slate-950 dark:border-red-900/30 focus:outline-none focus:ring-2"
                   >
                     <option value="" disabled>Select intervention...</option>
                     {interventionOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
@@ -218,7 +218,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                       key={sym}
                       type="button"
                       onClick={() => onToggleSymptom(sym)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
+                      className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-all duration-200 ${
                         symptoms.includes(sym)
                         ? 'bg-red-600 text-white border-red-600 shadow-md transform scale-105'
                         : 'bg-white text-red-900 border-red-200 hover:bg-red-100 hover:border-red-300 dark:bg-slate-950 dark:text-red-200 dark:border-red-900/50'

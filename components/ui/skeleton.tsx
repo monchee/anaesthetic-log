@@ -7,7 +7,7 @@ interface SkeletonProps {
 export const Skeleton: React.FC<SkeletonProps> = ({ className = '' }) => {
   return (
     <div
-      className={`animate-pulse rounded-md bg-slate-200 dark:bg-slate-800 ${className}`}
+      className={`animate-pulse rounded-none bg-slate-200 dark:bg-slate-800 ${className}`}
       aria-hidden="true"
     />
   );
@@ -37,7 +37,7 @@ interface SkeletonCardProps {
 
 export const SkeletonCard: React.FC<SkeletonCardProps> = ({ className = '' }) => {
   return (
-    <div className={`p-6 rounded-xl border border-slate-200 dark:border-slate-800 ${className}`}>
+    <div className={`p-6 rounded-none border border-slate-200 dark:border-slate-800 ${className}`}>
       <Skeleton className="w-12 h-12 mb-4" />
       <Skeleton className="w-3/4 h-6 mb-2" />
       <Skeleton className="w-1/2 h-4 mb-4" />

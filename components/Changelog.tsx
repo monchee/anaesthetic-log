@@ -11,9 +11,20 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.16.0",
+      codename: "Bupivacaine",
+      highlight: true,
+      changes: [
+        "System-wide elimination of rounded corners for a sharp, clinical design profile.",
+        "Standardized all UI primitives (Buttons, Cards, Inputs, Dialogs) with 'rounded-none' geometry.",
+        "Refined dashboard analytics and charts with high-precision, square-edged layouts.",
+        "Updated technical documentation and privacy policies to match the new clinical aesthetic.",
+      ]
+    },
+    {
       version: "v0.15.0",
       codename: "Lignocaine",
-      highlight: true,
+      highlight: false,
       changes: [
         "Comprehensive typography overhaul aligning with NSW Health standards.",
         "Integrated 'Public Sans' font and NSW Health Blue branding throughout the application.",
@@ -169,7 +180,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
         <Card>
             <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+                    <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
                         <ShieldCheck className="w-6 h-6 text-primary dark:text-primary" />
                     </div>
                     <div>
@@ -183,7 +194,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                     {versions.map((v, idx) => (
                         <div key={idx} className="relative pl-8">
                             {/* Timeline Dot */}
-                            <div className={`absolute -left-[9px] top-0 h-4 w-4 rounded-full border-2 border-white dark:border-slate-900 shadow-sm ${
+                            <div className={`absolute -left-[9px] top-0 h-4 w-4 rounded-none border-2 border-white dark:border-slate-900 shadow-sm ${
                               v.highlight ? 'bg-gradient-to-r from-primary to-[var(--primary)] animate-pulse' : 'bg-primary'
                             }`} />
                             
@@ -197,14 +208,14 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                                   )}
                                 </div>
                                 {v.highlight && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-primary to-[var(--primary)] text-white">
+                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-none text-xs font-medium bg-gradient-to-r from-primary to-[var(--primary)] text-white">
                                         <Sparkles className="w-3 h-3" />
                                         Latest
                                     </span>
                                 )}
                             </div>
                             
-                            <div className="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-4 border border-slate-100 dark:border-slate-800">
+                            <div className="bg-slate-50 dark:bg-slate-900/50 rounded-none p-4 border border-slate-100 dark:border-slate-800">
                                 <ul className="space-y-2.5">
                                     {v.changes.map((change, cIdx) => (
                                         <li key={cIdx} className="flex gap-2 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">

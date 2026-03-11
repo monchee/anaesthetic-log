@@ -21,7 +21,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
   return (
     <Card className="max-w-4xl mx-auto mt-8 print:shadow-none print:border-none print:max-w-none print:mt-0">
         {/* Screen-only Controls */}
-        <div className="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center rounded-t-xl print:hidden">
+        <div className="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center rounded-none print:hidden">
             <h3 className="text-lg font-semibold tracking-tight text-slate-800">Testing Plan Document</h3>
             <Button size="sm" onClick={handlePrint} className="bg-slate-900">
                 <Printer className="w-4 h-4 mr-2" /> Print Now
@@ -45,7 +45,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </div>
 
             {/* Patient Banner */}
-            <div className="bg-slate-50 border border-slate-200 p-4 rounded-md grid grid-cols-2 gap-4 mt-8 print:bg-slate-50 print:p-2 print:mt-2 print:gap-2">
+            <div className="bg-slate-50 border border-slate-200 p-4 rounded-none grid grid-cols-2 gap-4 mt-8 print:bg-slate-50 print:p-2 print:mt-2 print:gap-2">
                 <div>
                     <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Patient Name</p>
                     <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{patient.firstName} {patient.lastName}</p>

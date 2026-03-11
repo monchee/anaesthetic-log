@@ -241,7 +241,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                     </SheetHeader>
                                     
                                     <div className="space-y-6">
-                                        <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800">
+                                        <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-none border border-slate-100 dark:border-slate-800">
                                             <h4 className="font-semibold mb-2 flex items-center gap-2">
                                                 <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
                                             </h4>
@@ -253,7 +253,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
                                         <div className="space-y-4">
                                             <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                                                     2
                                                 </div>
                                                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -262,7 +262,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             </div>
 
                                             <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                                                     3
                                                 </div>
                                                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -271,7 +271,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             </div>
 
                                             <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                                                     4
                                                 </div>
                                                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -280,7 +280,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             </div>
 
                                             <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                                                     5
                                                 </div>
                                                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -289,7 +289,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             </div>
 
                                             <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                                                     6
                                                 </div>
                                                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -368,7 +368,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
             {/* Upload Status Banner */}
             {uploadStatus && (
-                <div className={`p-4 mx-6 mt-4 mb-2 rounded-md flex items-start gap-3 text-sm animate-in fade-in slide-in-from-top-2 ${
+                <div className={`p-4 mx-6 mt-4 mb-2 rounded-none flex items-start gap-3 text-sm animate-in fade-in slide-in-from-top-2 ${
                     uploadStatus.type === 'error' 
                     ? 'bg-red-50 text-red-900 border border-red-200 dark:bg-red-900/30 dark:text-red-200 dark:border-red-900/50' 
                     : 'bg-green-50 text-green-900 border border-green-200 dark:bg-green-900/30 dark:text-green-200 dark:border-green-900/50'
@@ -444,7 +444,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                                     <div
                                                         key={idx}
                                                         className={`
-                                                            h-2.5 w-2.5 rounded-full cursor-help inline-block
+                                                            h-2.5 w-2.5 rounded-none cursor-help inline-block
                                                             ${e.type === 'reaction' ? 'bg-status-grade3' : ''}
                                                             ${e.type === 'induction' ? 'bg-primary' : ''}
                                                             ${e.type === 'med' ? 'bg-slate-300' : ''}
@@ -512,7 +512,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                         <div
                                             key={idx}
                                             className={`
-                                                h-2 w-2 rounded-full
+                                                h-2 w-2 rounded-none
                                                 ${e.type === 'reaction' ? 'bg-status-grade3' : ''}
                                                 ${e.type === 'induction' ? 'bg-primary' : ''}
                                                 ${e.type === 'med' ? 'bg-slate-300 dark:bg-slate-600' : ''}
@@ -640,7 +640,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             </td>
                                             <td className="px-4 py-2.5 text-center border-l border-slate-200 dark:border-slate-800">
                                                 {totalCategoryPositives > 0 ? (
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-900/50 text-slate-800 dark:text-primary">
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-none text-xs font-medium bg-slate-100 dark:bg-slate-900/50 text-slate-800 dark:text-primary">
                                                         {totalCategoryPositives}
                                                     </span>
                                                 ) : (

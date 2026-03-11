@@ -13,7 +13,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
               <AlertTriangle className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
@@ -27,7 +27,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
         <CardContent className="pt-6 space-y-6">
 
           {/* Medical Disclaimer - Highlighted */}
-          <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-6 border-2 border-red-200 dark:border-red-800">
+          <div className="bg-red-50 dark:bg-red-900/20 rounded-none p-6 border-2 border-red-200 dark:border-red-800">
             <div className="flex items-start gap-4">
               <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400 shrink-0" />
               <div>
@@ -48,7 +48,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Emergency Warning */}
-          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-5 border border-amber-200 dark:border-amber-800">
+          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-none p-5 border border-amber-200 dark:border-amber-800">
             <div className="flex items-start gap-3">
               <Phone className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
               <div>
@@ -69,7 +69,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Clinical Judgment Required */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Clinical Judgment Required</h4>
@@ -100,7 +100,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* No Warranty */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">No Warranty</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>
@@ -127,7 +127,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Limitation of Liability */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Limitation of Liability</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>
@@ -155,7 +155,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Professional Use Only */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Professional Use Only</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>
@@ -168,7 +168,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Guidelines Change */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Clinical Guidelines Evolve</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>
@@ -181,7 +181,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Acceptance */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-5 border border-blue-200 dark:border-blue-800">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-none p-5 border border-blue-200 dark:border-blue-800">
             <h4 className="font-semibold text-blue-900 dark:text-blue-300 mb-3">Use of Application Constitutes Acceptance</h4>
             <div className="text-sm text-blue-800 dark:text-blue-300">
               <p>

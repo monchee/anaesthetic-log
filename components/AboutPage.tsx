@@ -13,7 +13,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
               <Info className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
@@ -25,7 +25,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
         <CardContent className="pt-6 space-y-6">
           
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-lg p-6 border border-slate-900/10 dark:border-primary/30">
+          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
             <div className="flex items-start gap-4">
               <Stethoscope className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
@@ -42,7 +42,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
 
           {/* Purpose */}
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-3">
                 <Target className="w-5 h-5 text-primary" />
                 <h4 className="font-semibold">Purpose</h4>
@@ -53,7 +53,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
               </p>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-3">
                 <Shield className="w-5 h-5 text-primary" />
                 <h4 className="font-semibold">Data Privacy</h4>
@@ -66,7 +66,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Features */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Users className="w-5 h-5 text-primary" />
               <h4 className="font-semibold">Key Features</h4>

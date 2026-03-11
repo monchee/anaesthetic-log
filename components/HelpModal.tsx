@@ -134,7 +134,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
         <Button
           variant="outline"
           size="sm"
-          className="w-full justify-start px-4 py-3 h-auto rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium"
+          className="w-full justify-start px-4 py-3 h-auto rounded-none hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium"
           onClick={() => setIsOpen(true)}
           data-help-modal-trigger
         >
@@ -162,9 +162,9 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
           </DialogHeader>
 
           {/* Welcome Message */}
-          <div className="p-4 bg-gradient-to-r from-slate-900/10 to-primary/10 dark:from-slate-900/30 dark:to-slate-800/20 rounded-lg border border-slate-900/20 dark:border-primary/30 mb-4">
+          <div className="p-4 bg-gradient-to-r from-slate-900/10 to-primary/10 dark:from-slate-900/30 dark:to-slate-800/20 rounded-none border border-slate-900/20 dark:border-primary/30 mb-4">
             <div className="flex items-start gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 shrink-0">
+              <div className="flex items-center justify-center w-10 h-10 rounded-none bg-slate-900 shrink-0">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -183,10 +183,10 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
             {HELP_SECTIONS.map((section) => (
               <div
                 key={section.title}
-                className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800"
+                className="p-3 bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800"
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-900/10 dark:bg-slate-900/30">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-none bg-slate-900/10 dark:bg-slate-900/30">
                     {section.icon}
                   </div>
                   <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
@@ -209,7 +209,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
           </div>
 
           {/* Quick Tips - Full Width */}
-          <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-900/40 mt-4">
+          <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-none border border-blue-100 dark:border-blue-900/40 mt-4">
             <div className="flex items-center gap-2 mb-1.5">
               <Filter className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span className="font-medium text-blue-700 dark:text-blue-300 text-sm">
@@ -254,7 +254,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
                   </SheetHeader>
 
                   <div className="space-y-6">
-                    <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800">
+                    <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-none border border-slate-100 dark:border-slate-800">
                       <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
                         <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
                       </h4>
@@ -266,7 +266,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
 
                     <div className="space-y-4">
                       <div className="flex gap-3">
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                           2
                         </div>
                         <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -275,7 +275,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
                       </div>
 
                       <div className="flex gap-3">
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                           3
                         </div>
                         <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -284,7 +284,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
                       </div>
 
                       <div className="flex gap-3">
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                           4
                         </div>
                         <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -293,7 +293,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
                       </div>
 
                       <div className="flex gap-3">
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                           5
                         </div>
                         <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -302,7 +302,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
                       </div>
 
                       <div className="flex gap-3">
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                           6
                         </div>
                         <div className="text-sm text-slate-600 dark:text-slate-300">

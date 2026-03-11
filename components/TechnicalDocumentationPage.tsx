@@ -13,7 +13,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
               <Code className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
@@ -27,7 +27,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-lg p-6 border border-slate-900/10 dark:border-primary/30">
+          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
             <div className="flex items-start gap-4">
               <Cpu className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
@@ -40,7 +40,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Architecture */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Code className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Technology Stack</h4>
@@ -74,7 +74,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Security */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Lock className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Security Architecture</h4>
@@ -107,7 +107,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Data Flow */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Database className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Data Flow</h4>
@@ -126,7 +126,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Offline Functionality */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Smartphone className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Offline Functionality (PWA)</h4>
@@ -155,7 +155,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Browser Compatibility */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Globe className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Browser Compatibility</h4>
@@ -164,19 +164,19 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
               <p>The application supports modern browsers with JavaScript enabled:</p>
               <ul className="grid grid-cols-2 gap-2 mt-3 ml-4">
                 <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-green-500 rounded-none"></span>
                   Chrome/Edge (latest)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-green-500 rounded-none"></span>
                   Firefox (latest)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-green-500 rounded-none"></span>
                   Safari (latest)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-amber-500 rounded-none"></span>
                   Mobile browsers
                 </li>
               </ul>
@@ -184,7 +184,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Accessibility */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Accessibility Features</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>The application includes accessibility features to support diverse user needs:</p>
@@ -214,7 +214,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Version History */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Version History</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <div className="flex justify-between py-2 border-b border-slate-200 dark:border-slate-700">

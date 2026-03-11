@@ -63,7 +63,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
             </h3>
             
             {/* Controls */}
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 mb-4 text-sm print:bg-slate-50 print:border-slate-300 print:p-2 print:mb-2 print:text-xs">
+            <div className="bg-slate-50 p-4 rounded-none border border-slate-200 mb-4 text-sm print:bg-slate-50 print:border-slate-300 print:p-2 print:mb-2 print:text-xs">
                <div className="font-semibold mb-2 block md:inline md:mr-2">Controls (mm):</div>
                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:inline-flex md:gap-4">
                    <span>Histamine SPT: <strong>{data.controls?.histamineSpt || '-'}</strong></span>
@@ -105,7 +105,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                 {/* Mobile Card View */}
                 <div className="md:hidden print:hidden space-y-3">
                    {data.testPanel.map((row, i) => (
-                      <div key={i} className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                      <div key={i} className="bg-slate-50 border border-slate-200 rounded-none p-4">
                           <div className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-2">
                              {row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName}
                           </div>
@@ -142,7 +142,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
               <History className="w-5 h-5 print:w-4 print:h-4" /> Drug Challenge Details
             </h3>
             {data.proceedToChallenge ? (
-               <div className={`p-4 rounded-lg border-l-4 ${data.outcome === 'SUCCESS' 
+               <div className={`p-4 rounded-none border-l-4 ${data.outcome === 'SUCCESS' 
                    ? 'bg-green-50 border-green-500 print:bg-green-50' 
                    : 'bg-red-50 border-red-500 print:bg-red-50'} print:p-2`}>
                   <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2 gap-2 print:mb-1">
@@ -172,7 +172,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
             <h3 className="tracking-tight text-lg mb-2 flex items-center gap-2 print:text-sm print:mb-1">
               <FileText className="w-5 h-5 print:w-4 print:h-4" /> Assessment & Plan
             </h3>
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 min-h-[100px] whitespace-pre-wrap text-sm md:text-base print:p-2 print:min-h-0 print:text-xs">
+            <div className="bg-slate-50 p-4 rounded-none border border-slate-200 min-h-[100px] whitespace-pre-wrap text-sm md:text-base print:p-2 print:min-h-0 print:text-xs">
                {data.plan || 'No comments recorded.'}
             </div>
          </div>

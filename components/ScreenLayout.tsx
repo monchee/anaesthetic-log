@@ -62,7 +62,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                             
                             {/* Title Area */}
                             <div className="flex items-center gap-3 w-full sm:w-auto">
-                                <div className="bg-white/10 p-2 rounded-xl backdrop-blur-sm border border-white/10 shrink-0">
+                                <div className="bg-white/10 p-2 rounded-none backdrop-blur-sm border border-white/10 shrink-0">
                                     {icon}
                                 </div>
                                 <div className="min-w-0">
@@ -82,7 +82,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                 {/* Hamburger Menu */}
                                 <DropdownMenu>
                                     <DropdownMenuTrigger
-                                        className="h-9 px-4 rounded-md bg-white/10 hover:bg-white/20 text-white font-medium flex items-center gap-2 border border-white/10 transition-all shadow-sm group"
+                                        className="h-9 px-4 rounded-none bg-white/10 hover:bg-white/20 text-white font-medium flex items-center gap-2 border border-white/10 transition-all shadow-sm group"
                                         title="Open Navigation Menu"
                                     >
                                         <Menu className="w-4 h-4 text-white opacity-90 group-hover:opacity-100 transition-opacity" />

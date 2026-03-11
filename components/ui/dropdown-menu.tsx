@@ -45,7 +45,7 @@ export const DropdownMenuTrigger: React.FC<{ children: React.ReactNode; classNam
       aria-haspopup="true"
       aria-expanded={context.open}
       title={title}
-      className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 disabled:pointer-events-none disabled:opacity-50 ${className}`}
+      className={`inline-flex items-center justify-center whitespace-nowrap rounded-none text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 disabled:pointer-events-none disabled:opacity-50 ${className}`}
     >
       {children}
     </button>
@@ -137,7 +137,7 @@ export const DropdownMenuContent: React.FC<{ children: React.ReactNode; classNam
       ref={contentRef}
       role="menu"
       aria-orientation="vertical"
-      className={`absolute z-50 min-w-[12rem] overflow-hidden rounded-md border border-slate-200 bg-white p-1 text-slate-950 shadow-md dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 ${className || ''} ${animationClass}`}
+      className={`absolute z-50 min-w-[12rem] overflow-hidden rounded-none border border-slate-200 bg-white p-1 text-slate-950 shadow-md dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 ${className || ''} ${animationClass}`}
       style={{
         top: position.top,
         left: position.left,
@@ -175,7 +175,7 @@ export const DropdownMenuItem: React.FC<{
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-all duration-150 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50 hover:pl-3 focus:bg-slate-100 focus:text-slate-900 dark:focus:bg-slate-800 dark:focus:text-slate-50 ${className || ''}`}
+      className={`relative flex cursor-pointer select-none items-center rounded-none px-2 py-1.5 text-sm outline-none transition-all duration-150 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50 hover:pl-3 focus:bg-slate-100 focus:text-slate-900 dark:focus:bg-slate-800 dark:focus:text-slate-50 ${className || ''}`}
     >
       {children}
     </div>

@@ -13,7 +13,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
               <FileText className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
@@ -27,7 +27,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-lg p-6 border border-slate-900/10 dark:border-primary/30">
+          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
             <div className="flex items-start gap-4">
               <Gavel className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
@@ -43,7 +43,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Acceptance of Terms */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <UserCheck className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">1. Acceptance of Terms</h4>
@@ -59,7 +59,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Permitted Use */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">2. Permitted Use</h4>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>This application is intended for use by:</p>
@@ -84,7 +84,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* User Responsibilities */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">3. User Responsibilities</h4>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>As a user of this application, you agree to:</p>
@@ -114,7 +114,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Intellectual Property */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Copyright className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">4. Intellectual Property</h4>
@@ -130,7 +130,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Medical Disclaimer */}
-          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-5 border border-amber-200 dark:border-amber-800">
+          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-none p-5 border border-amber-200 dark:border-amber-800">
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
               <div>
@@ -148,7 +148,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* No Warranty */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">6. No Warranty</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>
@@ -161,7 +161,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Limitation of Liability */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">7. Limitation of Liability</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>
@@ -174,7 +174,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Termination */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">8. Termination</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>
@@ -184,7 +184,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Governing Law */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">9. Governing Law</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>

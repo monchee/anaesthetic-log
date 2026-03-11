@@ -84,7 +84,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
               <HelpCircle className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
@@ -99,7 +99,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
               <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
                 {category.category}
               </h3>
-              <div className="bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
+              <div className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800">
                 {category.items.map((item, itemIdx) => (
                   <AccordionItem 
                     key={itemIdx}

@@ -381,15 +381,15 @@ function AnaestheticLogApp() {
             >
                 <ClinicalReport data={lastSavedRecord} />
                 <div className="flex flex-col sm:flex-row gap-4 no-print mt-6">
-                    <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-sm">
+                    <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-none">
                         <Printer className="w-5 h-5 mr-2" /> Print Clinical Report
                     </Button>
-                    <Button onClick={() => setScreen(Screen.PATIENT_SUMMARY)} size="lg" variant="secondary" className="flex-1 py-6 h-auto text-base rounded-sm">
+                    <Button onClick={() => setScreen(Screen.PATIENT_SUMMARY)} size="lg" variant="secondary" className="flex-1 py-6 h-auto text-base rounded-none">
                         <User className="w-5 h-5 mr-2" /> View Patient Handout
                     </Button>
                 </div>
                 <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
-                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg rounded-sm bg-primary hover:bg-primary/90 text-white font-semibold">
+                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold">
                         <Plus className="w-5 h-5 mr-2" /> Start New Log
                     </Button>
                 </div>
@@ -418,15 +418,15 @@ function AnaestheticLogApp() {
             >
                 <PatientHandout data={lastSavedRecord} />
                 <div className="flex flex-col sm:flex-row gap-4 no-print mt-6">
-                    <Button onClick={() => setScreen(Screen.SUMMARY)} size="lg" variant="ghost" className="flex-1 py-6 h-auto text-base rounded-sm">
+                    <Button onClick={() => setScreen(Screen.SUMMARY)} size="lg" variant="ghost" className="flex-1 py-6 h-auto text-base rounded-none">
                         <ArrowLeft className="w-4 h-4 mr-2" /> Back to Clinical Report
                     </Button>
-                    <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-sm border-slate-300">
+                    <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-none border-slate-300">
                         <Printer className="w-4 h-4 mr-2" /> Print Handout
                     </Button>
                 </div>
                 <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
-                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg bg-primary hover:bg-primary/90 text-white rounded-sm font-semibold">
+                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg bg-primary hover:bg-primary/90 text-white rounded-none font-semibold">
                         <Plus className="w-5 h-5 mr-2" /> Start New Log
                     </Button>
                 </div>
@@ -515,10 +515,10 @@ function AnaestheticLogApp() {
             contentClassName="p-3 space-y-4"
             className="pb-10"
         >
-            <Card className="border-t-4 border-primary shadow-sm rounded-sm">
+            <Card className="border-t-4 border-primary shadow-sm rounded-none">
                 <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
                     <CardTitle className="flex items-center gap-2 text-lg">
-                        <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-sm">
+                        <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
                             <User className="w-4 h-4 text-primary" />
                         </div>
                         Patient Selection
@@ -629,7 +629,7 @@ function AnaestheticLogApp() {
                     <div className="flex justify-end pt-4">
                         <Button 
                             size="lg" 
-                            className="w-full sm:w-auto text-base py-6 rounded-sm bg-primary hover:bg-primary/90 text-white font-semibold"
+                            className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold"
                             onClick={() => setScreen(Screen.TESTING)}
                         >
                             Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
@@ -662,7 +662,7 @@ function App() {
               duration={5000}
               toastOptions={{
                 classNames: {
-                  toast: 'border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm',
+                  toast: 'border border-slate-200 dark:border-slate-800 rounded-none shadow-sm',
                   actionButton: 'bg-primary text-white hover:bg-primary/90',
                   description: 'text-slate-600 dark:text-slate-300',
                 }

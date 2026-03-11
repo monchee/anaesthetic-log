@@ -15,7 +15,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
               <Shield className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
@@ -29,7 +29,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-lg p-6 border border-slate-900/10 dark:border-primary/30">
+          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
             <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
               <strong>Royal Prince Alfred Hospital (RPAH) Anaesthetic Allergy Clinic</strong> is committed to protecting the privacy and confidentiality of your personal and health information. This Privacy Policy explains how we collect, use, store, and safeguard information through this application.
             </p>
@@ -39,7 +39,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Local Processing Notice */}
-          <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-5 border border-green-200 dark:border-green-800">
+          <div className="bg-green-50 dark:bg-green-900/20 rounded-none p-5 border border-green-200 dark:border-green-800">
             <div className="flex items-start gap-3">
               <Lock className="w-5 h-5 text-green-600 dark:text-green-400 shrink-0 mt-0.5" />
               <div>
@@ -52,7 +52,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Information We Collect */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Eye className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Information We Collect</h4>
@@ -77,7 +77,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* How We Use Your Information */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">How We Use Your Information</h4>
@@ -106,7 +106,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Data Storage and Security */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <Lock className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Data Storage and Security</h4>
@@ -135,7 +135,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Your Rights */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Your Rights</h4>
@@ -164,7 +164,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Cookies and Tracking */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Cookies and Tracking</h4>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>This application does not use tracking cookies or third-party analytics. Any browser storage (localStorage) is used solely for:</p>
@@ -186,7 +186,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Contact */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-5 border border-blue-200 dark:border-blue-800">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-none p-5 border border-blue-200 dark:border-blue-800">
             <div className="flex items-start gap-3">
               <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
               <div>

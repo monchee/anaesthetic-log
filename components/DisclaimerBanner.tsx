@@ -17,7 +17,7 @@ const DisclaimerBanner = ({ onClose }: DisclaimerBannerProps) => {
         </div>
         <button 
             onClick={onClose}
-            className="text-amber-700 hover:text-amber-900 dark:text-amber-400 dark:hover:text-amber-200 transition-colors shrink-0 p-1 rounded-full hover:bg-amber-200/50 dark:hover:bg-amber-800/50"
+            className="text-amber-700 hover:text-amber-900 dark:text-amber-400 dark:hover:text-amber-200 transition-colors shrink-0 p-1 rounded-none hover:bg-amber-200/50 dark:hover:bg-amber-800/50"
             aria-label="Dismiss"
         >
             <X className="w-4 h-4" />

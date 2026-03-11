@@ -248,9 +248,13 @@ export default {
   			shimmer: 'shimmer 2s linear infinite'
   		},
   		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			lg: '0',
+  			md: '0',
+  			sm: '0',
+  			xl: '0',
+  			'2xl': '0',
+  			'3xl': '0',
+  			full: '0'
   		}
   	}
   },

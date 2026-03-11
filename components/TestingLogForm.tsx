@@ -41,7 +41,7 @@ const DrugRow = React.memo(({
 
   return (
     <div
-      className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-r-md group`}
+      className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-none group`}
     >
       {/* Name Column (Full width on mobile) */}
       <div className="col-span-2 md:col-span-1 flex items-center gap-2">
@@ -152,7 +152,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
         <Card>
           <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
             <CardTitle className="flex items-center gap-2 text-base">
-              <div className="bg-slate-100 dark:bg-slate-900/40 p-1.5 rounded-md">
+              <div className="bg-slate-100 dark:bg-slate-900/40 p-1.5 rounded-none">
                  <Activity className="w-4 h-4 text-primary dark:text-primary" />
               </div>
               SPT & IDT Panel
@@ -161,7 +161,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
           <CardContent className="pt-4 space-y-6">
             
             {/* Controls */}
-            <div className="bg-slate-50 dark:bg-slate-900 px-4 py-4 rounded-lg border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
+            <div className="bg-slate-50 dark:bg-slate-900 px-4 py-4 rounded-none border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
               <div className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">
                 Reference Controls (mm):
               </div>
@@ -227,11 +227,11 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
 
                     return (
-                    <div key={category} className={`space-y-2 rounded-xl p-3 transition-colors duration-300 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
+                    <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-300 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
                         <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-slate-200 dark:border-slate-800'}`}>
                             <h4 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-slate-400'}`}>
                                 {category}
-                                {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-full ${theme.pulse} animate-pulse`}></span>}
+                                {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-none ${theme.pulse} animate-pulse`}></span>}
                             </h4>
                             <button 
                                 onClick={(e) => { e.preventDefault(); toggleCategory(categoryDrugs); }}
@@ -276,8 +276,8 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
             {/* Data Entry Table */}
             {formData.testPanel.length > 0 ? (
-              <div className={`rounded-lg overflow-hidden animate-in fade-in slide-in-from-top-2`}>
-                 <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-100/50 dark:bg-slate-900/50 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase border-b border-slate-200 dark:border-slate-800 mb-2 rounded-t-lg text-center">
+              <div className={`rounded-none overflow-hidden animate-in fade-in slide-in-from-top-2`}>
+                 <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-100/50 dark:bg-slate-900/50 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase border-b border-slate-200 dark:border-slate-800 mb-2 rounded-none text-center">
                     <div className="text-left md:text-center">Drug</div>
                     <div>SPT</div>
                     <div>1:100</div>
@@ -299,7 +299,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                  </div>
               </div>
             ) : (
-                <div className="text-center py-10 bg-slate-50 dark:bg-slate-900 rounded-lg border border-dashed border-slate-300 dark:border-slate-700">
+                <div className="text-center py-10 bg-slate-50 dark:bg-slate-900 rounded-none border border-dashed border-slate-300 dark:border-slate-700">
                     <p className="text-slate-500 dark:text-slate-400 text-sm">No drugs selected. Choose a category above to begin.</p>
                 </div>
             )}
@@ -310,7 +310,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       <Card>
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
           <CardTitle className="flex items-center gap-2 text-base">
-             <div className="bg-primary/10 dark:bg-slate-900/40 p-1.5 rounded-md">
+             <div className="bg-primary/10 dark:bg-slate-900/40 p-1.5 rounded-none">
                  <Syringe className="w-4 h-4 text-primary dark:text-primary" />
              </div>
              Drug Challenge
@@ -321,14 +321,14 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
             {/* Main Toggle */}
             <div 
                 onClick={() => handleInputChange('proceedToChallenge', !formData.proceedToChallenge)}
-                className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 group ${
+                className={`flex items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-all duration-300 group ${
                     formData.proceedToChallenge 
                     ? 'border-primary bg-[white] dark:bg-slate-900/10 shadow-sm' 
                     : 'border-slate-100 hover:border-slate-300 dark:border-slate-800 dark:hover:border-slate-700 bg-white dark:bg-slate-950'
                 }`}
             >
                 <div className="flex items-center gap-4">
-                    <div className={`p-2.5 rounded-full transition-colors ${
+                    <div className={`p-2.5 rounded-none transition-colors ${
                         formData.proceedToChallenge 
                         ? 'bg-primary text-white' 
                         : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'
@@ -344,8 +344,8 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 </div>
                 
                 {/* Visual Switch */}
-                <div className={`w-12 h-7 rounded-full p-1 transition-colors duration-300 ease-in-out ${formData.proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}>
-                    <div className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ease-in-out ${formData.proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
+                <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-300 ease-in-out ${formData.proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}>
+                    <div className={`w-5 h-5 bg-white rounded-none shadow-sm transform transition-transform duration-300 ease-in-out ${formData.proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
                 </div>
             </div>
 
@@ -391,13 +391,13 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                              <button 
                                 type="button" 
                                 onClick={() => handleInputChange('outcome', 'SUCCESS')}
-                                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
+                                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-all duration-200 hover:shadow-md ${
                                     formData.outcome === 'SUCCESS' 
                                     ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300' 
                                     : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400'
                                 }`}
                              >
-                                 <div className={`p-3 rounded-full ${
+                                 <div className={`p-3 rounded-none ${
                                      formData.outcome === 'SUCCESS' ? 'bg-green-100 text-green-600 dark:bg-green-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
                                  }`}>
                                      <ThumbsUp className="w-6 h-6" />
@@ -413,13 +413,13 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                              <button 
                                 type="button" 
                                 onClick={() => handleInputChange('outcome', 'UNSUCCESS')}
-                                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
+                                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-all duration-200 hover:shadow-md ${
                                     formData.outcome === 'UNSUCCESS' 
                                     ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300' 
                                     : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400'
                                 }`}
                              >
-                                 <div className={`p-3 rounded-full ${
+                                 <div className={`p-3 rounded-none ${
                                      formData.outcome === 'UNSUCCESS' ? 'bg-red-100 text-red-600 dark:bg-red-900/50' : 'bg-slate-100 text-slate-400 dark:bg-slate-900'
                                  }`}>
                                      <ThumbsDown className="w-6 h-6" />
@@ -436,7 +436,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
                     {/* Conditional Reaction Details */}
                     {formData.outcome === 'UNSUCCESS' && (
-                        <div className="bg-red-50 dark:bg-red-900/10 p-5 rounded-xl border border-red-200 dark:border-red-900/30 space-y-6 animate-in fade-in slide-in-from-top-1 shadow-sm">
+                        <div className="bg-red-50 dark:bg-red-900/10 p-5 rounded-none border border-red-200 dark:border-red-900/30 space-y-6 animate-in fade-in slide-in-from-top-1 shadow-sm">
                             <div className="flex items-center gap-2 pb-2 border-b border-red-200 dark:border-red-900/30">
                                 <Activity className="w-5 h-5 text-red-600" />
                                 <h4 className="font-bold text-red-800 dark:text-red-300 text-sm uppercase tracking-wide">
@@ -500,7 +500,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                             aria-checked={formData.symptoms.includes(sym)}
                                             aria-label={`${formData.symptoms.includes(sym) ? 'Remove' : 'Add'} ${sym}`}
                                             onClick={() => toggleSymptom(sym)}
-                                            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
+                                            className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-all duration-200 ${
                                                 formData.symptoms.includes(sym)
                                                 ? 'bg-red-600 text-white border-red-600 shadow-md transform scale-105'
                                                 : 'bg-white text-red-900 border-red-200 hover:bg-red-100 hover:border-red-300 dark:bg-slate-950 dark:text-red-200 dark:border-red-900/50'
@@ -533,7 +533,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       <Card>
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
            <CardTitle className="flex items-center gap-2 text-base">
-             <div className="bg-emerald-100 dark:bg-emerald-900/40 p-1.5 rounded-md">
+             <div className="bg-emerald-100 dark:bg-emerald-900/40 p-1.5 rounded-none">
                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
              </div>
              Assessment & Plan
@@ -543,7 +543,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
             <div className="space-y-2">
                 <Label>Comments / Plan</Label>
                 <textarea 
-                    className="flex min-h-[120px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
+                    className="flex min-h-[120px] w-full rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
                     placeholder="Enter clinical notes, interpretation of results, and future recommendations..."
                     value={formData.plan}
                     onChange={(e) => handleInputChange('plan', e.target.value)}

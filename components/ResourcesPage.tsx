@@ -61,7 +61,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
               <Link2 className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
@@ -84,10 +84,10 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block bg-slate-50 dark:bg-slate-900 rounded-lg p-4 border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-primary transition-colors group"
+                    className="block bg-slate-50 dark:bg-slate-900 rounded-none p-4 border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-primary transition-colors group"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="p-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shrink-0">
+                      <div className="p-2 bg-white dark:bg-slate-800 rounded-none border border-slate-200 dark:border-slate-700 shrink-0">
                         {item.icon}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -109,7 +109,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           ))}
 
           {/* Disclaimer */}
-          <div className="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 border border-slate-200 dark:border-slate-700">
+          <div className="bg-slate-100 dark:bg-slate-800 rounded-none p-4 border border-slate-200 dark:border-slate-700">
             <p className="text-xs text-slate-500 dark:text-slate-400">
               These links are provided for informational purposes. We are not responsible for the content 
               of external websites. Links were verified at the time of publication but may change.
