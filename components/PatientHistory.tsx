@@ -50,11 +50,11 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
   const doctorName = history.referringDoctor || history.anaesthetist || "Unknown";
 
   return (
-    <Card className="border-t-4 border-brand shadow-md bg-white dark:bg-slate-900">
+    <Card className="border-t-4 border-primary shadow-md bg-white dark:bg-slate-900">
       <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-        <CardTitle className="text-brand-dark dark:text-purple-300 flex items-center gap-2 text-base">
-          <div className="bg-brand-light dark:bg-purple-900/40 p-1.5 rounded-md">
-            <History className="h-4 w-4 text-brand dark:text-purple-300" />
+        <CardTitle className="flex items-center gap-2 text-base font-semibold tracking-tight">
+          <div className="bg-primary/10 dark:bg-slate-900/40 p-1.5 rounded-md">
+            <History className="h-4 w-4 text-primary dark:text-primary" />
           </div>
           Reaction History
         </CardTitle>
@@ -64,11 +64,11 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
         {/* Header Information Box */}
         <div className="mt-2 bg-slate-50 dark:bg-slate-950 p-4 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm flex flex-wrap items-center justify-between gap-y-2 gap-x-3">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
-            <span className="font-extrabold text-slate-900 dark:text-white text-lg tracking-tight">
+            <span className="font-semibold text-slate-900 dark:text-white text-lg tracking-tight">
                 {formatDate(history.date)}
             </span>
             <span className="text-slate-300 dark:text-slate-700 text-xl font-light hidden sm:inline">|</span>
-            <span className="text-base text-[#441170] dark:text-purple-300 font-bold uppercase tracking-wide leading-tight break-words">
+            <span className="text-base text-primary dark:text-primary font-semibold uppercase tracking-wide leading-tight break-words">
                 {history.procedure}
             </span>
             </div>
@@ -95,7 +95,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 {/* 1. Suspected Agents */}
                 {history.suspectedAgents && history.suspectedAgents.length > 0 && (
                     <div className="space-y-2">
-                            <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wide">
+                            <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-[10px] uppercase tracking-wider">
                             <AlertTriangle className="h-3.5 w-3.5 text-red-500" /> 
                             Suspected Culprit Agents
                         </h4>
@@ -110,8 +110,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 {/* 2. Reaction Summary & Comments */}
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wide">
-                            <FileText className="h-3.5 w-3.5 text-brand dark:text-purple-400" /> 
+                        <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-[10px] uppercase tracking-wider">
+                            <FileText className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Reaction Summary
                         </h4>
                         <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 leading-relaxed shadow-sm text-sm">
@@ -135,8 +135,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 {/* 3. Clinical Features & Treatment (Grid 1x2) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2 h-full">
-                        <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wide">
-                            <Activity className="h-3.5 w-3.5 text-brand dark:text-purple-400" /> 
+                        <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-[10px] uppercase tracking-wider">
+                            <Activity className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Clinical Features
                         </h4>
                         <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col gap-3 shadow-sm flex-1">
@@ -184,8 +184,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     </div>
 
                     <div className="flex flex-col gap-2 h-full">
-                        <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wide">
-                            <Syringe className="h-3.5 w-3.5 text-brand dark:text-purple-400" /> 
+                        <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-[10px] uppercase tracking-wider">
+                            <Syringe className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Treatment
                         </h4>
                         <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-100 dark:border-slate-800 shadow-sm flex-1">
@@ -230,8 +230,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
 
             {/* RIGHT COLUMN (Timeline) */}
             <div className="lg:col-span-5 flex flex-col gap-2 h-full">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wide">
-                    <Clock className="h-3.5 w-3.5 text-brand dark:text-purple-400" /> 
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-2 text-[10px] uppercase tracking-wider">
+                    <Clock className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                     Timeline & Medications
                 </h4>
                 {/* Removed overflow-hidden and overflow-y-auto to allow tooltips to display without clipping */}
@@ -241,7 +241,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 py-2 flex justify-between gap-2 text-xs shrink-0 rounded-t-lg">
                         <div className="flex items-center gap-1.5">
                             <span className="font-bold text-slate-500 dark:text-slate-400 text-xs">INDUCTION:</span>
-                            <span className="font-mono font-medium text-purple-600 dark:text-purple-400 text-xs">
+                            <span className="font-mono font-medium text-primary dark:text-primary text-xs">
                                 {formatTime(history.inductionTime)}
                             </span>
                         </div>
@@ -261,7 +261,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                     <div key={idx} className="relative pl-5">
                                         <div className={`absolute -left-[7px] top-1.5 h-3.5 w-3.5 rounded-full border-2 shadow-sm z-10 
                                             ${event.type === 'reaction' ? 'bg-red-500 border-white dark:border-slate-900' : 
-                                                event.type === 'induction' ? 'bg-purple-500 border-white dark:border-slate-900' :
+                                                event.type === 'induction' ? 'bg-primary border-white dark:border-slate-900' :
                                                 'bg-slate-300 dark:bg-slate-600 border-white dark:border-slate-900'}`} 
                                         />
                                         
@@ -271,10 +271,10 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                     {event.type === 'induction' ? (
                                                         <HoverCard>
                                                             <HoverCardTrigger className="cursor-help flex items-center gap-1.5 group">
-                                                                <span className="font-semibold text-xs text-purple-700 dark:text-purple-300">
+                                                                <span className="font-semibold text-xs text-primary dark:text-primary">
                                                                     {event.label}
                                                                 </span>
-                                                                <MonitorCheck className="w-3.5 h-3.5 text-purple-500 opacity-70" />
+                                                                <MonitorCheck className="w-3.5 h-3.5 text-primary opacity-70" />
                                                             </HoverCardTrigger>
                                                             <HoverCardContent className="w-auto px-3 py-1.5 z-50">
                                                                 <span className="font-medium text-xs text-slate-100 whitespace-nowrap">
@@ -308,7 +308,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                 </div>
                                                 <span className={`font-mono text-xs font-bold ${
                                                     event.type === 'reaction' ? 'text-red-600 dark:text-red-400' : 
-                                                    event.type === 'induction' ? 'text-purple-600 dark:text-purple-400' :
+                                                    event.type === 'induction' ? 'text-primary dark:text-primary' :
                                                     'text-slate-400 dark:text-slate-500'
                                                 }`}>
                                                     {formatTime(event.time)}

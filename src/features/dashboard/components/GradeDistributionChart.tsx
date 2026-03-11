@@ -22,7 +22,7 @@ export const GradeDistributionChart: React.FC<GradeDistributionChartProps> = ({
   return (
     <Card className="shadow-sm h-full">
       <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-        <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
+        <CardTitle className="text-lg text-slate-800 dark:text-primary flex items-center gap-2">
           <PieChart className="w-5 h-5" /> Reaction Severity Distribution
         </CardTitle>
       </CardHeader>

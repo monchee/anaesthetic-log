@@ -21,7 +21,7 @@ export const TopAgentsChart: React.FC<TopAgentsChartProps> = ({
   return (
     <Card className="shadow-sm h-full">
       <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-        <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
+        <CardTitle className="text-lg text-slate-800 dark:text-primary flex items-center gap-2">
           <BarChart3 className="w-5 h-5" /> Top 5 Suspected Agents
         </CardTitle>
       </CardHeader>
@@ -37,7 +37,7 @@ export const TopAgentsChart: React.FC<TopAgentsChartProps> = ({
                 </div>
                 <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-[#8055f1] dark:bg-purple-500 rounded-full transition-all duration-1000 ease-out group-hover:bg-[#6b42d1] dark:group-hover:bg-purple-400" 
+                    className="h-full bg-primary dark:bg-primary rounded-full transition-all duration-1000 ease-out group-hover:bg-primary dark:group-hover:bg-primary" 
                     style={{ 
                       width: animateCharts ? `${percentage}%` : '0%',
                       transitionDelay: `${idx * 100}ms`

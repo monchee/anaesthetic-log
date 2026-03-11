@@ -1,5 +1,5 @@
 import React from 'react';
-import { Label, Input, Select } from '../../../../components/ui';
+import { Label, Input } from '../../../../components/ui';
 import { Activity, Syringe, ThumbsUp, ThumbsDown, CheckCircle2, AlertOctagon, Clock, Stethoscope } from 'lucide-react';
 
 interface ChallengeSectionProps {
@@ -50,20 +50,20 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
         onClick={onToggleChallenge}
         className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 group ${
           proceedToChallenge 
-          ? 'border-[#8055f1] bg-[#fbfaff] dark:bg-[#441170]/10 shadow-sm' 
+          ? 'border-primary bg-slate-50 dark:bg-slate-900/10 shadow-sm' 
           : 'border-slate-100 hover:border-slate-300 dark:border-slate-800 dark:hover:border-slate-700 bg-white dark:bg-slate-950'
         }`}
       >
         <div className="flex items-center gap-4">
           <div className={`p-2.5 rounded-full transition-colors ${
             proceedToChallenge 
-            ? 'bg-[#8055f1] text-white' 
+            ? 'bg-primary text-white' 
             : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'
           }`}>
             <Activity className="w-5 h-5" />
           </div>
           <div>
-            <h3 className={`font-bold transition-colors ${proceedToChallenge ? 'text-[#441170] dark:text-purple-300' : 'text-slate-700 dark:text-slate-300'}`}>
+            <h3 className={`font-bold transition-colors ${proceedToChallenge ? 'text-slate-800 dark:text-primary' : 'text-slate-700 dark:text-slate-300'}`}>
               Drug Challenge
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">Proceed with live drug challenge</p>
@@ -71,7 +71,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
         </div>
         
         {/* Visual Switch */}
-        <div className={`w-12 h-7 rounded-full p-1 transition-colors duration-300 ease-in-out ${proceedToChallenge ? 'bg-[#8055f1]' : 'bg-slate-200 dark:bg-slate-700'}`}>
+        <div className={`w-12 h-7 rounded-full p-1 transition-colors duration-300 ease-in-out ${proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}>
           <div className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ease-in-out ${proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
         </div>
       </div>
@@ -86,15 +86,15 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
             </Label>
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1 group">
-                <Syringe className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 group-hover:text-[#8055f1] transition-colors pointer-events-none" />
-                <Select 
+                <Syringe className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 group-hover:text-primary transition-colors pointer-events-none" />
+                <select 
                   value={challengeDrug} 
                   onChange={(e) => onChange('challengeDrug', e.target.value)}
-                  className="pl-10 h-11 border-slate-200 focus:border-[#8055f1] focus:ring-[#8055f1]"
-                  placeholder="Choose drug from list..."
+                  className="w-full pl-10 h-11 border-slate-200 border rounded-md focus:border-primary focus:ring-primary dark:bg-slate-950 dark:border-slate-800 focus:outline-none focus:ring-2"
                 >
+                  <option value="" disabled>Choose drug from list...</option>
                   {challengeOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                </Select>
+                </select>
               </div>
               {challengeDrug === 'Other' && (
                 <Input 
@@ -187,14 +187,14 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                   <Label className="text-red-900 dark:text-red-200 font-semibold flex items-center gap-2">
                     <Stethoscope className="w-4 h-4" /> Treatment Required
                   </Label>
-                  <Select 
+                  <select 
                     value={interventionType} 
                     onChange={(e) => onChange('interventionType', e.target.value)}
-                    className="bg-white dark:bg-slate-950 border-red-200 focus:border-red-400 focus:ring-red-400"
-                    placeholder="Select intervention..."
+                    className="w-full h-11 px-3 border-red-200 border rounded-md focus:border-red-400 focus:ring-red-400 bg-white dark:bg-slate-950 dark:border-red-900/30 focus:outline-none focus:ring-2"
                   >
+                    <option value="" disabled>Select intervention...</option>
                     {interventionOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                  </Select>
+                  </select>
                 </div>
               </div>
               

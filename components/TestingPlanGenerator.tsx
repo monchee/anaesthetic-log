@@ -70,8 +70,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                     <ClipboardList className="w-5 h-5" />
                 </div>
                 <div>
-                    <h3 className="font-bold text-slate-800 dark:text-slate-200 text-lg">Testing Plan / Request Form</h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Select drugs to generate a printable testing plan</p>
+                    <h3 className="font-semibold text-primary dark:text-primary text-lg">Testing Plan / Request Form</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Select drugs to generate a printable testing plan</p>
                 </div>
              </div>
              <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
@@ -83,7 +83,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                     
                     {/* Notes Section */}
                     <div className="space-y-2">
-                        <Label>Clinical Notes / Indication</Label>
+                        <Label className="text-xs font-semibold uppercase text-slate-500 tracking-wider">Clinical Notes / Indication</Label>
                         <textarea 
                             className="flex min-h-[60px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
                             placeholder="e.g. History of reaction to Rocuronium. Please test standard panel plus..."
@@ -107,7 +107,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                                     className={`space-y-2 rounded-xl p-3 transition-colors duration-300 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}
                                 >
                                     <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-slate-200 dark:border-slate-800'}`}>
-                                        <h4 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-700 dark:text-slate-300'}`}>
+                                        <h4 className={`text-[10px] font-semibold uppercase tracking-wider flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-slate-400'}`}>
                                             {category}
                                             {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-full ${theme.pulse} animate-pulse`}></span>}
                                         </h4>
@@ -141,7 +141,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                         {/* Custom Drugs Section */}
                         <div className={`space-y-2 rounded-xl p-3 transition-colors duration-300 ${hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
                             <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasCustomActive ? `${customTheme.headerBorder}` : 'border-slate-200 dark:border-slate-800'}`}>
-                                <h4 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasCustomActive ? customTheme.headerText : 'text-slate-700 dark:text-slate-300'}`}>
+                                <h4 className={`text-[10px] font-semibold uppercase tracking-wider flex items-center gap-2 ${hasCustomActive ? customTheme.headerText : 'text-slate-500 dark:text-slate-400'}`}>
                                     Additional Items
                                     {hasCustomActive && <span className={`flex h-1.5 w-1.5 rounded-full ${customTheme.pulse} animate-pulse`}></span>}
                                 </h4>
@@ -185,7 +185,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                     </div>
 
                     <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
-                        <Button onClick={handlePreview} className="bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600">
+                        <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-white shadow-md font-semibold">
                             <Printer className="w-4 h-4 mr-2" /> Preview & Print Plan
                         </Button>
                     </div>

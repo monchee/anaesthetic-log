@@ -83,7 +83,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back to Log
                     </Button>
                 }
@@ -106,7 +106,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -129,7 +129,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -152,7 +152,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -175,7 +175,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -198,7 +198,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -221,7 +221,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -244,7 +244,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -267,7 +267,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -290,7 +290,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -313,7 +313,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -336,7 +336,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back to Log
                     </Button>
                 }
@@ -373,23 +373,23 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
                     </Button>
                 }
-                contentClassName="p-6 space-y-6"
+                contentClassName="p-4 space-y-4"
             >
                 <ClinicalReport data={lastSavedRecord} />
-                <div className="flex flex-col sm:flex-row gap-4 no-print mt-8">
-                    <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base border-2">
+                <div className="flex flex-col sm:flex-row gap-4 no-print mt-6">
+                    <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-sm">
                         <Printer className="w-5 h-5 mr-2" /> Print Clinical Report
                     </Button>
-                    <Button onClick={() => setScreen(Screen.PATIENT_SUMMARY)} size="lg" variant="secondary" className="flex-1 py-6 h-auto text-base border-2 border-[#e6e1fd] dark:border-[#441170]">
+                    <Button onClick={() => setScreen(Screen.PATIENT_SUMMARY)} size="lg" variant="secondary" className="flex-1 py-6 h-auto text-base rounded-sm">
                         <User className="w-5 h-5 mr-2" /> View Patient Handout
                     </Button>
                 </div>
-                <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-6">
-                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg shadow-md">
+                <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
+                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg rounded-sm bg-primary hover:bg-primary/90 text-white font-semibold">
                         <Plus className="w-5 h-5 mr-2" /> Start New Log
                     </Button>
                 </div>
@@ -410,23 +410,23 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
                     </Button>
                 }
-                contentClassName="p-6 space-y-6"
+                contentClassName="p-4 space-y-4"
             >
                 <PatientHandout data={lastSavedRecord} />
-                <div className="flex flex-col sm:flex-row gap-4 no-print mt-8">
-                    <Button onClick={() => setScreen(Screen.SUMMARY)} size="lg" variant="ghost" className="flex-1 py-6 h-auto text-base">
+                <div className="flex flex-col sm:flex-row gap-4 no-print mt-6">
+                    <Button onClick={() => setScreen(Screen.SUMMARY)} size="lg" variant="ghost" className="flex-1 py-6 h-auto text-base rounded-sm">
                         <ArrowLeft className="w-4 h-4 mr-2" /> Back to Clinical Report
                     </Button>
-                    <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base border-2">
+                    <Button onClick={handlePrint} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-sm border-slate-300">
                         <Printer className="w-4 h-4 mr-2" /> Print Handout
                     </Button>
                 </div>
-                <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-6">
-                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg shadow-md">
+                <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
+                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg bg-primary hover:bg-primary/90 text-white rounded-sm font-semibold">
                         <Plus className="w-5 h-5 mr-2" /> Start New Log
                     </Button>
                 </div>
@@ -448,7 +448,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -476,7 +476,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="headerAction" size="sm" className="mr-2">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" size="sm" className="mr-2 bg-white/10 hover:bg-white/20 text-white border border-white/10">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -508,18 +508,18 @@ function AnaestheticLogApp() {
             onDismissDisclaimer={handleDismissDisclaimer}
             onUploadPatients={handleUploadPatients}
             actions={
-                <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="headerAction" size="sm">
+                <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
                     <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
                 </Button>
             }
-            contentClassName="p-4 space-y-6"
+            contentClassName="p-3 space-y-4"
             className="pb-10"
         >
-            <Card className="border-t-4 border-[#8055f1] shadow-md dark:border-t-[#8055f1]">
-                <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-                    <CardTitle className="text-[#441170] dark:text-purple-300 flex items-center gap-2">
-                        <div className="bg-[#e6e1fd] dark:bg-[#441170] p-1.5 rounded-md">
-                            <User className="w-4 h-4 text-[#8055f1] dark:text-white" />
+            <Card className="border-t-4 border-primary shadow-sm rounded-sm">
+                <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                        <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-sm">
+                            <User className="w-4 h-4 text-primary" />
                         </div>
                         Patient Selection
                     </CardTitle>
@@ -629,7 +629,7 @@ function AnaestheticLogApp() {
                     <div className="flex justify-end pt-4">
                         <Button 
                             size="lg" 
-                            className="w-full sm:w-auto shadow-lg shadow-purple-200 dark:shadow-purple-900/50 text-base py-6"
+                            className="w-full sm:w-auto text-base py-6 rounded-sm bg-primary hover:bg-primary/90 text-white font-semibold"
                             onClick={() => setScreen(Screen.TESTING)}
                         >
                             Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
@@ -654,7 +654,20 @@ function App() {
       <ThemeProvider defaultTheme="light" storageKey={APP_CONFIG.LOCAL_STORAGE_KEYS.THEME}>
         <FontSizeProvider>
             <AnaestheticLogApp />
-            <Toaster /> {/* Render Toaster globally */}
+            <Toaster
+              position="top-center"
+              expand={false}
+              richColors
+              closeButton
+              duration={5000}
+              toastOptions={{
+                classNames: {
+                  toast: 'border border-slate-200 dark:border-slate-800 rounded-sm shadow-sm',
+                  actionButton: 'bg-primary text-white hover:bg-primary/90',
+                  description: 'text-slate-600 dark:text-slate-300',
+                }
+              }}
+            />
         </FontSizeProvider>
     </ThemeProvider>
     </ErrorBoundary>

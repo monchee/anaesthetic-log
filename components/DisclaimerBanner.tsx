@@ -12,7 +12,7 @@ const DisclaimerBanner = ({ onClose }: DisclaimerBannerProps) => {
         <div className="flex items-center gap-2 flex-1 justify-center sm:justify-start">
              <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
             <div className="text-xs text-amber-900 dark:text-amber-100 leading-tight text-center sm:text-left">
-                 <span className="font-bold">Demo System:</span> Sample data is currently used.
+                 <span className="font-semibold">Demo System:</span> Sample data is currently used.
             </div>
         </div>
         <button 

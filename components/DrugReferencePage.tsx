@@ -47,11 +47,11 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#e6e1fd] dark:bg-purple-900/40 rounded-full">
-              <Pill className="w-6 h-6 text-[#8055f1] dark:text-purple-300" />
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+              <Pill className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-[#441170] dark:text-purple-300">Drug Reference</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-primary">Drug Reference</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">Drug categories, cross-reactivity, and alternatives</p>
             </div>
           </div>
@@ -60,7 +60,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
           
           {/* Drug Categories */}
           <div>
-            <h3 className="text-sm font-semibold text-[#441170] dark:text-purple-300 uppercase tracking-wide mb-3">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
               Drug Categories
             </h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -92,7 +92,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
 
           {/* Cross-Reactivity & Alternatives */}
           <div>
-            <h3 className="text-sm font-semibold text-[#441170] dark:text-purple-300 uppercase tracking-wide mb-3">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
               Cross-Reactivity & Alternatives
             </h3>
             <div className="bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
@@ -135,7 +135,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
         <Button 
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-[#441170] hover:bg-[#5a1a8a] text-white px-8"
+          className="bg-slate-900 hover:bg-[var(--primary)] text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

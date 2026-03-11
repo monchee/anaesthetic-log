@@ -206,8 +206,8 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                     {/* Header Top Row: Title + Update Button */}
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div className="space-y-1">
-                             <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
-                                <FileText className="w-5 h-5" /> REDCap Record Database
+                             <CardTitle className="text-lg flex items-center gap-2">
+                                <FileText className="w-5 h-5 text-primary" /> REDCap Record Database
                              </CardTitle>
                              <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
                                 <span>Updated {databaseDate}</span>
@@ -242,7 +242,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                     
                                     <div className="space-y-6">
                                         <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-800">
-                                            <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
+                                            <h4 className="font-semibold mb-2 flex items-center gap-2">
                                                 <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
                                             </h4>
                                             <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
@@ -428,7 +428,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                         <td className="px-4 py-3 whitespace-nowrap text-slate-500 dark:text-slate-400 font-mono text-xs">
                                             {formatDate(p.history.date)}
                                         </td>
-                                        <td className="px-4 py-3 font-medium text-[#441170] dark:text-purple-300 group-hover:text-[#6b42d1] dark:group-hover:text-purple-200">
+                                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-primary">
                                             <div className="truncate max-w-[180px]" title={`${p.lastName}, ${p.firstName}`}>
                                                 {p.lastName}, {p.firstName}
                                             </div>
@@ -445,9 +445,9 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                                         key={idx}
                                                         className={`
                                                             h-2.5 w-2.5 rounded-full cursor-help inline-block
-                                                            ${e.type === 'reaction' ? 'bg-red-500' : ''}
-                                                            ${e.type === 'induction' ? 'bg-purple-500' : ''}
-                                                            ${e.type === 'med' ? 'bg-slate-400' : ''}
+                                                            ${e.type === 'reaction' ? 'bg-status-grade3' : ''}
+                                                            ${e.type === 'induction' ? 'bg-primary' : ''}
+                                                            ${e.type === 'med' ? 'bg-slate-300' : ''}
                                                         `}
                                                         title={`${e.time} - ${e.label}`}
                                                     />
@@ -491,7 +491,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                             >
                                 <div className="flex justify-between items-start mb-1 gap-2">
                                     <div>
-                                        <div className="font-bold text-[#441170] dark:text-purple-300">
+                                        <div className="font-bold text-slate-900 dark:text-slate-100">
                                             {p.lastName}, {p.firstName}
                                         </div>
                                         <div className="text-xs text-slate-500 font-mono mt-0.5 truncate max-w-[200px]">
@@ -513,8 +513,8 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             key={idx}
                                             className={`
                                                 h-2 w-2 rounded-full
-                                                ${e.type === 'reaction' ? 'bg-red-500' : ''}
-                                                ${e.type === 'induction' ? 'bg-purple-500' : ''}
+                                                ${e.type === 'reaction' ? 'bg-status-grade3' : ''}
+                                                ${e.type === 'induction' ? 'bg-primary' : ''}
                                                 ${e.type === 'med' ? 'bg-slate-300 dark:bg-slate-600' : ''}
                                             `}
                                         />
@@ -589,8 +589,8 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <CardTitle className="text-lg text-[#441170] dark:text-purple-300 flex items-center gap-2">
-                            <Thermometer className="w-5 h-5" /> Positive Skin Test Breakdown
+                        <CardTitle className="text-lg flex items-center gap-2">
+                            <Thermometer className="w-5 h-5 text-primary" /> Positive Skin Test Breakdown
                         </CardTitle>
                         <p className="text-sm text-slate-500 dark:text-slate-400">Number of positive patient reactions by drug (SPT/IDT &gt; 3mm or Positive Challenge).</p>
                     </div>
@@ -633,14 +633,14 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             onClick={() => toggleCategory(categoryGroup.category)}
                                         >
                                             <td colSpan={6} className="px-4 py-2.5">
-                                                <div className="flex items-center gap-2 text-xs font-bold text-[#441170] dark:text-purple-300 uppercase tracking-wide">
+                                                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
                                                     {isExpanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
                                                     {categoryGroup.category}
                                                 </div>
                                             </td>
                                             <td className="px-4 py-2.5 text-center border-l border-slate-200 dark:border-slate-800">
                                                 {totalCategoryPositives > 0 ? (
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300">
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-900/50 text-slate-800 dark:text-primary">
                                                         {totalCategoryPositives}
                                                     </span>
                                                 ) : (
@@ -650,7 +650,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                         </tr>
                                         {isExpanded && categoryGroup.stats.map((item, i) => (
                                             <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors border-b border-slate-50 dark:border-slate-900 animate-in fade-in slide-in-from-top-1">
-                                                <td className="px-4 py-3 font-medium text-slate-700 dark:text-slate-300 pl-10 border-l-4 border-l-[#8055f1] hover:border-l-[#8055f1] transition-all">{item.name}</td>
+                                                <td className="px-4 py-3 font-medium text-slate-700 dark:text-slate-300 pl-10 border-l-4 border-l-primary hover:border-l-primary transition-all">{item.name}</td>
                                                 <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.spt || '-'}</td>
                                                 <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idt100 || '-'}</td>
                                                 <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idt10 || '-'}</td>

@@ -158,11 +158,11 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
         <Card>
             <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 bg-[#e6e1fd] dark:bg-purple-900/40 rounded-full">
-                        <ShieldCheck className="w-6 h-6 text-[#8055f1] dark:text-purple-300" />
+                    <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+                        <ShieldCheck className="w-6 h-6 text-primary dark:text-primary" />
                     </div>
                     <div>
-                        <CardTitle className="text-xl text-[#441170] dark:text-purple-300">What's New</CardTitle>
+                        <CardTitle className="text-xl text-slate-900 dark:text-primary">What's New</CardTitle>
                         <p className="text-sm text-slate-500 dark:text-slate-400">Recent updates and improvements to the application</p>
                     </div>
                 </div>
@@ -173,7 +173,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                         <div key={idx} className="relative pl-8">
                             {/* Timeline Dot */}
                             <div className={`absolute -left-[9px] top-0 h-4 w-4 rounded-full border-2 border-white dark:border-slate-900 shadow-sm ${
-                              v.highlight ? 'bg-gradient-to-r from-[#8055f1] to-[#6b42d1] animate-pulse' : 'bg-[#8055f1]'
+                              v.highlight ? 'bg-gradient-to-r from-primary to-[var(--primary)] animate-pulse' : 'bg-primary'
                             }`} />
                             
                             <div className="flex items-center gap-2 mb-3">
@@ -186,7 +186,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                                   )}
                                 </div>
                                 {v.highlight && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-[#8055f1] to-[#6b42d1] text-white">
+                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-primary to-[var(--primary)] text-white">
                                         <Sparkles className="w-3 h-3" />
                                         Latest
                                     </span>
@@ -197,7 +197,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                                 <ul className="space-y-2.5">
                                     {v.changes.map((change, cIdx) => (
                                         <li key={cIdx} className="flex gap-2 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                                            <span className="text-[#8055f1] dark:text-purple-400 mt-1 shrink-0">•</span>
+                                            <span className="text-primary dark:text-primary mt-1 shrink-0">•</span>
                                             <span>{change}</span>
                                         </li>
                                     ))}
@@ -213,7 +213,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
             <Button 
                 onClick={() => setScreen(Screen.LOG)}
                 size="lg"
-                className="bg-[#441170] hover:bg-[#5a1a8a] text-white px-8"
+                className="bg-slate-900 hover:bg-[var(--primary)] text-white px-8"
             >
                 <Home className="w-5 h-5 mr-2" />
                 Return Home

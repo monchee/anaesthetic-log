@@ -13,11 +13,11 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#e6e1fd] dark:bg-purple-900/40 rounded-full">
-              <Code className="w-6 h-6 text-[#8055f1] dark:text-purple-300" />
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+              <Code className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-[#441170] dark:text-purple-300">Technical Documentation</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-primary">Technical Documentation</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 Architecture, security, and technical specifications
               </p>
@@ -27,9 +27,9 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-[#441170]/5 to-purple-500/5 dark:from-purple-900/20 dark:to-purple-800/10 rounded-lg p-6 border border-[#441170]/10 dark:border-purple-700/30">
+          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-lg p-6 border border-slate-900/10 dark:border-primary/30">
             <div className="flex items-start gap-4">
-              <Cpu className="w-8 h-8 text-[#441170] dark:text-purple-400 shrink-0" />
+              <Cpu className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
                 <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-2">Technical Overview</h3>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -42,7 +42,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           {/* Architecture */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Code className="w-5 h-5 text-[#8055f1]" />
+              <Code className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Technology Stack</h4>
             </div>
             <div className="grid md:grid-cols-2 gap-3 text-sm">
@@ -76,30 +76,30 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           {/* Security */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Lock className="w-5 h-5 text-[#8055f1]" />
+              <Lock className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Security Architecture</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>The application follows a privacy-by-design approach with the following security features:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Local-Only Processing:</strong> All patient data is processed in the browser; no backend servers receive patient information</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>No Data Transmission:</strong> Patient data is never transmitted over the network during normal use</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>HTTPS Only:</strong> The application is served exclusively over HTTPS</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Client-Side Validation:</strong> Input validation occurs before any data processing</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Content Security Policy:</strong> Strict CSP headers prevent XSS attacks</span>
                 </li>
               </ul>
@@ -109,7 +109,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           {/* Data Flow */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Database className="w-5 h-5 text-[#8055f1]" />
+              <Database className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Data Flow</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
@@ -128,26 +128,26 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           {/* Offline Functionality */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Smartphone className="w-5 h-5 text-[#8055f1]" />
+              <Smartphone className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Offline Functionality (PWA)</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>As a Progressive Web App, the application supports offline usage:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Installable on desktop and mobile devices</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Service worker caching for offline access</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Responsive design for all screen sizes</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Print-optimised layouts for clinical documentation</span>
                 </li>
               </ul>
@@ -157,7 +157,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           {/* Browser Compatibility */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Globe className="w-5 h-5 text-[#8055f1]" />
+              <Globe className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Browser Compatibility</h4>
             </div>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
@@ -190,23 +190,23 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
               <p>The application includes accessibility features to support diverse user needs:</p>
               <ul className="space-y-1 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Dark/light theme toggle</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Adjustable font size (3 levels)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Semantic HTML structure</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Keyboard navigation support</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Print-optimised views</span>
                 </li>
               </ul>
@@ -222,7 +222,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
                 <span className="font-mono">v0.12.0</span>
               </div>
               <p className="text-xs mt-2">
-                For detailed changelog information, see the <button onClick={() => setScreen(Screen.CHANGELOG)} className="text-[#8055f1] hover:underline">Changelog page</button>.
+                For detailed changelog information, see the <button onClick={() => setScreen(Screen.CHANGELOG)} className="text-primary hover:underline">Changelog page</button>.
               </p>
             </div>
           </div>
@@ -234,7 +234,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-[#441170] hover:bg-[#5a1a8a] text-white px-8"
+          className="bg-slate-900 hover:bg-[var(--primary)] text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

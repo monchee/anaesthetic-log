@@ -24,16 +24,16 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
   };
 
   return (
-    <Card className="border-t-8 border-t-[#441170] overflow-hidden print:shadow-none print:border-none">
+    <Card className="border-t-8 border-t-slate-900 overflow-hidden print:shadow-none print:border-none">
       
       {/* Report Header */}
-      <div className="bg-[#441170] text-white p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 print:flex-row print:items-center print:bg-[#441170] print:text-white print:p-3 print:gap-2">
+      <div className="bg-slate-900 text-white p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 print:flex-row print:items-center print:bg-slate-900 print:text-white print:p-3 print:gap-2">
          <div>
-           <h1 className="text-xl font-bold print:text-base">Clinical Immunology & Allergy</h1>
+           <h1 className="text-2xl font-bold tracking-tight print:text-base">Clinical Immunology & Allergy</h1>
            <p className="text-sm opacity-90 print:text-xs">Royal Prince Alfred Hospital</p>
          </div>
          <div className="text-left md:text-right print:text-right">
-           <h2 className="font-semibold text-lg print:text-sm">Anaesthetic Testing Report</h2>
+           <h2 className="text-xl font-semibold tracking-tight print:text-sm text-white">Anaesthetic Testing Report</h2>
            <p className="text-sm opacity-80 text-white print:text-xs">Generated: {new Date().toLocaleDateString('en-AU')}</p>
          </div>
       </div>
@@ -43,22 +43,22 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
          {/* Patient Details */}
          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 border-b border-slate-100 pb-6 pt-6 print:grid-cols-2 print:gap-2 print:pb-2 print:pt-2">
             <div>
-               <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold block mb-1 print:text-[10px] print:mb-0.5">Patient Name</label>
-               <p className="text-xl md:text-2xl font-bold text-[#441170] print:text-base">{data.firstName} {data.lastName}</p>
+               <label className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block mb-1 print:mb-0.5">Patient Name</label>
+               <p className="text-xl md:text-2xl font-semibold tracking-tight text-primary print:text-base">{data.firstName} {data.lastName}</p>
             </div>
             <div>
-               <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold block mb-1 print:text-[10px] print:mb-0.5">REDCap Record ID</label>
-               <p className="text-lg font-mono font-medium print:text-sm">{data.mrn}</p>
+               <label className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block mb-1 print:mb-0.5">REDCap Record ID</label>
+               <p className="text-lg font-mono font-medium text-slate-900 print:text-sm">{data.mrn}</p>
             </div>
             <div className="md:col-span-2 print:col-span-2">
-               <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold block mb-1 print:text-[10px] print:mb-0.5">Visit Date</label>
-               <p className="text-lg font-medium print:text-sm">{formatDate(data.visitDate)}</p>
+               <label className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block mb-1 print:mb-0.5">Visit Date</label>
+               <p className="text-lg font-medium text-slate-900 print:text-sm">{formatDate(data.visitDate)}</p>
             </div>
          </div>
 
          {/* Skin Testing Results */}
          <div>
-            <h3 className="text-[#441170] font-bold text-lg mb-3 flex items-center gap-2 print:text-sm print:mb-1">
+            <h3 className="tracking-tight text-lg mb-3 flex items-center gap-2 print:text-sm print:mb-1">
               <Activity className="w-5 h-5 print:w-4 print:h-4" /> Skin & Intradermal Testing
             </h3>
             
@@ -106,7 +106,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                 <div className="md:hidden print:hidden space-y-3">
                    {data.testPanel.map((row, i) => (
                       <div key={i} className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                          <div className="font-bold text-[#441170] mb-3 border-b border-slate-200 pb-2">
+                          <div className="font-bold text-slate-900 mb-3 border-b border-slate-200 pb-2">
                              {row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName}
                           </div>
                           <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
@@ -138,7 +138,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
 
          {/* Challenge Results */}
          <div>
-            <h3 className="text-[#441170] font-bold text-lg mb-3 flex items-center gap-2 print:text-sm print:mb-1">
+            <h3 className="tracking-tight text-lg mb-3 flex items-center gap-2 print:text-sm print:mb-1">
               <History className="w-5 h-5 print:w-4 print:h-4" /> Drug Challenge Details
             </h3>
             {data.proceedToChallenge ? (
@@ -169,7 +169,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
 
          {/* Plan */}
          <div className="pb-4 print:pb-2">
-            <h3 className="text-[#441170] font-bold text-lg mb-2 flex items-center gap-2 print:text-sm print:mb-1">
+            <h3 className="tracking-tight text-lg mb-2 flex items-center gap-2 print:text-sm print:mb-1">
               <FileText className="w-5 h-5 print:w-4 print:h-4" /> Assessment & Plan
             </h3>
             <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 min-h-[100px] whitespace-pre-wrap text-sm md:text-base print:p-2 print:min-h-0 print:text-xs">

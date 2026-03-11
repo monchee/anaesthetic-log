@@ -26,7 +26,7 @@ interface HelpSection {
 
 const HELP_SECTIONS: HelpSection[] = [
   {
-    icon: <LayoutDashboard className="w-5 h-5 text-[#441170]" />,
+    icon: <LayoutDashboard className="w-5 h-5 text-slate-900" />,
     title: "Dashboard",
     steps: [
       "View key stats: total patients, severe reactions, abandoned procedures.",
@@ -34,7 +34,7 @@ const HELP_SECTIONS: HelpSection[] = [
     ]
   },
   {
-    icon: <Search className="w-5 h-5 text-[#441170]" />,
+    icon: <Search className="w-5 h-5 text-slate-900" />,
     title: "Search & Filter",
     steps: [
       "Search by name, MRN, or suspected agent.",
@@ -42,7 +42,7 @@ const HELP_SECTIONS: HelpSection[] = [
     ]
   },
   {
-    icon: <User className="w-5 h-5 text-[#441170]" />,
+    icon: <User className="w-5 h-5 text-slate-900" />,
     title: "Patient Details",
     steps: [
       "Review clinical history, suspected agents, and test results.",
@@ -50,7 +50,7 @@ const HELP_SECTIONS: HelpSection[] = [
     ]
   },
   {
-    icon: <Activity className="w-5 h-5 text-[#441170]" />,
+    icon: <Activity className="w-5 h-5 text-slate-900" />,
     title: "Testing",
     steps: [
       "Record SPT, IDT results and drug challenge outcomes.",
@@ -58,7 +58,7 @@ const HELP_SECTIONS: HelpSection[] = [
     ]
   },
   {
-    icon: <FileSpreadsheet className="w-5 h-5 text-[#441170]" />,
+    icon: <FileSpreadsheet className="w-5 h-5 text-slate-900" />,
     title: "Database",
     steps: [
       "Upload CSV exports from REDCap to update patient data.",
@@ -69,17 +69,20 @@ const HELP_SECTIONS: HelpSection[] = [
 
 interface HelpModalProps {
   onUploadPatients?: (patients: Patient[]) => void;
+  hideTrigger?: boolean;
 }
 
-export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
+export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrigger = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isUploadSheetOpen, setIsUploadSheetOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-open on page load
+  // Auto-open on page load (only when trigger is visible)
   useEffect(() => {
-    setIsOpen(true);
-  }, []);
+    if (!hideTrigger) {
+      setIsOpen(true);
+    }
+  }, [hideTrigger]);
 
   const handleClose = (open: boolean) => {
     setIsOpen(open);
@@ -127,16 +130,18 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="sm"
-        className="w-full justify-start px-4 py-3 h-auto rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium"
-        onClick={() => setIsOpen(true)}
-        data-help-modal-trigger
-      >
-        <HelpCircle className="w-5 h-5 mr-2" />
-        Quick Start Guide
-      </Button>
+      {!hideTrigger && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full justify-start px-4 py-3 h-auto rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium"
+          onClick={() => setIsOpen(true)}
+          data-help-modal-trigger
+        >
+          <HelpCircle className="w-5 h-5 mr-2" />
+          Quick Start Guide
+        </Button>
+      )}
 
       {/* Hidden file input */}
       <input
@@ -147,19 +152,19 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
         className="hidden"
       />
 
-      <Dialog open={isOpen} onOpenChange={handleClose} className="!max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogContent>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
+        <DialogContent className="!max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader className="pb-4">
             <DialogTitle className="flex items-center gap-2 text-lg">
-              <Activity className="w-5 h-5 text-[#441170]" />
+              <Activity className="w-5 h-5 text-slate-900" />
               Quick Start Guide
             </DialogTitle>
           </DialogHeader>
 
           {/* Welcome Message */}
-          <div className="p-4 bg-gradient-to-r from-[#441170]/10 to-purple-500/10 dark:from-purple-900/30 dark:to-purple-800/20 rounded-lg border border-[#441170]/20 dark:border-purple-700/30 mb-4">
+          <div className="p-4 bg-gradient-to-r from-slate-900/10 to-primary/10 dark:from-slate-900/30 dark:to-slate-800/20 rounded-lg border border-slate-900/20 dark:border-primary/30 mb-4">
             <div className="flex items-start gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#441170] shrink-0">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 shrink-0">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -181,7 +186,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
                 className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800"
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#441170]/10 dark:bg-purple-900/30">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-900/10 dark:bg-slate-900/30">
                     {section.icon}
                   </div>
                   <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
@@ -194,7 +199,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
                       key={stepIndex}
                       className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-400"
                     >
-                      <ChevronRight className="w-3.5 h-3.5 text-[#441170] shrink-0 mt-0.5" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-900 shrink-0 mt-0.5" />
                       <span>{step}</span>
                     </li>
                   ))}
@@ -231,7 +236,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients }) => {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="flex-1 border-2 border-[#441170] text-[#441170] hover:bg-[#441170] hover:text-white dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-400 dark:hover:text-white"
+                    className="flex-1 border-2 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white dark:border-primary dark:text-primary dark:hover:bg-primary dark:hover:text-white"
                   >
                     <Upload className="w-5 h-5 mr-2" />
                     Upload CSV

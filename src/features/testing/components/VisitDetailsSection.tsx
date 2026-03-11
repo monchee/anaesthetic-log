@@ -15,8 +15,8 @@ export const VisitDetailsSection: React.FC<VisitDetailsSectionProps> = ({
     <Card>
       <CardContent className="pt-6">
         <div className="flex items-center gap-4">
-          <Label className="whitespace-nowrap text-base font-semibold text-[#441170] dark:text-purple-300 flex items-center gap-2">
-            <Calendar className="w-5 h-5" /> Visit Date:
+          <Label className="whitespace-nowrap text-base font-semibold text-slate-800 dark:text-primary flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-primary dark:text-primary" /> Visit Date:
           </Label>
           <Input 
             type="date" 

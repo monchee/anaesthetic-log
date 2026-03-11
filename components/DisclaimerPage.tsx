@@ -13,11 +13,11 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#e6e1fd] dark:bg-purple-900/40 rounded-full">
-              <AlertTriangle className="w-6 h-6 text-[#8055f1] dark:text-purple-300" />
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+              <AlertTriangle className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-[#441170] dark:text-purple-300">Disclaimer</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-primary">Disclaimer</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 Important medical and legal information
               </p>
@@ -71,7 +71,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           {/* Clinical Judgment Required */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Shield className="w-5 h-5 text-[#8055f1]" />
+              <Shield className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Clinical Judgment Required</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
@@ -80,19 +80,19 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
               </p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Every patient is unique; individual circumstances may warrant deviation from suggested protocols</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>The application cannot account for all possible clinical scenarios</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Users must apply their own clinical expertise and knowledge of the patient</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Recommendations should be verified with current clinical guidelines</span>
                 </li>
               </ul>
@@ -111,15 +111,15 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
               </p>
               <ul className="space-y-1 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Make no representation or warranty regarding the completeness, accuracy, reliability, or timeliness of the information</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Do not warrant that the application will function uninterrupted or error-free</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Do not warrant that defects will be corrected</span>
                 </li>
               </ul>
@@ -135,19 +135,19 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
               </p>
               <ul className="space-y-2 ml-4 mt-3">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Accept no liability for any loss, injury, or damage resulting from use of this application</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Accept no liability for any clinical decisions made based on application outputs</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Accept no liability for any errors or omissions in the information provided</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Accept no liability for any inability to use the application</span>
                 </li>
               </ul>
@@ -197,7 +197,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-[#441170] hover:bg-[#5a1a8a] text-white px-8"
+          className="bg-slate-900 hover:bg-[var(--primary)] text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select } from './ui';
+import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui';
 import { LogFormData, DrugTestRow } from '../types';
 import { Calendar, Activity, Syringe, CheckCircle2, Check, X, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '../lib/constants';
@@ -122,15 +122,15 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       
       {/* Section Header */}
       <div className="flex items-center gap-2 border-b-2 border-slate-200 dark:border-slate-800 pb-2 mb-2">
-        <Stethoscope className="w-6 h-6 text-[#441170] dark:text-purple-300" />
-        <h2 className="text-xl font-bold text-[#441170] dark:text-purple-300">Anaesthetic Allergy Testing</h2>
+        <Stethoscope className="w-6 h-6 text-primary dark:text-primary" />
+        <h2 className="text-xl font-semibold tracking-tight text-primary dark:text-primary uppercase">Anaesthetic Allergy Testing</h2>
       </div>
 
       {/* 1. Visit Details */}
       <Card>
         <CardContent className="pt-6">
             <div className="flex items-center gap-4">
-                <Label htmlFor="visit-date" className="whitespace-nowrap text-base font-semibold text-[#441170] dark:text-purple-300 flex items-center gap-2">
+                <Label htmlFor="visit-date" className="whitespace-nowrap text-base font-semibold text-slate-900 dark:text-primary flex items-center gap-2">
                     <Calendar className="w-5 h-5" aria-hidden="true" /> Visit Date:
                 </Label>
                 <Input
@@ -151,9 +151,9 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 2. Skin Testing Panel */}
         <Card>
           <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
-            <CardTitle className="text-[#441170] dark:text-purple-300 flex items-center gap-2">
-              <div className="bg-[#e6e1fd] dark:bg-purple-900/40 p-1.5 rounded-md">
-                 <Activity className="w-4 h-4 text-[#8055f1] dark:text-purple-300" />
+            <CardTitle className="flex items-center gap-2 text-base">
+              <div className="bg-slate-100 dark:bg-slate-900/40 p-1.5 rounded-md">
+                 <Activity className="w-4 h-4 text-primary dark:text-primary" />
               </div>
               SPT & IDT Panel
             </CardTitle>
@@ -309,9 +309,9 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 3. Drug Challenge */}
       <Card>
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
-          <CardTitle className="text-[#441170] dark:text-purple-300 flex items-center gap-2">
-             <div className="bg-[#e6e1fd] dark:bg-purple-900/40 p-1.5 rounded-md">
-                 <Syringe className="w-4 h-4 text-[#8055f1] dark:text-purple-300" />
+          <CardTitle className="flex items-center gap-2 text-base">
+             <div className="bg-primary/10 dark:bg-slate-900/40 p-1.5 rounded-md">
+                 <Syringe className="w-4 h-4 text-primary dark:text-primary" />
              </div>
              Drug Challenge
           </CardTitle>
@@ -323,20 +323,20 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 onClick={() => handleInputChange('proceedToChallenge', !formData.proceedToChallenge)}
                 className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 group ${
                     formData.proceedToChallenge 
-                    ? 'border-[#8055f1] bg-[#fbfaff] dark:bg-[#441170]/10 shadow-sm' 
+                    ? 'border-primary bg-[white] dark:bg-slate-900/10 shadow-sm' 
                     : 'border-slate-100 hover:border-slate-300 dark:border-slate-800 dark:hover:border-slate-700 bg-white dark:bg-slate-950'
                 }`}
             >
                 <div className="flex items-center gap-4">
                     <div className={`p-2.5 rounded-full transition-colors ${
                         formData.proceedToChallenge 
-                        ? 'bg-[#8055f1] text-white' 
+                        ? 'bg-primary text-white' 
                         : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'
                     }`}>
                         <Activity className="w-5 h-5" />
                     </div>
                     <div>
-                        <h3 className={`font-bold transition-colors ${formData.proceedToChallenge ? 'text-[#441170] dark:text-purple-300' : 'text-slate-700 dark:text-slate-300'}`}>
+                        <h3 className={`font-semibold tracking-tight transition-colors ${formData.proceedToChallenge ? 'text-slate-900 dark:text-primary' : 'text-slate-700 dark:text-slate-300'}`}>
                             Drug Challenge
                         </h3>
                         <p className="text-xs text-slate-500 dark:text-slate-400">Proceed with live drug challenge</p>
@@ -344,7 +344,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 </div>
                 
                 {/* Visual Switch */}
-                <div className={`w-12 h-7 rounded-full p-1 transition-colors duration-300 ease-in-out ${formData.proceedToChallenge ? 'bg-[#8055f1]' : 'bg-slate-200 dark:bg-slate-700'}`}>
+                <div className={`w-12 h-7 rounded-full p-1 transition-colors duration-300 ease-in-out ${formData.proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}>
                     <div className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ease-in-out ${formData.proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
                 </div>
             </div>
@@ -359,14 +359,17 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                          </Label>
                          <div className="flex flex-col sm:flex-row gap-3">
                             <div className="relative flex-1 group">
-                               <Syringe className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 group-hover:text-[#8055f1] transition-colors pointer-events-none" />
+                               <Syringe className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 group-hover:text-primary transition-colors pointer-events-none" />
                                <Select 
                                     value={formData.challengeDrug} 
-                                    onChange={(e) => handleInputChange('challengeDrug', e.target.value)}
-                                    className="pl-10 h-11 border-slate-200 focus:border-[#8055f1] focus:ring-[#8055f1]"
-                                    placeholder="Choose drug from list..."
+                                    onValueChange={(value) => handleInputChange('challengeDrug', value)}
                                 >
-                                    {challengeOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                                    <SelectTrigger className="pl-10 h-11 border-slate-200 focus:border-primary focus:ring-primary">
+                                        <SelectValue placeholder="Choose drug from list..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {challengeOptions.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}
+                                    </SelectContent>
                                 </Select>
                             </div>
                             {formData.challengeDrug === 'Other' && (
@@ -462,12 +465,14 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                     </Label>
                                     <Select
                                         value={formData.interventionType}
-                                        onChange={(e) => handleInputChange('interventionType', e.target.value)}
-                                        className="bg-white dark:bg-slate-950 border-red-200 focus:border-red-400 focus:ring-red-400"
-                                        placeholder="Select intervention..."
-                                        aria-label="Select treatment intervention"
+                                        onValueChange={(value) => handleInputChange('interventionType', value)}
                                     >
-                                        {interventionOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                                        <SelectTrigger className="bg-white dark:bg-slate-950 border-red-200 focus:border-red-400 focus:ring-red-400" aria-label="Select treatment intervention">
+                                            <SelectValue placeholder="Select intervention..." />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {interventionOptions.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}
+                                        </SelectContent>
                                     </Select>
                                 </div>
                             </div>
@@ -527,9 +532,9 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 4. Plan & Assessment */}
       <Card>
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
-           <CardTitle className="text-[#441170] dark:text-purple-300 flex items-center gap-2">
-             <div className="bg-[#e6e1fd] dark:bg-purple-900/40 p-1.5 rounded-md">
-                 <CheckCircle2 className="w-4 h-4 text-[#8055f1] dark:text-purple-300" />
+           <CardTitle className="flex items-center gap-2 text-base">
+             <div className="bg-emerald-100 dark:bg-emerald-900/40 p-1.5 rounded-md">
+                 <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
              </div>
              Assessment & Plan
           </CardTitle>
@@ -549,7 +554,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
       {/* Save Action */}
       <div className="pt-4 pb-20">
-         <Button onClick={onSubmit} size="lg" className="w-full h-14 text-lg shadow-lg hover:shadow-xl transition-all">
+         <Button onClick={onSubmit} size="lg" className="w-full h-14 text-lg shadow-lg hover:shadow-xl transition-all bg-primary hover:bg-primary font-semibold">
              <Save className="w-5 h-5 mr-2" /> Save Clinical Record
          </Button>
       </div>

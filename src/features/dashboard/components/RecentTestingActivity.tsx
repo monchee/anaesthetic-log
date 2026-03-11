@@ -15,9 +15,9 @@ export const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
 }) => {
   return (
     <Card className="w-full shadow-sm border-t-4 border-t-green-500 animate-enter-subtle">
-      <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-green-50/50 dark:bg-green-900/10">
-        <CardTitle className="text-lg text-green-800 dark:text-green-400 flex items-center gap-2">
-          <Clock className="w-5 h-5" /> Recent Skin Testing Activity
+      <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/10">
+        <CardTitle className="text-lg text-slate-800 dark:text-primary flex items-center gap-2">
+          <Clock className="w-5 h-5 text-primary dark:text-primary" /> Recent Skin Testing Activity
         </CardTitle>
       </CardHeader>
       <div className="overflow-x-auto">
@@ -51,7 +51,7 @@ export const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                     onClick={() => onViewLog(log)}
                   >
                     <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300">{formatDate(log.visitDate)}</td>
-                    <td className="px-4 py-3 font-medium text-[#441170] dark:text-purple-300 group-hover:text-[#6b42d1] dark:group-hover:text-purple-200">{log.lastName}, {log.firstName}</td>
+                    <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-primary">{log.lastName}, {log.firstName}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1 items-center">
                         {positives.map(p => <Badge key={p} variant="danger" className="text-[10px] px-1.5 py-0 h-5">{p}</Badge>)}

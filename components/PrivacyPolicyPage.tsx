@@ -15,11 +15,11 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#e6e1fd] dark:bg-purple-900/40 rounded-full">
-              <Shield className="w-6 h-6 text-[#8055f1] dark:text-purple-300" />
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+              <Shield className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-[#441170] dark:text-purple-300">Privacy Policy</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-primary">Privacy Policy</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 How we protect your health information
               </p>
@@ -29,7 +29,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-[#441170]/5 to-purple-500/5 dark:from-purple-900/20 dark:to-purple-800/10 rounded-lg p-6 border border-[#441170]/10 dark:border-purple-700/30">
+          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-lg p-6 border border-slate-900/10 dark:border-primary/30">
             <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
               <strong>Royal Prince Alfred Hospital (RPAH) Anaesthetic Allergy Clinic</strong> is committed to protecting the privacy and confidentiality of your personal and health information. This Privacy Policy explains how we collect, use, store, and safeguard information through this application.
             </p>
@@ -54,22 +54,22 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           {/* Information We Collect */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Eye className="w-5 h-5 text-[#8055f1]" />
+              <Eye className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Information We Collect</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>The application may process the following types of information when you use REDCap data exports:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Personal Information:</strong> Name, date of birth, MRN/hospital ID, city or suburb</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Health Information:</strong> Allergy history, test results, clinical notes, reaction details</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Clinical Data:</strong> Testing plans, skin prick test results, intradermal test results, challenge outcomes</span>
                 </li>
               </ul>
@@ -79,26 +79,26 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           {/* How We Use Your Information */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Shield className="w-5 h-5 text-[#8055f1]" />
+              <Shield className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">How We Use Your Information</h4>
             </div>
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <p>Your information is used solely for:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Clinical assessment and management of anaesthetic allergies</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Generating clinical reports and patient handouts</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Tracking testing workflows and outcomes</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Clinical audit and quality improvement activities</span>
                 </li>
               </ul>
@@ -108,26 +108,26 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           {/* Data Storage and Security */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Lock className="w-5 h-5 text-[#8055f1]" />
+              <Lock className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Data Storage and Security</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>We implement appropriate security measures to protect your information:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Local Processing:</strong> All data remains on your device; no server transmission</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Browser Security:</strong> Utilises your browser's built-in security features</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>No Persistent Storage:</strong> Data is cleared when the session ends (unless explicitly saved locally)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>REDCap Compliance:</strong> Original data remains secure within the REDCap system</span>
                 </li>
               </ul>
@@ -137,26 +137,26 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           {/* Your Rights */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <AlertCircle className="w-5 h-5 text-[#8055f1]" />
+              <AlertCircle className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Your Rights</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>Under the <strong>Health Records and Information Privacy Act 2002 (NSW)</strong> and the <strong>Privacy Act 1988 (Cth)</strong>, you have the right to:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Access your personal and health information held by RPAH</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Request correction of inaccurate or incomplete information</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Make a complaint about how your information is handled</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Choose not to identify yourself (where practicable)</span>
                 </li>
               </ul>
@@ -170,15 +170,15 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
               <p>This application does not use tracking cookies or third-party analytics. Any browser storage (localStorage) is used solely for:</p>
               <ul className="space-y-1 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Theme preference (light/dark mode)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Font size accessibility settings</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>PWA installation status</span>
                 </li>
               </ul>
@@ -208,7 +208,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-[#441170] hover:bg-[#5a1a8a] text-white px-8"
+          className="bg-slate-900 hover:bg-[var(--primary)] text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

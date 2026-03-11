@@ -4,15 +4,15 @@ import { CategoryTheme } from '../types';
 
 export const CATEGORY_THEMES: Record<string, CategoryTheme> = {
   "Muscle Relaxants": {
-    activeBg: "bg-sky-50 dark:bg-sky-900/20",
-    activeRing: "ring-sky-100 dark:ring-sky-900/50",
-    headerText: "text-sky-700 dark:text-sky-300",
-    headerBorder: "border-sky-200 dark:border-sky-800",
-    btnSelected: "bg-sky-600 border-sky-600 text-white shadow-sm ring-1 ring-sky-100 dark:ring-sky-900",
-    btnHover: "hover:border-sky-500 hover:text-sky-600 dark:hover:text-sky-400 dark:hover:border-sky-400",
-    pulse: "bg-sky-600",
-    rowBorder: "border-l-sky-600",
-    actionText: "text-sky-600 dark:text-sky-400"
+    activeBg: "bg-blue-50 dark:bg-blue-900/20",
+    activeRing: "ring-blue-100 dark:ring-blue-900/50",
+    headerText: "text-blue-700 dark:text-blue-300",
+    headerBorder: "border-blue-200 dark:border-blue-800",
+    btnSelected: "bg-blue-600 border-blue-600 text-white shadow-sm ring-1 ring-blue-100 dark:ring-blue-900",
+    btnHover: "hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 dark:hover:border-blue-400",
+    pulse: "bg-blue-600",
+    rowBorder: "border-l-blue-600",
+    actionText: "text-blue-600 dark:text-blue-400"
   },
   "Penicillins": {
     activeBg: "bg-orange-50 dark:bg-orange-900/20",

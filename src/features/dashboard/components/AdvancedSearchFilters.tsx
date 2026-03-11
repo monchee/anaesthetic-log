@@ -48,7 +48,7 @@ export const AdvancedSearchFilters: React.FC<
         <Filter className="w-3.5 h-3.5 mr-1.5" />
         Filters
         {activeFilterCount > 0 && (
-          <Badge variant="default" className="ml-2 h-4 px-1.5 text-[10px] bg-[#8055f1]">
+          <Badge variant="default" className="ml-2 h-4 px-1.5 text-[10px] bg-primary">
             {activeFilterCount}
           </Badge>
         )}
@@ -100,10 +100,10 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
     if (!isSelected) return 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600';
     
     switch (outcome) {
-      case 'all': return 'bg-[#441170] dark:bg-purple-600 text-white shadow-sm';
+      case 'all': return 'bg-primary dark:bg-primary text-white shadow-sm';
       case 'completed': return 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm';
       case 'abandoned': return 'bg-rose-600 dark:bg-rose-500 text-white shadow-sm';
-      default: return 'bg-[#441170] text-white';
+      default: return 'bg-primary text-white';
     }
   };
 
@@ -202,7 +202,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
           <select
             value={filters.hospital}
             onChange={(e) => updateFilter('hospital', e.target.value)}
-            className="w-full h-9 px-3 text-sm rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#441170] dark:focus:ring-purple-500"
+            className="w-full h-9 px-3 text-sm rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary"
           >
             <option value="">All Hospitals</option>
             {suggestions.hospitals.map(h => (
@@ -217,7 +217,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
         <Label className="text-xs font-medium text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
           Suspected Agents
           {filters.suspectedAgents.length > 0 && (
-            <Badge variant="secondary" className="text-[10px] h-4 px-1.5 bg-[#441170]/10 dark:bg-purple-900/30 text-[#441170] dark:text-purple-300 border-none">
+            <Badge variant="secondary" className="text-[10px] h-4 px-1.5 bg-primary/10 dark:bg-slate-900/30 text-primary dark:text-primary border-none">
               {filters.suspectedAgents.length}
             </Badge>
           )}

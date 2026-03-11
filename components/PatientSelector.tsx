@@ -129,11 +129,11 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                     <UserPlus className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col">
-                    <span className="font-medium">New Patient (Manual Entry)</span>
+                    <span className="font-semibold text-primary">New Patient (Manual Entry)</span>
                     <span className="text-[10px] text-slate-500 dark:text-slate-500">Create a record without database ID</span>
                 </div>
                 {isManualSelection && (
-                    <div className="ml-auto text-[#8055f1] dark:text-[#a686f5]">
+                    <div className="ml-auto text-primary">
                         <Check className="h-4 w-4" />
                     </div>
                 )}
@@ -148,14 +148,14 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                 <div
                     key={patient.id}
                     className={`relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-slate-100 dark:hover:bg-slate-800 border-b border-slate-50 dark:border-slate-800/50 last:border-0 ${
-                        selectedPatientId === patient.id ? "bg-slate-50 font-medium dark:bg-slate-800/50" : "text-slate-900 dark:text-slate-100"
+                        selectedPatientId === patient.id ? "bg-slate-50 font-medium dark:bg-slate-800/50" : ""
                     }`}
                     onClick={() => handleSelect(patient)}
                 >
                     <div className="flex flex-col gap-0.5">
                         <span className="block whitespace-normal leading-tight">
                             <span className="text-slate-500 dark:text-slate-500 mr-2 font-mono text-xs">[{patient.id}]</span>
-                            {patient.lastName}, {patient.firstName}
+                            <span className="font-medium text-slate-900 dark:text-slate-100">{patient.lastName}, {patient.firstName}</span>
                         </span>
                         <span className="block text-xs text-slate-500 dark:text-slate-400 pl-8">
                             DOB: {formatDate(patient.dob)}
@@ -163,7 +163,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                     </div>
                     
                     {selectedPatientId === patient.id && (
-                        <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#8055f1] dark:text-[#a686f5]">
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-primary">
                             <Check className="h-4 w-4" />
                         </span>
                     )}

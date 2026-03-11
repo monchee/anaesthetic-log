@@ -44,7 +44,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           title: "ANZCA - Australian and New Zealand College of Anaesthetists",
           description: "Professional standards and guidelines for anaesthetic practice.",
           url: "https://www.anzca.edu.au",
-          icon: <BookOpen className="w-5 h-5 text-purple-500" />
+          icon: <BookOpen className="w-5 h-5 text-primary" />
         },
         {
           title: "NAP6 - 6th National Audit Project",
@@ -61,11 +61,11 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#e6e1fd] dark:bg-purple-900/40 rounded-full">
-              <Link2 className="w-6 h-6 text-[#8055f1] dark:text-purple-300" />
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+              <Link2 className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-[#441170] dark:text-purple-300">Resources & Links</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-primary">Resources & Links</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">Useful external resources and guidelines</p>
             </div>
           </div>
@@ -74,7 +74,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           
           {resources.map((section, idx) => (
             <div key={idx}>
-              <h3 className="text-sm font-semibold text-[#441170] dark:text-purple-300 uppercase tracking-wide mb-3">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
                 {section.category}
               </h3>
               <div className="space-y-3">
@@ -84,7 +84,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block bg-slate-50 dark:bg-slate-900 rounded-lg p-4 border border-slate-200 dark:border-slate-800 hover:border-[#8055f1] dark:hover:border-purple-500 transition-colors group"
+                    className="block bg-slate-50 dark:bg-slate-900 rounded-lg p-4 border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-primary transition-colors group"
                   >
                     <div className="flex items-start gap-3">
                       <div className="p-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shrink-0">
@@ -92,10 +92,10 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-[#8055f1] dark:group-hover:text-purple-400 transition-colors">
+                          <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors">
                             {item.title}
                           </h4>
-                          <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-[#8055f1] dark:group-hover:text-purple-400 transition-colors" />
+                          <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-primary dark:group-hover:text-primary transition-colors" />
                         </div>
                         <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                           {item.description}
@@ -123,7 +123,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
         <Button 
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-[#441170] hover:bg-[#5a1a8a] text-white px-8"
+          className="bg-slate-900 hover:bg-[var(--primary)] text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

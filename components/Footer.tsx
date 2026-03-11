@@ -36,7 +36,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
               <button
                 key={link.screen}
                 onClick={() => setScreen(link.screen)}
-                className="text-slate-500 dark:text-slate-400 hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors"
+                className="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors"
               >
                 {link.label}
               </button>
@@ -49,7 +49,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
               <button
                 key={link.screen}
                 onClick={() => setScreen(link.screen)}
-                className="text-slate-400 dark:text-slate-500 hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors"
+                className="text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-primary transition-colors"
               >
                 {link.label}
               </button>
@@ -59,7 +59,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
           {/* Bottom Row */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3">
             <div className="text-center sm:text-left">
-              <span className="font-medium">RPAH Anaesthetic Allergy Clinic</span>
+              <span className="font-semibold text-primary">RPAH Anaesthetic Allergy Clinic</span>
             </div>
 
             <div className="flex items-center gap-4">
@@ -72,7 +72,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
 
               <button
                 onClick={() => setScreen(Screen.CHANGELOG)}
-                className="hover:text-[#8055f1] dark:hover:text-purple-300 transition-colors font-medium"
+                className="hover:text-primary dark:hover:text-primary transition-colors font-semibold"
               >
                 v0.14.0
               </button>

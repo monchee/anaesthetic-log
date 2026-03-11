@@ -13,11 +13,11 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#e6e1fd] dark:bg-purple-900/40 rounded-full">
-              <ShieldCheck className="w-6 h-6 text-[#8055f1] dark:text-purple-300" />
+            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-full">
+              <ShieldCheck className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-[#441170] dark:text-purple-300">Clinical Governance</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-primary">Clinical Governance</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 Our commitment to clinical safety and quality
               </p>
@@ -27,9 +27,9 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-[#441170]/5 to-purple-500/5 dark:from-purple-900/20 dark:to-purple-800/10 rounded-lg p-6 border border-[#441170]/10 dark:border-purple-700/30">
+          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-lg p-6 border border-slate-900/10 dark:border-primary/30">
             <div className="flex items-start gap-4">
-              <Hospital className="w-8 h-8 text-[#441170] dark:text-purple-400 shrink-0" />
+              <Hospital className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
                 <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-2">RPAH Clinical Governance Framework</h3>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -42,26 +42,26 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           {/* Governance Structure */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Award className="w-5 h-5 text-[#8055f1]" />
+              <Award className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Governance Structure</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>The application is developed and maintained under the oversight of:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>RPAH Department of Clinical Immunology & Allergy</strong> — Clinical leadership and direction</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Sydney Local Health District (SLHD)</strong> — Organisational governance and accountability</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>eHealth NSW</strong> — Digital health standards and compliance</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Clinical Director — Immunology & Allergy</strong> — Clinical governance accountability</span>
                 </li>
               </ul>
@@ -71,30 +71,30 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           {/* Clinical Safety and Risk Management */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <AlertTriangle className="w-5 h-5 text-[#8055f1]" />
+              <AlertTriangle className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Clinical Safety and Risk Management</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>We maintain clinical safety through:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Clinician-led Design:</strong> Developed by clinicians for clinical use</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Peer Review:</strong> Clinical workflows reviewed by specialist immunologists</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Risk Assessment:</strong> Regular clinical risk assessments for digital tools</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Incident Reporting:</strong> Integrated with SLHD incident management processes</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Clinical Judgment:</strong> The app supports, not replaces, clinical decision-making</span>
                 </li>
               </ul>
@@ -104,26 +104,26 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           {/* Partnership with Consumers */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <Users className="w-5 h-5 text-[#8055f1]" />
+              <Users className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Partnership with Consumers</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>We engage with patients and consumers to ensure our services meet their needs:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Patient feedback informs ongoing improvements</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Clear, accessible patient handouts and information</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Transparent about the purpose and limitations of the service</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span>Respect for patient privacy and autonomy</span>
                 </li>
               </ul>
@@ -133,26 +133,26 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           {/* Clinical Effectiveness */}
           <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4">
-              <FileCheck className="w-5 h-5 text-[#8055f1]" />
+              <FileCheck className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Clinical Effectiveness and Quality Improvement</h4>
             </div>
             <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               <p>We are committed to continuous improvement and evidence-based practice:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Evidence-Based:</strong> Aligned with current Australasian Society of Clinical Immunology and Allergy (ASCIA) guidelines</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Audit and Review:</strong> Regular clinical audit of testing outcomes and patient pathways</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Outcome Monitoring:</strong> Tracking of clinical outcomes for quality assurance</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#8055f1] mt-1">•</span>
+                  <span className="text-primary mt-1">•</span>
                   <span><strong>Professional Development:</strong> Team members maintain up-to-date knowledge and skills</span>
                 </li>
               </ul>
@@ -192,7 +192,7 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-[#441170] hover:bg-[#5a1a8a] text-white px-8"
+          className="bg-slate-900 hover:bg-[var(--primary)] text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home
