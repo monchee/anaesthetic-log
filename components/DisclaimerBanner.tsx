@@ -7,7 +7,7 @@ interface DisclaimerBannerProps {
 
 const DisclaimerBanner = ({ onClose }: DisclaimerBannerProps) => {
   return (
-    <div className="w-full bg-amber-100 dark:bg-amber-900/40 border-b border-amber-200 dark:border-amber-800 animate-in slide-in-from-top-2 duration-300">
+    <div className="w-full bg-amber-100 dark:bg-amber-900/40 border-b border-amber-200 dark:border-amber-800 animate-in slide-in-from-top-2 duration-150">
       <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 flex-1 justify-center sm:justify-start">
              <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />

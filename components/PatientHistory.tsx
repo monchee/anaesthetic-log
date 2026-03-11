@@ -238,15 +238,15 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 <div className="bg-slate-50 dark:bg-slate-950 rounded-none border border-slate-100 dark:border-slate-800 shadow-sm overflow-visible flex-1 flex flex-col">
                     
                     {/* Key Times Header */}
-                    <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 py-2 flex justify-between gap-2 text-xs shrink-0 rounded-none">
+                    <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2 flex justify-between gap-2 text-xs shrink-0 rounded-none">
                         <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-slate-500 dark:text-slate-400 text-xs">INDUCTION:</span>
-                            <span className="font-mono font-medium text-primary dark:text-primary text-xs">
+                            <span className="font-bold text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider">Induction:</span>
+                            <span className="font-mono font-semibold text-primary dark:text-primary text-xs">
                                 {formatTime(history.inductionTime)}
                             </span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-slate-500 dark:text-slate-400 text-xs">REACTION:</span>
+                            <span className="font-bold text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider">Reaction:</span>
                             <span className="font-mono font-bold text-red-600 dark:text-red-400 text-xs">
                                 {formatTime(history.reactionTime)}
                             </span>
@@ -254,12 +254,12 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     </div>
 
                     {/* Timeline Area - Removed max-height constraints to prevent scrolling and clipping */}
-                    <div className="p-3 flex-1">
+                    <div className="p-4 flex-1">
                         {sortedEvents.length > 0 ? (
-                            <div className="relative border-l-2 border-slate-200 dark:border-slate-700 ml-2 space-y-3">
+                            <div className="relative border-l-2 border-slate-200 dark:border-slate-700 ml-1.5 space-y-4">
                                 {sortedEvents.map((event, idx) => (
-                                    <div key={idx} className="relative pl-5">
-                                        <div className={`absolute -left-[7px] top-1.5 h-3.5 w-3.5 rounded-none border-2 shadow-sm z-10 
+                                    <div key={idx} className="relative pl-6">
+                                        <div className={`absolute -left-[6px] top-1 h-3 w-3 rounded-full border-2 shadow-sm z-10 
                                             ${event.type === 'reaction' ? 'bg-red-500 border-white dark:border-slate-900' : 
                                                 event.type === 'induction' ? 'bg-primary border-white dark:border-slate-900' :
                                                 'bg-slate-300 dark:bg-slate-600 border-white dark:border-slate-900'}`} 
@@ -344,11 +344,11 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         </div>
                     )}
 
-                        {/* Outcome Footer */}
-                    <div className="bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-3 py-2 flex items-center justify-between shrink-0 rounded-none">
-                            <span className="text-xs uppercase font-bold text-slate-500 tracking-wider">Outcome</span>
+                    {/* Outcome Footer */}
+                    <div className="bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 py-2 flex items-center justify-between shrink-0 rounded-none">
+                            <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Outcome</span>
                             <div className={`font-bold text-xs flex items-center gap-1.5 ${outcomeConfig.color}`}>
-                            <OutcomeIcon className="h-3 w-3" />
+                            <OutcomeIcon className="h-3.5 w-3.5" />
                             {outcomeConfig.text}
                         </div>
                     </div>

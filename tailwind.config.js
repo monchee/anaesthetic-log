@@ -237,14 +237,14 @@ export default {
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-  			enter: 'enter 0.25s ease-out forwards',
+  			enter: 'enter 0.2s ease-out forwards',
   			'enter-subtle': 'enter-subtle 0.15s ease-out forwards',
-  			'fade-in': 'fade-in 0.3s ease-out forwards',
-  			'slide-in-right': 'slide-in-right 0.4s ease-out forwards',
-  			'sheet-in': 'slide-in-from-right 0.3s ease-out forwards, fade-in 0.3s ease-out forwards',
-  			'sheet-out': 'slide-out-to-right 0.3s ease-in forwards, fade-out 0.3s ease-in forwards',
-  			'slide-in-bottom': 'slide-in-bottom 0.3s ease-out forwards',
-  			'scale-in': 'scale-in 0.2s ease-out forwards',
+  			'fade-in': 'fade-in 0.2s ease-out forwards',
+  			'slide-in-right': 'slide-in-right 0.25s ease-out forwards',
+  			'sheet-in': 'slide-in-from-right 0.25s ease-out forwards, fade-in 0.25s ease-out forwards',
+  			'sheet-out': 'slide-out-to-right 0.2s ease-in forwards, fade-out 0.2s ease-in forwards',
+  			'slide-in-bottom': 'slide-in-bottom 0.25s ease-out forwards',
+  			'scale-in': 'scale-in 0.15s ease-out forwards',
   			shimmer: 'shimmer 2s linear infinite'
   		},
   		borderRadius: {
@@ -253,8 +253,7 @@ export default {
   			sm: '0',
   			xl: '0',
   			'2xl': '0',
-  			'3xl': '0',
-  			full: '0'
+  			'3xl': '0'
   		}
   	}
   },

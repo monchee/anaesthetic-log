@@ -74,7 +74,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                     <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Select drugs to generate a printable testing plan</p>
                 </div>
              </div>
-             <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+             <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
         </div>
 
         {isOpen && (
@@ -104,7 +104,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                             return (
                                 <div 
                                     key={category} 
-                                    className={`space-y-2 rounded-none p-3 transition-colors duration-300 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}
+                                    className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}
                                 >
                                     <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-slate-200 dark:border-slate-800'}`}>
                                         <h4 className={`text-[10px] font-semibold uppercase tracking-wider flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-slate-400'}`}>
@@ -123,7 +123,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                                             <button
                                                 key={drug}
                                                 onClick={() => toggleDrug(drug)}
-                                                className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-200 flex items-center gap-1.5 text-left ${
+                                                className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-150 flex items-center gap-1.5 text-left ${
                                                 selectedDrugs.includes(drug) 
                                                 ? theme.btnSelected
                                                 : `bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 ${theme.btnHover}`
@@ -139,7 +139,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                         })}
 
                         {/* Custom Drugs Section */}
-                        <div className={`space-y-2 rounded-none p-3 transition-colors duration-300 ${hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
+                        <div className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
                             <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasCustomActive ? `${customTheme.headerBorder}` : 'border-slate-200 dark:border-slate-800'}`}>
                                 <h4 className={`text-[10px] font-semibold uppercase tracking-wider flex items-center gap-2 ${hasCustomActive ? customTheme.headerText : 'text-slate-500 dark:text-slate-400'}`}>
                                     Additional Items
@@ -151,7 +151,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                                     <button
                                         key={drug}
                                         onClick={() => toggleDrug(drug)}
-                                        className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-200 flex items-center gap-1.5 text-left group ${
+                                        className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-150 flex items-center gap-1.5 text-left group ${
                                             selectedDrugs.includes(drug) 
                                             ? customTheme.btnSelected
                                             : `bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 ${customTheme.btnHover}`
@@ -161,7 +161,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                                         {drug}
                                         <span 
                                             onClick={(e) => { e.stopPropagation(); removeCustomDrug(drug); }}
-                                            className="ml-1 opacity-50 hover:opacity-100 hover:text-red-400 dark:hover:text-red-300"
+                                            className="ml-1 opacity-50 hover:opacity-100 hover:text-red-400 dark:hover:text-red-300 transition-all"
                                         >
                                             <X className="w-3 h-3" />
                                         </span>

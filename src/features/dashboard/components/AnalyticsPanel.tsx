@@ -57,12 +57,12 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {/* Severe */}
             <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-1">
-                <AlertTriangle className="w-4 h-4 text-status-grade3" />
+                <AlertTriangle className="w-4 h-4 text-red-500" />
                 <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Severe</span>
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-slate-900 dark:text-white">{animatedSevereCount}</span>
-                <span className="text-xs font-medium text-status-grade3">{severeRate}%</span>
+                <span className="text-xs font-medium text-red-500">{severeRate}%</span>
               </div>
             </div>
 
@@ -106,54 +106,54 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {gradeCounts.I > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.I / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade1 h-full transition-all duration-700" 
+                className="bg-status-grade1 h-full transition-all duration-500" 
               />
             )}
             {gradeCounts.II > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.II / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade2 h-full transition-all duration-700 delay-75" 
+                className="bg-status-grade2 h-full transition-all duration-500 delay-75" 
               />
             )}
             {gradeCounts.III > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.III / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade3 h-full transition-all duration-700 delay-100" 
+                className="bg-red-500 h-full transition-all duration-500 delay-75" 
               />
             )}
             {gradeCounts.IV > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.IV / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade4 h-full transition-all duration-700 delay-150" 
+                className="bg-status-grade4 h-full transition-all duration-500 delay-100" 
               />
             )}
             {gradeCounts.Ungraded > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.Ungraded / totalPatients) * 100}%` : '0%' }} 
-                className="bg-slate-300 h-full transition-all duration-700 delay-200" 
+                className="bg-slate-300 h-full transition-all duration-500 delay-100" 
               />
             )}
           </div>
           
           <div className="grid grid-cols-3 gap-2 text-xs mt-4">
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-none bg-status-grade1"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-status-grade1"></span>
               <span className="text-slate-600 dark:text-slate-400">I: <b className="text-slate-900 dark:text-white">{gradeCounts.I}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-none bg-status-grade2"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-status-grade2"></span>
               <span className="text-slate-600 dark:text-slate-400">II: <b className="text-slate-900 dark:text-white">{gradeCounts.II}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-none bg-status-grade3"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
               <span className="text-slate-600 dark:text-slate-400">III: <b className="text-slate-900 dark:text-white">{gradeCounts.III}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-none bg-status-grade4"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-status-grade4"></span>
               <span className="text-slate-600 dark:text-slate-400">IV: <b className="text-slate-900 dark:text-white">{gradeCounts.IV}</b></span>
             </div>
             <div className="flex items-center gap-1.5 col-span-2">
-              <span className="w-2.5 h-2.5 rounded-none bg-slate-300"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
               <span className="text-slate-600 dark:text-slate-400">Ungraded: <b className="text-slate-900 dark:text-white">{gradeCounts.Ungraded}</b></span>
             </div>
           </div>
@@ -180,7 +180,7 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                     </div>
                     <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-none overflow-hidden">
                       <div 
-                        className="h-full bg-primary rounded-none transition-all duration-700" 
+                        className="h-full bg-primary rounded-none transition-all duration-500" 
                         style={{ 
                           width: animateCharts ? `${percentage}%` : '0%',
                           transitionDelay: `${idx * 50}ms`

@@ -8,19 +8,19 @@ import TestingLogForm from './components/TestingLogForm';
 import ClinicalReport from './components/ClinicalReport';
 import PatientHandout from './components/PatientHandout';
 import Dashboard from './components/Dashboard';
-import Changelog from './components/Changelog';
+const Changelog = React.lazy(() => import('./components/Changelog'));
 import TestingPlanGenerator from './components/TestingPlanGenerator';
 import TestingPlanPrintView from './components/TestingPlanPrintView';
-import AboutPage from './components/AboutPage';
-import FAQPage from './components/FAQPage';
-import DrugReferencePage from './components/DrugReferencePage';
-import ContactPage from './components/ContactPage';
-import ResourcesPage from './components/ResourcesPage';
-import PrivacyPolicyPage from './components/PrivacyPolicyPage';
-import ClinicalGovernancePage from './components/ClinicalGovernancePage';
-import TermsOfUsePage from './components/TermsOfUsePage';
-import TechnicalDocumentationPage from './components/TechnicalDocumentationPage';
-import DisclaimerPage from './components/DisclaimerPage';
+const AboutPage = React.lazy(() => import('./components/AboutPage'));
+const FAQPage = React.lazy(() => import('./components/FAQPage'));
+const DrugReferencePage = React.lazy(() => import('./components/DrugReferencePage'));
+const ContactPage = React.lazy(() => import('./components/ContactPage'));
+const ResourcesPage = React.lazy(() => import('./components/ResourcesPage'));
+const PrivacyPolicyPage = React.lazy(() => import('./components/PrivacyPolicyPage'));
+const ClinicalGovernancePage = React.lazy(() => import('./components/ClinicalGovernancePage'));
+const TermsOfUsePage = React.lazy(() => import('./components/TermsOfUsePage'));
+const TechnicalDocumentationPage = React.lazy(() => import('./components/TechnicalDocumentationPage'));
+const DisclaimerPage = React.lazy(() => import('./components/DisclaimerPage'));
 import { ScreenLayout } from './components/ScreenLayout';
 import { ThemeProvider } from './components/ThemeProvider';
 import { FontSizeProvider } from './components/FontSizeProvider';
@@ -389,7 +389,7 @@ function AnaestheticLogApp() {
                     </Button>
                 </div>
                 <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
-                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold">
+                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
                         <Plus className="w-5 h-5 mr-2" /> Start New Log
                     </Button>
                 </div>
@@ -426,7 +426,7 @@ function AnaestheticLogApp() {
                     </Button>
                 </div>
                 <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
-                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg bg-primary hover:bg-primary/90 text-white rounded-none font-semibold">
+                    <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg bg-primary hover:bg-primary/90 text-white rounded-none font-semibold transition-colors">
                         <Plus className="w-5 h-5 mr-2" /> Start New Log
                     </Button>
                 </div>
@@ -476,7 +476,7 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" size="sm" className="mr-2 bg-white/10 hover:bg-white/20 text-white border border-white/10">
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" size="sm" className="mr-2 bg-white/10 hover:bg-white/20 text-white border border-white/10 transition-colors">
                         <ArrowLeft className="w-4 h-4 mr-1" /> Back
                     </Button>
                 }
@@ -629,7 +629,7 @@ function AnaestheticLogApp() {
                     <div className="flex justify-end pt-4">
                         <Button 
                             size="lg" 
-                            className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold"
+                            className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors"
                             onClick={() => setScreen(Screen.TESTING)}
                         >
                             Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
@@ -663,7 +663,7 @@ function App() {
               toastOptions={{
                 classNames: {
                   toast: 'border border-slate-200 dark:border-slate-800 rounded-none shadow-sm',
-                  actionButton: 'bg-primary text-white hover:bg-primary/90',
+                  actionButton: 'bg-primary text-white hover:bg-primary/90 transition-colors',
                   description: 'text-slate-600 dark:text-slate-300',
                 }
               }}

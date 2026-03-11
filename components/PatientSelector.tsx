@@ -147,7 +147,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                 filteredPatients.map((patient) => (
                 <div
                     key={patient.id}
-                    className={`relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-slate-100 dark:hover:bg-slate-800 border-b border-slate-50 dark:border-slate-800/50 last:border-0 ${
+                    className={`relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-slate-100 dark:hover:bg-slate-800 border-b border-slate-50 dark:border-slate-800/50 transition-colors last:border-0 ${
                         selectedPatientId === patient.id ? "bg-slate-50 font-medium dark:bg-slate-800/50" : ""
                     }`}
                     onClick={() => handleSelect(patient)}

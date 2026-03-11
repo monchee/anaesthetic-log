@@ -253,7 +253,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
                                         <div className="space-y-4">
                                             <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                                                     2
                                                 </div>
                                                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -262,7 +262,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             </div>
 
                                             <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                                                     3
                                                 </div>
                                                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -271,7 +271,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             </div>
 
                                             <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                                                     4
                                                 </div>
                                                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -280,7 +280,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             </div>
 
                                             <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                                                     5
                                                 </div>
                                                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -289,7 +289,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                             </div>
 
                                             <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
                                                     6
                                                 </div>
                                                 <div className="text-sm text-slate-600 dark:text-slate-300">
@@ -352,7 +352,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
                         {/* Row 2: Expanded Filter Panel Content - Guaranteed to be below */}
                         {isFiltersExpanded && (
-                            <div className="w-full animate-in fade-in slide-in-from-top-2 duration-200">
+                            <div className="w-full animate-in fade-in slide-in-from-top-2 duration-150">
                                 <AdvancedSearchPanel
                                     filters={filters}
                                     updateFilter={updateFilter}
@@ -385,7 +385,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                         )}
                     </div>
                     <button 
-                        className="opacity-50 hover:opacity-100" 
+                        className="opacity-50 hover:opacity-100 transition-opacity" 
                         onClick={() => setUploadStatus(null)}
                     >
                         <X className="w-4 h-4" />
@@ -428,7 +428,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                         <td className="px-4 py-3 whitespace-nowrap text-slate-500 dark:text-slate-400 font-mono text-xs">
                                             {formatDate(p.history.date)}
                                         </td>
-                                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-primary">
+                                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-primary transition-colors">
                                             <div className="truncate max-w-[180px]" title={`${p.lastName}, ${p.firstName}`}>
                                                 {p.lastName}, {p.firstName}
                                             </div>
@@ -444,8 +444,8 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                                     <div
                                                         key={idx}
                                                         className={`
-                                                            h-2.5 w-2.5 rounded-none cursor-help inline-block
-                                                            ${e.type === 'reaction' ? 'bg-status-grade3' : ''}
+                                                            h-2.5 w-2.5 rounded-full cursor-help inline-block
+                                                            ${e.type === 'reaction' ? 'bg-red-500' : ''}
                                                             ${e.type === 'induction' ? 'bg-primary' : ''}
                                                             ${e.type === 'med' ? 'bg-slate-300' : ''}
                                                         `}
@@ -512,8 +512,8 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                         <div
                                             key={idx}
                                             className={`
-                                                h-2 w-2 rounded-none
-                                                ${e.type === 'reaction' ? 'bg-status-grade3' : ''}
+                                                h-2 w-2 rounded-full
+                                                ${e.type === 'reaction' ? 'bg-red-500' : ''}
                                                 ${e.type === 'induction' ? 'bg-primary' : ''}
                                                 ${e.type === 'med' ? 'bg-slate-300 dark:bg-slate-600' : ''}
                                             `}

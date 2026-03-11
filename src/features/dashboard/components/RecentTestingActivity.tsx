@@ -50,8 +50,8 @@ export const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                     className="hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer transition-colors group"
                     onClick={() => onViewLog(log)}
                   >
-                    <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300">{formatDate(log.visitDate)}</td>
-                    <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-primary">{log.lastName}, {log.firstName}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">{formatDate(log.visitDate)}</td>
+                    <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-primary transition-colors">{log.lastName}, {log.firstName}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1 items-center">
                         {positives.map(p => <Badge key={p} variant="danger" className="text-[10px] px-1.5 py-0 h-5">{p}</Badge>)}

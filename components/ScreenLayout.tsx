@@ -150,8 +150,17 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 tabIndex={-1}
                 className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col relative z-10"
             >
-                <div className={`${contentClassName || ''} flex-1`}>
-                    {children}
+                <div className={`${contentClassName || ''} flex-1 flex flex-col`}>
+                    <React.Suspense fallback={
+                        <div className="flex-1 flex flex-col items-center justify-center p-12 text-slate-500 min-h-[50vh]">
+                            <div className="flex flex-col items-center gap-4">
+                                <div className="h-8 w-8 rounded-full border-4 border-primary/20 border-t-primary animate-spin"></div>
+                                <span className="text-sm font-medium animate-pulse">Loading content...</span>
+                            </div>
+                        </div>
+                    }>
+                        {children}
+                    </React.Suspense>
                 </div>
             </main>
 

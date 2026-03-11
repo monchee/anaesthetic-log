@@ -11,9 +11,20 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.17.0",
+      codename: "Remifentanil",
+      highlight: true,
+      changes: [
+        "Implemented Route-based Code Splitting using React.lazy and Suspense, reducing initial bundle size by ~85KB.",
+        "Conducted comprehensive Security Review against OWASP Top 10 standards.",
+        "Remediated 14 dependency vulnerabilities including deep-tree security overrides for serialize-javascript.",
+        "Optimized application shell with a shared loading state for lazy-loaded clinical resources.",
+      ]
+    },
+    {
       version: "v0.16.0",
       codename: "Bupivacaine",
-      highlight: true,
+      highlight: false,
       changes: [
         "System-wide elimination of rounded corners for a sharp, clinical design profile.",
         "Standardized all UI primitives (Buttons, Cards, Inputs, Dialogs) with 'rounded-none' geometry.",

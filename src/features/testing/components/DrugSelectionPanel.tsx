@@ -38,7 +38,7 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
           const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
 
           return (
-            <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-300 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
+            <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
               <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-slate-200 dark:border-slate-800'}`}>
                 <h4 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-slate-400'}`}>
                   {category}
@@ -58,7 +58,7 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
                     <button
                       key={drug}
                       onClick={() => onToggleDrug(drug)}
-                      className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-200 flex items-center gap-1.5 text-left ${
+                      className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-150 flex items-center gap-1.5 text-left ${
                         isSelected 
                         ? theme.btnSelected
                         : `bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 ${theme.btnHover}`
@@ -73,7 +73,7 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
                 {category === 'Others' && (
                   <button
                     onClick={onAddCustomDrug}
-                    className={`text-xs px-2.5 py-1.5 rounded border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
+                    className={`text-xs px-2.5 py-1.5 rounded border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
                   >
                     <Plus className="w-3 h-3 shrink-0" />
                     Other
