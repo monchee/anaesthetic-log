@@ -11,9 +11,20 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.20.0",
+      codename: "Ketamine",
+      highlight: true,
+      changes: [
+        "Implemented path-based deep linking, enabling direct access to pages via specific URLs.",
+        "Synchronized application state with browser history for a seamless back/forward navigation experience.",
+        "Configured SPA routing support for production deployment environments.",
+        "Refined navigation hooks for improved performance and state reliability.",
+      ]
+    },
+    {
       version: "v0.19.0",
       codename: "Cisatracurium",
-      highlight: true,
+      highlight: false,
       changes: [
         "Standardized top bar button interactions with consistent white text on hover for high contrast against dark backgrounds.",
         "Refined Dashboard 'Upload CSV' trigger with enhanced hover states and responsive background transitions.",
