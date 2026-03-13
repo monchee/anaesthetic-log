@@ -225,11 +225,11 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                             />
                             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                                 <SheetTrigger>
-                                    <Button variant="outline" size="sm" className="shrink-0 h-9">
+                                    <Button variant="outline" size="sm" className="shrink-0 h-9 bg-white hover:bg-slate-100 border-slate-200 hover:border-slate-300 transition-all duration-200 shadow-sm rounded-none">
                                         <Upload className="w-3 h-3 mr-1.5" /> Upload CSV
                                     </Button>
                                 </SheetTrigger>
-                                <SheetContent>
+                                <SheetContent className="rounded-none border-l border-slate-200 dark:border-slate-800">
                                     <SheetHeader className="mb-6">
                                         <SheetTitle className="flex items-center gap-2">
                                             <FileUp className="w-5 h-5 text-red-600" />
@@ -343,24 +343,21 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                 />
                             </div>
                             <AdvancedSearchFilters
+                                activeFilterCount={activeFilterCount}
                                 isExpanded={isFiltersExpanded} 
                                 setIsExpanded={setIsFiltersExpanded}
-                                activeFilterCount={activeFilterCount}
-                                clearFilters={clearFilters}
                             />
                         </div>
-
-                        {/* Row 2: Expanded Filter Panel Content - Guaranteed to be below */}
+                        
+                        {/* Row 2: Expanded Filters */}
                         {isFiltersExpanded && (
-                            <div className="w-full animate-in fade-in slide-in-from-top-2 duration-150">
-                                <AdvancedSearchPanel
-                                    filters={filters}
-                                    updateFilter={updateFilter}
-                                    suggestions={suggestions}
-                                    clearFilters={clearFilters}
-                                    activeFilterCount={activeFilterCount}
-                                />
-                            </div>
+                            <AdvancedSearchPanel
+                                filters={filters}
+                                updateFilter={updateFilter}
+                                clearFilters={clearFilters}
+                                activeFilterCount={activeFilterCount}
+                                suggestions={suggestions}
+                            />
                         )}
                     </div>
                 </div>

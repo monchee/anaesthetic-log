@@ -83,8 +83,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back to Log
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back to Log
                     </Button>
                 }
             >
@@ -106,8 +106,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -129,8 +129,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -152,8 +152,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -175,8 +175,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -198,8 +198,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -221,8 +221,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -244,8 +244,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -267,8 +267,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -290,8 +290,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -313,8 +313,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -336,8 +336,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back to Log
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back to Log
                     </Button>
                 }
             >
@@ -373,8 +373,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
+                    <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <LayoutDashboard className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Dashboard
                     </Button>
                 }
                 contentClassName="p-4 space-y-4"
@@ -410,8 +410,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
+                    <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <LayoutDashboard className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Dashboard
                     </Button>
                 }
                 contentClassName="p-4 space-y-4"
@@ -448,8 +448,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
             >
@@ -476,8 +476,8 @@ function AnaestheticLogApp() {
                 onDismissDisclaimer={handleDismissDisclaimer}
                 onUploadPatients={handleUploadPatients}
                 actions={
-                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" size="sm" className="mr-2 bg-white/10 hover:bg-white/20 text-white border border-white/10 transition-colors">
-                        <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                    <Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                        <ArrowLeft className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Back
                     </Button>
                 }
                 contentClassName="p-4"
@@ -508,8 +508,8 @@ function AnaestheticLogApp() {
             onDismissDisclaimer={handleDismissDisclaimer}
             onUploadPatients={handleUploadPatients}
             actions={
-                <Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className="bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm transition-all">
-                    <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
+                <Button onClick={() => setScreen(Screen.DASHBOARD)}variant="ghost" className="h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none">
+                    <LayoutDashboard className="w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity" /> Dashboard
                 </Button>
             }
             contentClassName="p-3 space-y-4"

@@ -17,6 +17,7 @@ import {
 import { parseRedcapCSV } from '../lib/utils';
 import { Patient } from '../types';
 import toast from 'react-hot-toast';
+import { useLocalStorage } from '../src/shared/hooks/useLocalStorage';
 
 interface HelpSection {
   icon: React.ReactNode;
@@ -75,14 +76,16 @@ interface HelpModalProps {
 export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrigger = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isUploadSheetOpen, setIsUploadSheetOpen] = useState(false);
+  const [hasSeenQuickStart, setHasSeenQuickStart] = useLocalStorage('hasSeenQuickStart', false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-open on page load (only when trigger is visible)
+  // Auto-open on page load for first-time users
   useEffect(() => {
-    if (!hideTrigger) {
+    if (!hasSeenQuickStart) {
       setIsOpen(true);
+      setHasSeenQuickStart(true);
     }
-  }, [hideTrigger]);
+  }, [hasSeenQuickStart, setHasSeenQuickStart]);
 
   const handleClose = (open: boolean) => {
     setIsOpen(open);
@@ -130,18 +133,16 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
 
   return (
     <>
-      {!hideTrigger && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start px-4 py-3 h-auto rounded-none hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium"
-          onClick={() => setIsOpen(true)}
-          data-help-modal-trigger
-        >
-          <HelpCircle className="w-5 h-5 mr-2" />
-          Quick Start Guide
-        </Button>
-      )}
+      <Button
+        variant="outline"
+        size="sm"
+        className={hideTrigger ? "hidden" : "w-full justify-start px-4 py-3 h-auto rounded-none hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium"}
+        onClick={() => setIsOpen(true)}
+        data-help-modal-trigger
+      >
+        <HelpCircle className="w-5 h-5 mr-2" />
+        Quick Start Guide
+      </Button>
 
       {/* Hidden file input */}
       <input

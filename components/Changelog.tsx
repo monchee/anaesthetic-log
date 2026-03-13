@@ -11,9 +11,20 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.19.0",
+      codename: "Cisatracurium",
+      highlight: true,
+      changes: [
+        "Standardized top bar button interactions with consistent white text on hover for high contrast against dark backgrounds.",
+        "Refined Dashboard 'Upload CSV' trigger with enhanced hover states and responsive background transitions.",
+        "Optimized core Sheet animations by cleaning up Tailwind config conflicts, restoring clean horizontal slide-in/out patterns.",
+        "Harmonized navigation menu styling with translucent hover backgrounds and responsive visual feedback.",
+      ]
+    },
+    {
       version: "v0.18.0",
       codename: "Sugammadex",
-      highlight: true,
+      highlight: false,
       changes: [
         "Implemented 'Utility Belt' horizontal filter bar with Popover-based controls for severity, outcome, date, and hospital.",
         "Redesigned filter navigation to reclaim dashboard space while ensuring filters apply instantly (auto-apply).",
