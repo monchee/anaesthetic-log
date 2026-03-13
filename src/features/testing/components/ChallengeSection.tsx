@@ -57,7 +57,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
         <div className="flex items-center gap-4">
           <div className={`p-2.5 rounded-none transition-colors ${
             proceedToChallenge 
-            ? 'bg-primary text-white' 
+            ? 'bg-primary text-primary-foreground' 
             : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'
           }`}>
             <Activity className="w-5 h-5" />
@@ -220,7 +220,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                       onClick={() => onToggleSymptom(sym)}
                       className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-all duration-150 ${
                         symptoms.includes(sym)
-                        ? 'bg-red-600 text-white border-red-600 shadow-md transform scale-105'
+                        ? 'bg-red-600 text-slate-50 border-red-600 shadow-md transform scale-105'
                         : 'bg-white text-red-900 border-red-200 hover:bg-red-100 hover:border-red-300 dark:bg-slate-950 dark:text-red-200 dark:border-red-900/50'
                       }`}
                     >

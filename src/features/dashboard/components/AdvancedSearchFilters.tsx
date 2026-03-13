@@ -45,7 +45,7 @@ export const AdvancedSearchFilters: React.FC<Pick<AdvancedSearchFiltersProps, 'a
       <Filter className="w-4 h-4 mr-2" />
       Filters
       {activeFilterCount > 0 && (
-        <Badge variant="default" className="ml-2 h-5 px-1.5 min-w-5 justify-center text-[10px] bg-primary text-white">
+        <Badge variant="default" className="ml-2 h-5 px-1.5 min-w-5 justify-center text-[10px] bg-primary text-primary-foreground">
           {activeFilterCount}
         </Badge>
       )}
@@ -81,10 +81,10 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
     if (!isSelected) return 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700';
     
     switch (outcome) {
-      case 'all': return 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border-transparent shadow-sm';
+      case 'all': return 'bg-slate-900 dark:bg-slate-100 text-slate-50 dark:text-slate-900 border-transparent shadow-sm';
       case 'completed': return 'bg-emerald-600 dark:bg-emerald-500 text-white border-transparent shadow-sm';
       case 'abandoned': return 'bg-rose-600 dark:bg-rose-500 text-white border-transparent shadow-sm';
-      default: return 'bg-primary text-white border-transparent shadow-sm';
+      default: return 'bg-primary text-primary-foreground border-transparent shadow-sm';
     }
   };
 
@@ -139,6 +139,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                   <button
                     key={grade.value}
                     onClick={() => toggleGrade(grade.value)}
+                    aria-label={grade.label}
                     className={`
                       ${isUngraded ? 'col-span-2' : 'col-span-1'}
                       h-9 rounded-none border text-[10px] font-bold transition-all flex items-center justify-center gap-1

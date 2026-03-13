@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Badge } from './custom-badge';
+import { Badge } from './badge';
 
 interface AnimatedGradeBadgeProps {
   grade: string;

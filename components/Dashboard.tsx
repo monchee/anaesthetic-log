@@ -31,7 +31,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
   const [isUploading, setIsUploading] = useState(false);
   const [animateCharts, setAnimateCharts] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isFiltersExpanded, setIsFiltersExpanded] = useState(true);
+  const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Advanced Search Hook
@@ -224,7 +224,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                 className="hidden" 
                             />
                             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-                                <SheetTrigger>
+                                <SheetTrigger asChild>
                                     <Button variant="outline" size="sm" className="shrink-0 h-9 bg-white hover:bg-slate-100 border-slate-200 hover:border-slate-300 transition-all duration-200 shadow-sm rounded-none">
                                         <Upload className="w-3 h-3 mr-1.5" /> Upload CSV
                                     </Button>
@@ -397,7 +397,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                         <tr>
                             <th scope="col" className="px-4 py-3 w-28">Date</th>
                             <th scope="col" className="px-4 py-3 w-48">Patient</th>
-                            <th scope="col" className="px-4 py-3">Procedure</th> {/* Flexible width */}
+                            <th scope="col" className="px-4 py-3">Procedure</th>{/* Flexible width */}
                             <th scope="col" className="px-4 py-3 w-48">Timeline</th>
                             <th scope="col" className="px-4 py-3 text-center w-28">Grade</th>
                         </tr>

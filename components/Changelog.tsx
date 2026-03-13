@@ -11,9 +11,20 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.21.0",
+      codename: "Etomidate",
+      highlight: true,
+      changes: [
+        "Resolved tooltip contrast issues by removing hardcoded white text overriding themed backgrounds.",
+        "Refactored Dashboard test suite for improved selector reliability and responsive view handling.",
+        "Standardized status badges and challenge section buttons with theme-aware text tokens.",
+        "Enhanced accessibility of HoverCard components with adaptive contrast across light and dark modes.",
+      ]
+    },
+    {
       version: "v0.20.0",
       codename: "Ketamine",
-      highlight: true,
+      highlight: false,
       changes: [
         "Implemented path-based deep linking, enabling direct access to pages via specific URLs.",
         "Synchronized application state with browser history for a seamless back/forward navigation experience.",

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Button, AccordionItem } from './ui';
+import { Card, CardContent, CardHeader, CardTitle, Button, Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './ui';
 import { Pill, Home, AlertTriangle, ArrowRight } from 'lucide-react';
 import { Screen } from '../types';
 import { DRUG_CATEGORIES, CATEGORY_THEMES } from '../lib/constants';
@@ -95,14 +95,18 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
             <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
               Cross-Reactivity & Alternatives
             </h3>
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800">
+            <Accordion type="multiple" className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 px-4">
               {crossReactivityInfo.map((item, idx) => (
                 <AccordionItem 
                   key={idx}
-                  title={<span className="text-slate-900 dark:text-white">{item.category}</span>}
+                  value={`item-${idx}`}
+                  className="border-b border-slate-200 dark:border-slate-800 last:border-0"
                 >
-                  <div className="px-5 pb-4 space-y-3">
-                    <div className="flex items-start gap-2">
+                  <AccordionTrigger className="text-slate-900 dark:text-white font-medium hover:no-underline">
+                      {item.category}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed pb-4 space-y-3">
+                    <div className="flex items-start gap-2 pt-2">
                       <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                       <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                         {item.info}
@@ -114,10 +118,10 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
                         <strong>Alternatives:</strong> {item.alternatives}
                       </p>
                     </div>
-                  </div>
+                  </AccordionContent>
                 </AccordionItem>
               ))}
-            </div>
+            </Accordion>
           </div>
 
           {/* Disclaimer */}

@@ -62,10 +62,10 @@ const parseDate = (dateStr: string): Date | null => {
 const normaliseGrade = (grade: string): string => {
   if (!grade) return 'ungraded';
   const g = grade.toUpperCase();
-  if (g.includes('IV') || g.includes('CARDIAC ARREST')) return 'IV';
-  if (g.includes('III')) return 'III';
-  if (g.includes('II')) return 'II';
-  if (g.includes('I')) return 'I';
+  if (g.includes('IV') || g.includes('CARDIAC ARREST') || g === '4') return 'IV';
+  if (g.includes('III') || g === '3') return 'III';
+  if (g.includes('II') || g === '2') return 'II';
+  if (g.includes('I') || g === '1') return 'I';
   return 'ungraded';
 };
 

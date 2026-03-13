@@ -69,6 +69,7 @@ export { RadioGroup, RadioGroupItem } from './radio-group';
 export { Switch } from './switch';
 export {
   Accordion,
+  AccordionItem,
   AccordionContent,
   AccordionTrigger,
 } from './accordion';
@@ -82,9 +83,9 @@ export { Toaster } from './sonner';
 export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from './dropdown-menu';
 
 // Custom Badge with medical grade variants (grade1-4, ungraded)
-export { Badge } from './custom-badge';
-export { HoverCard, HoverCardTrigger, HoverCardContent } from './custom-hover-card';
-export { AccordionItem } from './custom-accordion-item';
+export { Badge } from './badge';
+export { HoverCard, HoverCardTrigger, HoverCardContent } from './hover-card';
+
 
 // Legacy Toaster (react-hot-toast) - kept for backwards compatibility
 import { Toaster as HotToaster } from "react-hot-toast"

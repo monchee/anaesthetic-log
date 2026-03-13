@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Button, AccordionItem } from './ui';
+import { Card, CardContent, CardHeader, CardTitle, Button, Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './ui';
 import { HelpCircle, Home } from 'lucide-react';
 import { Screen } from '../types';
 
@@ -99,18 +99,22 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
               <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
                 {category.category}
               </h3>
-              <div className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800">
+              <Accordion type="multiple" className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 px-4">
                 {category.items.map((item, itemIdx) => (
                   <AccordionItem 
                     key={itemIdx}
-                    title={<span className="text-slate-900 dark:text-white">{item.question}</span>}
+                    value={`item-${itemIdx}`}
+                    className="border-b border-slate-200 dark:border-slate-800 last:border-0"
                   >
-                    <div className="px-5 pb-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    <AccordionTrigger className="text-slate-900 dark:text-white font-medium hover:no-underline">
+                        {item.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed pb-4">
                       {item.answer}
-                    </div>
+                    </AccordionContent>
                   </AccordionItem>
                 ))}
-              </div>
+              </Accordion>
             </div>
           ))}
         </CardContent>

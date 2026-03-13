@@ -9,11 +9,14 @@ export default {
   ],
   darkMode: ['class', "class"],
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ['"Public Sans"', 'Inter', 'sans-serif'],
-      },
-
+  	extend: {
+  		fontFamily: {
+  			sans: [
+  				'"Public Sans"',
+  				'Inter',
+  				'sans-serif'
+  			]
+  		},
   		colors: {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
@@ -59,7 +62,7 @@ export default {
   				grade1: 'hsl(var(--status-grade1))',
   				grade2: 'hsl(var(--status-grade2))',
   				grade3: 'hsl(var(--status-grade3))',
-  				grade4: 'hsl(var(--status-grade4))',
+  				grade4: 'hsl(var(--status-grade4))'
   			}
   		},
   		keyframes: {
@@ -106,7 +109,7 @@ export default {
   				'100%': {
   					backgroundPosition: '1000px 0'
   				}
-  			},
+  			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
