@@ -1,4 +1,5 @@
 // Backward compatibility - re-export new hooks with old interface
+import { useEffect } from 'react';
 import { usePatientState } from '../src/features/patients/hooks/usePatientState';
 import { useTestingState } from '../src/features/testing/hooks/useTestingState';
 import { useAppNavigation } from '../src/core/hooks/useAppNavigation';
@@ -7,28 +8,51 @@ import { Patient, Screen } from '../types';
 
 export function useAnaestheticApp() {
   const patientState = usePatientState();
+  const { selectedPatient, handlePatientSelect, handleManualDetailChange: originalHandleManualDetailChange } = patientState;
   const testingState = useTestingState();
+  const { setFormData, handleSubmit: originalHandleSubmit, resetForm: originalResetForm, setLastSavedRecord } = testingState;
   const navigation = useAppNavigation();
   const disclaimer = useDisclaimer();
 
   // Compose handlers that need cross-concern coordination
   const handleDashboardPatientSelect = (patient: Patient) => {
-    patientState.handlePatientSelect(patient);
+    handlePatientSelect(patient);
     navigation.setScreen(Screen.LOG);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  useEffect(() => {
+    if (selectedPatient) {
+      setFormData(prev => ({
+        ...prev,
+        firstName: selectedPatient?.firstName || '',
+        lastName: selectedPatient?.lastName || '',
+        mrn: selectedPatient?.mrn || ''
+      }));
+    }
+  }, [selectedPatient, setFormData]);
+
+  const handleManualDetailChange = (field: string, value: string) => {
+    originalHandleManualDetailChange(field as any, value);
+    if (field === 'firstName' || field === 'lastName' || field === 'mrn') {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }
+  };
+
   const handleSubmit = () => {
-    const savedRecord = testingState.handleSubmit();
+    const savedRecord = originalHandleSubmit();
     navigation.setScreen(Screen.SUMMARY);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return savedRecord;
   };
 
   const resetForm = () => {
-    testingState.resetForm();
+    originalResetForm();
     patientState.setSelectedPatient(null);
-    testingState.setLastSavedRecord(null);
+    setLastSavedRecord(null);
     navigation.setScreen(Screen.LOG);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -63,8 +87,8 @@ export function useAnaestheticApp() {
     
     // Handlers
     handleDismissDisclaimer: disclaimer.handleDismissDisclaimer,
-    handlePatientSelect: patientState.handlePatientSelect,
-    handleManualDetailChange: patientState.handleManualDetailChange,
+    handlePatientSelect,
+    handleManualDetailChange,
     handleSubmit,
     handleUploadPatients: patientState.handleUploadPatients,
     handleDashboardPatientSelect,
