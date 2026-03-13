@@ -6,10 +6,13 @@ import { Patient, LogFormData } from '../types';
 
 // Mock dependencies
 vi.mock('../lib/utils', () => ({
-  formatDate: (date: Date) => date.toLocaleDateString(),
+  formatDate: (date: any) => typeof date === 'string' ? date : new Date(date).toLocaleDateString(),
   parseRedcapCSV: vi.fn(() => ({ success: true, data: [] })),
   getGradeVariant: (_grade: string) => 'default',
-  parsePatientTimeline: vi.fn(() => []),
+  parsePatientTimeline: vi.fn(() => ({ events: [] })),
+  calculateTimeDifference: vi.fn(() => 15),
+  isSkinTestPositive: vi.fn(() => false),
+  cn: (...args: any[]) => args.filter(Boolean).join(' '),
 }));
 
 vi.mock('react-hot-toast', () => ({
@@ -124,7 +127,7 @@ describe('Dashboard', () => {
       render(<Dashboard {...mockProps} />);
 
       expect(screen.getByText(/Dashboard/i)).toBeInTheDocument();
-      expect(screen.getByText(/Total Patients/i)).toBeInTheDocument();
+      expect(screen.getByText(/Records/i)).toBeInTheDocument();
     });
 
     it('displays correct patient count', () => {
@@ -136,15 +139,15 @@ describe('Dashboard', () => {
     it('displays analytics cards', () => {
       render(<Dashboard {...mockProps} />);
 
-      expect(screen.getByText(/Grade 3\+ Reactions/i)).toBeInTheDocument();
+      expect(screen.getByText(/Severe/i)).toBeInTheDocument();
       expect(screen.getByText(/Abandoned/i)).toBeInTheDocument();
     });
 
     it('renders patient table', () => {
       render(<Dashboard {...mockProps} />);
 
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
-      expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+      expect(screen.getByText(/Doe, John/i)).toBeInTheDocument();
+      expect(screen.getByText(/Smith, Jane/i)).toBeInTheDocument();
     });
   });
 
@@ -152,41 +155,41 @@ describe('Dashboard', () => {
     it('filters patients by search term', async () => {
       render(<Dashboard {...mockProps} />);
 
-      const searchInput = screen.getByPlaceholderText(/Search patients/i);
+      const searchInput = screen.getByPlaceholderText(/Search by Name, MRN/i);
       fireEvent.change(searchInput, { target: { value: 'John' } });
 
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument();
-        expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument();
+        expect(screen.getByText(/Doe, John/i)).toBeInTheDocument();
+        expect(screen.queryByText(/Smith, Jane/i)).not.toBeInTheDocument();
       });
     });
 
     it('filters patients by MRN', async () => {
       render(<Dashboard {...mockProps} />);
 
-      const searchInput = screen.getByPlaceholderText(/Search patients/i);
+      const searchInput = screen.getByPlaceholderText(/Search by Name, MRN/i);
       fireEvent.change(searchInput, { target: { value: 'MRN001' } });
 
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument();
-        expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument();
+        expect(screen.getByText(/Doe, John/i)).toBeInTheDocument();
+        expect(screen.queryByText(/Smith, Jane/i)).not.toBeInTheDocument();
       });
     });
 
     it('clears search when input is cleared', async () => {
       render(<Dashboard {...mockProps} />);
 
-      const searchInput = screen.getByPlaceholderText(/Search patients/i);
+      const searchInput = screen.getByPlaceholderText(/Search by Name, MRN/i);
       fireEvent.change(searchInput, { target: { value: 'John' } });
 
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument();
+        expect(screen.getByText(/Doe, John/i)).toBeInTheDocument();
       });
 
       fireEvent.change(searchInput, { target: { value: '' } });
 
       await waitFor(() => {
-        expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+        expect(screen.getByText(/Smith, Jane/i)).toBeInTheDocument();
       });
     });
   });
@@ -195,11 +198,11 @@ describe('Dashboard', () => {
     it('opens upload dialog when upload button clicked', () => {
       render(<Dashboard {...mockProps} />);
 
-      const uploadButton = screen.getByText(/Upload Database/i);
+      const uploadButton = screen.getByText(/Upload REDCap/i);
       fireEvent.click(uploadButton);
 
       // Dialog should be visible
-      expect(screen.getByText(/Upload Patient Database/i)).toBeInTheDocument();
+      expect(screen.getByText(/Upload Patient Data/i)).toBeInTheDocument();
     });
 
     it('handles CSV file upload', async () => {
@@ -229,7 +232,7 @@ describe('Dashboard', () => {
 
       render(<Dashboard {...mockProps} />);
 
-      const uploadButton = screen.getByText(/Upload Database/i);
+      const uploadButton = screen.getByText(/Upload REDCap/i);
       fireEvent.click(uploadButton);
 
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
@@ -251,7 +254,7 @@ describe('Dashboard', () => {
 
       render(<Dashboard {...mockProps} />);
 
-      const uploadButton = screen.getByText(/Upload Database/i);
+      const uploadButton = screen.getByText(/Upload REDCap/i);
       fireEvent.click(uploadButton);
 
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
@@ -373,7 +376,7 @@ describe('Dashboard', () => {
     it('calls onSelectPatient when patient is clicked', async () => {
       render(<Dashboard {...mockProps} />);
 
-      const patientRow = screen.getByText('John Doe');
+      const patientRow = screen.getByText(/Doe, John/i);
       fireEvent.click(patientRow);
 
       await waitFor(() => {
@@ -397,45 +400,51 @@ describe('Dashboard', () => {
     it('toggles advanced filters panel', () => {
       render(<Dashboard {...mockProps} />);
 
-      const filtersButton = screen.getByText(/Advanced Filters/i);
+      const filtersButton = screen.getByText(/Filters/i);
       fireEvent.click(filtersButton);
 
-      expect(screen.getByText(/Filter by reaction grade/i)).toBeInTheDocument();
+      expect(screen.getByText(/Severity/i)).toBeInTheDocument();
     });
 
     it('filters patients by grade', async () => {
       render(<Dashboard {...mockProps} />);
 
-      const filtersButton = screen.getByText(/Advanced Filters/i);
+      const filtersButton = screen.getByText(/Filters/i);
       fireEvent.click(filtersButton);
 
-      const grade3Checkbox = screen.getByLabelText(/Grade 3/i);
+      const severityTrigger = screen.getByText(/Severity/i);
+      fireEvent.click(severityTrigger);
+
+      const grade3Checkbox = screen.getByText(/Grade III/i);
       fireEvent.click(grade3Checkbox);
 
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument();
-        expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument();
+        expect(screen.getByText(/Doe, John/i)).toBeInTheDocument();
+        expect(screen.queryByText(/Smith, Jane/i)).not.toBeInTheDocument();
       });
     });
 
     it('clears all filters', async () => {
       render(<Dashboard {...mockProps} />);
 
-      const filtersButton = screen.getByText(/Advanced Filters/i);
+      const filtersButton = screen.getByText(/Filters/i);
       fireEvent.click(filtersButton);
 
-      const grade3Checkbox = screen.getByLabelText(/Grade 3/i);
+      const severityTrigger = screen.getByRole('button', { name: /Severity/i });
+      fireEvent.click(severityTrigger);
+
+      const grade3Checkbox = await screen.findByText(/Grade III/i);
       fireEvent.click(grade3Checkbox);
 
       await waitFor(() => {
-        expect(screen.getByText('John Doe')).toBeInTheDocument();
+        expect(screen.getByText(/Doe, John/i)).toBeInTheDocument();
       });
 
       const clearButton = screen.getByRole('button', { name: /Clear Filters/i });
       fireEvent.click(clearButton);
 
       await waitFor(() => {
-        expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+        expect(screen.getByText(/Smith, Jane/i)).toBeInTheDocument();
       });
     });
   });
@@ -444,21 +453,21 @@ describe('Dashboard', () => {
     it('has proper ARIA labels on search input', () => {
       render(<Dashboard {...mockProps} />);
 
-      const searchInput = screen.getByPlaceholderText(/Search patients/i);
+      const searchInput = screen.getByPlaceholderText(/Search by Name, MRN/i);
       expect(searchInput).toHaveAttribute('aria-label');
     });
 
     it('has proper ARIA labels on buttons', () => {
       render(<Dashboard {...mockProps} />);
 
-      const uploadButton = screen.getByRole('button', { name: /Upload Database/i });
+      const uploadButton = screen.getAllByRole('button', { name: /Upload/i })[0];
       expect(uploadButton).toBeInTheDocument();
     });
 
     it('is keyboard navigable', () => {
       render(<Dashboard {...mockProps} />);
 
-      const searchInput = screen.getByPlaceholderText(/Search patients/i);
+      const searchInput = screen.getByPlaceholderText(/Search by Name, MRN/i);
       searchInput.focus();
       expect(searchInput).toHaveFocus();
 
