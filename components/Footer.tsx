@@ -28,7 +28,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
 
   return (
     <footer role="contentinfo" aria-label="Application footer" className="border-t border-slate-200 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm no-print">
-      <div className="max-w-6xl mx-auto px-6 py-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4">
         <div className="flex flex-col gap-3">
           {/* Navigation Links */}
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs">
@@ -74,7 +74,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
                 onClick={() => setScreen(Screen.CHANGELOG)}
                 className="hover:text-primary dark:hover:text-primary transition-colors font-semibold"
               >
-                v0.21.0
+                v0.22.0
               </button>
             </div>
           </div>

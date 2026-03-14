@@ -154,7 +154,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
       />
 
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="!max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-full sm:!max-w-3xl md:!max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader className="pb-4">
             <DialogTitle className="flex items-center gap-2 text-lg">
               <Activity className="w-5 h-5 text-slate-900" />

@@ -58,7 +58,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 <div className="bg-primary text-white border-b border-slate-800 w-full">
                     {/* Safe Area Padding for mobile notch support */}
                     <div className="pt-[env(safe-area-inset-top)]">
-                        <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div className="max-w-6xl mx-auto px-3 py-2 sm:px-4 sm:py-3 lg:py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
                             
                             {/* Title Area */}
                             <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -148,7 +148,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 role="main"
                 aria-label="Main content"
                 tabIndex={-1}
-                className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col relative z-10"
+                className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-5 md:px-6 py-3 sm:py-4 md:py-6 flex flex-col relative z-10"
             >
                 <div className={`${contentClassName || ''} flex-1 flex flex-col`}>
                     <React.Suspense fallback={

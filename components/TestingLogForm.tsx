@@ -41,7 +41,7 @@ const DrugRow = React.memo(({
 
   return (
     <div
-      className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-none group`}
+      className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-3 sm:p-3.5 md:p-4 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-none group`}
     >
       {/* Name Column (Full width on mobile) */}
       <div className="col-span-2 md:col-span-1 flex items-center gap-2">
@@ -119,7 +119,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   } = useTestingLogLogic({ formData, setFormData, drugCategories });
 
   return (
-    <div className="space-y-6 mt-8">
+    <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-4 sm:mt-6 md:mt-8">
       
       {/* Section Header */}
       <div className="flex items-center gap-2 border-b-2 border-slate-200 dark:border-slate-800 pb-2 mb-2">
@@ -129,7 +129,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
       {/* 1. Visit Details & Patient Info */}
       <Card>
-        <CardContent className="pt-6">
+        <CardContent className="pt-4 sm:pt-5 md:pt-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
                     <div className="bg-slate-100 dark:bg-slate-800 p-2 rounded-none">
@@ -179,7 +179,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
               SPT & IDT Panel
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-4 space-y-6">
+          <CardContent className="pt-3 sm:pt-4 md:pt-4 space-y-4 sm:space-y-5 md:space-y-6">
             
             {/* Controls */}
             <div className="bg-slate-50 dark:bg-slate-900 px-4 py-4 rounded-none border border-slate-200 dark:border-slate-800 flex flex-col gap-4">

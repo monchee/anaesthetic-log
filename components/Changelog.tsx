@@ -11,6 +11,17 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.22.0",
+      codename: "Propofol",
+      highlight: true,
+      changes: [
+        "Optimized mobile and tablet experience with progressive responsive spacing (25-50% reduction on mobile, 15-25% on tablet).",
+        "Fixed inverted padding bug in TestingLogForm where mobile had more padding than desktop.",
+        "Enhanced content visibility on mobile devices with 15-20% more content above the fold.",
+        "Refined responsive breakpoints across ScreenLayout, Cards, Dialogs, Forms, and Footer components.",
+      ]
+    },
+    {
       version: "v0.21.0",
       codename: "Etomidate",
       highlight: true,
