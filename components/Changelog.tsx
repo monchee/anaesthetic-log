@@ -11,9 +11,21 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.23.0",
+      codename: "Rocuronium",
+      highlight: true,
+      changes: [
+        "Removed 8 unused animated wrapper components (~350 lines) and replaced with TailwindCSS utilities for cleaner code.",
+        "Eliminated framer-motion dependency, reducing bundle size by ~40KB gzipped.",
+        "Added reusable utility classes to index.css (.card-compact, .card-interactive, .hover-scale, etc.).",
+        "Standardized animation patterns using TailwindCSS and Radix UI built-in animations.",
+        "Updated documentation to reflect modern TailwindCSS-first approach.",
+      ]
+    },
+    {
       version: "v0.22.0",
       codename: "Propofol",
-      highlight: true,
+      highlight: false,
       changes: [
         "Optimized mobile and tablet experience with progressive responsive spacing (25-50% reduction on mobile, 15-25% on tablet).",
         "Fixed inverted padding bug in TestingLogForm where mobile had more padding than desktop.",

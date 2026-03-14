@@ -88,8 +88,39 @@
 }
 
 @layer utilities {
-  .print-break-inside-avoid { 
-    break-inside: avoid; 
+  .print-break-inside-avoid {
+    break-inside: avoid;
+  }
+}
+
+@layer components {
+  /* Standard card styling */
+  .card-compact {
+    @apply bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-none p-4 shadow-sm;
+  }
+
+  /* Card with hover effect */
+  .card-interactive {
+    @apply card-compact hover:shadow-lg hover:-translate-y-1 transition-all duration-200;
+  }
+
+  /* Standard transitions */
+  .transition-standard {
+    @apply transition-all duration-150 ease-out;
+  }
+
+  .transition-smooth {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  /* Subtle hover scale (for buttons, cards) */
+  .hover-scale {
+    @apply hover:scale-[1.02] active:scale-[0.98] transition-transform duration-100;
+  }
+
+  /* Hover slide left (for back buttons) */
+  .hover-slide-left {
+    @apply -translate-x-0 hover:-translate-x-2 active:scale-95 transition-all duration-150;
   }
 }
 

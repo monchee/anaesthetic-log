@@ -82,32 +82,34 @@ Created reusable animated components:
   - Pre-configured toast functions (success, error, info, loading)
   - Consistent styling with color-coded left borders
 
-## New Component Library
+## Component Library
 
-### Animated Components (ready to use)
-Import from `components/ui/animated-components.ts`:
-- `AnimatedInputWrapper` - Wrap inputs for focus animation
-- `AnimatedButton` - Enhanced button with micro-interactions
-- `AnimatedCard` - Card with hover lift effect
-- `AnimatedDialog` - Dialog with smooth transitions
-- `AnimatedGradeBadge` - Badge with pulse for severe reactions
-- `AnimatedBackButton` - Back button with hover feedback
-- `AnimatedTableRow` - Table row with staggered entrance
+### Animation Approach
+All animations now use **TailwindCSS utilities** for simplicity and performance:
+- **Button animations**: Use `hover:scale-[1.02] active:scale-[0.98] transition-transform duration-100`
+- **Card hover effects**: Use `hover:shadow-lg hover:-translate-y-1 transition-all duration-200`
+- **Dialog animations**: Built into Radix UI via `data-[state=open]` attributes
+- **Utility classes**: Pre-defined classes like `.hover-scale`, `.card-interactive` available in `index.css`
 
 ### Usage Example
 ```tsx
-import { AnimatedButton, AnimatedCard } from './components/ui/animated-components';
-
-// Animated button
-<AnimatedButton variant="default" onClick={handleClick}>
+// Button with hover animation
+<Button variant="default" onClick={handleClick} className="hover-scale">
   Save Record
-</AnimatedButton>
+</Button>
 
-// Animated card
-<AnimatedCard className="p-4">
+// Card with hover effect
+<Card className="card-interactive p-4">
   <h3>Statistics</h3>
   <p>Content here</p>
-</AnimatedCard>
+</Card>
+
+// Dialog with built-in animations
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogContent>
+    {/* Animations are built-in via Radix */}
+  </DialogContent>
+</Dialog>
 ```
 
 ## Animation Philosophy
@@ -120,11 +122,11 @@ All animations follow **subtle & professional** principles:
 - **Medical appropriate**: Never distracting, always purposeful
 
 ## Performance Optimizations
-1. **GPU-accelerated animations**: Using transform and opacity only
+1. **CSS-based animations**: Using TailwindCSS utilities (GPU-accelerated transforms only)
 2. **Reduced motion support**: Ready for `prefers-reduced-motion` media query
 3. **Code splitting**: Components loaded on-demand
-4. **Staggered animations**: Capped delays to prevent long waits
-5. **Will-change hints**: Applied strategically by framer-motion
+4. **Lightweight bundle**: Removed framer-motion dependency (~40KB saved)
+5. **Utility classes**: Pre-defined CSS classes for consistent animations
 
 ## Build Status
 ✅ **Build successful** - All components working correctly
