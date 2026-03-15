@@ -11,9 +11,23 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.24.0",
+      codename: "Suxamethonium",
+      highlight: true,
+      changes: [
+        "Comprehensive dark mode overhaul with NSW Health Blue branding maintained across light and dark themes.",
+        "Replaced 100+ instances of hardcoded dark mode classes with semantic CSS variables for consistency.",
+        "Softer dark backgrounds (slate-900 instead of slate-950) to reduce eye strain during extended use.",
+        "Enhanced ThemeProvider with system preference detection - respects OS dark mode setting on first load.",
+        "Added smooth theme transitions (200ms) for polished theme switching experience.",
+        "Improved contrast ratios across all components meeting WCAG AA accessibility standards.",
+        "Standardized medical status colors (Grade I-IV) to remain bright for clinical safety in dark mode.",
+      ]
+    },
+    {
       version: "v0.23.0",
       codename: "Rocuronium",
-      highlight: true,
+      highlight: false,
       changes: [
         "Removed 8 unused animated wrapper components (~350 lines) and replaced with TailwindCSS utilities for cleaner code.",
         "Eliminated framer-motion dependency, reducing bundle size by ~40KB gzipped.",
