@@ -11,6 +11,16 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.24.6",
+      codename: "Suxamethonium (Patch 6)",
+      highlight: false,
+      changes: [
+        "Fixed all page CardTitle headings with dark mode text color (About, FAQ, Resources, Disclaimer, Contact, Terms, Technical Docs, Clinical Governance, Privacy, Drug Reference, PatientHistory, TestingLogForm).",
+        "Fixed page section headings with dark:text-slate-100 override.",
+        "Root cause: CardTitle uses primary-foreground which is slate-900 in dark mode.",
+      ]
+    },
+    {
       version: "v0.24.5",
       codename: "Suxamethonium (Patch 5)",
       highlight: false,
@@ -330,7 +340,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                         <ShieldCheck className="w-6 h-6 text-primary dark:text-primary" />
                     </div>
                     <div>
-                        <CardTitle className="text-xl text-slate-900 dark:text-primary">What's New</CardTitle>
+                        <CardTitle className="text-xl text-slate-900 dark:text-slate-100">What's New</CardTitle>
                         <p className="text-sm text-slate-500 dark:text-slate-400">Recent updates and improvements to the application</p>
                     </div>
                 </div>

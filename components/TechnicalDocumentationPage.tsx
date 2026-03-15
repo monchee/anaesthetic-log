@@ -17,7 +17,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
               <Code className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-slate-900 dark:text-primary">Technical Documentation</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-slate-100">Technical Documentation</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 Architecture, security, and technical specifications
               </p>

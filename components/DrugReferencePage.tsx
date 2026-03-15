@@ -51,7 +51,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
               <Pill className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-slate-900 dark:text-primary">Drug Reference</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-slate-100">Drug Reference</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">Drug categories, cross-reactivity, and alternatives</p>
             </div>
           </div>
@@ -60,7 +60,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
           
           {/* Drug Categories */}
           <div>
-            <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
               Drug Categories
             </h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -92,7 +92,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
 
           {/* Cross-Reactivity & Alternatives */}
           <div>
-            <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
               Cross-Reactivity & Alternatives
             </h3>
             <Accordion type="multiple" className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 px-4">

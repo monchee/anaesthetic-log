@@ -172,7 +172,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 2. Skin Testing Panel */}
         <Card>
           <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
-            <CardTitle className="flex items-center gap-2 text-base">
+            <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-slate-100">
               <div className="bg-slate-100 dark:bg-slate-900/40 p-1.5 rounded-none">
                  <Activity className="w-4 h-4 text-primary dark:text-primary" />
               </div>
@@ -333,7 +333,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 3. Drug Challenge */}
       <Card>
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
-          <CardTitle className="flex items-center gap-2 text-base">
+          <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-slate-100">
              <div className="bg-primary/10 dark:bg-slate-900/40 p-1.5 rounded-none">
                  <Syringe className="w-4 h-4 text-primary dark:text-primary" />
              </div>
@@ -559,7 +559,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 4. Plan & Assessment */}
       <Card>
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
-           <CardTitle className="flex items-center gap-2 text-base">
+           <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-slate-100">
              <div className="bg-emerald-100 dark:bg-emerald-900/40 p-1.5 rounded-none">
                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
              </div>

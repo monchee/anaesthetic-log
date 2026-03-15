@@ -17,7 +17,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
               <AlertTriangle className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-slate-900 dark:text-primary">Disclaimer</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-slate-100">Disclaimer</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 Important medical and legal information
               </p>

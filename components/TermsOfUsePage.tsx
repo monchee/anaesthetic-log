@@ -17,7 +17,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
               <FileText className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-slate-900 dark:text-primary">Terms of Use</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-slate-100">Terms of Use</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 Legal terms for using this application
               </p>

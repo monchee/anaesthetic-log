@@ -65,7 +65,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
               <Link2 className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-slate-900 dark:text-primary">Resources & Links</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-slate-100">Resources & Links</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">Useful external resources and guidelines</p>
             </div>
           </div>
@@ -74,7 +74,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           
           {resources.map((section, idx) => (
             <div key={idx}>
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
                 {section.category}
               </h3>
               <div className="space-y-3">

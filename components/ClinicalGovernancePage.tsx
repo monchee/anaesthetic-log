@@ -17,7 +17,7 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
               <ShieldCheck className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-slate-900 dark:text-primary">Clinical Governance</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-slate-100">Clinical Governance</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 Our commitment to clinical safety and quality
               </p>

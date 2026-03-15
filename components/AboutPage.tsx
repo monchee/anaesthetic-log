@@ -17,7 +17,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
               <Info className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl font-semibold text-primary dark:text-primary-foreground">About</CardTitle>
+              <CardTitle className="text-xl font-semibold text-slate-900 dark:text-slate-100">About</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">RPAH Anaesthetic Allergy Clinic Tool</p>
             </div>
           </div>

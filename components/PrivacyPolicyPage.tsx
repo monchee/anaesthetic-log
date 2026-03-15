@@ -19,7 +19,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
               <Shield className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-slate-900 dark:text-primary">Privacy Policy</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-slate-100">Privacy Policy</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 How we protect your health information
               </p>

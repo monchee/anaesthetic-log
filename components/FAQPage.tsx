@@ -88,7 +88,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
               <HelpCircle className="w-6 h-6 text-primary dark:text-primary" />
             </div>
             <div>
-              <CardTitle className="text-xl text-slate-900 dark:text-primary">Frequently Asked Questions</CardTitle>
+              <CardTitle className="text-xl text-slate-900 dark:text-slate-100">Frequently Asked Questions</CardTitle>
               <p className="text-sm text-slate-500 dark:text-slate-400">Common questions about using the application</p>
             </div>
           </div>
@@ -96,7 +96,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         <CardContent className="pt-6 space-y-6">
           {faqs.map((category, idx) => (
             <div key={idx} className="space-y-2">
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-primary uppercase tracking-wide mb-3">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
                 {category.category}
               </h3>
               <Accordion type="multiple" className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 px-4">

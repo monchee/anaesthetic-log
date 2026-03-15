@@ -52,7 +52,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
   return (
     <Card className="border-t-4 border-primary shadow-md bg-white dark:bg-slate-900">
       <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-        <CardTitle className="flex items-center gap-2 text-base font-semibold tracking-tight">
+        <CardTitle className="flex items-center gap-2 text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           <div className="bg-primary/10 dark:bg-slate-900/40 p-1.5 rounded-none">
             <History className="h-4 w-4 text-primary dark:text-primary" />
           </div>
