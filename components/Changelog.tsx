@@ -11,6 +11,16 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.24.8",
+      codename: "Suxamethonium (Patch 8)",
+      highlight: false,
+      changes: [
+        "Fixed header icons in all 10 footer-linked pages - changed from text-primary to text-white in light mode.",
+        "Icons now visible in light mode (white on blue background) while maintaining proper dark mode appearance.",
+        "Pages affected: About, FAQ, Drug Reference, Contact, Resources, Privacy, Clinical Governance, Terms, Technical Docs, Disclaimer.",
+      ]
+    },
+    {
       version: "v0.24.7",
       codename: "Suxamethonium (Patch 7)",
       highlight: false,

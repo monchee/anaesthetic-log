@@ -14,7 +14,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
-              <Code className="w-6 h-6 text-primary dark:text-primary" />
+              <Code className="w-6 h-6 text-white dark:text-primary" />
             </div>
             <div>
               <CardTitle className="text-xl text-slate-900 dark:text-slate-100">Technical Documentation</CardTitle>
