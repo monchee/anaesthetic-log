@@ -1,11 +1,14 @@
-import React from 'react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from './ui';
-import { Sun, Moon, Menu, HelpCircle } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, Button } from './ui';
+import { Sun, Moon, Menu, HelpCircle, Upload } from 'lucide-react';
 import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
 import { useTheme } from './ThemeProvider';
-import { Screen } from '../types';
+import { Screen, Patient } from '../types';
 import { HelpModal } from './HelpModal';
+import { CSVUploadInstructions } from './dashboard/CSVUploadInstructions';
+import { parseRedcapCSV } from '../lib/utils';
+import toast from 'react-hot-toast';
 
 interface ScreenLayoutProps {
     title: string;
@@ -21,7 +24,7 @@ interface ScreenLayoutProps {
     showDisclaimer?: boolean;
     isCustomData?: boolean;
     onDismissDisclaimer?: () => void;
-    onUploadPatients?: (patients: any[]) => void;
+    onUploadPatients?: (patients: Patient[]) => void;
 }
 
 export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
@@ -41,6 +44,51 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     onUploadPatients
 }) => {
     const { theme, toggleTheme } = useTheme();
+    const [isCSVUploadSheetOpen, setIsCSVUploadSheetOpen] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+
+        if (file && onUploadPatients) {
+            setIsUploading(true);
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const text = event.target?.result as string;
+                    const result = parseRedcapCSV(text);
+
+                    if (result.success) {
+                        onUploadPatients(result.data);
+                        toast.success(
+                            <div className="flex flex-col gap-1">
+                                <span className="font-bold">Database updated</span>
+                                <span className="text-sm font-normal">Successfully loaded {result.data.length} records from CSV.</span>
+                            </div>
+                        );
+                        setIsCSVUploadSheetOpen(false);
+                    } else {
+                        toast.error(
+                            <div className="flex flex-col gap-1">
+                                <span className="font-bold">Failed to parse CSV</span>
+                                <span className="text-sm font-normal">{result.error || "Please check the file format."}</span>
+                            </div>
+                        );
+                    }
+                } catch {
+                    toast.error("Error reading file");
+                } finally {
+                    setIsUploading(false);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        if (e.target) {
+            e.target.value = '';
+        }
+    };
 
     return (
         <div className={`min-h-screen bg-background dark:bg-background flex flex-col ${className || ''}`}>
@@ -89,6 +137,15 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                         <span className="text-sm">Menu</span>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56">
+                                        {/* Upload CSV */}
+                                        <DropdownMenuItem onClick={() => {
+                                            const trigger = document.querySelector('[data-csv-upload-trigger]') as HTMLButtonElement;
+                                            trigger?.click();
+                                        }}>
+                                            <Upload className="w-4 h-4 mr-2" />
+                                            Upload CSV
+                                        </DropdownMenuItem>
+
                                         {/* Quick Start Guide */}
                                         <DropdownMenuItem onClick={() => {
                                             const helpButton = document.querySelector('[data-help-modal-trigger]') as HTMLButtonElement;
@@ -97,9 +154,9 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                             <HelpCircle className="w-4 h-4 mr-2" />
                                             Quick Start Guide
                                         </DropdownMenuItem>
-                                        
+
                                         <DropdownMenuSeparator />
-                                        
+
                                         <DropdownMenuItem onClick={() => setScreen(Screen.ABOUT)}>
                                             About
                                         </DropdownMenuItem>
@@ -166,6 +223,34 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
             {/* Hidden HelpModal - triggered from dropdown menu */}
             <HelpModal onUploadPatients={onUploadPatients} hideTrigger={true} />
+
+            {/* Hidden file input for CSV upload */}
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv"
+                onChange={handleFileUpload}
+                className="hidden"
+            />
+
+            {/* Hidden trigger button for CSV upload sheet */}
+            <Button
+                className="hidden"
+                data-csv-upload-trigger
+                onClick={() => setIsCSVUploadSheetOpen(true)}
+            >
+                Upload CSV
+            </Button>
+
+            {/* Global CSV Upload Instructions Sheet */}
+            {onUploadPatients && (
+                <CSVUploadInstructions
+                    isOpen={isCSVUploadSheetOpen}
+                    onOpenChange={setIsCSVUploadSheetOpen}
+                    onUpload={handleFileUpload}
+                    isUploading={isUploading}
+                />
+            )}
 
             {/* Footer */}
             {showFooter && <Footer setScreen={setScreen} databaseDate={databaseDate} onUploadPatients={onUploadPatients} />}

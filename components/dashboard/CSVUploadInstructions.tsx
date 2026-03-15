@@ -18,7 +18,7 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent className="rounded-none border-l border-slate-200 dark:border-slate-800">
-        <SheetHeader className="mb-6">
+        <SheetHeader className="mb-6 pt-12">
           <SheetTitle className="flex items-center gap-2">
             <FileUp className="w-5 h-5 text-red-600" />
             Update Database

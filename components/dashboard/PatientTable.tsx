@@ -84,6 +84,13 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 onUpload={handleFileUpload}
                 isUploading={isUploading}
               />
+              <Button
+                onClick={() => setIsSheetOpen(true)}
+                size="sm"
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                Upload CSV
+              </Button>
             </div>
           </div>
           {/* Search & Filters Section */}
