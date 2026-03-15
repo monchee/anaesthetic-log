@@ -3,7 +3,7 @@ import React from 'react';
 import { Screen, Patient } from '../types';
 import { Database } from 'lucide-react';
 
-// @ts-ignore - __APP_VERSION__ is injected by Vite during build
+// @ts-expect-error - __APP_VERSION__ is injected by Vite during build
 const APP_VERSION = __APP_VERSION__;
 
 interface FooterProps {
