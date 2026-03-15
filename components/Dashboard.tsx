@@ -242,7 +242,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                     
                                     <div className="space-y-6">
                                         <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-none border border-slate-100 dark:border-slate-800">
-                                            <h4 className="font-semibold mb-2 flex items-center gap-2">
+                                            <h4 className="font-semibold mb-2 flex items-center gap-2 text-slate-900 dark:text-slate-100">
                                                 <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
                                             </h4>
                                             <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">

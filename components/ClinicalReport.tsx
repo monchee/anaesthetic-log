@@ -58,7 +58,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
 
          {/* Skin Testing Results */}
          <div>
-            <h3 className="tracking-tight text-lg mb-3 flex items-center gap-2 print:text-sm print:mb-1">
+            <h3 className="tracking-tight text-lg mb-3 flex items-center gap-2 text-slate-900 dark:text-slate-100 print:text-sm print:mb-1">
               <Activity className="w-5 h-5 print:w-4 print:h-4" /> Skin & Intradermal Testing
             </h3>
             
@@ -138,7 +138,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
 
          {/* Challenge Results */}
          <div>
-            <h3 className="tracking-tight text-lg mb-3 flex items-center gap-2 print:text-sm print:mb-1">
+            <h3 className="tracking-tight text-lg mb-3 flex items-center gap-2 text-slate-900 dark:text-slate-100 print:text-sm print:mb-1">
               <History className="w-5 h-5 print:w-4 print:h-4" /> Drug Challenge Details
             </h3>
             {data.proceedToChallenge ? (
@@ -169,7 +169,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
 
          {/* Plan */}
          <div className="pb-4 print:pb-2">
-            <h3 className="tracking-tight text-lg mb-2 flex items-center gap-2 print:text-sm print:mb-1">
+            <h3 className="tracking-tight text-lg mb-2 flex items-center gap-2 text-slate-900 dark:text-slate-100 print:text-sm print:mb-1">
               <FileText className="w-5 h-5 print:w-4 print:h-4" /> Assessment & Plan
             </h3>
             <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-none border border-slate-200 dark:border-slate-800 min-h-[100px] whitespace-pre-wrap text-sm md:text-base print:p-2 print:min-h-0 print:text-xs">
