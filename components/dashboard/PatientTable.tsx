@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, Button, Input, Badge } from '../../components/ui';
-import { ChevronLeft, ChevronRight, FileText, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FileText, Search, Upload } from 'lucide-react';
 import { formatDate, getGradeVariant, parsePatientTimeline } from '../../lib/utils';
 import { Patient } from '../../types';
 import { AdvancedSearchFilters, AdvancedSearchPanel } from '../../src/features/dashboard/components/AdvancedSearchFilters';
@@ -89,6 +89,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 size="sm"
                 className="bg-red-600 hover:bg-red-700 text-white"
               >
+                <Upload className="w-4 h-4 mr-2" />
                 Upload CSV
               </Button>
             </div>
