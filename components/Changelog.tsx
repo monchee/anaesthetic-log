@@ -11,6 +11,16 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.24.7",
+      codename: "Suxamethonium (Patch 7)",
+      highlight: false,
+      changes: [
+        "Fixed CardTitle component at source to use dark:text-slate-100 instead of dark:text-primary-foreground.",
+        "This fixes all headings across the entire application that were appearing black in dark mode.",
+        "Previous patch (v0.24.6) attempted to fix via class overrides but the base component needed correction.",
+      ]
+    },
+    {
       version: "v0.24.6",
       codename: "Suxamethonium (Patch 6)",
       highlight: false,
