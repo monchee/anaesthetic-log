@@ -11,6 +11,19 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.24.2",
+      codename: "Suxamethonium (Patch 2)",
+      highlight: false,
+      changes: [
+        "Fixed remaining dark mode issues in TestingPlanPrintView date and 'Additional' headings.",
+        "Updated ClinicalReport patient detail labels with dark mode text variants.",
+        "Added dark mode backgrounds to ClinicalReport controls box and Assessment & Plan box.",
+        "Fixed ClinicalReport table headers and row borders for dark mode visibility.",
+        "Applied dark mode fixes to ClinicalReport mobile card views (backgrounds, headings, labels).",
+        "Improved contrast for MRN and visit date values in ClinicalReport dark mode.",
+      ]
+    },
+    {
       version: "v0.24.1",
       codename: "Suxamethonium (Patch)",
       highlight: false,

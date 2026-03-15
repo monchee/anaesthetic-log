@@ -38,7 +38,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                 </div>
                 <div className="text-right">
                         <div className="bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded mb-2 print:bg-slate-100 print:px-2 print:py-1 print:mb-1">
-                        <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Date of Request</p>
+                        <p className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider print:text-[9px]">Date of Request</p>
                         <p className="font-mono font-semibold text-lg print:text-xs">{formatDate(new Date().toISOString())}</p>
                         </div>
                 </div>
@@ -102,7 +102,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                         {/* Custom Drugs Group */}
                         {customDrugs.filter(d => selectedDrugs.includes(d)).length > 0 && (
                             <div className="break-inside-avoid mb-4 print:mb-1">
-                                <h5 className="font-semibold text-slate-600 text-xs uppercase mb-2 print:text-[10px] print:mb-0.5">Additional</h5>
+                                <h5 className="font-semibold text-slate-600 dark:text-slate-400 text-xs uppercase mb-2 print:text-[10px] print:mb-0.5">Additional</h5>
                                 <ul className="list-disc pl-5 space-y-1 print:pl-3 print:space-y-0">
                                     {customDrugs.filter(d => selectedDrugs.includes(d)).map(d => (
                                         <li key={d} className="text-sm pl-1 print:text-xs print:pl-0.5">
