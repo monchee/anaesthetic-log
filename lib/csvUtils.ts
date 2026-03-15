@@ -13,6 +13,36 @@ export interface CsvParseResult {
     details?: string[];
 }
 
+// Required headers for a valid REDCap export
+const REQUIRED_HEADERS = [
+    'Record ID',
+    'First Name',
+    'Last Name',
+    'Date of Reaction:'
+];
+
+/**
+ * Validates that the CSV headers contain all required REDCap columns.
+ * Returns null if valid, or an error message if validation fails.
+ */
+const validateCSVHeaders = (headers: string[]): string | null => {
+    const normalizedHeaders = headers.map(h => h.trim());
+    const missingHeaders: string[] = [];
+
+    for (const required of REQUIRED_HEADERS) {
+        if (!normalizedHeaders.includes(required)) {
+            missingHeaders.push(required);
+        }
+    }
+
+    if (missingHeaders.length > 0) {
+        return `Missing required columns: ${missingHeaders.join(', ')}. ` +
+               `Please ensure you're exporting from REDCap using "CSV / Microsoft Excel (labels)" format.`;
+    }
+
+    return null;
+};
+
 const splitCSVLine = (line: string) => {
   const result = [];
   let current = '';
@@ -163,6 +193,13 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   if (lines.length < 2) return { success: false, data: [], error: "Empty or invalid CSV." };
 
   const headers = splitCSVLine(lines[0]);
+
+  // Validate headers before processing
+  const headerError = validateCSVHeaders(headers);
+  if (headerError) {
+      return { success: false, data: [], error: headerError };
+  }
+
   const data: Patient[] = [];
 
   // --- 1. Map Information Columns ---
@@ -330,9 +367,15 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
 
 
   // --- 6. Process Rows ---
+  const parsingErrors: string[] = [];
+  const skippedRows: number[] = [];
+
   for (let i = 1; i < lines.length; i++) {
     const row = splitCSVLine(lines[i]);
-    if (row.length < 2) continue;
+    if (row.length < 2) {
+        skippedRows.push(i + 1); // +1 for 1-based row number
+        continue;
+    }
 
     const getVal = (key: string) => {
         const idx = colIndices[key];
@@ -360,7 +403,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
             referringDoctorPosition: getVal('referringDoctorPosition'),
             providerNumber: getVal('providerNumber'),
             referringEmail: getVal('referringEmail'),
-            referringPhone: getVal('referringPhone'),
+            referringPhone: getVal('phoneNumber'),
             inductionTime: normalizeTime(getVal('inductionTime')),
             reactionTime: normalizeTime(getVal('reactionTime')),
             procedureOutcome: getVal('outcome'),
@@ -477,5 +520,14 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
     data.push(p);
   }
 
-  return { success: true, data };
+  // Add parsing details to the result
+  const details: string[] = [];
+  if (skippedRows.length > 0) {
+      details.push(`Skipped ${skippedRows.length} empty or malformed row(s): ${skippedRows.slice(0, 5).join(', ')}${skippedRows.length > 5 ? '...' : ''}`);
+  }
+  if (parsingErrors.length > 0) {
+      details.push(...parsingErrors);
+  }
+
+  return { success: true, data, details: details.length > 0 ? details : undefined };
 };

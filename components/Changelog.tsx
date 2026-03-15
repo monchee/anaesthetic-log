@@ -13,9 +13,21 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   // This displays the "Latest" badge in the changelog
   const versions = [
     {
+      version: "v0.24.10",
+      codename: "Suxamethonium (Patch 10)",
+      highlight: true,
+      changes: [
+        "Fixed CSV import bug - phone numbers now correctly imported from REDCap exports (was using wrong field key).",
+        "Added header validation for CSV imports - now validates required columns before parsing.",
+        "Added row-level error tracking - skipped or malformed rows are reported in the import result.",
+        "Added duplicate detection - importing the same patient ID twice now shows a clear warning and blocks the import.",
+        "Removed unused uploadStatus state and banner component that was never displayed (all feedback goes via toast).",
+      ]
+    },
+    {
       version: "v0.24.9",
       codename: "Suxamethonium (Patch 9)",
-      highlight: true,
+      highlight: false,
       changes: [
         "Completely redesigned changelog page to match the consistent Card-based design pattern used across all footer pages.",
         "Removed timeline elements (vertical line, dots, pulse animation) for a cleaner, more professional appearance.",

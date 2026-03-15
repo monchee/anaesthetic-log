@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui';
-import { Search, Thermometer, Upload, ChevronLeft, ChevronDown, ChevronUp, X, CheckCircle2, ChevronRight, FileText, ExternalLink, FileUp, AlertTriangle } from 'lucide-react';
+import { Search, Thermometer, Upload, ChevronLeft, ChevronDown, ChevronUp, ChevronRight, FileText, ExternalLink, FileUp } from 'lucide-react';
 import { formatDate, parseRedcapCSV, getGradeVariant, parsePatientTimeline } from '../lib/utils';
 import { Screen, Patient, LogFormData } from '../types';
 import toast from 'react-hot-toast';
@@ -27,7 +27,6 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
-  const [uploadStatus, setUploadStatus] = useState<{ type: 'success' | 'error', message: string, details?: string[] } | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [animateCharts, setAnimateCharts] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -73,7 +72,6 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
   // --- Handle File Upload ---
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      setUploadStatus(null);
 
       if (file) {
           setIsUploading(true);
@@ -84,14 +82,38 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                 const result = parseRedcapCSV(text);
 
                 if (result.success) {
-                    onUploadPatients(result.data);
-                    toast.success(
-                        <div className="flex flex-col gap-1">
-                            <span className="font-bold">Database updated</span>
-                            <span className="text-sm font-normal">Successfully loaded {result.data.length} records from CSV.</span>
-                        </div>
-                    );
-                    setIsSheetOpen(false);
+                    // Check for duplicate patient IDs
+                    const existingIds = new Set(existingPatients.map(p => p.id));
+                    const duplicates = result.data.filter(p => existingIds.has(p.id));
+
+                    if (duplicates.length > 0) {
+                        toast.error(
+                            <div className="flex flex-col gap-1">
+                                <span className="font-bold">Duplicate records detected</span>
+                                <span className="text-sm font-normal">
+                                    {duplicates.length} record(s) already exist in the database. Import would create duplicates.
+                                </span>
+                                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                    {duplicates.length > 3 ? `First few: ${duplicates.slice(0, 3).map(d => d.id).join(', ')}...` : `IDs: ${duplicates.map(d => d.id).join(', ')}`}
+                                </span>
+                            </div>,
+                            { duration: 10000 }
+                        );
+                    } else {
+                        onUploadPatients(result.data);
+                        toast.success(
+                            <div className="flex flex-col gap-1">
+                                <span className="font-bold">Database updated</span>
+                                <span className="text-sm font-normal">Successfully loaded {result.data.length} records from CSV.</span>
+                                {result.details && (
+                                    <span className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                                        {result.details.join(' ')}
+                                    </span>
+                                )}
+                            </div>
+                        );
+                        setIsSheetOpen(false);
+                    }
                 } else {
                     toast.error(
                         <div className="flex flex-col gap-1">
@@ -363,33 +385,6 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                 </div>
             </CardHeader>
 
-            {/* Upload Status Banner */}
-            {uploadStatus && (
-                <div className={`p-4 mx-6 mt-4 mb-2 rounded-none flex items-start gap-3 text-sm animate-in fade-in slide-in-from-top-2 ${
-                    uploadStatus.type === 'error' 
-                    ? 'bg-red-50 text-red-900 border border-red-200 dark:bg-red-900/30 dark:text-red-200 dark:border-red-900/50' 
-                    : 'bg-green-50 text-green-900 border border-green-200 dark:bg-green-900/30 dark:text-green-200 dark:border-green-900/50'
-                }`}>
-                    <div className="shrink-0 mt-0.5">
-                        {uploadStatus.type === 'error' ? <AlertTriangle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
-                    </div>
-                    <div className="flex-1 space-y-1">
-                        <p className="font-semibold text-slate-900 dark:text-slate-100">{uploadStatus.message}</p>
-                        {uploadStatus.details && (
-                            <ul className="list-disc list-inside opacity-90 text-xs space-y-0.5 ml-1">
-                                {uploadStatus.details.map((d, i) => <li key={i}>{d}</li>)}
-                            </ul>
-                        )}
-                    </div>
-                    <button 
-                        className="opacity-50 hover:opacity-100 transition-opacity" 
-                        onClick={() => setUploadStatus(null)}
-                    >
-                        <X className="w-4 h-4" />
-                    </button>
-                </div>
-            )}
-            
             {/* Desktop View (Table) */}
             <div className="hidden md:block overflow-x-auto">
                 <table role="table" aria-label="Patient database" className="w-full text-sm text-left">
