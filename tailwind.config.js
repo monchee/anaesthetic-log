@@ -7,7 +7,7 @@ export default {
     "./hooks/**/*.{js,ts,jsx,tsx}",
     "./lib/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: ['class', "class"],
+  darkMode: "class",
   theme: {
   	extend: {
   		fontFamily: {

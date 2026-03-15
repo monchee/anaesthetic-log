@@ -43,7 +43,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     const { theme, toggleTheme } = useTheme();
 
     return (
-        <div className={`min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col ${className || ''}`}>
+        <div className={`min-h-screen bg-background dark:bg-background flex flex-col ${className || ''}`}>
             {/* Skip to Main Content Link */}
             <a
                 href="#main-content"
