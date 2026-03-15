@@ -9,7 +9,21 @@ interface ChangelogProps {
 }
 
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
+  // NOTE: Set highlight: true on the most recent version release
+  // This displays the "Latest" badge in the changelog
   const versions = [
+    {
+      version: "v0.24.9",
+      codename: "Suxamethonium (Patch 9)",
+      highlight: true,
+      changes: [
+        "Completely redesigned changelog page to match the consistent Card-based design pattern used across all footer pages.",
+        "Removed timeline elements (vertical line, dots, pulse animation) for a cleaner, more professional appearance.",
+        "Each version now displays in a styled box matching About, Resources, and other footer page layouts.",
+        "Made footer version dynamic by importing from package.json - no more manual version updates needed!",
+        "Version in footer now automatically syncs with package.json, simplifying the release process.",
+      ]
+    },
     {
       version: "v0.24.8",
       codename: "Suxamethonium (Patch 8)",
@@ -134,7 +148,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
     {
       version: "v0.21.0",
       codename: "Etomidate",
-      highlight: true,
+      highlight: false,
       changes: [
         "Resolved tooltip contrast issues by removing hardcoded white text overriding themed backgrounds.",
         "Refactored Dashboard test suite for improved selector reliability and responsive view handling.",
@@ -357,7 +371,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
             <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
-                        <ShieldCheck className="w-6 h-6 text-primary dark:text-primary" />
+                        <ShieldCheck className="w-6 h-6 text-white dark:text-primary" />
                     </div>
                     <div>
                         <CardTitle className="text-xl text-slate-900 dark:text-slate-100">What's New</CardTitle>
@@ -366,41 +380,34 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                 </div>
             </CardHeader>
             <CardContent className="pt-6">
-                <div className="relative border-l-2 border-slate-200 dark:border-slate-800 ml-3 space-y-8">
+                <div className="space-y-6">
                     {versions.map((v, idx) => (
-                        <div key={idx} className="relative pl-8">
-                            {/* Timeline Dot */}
-                            <div className={`absolute -left-[9px] top-0 h-4 w-4 rounded-none border-2 border-white dark:border-slate-900 shadow-sm ${
-                              v.highlight ? 'bg-gradient-to-r from-primary to-[var(--primary)] animate-pulse' : 'bg-primary'
-                            }`} />
-                            
-                            <div className="flex items-center gap-2 mb-3">
-                                <div className="flex items-center gap-2">
-                                  <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">{v.version}</h3>
-                                  {v.codename && (
-                                    <span className="text-sm font-bold text-slate-500 dark:text-slate-400">
+                        <div key={idx} className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
+                            {/* Version Header */}
+                            <div className="flex items-center gap-2 mb-4">
+                                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">{v.version}</h3>
+                                {v.codename && (
+                                    <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
                                       {v.codename}
                                     </span>
-                                  )}
-                                </div>
+                                )}
                                 {v.highlight && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-none text-xs font-medium bg-gradient-to-r from-primary to-[var(--primary)] text-white">
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none text-xs font-medium bg-gradient-to-r from-primary to-[var(--primary)] text-white ml-auto">
                                         <Sparkles className="w-3 h-3" />
                                         Latest
                                     </span>
                                 )}
                             </div>
-                            
-                            <div className="bg-slate-50 dark:bg-slate-900/50 rounded-none p-4 border border-slate-100 dark:border-slate-800">
-                                <ul className="space-y-2.5">
-                                    {v.changes.map((change, cIdx) => (
-                                        <li key={cIdx} className="flex gap-2 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                                            <span className="text-primary dark:text-primary mt-1 shrink-0">•</span>
-                                            <span>{change}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+
+                            {/* Changes List */}
+                            <ul className="space-y-2.5">
+                                {v.changes.map((change, cIdx) => (
+                                    <li key={cIdx} className="flex gap-2 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                                        <span className="text-primary dark:text-primary mt-1 shrink-0">•</span>
+                                        <span>{change}</span>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     ))}
                 </div>
