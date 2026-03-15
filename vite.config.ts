@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
+import packageJson from './package.json';
 
 export default defineConfig(() => {
   const plugins = [
@@ -125,6 +126,9 @@ export default defineConfig(() => {
 
   return {
     base: './',
+    define: {
+      '__APP_VERSION__': JSON.stringify(packageJson.version)
+    },
     server: {
       port: 3000,
       host: '0.0.0.0',

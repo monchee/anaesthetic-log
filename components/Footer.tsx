@@ -2,7 +2,9 @@
 import React from 'react';
 import { Screen, Patient } from '../types';
 import { Database } from 'lucide-react';
-import packageJson from '../../package.json';
+
+// @ts-ignore - __APP_VERSION__ is injected by Vite during build
+const APP_VERSION = __APP_VERSION__;
 
 interface FooterProps {
   setScreen: (screen: Screen) => void;
@@ -75,7 +77,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
                 onClick={() => setScreen(Screen.CHANGELOG)}
                 className="hover:text-primary dark:hover:text-primary transition-colors font-semibold"
               >
-                v{packageJson.version}
+                v{APP_VERSION}
               </button>
             </div>
           </div>
