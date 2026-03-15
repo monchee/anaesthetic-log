@@ -206,7 +206,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                     {/* Header Top Row: Title + Update Button */}
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div className="space-y-1">
-                             <CardTitle className="text-lg flex items-center gap-2">
+                             <CardTitle className="text-lg flex items-center gap-2 text-slate-900 dark:text-slate-100">
                                 <FileText className="w-5 h-5 text-primary" /> REDCap Record Database
                              </CardTitle>
                              <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
@@ -374,7 +374,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                         {uploadStatus.type === 'error' ? <AlertTriangle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
                     </div>
                     <div className="flex-1 space-y-1">
-                        <p className="font-semibold">{uploadStatus.message}</p>
+                        <p className="font-semibold text-slate-900 dark:text-slate-100">{uploadStatus.message}</p>
                         {uploadStatus.details && (
                             <ul className="list-disc list-inside opacity-90 text-xs space-y-0.5 ml-1">
                                 {uploadStatus.details.map((d, i) => <li key={i}>{d}</li>)}
@@ -586,7 +586,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
             <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <CardTitle className="text-lg flex items-center gap-2">
+                        <CardTitle className="text-lg flex items-center gap-2 text-slate-900 dark:text-slate-100">
                             <Thermometer className="w-5 h-5 text-primary" /> Positive Skin Test Breakdown
                         </CardTitle>
                         <p className="text-sm text-slate-500 dark:text-slate-400">Number of positive patient reactions by drug (SPT/IDT &gt; 3mm or Positive Challenge).</p>
