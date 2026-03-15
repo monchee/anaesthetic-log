@@ -142,9 +142,9 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
               <History className="w-5 h-5 print:w-4 print:h-4" /> Drug Challenge Details
             </h3>
             {data.proceedToChallenge ? (
-               <div className={`p-4 rounded-none border-l-4 ${data.outcome === 'SUCCESS' 
-                   ? 'bg-green-50 border-green-500 print:bg-green-50' 
-                   : 'bg-red-50 border-red-500 print:bg-red-50'} print:p-2`}>
+               <div className={`p-4 rounded-none border-l-4 ${data.outcome === 'SUCCESS'
+                   ? 'bg-green-50 border-green-500 dark:bg-green-900/20 dark:border-green-700 print:bg-green-50'
+                   : 'bg-red-50 border-red-500 dark:bg-red-900/20 dark:border-red-700 print:bg-red-50'} print:p-2`}>
                   <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2 gap-2 print:mb-1">
                      <span className="font-bold text-lg print:text-sm">
                         {data.challengeDrug === 'Other' ? (data.challengeDrugCustom || 'Other') : data.challengeDrug}

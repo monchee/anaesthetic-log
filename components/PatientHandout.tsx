@@ -41,14 +41,14 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
               {posResults.length > 0 ? (
                  <ul className="space-y-3 print:space-y-1">
                     {posResults.map((drugName, idx) => (
-                        <li key={idx} className="bg-red-50 border border-red-100 p-4 rounded-none flex justify-between items-center print:bg-red-50 print:p-1.5 print:text-xs">
+                        <li key={idx} className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-700 p-4 rounded-none flex justify-between items-center print:bg-red-50 print:p-1.5 print:text-xs">
                            <span className="font-semibold text-red-900 text-lg print:text-xs">{drugName}</span>
                            <span className="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded print:px-1 print:py-0.5 print:text-[9px]">AVOID</span>
                         </li>
                     ))}
                  </ul>
               ) : (
-                 <p className="text-slate-500 italic p-4 bg-slate-50 rounded-none border border-slate-200 print:p-2 print:text-xs">No positive reactions recorded today.</p>
+                 <p className="text-slate-500 italic p-4 bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 print:p-2 print:text-xs">No positive reactions recorded today.</p>
               )}
            </div>
 
@@ -60,19 +60,19 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
               {negResults.length > 0 ? (
                  <ul className="space-y-3 print:space-y-1">
                     {negResults.map((drugName, idx) => (
-                        <li key={idx} className="bg-green-50 border border-green-100 p-4 rounded-none flex justify-between items-center print:bg-green-50 print:p-1.5 print:text-xs">
+                        <li key={idx} className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-700 p-4 rounded-none flex justify-between items-center print:bg-green-50 print:p-1.5 print:text-xs">
                            <span className="font-semibold text-green-900 text-lg print:text-xs">{drugName}</span>
                            <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded print:px-1 print:py-0.5 print:text-[9px]">SAFE</span>
                         </li>
                     ))}
                  </ul>
               ) : (
-                 <p className="text-slate-500 italic p-4 bg-slate-50 rounded-none border border-slate-200 print:p-2 print:text-xs">No negative results recorded.</p>
+                 <p className="text-slate-500 italic p-4 bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 print:p-2 print:text-xs">No negative results recorded.</p>
               )}
            </div>
 
            {/* Department Info */}
-            <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-none border border-slate-200 dark:border-slate-700 text-sm space-y-1 print:bg-slate-50 print:p-2 print:space-y-0.5 print:text-xs">
+            <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-none border border-slate-200 dark:border-slate-800 text-sm space-y-1 print:bg-slate-50 print:p-2 print:space-y-0.5 print:text-xs">
                <h3 className="font-semibold text-primary dark:text-primary mb-2 uppercase text-[11px] tracking-wider print:text-[10px] print:mb-1">Contact Information</h3>
                <p className="font-semibold dark:text-slate-200 print:text-xs">Department of Clinical Immunology & Allergy</p>
               <p className="dark:text-slate-300 print:text-xs">Royal Prince Alfred Hospital</p>

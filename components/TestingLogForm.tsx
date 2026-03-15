@@ -78,7 +78,7 @@ const DrugRow = React.memo(({
               type="number"
               min="0"
               onKeyDown={preventNegativeInput}
-              className={`h-9 text-center font-mono ${parseInt(row[field] || '0') >= 3 ? 'text-red-600 font-bold bg-red-50 border-red-200' : ''}`}
+              className={`h-9 text-center font-mono ${parseInt(row[field] || '0') >= 3 ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
               placeholder="-"
               value={row[field] || ''}
               onChange={(e) => updateDrugData(index, field, e.target.value)}
