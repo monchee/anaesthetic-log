@@ -1,0 +1,378 @@
+[
+  {
+    "version": "v0.25.0",
+    "codename": "Vecuronium",
+    "highlight": true,
+    "changes": [
+      "Major performance optimization - reduced main bundle size by 25% through manual chunk splitting (from 1.0MB to 748KB).",
+      "Refactored Dashboard component into modular sub-components - reduced from 675 to 266 lines (61% reduction) for improved maintainability.",
+      "Externalized Changelog data to JSON format - reduced component from 444 to 85 lines (81% reduction).",
+      "Added React.memo to PatientHistory, AnalyticsPanel, RecentTestingActivity, and all new Dashboard child components to prevent unnecessary re-renders.",
+      "Created reusable PatientTable, SkinTestBreakdown, and CSVUploadInstructions components for better code organization.",
+      "Separated vendor dependencies (React, Radix UI, forms, icons, notifications) into dedicated chunks for better browser caching."
+    ]
+  },
+  {
+    "version": "v0.24.10",
+    "codename": "Suxamethonium (Patch 10)",
+    "highlight": false,
+    "changes": [
+      "Fixed CSV import bug - phone numbers now correctly imported from REDCap exports (was using wrong field key).",
+      "Added header validation for CSV imports - now validates required columns before parsing.",
+      "Added row-level error tracking - skipped or malformed rows are reported in the import result.",
+      "Added duplicate detection - importing the same patient ID twice now shows a clear warning and blocks the import.",
+      "Removed unused uploadStatus state and banner component that was never displayed (all feedback goes via toast)."
+    ]
+  },
+  {
+    "version": "v0.24.9",
+    "codename": "Suxamethonium (Patch 9)",
+    "highlight": false,
+    "changes": [
+      "Completely redesigned changelog page to match the consistent Card-based design pattern used across all footer pages.",
+      "Removed timeline elements (vertical line, dots, pulse animation) for a cleaner, more professional appearance.",
+      "Each version now displays in a styled box matching About, Resources, and other footer page layouts.",
+      "Made footer version dynamic by importing from package.json - no more manual version updates needed!",
+      "Version in footer now automatically syncs with package.json, simplifying the release process."
+    ]
+  },
+  {
+    "version": "v0.24.8",
+    "codename": "Suxamethonium (Patch 8)",
+    "highlight": false,
+    "changes": [
+      "Fixed header icons in all 10 footer-linked pages - changed from text-primary to text-white in light mode.",
+      "Icons now visible in light mode (white on blue background) while maintaining proper dark mode appearance.",
+      "Pages affected: About, FAQ, Drug Reference, Contact, Resources, Privacy, Clinical Governance, Terms, Technical Docs, Disclaimer."
+    ]
+  },
+  {
+    "version": "v0.24.7",
+    "codename": "Suxamethonium (Patch 7)",
+    "highlight": false,
+    "changes": [
+      "Fixed CardTitle component at source to use dark:text-slate-100 instead of dark:text-primary-foreground.",
+      "This fixes all headings across the entire application that were appearing black in dark mode.",
+      "Previous patch (v0.24.6) attempted to fix via class overrides but the base component needed correction."
+    ]
+  },
+  {
+    "version": "v0.24.6",
+    "codename": "Suxamethonium (Patch 6)",
+    "highlight": false,
+    "changes": [
+      "Fixed all page CardTitle headings with dark mode text color (About, FAQ, Resources, Disclaimer, Contact, Terms, Technical Docs, Clinical Governance, Privacy, Drug Reference, PatientHistory, TestingLogForm).",
+      "Fixed page section headings with dark:text-slate-100 override.",
+      "Root cause: CardTitle uses primary-foreground which is slate-900 in dark mode."
+    ]
+  },
+  {
+    "version": "v0.24.5",
+    "codename": "Suxamethonium (Patch 5)",
+    "highlight": false,
+    "changes": [
+      "Fixed Dashboard CardTitle headings with dark mode text color (were using primary-foreground which is dark in dark mode).",
+      "Added dark mode to upload status message for proper visibility."
+    ]
+  },
+  {
+    "version": "v0.24.4",
+    "codename": "Suxamethonium (Patch 4)",
+    "highlight": false,
+    "changes": [
+      "Fixed Dashboard Upload CSV button with dark mode background, hover states, and border colors.",
+      "Added dark mode background to Dashboard search bar input for better visibility.",
+      "Updated Dashboard search icon with dark mode text color variant."
+    ]
+  },
+  {
+    "version": "v0.24.3",
+    "codename": "Suxamethonium (Patch 3)",
+    "highlight": false,
+    "changes": [
+      "Fixed ClinicalReport section headings (Skin & Intradermal Testing, Drug Challenge Details, Assessment & Plan) with dark mode text colors.",
+      "Added dark mode background to TestingPlanPrintView screen-only header.",
+      "Fixed Dashboard upload instructions heading with dark mode text color."
+    ]
+  },
+  {
+    "version": "v0.24.2",
+    "codename": "Suxamethonium (Patch 2)",
+    "highlight": false,
+    "changes": [
+      "Fixed remaining dark mode issues in TestingPlanPrintView date and 'Additional' headings.",
+      "Updated ClinicalReport patient detail labels with dark mode text variants.",
+      "Added dark mode backgrounds to ClinicalReport controls box and Assessment & Plan box.",
+      "Fixed ClinicalReport table headers and row borders for dark mode visibility.",
+      "Applied dark mode fixes to ClinicalReport mobile card views (backgrounds, headings, labels).",
+      "Improved contrast for MRN and visit date values in ClinicalReport dark mode."
+    ]
+  },
+  {
+    "version": "v0.24.1",
+    "codename": "Suxamethonium (Patch)",
+    "highlight": false,
+    "changes": [
+      "Fixed dark mode readability issues with box headings now using proper dark text variants.",
+      "Added dark mode backgrounds to testing plan document light boxes.",
+      "Fixed drug test values ≥3 highlighting to use dark red backgrounds in dark mode.",
+      "Updated clinical report challenge result boxes with dark mode variants.",
+      "Applied dark mode fixes to patient handout colored result boxes."
+    ]
+  },
+  {
+    "version": "v0.24.0",
+    "codename": "Suxamethonium",
+    "highlight": true,
+    "changes": [
+      "Comprehensive dark mode overhaul with NSW Health Blue branding maintained across light and dark themes.",
+      "Replaced 100+ instances of hardcoded dark mode classes with semantic CSS variables for consistency.",
+      "Softer dark backgrounds (slate-900 instead of slate-950) to reduce eye strain during extended use.",
+      "Enhanced ThemeProvider with system preference detection - respects OS dark mode setting on first load.",
+      "Added smooth theme transitions (200ms) for polished theme switching experience.",
+      "Improved contrast ratios across all components meeting WCAG AA accessibility standards.",
+      "Standardized medical status colors (Grade I-IV) to remain bright for clinical safety in dark mode."
+    ]
+  },
+  {
+    "version": "v0.23.0",
+    "codename": "Rocuronium",
+    "highlight": false,
+    "changes": [
+      "Removed 8 unused animated wrapper components (~350 lines) and replaced with TailwindCSS utilities for cleaner code.",
+      "Eliminated framer-motion dependency, reducing bundle size by ~40KB gzipped.",
+      "Added reusable utility classes to index.css (.card-compact, .card-interactive, .hover-scale, etc.).",
+      "Standardized animation patterns using TailwindCSS and Radix UI built-in animations.",
+      "Updated documentation to reflect modern TailwindCSS-first approach."
+    ]
+  },
+  {
+    "version": "v0.22.0",
+    "codename": "Propofol",
+    "highlight": false,
+    "changes": [
+      "Optimized mobile and tablet experience with progressive responsive spacing (25-50% reduction on mobile, 15-25% on tablet).",
+      "Fixed inverted padding bug in TestingLogForm where mobile had more padding than desktop.",
+      "Enhanced content visibility on mobile devices with 15-20% more content above the fold.",
+      "Refined responsive breakpoints across ScreenLayout, Cards, Dialogs, Forms, and Footer components."
+    ]
+  },
+  {
+    "version": "v0.21.0",
+    "codename": "Etomidate",
+    "highlight": false,
+    "changes": [
+      "Resolved tooltip contrast issues by removing hardcoded white text overriding themed backgrounds.",
+      "Refactored Dashboard test suite for improved selector reliability and responsive view handling.",
+      "Standardized status badges and challenge section buttons with theme-aware text tokens.",
+      "Enhanced accessibility of HoverCard components with adaptive contrast across light and dark modes."
+    ]
+  },
+  {
+    "version": "v0.20.0",
+    "codename": "Ketamine",
+    "highlight": false,
+    "changes": [
+      "Implemented path-based deep linking, enabling direct access to pages via specific URLs.",
+      "Synchronized application state with browser history for a seamless back/forward navigation experience.",
+      "Configured SPA routing support for production deployment environments.",
+      "Refined navigation hooks for improved performance and state reliability."
+    ]
+  },
+  {
+    "version": "v0.19.0",
+    "codename": "Cisatracurium",
+    "highlight": false,
+    "changes": [
+      "Standardized top bar button interactions with consistent white text on hover for high contrast against dark backgrounds.",
+      "Refined Dashboard 'Upload CSV' trigger with enhanced hover states and responsive background transitions.",
+      "Optimized core Sheet animations by cleaning up Tailwind config conflicts, restoring clean horizontal slide-in/out patterns.",
+      "Harmonized navigation menu styling with translucent hover backgrounds and responsive visual feedback."
+    ]
+  },
+  {
+    "version": "v0.18.0",
+    "codename": "Sugammadex",
+    "highlight": false,
+    "changes": [
+      "Implemented 'Utility Belt' horizontal filter bar with Popover-based controls for severity, outcome, date, and hospital.",
+      "Redesigned filter navigation to reclaim dashboard space while ensuring filters apply instantly (auto-apply).",
+      "Enhanced Reaction Severity selection with a custom grid-wrap layout for improved touch ergonomics.",
+      "Refactored Suspected Agents selection into an inline expandable panel with integrated search."
+    ]
+  },
+  {
+    "version": "v0.17.0",
+    "codename": "Remifentanil",
+    "highlight": false,
+    "changes": [
+      "Implemented Route-based Code Splitting using React.lazy and Suspense, reducing initial bundle size by ~85KB.",
+      "Conducted comprehensive Security Review against OWASP Top 10 standards.",
+      "Remediated 14 dependency vulnerabilities including deep-tree security overrides for serialize-javascript.",
+      "Optimized application shell with a shared loading state for lazy-loaded clinical resources."
+    ]
+  },
+  {
+    "version": "v0.16.0",
+    "codename": "Bupivacaine",
+    "highlight": false,
+    "changes": [
+      "System-wide elimination of rounded corners for a sharp, clinical design profile.",
+      "Standardized all UI primitives (Buttons, Cards, Inputs, Dialogs) with 'rounded-none' geometry.",
+      "Refined dashboard analytics and charts with high-precision, square-edged layouts.",
+      "Updated technical documentation and privacy policies to match the new clinical aesthetic."
+    ]
+  },
+  {
+    "version": "v0.15.0",
+    "codename": "Lignocaine",
+    "highlight": false,
+    "changes": [
+      "Comprehensive typography overhaul aligning with NSW Health standards.",
+      "Integrated 'Public Sans' font and NSW Health Blue branding throughout the application.",
+      "Standardized clinical form layouts (Testing Log, Patient History) and print views for professional presentation.",
+      "Unified top bar button styling and internal accessibility labels for improved usability."
+    ]
+  },
+  {
+    "version": "v0.14.0",
+    "codename": "Rocuronium",
+    "highlight": false,
+    "changes": [
+      "Internal improvements - code quality checks now run faster and more reliably.",
+      "Better test coverage helps catch bugs before they reach you.",
+      "Performance optimisations make updates smoother."
+    ]
+  },
+  {
+    "version": "v0.13.0",
+    "codename": "Neostigmine",
+    "highlight": false,
+    "changes": [
+      "Added legal and governance documentation pages (Privacy Policy, Clinical Governance, Terms of Use, Technical Documentation, Disclaimer).",
+      "Content aligned with Australian healthcare standards (OAIC Privacy Principles, NSQHS Clinical Governance Standard, NSW Health guidelines).",
+      "New footer section with legal links for easy access to compliance information."
+    ]
+  },
+  {
+    "version": "v0.12.0",
+    "codename": "Propofol",
+    "highlight": false,
+    "changes": [
+      "Condensed Quick Start Guide - now more compact and easier to scan.",
+      "Upload CSV now opens instruction side sheet (matches Dashboard).",
+      "Added step-by-step REDCap export instructions to upload flow."
+    ]
+  },
+  {
+    "version": "v0.11.0",
+    "codename": "Suxamethonium",
+    "highlight": false,
+    "changes": [
+      "Improved accessibility throughout the app - better keyboard navigation and screen reader support.",
+      "Updated notification messages to be clearer and less intrusive.",
+      "Enhanced visual consistency across all screens and menus.",
+      "Improved allergy grade badges with clearer colour coding for quick identification.",
+      "Better support for light and dark themes across all components.",
+      "Menu items are now easier to tap on mobile devices."
+    ]
+  },
+  {
+    "version": "v0.10.0",
+    "codename": "Sevoflurane",
+    "changes": [
+      "App now works offline - you can use it without an internet connection.",
+      "Faster loading times and quicker access to patient data.",
+      "Added proper app icons when installed on phones and tablets.",
+      "Cleaner header with a new menu button for easier navigation.",
+      "Quick Start Guide and other links moved to the new menu.",
+      "New version notifications - you'll be prompted when updates are available."
+    ]
+  },
+  {
+    "version": "v0.9.0",
+    "codename": "Desflurane",
+    "changes": [
+      "Added new information pages: About, FAQ, Drug Reference, Contact, and Resources.",
+      "Redesigned dashboard with cleaner statistics display.",
+      "Search filters are now visible by default for easier access.",
+      "Quick Start Guide opens automatically when you first use the app."
+    ]
+  },
+  {
+    "version": "v0.8.0",
+    "codename": "Propofol",
+    "changes": [
+      "New Quick Start Guide to help you get started.",
+      "Advanced Search with filters for reaction grade, date range, hospital, outcome, and suspected agents.",
+      "Better patient search and filtering in the dashboard.",
+      "Help button moved to the top navigation bar."
+    ]
+  },
+  {
+    "version": "v0.7.0",
+    "codename": "Sevoflurane",
+    "changes": [
+      "Improved layout and spacing in the testing forms.",
+      "Printed reports no longer include the header - cleaner printed output.",
+      "Easier to read changelog with clearer descriptions."
+    ]
+  },
+  {
+    "version": "v0.6.0",
+    "codename": "Fentanyl",
+    "changes": [
+      "Fixed issues with saving clinical records - forms now save correctly.",
+      "Better error messages when something goes wrong.",
+      "All text now uses Australian English spelling.",
+      "Printed reports now fit neatly on a single page."
+    ]
+  },
+  {
+    "version": "v0.5.0",
+    "codename": "Midazolam",
+    "changes": [
+      "Enhanced security to better protect patient information.",
+      "Faster loading and uses less data.",
+      "Improved tooltips and helpful information when hovering over items."
+    ]
+  },
+  {
+    "version": "v0.4.0",
+    "codename": "Rocuronium",
+    "changes": [
+      "Smoother, less distracting animations in the dashboard.",
+      "More stable - fewer crashes and errors."
+    ]
+  },
+  {
+    "version": "v0.3.0",
+    "codename": "Ketamine",
+    "changes": [
+      "Easier workflow for viewing patient history and entering test results.",
+      "New Testing Plan Generator for printable request forms.",
+      "Faster patient search.",
+      "Clearer display of reaction grades."
+    ]
+  },
+  {
+    "version": "v0.2.0",
+    "codename": "Atracurium",
+    "changes": [
+      "Upload patient databases from CSV files.",
+      "New dashboard with statistics and patient overview.",
+      "Detailed patient history timeline showing medications and reactions.",
+      "Support for REDCap patient records."
+    ]
+  },
+  {
+    "version": "v0.1.0",
+    "codename": "Lignocaine",
+    "changes": [
+      "Initial release of the Anaesthetic Allergy Clinic application.",
+      "Record skin tests and drug challenges.",
+      "Generate clinical reports and patient handouts.",
+      "Manage patient data and track testing results."
+    ]
+  }
+]

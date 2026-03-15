@@ -20,7 +20,7 @@ interface StatsPanelProps {
   animateCharts: boolean;
 }
 
-export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
+const AnalyticsPanel: React.FC<StatsPanelProps> = ({
   animatedTotalPatients,
   animatedSevereCount,
   severeRate,
@@ -201,3 +201,5 @@ export const AnalyticsPanel: React.FC<StatsPanelProps> = ({
     </div>
   );
 };
+
+export default React.memo(AnalyticsPanel);

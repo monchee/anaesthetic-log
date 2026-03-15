@@ -1,16 +1,15 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, Button, Input, Badge, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui';
-import { Search, Thermometer, Upload, ChevronLeft, ChevronDown, ChevronUp, ChevronRight, FileText, ExternalLink, FileUp } from 'lucide-react';
-import { formatDate, parseRedcapCSV, getGradeVariant, parsePatientTimeline } from '../lib/utils';
+import { parseRedcapCSV } from '../lib/utils';
 import { Screen, Patient, LogFormData } from '../types';
 import toast from 'react-hot-toast';
 import { useCountUp } from '../hooks/useCountUp';
 import { useDashboardAnalytics } from '../hooks/useDashboardAnalytics';
-import { AnalyticsPanel } from '../src/features/dashboard/components/AnalyticsPanel';
-import { RecentTestingActivity } from '../src/features/dashboard/components/RecentTestingActivity';
+import AnalyticsPanel from '../src/features/dashboard/components/AnalyticsPanel';
+import RecentTestingActivity from '../src/features/dashboard/components/RecentTestingActivity';
 import { useAdvancedSearch } from '../src/features/dashboard/hooks/useAdvancedSearch';
-import { AdvancedSearchFilters, AdvancedSearchPanel } from '../src/features/dashboard/components/AdvancedSearchFilters';
+import PatientTable from './dashboard/PatientTable';
+import SkinTestBreakdown from './dashboard/SkinTestBreakdown';
 
 interface DashboardProps {
   setScreen: (screen: Screen) => void;
@@ -222,352 +221,28 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
         </div>
 
         {/* Patient Database Table (Full Width) - Paginated */}
-        <Card className="w-full shadow-sm animate-enter-subtle">
-            <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-                <div className="flex flex-col gap-4">
-                    {/* Header Top Row: Title + Update Button */}
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div className="space-y-1">
-                             <CardTitle className="text-lg flex items-center gap-2 text-slate-900 dark:text-slate-100">
-                                <FileText className="w-5 h-5 text-primary" /> REDCap Record Database
-                             </CardTitle>
-                             <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                                <span>Updated {databaseDate}</span>
-                             </div>
-                        </div>
-                        
-                        {/* Action Buttons */}
-                        <div className="flex gap-2 items-center">
-                            <input 
-                                type="file" 
-                                ref={fileInputRef} 
-                                onChange={handleFileUpload} 
-                                accept=".csv" 
-                                className="hidden" 
-                            />
-                            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-                                <SheetTrigger asChild>
-                                    <Button variant="outline" size="sm" className="shrink-0 h-9 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 shadow-sm rounded-none">
-                                        <Upload className="w-3 h-3 mr-1.5" /> Upload CSV
-                                    </Button>
-                                </SheetTrigger>
-                                <SheetContent className="rounded-none border-l border-slate-200 dark:border-slate-800">
-                                    <SheetHeader className="mb-6">
-                                        <SheetTitle className="flex items-center gap-2">
-                                            <FileUp className="w-5 h-5 text-red-600" />
-                                            Update Database
-                                        </SheetTitle>
-                                        <SheetDescription>
-                                            Instructions for exporting patient data from REDCap and importing it here.
-                                        </SheetDescription>
-                                    </SheetHeader>
-                                    
-                                    <div className="space-y-6">
-                                        <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-none border border-slate-100 dark:border-slate-800">
-                                            <h4 className="font-semibold mb-2 flex items-center gap-2 text-slate-900 dark:text-slate-100">
-                                                <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
-                                            </h4>
-                                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                                                Go to <a href="https://redcap.slhd.nsw.gov.au/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline font-medium">redcap.slhd.nsw.gov.au</a> and log in with your credentials.
-                                            </p>
-                                            <p className="text-xs text-slate-500 italic">(You must have data export rights)</p>
-                                        </div>
-
-                                        <div className="space-y-4">
-                                            <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                                                    2
-                                                </div>
-                                                <div className="text-sm text-slate-600 dark:text-slate-300">
-                                                    Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Data Exports, Reports, and Stats</span> on the sidebar.
-                                                </div>
-                                            </div>
-
-                                            <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                                                    3
-                                                </div>
-                                                <div className="text-sm text-slate-600 dark:text-slate-300">
-                                                    Find the <span className="font-semibold text-slate-900 dark:text-slate-100">All data (all records and fields)</span> row.
-                                                </div>
-                                            </div>
-
-                                            <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                                                    4
-                                                </div>
-                                                <div className="text-sm text-slate-600 dark:text-slate-300">
-                                                    Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span>.
-                                                </div>
-                                            </div>
-
-                                            <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                                                    5
-                                                </div>
-                                                <div className="text-sm text-slate-600 dark:text-slate-300">
-                                                    Choose <span className="font-semibold text-slate-900 dark:text-slate-100">CSV / Microsoft Excel (labels)</span> as the export format.
-                                                </div>
-                                            </div>
-
-                                            <div className="flex gap-3">
-                                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                                                    6
-                                                </div>
-                                                <div className="text-sm text-slate-600 dark:text-slate-300">
-                                                    Click <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span> and download the file.
-                                                </div>
-                                            </div>
-                                            
-                                            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-100 dark:border-blue-900/40 text-xs text-blue-700 dark:text-blue-300">
-                                                Filename format should resemble:<br/>
-                                                <span className="font-mono">AnaestheticAllergyCl_DATA_LABELS_YYYY-MM-DD_time.csv</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
-                                            <Button
-                                                className="w-full h-12 text-base shadow-lg hover:shadow-red-500/20 transition-all bg-red-600 hover:bg-red-700 text-white"
-                                                size="lg"
-                                                onClick={() => fileInputRef.current?.click()}
-                                                disabled={isUploading}
-                                                aria-label="Select CSV file to upload"
-                                            >
-                                                {isUploading ? (
-                                                    <>
-                                                        <span className="animate-spin mr-2">⌛</span>
-                                                        Processing...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Upload className="w-4 h-4 mr-2" /> Select CSV File
-                                                    </>
-                                                )}
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </SheetContent>
-                            </Sheet>
-                        </div>
-                    </div>
-                    {/* Search & Filters Section */}
-                    <div className="space-y-3">
-                        {/* Row 1: Search Box + Filter Button Toggle */}
-                        <div className="flex flex-wrap gap-2 items-center">
-                            <div className="relative flex-1 sm:flex-none sm:w-64">
-                                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" aria-hidden="true" />
-                                <Input
-                                    placeholder="Search by Name, MRN..."
-                                    aria-label="Search patients by name, medical record number (MRN), or city"
-                                    className="pl-9 h-9 bg-white dark:bg-slate-800"
-                                    value={filters.textQuery}
-                                    onChange={(e) => updateFilter('textQuery', e.target.value)}
-                                />
-                            </div>
-                            <AdvancedSearchFilters
-                                activeFilterCount={activeFilterCount}
-                                isExpanded={isFiltersExpanded} 
-                                setIsExpanded={setIsFiltersExpanded}
-                            />
-                        </div>
-                        
-                        {/* Row 2: Expanded Filters */}
-                        {isFiltersExpanded && (
-                            <AdvancedSearchPanel
-                                filters={filters}
-                                updateFilter={updateFilter}
-                                clearFilters={clearFilters}
-                                activeFilterCount={activeFilterCount}
-                                suggestions={suggestions}
-                            />
-                        )}
-                    </div>
-                </div>
-            </CardHeader>
-
-            {/* Desktop View (Table) */}
-            <div className="hidden md:block overflow-x-auto">
-                <table role="table" aria-label="Patient database" className="w-full text-sm text-left">
-                    <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
-                        <tr>
-                            <th scope="col" className="px-4 py-3 w-28">Date</th>
-                            <th scope="col" className="px-4 py-3 w-48">Patient</th>
-                            <th scope="col" className="px-4 py-3">Procedure</th>{/* Flexible width */}
-                            <th scope="col" className="px-4 py-3 w-48">Timeline</th>
-                            <th scope="col" className="px-4 py-3 text-center w-28">Grade</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
-                        {paginatedPatients.length > 0 ? (
-                            paginatedPatients.map((p) => {
-                                const { events: timelineEvents } = parsePatientTimeline(p.history);
-                                return (
-                                    <tr
-                                        key={p.id}
-                                        role="button"
-                                        tabIndex={0}
-                                        className="hover:bg-slate-50/80 dark:hover:bg-slate-900/50 transition-colors cursor-pointer group"
-                                        onClick={() => onSelectPatient(p)}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter' || e.key === ' ') {
-                                                e.preventDefault();
-                                                onSelectPatient(p);
-                                            }
-                                        }}
-                                        aria-label={`View details for patient: ${p.firstName} ${p.lastName}`}
-                                        title="Click to view patient details"
-                                    >
-                                        <td className="px-4 py-3 whitespace-nowrap text-slate-500 dark:text-slate-400 font-mono text-xs">
-                                            {formatDate(p.history.date)}
-                                        </td>
-                                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-primary transition-colors">
-                                            <div className="truncate max-w-[180px]" title={`${p.lastName}, ${p.firstName}`}>
-                                                {p.lastName}, {p.firstName}
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
-                                            <div className="line-clamp-1 max-w-xs" title={p.history.procedure}>
-                                                {p.history.procedure || <span className="italic text-slate-400">Unknown</span>}
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <div className="flex items-center gap-1.5 flex-wrap">
-                                                {timelineEvents.map((e, idx) => (
-                                                    <div
-                                                        key={idx}
-                                                        className={`
-                                                            h-2.5 w-2.5 rounded-full cursor-help inline-block
-                                                            ${e.type === 'reaction' ? 'bg-red-500' : ''}
-                                                            ${e.type === 'induction' ? 'bg-primary' : ''}
-                                                            ${e.type === 'med' ? 'bg-slate-300' : ''}
-                                                        `}
-                                                        title={`${e.time} - ${e.label}`}
-                                                    />
-                                                ))}
-                                                {timelineEvents.length === 0 && <span className="text-slate-300 text-xs">-</span>}
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3 text-center">
-                                            <Badge
-                                                variant={getGradeVariant(p.history.grade || 'Ungraded')}
-                                                className="whitespace-nowrap text-[10px] cursor-help w-20 justify-center"
-                                                title={p.history.grade || 'Ungraded'}
-                                            >
-                                                {(p.history.grade || 'Ungraded').split(' -')[0]}
-                                            </Badge>
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                        ) : (
-                            <tr>
-                                <td colSpan={5} className="px-4 py-8 text-center text-slate-500 dark:text-slate-400 italic">
-                                    No matching records found.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-
-            {/* Mobile View (Card List) */}
-            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
-                {paginatedPatients.length > 0 ? (
-                    paginatedPatients.map(p => {
-                        const { events: timelineEvents } = parsePatientTimeline(p.history);
-                        return (
-                            <div
-                                key={p.id}
-                                className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800"
-                                onClick={() => onSelectPatient(p)}
-                            >
-                                <div className="flex justify-between items-start mb-1 gap-2">
-                                    <div>
-                                        <div className="font-bold text-slate-900 dark:text-slate-100">
-                                            {p.lastName}, {p.firstName}
-                                        </div>
-                                        <div className="text-xs text-slate-500 font-mono mt-0.5 truncate max-w-[200px]">
-                                            {formatDate(p.history.date)}
-                                        </div>
-                                    </div>
-                                    <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-[10px] shrink-0 w-20 justify-center">
-                                        {(p.history.grade || 'Ungraded').split(' -')[0]}
-                                    </Badge>
-                                </div>
-
-                                <div className="text-sm text-slate-600 dark:text-slate-400 mt-1 line-clamp-1 italic">
-                                    {p.history.procedure || 'Unknown Procedure'}
-                                </div>
-
-                                <div className="flex items-center gap-1.5 mt-1.5">
-                                    {timelineEvents.map((e, idx) => (
-                                        <div
-                                            key={idx}
-                                            className={`
-                                                h-2 w-2 rounded-full
-                                                ${e.type === 'reaction' ? 'bg-red-500' : ''}
-                                                ${e.type === 'induction' ? 'bg-primary' : ''}
-                                                ${e.type === 'med' ? 'bg-slate-300 dark:bg-slate-600' : ''}
-                                            `}
-                                        />
-                                    ))}
-                                    {timelineEvents.length === 0 && <span className="text-xs text-slate-400">No timed events</span>}
-                                </div>
-                            </div>
-                        );
-                    })
-                ) : (
-                    <div className="p-8 text-center text-slate-500 italic text-sm">
-                        No matching records found.
-                    </div>
-                )}
-            </div>
-
-            {/* Pagination Controls */}
-            {filteredPatients.length > 0 && (
-                <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-                    <div className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
-                        Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredPatients.length)} of {filteredPatients.length} records
-                    </div>
-                    <div
-                        className="text-xs text-slate-500 dark:text-slate-400 sm:hidden"
-                        aria-live="polite"
-                        aria-atomic="true"
-                    >
-                        Page {currentPage} of {Math.ceil(filteredPatients.length / ITEMS_PER_PAGE)}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handlePrevPage}
-                            disabled={currentPage === 1}
-                            className="h-8 px-2"
-                            aria-label="Go to previous page"
-                        >
-                            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-                        </Button>
-                        <div
-                            className="text-xs font-medium text-slate-700 dark:text-slate-300 px-2 hidden sm:block"
-                            aria-live="polite"
-                            aria-atomic="true"
-                        >
-                            Page {currentPage} of {Math.ceil(filteredPatients.length / ITEMS_PER_PAGE)}
-                        </div>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleNextPage}
-                            disabled={currentPage * ITEMS_PER_PAGE >= filteredPatients.length}
-                            className="h-8 px-2"
-                            aria-label="Go to next page"
-                        >
-                            <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                        </Button>
-                    </div>
-                </div>
-            )}
-        </Card>
+        <PatientTable
+          paginatedPatients={paginatedPatients}
+          filteredPatients={filteredPatients}
+          currentPage={currentPage}
+          ITEMS_PER_PAGE={ITEMS_PER_PAGE}
+          filters={filters}
+          updateFilter={updateFilter}
+          clearFilters={clearFilters}
+          activeFilterCount={activeFilterCount}
+          suggestions={suggestions}
+          isFiltersExpanded={isFiltersExpanded}
+          setIsFiltersExpanded={setIsFiltersExpanded}
+          databaseDate={databaseDate}
+          onSelectPatient={onSelectPatient}
+          handleFileUpload={handleFileUpload}
+          isSheetOpen={isSheetOpen}
+          setIsSheetOpen={setIsSheetOpen}
+          isUploading={isUploading}
+          fileInputRef={fileInputRef}
+          handleNextPage={handleNextPage}
+          handlePrevPage={handlePrevPage}
+        />
 
 
         {/* Recent Skin Testing Activity Card */}
@@ -576,97 +251,13 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
           onViewLog={onViewLog}
         />
 
-        {/* Positive Skin Test Breakdown Table */}
-        <Card className="w-full shadow-sm animate-enter-subtle">
-            <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                        <CardTitle className="text-lg flex items-center gap-2 text-slate-900 dark:text-slate-100">
-                            <Thermometer className="w-5 h-5 text-primary" /> Positive Skin Test Breakdown
-                        </CardTitle>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">Number of positive patient reactions by drug (SPT/IDT &gt; 3mm or Positive Challenge).</p>
-                    </div>
-                    <Button variant="outline" size="sm" onClick={toggleAllCategories} className="shrink-0 h-8">
-                        {areAllExpanded ? (
-                            <>
-                                <ChevronUp className="w-4 h-4 mr-1.5" /> Collapse All
-                            </>
-                        ) : (
-                            <>
-                                <ChevronDown className="w-4 h-4 mr-1.5" /> Expand All
-                            </>
-                        )}
-                    </Button>
-                </div>
-            </CardHeader>
-            <div className="overflow-x-auto">
-                <table className="min-w-full text-sm relative border-collapse">
-                    <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold sticky top-0 z-10 shadow-sm">
-                        <tr>
-                            <th className="px-4 py-3 text-left bg-slate-50 dark:bg-slate-900 w-1/3">Drug</th>
-                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">SPT</th>
-                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">IDT 1:100</th>
-                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">IDT 1:10</th>
-                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">IDT Neat</th>
-                            <th className="px-4 py-3 text-center bg-slate-50 dark:bg-slate-900">Challenge Pos</th>
-                            <th className="px-4 py-3 text-center bg-slate-100/50 dark:bg-slate-800/50 border-l border-slate-200 dark:border-slate-800">Total Cases</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-slate-950">
-                        {analytics.statsByCategory.length > 0 ? (
-                            analytics.statsByCategory.map((categoryGroup, cIdx) => {
-                                const isExpanded = expandedCategories.includes(categoryGroup.category);
-                                const totalCategoryPositives = categoryGroup.stats.reduce((acc, curr) => acc + curr.total, 0);
-
-                                return (
-                                    <React.Fragment key={cIdx}>
-                                        <tr 
-                                            className="bg-slate-50 dark:bg-slate-900 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 cursor-pointer transition-colors"
-                                            onClick={() => toggleCategory(categoryGroup.category)}
-                                        >
-                                            <td colSpan={6} className="px-4 py-2.5">
-                                                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
-                                                    {isExpanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
-                                                    {categoryGroup.category}
-                                                </div>
-                                            </td>
-                                            <td className="px-4 py-2.5 text-center border-l border-slate-200 dark:border-slate-800">
-                                                {totalCategoryPositives > 0 ? (
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-none text-xs font-medium bg-slate-100 dark:bg-slate-900/50 text-slate-800 dark:text-primary">
-                                                        {totalCategoryPositives}
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-slate-400 text-xs">-</span>
-                                                )}
-                                            </td>
-                                        </tr>
-                                        {isExpanded && categoryGroup.stats.map((item, i) => (
-                                            <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors border-b border-slate-50 dark:border-slate-900 animate-in fade-in slide-in-from-top-1">
-                                                <td className="px-4 py-3 font-medium text-slate-700 dark:text-slate-300 pl-10 border-l-4 border-l-primary hover:border-l-primary transition-all">{item.name}</td>
-                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.spt || '-'}</td>
-                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idt100 || '-'}</td>
-                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idt10 || '-'}</td>
-                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idtNeat || '-'}</td>
-                                                <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.challenge || '-'}</td>
-                                                <td className="px-4 py-3 text-center font-bold text-slate-900 dark:text-slate-100 bg-slate-50/30 dark:bg-slate-900/30 border-l border-slate-100 dark:border-slate-800">
-                                                    {item.total || <span className="text-slate-300 dark:text-slate-600 font-normal">-</span>}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </React.Fragment>
-                                );
-                            })
-                        ) : (
-                            <tr>
-                                <td colSpan={7} className="px-4 py-8 text-center text-slate-500 italic">
-                                    No data available.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </Card>
+        {/* Positive Skin Test Breakdown */}
+        <SkinTestBreakdown
+          statsByCategory={analytics.statsByCategory}
+          expandedCategories={expandedCategories}
+          toggleCategory={toggleCategory}
+          toggleAllCategories={toggleAllCategories}
+        />
 
     </div>
   );

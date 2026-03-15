@@ -9,7 +9,7 @@ interface RecentTestingActivityProps {
   onViewLog: (log: LogFormData) => void;
 }
 
-export const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
+const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
   recentLogs,
   onViewLog
 }) => {
@@ -82,3 +82,5 @@ export const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
     </Card>
   );
 };
+
+export default React.memo(RecentTestingActivity);

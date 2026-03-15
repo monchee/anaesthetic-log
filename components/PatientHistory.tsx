@@ -368,4 +368,4 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
   );
 };
 
-export default PatientHistory;
+export default React.memo(PatientHistory);
