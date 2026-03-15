@@ -225,7 +225,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                             />
                             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                                 <SheetTrigger asChild>
-                                    <Button variant="outline" size="sm" className="shrink-0 h-9 bg-white hover:bg-slate-100 border-slate-200 hover:border-slate-300 transition-all duration-200 shadow-sm rounded-none">
+                                    <Button variant="outline" size="sm" className="shrink-0 h-9 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-200 shadow-sm rounded-none">
                                         <Upload className="w-3 h-3 mr-1.5" /> Upload CSV
                                     </Button>
                                 </SheetTrigger>
@@ -333,11 +333,11 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                         {/* Row 1: Search Box + Filter Button Toggle */}
                         <div className="flex flex-wrap gap-2 items-center">
                             <div className="relative flex-1 sm:flex-none sm:w-64">
-                                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" aria-hidden="true" />
+                                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" aria-hidden="true" />
                                 <Input
                                     placeholder="Search by Name, MRN..."
                                     aria-label="Search patients by name, medical record number (MRN), or city"
-                                    className="pl-9 h-9 bg-white"
+                                    className="pl-9 h-9 bg-white dark:bg-slate-800"
                                     value={filters.textQuery}
                                     onChange={(e) => updateFilter('textQuery', e.target.value)}
                                 />

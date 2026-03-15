@@ -11,6 +11,16 @@ interface ChangelogProps {
 const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = [
     {
+      version: "v0.24.4",
+      codename: "Suxamethonium (Patch 4)",
+      highlight: false,
+      changes: [
+        "Fixed Dashboard Upload CSV button with dark mode background, hover states, and border colors.",
+        "Added dark mode background to Dashboard search bar input for better visibility.",
+        "Updated Dashboard search icon with dark mode text color variant.",
+      ]
+    },
+    {
       version: "v0.24.3",
       codename: "Suxamethonium (Patch 3)",
       highlight: false,
