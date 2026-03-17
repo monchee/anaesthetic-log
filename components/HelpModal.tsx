@@ -149,6 +149,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
         ref={fileInputRef}
         type="file"
         accept=".csv"
+        aria-label="Upload CSV file"
         onChange={handleFileUpload}
         className="hidden"
       />

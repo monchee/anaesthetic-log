@@ -128,6 +128,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                 <div className="h-6 w-px bg-white/10 mx-1 hidden sm:block"></div>
 
                                 {/* Hamburger Menu */}
+                                <nav aria-label="Main navigation">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger
                                         className="h-9 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-all duration-200 shadow-sm group"
@@ -185,6 +186,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
+                                </nav>
                             </div>
                         </div>
                     </div>
@@ -229,6 +231,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 ref={fileInputRef}
                 type="file"
                 accept=".csv"
+                aria-label="Upload CSV file"
                 onChange={handleFileUpload}
                 className="hidden"
             />

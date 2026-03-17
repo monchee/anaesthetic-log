@@ -76,6 +76,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 ref={fileInputRef}
                 onChange={handleFileUpload}
                 accept=".csv"
+                aria-label="Upload CSV file"
                 className="hidden"
               />
               <CSVUploadInstructions

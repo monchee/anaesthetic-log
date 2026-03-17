@@ -61,6 +61,7 @@
     "@vitest/coverage-v8": "^4.1.0",
     "@vitest/ui": "^4.1.0",
     "autoprefixer": "^10.4.22",
+    "axe-core": "^4.11.1",
     "eslint": "^9.15.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.5.2",

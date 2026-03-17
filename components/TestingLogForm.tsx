@@ -49,6 +49,7 @@ const DrugRow = React.memo(({
           <Input
             className="h-10 md:h-9 text-sm flex-1 min-w-0 font-medium font-mono"
             placeholder="Specify name..."
+            aria-label="Custom drug name"
             value={row.customName || ''}
             onChange={(e) => updateDrugData(index, 'customName', e.target.value)}
             autoFocus
@@ -78,6 +79,7 @@ const DrugRow = React.memo(({
               type="number"
               min="0"
               onKeyDown={preventNegativeInput}
+              aria-label={`${row.drugName} ${FIELD_LABELS[field]} result (mm)`}
               className={`h-9 text-center font-mono ${parseInt(row[field] || '0') >= 3 ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
               placeholder="-"
               value={row[field] || ''}
@@ -253,10 +255,10 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     return (
                     <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
                         <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-slate-200 dark:border-slate-800'}`}>
-                            <h4 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-slate-400'}`}>
+                            <h3 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-slate-400'}`}>
                                 {category}
                                 {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-full ${theme.pulse} animate-pulse`}></span>}
-                            </h4>
+                            </h3>
                             <button
                                 onClick={(e) => { e.preventDefault(); toggleCategory(categoryDrugs); }}
                                 className={`text-[10px] hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}`}
@@ -363,9 +365,9 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                         <Activity className="w-5 h-5" />
                     </div>
                     <div className="text-left">
-                        <h3 className={`font-semibold tracking-tight transition-colors ${formData.proceedToChallenge ? 'text-slate-900 dark:text-primary' : 'text-slate-700 dark:text-slate-300'}`}>
+                        <span className={`font-semibold tracking-tight transition-colors ${formData.proceedToChallenge ? 'text-slate-900 dark:text-primary' : 'text-slate-700 dark:text-slate-300'}`}>
                             Drug Challenge
-                        </h3>
+                        </span>
                         <p className="text-xs text-slate-500 dark:text-slate-400">Proceed with live drug challenge</p>
                     </div>
                 </div>
@@ -391,7 +393,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                     value={formData.challengeDrug}
                                     onValueChange={(value) => handleInputChange('challengeDrug', value)}
                                 >
-                                    <SelectTrigger className="pl-10 h-11 border-slate-200 focus:border-primary focus:ring-primary">
+                                    <SelectTrigger className="pl-10 h-11 border-slate-200 focus:border-primary focus:ring-primary" aria-label="Select challenge drug">
                                         <SelectValue placeholder="Choose drug from list..." />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -403,6 +405,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                 <Input
                                     className="flex-1 h-11"
                                     placeholder="Specify custom drug name..."
+                                    aria-label="Custom challenge drug name"
                                     value={formData.challengeDrugCustom || ''}
                                     onChange={(e) => handleInputChange('challengeDrugCustom', e.target.value)}
                                     autoFocus
@@ -473,10 +476,11 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <Label className="text-red-900 dark:text-red-200 font-semibold flex items-center gap-2">
-                                        <Clock className="w-4 h-4" /> Time to Reaction (min)
+                                    <Label htmlFor="reaction-time" className="text-red-900 dark:text-red-200 font-semibold flex items-center gap-2">
+                                        <Clock className="w-4 h-4" aria-hidden="true" /> Time to Reaction (min)
                                     </Label>
                                     <Input
+                                        id="reaction-time"
                                         type="number"
                                         min="0"
                                         onKeyDown={preventNegativeInput}
@@ -506,10 +510,11 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                             
                             {formData.interventionType === 'Other' && (
                                 <div className="space-y-2 animate-in fade-in">
-                                    <Label className="text-red-900 dark:text-red-200">Specify Treatment Details</Label>
-                                    <Input 
-                                        value={formData.interventionOther} 
-                                        onChange={(e) => handleInputChange('interventionOther', e.target.value)} 
+                                    <Label htmlFor="intervention-other" className="text-red-900 dark:text-red-200">Specify Treatment Details</Label>
+                                    <Input
+                                        id="intervention-other"
+                                        value={formData.interventionOther}
+                                        onChange={(e) => handleInputChange('interventionOther', e.target.value)}
                                         className="bg-white dark:bg-slate-950 border-red-200"
                                         placeholder="Describe intervention..."
                                     />
@@ -540,10 +545,11 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                             </div>
                              {formData.symptoms.includes('Other') && (
                                 <div className="space-y-2 animate-in fade-in">
-                                    <Label className="text-red-900 dark:text-red-200">Specify Other Symptoms</Label>
-                                    <Input 
-                                        value={formData.symptomsOther} 
-                                        onChange={(e) => handleInputChange('symptomsOther', e.target.value)} 
+                                    <Label htmlFor="symptoms-other" className="text-red-900 dark:text-red-200">Specify Other Symptoms</Label>
+                                    <Input
+                                        id="symptoms-other"
+                                        value={formData.symptomsOther}
+                                        onChange={(e) => handleInputChange('symptomsOther', e.target.value)}
                                         className="bg-white dark:bg-slate-950 border-red-200"
                                         placeholder="Describe symptoms..."
                                     />
@@ -568,8 +574,9 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
         </CardHeader>
         <CardContent className="pt-6">
             <div className="space-y-2">
-                <Label>Comments / Plan</Label>
-                <textarea 
+                <Label htmlFor="clinical-plan">Comments / Plan</Label>
+                <textarea
+                    id="clinical-plan"
                     className="flex min-h-[120px] w-full rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
                     placeholder="Enter clinical notes, interpretation of results, and future recommendations..."
                     value={formData.plan}

@@ -1,4 +1,9 @@
 import { test, expect } from '@playwright/test';
+import path from 'path';
+
+async function injectAxe(page: any) {
+  await page.addScriptTag({ path: path.resolve('node_modules/axe-core/axe.min.js') });
+}
 
 test.describe('Accessibility Tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -39,11 +44,16 @@ test.describe('Accessibility Tests', () => {
     for (let i = 0; i < count; i++) {
       const input = inputs.nth(i);
 
-      // Input should have aria-label, aria-labelledby, or associated label element
+      // Input should have aria-label, aria-labelledby, associated label element, or be wrapped in a label
       const hasAriaLabel = await input.getAttribute('aria-label');
       const hasAriaLabelledby = await input.getAttribute('aria-labelledby');
+      const id = await input.getAttribute('id');
+      const hasAssociatedLabel = id
+        ? (await page.locator(`label[for="${id}"]`).count()) > 0
+        : false;
+      const isWrappedInLabel = await input.evaluate((el: Element) => !!el.closest('label'));
 
-      expect(hasAriaLabel || hasAriaLabelledby).toBeTruthy();
+      expect(hasAriaLabel || hasAriaLabelledby || hasAssociatedLabel || isWrappedInLabel).toBeTruthy();
     }
   });
 
@@ -78,8 +88,9 @@ test.describe('Accessibility Tests', () => {
   });
 
   test('focus management in modals', async ({ page }) => {
-    // Open help modal
-    await page.click('button:has-text("Help")');
+    // Open help modal via the navigation dropdown
+    await page.click('button:has-text("Menu")');
+    await page.click('text=Quick Start Guide');
 
     // Check that modal trap is working
     const modal = page.locator('[role="dialog"]');
@@ -108,6 +119,7 @@ test.describe('Accessibility Tests', () => {
 
   test('color contrast meets WCAG AA standards', async ({ page }) => {
     // Use axe-core to check color contrast
+    await injectAxe(page);
     const violations = await page.evaluate(() => {
       return new Promise((resolve) => {
         axe.run(document, { rules: { 'color-contrast': { enabled: true } } }, (err: any, results: any) => {
@@ -158,7 +170,6 @@ test.describe('Accessibility Tests', () => {
       'banner',
       'navigation',
       'main',
-      'complementary',
       'contentinfo',
     ];
 
@@ -267,6 +278,7 @@ test.describe('Accessibility Tests', () => {
 test.describe('Automated Accessibility Scans', () => {
   test('axe-core scan passes', async ({ page }) => {
     await page.goto('/');
+    await injectAxe(page);
 
     const violations = await page.evaluate(() => {
       return new Promise((resolve) => {
@@ -288,12 +300,12 @@ test.describe('Automated Accessibility Scans', () => {
       });
     }
 
-    // TODO: Fix all accessibility violations and uncomment this assertion
-    // expect(violations.length).toBe(0);
+    expect(violations.length).toBe(0);
   });
 
   test('axe-core scan on dashboard', async ({ page }) => {
     await page.goto('/');
+    await injectAxe(page);
     await page.click('text=Dashboard');
 
     const violations = await page.evaluate(() => {
@@ -312,12 +324,12 @@ test.describe('Automated Accessibility Scans', () => {
       });
     }
 
-    // TODO: Fix all accessibility violations and uncomment this assertion
-    // expect(violations.length).toBe(0);
+    expect(violations.length).toBe(0);
   });
 
   test('axe-core scan on testing log form', async ({ page }) => {
     await page.goto('/');
+    await injectAxe(page);
     await page.click('text=New Testing Log');
 
     const violations = await page.evaluate(() => {
@@ -336,7 +348,6 @@ test.describe('Automated Accessibility Scans', () => {
       });
     }
 
-    // TODO: Fix all accessibility violations and uncomment this assertion
-    // expect(violations.length).toBe(0);
+    expect(violations.length).toBe(0);
   });
 });

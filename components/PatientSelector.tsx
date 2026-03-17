@@ -83,34 +83,39 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
 
   return (
     <div className="w-full" ref={dropdownRef}>
-      <label className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 block">
+      <span className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 block" id="patient-selector-label">
         Select Patient from Database
-      </label>
-      
+      </span>
+
       <div className="relative">
-        <div 
-          className="flex min-h-10 h-auto w-full items-center justify-between rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white cursor-pointer hover:bg-slate-50 focus-within:ring-2 focus-within:ring-slate-950 focus-within:ring-offset-2 dark:bg-slate-950 dark:border-slate-800 dark:hover:bg-slate-900 dark:focus-within:ring-slate-300 transition-all"
+        <button
+          type="button"
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          aria-labelledby="patient-selector-label"
+          className="flex min-h-10 h-auto w-full items-center justify-between rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white cursor-pointer hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 dark:bg-slate-950 dark:border-slate-800 dark:hover:bg-slate-900 dark:focus-visible:ring-slate-300 transition-all"
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className={`mr-2 whitespace-normal text-left leading-tight ${selectedPatient || isManualSelection ? "text-slate-900 dark:text-slate-100" : "text-slate-500 dark:text-slate-400"}`}>
-            {isManualSelection 
+            {isManualSelection
                 ? "[New] Manual Entry"
-                : selectedPatient 
+                : selectedPatient
                     ? `[ID: ${selectedPatient.id}] ${selectedPatient.lastName}, ${selectedPatient.firstName} (DOB: ${formatDate(selectedPatient.dob)})`
                     : "Search or select patient..."
             }
           </span>
           <ChevronDown className="h-4 w-4 opacity-50 dark:text-slate-400 shrink-0" />
-        </div>
+        </button>
 
         {isOpen && (
-          <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-none border border-slate-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm animate-in fade-in zoom-in-95 duration-100 dark:bg-slate-900 dark:border-slate-800 dark:shadow-xl">
+          <div role="listbox" aria-label="Patient list" className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-none border border-slate-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm animate-in fade-in zoom-in-95 duration-100 dark:bg-slate-900 dark:border-slate-800 dark:shadow-xl">
             {/* Sticky Search Header */}
             <div className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 px-2 py-1.5">
                 <div className="relative">
                     <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
                     <input
                         type="text"
+                        aria-label="Filter patients by ID or name"
                         className="w-full rounded-none border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-2 text-xs focus:outline-none focus:ring-1 focus:ring-slate-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:focus:ring-slate-500"
                         placeholder="Filter by ID or Name..."
                         value={searchTerm}
@@ -121,7 +126,9 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
             </div>
 
             {/* Manual Entry Option - Static List Item */}
-            <div 
+            <div
+                role="option"
+                aria-selected={isManualSelection}
                 className="cursor-pointer select-none py-2 px-3 border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300 transition-colors"
                 onClick={handleManualEntry}
             >
@@ -147,6 +154,8 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                 filteredPatients.map((patient) => (
                 <div
                     key={patient.id}
+                    role="option"
+                    aria-selected={selectedPatientId === patient.id}
                     className={`relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-slate-100 dark:hover:bg-slate-800 border-b border-slate-50 dark:border-slate-800/50 transition-colors last:border-0 ${
                         selectedPatientId === patient.id ? "bg-slate-50 font-medium dark:bg-slate-800/50" : ""
                     }`}
