@@ -153,6 +153,9 @@ export default defineConfig(() => {
     resolve: {
       alias: {
         '@': path.resolve('.', '.'),
+        '@features': path.resolve('.', './src/features'),
+        '@shared': path.resolve('.', './src/shared'),
+        '@core': path.resolve('.', './src/core'),
       }
     },
     build: {

@@ -1,0 +1,333 @@
+[
+  {
+    "version": "v0.25.0",
+    "codename": "Vecuronium",
+    "highlight": true,
+    "changes": [
+      "The app now loads faster and responds more quickly.",
+      "Improved dashboard organization and layout.",
+      "Enhanced performance throughout the application - views update more smoothly."
+    ]
+  },
+  {
+    "version": "v0.24.10",
+    "codename": "Suxamethonium (Patch 10)",
+    "highlight": false,
+    "changes": [
+      "Fixed CSV import - phone numbers now import correctly from REDCap exports.",
+      "Added validation to ensure CSV files have the correct columns before importing.",
+      "Improved error messages - now shows which rows couldn't be imported and why.",
+      "Added duplicate detection - warns you if you try to import the same patient twice."
+    ]
+  },
+  {
+    "version": "v0.24.9",
+    "codename": "Suxamethonium (Patch 9)",
+    "highlight": false,
+    "changes": [
+      "Redesigned changelog page with a cleaner, more professional appearance.",
+      "Version number in footer now updates automatically."
+    ]
+  },
+  {
+    "version": "v0.24.8",
+    "codename": "Suxamethonium (Patch 8)",
+    "highlight": false,
+    "changes": [
+      "Fixed display issues with page icons in light mode."
+    ]
+  },
+  {
+    "version": "v0.24.7",
+    "codename": "Suxamethonium (Patch 7)",
+    "highlight": false,
+    "changes": [
+      "Fixed headings appearing too dark to read in dark mode."
+    ]
+  },
+  {
+    "version": "v0.24.6",
+    "codename": "Suxamethonium (Patch 6)",
+    "highlight": false,
+    "changes": [
+      "Fixed heading text visibility issues in dark mode across all pages."
+    ]
+  },
+  {
+    "version": "v0.24.5",
+    "codename": "Suxamethonium (Patch 5)",
+    "highlight": false,
+    "changes": [
+      "Fixed heading visibility in the dashboard when using dark mode."
+    ]
+  },
+  {
+    "version": "v0.24.4",
+    "codename": "Suxamethonium (Patch 4)",
+    "highlight": false,
+    "changes": [
+      "Fixed button and search bar appearance in dark mode."
+    ]
+  },
+  {
+    "version": "v0.24.3",
+    "codename": "Suxamethonium (Patch 3)",
+    "highlight": false,
+    "changes": [
+      "Fixed heading visibility in clinical reports and printed documents when using dark mode."
+    ]
+  },
+  {
+    "version": "v0.24.2",
+    "codename": "Suxamethonium (Patch 2)",
+    "highlight": false,
+    "changes": [
+      "Fixed text and table visibility issues in clinical reports when using dark mode.",
+      "Improved readability of patient details and assessment sections."
+    ]
+  },
+  {
+    "version": "v0.24.1",
+    "codename": "Suxamethonium (Patch)",
+    "highlight": false,
+    "changes": [
+      "Improved text readability and result highlighting in dark mode.",
+      "Fixed display issues with colored result boxes in patient handouts."
+    ]
+  },
+  {
+    "version": "v0.24.0",
+    "codename": "Suxamethonium",
+    "highlight": true,
+    "changes": [
+      "Comprehensive dark mode update with easier-on-the-eyes colors.",
+      "App now respects your device's light/dark mode preference.",
+      "Improved color contrast for better readability in all lighting conditions.",
+      "Medical status colors remain clear and visible in dark mode for patient safety."
+    ]
+  },
+  {
+    "version": "v0.23.0",
+    "codename": "Rocuronium",
+    "highlight": false,
+    "changes": [
+      "Simplified code structure for better maintainability.",
+      "App now uses less data and loads faster."
+    ]
+  },
+  {
+    "version": "v0.22.0",
+    "codename": "Propofol",
+    "highlight": false,
+    "changes": [
+      "Improved layout on mobile phones and tablets - content is now easier to see and navigate.",
+      "Fixed spacing issues on smaller screens."
+    ]
+  },
+  {
+    "version": "v0.21.0",
+    "codename": "Etomidate",
+    "highlight": false,
+    "changes": [
+      "Fixed tooltip visibility issues in light and dark modes.",
+      "Improved accessibility throughout the app."
+    ]
+  },
+  {
+    "version": "v0.20.0",
+    "codename": "Ketamine",
+    "highlight": false,
+    "changes": [
+      "Added direct links to pages - you can now bookmark and share specific screens.",
+      "Browser back and forward buttons now work correctly."
+    ]
+  },
+  {
+    "version": "v0.19.0",
+    "codename": "Cisatracurium",
+    "highlight": false,
+    "changes": [
+      "Improved button responsiveness and visual feedback throughout the app.",
+      "Smoother slide-in animations for panels and menus."
+    ]
+  },
+  {
+    "version": "v0.18.0",
+    "codename": "Sugammadex",
+    "highlight": false,
+    "changes": [
+      "Redesigned filter bar with easier-to-use controls.",
+      "Filters now apply automatically as you select them.",
+      "Improved touch-friendly layout for selecting reaction severity and suspected agents."
+    ]
+  },
+  {
+    "version": "v0.17.0",
+    "codename": "Remifentanil",
+    "highlight": false,
+    "changes": [
+      "App now loads faster on first open.",
+      "Enhanced security to better protect patient information.",
+      "Improved loading screens when navigating between sections."
+    ]
+  },
+  {
+    "version": "v0.16.0",
+    "codename": "Bupivacaine",
+    "highlight": false,
+    "changes": [
+      "Updated design with a cleaner, sharper clinical appearance.",
+      "All buttons, cards, and forms now have a consistent professional look."
+    ]
+  },
+  {
+    "version": "v0.15.0",
+    "codename": "Lignocaine",
+    "highlight": false,
+    "changes": [
+      "Updated fonts and colors to match NSW Health branding standards.",
+      "Improved form layouts and printed documents for a more professional appearance."
+    ]
+  },
+  {
+    "version": "v0.14.0",
+    "codename": "Rocuronium",
+    "highlight": false,
+    "changes": [
+      "Internal improvements - code quality checks now run faster and more reliably.",
+      "Better test coverage helps catch bugs before they reach you.",
+      "Performance optimisations make updates smoother."
+    ]
+  },
+  {
+    "version": "v0.13.0",
+    "codename": "Neostigmine",
+    "highlight": false,
+    "changes": [
+      "Added legal and governance documentation pages (Privacy Policy, Clinical Governance, Terms of Use, Technical Documentation, Disclaimer).",
+      "Content aligned with Australian healthcare standards (OAIC Privacy Principles, NSQHS Clinical Governance Standard, NSW Health guidelines).",
+      "New footer section with legal links for easy access to compliance information."
+    ]
+  },
+  {
+    "version": "v0.12.0",
+    "codename": "Propofol",
+    "highlight": false,
+    "changes": [
+      "Condensed Quick Start Guide - now more compact and easier to scan.",
+      "Upload CSV now opens instruction side sheet (matches Dashboard).",
+      "Added step-by-step REDCap export instructions to upload flow."
+    ]
+  },
+  {
+    "version": "v0.11.0",
+    "codename": "Suxamethonium",
+    "highlight": false,
+    "changes": [
+      "Improved accessibility throughout the app - better keyboard navigation and screen reader support.",
+      "Updated notification messages to be clearer and less intrusive.",
+      "Enhanced visual consistency across all screens and menus.",
+      "Improved allergy grade badges with clearer colour coding for quick identification.",
+      "Better support for light and dark themes across all components.",
+      "Menu items are now easier to tap on mobile devices."
+    ]
+  },
+  {
+    "version": "v0.10.0",
+    "codename": "Sevoflurane",
+    "changes": [
+      "App now works offline - you can use it without an internet connection.",
+      "Faster loading times and quicker access to patient data.",
+      "Added proper app icons when installed on phones and tablets.",
+      "Cleaner header with a new menu button for easier navigation.",
+      "Quick Start Guide and other links moved to the new menu.",
+      "New version notifications - you'll be prompted when updates are available."
+    ]
+  },
+  {
+    "version": "v0.9.0",
+    "codename": "Desflurane",
+    "changes": [
+      "Added new information pages: About, FAQ, Drug Reference, Contact, and Resources.",
+      "Redesigned dashboard with cleaner statistics display.",
+      "Search filters are now visible by default for easier access.",
+      "Quick Start Guide opens automatically when you first use the app."
+    ]
+  },
+  {
+    "version": "v0.8.0",
+    "codename": "Propofol",
+    "changes": [
+      "New Quick Start Guide to help you get started.",
+      "Advanced Search with filters for reaction grade, date range, hospital, outcome, and suspected agents.",
+      "Better patient search and filtering in the dashboard.",
+      "Help button moved to the top navigation bar."
+    ]
+  },
+  {
+    "version": "v0.7.0",
+    "codename": "Sevoflurane",
+    "changes": [
+      "Improved layout and spacing in the testing forms.",
+      "Printed reports no longer include the header - cleaner printed output.",
+      "Easier to read changelog with clearer descriptions."
+    ]
+  },
+  {
+    "version": "v0.6.0",
+    "codename": "Fentanyl",
+    "changes": [
+      "Fixed issues with saving clinical records - forms now save correctly.",
+      "Better error messages when something goes wrong.",
+      "All text now uses Australian English spelling.",
+      "Printed reports now fit neatly on a single page."
+    ]
+  },
+  {
+    "version": "v0.5.0",
+    "codename": "Midazolam",
+    "changes": [
+      "Enhanced security to better protect patient information.",
+      "Faster loading and uses less data.",
+      "Improved tooltips and helpful information when hovering over items."
+    ]
+  },
+  {
+    "version": "v0.4.0",
+    "codename": "Rocuronium",
+    "changes": [
+      "Smoother, less distracting animations in the dashboard.",
+      "More stable - fewer crashes and errors."
+    ]
+  },
+  {
+    "version": "v0.3.0",
+    "codename": "Ketamine",
+    "changes": [
+      "Easier workflow for viewing patient history and entering test results.",
+      "New Testing Plan Generator for printable request forms.",
+      "Faster patient search.",
+      "Clearer display of reaction grades."
+    ]
+  },
+  {
+    "version": "v0.2.0",
+    "codename": "Atracurium",
+    "changes": [
+      "Upload patient databases from CSV files.",
+      "New dashboard with statistics and patient overview.",
+      "Detailed patient history timeline showing medications and reactions.",
+      "Support for REDCap patient records."
+    ]
+  },
+  {
+    "version": "v0.1.0",
+    "codename": "Lignocaine",
+    "changes": [
+      "Initial release of the Anaesthetic Allergy Clinic application.",
+      "Record skin tests and drug challenges.",
+      "Generate clinical reports and patient handouts.",
+      "Manage patient data and track testing results."
+    ]
+  }
+]

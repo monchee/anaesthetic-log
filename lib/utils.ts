@@ -1,16 +1,7 @@
-
-
-// Re-export utilities from specialized modules for backward compatibility
-export { formatDate, calculateTimeDifference } from './dateUtils';
-export { getGradeVariant, type GradeVariant } from './gradingUtils';
-export { isSkinTestPositive, getPositiveResults, getNegativeResults } from './testingUtils';
-export { parsePatientTimeline, type TimelineEvent } from './timelineUtils';
-export { parseRedcapCSV, type CsvParseResult } from './csvUtils';
-
-// Shadcn cn utility
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
+// Backward compatibility - re-exports from new location
+export { cn } from '../src/shared/utils/cn';
+export { formatDate, calculateTimeDifference } from '../src/shared/utils/dateUtils';
+export { getGradeVariant, type GradeVariant } from '../src/shared/utils/gradingUtils';
+export { isSkinTestPositive, getPositiveResults, getNegativeResults } from '../src/shared/utils/testingUtils';
+export { parsePatientTimeline, type TimelineEvent } from '../src/shared/utils/timelineUtils';
+export { parseRedcapCSV, type CsvParseResult } from '../src/shared/utils/csvUtils';

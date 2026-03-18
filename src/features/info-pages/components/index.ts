@@ -1,0 +1,11 @@
+export { default as AboutPage } from './AboutPage';
+export { default as FAQPage } from './FAQPage';
+export { default as DrugReferencePage } from './DrugReferencePage';
+export { default as ContactPage } from './ContactPage';
+export { default as ResourcesPage } from './ResourcesPage';
+export { default as PrivacyPolicyPage } from './PrivacyPolicyPage';
+export { default as ClinicalGovernancePage } from './ClinicalGovernancePage';
+export { default as TermsOfUsePage } from './TermsOfUsePage';
+export { default as TechnicalDocumentationPage } from './TechnicalDocumentationPage';
+export { default as DisclaimerPage } from './DisclaimerPage';
+export { default as Changelog } from './Changelog';
