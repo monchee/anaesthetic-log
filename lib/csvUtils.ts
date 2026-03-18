@@ -76,8 +76,8 @@ const normalizeTime = (timeStr: string): string => {
     // Check for HHMM
     match = cleanStr.match(TIME_HHMM_REGEX);
     if (match) {
-        const h = parseInt(match[1]);
-        const m = parseInt(match[2]);
+        const h = parseInt(match[1], 10);
+        const m = parseInt(match[2], 10);
         if (h < 24 && m < 60) return `${match[1]}:${match[2]}`;
     }
 
@@ -96,7 +96,7 @@ const DRUG_TIME_MATCHERS: Record<string, string[]> = {
     'Dexamethasone': ['Dexmethasone', 'Dexamethasone'],
     'Chlorhexidine': ['Chlorhex', 'Chlorhexidine'],
     'Amoxicillin': ['Amoxicillin', 'Amoxycillin'],
-    'Cephazolin': ['Cephazolin', 'Cefazolin'],
+    'Cefazolin': ['Cefazolin', 'Cephazolin'],
     'Metoclopramide': ['Metoclopramide', 'Metoclopr'],
     'Ondansetron': ['Ondansetron'],
     'Parecoxib': ['Parecoxib'],

@@ -3,10 +3,10 @@ import { DrugTestRow, LogFormData } from '../types';
 // Testing utility functions
 
 export const isSkinTestPositive = (row: DrugTestRow): boolean => {
-    const spt = parseInt(row.sptWheal || '0');
-    const idt100 = parseInt(row.idt100 || '0');
-    const idt10 = parseInt(row.idt10 || '0');
-    const idtNeat = parseInt(row.idtNeat || '0');
+    const spt = parseInt(row.sptWheal || '0', 10);
+    const idt100 = parseInt(row.idt100 || '0', 10);
+    const idt10 = parseInt(row.idt10 || '0', 10);
+    const idtNeat = parseInt(row.idtNeat || '0', 10);
     return spt >= 3 || idt100 >= 3 || idt10 >= 3 || idtNeat >= 3;
 };
 
