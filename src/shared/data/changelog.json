@@ -1,8 +1,24 @@
 [
   {
+    "version": "v0.31.0",
+    "codename": "Rocuronium",
+    "highlight": true,
+    "changes": [
+      "Typography refined project-wide — improved line height for body text, tighter heading leading, and a new section-label utility replacing ad-hoc 10px uppercase patterns throughout.",
+      "Heading scale clarified — h4 now defined at text-sm, giving a clearer visual hierarchy between headings, field labels, and body text.",
+      "NSW Government colour system introduced — Brand Supplementary blue (#146CFD) and Info Blue (#2E5299) added as official design tokens alongside the existing NSW Health navy.",
+      "Header bar now features a 3px NSW Brand Supplementary blue accent stripe, consistent with NSW Government digital product standards.",
+      "Ghost button and dropdown hover states now use the pale NSW Brand Light blue (#CBEDFD) tint instead of a generic grey.",
+      "Dashboard stat cards (Records, Severe, Abandoned, Onset) now have colour-coded left borders for quicker at-a-glance differentiation.",
+      "Quick Tips callout in the Help modal updated to use the official NSW Info Blue palette.",
+      "Get Started button in the Help modal changed to NSW Brand Supplementary blue, removing the inconsistent green.",
+      "Info page callout boxes (Contact, Privacy Policy, Disclaimer) standardised to the NSW Info Blue palette."
+    ]
+  },
+  {
     "version": "v0.30.0",
     "codename": "Pancuronium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Mobile and tablet layout improvements across the whole app — iPhone X and newer, iPad mini, iPad Air, and iPad Pro.",
       "Testing form reference controls now fit in a single 3-column row on mobile instead of wrapping to separate rows.",

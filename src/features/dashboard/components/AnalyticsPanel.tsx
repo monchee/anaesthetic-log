@@ -46,19 +46,19 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
         <CardContent className="p-4 pt-6">
           <div className="grid grid-cols-2 gap-3">
             {/* Total */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800 border-l-4 border-l-primary">
               <div className="flex items-center gap-2 mb-1">
                 <Users className="w-4 h-4 text-primary" />
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Records</span>
+                <span className="section-label">Records</span>
               </div>
               <div className="text-2xl font-bold text-slate-900 dark:text-white">{animatedTotalPatients}</div>
             </div>
 
             {/* Severe */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800 border-l-4 border-l-red-500">
               <div className="flex items-center gap-2 mb-1">
                 <AlertTriangle className="w-4 h-4 text-red-500" />
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Severe</span>
+                <span className="section-label">Severe</span>
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-slate-900 dark:text-white">{animatedSevereCount}</span>
@@ -67,10 +67,10 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             </div>
 
             {/* Abandoned */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800 border-l-4 border-l-amber-500">
               <div className="flex items-center gap-2 mb-1">
                 <Ban className="w-4 h-4 text-status-grade2" />
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Abandoned</span>
+                <span className="section-label">Abandoned</span>
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-slate-900 dark:text-white">{animatedAbandonedCount}</span>
@@ -79,10 +79,10 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             </div>
 
             {/* Avg Time */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800 border-l-4 border-l-nsw-blue">
               <div className="flex items-center gap-2 mb-1">
-                <Timer className="w-4 h-4 text-primary" />
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Onset</span>
+                <Timer className="w-4 h-4 text-nsw-blue" />
+                <span className="section-label">Onset</span>
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-slate-900 dark:text-white">{animatedAvgTime}</span>

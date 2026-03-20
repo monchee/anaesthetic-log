@@ -74,7 +74,7 @@ const DrugRow = React.memo(({
       <div className="col-span-2 md:col-span-4 grid grid-cols-2 gap-x-2 gap-y-5 md:grid-cols-4 md:gap-2">
         {['sptWheal', 'idt100', 'idt10', 'idtNeat'].map((field) => (
           <div key={field} className="relative">
-            <span className="md:hidden text-[10px] text-slate-400 absolute -top-3 left-0 uppercase font-bold">{FIELD_LABELS[field]}</span>
+            <span className="md:hidden section-label absolute -top-3 left-0">{FIELD_LABELS[field]}</span>
             <Input
               type="number"
               min="0"
@@ -149,13 +149,13 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                         <Activity className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                        <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Patient Name</div>
+                        <div className="section-label">Patient Name</div>
                         <div className="text-lg font-bold text-slate-900 dark:text-primary">
                             {formData.lastName}, {formData.firstName}
                         </div>
                     </div>
                     <div className="border-l pl-4 border-slate-200 dark:border-slate-800">
-                        <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">MRN</div>
+                        <div className="section-label">MRN</div>
                         <div className="text-lg font-bold text-slate-900 dark:text-primary font-mono lowercase">
                             {formData.mrn}
                         </div>
@@ -196,7 +196,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
             
             {/* Controls */}
             <div className="bg-slate-50 dark:bg-slate-900 px-4 py-4 rounded-none border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
-              <div className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">
+              <div className="section-label">
                 Reference Controls (mm):
               </div>
               

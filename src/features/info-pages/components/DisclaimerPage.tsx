@@ -181,9 +181,9 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Acceptance */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-none p-5 border border-blue-200 dark:border-blue-800">
-            <h4 className="font-semibold text-blue-900 dark:text-blue-300 mb-3">Use of Application Constitutes Acceptance</h4>
-            <div className="text-sm text-blue-800 dark:text-blue-300">
+          <div className="bg-nsw-info-bg dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
+            <h4 className="font-semibold text-nsw-info dark:text-nsw-blue mb-3">Use of Application Constitutes Acceptance</h4>
+            <div className="text-sm text-slate-700 dark:text-slate-300">
               <p>
                 By accessing and using this application, you acknowledge that you have read, understood, and agree to be bound by this disclaimer. If you do not agree with any part of this disclaimer, you must not use this application.
               </p>

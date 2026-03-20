@@ -103,7 +103,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
             {/* Full Width Header (Static) */}
             <header role="banner" aria-label="Application header" className="w-full flex flex-col shadow-sm z-50 relative no-print">
                 {/* Main Navigation Bar */}
-                <div className="bg-primary text-white border-b border-slate-800 w-full">
+                <div className="bg-primary text-white border-b-[3px] border-nsw-blue/70 w-full">
                     {/* Safe Area Padding for mobile notch support */}
                     <div className="pt-[env(safe-area-inset-top)]">
                         <div className="max-w-6xl mx-auto px-3 py-2 sm:px-4 sm:py-3 lg:py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -117,7 +117,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                     <h1 className="text-xl font-semibold tracking-tight leading-none truncate m-0 text-white">
                                         {title}
                                     </h1>
-                                    {subtitle && <div className="text-[10px] sm:text-xs text-white/80 truncate font-normal mt-1 italic opacity-90">{subtitle}</div>}
+                                    {subtitle && <div className="text-[0.625rem] sm:text-xs text-white/80 truncate font-normal mt-1 italic opacity-90">{subtitle}</div>}
                                 </div>
                             </div>
 

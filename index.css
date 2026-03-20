@@ -51,6 +51,16 @@
     --chart-5: 27 87% 67%;
     
     --radius: 0; /* Professional sharp-edge look */
+
+    /* NSW Government Design System — Brand Supplementary & Info */
+    --nsw-blue: 218 98% 54%;       /* #146CFD — NSW Brand Supplementary Blue */
+    --nsw-blue-light: 199 92% 89%; /* #CBEDFD — NSW Brand Light Blue */
+    --nsw-info: 220 54% 39%;       /* #2E5299 — NSW Info Blue */
+    --nsw-info-bg: 228 33% 93%;    /* #EAEDF4 — NSW Info Blue Background */
+
+    /* Override --accent with NSW Brand Light (replaces slate-100) */
+    --accent: 199 92% 89%;         /* #CBEDFD — pale NSW blue for hover states */
+    --accent-foreground: 218 100% 20%; /* Dark navy on light blue */
   }
   .dark {
     --background: 222.2 84% 4.9%; /* slate-900/950 */
@@ -84,6 +94,16 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    /* NSW Government Design System — dark mode */
+    --nsw-blue: 218 98% 65%;       /* Brightened for dark bg readability */
+    --nsw-blue-light: 218 60% 25%; /* Dark navy-blue light variant */
+    --nsw-info: 220 70% 65%;       /* Lighter info blue for dark bg */
+    --nsw-info-bg: 220 40% 18%;    /* Dark navy-blue info background */
+
+    /* Override --accent with NSW dark blue hover */
+    --accent: 218 40% 18%;         /* Dark navy-blue for hover backgrounds */
+    --accent-foreground: 199 80% 85%; /* Light blue text in dark mode */
   }
 }
 
@@ -121,6 +141,13 @@
   /* Hover slide left (for back buttons) */
   .hover-slide-left {
     @apply -translate-x-0 hover:-translate-x-2 active:scale-95 transition-all duration-150;
+  }
+
+  /* Section/field group label — replaces scattered text-[10px] uppercase patterns.
+     Uses rem so it scales correctly with the FontSizeProvider (85%–125%). */
+  .section-label {
+    @apply text-[0.625rem] font-bold uppercase tracking-wider
+           text-slate-500 dark:text-slate-400;
   }
 }
 
@@ -165,15 +192,16 @@ html {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground leading-relaxed;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold text-[var(--primary)];
+    @apply font-semibold text-[var(--primary)] leading-tight;
     letter-spacing: -0.01em;
   }
 
   h1 { @apply text-3xl mb-4 sm:mb-5 lg:mb-6; }
   h2 { @apply text-2xl mb-3 sm:mb-3.5 lg:mb-4; }
   h3 { @apply text-xl mb-3; }
+  h4 { @apply text-sm mb-2; }
 }

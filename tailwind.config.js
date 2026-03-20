@@ -64,7 +64,15 @@ export default {
   				grade2: 'hsl(var(--status-grade2))',
   				grade3: 'hsl(var(--status-grade3))',
   				grade4: 'hsl(var(--status-grade4))'
-  			}
+  			},
+  			'nsw-blue': {
+  				DEFAULT: 'hsl(var(--nsw-blue))',
+  				light: 'hsl(var(--nsw-blue-light))',
+  			},
+  			'nsw-info': {
+  				DEFAULT: 'hsl(var(--nsw-info))',
+  				bg: 'hsl(var(--nsw-info-bg))',
+  			},
   		},
   		keyframes: {
   			'accordion-down': {

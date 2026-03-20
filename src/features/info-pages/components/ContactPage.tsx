@@ -81,9 +81,9 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Tips for Reporting Issues */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-none p-5 border border-blue-100 dark:border-blue-800/40">
-            <h4 className="font-semibold text-blue-800 dark:text-blue-300 mb-3">Tips for Reporting Issues</h4>
-            <ul className="space-y-2 text-sm text-blue-700 dark:text-blue-300">
+          <div className="bg-nsw-info-bg dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
+            <h4 className="font-semibold text-nsw-info dark:text-nsw-blue mb-3">Tips for Reporting Issues</h4>
+            <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
               {[
                 "Describe what you were trying to do when the issue occurred",
                 "Note any error messages that appeared",
@@ -91,7 +91,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
                 "Specify whether the issue is reproducible or occurred only once"
               ].map((tip, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <span className="text-blue-500 mt-0.5">•</span>
+                  <span className="text-nsw-info dark:text-nsw-blue mt-0.5">•</span>
                   {tip}
                 </li>
               ))}

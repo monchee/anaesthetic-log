@@ -207,14 +207,14 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
           </div>
 
           {/* Quick Tips - Full Width */}
-          <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-none border border-blue-100 dark:border-blue-900/40 mt-4">
+          <div className="p-3 bg-nsw-info-bg dark:bg-nsw-info/10 rounded-none border border-nsw-info/20 dark:border-nsw-info/30 mt-4">
             <div className="flex items-center gap-2 mb-1.5">
-              <Filter className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className="font-medium text-blue-700 dark:text-blue-300 text-sm">
+              <Filter className="w-4 h-4 text-nsw-info dark:text-nsw-blue" />
+              <span className="font-medium text-nsw-info dark:text-nsw-blue text-sm">
                 Quick Tips
               </span>
             </div>
-            <ul className="space-y-1 text-xs text-blue-700 dark:text-blue-300">
+            <ul className="space-y-1 text-xs text-slate-700 dark:text-slate-300">
               <li className="flex items-start gap-2">
                 <FileSpreadsheet className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                 <span>Export from REDCap using "CSV / Microsoft Excel (labels)" format.</span>
@@ -232,7 +232,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
               <Button
                 size="lg"
                 variant="outline"
-                className="flex-1 border-2 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white dark:border-primary dark:text-primary dark:hover:bg-primary dark:hover:text-white"
+                className="flex-1 w-full h-14 sm:h-11 text-base border-2 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white dark:border-primary dark:text-primary dark:hover:bg-primary dark:hover:text-white"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Upload className="w-5 h-5 mr-2" />
@@ -242,7 +242,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
             <Button
               onClick={() => setIsOpen(false)}
               size="lg"
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+              className="flex-1 w-full h-14 sm:h-11 text-base bg-nsw-blue hover:bg-nsw-blue/85 text-white"
             >
               Get Started
             </Button>

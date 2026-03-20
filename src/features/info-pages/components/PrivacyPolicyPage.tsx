@@ -186,16 +186,16 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Contact */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-none p-5 border border-blue-200 dark:border-blue-800">
+          <div className="bg-nsw-info-bg dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
             <div className="flex items-start gap-3">
-              <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+              <Mail className="w-5 h-5 text-nsw-info dark:text-nsw-blue shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">Privacy Contact</h4>
-                <p className="text-sm text-blue-800 dark:text-blue-300">
+                <h4 className="font-semibold text-nsw-info dark:text-nsw-blue mb-2">Privacy Contact</h4>
+                <p className="text-sm text-slate-700 dark:text-slate-300">
                   For privacy-related enquiries or complaints, please contact the RPAH Department of Clinical Immunology & Allergy or the Sydney Local Health District Privacy Officer.
                 </p>
-                <p className="text-xs text-blue-700 dark:text-blue-400 mt-2">
-                  General enquiries can be made through the <button onClick={() => setScreen(Screen.CONTACT)} className="underline hover:text-blue-900 dark:hover:text-blue-200">Contact page</button>.
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-2">
+                  General enquiries can be made through the <button onClick={() => setScreen(Screen.CONTACT)} className="underline text-nsw-info dark:text-nsw-blue hover:opacity-80">Contact page</button>.
                 </p>
               </div>
             </div>
