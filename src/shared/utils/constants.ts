@@ -4,15 +4,15 @@ import { CategoryTheme } from '../types';
 
 export const CATEGORY_THEMES: Record<string, CategoryTheme> = {
   "Muscle Relaxants": {
-    activeBg: "bg-blue-50 dark:bg-blue-900/20",
-    activeRing: "ring-blue-100 dark:ring-blue-900/50",
-    headerText: "text-blue-700 dark:text-blue-300",
-    headerBorder: "border-blue-200 dark:border-blue-800",
-    btnSelected: "bg-blue-600 border-blue-600 text-white shadow-sm ring-1 ring-blue-100 dark:ring-blue-900",
-    btnHover: "hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 dark:hover:border-blue-400",
-    pulse: "bg-blue-600",
-    rowBorder: "border-l-blue-600",
-    actionText: "text-blue-600 dark:text-blue-400"
+    activeBg: "bg-red-50 dark:bg-red-900/20",
+    activeRing: "ring-red-100 dark:ring-red-900/50",
+    headerText: "text-red-700 dark:text-red-300",
+    headerBorder: "border-red-200 dark:border-red-800",
+    btnSelected: "bg-red-600 border-red-600 text-white shadow-sm ring-1 ring-red-100 dark:ring-red-900",
+    btnHover: "hover:border-red-500 hover:text-red-600 dark:hover:text-red-400 dark:hover:border-red-400",
+    pulse: "bg-red-600",
+    rowBorder: "border-l-red-600",
+    actionText: "text-red-600 dark:text-red-400"
   },
   "Penicillins": {
     activeBg: "bg-orange-50 dark:bg-orange-900/20",
@@ -59,15 +59,15 @@ export const CATEGORY_THEMES: Record<string, CategoryTheme> = {
     actionText: "text-cyan-600 dark:text-cyan-400"
   },
   "Opioids": {
-    activeBg: "bg-rose-50 dark:bg-rose-900/20",
-    activeRing: "ring-rose-100 dark:ring-rose-900/50",
-    headerText: "text-rose-700 dark:text-rose-300",
-    headerBorder: "border-rose-200 dark:border-rose-800",
-    btnSelected: "bg-rose-600 border-rose-600 text-white shadow-sm ring-1 ring-rose-100 dark:ring-rose-900",
-    btnHover: "hover:border-rose-500 hover:text-rose-600 dark:hover:text-rose-400 dark:hover:border-rose-400",
-    pulse: "bg-rose-600",
-    rowBorder: "border-l-rose-600",
-    actionText: "text-rose-600 dark:text-rose-400"
+    activeBg: "bg-blue-50 dark:bg-blue-900/20",
+    activeRing: "ring-blue-100 dark:ring-blue-900/50",
+    headerText: "text-blue-700 dark:text-blue-300",
+    headerBorder: "border-blue-200 dark:border-blue-800",
+    btnSelected: "bg-blue-600 border-blue-600 text-white shadow-sm ring-1 ring-blue-100 dark:ring-blue-900",
+    btnHover: "hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 dark:hover:border-blue-400",
+    pulse: "bg-blue-600",
+    rowBorder: "border-l-blue-600",
+    actionText: "text-blue-600 dark:text-blue-400"
   },
   "Antiseptics": {
     activeBg: "bg-teal-50 dark:bg-teal-900/20",
@@ -90,6 +90,17 @@ export const CATEGORY_THEMES: Record<string, CategoryTheme> = {
     pulse: "bg-slate-600",
     rowBorder: "border-l-slate-600",
     actionText: "text-slate-600 dark:text-slate-400"
+  },
+  "Reversal Agents": {
+    activeBg: "bg-amber-50 dark:bg-amber-900/20",
+    activeRing: "ring-amber-100 dark:ring-amber-900/50",
+    headerText: "text-amber-700 dark:text-amber-300",
+    headerBorder: "border-amber-200 dark:border-amber-800",
+    btnSelected: "bg-amber-500 border-amber-500 text-white shadow-sm ring-1 ring-amber-100 dark:ring-amber-900",
+    btnHover: "hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:border-amber-400",
+    pulse: "bg-amber-500",
+    rowBorder: "border-l-amber-500",
+    actionText: "text-amber-600 dark:text-amber-400"
   }
 };
 
@@ -109,11 +120,14 @@ export const DRUG_CATEGORIES: Record<string, string[]> = {
   "Muscle Relaxants": [
     "Cis-atracurium", "Rocuronium", "Pancuronium", "Vecuronium", "Suxamethonium"
   ],
+  "Reversal Agents": [
+    "Sugammadex", "Sugammadex/Roc", "Sugammadex/Vec"
+  ],
   "Penicillins": [
-    "Major/Minor Determinants", "Ampicillin", "Amoxicillin"
+    "Major/Minor Determinants", "Ampicillin", "Amoxycillin", "Methoxybenzylpenicillin", "Benzylpenicillin"
   ],
   "Cephalosporins": [
-    "Cefotaxime", "Cefazolin", "Ceftazidime", "Ceftriaxone", "Cefepime"
+    "Cefazolin", "Cefotaxime", "Ceftazidime", "Ceftriaxone", "Cefepime"
   ],
   "Hypnotics": [
     "Midazolam", "Propofol"
@@ -128,11 +142,14 @@ export const DRUG_CATEGORIES: Record<string, string[]> = {
     "Chlorhexidine", "Povidone Iodine"
   ],
   "Others": [
-    "Latex", "Paracetamol", "Patent Blue", "Methylene Blue", "Atropine", "Neostigmine"
+    "Latex", "Paracetamol", "Patent Blue", "Methylene Blue", "Atropine", "Neostigmine",
+    "Ondansetron", "Parecoxib", "IV Contrast"
   ]
 };
 
 export const FLAT_DRUG_OPTIONS = Object.values(DRUG_CATEGORIES).flat();
+
+export const DEFAULT_SELECTED_DRUGS: string[] = ["Chlorhexidine", "Latex"];
 
 // App Configuration
 export const APP_CONFIG = {

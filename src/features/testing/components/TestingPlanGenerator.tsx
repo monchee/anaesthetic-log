@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, Button, Label } from '@/components/ui';
 import { Patient, TestingPlanData } from '@/types';
-import { Printer, Check, X, ClipboardList, ChevronDown, Plus } from 'lucide-react';
-import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
+import { Printer, Check, X, ClipboardList, ChevronDown, Plus, History } from 'lucide-react';
+import { CATEGORY_THEMES, DEFAULT_THEME, DEFAULT_SELECTED_DRUGS } from '@shared/utils/constants';
 
 interface TestingPlanGeneratorProps {
   patient: Patient;
@@ -10,12 +10,41 @@ interface TestingPlanGeneratorProps {
   onPreview: (data: TestingPlanData) => void;
 }
 
-const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _patient, drugCategories, onPreview }) => {
+const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, drugCategories, onPreview }) => {
+  // Drugs pre-selected based on patient's medication history before reaction
+  const historyDrugs = useMemo(() => {
+    const allFlat = Object.values(drugCategories).flat().map(d => d.toLowerCase());
+    const patientDrugs = [
+      ...(patient.history.preInductionDrugs ?? []),
+      ...(patient.history.postInductionDrugs ?? []),
+      ...(patient.history.medications ?? []),
+    ].map(d => d.toLowerCase());
+
+    return Object.values(drugCategories).flat().filter(drug =>
+      patientDrugs.some(pd => pd.includes(drug.toLowerCase()) || drug.toLowerCase().includes(pd))
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [patient.id]);
+
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedDrugs, setSelectedDrugs] = useState<string[]>([]);
+  const [selectedDrugs, setSelectedDrugs] = useState<string[]>(() => [
+    ...new Set([...DEFAULT_SELECTED_DRUGS, ...historyDrugs])
+  ]);
   const [customDrugs, setCustomDrugs] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [newCustomDrug, setNewCustomDrug] = useState('');
+  const [urgent, setUrgent] = useState(false);
+  const [reactionDate, setReactionDate] = useState(patient.history.date ?? '');
+  const [documentsToChase, setDocumentsToChase] = useState({
+    tryptases: false,
+    anaestheticChart: false,
+    other: false,
+    otherText: '',
+  });
+
+  const toggleDoc = (key: 'tryptases' | 'anaestheticChart' | 'other') => {
+    setDocumentsToChase(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const toggleDrug = (drug: string) => {
     setSelectedDrugs(prev => 
@@ -51,7 +80,10 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
     onPreview({
         selectedDrugs,
         customDrugs,
-        notes
+        notes,
+        urgent,
+        reactionDate,
+        documentsToChase,
     });
   };
 
@@ -80,7 +112,59 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
         {isOpen && (
             <CardContent className="pt-0 pb-6 px-6">
                 <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-6">
-                    
+
+                    {/* Urgent flag + Reaction Date */}
+                    <div className="flex flex-wrap items-center gap-6">
+                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                            <input
+                                type="checkbox"
+                                checked={urgent}
+                                onChange={e => setUrgent(e.target.checked)}
+                                className="w-4 h-4 accent-red-600"
+                            />
+                            <span className={`text-sm font-bold uppercase tracking-wide ${urgent ? 'text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-300'}`}>
+                                Urgent
+                            </span>
+                        </label>
+                        <div className="flex items-center gap-2">
+                            <Label className="text-xs font-semibold uppercase text-slate-500 tracking-wider whitespace-nowrap">Date of Reaction</Label>
+                            <input
+                                type="date"
+                                value={reactionDate ? reactionDate.slice(0, 10) : ''}
+                                onChange={e => setReactionDate(e.target.value)}
+                                className="h-8 rounded-none border border-slate-200 dark:border-slate-700 px-2 text-sm bg-white dark:bg-slate-950 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Documents to Chase */}
+                    <div className="space-y-2">
+                        <Label className="text-xs font-semibold uppercase text-slate-500 tracking-wider">Documents to Chase</Label>
+                        <div className="flex flex-wrap gap-4">
+                            <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-700 dark:text-slate-300">
+                                <input type="checkbox" checked={documentsToChase.tryptases} onChange={() => toggleDoc('tryptases')} className="w-4 h-4" />
+                                Tryptases
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-700 dark:text-slate-300">
+                                <input type="checkbox" checked={documentsToChase.anaestheticChart} onChange={() => toggleDoc('anaestheticChart')} className="w-4 h-4" />
+                                Anaesthetic Chart
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-700 dark:text-slate-300">
+                                <input type="checkbox" checked={documentsToChase.other} onChange={() => toggleDoc('other')} className="w-4 h-4" />
+                                Other
+                            </label>
+                            {documentsToChase.other && (
+                                <input
+                                    type="text"
+                                    placeholder="Specify..."
+                                    value={documentsToChase.otherText}
+                                    onChange={e => setDocumentsToChase(prev => ({ ...prev, otherText: e.target.value }))}
+                                    className="flex-1 min-w-[160px] h-8 rounded-none border border-slate-200 dark:border-slate-700 px-2 text-sm bg-white dark:bg-slate-950 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                                />
+                            )}
+                        </div>
+                    </div>
+
                     {/* Notes Section */}
                     <div className="space-y-2">
                         <Label className="text-xs font-semibold uppercase text-slate-500 tracking-wider">Clinical Notes / Indication</Label>
@@ -119,20 +203,26 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                                         </button>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
-                                        {categoryDrugs.map(drug => (
+                                        {categoryDrugs.map(drug => {
+                                            const fromHistory = historyDrugs.includes(drug);
+                                            return (
                                             <button
                                                 key={drug}
                                                 onClick={() => toggleDrug(drug)}
                                                 className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-150 flex items-center gap-1.5 text-left ${
-                                                selectedDrugs.includes(drug) 
+                                                selectedDrugs.includes(drug)
                                                 ? theme.btnSelected
                                                 : `bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 ${theme.btnHover}`
                                                 }`}
                                             >
                                                 {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
                                                 {drug}
+                                                {fromHistory && (
+                                                    <History className="w-3 h-3 shrink-0 opacity-70" title="Given at time of reaction" />
+                                                )}
                                             </button>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             );
@@ -183,6 +273,12 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient: _p
                             </div>
                         </div>
                     </div>
+
+                    {historyDrugs.length > 0 && (
+                        <p className="text-[10px] text-slate-400 dark:text-slate-500 flex items-center gap-1">
+                            <History className="w-3 h-3" /> = given at time of reaction (auto-selected from patient history)
+                        </p>
+                    )}
 
                     <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
                         <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-white shadow-md font-semibold">

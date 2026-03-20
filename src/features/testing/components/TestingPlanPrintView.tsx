@@ -2,7 +2,8 @@ import React from 'react';
 import { Button, Card, CardContent } from '@/components/ui';
 import { Patient, TestingPlanData } from '@/types';
 import { formatDate } from '@shared/utils';
-import { Printer, FileText, ChevronRight } from 'lucide-react';
+import { Printer, FileText, ChevronRight, Mail, AlertTriangle } from 'lucide-react';
+import { formatTestingPlanAsText } from '@shared/utils/testingPlanFormatter';
 
 interface TestingPlanPrintViewProps {
   patient: Patient;
@@ -12,10 +13,16 @@ interface TestingPlanPrintViewProps {
 }
 
 const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: TestingPlanPrintViewProps) => {
-  const { selectedDrugs, customDrugs, notes } = data;
+  const { selectedDrugs, customDrugs, notes, urgent, reactionDate, documentsToChase } = data;
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleEmail = () => {
+    const body = formatTestingPlanAsText(patient, data, drugCategories);
+    const subject = `Testing Plan: ${patient.firstName} ${patient.lastName} - ${reactionDate ? new Date(reactionDate).toLocaleDateString('en-AU') : 'Date unknown'}`;
+    window.location.href = `mailto:SLHD-RPA-allergynurses@health.nsw.gov.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (
@@ -23,12 +30,25 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
         {/* Screen-only Controls */}
         <div className="p-4 border-b border-slate-200 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center rounded-none print:hidden">
             <h3 className="text-lg font-semibold tracking-tight text-slate-800 dark:text-slate-100">Testing Plan Document</h3>
-            <Button size="sm" onClick={handlePrint} className="bg-slate-900">
-                <Printer className="w-4 h-4 mr-2" /> Print Now
-            </Button>
+            <div className="flex items-center gap-2">
+                <Button size="sm" variant="outline" onClick={handleEmail}>
+                    <Mail className="w-4 h-4 mr-2" /> Email to Allergy Nurse
+                </Button>
+                <Button size="sm" onClick={handlePrint} className="bg-slate-900">
+                    <Printer className="w-4 h-4 mr-2" /> Print Now
+                </Button>
+            </div>
         </div>
 
         <CardContent className="p-8 md:p-12 print:p-2">
+             {/* Urgent Banner */}
+             {urgent && (
+                 <div className="mb-6 print:mb-3 flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-3 print:py-1.5 font-bold uppercase tracking-widest text-sm print:text-xs">
+                     <AlertTriangle className="w-5 h-5 print:w-4 print:h-4 shrink-0" />
+                     URGENT — Priority Testing Required
+                 </div>
+             )}
+
              {/* Document Header */}
              <div className="flex justify-between items-start border-b-2 border-slate-800 pb-4 print:pb-2 print:border-b">
                 <div>
@@ -55,14 +75,32 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                     <p className="text-lg font-mono font-medium text-slate-700 dark:text-slate-300 print:text-xs">{patient.mrn}</p>
                 </div>
                 <div>
-                        <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">DOB</p>
-                        <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{formatDate(patient.dob)}</p>
+                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">DOB</p>
+                    <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{formatDate(patient.dob)}</p>
                 </div>
                 <div>
-                        <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Gender</p>
-                        <p className="text-slate-700 font-medium print:text-xs">{patient.gender}</p>
+                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Gender</p>
+                    <p className="text-slate-700 font-medium print:text-xs">{patient.gender}</p>
                 </div>
+                {reactionDate && (
+                    <div className="col-span-2">
+                        <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Date of Reaction</p>
+                        <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{formatDate(reactionDate)}</p>
+                    </div>
+                )}
             </div>
+
+            {/* Documents to Chase */}
+            {documentsToChase && (documentsToChase.tryptases || documentsToChase.anaestheticChart || documentsToChase.other) && (
+                <div className="mt-6 print:mt-2">
+                    <h4 className="font-semibold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 mb-2 uppercase text-[11px] tracking-wider print:text-[10px] print:mb-1 print:pb-0.5">Documents to Chase</h4>
+                    <ul className="list-disc pl-5 space-y-1 print:space-y-0 text-sm print:text-xs text-slate-700 dark:text-slate-300">
+                        {documentsToChase.tryptases && <li>Tryptases</li>}
+                        {documentsToChase.anaestheticChart && <li>Anaesthetic Chart</li>}
+                        {documentsToChase.other && <li>Other{documentsToChase.otherText ? `: ${documentsToChase.otherText}` : ''}</li>}
+                    </ul>
+                </div>
+            )}
 
             {/* Notes */}
             {notes && (

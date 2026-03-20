@@ -41,8 +41,18 @@ export interface LogFormData {
   plan: string;
 }
 
+export interface DocumentsToChase {
+  tryptases: boolean;
+  anaestheticChart: boolean;
+  other: boolean;
+  otherText: string;
+}
+
 export interface TestingPlanData {
   selectedDrugs: string[];
   customDrugs: string[];
   notes: string;
+  urgent: boolean;
+  reactionDate: string;
+  documentsToChase: DocumentsToChase;
 }

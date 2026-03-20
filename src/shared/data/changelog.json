@@ -1,8 +1,23 @@
 [
   {
+    "version": "v0.26.0",
+    "codename": "Sugammadex",
+    "highlight": true,
+    "changes": [
+      "Added Reversal Agents drug category (Sugammadex, Sugammadex/Roc, Sugammadex/Vec).",
+      "Testing plan now auto-highlights drugs given at time of reaction from patient history.",
+      "Added urgent flag and reaction date to testing plans.",
+      "Added documents-to-chase tracking (tryptases, anaesthetic chart, other).",
+      "Email testing plans directly to allergy nurses at SLHD-RPA-allergynurses@health.nsw.gov.au.",
+      "Tryptase results now display on patient summary card.",
+      "Updated drug lists: Cefazolin first in cephalosporins, added penicillins (Methoxybenzylpenicillin, Benzylpenicillin), added other drugs (Ondansetron, Parecoxib, IV Contrast).",
+      "Chlorhexidine and Latex now auto-selected by default on testing plans."
+    ]
+  },
+  {
     "version": "v0.25.0",
     "codename": "Vecuronium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "The app now loads faster and responds more quickly.",
       "Improved dashboard organization and layout.",

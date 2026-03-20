@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Badge, HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui';
 import { Patient } from '@/types';
-import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck } from 'lucide-react';
+import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck, FlaskConical } from 'lucide-react';
 import { formatDate, getGradeVariant, parsePatientTimeline } from '@shared/utils';
 
 interface PatientHistoryProps {
@@ -72,7 +72,14 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 {history.procedure}
             </span>
             </div>
-            <div className="shrink-0">
+            <div className="flex items-center gap-3 shrink-0">
+                {history.tryptase && (
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-800 px-2.5 py-1 rounded-none">
+                        <FlaskConical className="h-3.5 w-3.5 shrink-0" />
+                        <span className="font-semibold uppercase tracking-wide text-[10px]">Tryptase:</span>
+                        <span>{history.tryptase}</span>
+                    </div>
+                )}
                 <HoverCard>
                     <HoverCardTrigger asChild>
                         <Badge variant={getGradeVariant(history.grade)} className="shadow-sm cursor-help whitespace-nowrap">

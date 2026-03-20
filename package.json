@@ -1,7 +1,7 @@
 {
   "name": "rpah-anaesthetic-allergy-log",
   "private": true,
-  "version": "0.25.0",
+  "version": "0.26.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
