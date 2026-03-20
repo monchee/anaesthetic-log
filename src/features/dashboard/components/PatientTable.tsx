@@ -1,10 +1,11 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, Button, Input, Badge } from '@/components/ui';
-import { ChevronLeft, ChevronRight, FileText, Search, Upload } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FileText, Search, Upload, Download } from 'lucide-react';
 import { formatDate, getGradeVariant, parsePatientTimeline } from '@shared/utils';
 import { Patient } from '@/types';
 import { AdvancedSearchFilters, AdvancedSearchPanel } from './AdvancedSearchFilters';
 import { CSVUploadInstructions } from './CSVUploadInstructions';
+import { exportDeidentifiedCSV, downloadFile } from '@shared/utils/auditExporter';
 import { SearchFilters } from '../hooks/useAdvancedSearch';
 
 interface PatientTableProps {
@@ -28,6 +29,7 @@ interface PatientTableProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleNextPage: () => void;
   handlePrevPage: () => void;
+  allPatients: Patient[];
 }
 
 const PatientTable: React.FC<PatientTableProps> = ({
@@ -51,6 +53,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
   fileInputRef,
   handleNextPage,
   handlePrevPage,
+  allPatients,
 }) => {
   const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
 
@@ -85,6 +88,19 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 onUpload={handleFileUpload}
                 isUploading={isUploading}
               />
+              <Button
+                onClick={() => {
+                  const csv = exportDeidentifiedCSV(allPatients);
+                  const date = new Date().toISOString().slice(0, 10);
+                  downloadFile(csv, `audit-export-${date}.csv`, 'text/csv');
+                }}
+                size="sm"
+                variant="outline"
+                disabled={allPatients.length === 0}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Audit Export
+              </Button>
               <Button
                 onClick={() => setIsSheetOpen(true)}
                 size="sm"

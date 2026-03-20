@@ -6,6 +6,7 @@ export interface DrugTestRow {
   idt10: string;
   idtNeat: string;
   customName?: string;
+  notes?: string;
   [key: string]: string | undefined;
 }
 

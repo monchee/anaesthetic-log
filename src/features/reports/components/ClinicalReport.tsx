@@ -47,7 +47,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                <p className="text-xl md:text-2xl font-semibold tracking-tight text-primary print:text-base">{data.firstName} {data.lastName}</p>
             </div>
             <div>
-               <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold block mb-1 print:mb-0.5">REDCap Record ID</label>
+               <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold block mb-1 print:mb-0.5">MRN</label>
                <p className="text-lg font-mono font-medium text-slate-900 dark:text-slate-100 print:text-sm">{data.mrn}</p>
             </div>
             <div className="md:col-span-2 print:col-span-2">
@@ -84,6 +84,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                           <th className="py-2 font-semibold print:py-1 print:text-[10px]">IDT 1:100</th>
                           <th className="py-2 font-semibold print:py-1 print:text-[10px]">IDT 1:10</th>
                           <th className="py-2 font-semibold print:py-1 print:text-[10px]">IDT Neat</th>
+                          <th className="py-2 font-semibold print:py-1 print:text-[10px]">Notes</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -96,6 +97,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                              <td className="py-2 print:py-1 print:text-xs">{row.idt100 || '-'} mm</td>
                              <td className="py-2 print:py-1 print:text-xs">{row.idt10 || '-'} mm</td>
                              <td className="py-2 print:py-1 print:text-xs">{row.idtNeat || '-'} mm</td>
+                             <td className="py-2 print:py-1 print:text-xs text-slate-500">{row.notes || ''}</td>
                           </tr>
                         ))}
                      </tbody>
@@ -127,6 +129,9 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                                  <span className="font-medium">{row.idtNeat || '-'} mm</span>
                               </div>
                           </div>
+                          {row.notes && (
+                              <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500">{row.notes}</div>
+                          )}
                       </div>
                    ))}
                 </div>

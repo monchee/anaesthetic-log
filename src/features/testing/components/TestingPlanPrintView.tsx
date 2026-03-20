@@ -71,9 +71,15 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                     <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{patient.firstName} {patient.lastName}</p>
                 </div>
                 <div>
-                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">MRN / Record ID</p>
+                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">MRN</p>
                     <p className="text-lg font-mono font-medium text-slate-700 dark:text-slate-300 print:text-xs">{patient.mrn}</p>
                 </div>
+                {patient.redcapId && patient.redcapId !== patient.mrn && (
+                <div>
+                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">REDCap Record ID</p>
+                    <p className="text-lg font-mono font-medium text-slate-700 dark:text-slate-300 print:text-xs">{patient.redcapId}</p>
+                </div>
+                )}
                 <div>
                     <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">DOB</p>
                     <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{formatDate(patient.dob)}</p>

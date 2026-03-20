@@ -1,5 +1,19 @@
 [
   {
+    "version": "v0.27.0",
+    "codename": "Rocuronium",
+    "highlight": true,
+    "changes": [
+      "New Powerchart letter template with auto-generated clinical narrative from patient history and test results.",
+      "Copy clinical reports and patient handouts as plain text to clipboard.",
+      "Local PIN protection for app access with session-based unlock.",
+      "MRN and REDCap Record ID now displayed as separate fields across reports and forms.",
+      "De-identified audit data export (CSV) from the dashboard — strips all patient-identifying information.",
+      "Free-text notes field added to each drug test row in the testing log.",
+      "Notes column visible in clinical report output."
+    ]
+  },
+  {
     "version": "v0.26.0",
     "codename": "Sugammadex",
     "highlight": true,

@@ -242,6 +242,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
           fileInputRef={fileInputRef}
           handleNextPage={handleNextPage}
           handlePrevPage={handlePrevPage}
+          allPatients={existingPatients}
         />
 
 

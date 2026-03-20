@@ -389,6 +389,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
         lastName: getVal('lastName') || 'Unknown',
         dob: getVal('dob'),
         mrn: id,
+        redcapId: id,
         gender: getVal('gender'),
         city: getVal('city'),
         history: {

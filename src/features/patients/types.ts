@@ -4,6 +4,7 @@ export interface Patient {
   lastName: string;
   dob: string;
   mrn: string;
+  redcapId?: string;
   gender: string;
   city: string;
   history: PatientHistory;

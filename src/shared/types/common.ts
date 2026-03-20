@@ -15,7 +15,8 @@ export enum Screen {
   CLINICAL_GOVERNANCE = 'clinical-governance',
   TERMS_OF_USE = 'terms-of-use',
   TECHNICAL_DOCUMENTATION = 'technical-documentation',
-  DISCLAIMER = 'disclaimer'
+  DISCLAIMER = 'disclaimer',
+  POWERCHART_LETTER = 'powerchart-letter'
 }
 
 export interface CategoryTheme {

@@ -88,6 +88,17 @@ const DrugRow = React.memo(({
           </div>
         ))}
       </div>
+
+      {/* Notes Row */}
+      <div className="col-span-2 md:col-span-5">
+        <Input
+          aria-label={`${row.drugName} notes`}
+          className="h-8 text-xs text-slate-600 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-600"
+          placeholder="Notes..."
+          value={row.notes || ''}
+          onChange={(e) => updateDrugData(index, 'notes', e.target.value)}
+        />
+      </div>
     </div>
   );
 });
@@ -144,7 +155,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                         </div>
                     </div>
                     <div className="ml-4 border-l pl-4 border-slate-200 dark:border-slate-800">
-                        <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">MRN / ID</div>
+                        <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">MRN</div>
                         <div className="text-lg font-bold text-slate-900 dark:text-primary font-mono lowercase">
                             {formData.mrn}
                         </div>

@@ -22,6 +22,9 @@ export function formatTestingPlanAsText(
   lines.push('---------------');
   lines.push(`Name:       ${patient.firstName} ${patient.lastName}`);
   lines.push(`MRN:        ${patient.mrn}`);
+  if (patient.redcapId && patient.redcapId !== patient.mrn) {
+    lines.push(`REDCap ID:  ${patient.redcapId}`);
+  }
   lines.push(`DOB:        ${patient.dob ? new Date(patient.dob).toLocaleDateString('en-AU') : 'Unknown'}`);
   lines.push(`Gender:     ${patient.gender ?? 'Unknown'}`);
   if (reactionDate) {

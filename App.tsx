@@ -1,12 +1,13 @@
 
 import React, { useEffect } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
 import TestingLogForm from '@features/testing/components/TestingLogForm';
 import ClinicalReport from '@features/reports/components/ClinicalReport';
 import PatientHandout from '@features/reports/components/PatientHandout';
+import PowerchartLetter from '@features/reports/components/PowerchartLetter';
 import Dashboard from '@features/dashboard/components/Dashboard';
 import TestingPlanGenerator from '@features/testing/components/TestingPlanGenerator';
 import TestingPlanPrintView from '@features/testing/components/TestingPlanPrintView';
@@ -14,9 +15,12 @@ import { ScreenLayout } from '@core/components/ScreenLayout';
 import { ThemeProvider } from '@core/components/ThemeProvider';
 import { FontSizeProvider } from '@core/components/FontSizeProvider';
 import ErrorBoundary from '@core/components/ErrorBoundary';
+import PasswordGate from '@core/components/PasswordGate';
 import { Screen } from '@shared/types';
 import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from '@shared/utils/constants';
+import { showToast } from '@shared/utils';
 import { useAnaestheticApp } from './hooks/useAnaestheticApp';
+import { formatClinicalReportAsText, formatPatientHandoutAsText } from '@shared/utils/reportExporter';
 import { reportWebVitals } from './src/lib/analytics';
 import { findInfoPageRoute } from '@core/routes/infoPageConfig';
 
@@ -90,12 +94,18 @@ function AnaestheticLogApp() {
           contentClassName="p-4 space-y-4"
         >
           <ClinicalReport data={lastSavedRecord} />
-          <div className="flex flex-col sm:flex-row gap-4 no-print mt-6">
-            <Button onClick={() => window.print()} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-none">
-              <Printer className="w-5 h-5 mr-2" /> Print Clinical Report
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 no-print mt-6">
+            <Button onClick={() => window.print()} size="lg" variant="outline" className="py-5 h-auto text-sm rounded-none">
+              <Printer className="w-4 h-4 mr-2" /> Print Report
             </Button>
-            <Button onClick={() => setScreen(Screen.PATIENT_SUMMARY)} size="lg" variant="secondary" className="flex-1 py-6 h-auto text-base rounded-none">
-              <User className="w-5 h-5 mr-2" /> View Patient Handout
+            <Button onClick={() => { navigator.clipboard.writeText(formatClinicalReportAsText(lastSavedRecord)); showToast.success('Report copied to clipboard'); }} size="lg" variant="outline" className="py-5 h-auto text-sm rounded-none">
+              <Copy className="w-4 h-4 mr-2" /> Copy as Text
+            </Button>
+            <Button onClick={() => setScreen(Screen.PATIENT_SUMMARY)} size="lg" variant="secondary" className="py-5 h-auto text-sm rounded-none">
+              <User className="w-4 h-4 mr-2" /> Patient Handout
+            </Button>
+            <Button onClick={() => setScreen(Screen.POWERCHART_LETTER)} size="lg" variant="secondary" className="py-5 h-auto text-sm rounded-none">
+              <ClipboardCopy className="w-4 h-4 mr-2" /> Powerchart Letter
             </Button>
           </div>
           <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
@@ -120,6 +130,33 @@ function AnaestheticLogApp() {
             </Button>
             <Button onClick={() => window.print()} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-none border-slate-300">
               <Printer className="w-4 h-4 mr-2" /> Print Handout
+            </Button>
+            <Button onClick={() => { navigator.clipboard.writeText(formatPatientHandoutAsText(lastSavedRecord)); showToast.success('Handout copied to clipboard'); }} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-none border-slate-300">
+              <Copy className="w-4 h-4 mr-2" /> Copy as Text
+            </Button>
+          </div>
+          <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
+            <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg bg-primary hover:bg-primary/90 text-white rounded-none font-semibold transition-colors">
+              <Plus className="w-5 h-5 mr-2" /> Start New Log
+            </Button>
+          </div>
+        </ScreenLayout>
+      );
+    }
+
+    if (screen === Screen.POWERCHART_LETTER && lastSavedRecord) {
+      return (
+        <ScreenLayout title="Powerchart Letter" subtitle={APP_SUBTITLE} icon={<ClipboardCopy className="w-5 h-5" />} {...layoutProps}
+          actions={<Button onClick={() => setScreen(Screen.SUMMARY)} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back to Report</Button>}
+          contentClassName="p-4 space-y-4"
+        >
+          <PowerchartLetter data={lastSavedRecord} patient={selectedPatient} />
+          <div className="flex flex-col sm:flex-row gap-4 no-print mt-6">
+            <Button onClick={() => setScreen(Screen.SUMMARY)} size="lg" variant="ghost" className="flex-1 py-6 h-auto text-base rounded-none">
+              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Clinical Report
+            </Button>
+            <Button onClick={() => window.print()} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-none border-slate-300">
+              <Printer className="w-4 h-4 mr-2" /> Print Letter
             </Button>
           </div>
           <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
@@ -199,14 +236,24 @@ function AnaestheticLogApp() {
                     <Input value={selectedPatient.lastName} onChange={(e) => handleManualDetailChange('lastName', e.target.value)} placeholder="Enter last name" />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">MRN / ID</Label>
-                    <Input value={selectedPatient.mrn} onChange={(e) => handleManualDetailChange('mrn', e.target.value)} placeholder="MRN..." />
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">MRN</Label>
+                    <Input value={selectedPatient.mrn} onChange={(e) => handleManualDetailChange('mrn', e.target.value)} placeholder="Medical Record Number..." />
                   </div>
+                  <div>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">REDCap Record ID</Label>
+                    <Input value={selectedPatient.redcapId || ''} onChange={(e) => handleManualDetailChange('redcapId', e.target.value)} placeholder="REDCap ID..." />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <Label className="text-xs uppercase mb-1.5 block text-slate-500">Date of Birth</Label>
                     <Input type="date" value={selectedPatient.dob} onChange={(e) => handleManualDetailChange('dob', e.target.value)} />
+                  </div>
+                  <div>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">Gender</Label>
+                    <Input value={selectedPatient.gender} onChange={(e) => handleManualDetailChange('gender', e.target.value)} placeholder="Gender..." />
                   </div>
                   <div>
                     <Label className="text-xs uppercase mb-1.5 block text-slate-500">City / Suburb</Label>
@@ -244,7 +291,9 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" storageKey={APP_CONFIG.LOCAL_STORAGE_KEYS.THEME}>
         <FontSizeProvider>
-          <AnaestheticLogApp />
+          <PasswordGate>
+            <AnaestheticLogApp />
+          </PasswordGate>
           <Toaster position="top-center" expand={false} richColors closeButton duration={5000}
             toastOptions={{ classNames: {
               toast: 'border border-slate-200 dark:border-slate-800 rounded-none shadow-sm',
