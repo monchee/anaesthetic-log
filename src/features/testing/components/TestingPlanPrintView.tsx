@@ -26,7 +26,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
   };
 
   return (
-    <Card className="max-w-5xl mx-auto mt-8 border-t-4 border-t-primary print:shadow-none print:border-none print:border-t-4 print:border-t-primary print:max-w-none print:mt-0">
+    <Card className="max-w-6xl mx-auto mt-8 border-t-4 border-t-primary print:shadow-none print:border-none print:border-t-4 print:border-t-primary print:max-w-none print:mt-0">
         {/* Screen-only Controls */}
         <div className="p-4 border-b border-slate-200 bg-slate-50 dark:bg-slate-900/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">
             <h3 className="text-lg font-semibold tracking-tight text-slate-800 dark:text-slate-100">Testing Plan Document</h3>
@@ -40,7 +40,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </div>
         </div>
 
-        <CardContent className="p-8 md:p-12 print:p-0">
+        <CardContent className="p-8 md:p-10 print:p-0">
              {/* Urgent Banner */}
              {urgent && (
                  <div className="mb-6 print:mb-3 flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-3 print:py-1.5 font-bold uppercase tracking-widest text-sm print:text-xs">
@@ -147,7 +147,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                 </h4>
                 
                 {selectedDrugs.length > 0 ? (
-                    <div className="columns-2 gap-8 space-y-4 print:columns-3 print:gap-4 print:space-y-1">
+                    <div className="columns-2 md:columns-3 gap-6 space-y-4 print:columns-3 print:gap-4 print:space-y-1">
                         {/* Group selected drugs by category for display */}
                         {Object.entries(drugCategories).map(([category, drugs]) => {
                             const activeInCat = (drugs as string[]).filter(d => selectedDrugs.includes(d));

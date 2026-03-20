@@ -11,7 +11,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
   const lastUpdated = 'December 2025';
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="py-4 sm:p-6 space-y-6">
       <Card>
         <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">

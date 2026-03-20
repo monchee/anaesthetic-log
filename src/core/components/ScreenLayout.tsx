@@ -207,7 +207,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 role="main"
                 aria-label="Main content"
                 tabIndex={-1}
-                className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-5 md:px-6 py-3 sm:py-4 md:py-6 flex flex-col relative z-10"
+                className="flex-1 w-full max-w-6xl mx-auto sm:px-5 md:px-6 py-3 sm:py-4 md:py-6 flex flex-col relative z-10"
             >
                 <div className={`${contentClassName || ''} flex-1 flex flex-col`}>
                     <React.Suspense fallback={
