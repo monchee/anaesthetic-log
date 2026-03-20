@@ -115,11 +115,20 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                     {/* Urgent flag + Reaction Date */}
                     <div className="flex flex-wrap items-center gap-6">
-                        <div className="flex items-center gap-2">
+                        <div
+                            className={`flex items-center gap-2 px-3 py-2 border cursor-pointer transition-colors ${
+                                urgent
+                                    ? 'border-red-500 bg-red-100 dark:border-red-500 dark:bg-red-900/40'
+                                    : 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950/30'
+                            }`}
+                            onClick={() => setUrgent(!urgent)}
+                        >
                             <Switch id="urgent" checked={urgent} onCheckedChange={setUrgent} />
                             <Label
                                 htmlFor="urgent"
-                                className={`text-sm font-bold uppercase tracking-wide cursor-pointer ${urgent ? 'text-destructive' : 'text-muted-foreground'}`}
+                                className={`text-sm font-bold uppercase tracking-wide cursor-pointer ${
+                                    urgent ? 'text-red-600 dark:text-red-400' : 'text-red-400 dark:text-red-700'
+                                }`}
                             >
                                 Urgent
                             </Label>

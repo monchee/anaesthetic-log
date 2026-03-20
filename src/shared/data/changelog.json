@@ -1,5 +1,16 @@
 [
   {
+    "version": "v0.29.0",
+    "codename": "Mivacurium",
+    "highlight": true,
+    "changes": [
+      "Testing plan document redesigned — branded header stripe, section icons, amber badge pills for documents to chase, and boxed drug categories with dot-style items.",
+      "Testing plan document is now responsive on mobile and tablet, with controls that stack vertically on small screens.",
+      "Urgent flag in testing plan form is now a styled red box that intensifies when activated.",
+      "Testing plan form fields (urgent, date, documents, notes) now use shadcn components throughout."
+    ]
+  },
+  {
     "version": "v0.28.0",
     "codename": "Cisatracurium",
     "highlight": true,
