@@ -3,7 +3,6 @@ import { Button, Input, Label, Card, CardContent } from '@/components/ui';
 import { Lock, KeyRound, Eye, EyeOff } from 'lucide-react';
 
 const STORAGE_KEY = 'app_pin_hash';
-const SESSION_KEY = 'app_pin_unlocked';
 
 async function hashPin(pin: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -31,10 +30,6 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
     if (!stored) {
       // No PIN set — app is open
       setUnlocked(true);
-    } else {
-      // Check session
-      const session = sessionStorage.getItem(SESSION_KEY);
-      if (session === 'true') setUnlocked(true);
     }
   }, []);
 
@@ -43,7 +38,6 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
     const stored = localStorage.getItem(STORAGE_KEY);
     const hashed = await hashPin(pin);
     if (hashed === stored) {
-      sessionStorage.setItem(SESSION_KEY, 'true');
       setUnlocked(true);
     } else {
       setError('Incorrect PIN');
@@ -63,7 +57,6 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
     }
     const hashed = await hashPin(pin);
     localStorage.setItem(STORAGE_KEY, hashed);
-    sessionStorage.setItem(SESSION_KEY, 'true');
     setHasPin(true);
     setUnlocked(true);
   };
