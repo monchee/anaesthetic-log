@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, Button, Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, Button } from '@/components/ui';
 import {
   HelpCircle,
   LayoutDashboard,
@@ -11,8 +11,6 @@ import {
   FileSpreadsheet,
   Filter,
   Sparkles,
-  ExternalLink,
-  FileUp
 } from 'lucide-react';
 import { parseRedcapCSV } from '@shared/utils';
 import { Patient } from '@/types';
@@ -75,7 +73,6 @@ interface HelpModalProps {
 
 export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrigger = false }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isUploadSheetOpen, setIsUploadSheetOpen] = useState(false);
   const [hasSeenQuickStart, setHasSeenQuickStart] = useLocalStorage('hasSeenQuickStart', false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -109,7 +106,6 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
                 <span className="text-sm font-normal">Successfully loaded {result.data.length} records from CSV.</span>
               </div>
             );
-            setIsUploadSheetOpen(false);
             setIsOpen(false);
           } else {
             toast.error(
@@ -233,103 +229,15 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
             {onUploadPatients && (
-              <Sheet open={isUploadSheetOpen} onOpenChange={setIsUploadSheetOpen}>
-                <SheetTrigger>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="flex-1 border-2 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white dark:border-primary dark:text-primary dark:hover:bg-primary dark:hover:text-white"
-                  >
-                    <Upload className="w-5 h-5 mr-2" />
-                    Upload CSV
-                  </Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader className="mb-6">
-                    <SheetTitle className="flex items-center gap-2">
-                      <FileUp className="w-5 h-5 text-red-600" />
-                      Update Database
-                    </SheetTitle>
-                    <SheetDescription>
-                      Instructions for exporting patient data from REDCap and importing it here.
-                    </SheetDescription>
-                  </SheetHeader>
-
-                  <div className="space-y-6">
-                    <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-none border border-slate-100 dark:border-slate-800">
-                      <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
-                        <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
-                      </h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                        Go to <a href="https://redcap.slhd.nsw.gov.au/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline font-medium">redcap.slhd.nsw.gov.au</a> and log in with your credentials.
-                      </p>
-                      <p className="text-xs text-slate-500 italic">(You must have data export rights)</p>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="flex gap-3">
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                          2
-                        </div>
-                        <div className="text-sm text-slate-600 dark:text-slate-300">
-                          Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Data Exports, Reports, and Stats</span> on the sidebar.
-                        </div>
-                      </div>
-
-                      <div className="flex gap-3">
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                          3
-                        </div>
-                        <div className="text-sm text-slate-600 dark:text-slate-300">
-                          Find the <span className="font-semibold text-slate-900 dark:text-slate-100">All data (all records and fields)</span> row.
-                        </div>
-                      </div>
-
-                      <div className="flex gap-3">
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                          4
-                        </div>
-                        <div className="text-sm text-slate-600 dark:text-slate-300">
-                          Click on <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span>.
-                        </div>
-                      </div>
-
-                      <div className="flex gap-3">
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                          5
-                        </div>
-                        <div className="text-sm text-slate-600 dark:text-slate-300">
-                          Choose <span className="font-semibold text-slate-900 dark:text-slate-100">CSV / Microsoft Excel (labels)</span> as the export format.
-                        </div>
-                      </div>
-
-                      <div className="flex gap-3">
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
-                          6
-                        </div>
-                        <div className="text-sm text-slate-600 dark:text-slate-300">
-                          Click <span className="font-semibold text-slate-900 dark:text-slate-100">Export Data</span> and download the file.
-                        </div>
-                      </div>
-
-                      <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-100 dark:border-blue-900/40 text-xs text-blue-700 dark:text-blue-300">
-                        Filename format should resemble:<br/>
-                        <span className="font-mono">AnaestheticAllergyCl_DATA_LABELS_YYYY-MM-DD_time.csv</span>
-                      </div>
-                    </div>
-
-                    <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
-                      <Button
-                        className="w-full h-12 text-base shadow-lg hover:shadow-red-500/20 transition-all bg-red-600 hover:bg-red-700 text-white"
-                        size="lg"
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                        <Upload className="w-4 h-4 mr-2" /> Select CSV File
-                      </Button>
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
+              <Button
+                size="lg"
+                variant="outline"
+                className="flex-1 border-2 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white dark:border-primary dark:text-primary dark:hover:bg-primary dark:hover:text-white"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="w-5 h-5 mr-2" />
+                Upload CSV
+              </Button>
             )}
             <Button
               onClick={() => setIsOpen(false)}
