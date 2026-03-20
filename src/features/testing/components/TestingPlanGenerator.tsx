@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Card, CardContent, Button, Label } from '@/components/ui';
+import { Card, CardContent, Button, Label, Switch, Checkbox, Input, Textarea } from '@/components/ui';
 import { Patient, TestingPlanData } from '@/types';
 import { Printer, Check, X, ClipboardList, ChevronDown, Plus, History } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME, DEFAULT_SELECTED_DRUGS } from '@shared/utils/constants';
@@ -115,51 +115,49 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                     {/* Urgent flag + Reaction Date */}
                     <div className="flex flex-wrap items-center gap-6">
-                        <label className="flex items-center gap-2 cursor-pointer select-none">
-                            <input
-                                type="checkbox"
-                                checked={urgent}
-                                onChange={e => setUrgent(e.target.checked)}
-                                className="w-4 h-4 accent-red-600"
-                            />
-                            <span className={`text-sm font-bold uppercase tracking-wide ${urgent ? 'text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-300'}`}>
-                                Urgent
-                            </span>
-                        </label>
                         <div className="flex items-center gap-2">
-                            <Label className="text-xs font-semibold uppercase text-slate-500 tracking-wider whitespace-nowrap">Date of Reaction</Label>
-                            <input
+                            <Switch id="urgent" checked={urgent} onCheckedChange={setUrgent} />
+                            <Label
+                                htmlFor="urgent"
+                                className={`text-sm font-bold uppercase tracking-wide cursor-pointer ${urgent ? 'text-destructive' : 'text-muted-foreground'}`}
+                            >
+                                Urgent
+                            </Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Label htmlFor="reaction-date" className="text-xs font-semibold uppercase text-muted-foreground tracking-wider whitespace-nowrap">Date of Reaction</Label>
+                            <Input
+                                id="reaction-date"
                                 type="date"
                                 value={reactionDate ? reactionDate.slice(0, 10) : ''}
                                 onChange={e => setReactionDate(e.target.value)}
-                                className="h-8 rounded-none border border-slate-200 dark:border-slate-700 px-2 text-sm bg-white dark:bg-slate-950 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                                className="h-8 w-auto"
                             />
                         </div>
                     </div>
 
                     {/* Documents to Chase */}
                     <div className="space-y-2">
-                        <Label className="text-xs font-semibold uppercase text-slate-500 tracking-wider">Documents to Chase</Label>
+                        <Label className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">Documents to Chase</Label>
                         <div className="flex flex-wrap gap-4">
-                            <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-700 dark:text-slate-300">
-                                <input type="checkbox" checked={documentsToChase.tryptases} onChange={() => toggleDoc('tryptases')} className="w-4 h-4" />
-                                Tryptases
-                            </label>
-                            <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-700 dark:text-slate-300">
-                                <input type="checkbox" checked={documentsToChase.anaestheticChart} onChange={() => toggleDoc('anaestheticChart')} className="w-4 h-4" />
-                                Anaesthetic Chart
-                            </label>
-                            <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-slate-700 dark:text-slate-300">
-                                <input type="checkbox" checked={documentsToChase.other} onChange={() => toggleDoc('other')} className="w-4 h-4" />
-                                Other
-                            </label>
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="doc-tryptases" checked={documentsToChase.tryptases} onCheckedChange={() => toggleDoc('tryptases')} />
+                                <Label htmlFor="doc-tryptases" className="text-sm cursor-pointer">Tryptases</Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="doc-anaesthetic" checked={documentsToChase.anaestheticChart} onCheckedChange={() => toggleDoc('anaestheticChart')} />
+                                <Label htmlFor="doc-anaesthetic" className="text-sm cursor-pointer">Anaesthetic Chart</Label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="doc-other" checked={documentsToChase.other} onCheckedChange={() => toggleDoc('other')} />
+                                <Label htmlFor="doc-other" className="text-sm cursor-pointer">Other</Label>
+                            </div>
                             {documentsToChase.other && (
-                                <input
-                                    type="text"
+                                <Input
                                     placeholder="Specify..."
                                     value={documentsToChase.otherText}
                                     onChange={e => setDocumentsToChase(prev => ({ ...prev, otherText: e.target.value }))}
-                                    className="flex-1 min-w-[160px] h-8 rounded-none border border-slate-200 dark:border-slate-700 px-2 text-sm bg-white dark:bg-slate-950 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                                    className="flex-1 min-w-[160px] h-8"
                                 />
                             )}
                         </div>
@@ -167,12 +165,12 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                     {/* Notes Section */}
                     <div className="space-y-2">
-                        <Label className="text-xs font-semibold uppercase text-slate-500 tracking-wider">Clinical Notes / Indication</Label>
-                        <textarea 
-                            className="flex min-h-[60px] w-full rounded-none border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
+                        <Label className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">Clinical Notes / Indication</Label>
+                        <Textarea
                             placeholder="e.g. History of reaction to Rocuronium. Please test standard panel plus..."
                             value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
+                            onChange={e => setNotes(e.target.value)}
+                            className="min-h-[60px]"
                         />
                     </div>
 
@@ -259,13 +257,12 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                 ))}
                             </div>
                             <div className="flex gap-2">
-                                <input 
-                                    type="text" 
-                                    className="flex-1 h-8 rounded text-xs border border-slate-200 px-2 bg-white text-slate-900 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                                <Input
+                                    className="flex-1 h-8 text-xs"
                                     placeholder="Add custom drug..."
                                     value={newCustomDrug}
-                                    onChange={(e) => setNewCustomDrug(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && addCustomDrug()}
+                                    onChange={e => setNewCustomDrug(e.target.value)}
+                                    onKeyDown={e => e.key === 'Enter' && addCustomDrug()}
                                 />
                                 <Button size="sm" variant="outline" onClick={addCustomDrug} className="h-8 w-8 p-0">
                                     <Plus className="w-4 h-4" />
