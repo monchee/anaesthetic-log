@@ -1,5 +1,14 @@
 [
   {
+    "version": "v0.28.0",
+    "codename": "Cisatracurium",
+    "highlight": true,
+    "changes": [
+      "PIN login screen redesigned with cleaner layout — muted background, brand header, and card-based form.",
+      "PIN entry replaced with 4 individual digit boxes — numeric keyboard on mobile and tablet, auto-advances on input, auto-submits on completion."
+    ]
+  },
+  {
     "version": "v0.27.0",
     "codename": "Rocuronium",
     "highlight": true,
