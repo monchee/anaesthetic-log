@@ -1,5 +1,23 @@
 [
   {
+    "version": "v0.30.0",
+    "codename": "Pancuronium",
+    "highlight": true,
+    "changes": [
+      "Mobile and tablet layout improvements across the whole app — iPhone X and newer, iPad mini, iPad Air, and iPad Pro.",
+      "Testing form reference controls now fit in a single 3-column row on mobile instead of wrapping to separate rows.",
+      "Drug result inputs now display in a 2×2 grid on mobile for easier number entry, switching to 4 columns on iPad and desktop.",
+      "Challenge outcome buttons (Tolerated / Reaction Occurred) have reduced padding on mobile.",
+      "Dashboard analytics panel now shows 2 columns on iPad portrait, 3 columns on desktop.",
+      "Powerchart letter is now scrollable on mobile — the results table no longer overflows horizontally.",
+      "Patient details grid in Powerchart letter stacks to a single column on small phones.",
+      "Patient selector dropdown height capped at 50% of viewport on mobile to prevent overflow.",
+      "Agent filter panel height scales with viewport on short mobile screens.",
+      "Patient database header padding and button gaps tightened on mobile.",
+      "Footer navigation links use tighter horizontal gaps on small screens."
+    ]
+  },
+  {
     "version": "v0.29.0",
     "codename": "Mivacurium",
     "highlight": true,

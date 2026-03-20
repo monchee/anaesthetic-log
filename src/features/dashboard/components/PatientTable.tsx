@@ -59,10 +59,10 @@ const PatientTable: React.FC<PatientTableProps> = ({
 
   return (
     <Card className="w-full shadow-sm animate-enter-subtle">
-      <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-        <div className="flex flex-col gap-4">
+      <CardHeader className="py-2.5 sm:py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+        <div className="flex flex-col gap-3 sm:gap-4">
           {/* Header Top Row: Title + Update Button */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
             <div className="space-y-1">
               <CardTitle className="text-lg flex items-center gap-2 text-slate-900 dark:text-slate-100">
                 <FileText className="w-5 h-5 text-primary" /> REDCap Record Database

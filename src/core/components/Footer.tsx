@@ -34,7 +34,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
       <div className="max-w-6xl mx-auto px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4">
         <div className="flex flex-col gap-3">
           {/* Navigation Links */}
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs">
+          <div className="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1 text-xs">
             {navLinks.map((link) => (
               <button
                 key={link.screen}
@@ -47,7 +47,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
           </div>
 
           {/* Legal Links */}
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs">
+          <div className="flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1 text-xs">
             {legalLinks.map((link) => (
               <button
                 key={link.screen}

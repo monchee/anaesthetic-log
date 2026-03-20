@@ -71,7 +71,7 @@ const DrugRow = React.memo(({
       </div>
 
       {/* Result Columns - 4 Grid Layout */}
-      <div className="col-span-2 md:col-span-4 grid grid-cols-4 gap-2">
+      <div className="col-span-2 md:col-span-4 grid grid-cols-2 gap-x-2 gap-y-5 md:grid-cols-4 md:gap-2">
         {['sptWheal', 'idt100', 'idt10', 'idtNeat'].map((field) => (
           <div key={field} className="relative">
             <span className="md:hidden text-[10px] text-slate-400 absolute -top-3 left-0 uppercase font-bold">{FIELD_LABELS[field]}</span>
@@ -143,7 +143,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 1. Visit Details & Patient Info */}
       <Card>
         <CardContent className="pt-4 sm:pt-5 md:pt-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-6">
                 <div className="flex items-center gap-4">
                     <div className="bg-slate-100 dark:bg-slate-800 p-2 rounded-none">
                         <Activity className="w-5 h-5 text-primary" />
@@ -154,7 +154,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                             {formData.lastName}, {formData.firstName}
                         </div>
                     </div>
-                    <div className="ml-4 border-l pl-4 border-slate-200 dark:border-slate-800">
+                    <div className="border-l pl-4 border-slate-200 dark:border-slate-800">
                         <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">MRN</div>
                         <div className="text-lg font-bold text-slate-900 dark:text-primary font-mono lowercase">
                             {formData.mrn}
@@ -162,7 +162,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4 border-t md:border-t-0 pt-4 md:pt-0">
+                <div className="flex items-center gap-2 md:gap-4 border-t md:border-t-0 pt-3 md:pt-0">
                     <Label htmlFor="visit-date" className="whitespace-nowrap text-base font-semibold text-slate-900 dark:text-primary flex items-center gap-2">
                         <Calendar className="w-5 h-5" aria-hidden="true" /> Visit Date:
                     </Label>
@@ -170,7 +170,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                         id="visit-date"
                         type="date"
                         aria-describedby="visit-date-hint"
-                        className="max-w-[200px] font-mono"
+                        className="w-full md:max-w-[200px] font-mono"
                         value={formData.visitDate}
                         onChange={(e) => handleInputChange('visitDate', e.target.value)}
                     />
@@ -200,44 +200,44 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 Reference Controls (mm):
               </div>
               
-              <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-                <div className="flex items-center gap-3">
+              <div className="grid grid-cols-3 gap-2 md:flex md:flex-wrap md:items-center md:gap-x-8 md:gap-y-4">
+                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
                   <Label htmlFor="histamine-spt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Histamine (SPT)</Label>
-                  <Input 
+                  <Input
                     id="histamine-spt"
-                    type="number" 
+                    type="number"
                     min="0"
                     onKeyDown={preventNegativeInput}
-                    placeholder="0" 
-                    className="bg-white dark:bg-slate-950 h-9 w-20 text-center text-sm font-mono"
+                    placeholder="0"
+                    className="bg-white dark:bg-slate-950 h-9 w-full md:w-20 text-center text-sm font-mono"
                     value={formData.controls.histamineSpt}
                     onChange={(e) => handleControlChange('histamineSpt', e.target.value)}
                   />
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
                   <Label htmlFor="saline-spt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (SPT)</Label>
-                  <Input 
+                  <Input
                     id="saline-spt"
-                    type="number" 
+                    type="number"
                     min="0"
                     onKeyDown={preventNegativeInput}
-                    placeholder="0" 
-                    className="bg-white dark:bg-slate-950 h-9 w-20 text-center text-sm font-mono"
+                    placeholder="0"
+                    className="bg-white dark:bg-slate-950 h-9 w-full md:w-20 text-center text-sm font-mono"
                     value={formData.controls.salineSpt}
                     onChange={(e) => handleControlChange('salineSpt', e.target.value)}
                   />
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
                   <Label htmlFor="saline-idt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (IDT)</Label>
-                  <Input 
+                  <Input
                     id="saline-idt"
-                    type="number" 
+                    type="number"
                     min="0"
                     onKeyDown={preventNegativeInput}
-                    placeholder="0" 
-                    className="bg-white dark:bg-slate-950 h-9 w-20 text-center text-sm font-mono"
+                    placeholder="0"
+                    className="bg-white dark:bg-slate-950 h-9 w-full md:w-20 text-center text-sm font-mono"
                     value={formData.controls.salineIdt}
                     onChange={(e) => handleControlChange('salineIdt', e.target.value)}
                   />
@@ -432,7 +432,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                              <button
                                 type="button"
                                 onClick={() => handleInputChange('outcome', 'SUCCESS')}
-                                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
+                                className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
                                     formData.outcome === 'SUCCESS'
                                     ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300'
                                     : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400'
@@ -454,7 +454,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                              <button
                                 type="button"
                                 onClick={() => handleInputChange('outcome', 'UNSUCCESS')}
-                                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
+                                className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
                                     formData.outcome === 'UNSUCCESS'
                                     ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300'
                                     : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400'

@@ -137,7 +137,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         </Button>
       </div>
 
-      <CardContent className="p-8 md:p-12 print:p-0 space-y-6 print:space-y-3">
+      <CardContent className="p-4 sm:p-6 md:p-12 print:p-0 space-y-6 print:space-y-3">
         {/* Header */}
         <div className="border-b-2 border-slate-800 pb-4 print:pb-2">
           <h1 className="text-2xl font-semibold tracking-tight text-primary print:text-lg">ANZAAG Allergy Clinic</h1>
@@ -146,7 +146,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         </div>
 
         {/* Patient Details */}
-        <div className="grid grid-cols-2 gap-4 border-b border-slate-200 pb-4 print:pb-2 print:gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 border-b border-slate-200 pb-4 print:pb-2 print:gap-2 print:grid-cols-2">
           <div>
             <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Patient Name</p>
             <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{fullName}</p>
@@ -204,7 +204,8 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
 
           {/* Test Results Table */}
           {data.testPanel && data.testPanel.length > 0 && (
-            <table className="w-full text-sm border-collapse print:text-xs">
+            <div className="overflow-x-auto -mx-1 print:mx-0">
+            <table className="w-full min-w-[480px] text-sm border-collapse print:text-xs print:min-w-0">
               <thead>
                 <tr className="border-b-2 border-slate-200 text-slate-600 dark:text-slate-400">
                   <th className="py-2 text-left font-semibold print:py-1 print:text-[10px]">Agent</th>
@@ -230,6 +231,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
                 })}
               </tbody>
             </table>
+            </div>
           )}
         </div>
 

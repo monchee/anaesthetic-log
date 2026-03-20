@@ -316,7 +316,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </div>
           </div>
           
-          <div className="p-4 min-h-[100px] max-h-[300px] overflow-y-auto custom-scrollbar">
+          <div className="p-4 min-h-[100px] max-h-[40vh] sm:max-h-[300px] overflow-y-auto custom-scrollbar">
             <div className="flex flex-wrap gap-2">
               {filteredDrugs.length > 0 ? (
                 filteredDrugs.map(({ drug, category }) => {

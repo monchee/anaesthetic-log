@@ -35,7 +35,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
   const max = topAgents[0]?.count || 1;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {/* Left Column - Key Stats */}
       <Card className="lg:col-span-1 shadow-sm">
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
@@ -135,7 +135,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             )}
           </div>
           
-          <div className="grid grid-cols-3 gap-2 text-xs mt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs mt-4">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-status-grade1"></span>
               <span className="text-slate-600 dark:text-slate-400">I: <b className="text-slate-900 dark:text-white">{gradeCounts.I}</b></span>
