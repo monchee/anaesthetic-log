@@ -126,9 +126,9 @@
 
 /* Print Utilities */
 @media print {
-  @page { 
-    margin: 4mm; 
-    size: A4; 
+  @page {
+    margin: 12mm 15mm;
+    size: A4;
   }
   body { 
     -webkit-print-color-adjust: exact; 

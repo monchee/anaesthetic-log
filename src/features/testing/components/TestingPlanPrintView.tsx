@@ -26,7 +26,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
   };
 
   return (
-    <Card className="max-w-4xl mx-auto mt-8 print:shadow-none print:border-none print:max-w-none print:mt-0">
+    <Card className="max-w-5xl mx-auto mt-8 print:shadow-none print:border-none print:max-w-none print:mt-0">
         {/* Screen-only Controls */}
         <div className="p-4 border-b border-slate-200 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center rounded-none print:hidden">
             <h3 className="text-lg font-semibold tracking-tight text-slate-800 dark:text-slate-100">Testing Plan Document</h3>
@@ -40,7 +40,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </div>
         </div>
 
-        <CardContent className="p-8 md:p-12 print:p-2">
+        <CardContent className="p-8 md:p-12 print:p-0">
              {/* Urgent Banner */}
              {urgent && (
                  <div className="mb-6 print:mb-3 flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-3 print:py-1.5 font-bold uppercase tracking-widest text-sm print:text-xs">
