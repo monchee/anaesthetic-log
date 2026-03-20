@@ -24,7 +24,10 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleUnlock();
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleUnlock();
+    }
   };
 
   if (unlocked) return <>{children}</>;
