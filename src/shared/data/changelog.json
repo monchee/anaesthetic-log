@@ -1,5 +1,20 @@
 [
   {
+    "version": "v0.33.0",
+    "codename": "Esmolol",
+    "highlight": false,
+    "changes": [
+      "Footer pages content audit — comprehensive review of all documentation pages for accuracy and completeness.",
+      "Technical Documentation: Updated current version to v0.32.0 for accuracy.",
+      "Privacy Policy & Terms of Use: Updated last updated dates to March 2026.",
+      "Contact Page: Added specific RPAH clinic contact details (phone, email, location, hours) and urgent issue escalation path.",
+      "About Page: Expanded features list to reflect v0.33.0 capabilities including clinical reports, testing plans, PWA offline access.",
+      "Resources Page: Added NHMRC and TGA links for enhanced Australian healthcare authority references.",
+      "FAQ Page: Added two new Q&A sections — Clinical Reports (5 questions) and Test Interpretation (5 questions).",
+      "Drug Reference Page: Enhanced with clinical guidance intro and explicit ASCIA guideline references."
+    ]
+  },
+  {
     "version": "v0.32.0",
     "codename": "Propofol",
     "highlight": true,
