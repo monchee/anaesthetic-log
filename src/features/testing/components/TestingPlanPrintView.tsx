@@ -26,7 +26,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
   };
 
   return (
-    <Card className="w-full mt-8 border-t-4 border-t-primary print:shadow-none print:border-none print:border-t-4 print:border-t-primary print:max-w-none print:mt-0">
+    <Card className="overflow-hidden print:shadow-none print:border-none print:bg-white">
         {/* Screen-only Controls */}
         <div className="p-4 border-b border-slate-200 bg-slate-50 dark:bg-slate-900/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">
             <h3 className="text-lg font-semibold tracking-tight text-slate-800 dark:text-slate-100">Testing Plan Document</h3>
@@ -40,7 +40,21 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </div>
         </div>
 
-        <CardContent className="p-6 md:p-8 print:p-4">
+        {/* Minimal Accent Header */}
+        <div className="border-l-4 border-primary bg-slate-50 dark:bg-slate-900/30 p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">
+            <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                    <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100">Anaesthetic Allergy Testing Request</h1>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Department of Clinical Immunology & Allergy · Royal Prince Alfred Hospital</p>
+                </div>
+                <div className="text-right">
+                    <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Date of Request</p>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{formatDate(new Date().toISOString())}</p>
+                </div>
+            </div>
+        </div>
+
+        <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-4 print:space-y-3">
              {/* Urgent Banner */}
              {urgent && (
                  <div className="mb-4 print:mb-2 flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-2 print:py-1 font-bold uppercase tracking-widest text-sm print:text-xs">
@@ -49,23 +63,8 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                  </div>
              )}
 
-             {/* Document Header */}
-             <div className="flex justify-between items-start border-b-2 border-slate-800 pb-4 print:pb-2 print:border-b">
-                <div>
-                    <h1 className="text-2xl font-semibold tracking-tight text-primary print:text-lg">Anaesthetic Allergy Testing Request</h1>
-                    <p className="text-slate-500 font-medium print:text-xs">Department of Clinical Immunology & Allergy</p>
-                    <p className="text-sm text-slate-400 print:text-[9px]">Royal Prince Alfred Hospital</p>
-                </div>
-                <div className="text-right">
-                        <div className="bg-primary/10 border border-primary/20 px-4 py-2 mb-2 print:bg-primary/10 print:border print:border-primary/20 print:px-2 print:py-1 print:mb-1">
-                        <p className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider print:text-[9px]">Date of Request</p>
-                        <p className="font-mono font-semibold text-lg print:text-xs">{formatDate(new Date().toISOString())}</p>
-                        </div>
-                </div>
-            </div>
-
             {/* Patient Banner */}
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 sm:p-4 rounded-none grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mt-8 print:grid-cols-3 print:bg-slate-50 print:p-2 print:mt-2 print:gap-2">
+            <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 print:grid-cols-3 print:bg-white print:border-slate-300 print:p-2 print:gap-2">
                 <div>
                     <p className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider print:text-[9px]">Patient Name</p>
                     <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{patient.firstName} {patient.lastName}</p>
@@ -152,10 +151,10 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                         {Object.entries(drugCategories).map(([category, drugs]) => {
                             const activeInCat = (drugs as string[]).filter(d => selectedDrugs.includes(d));
                             if (activeInCat.length === 0) return null;
-                            
+
                             return (
-                                <div key={category} className="break-inside-avoid mb-0 bg-slate-50 border border-slate-100 p-3 print:mb-0 print:p-2 print:bg-slate-50 print:border print:border-slate-100">
-                                    <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary border-b border-slate-200 pb-1 mb-1.5 print:text-[9px] print:pb-0.5 print:mb-1">{category}</h5>
+                                <div key={category} className="break-inside-avoid mb-0 bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-3 print:mb-0 print:p-2 print:bg-white print:border-slate-300">
+                                    <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary border-b border-slate-200 dark:border-slate-700 pb-1 mb-1.5 print:text-[9px] print:pb-0.5 print:mb-1">{category}</h5>
                                     <ul className="space-y-1 print:space-y-0">
                                         {activeInCat.map(d => (
                                             <li key={d} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 print:text-xs print:gap-1.5">
@@ -170,8 +169,8 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
                         {/* Custom Drugs Group */}
                         {customDrugs.filter(d => selectedDrugs.includes(d)).length > 0 && (
-                            <div className="break-inside-avoid mb-0 bg-slate-50 border border-slate-100 p-3 print:mb-0 print:p-2 print:bg-slate-50 print:border print:border-slate-100">
-                                <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary border-b border-slate-200 pb-1 mb-1.5 print:text-[9px] print:pb-0.5 print:mb-1">Additional</h5>
+                            <div className="break-inside-avoid mb-0 bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-3 print:mb-0 print:p-2 print:bg-white print:border-slate-300">
+                                <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary border-b border-slate-200 dark:border-slate-700 pb-1 mb-1.5 print:text-[9px] print:pb-0.5 print:mb-1">Additional</h5>
                                 <ul className="space-y-1 print:space-y-0">
                                     {customDrugs.filter(d => selectedDrugs.includes(d)).map(d => (
                                         <li key={d} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 print:text-xs print:gap-1.5">
@@ -189,12 +188,14 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </div>
             
             {/* Signature Area */}
-            <div className="mt-8 pt-4 border-t border-slate-200 flex justify-between gap-12 print:flex print:mt-2 print:pt-2 print:gap-6">
-                <div className="flex-1 border-t border-black pt-2 print:pt-1">
-                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Requested By (Name & Signature)</p>
-                </div>
-                <div className="w-40 border-t border-black pt-2 print:pt-1 print:w-32">
-                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Date</p>
+            <div className="pt-6 border-t border-slate-200 dark:border-slate-700 print:pt-3">
+                <div className="flex justify-between gap-12 print:gap-6">
+                    <div className="flex-1 border-t border-black pt-2 print:pt-1">
+                        <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Requested By (Name & Signature)</p>
+                    </div>
+                    <div className="w-40 border-t border-black pt-2 print:pt-1 print:w-32">
+                        <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Date</p>
+                    </div>
                 </div>
             </div>
 

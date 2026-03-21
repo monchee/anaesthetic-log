@@ -24,24 +24,27 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
   };
 
   return (
-    <Card className="border-t-8 border-t-slate-900 overflow-hidden print:shadow-none print:border-none">
-      
-      {/* Report Header */}
-      <div className="bg-slate-900 text-white p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 print:flex-row print:items-center print:bg-slate-900 print:text-white print:p-3 print:gap-2">
-         <div>
-           <h1 className="text-2xl font-bold tracking-tight print:text-base">Clinical Immunology & Allergy</h1>
-           <p className="text-sm opacity-90 print:text-xs">Royal Prince Alfred Hospital</p>
-         </div>
-         <div className="text-left md:text-right print:text-right">
-           <h2 className="text-xl font-semibold tracking-tight print:text-sm text-white">Anaesthetic Testing Report</h2>
-           <p className="text-sm opacity-80 text-white print:text-xs">Generated: {new Date().toLocaleDateString('en-AU')}</p>
-         </div>
+    <Card className="overflow-hidden print:shadow-none print:border-none">
+
+      {/* Minimal Accent Header */}
+      <div className="border-l-4 border-primary bg-slate-50 dark:bg-slate-900/30 p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100">Anaesthetic Testing Report</h1>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Clinical Immunology & Allergy · Royal Prince Alfred Hospital</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Generated</p>
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{new Date().toLocaleDateString('en-AU')}</p>
+          </div>
+        </div>
       </div>
 
-      <CardContent className="p-4 md:p-8 space-y-6 md:space-y-8 print:p-3 print:space-y-3">
+      <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-3 print:space-y-3">
          
          {/* Patient Details */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 border-b border-slate-100 pb-6 pt-6 print:grid-cols-2 print:gap-2 print:pb-2 print:pt-2">
+         <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 print:bg-white print:border-slate-300">
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 print:grid-cols-2 print:gap-2">
             <div>
                <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold block mb-1 print:mb-0.5">Patient Name</label>
                <p className="text-xl md:text-2xl font-semibold tracking-tight text-primary print:text-base">{data.firstName} {data.lastName}</p>
@@ -54,16 +57,17 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                <label className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold block mb-1 print:mb-0.5">Visit Date</label>
                <p className="text-lg font-medium text-slate-900 dark:text-slate-100 print:text-sm">{formatDate(data.visitDate)}</p>
             </div>
+           </div>
          </div>
 
          {/* Skin Testing Results */}
          <div>
-            <h3 className="tracking-tight text-lg mb-3 flex items-center gap-2 text-slate-900 dark:text-slate-100 print:text-sm print:mb-1">
+            <h3 className="text-sm md:text-base font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2 border-b-2 border-primary pb-2 mb-4 print:text-xs print:mb-2">
               <Activity className="w-5 h-5 print:w-4 print:h-4" /> Skin & Intradermal Testing
             </h3>
             
             {/* Controls */}
-            <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-none border border-slate-200 dark:border-slate-800 mb-4 text-sm print:bg-slate-50 print:border-slate-300 print:p-2 print:mb-2 print:text-xs">
+            <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-sm mb-4 print:bg-white print:border-slate-300 print:p-2 print:mb-2 print:text-xs">
                <div className="font-semibold mb-2 block md:inline md:mr-2">Controls (mm):</div>
                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:inline-flex md:gap-4">
                    <span>Histamine SPT: <strong>{data.controls?.histamineSpt || '-'}</strong></span>
@@ -143,13 +147,11 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
 
          {/* Challenge Results */}
          <div>
-            <h3 className="tracking-tight text-lg mb-3 flex items-center gap-2 text-slate-900 dark:text-slate-100 print:text-sm print:mb-1">
+            <h3 className="text-sm md:text-base font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2 border-b-2 border-primary pb-2 mb-4 print:text-xs print:mb-2">
               <History className="w-5 h-5 print:w-4 print:h-4" /> Drug Challenge Details
             </h3>
             {data.proceedToChallenge ? (
-               <div className={`p-4 rounded-none border-l-4 ${data.outcome === 'SUCCESS'
-                   ? 'bg-green-50 border-green-500 dark:bg-green-900/20 dark:border-green-700 print:bg-green-50'
-                   : 'bg-red-50 border-red-500 dark:bg-red-900/20 dark:border-red-700 print:bg-red-50'} print:p-2`}>
+               <div className={`border-l-4 p-4 rounded-lg bg-white dark:bg-slate-900 ${data.outcome === 'SUCCESS' ? 'border-green-500' : 'border-red-500'} print:bg-white print:border-l-2 print:p-2`}>
                   <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2 gap-2 print:mb-1">
                      <span className="font-bold text-lg print:text-sm">
                         {data.challengeDrug === 'Other' ? (data.challengeDrugCustom || 'Other') : data.challengeDrug}
@@ -177,7 +179,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
             <h3 className="tracking-tight text-lg mb-2 flex items-center gap-2 text-slate-900 dark:text-slate-100 print:text-sm print:mb-1">
               <FileText className="w-5 h-5 print:w-4 print:h-4" /> Assessment & Plan
             </h3>
-            <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-none border border-slate-200 dark:border-slate-800 min-h-[100px] whitespace-pre-wrap text-sm md:text-base print:p-2 print:min-h-0 print:text-xs">
+            <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 whitespace-pre-wrap text-sm md:text-base print:bg-white print:border-slate-300 print:p-2 print:text-xs">
                {data.plan || 'No comments recorded.'}
             </div>
          </div>

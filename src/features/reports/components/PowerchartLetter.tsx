@@ -1,9 +1,7 @@
 import React from 'react';
-import { Card, CardContent, Button } from '@/components/ui';
+import { Card, CardContent } from '@/components/ui';
 import { LogFormData, Patient } from '@/types';
 import { formatDate, getPositiveResults, getNegativeResults } from '@shared/utils';
-import { Copy, Check } from 'lucide-react';
-import { showToast } from '@shared/utils';
 
 interface PowerchartLetterProps {
   data: LogFormData;
@@ -42,7 +40,7 @@ function getOutcomeText(patient: Patient): string {
   return 'completed/abandoned';
 }
 
-function generateLetterText(data: LogFormData, patient: Patient | null): string {
+export function generateLetterText(data: LogFormData, patient: Patient | null): string {
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
   const lines: string[] = [];
@@ -108,45 +106,31 @@ function generateLetterText(data: LogFormData, patient: Patient | null): string 
 const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) => {
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
-  const [copied, setCopied] = React.useState(false);
 
   const fullName = `${data.firstName} ${data.lastName}`;
   const firstName = data.firstName;
   const testingDate = data.visitDate ? formatDate(data.visitDate) : '[date]';
 
-  const handleCopy = async () => {
-    const text = generateLetterText(data, patient);
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      showToast.success('Letter copied to clipboard');
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      showToast.error('Failed to copy to clipboard');
-    }
-  };
-
   return (
-    <Card className="max-w-5xl mx-auto overflow-hidden print:shadow-none print:border-none print:max-w-none">
-      {/* Screen Controls */}
-      <div className="p-4 border-b border-slate-200 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center print:hidden">
-        <h3 className="text-lg font-semibold tracking-tight text-slate-800 dark:text-slate-100">Powerchart Letter</h3>
-        <Button size="sm" variant="outline" onClick={handleCopy}>
-          {copied ? <Check className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
-          {copied ? 'Copied' : 'Copy to Clipboard'}
-        </Button>
+    <Card className="overflow-hidden print:shadow-none print:border-none print:bg-white">
+      {/* Minimal Accent Header */}
+      <div className="border-l-4 border-primary bg-slate-50 dark:bg-slate-900/30 p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100">Anaesthetic Allergy Clinic</h1>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Department of Clinical Immunology & Allergy</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Testing Date</p>
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{testingDate}</p>
+          </div>
+        </div>
       </div>
 
-      <CardContent className="p-4 sm:p-6 md:p-12 print:p-0 space-y-6 print:space-y-3">
-        {/* Header */}
-        <div className="border-b-2 border-slate-800 pb-4 print:pb-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-primary print:text-lg">ANZAAG Allergy Clinic</h1>
-          <p className="text-slate-500 font-medium print:text-xs">Department of Clinical Immunology & Allergy</p>
-          <p className="text-sm text-slate-400 print:text-[9px]">Royal Prince Alfred Hospital</p>
-        </div>
-
+      <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-3 print:space-y-3">
         {/* Patient Details */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 border-b border-slate-200 pb-4 print:pb-2 print:gap-2 print:grid-cols-2">
+        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 print:bg-white print:border-slate-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 print:grid-cols-2 print:gap-2">
           <div>
             <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Patient Name</p>
             <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{fullName}</p>
@@ -185,10 +169,11 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
             <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Testing Date</p>
             <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{testingDate}</p>
           </div>
+          </div>
         </div>
 
         {/* Narrative */}
-        <div className="space-y-4 text-sm leading-relaxed text-slate-800 dark:text-slate-200 print:text-xs print:space-y-2">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4 text-sm leading-relaxed text-slate-800 dark:text-slate-200 print:bg-white print:border-slate-300 print:p-2 print:text-xs print:space-y-2">
           {patient && patient.id !== 'manual' && (
             <p>
               {fullName} presented to {patient.history.hospital || '[hospital]'} for a {patient.history.procedure?.toLowerCase() || '[procedure]'} on the {formatDate(patient.history.date)}.
@@ -220,7 +205,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
                   const drugName = row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName;
                   const isPositive = posResults.includes(drugName);
                   return (
-                    <tr key={i} className={`border-b border-slate-100 dark:border-slate-800 ${isPositive ? 'font-bold' : ''}`}>
+                    <tr key={i} className={`${i % 2 === 0 ? 'bg-slate-50 dark:bg-slate-900/20' : 'bg-white dark:bg-slate-900'} border-b border-slate-200 dark:border-slate-700 ${isPositive ? 'font-bold' : ''} print:bg-white`}>
                       <td className={`py-2 print:py-1 ${isPositive ? 'text-red-700 dark:text-red-400 uppercase' : ''}`}>{drugName}</td>
                       <td className="py-2 print:py-1">{row.sptWheal || '-'} mm</td>
                       <td className="py-2 print:py-1">{row.idt100 || '-'} mm</td>
@@ -236,14 +221,14 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         </div>
 
         {/* Results Summary */}
-        <div className="space-y-3 print:space-y-2">
-          <h3 className="font-semibold text-slate-800 dark:text-slate-100 uppercase text-[11px] tracking-wider border-b border-slate-200 pb-1 print:text-[10px]">Results</h3>
+        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4 print:bg-white print:border-slate-300 print:p-2 print:space-y-2">
+          <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-slate-900 dark:text-slate-100 print:text-xs print:pb-1">Results</h3>
           {posResults.length > 0 && (
-            <ul className="space-y-1">
+            <div className="space-y-2">
               {posResults.map((drug, i) => (
-                <li key={i} className="text-red-700 dark:text-red-400 font-bold uppercase text-sm print:text-xs">{drug} — POSITIVE</li>
+                <div key={i} className="border-l-4 border-red-500 bg-white dark:bg-slate-900 p-3 rounded-lg text-red-700 dark:text-red-400 font-bold uppercase text-sm print:bg-white print:border-l-2 print:p-2 print:text-xs">{drug} — POSITIVE</div>
               ))}
-            </ul>
+            </div>
           )}
           {negResults.length > 0 && (
             <ul className="space-y-1">
@@ -255,8 +240,8 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         </div>
 
         {/* Recommendations */}
-        <div className="space-y-3 print:space-y-2">
-          <h3 className="font-semibold text-slate-800 dark:text-slate-100 uppercase text-[11px] tracking-wider border-b border-slate-200 pb-1 print:text-[10px]">Recommendations</h3>
+        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4 print:bg-white print:border-slate-300 print:p-2 print:space-y-2">
+          <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-slate-900 dark:text-slate-100 print:text-xs print:pb-1">Recommendations</h3>
           {posResults.length > 0 && (
             <p className="text-red-700 dark:text-red-400 font-bold text-sm print:text-xs">
               Avoid {posResults.map(d => d.toUpperCase()).join(', ')}

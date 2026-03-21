@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
@@ -21,6 +21,7 @@ import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from '@shared/utils/co
 import { showToast } from '@shared/utils';
 import { useAnaestheticApp } from './hooks/useAnaestheticApp';
 import { formatClinicalReportAsText, formatPatientHandoutAsText } from '@shared/utils/reportExporter';
+import { generateLetterText } from '@features/reports/components/PowerchartLetter';
 import { reportWebVitals } from './src/lib/analytics';
 import { findInfoPageRoute } from '@core/routes/infoPageConfig';
 
@@ -42,6 +43,8 @@ function AnaestheticLogApp() {
     handlePatientSelect, handleManualDetailChange,
     handleSubmit, handleUploadPatients, handleDashboardPatientSelect, resetForm,
   } = useAnaestheticApp();
+
+  const [activeReportTab, setActiveReportTab] = React.useState<'report' | 'handout' | 'letter'>('report');
 
   const layoutProps = {
     setScreen, databaseDate, showDisclaimer,
@@ -88,79 +91,73 @@ function AnaestheticLogApp() {
     }
 
     if (screen === Screen.SUMMARY && lastSavedRecord) {
+      const tabLabel = ({ report: 'Clinical Report', handout: 'Patient Handout', letter: 'Powerchart Letter' } as const)[activeReportTab];
+      const patientName = `${lastSavedRecord.firstName} ${lastSavedRecord.lastName}`;
+      const visitDate = lastSavedRecord.visitDate ? new Date(lastSavedRecord.visitDate).toLocaleDateString('en-AU') : '';
+
+      const getCopyText = () => {
+        if (activeReportTab === 'report') return formatClinicalReportAsText(lastSavedRecord);
+        if (activeReportTab === 'handout') return formatPatientHandoutAsText(lastSavedRecord);
+        return generateLetterText(lastSavedRecord, selectedPatient);
+      };
+
+      const handleCopyTab = () => {
+        navigator.clipboard.writeText(getCopyText());
+        showToast.success(`${tabLabel} copied to clipboard`);
+      };
+
+      const handleEmailTab = () => {
+        const subject = `${tabLabel}: ${patientName}${visitDate ? ` - ${visitDate}` : ''}`;
+        window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(getCopyText())}`;
+      };
+
       return (
-        <ScreenLayout title="Clinical Report" subtitle={APP_SUBTITLE} icon={<FileText className="w-5 h-5" />} {...layoutProps}
+        <ScreenLayout title="Reports" subtitle={APP_SUBTITLE} icon={<FileText className="w-5 h-5" />} {...layoutProps}
           actions={<Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className={BACK_BTN}><LayoutDashboard className={BACK_ICON} /> Dashboard</Button>}
           contentClassName="p-4 space-y-4"
         >
-          <ClinicalReport data={lastSavedRecord} />
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 no-print mt-6">
+          {/* Tab bar */}
+          <div className="flex border-b border-slate-200 dark:border-slate-800 no-print">
+            {([
+              { key: 'report', label: 'Clinical Report', icon: <FileText className="w-4 h-4" /> },
+              { key: 'handout', label: 'Patient Handout', icon: <User className="w-4 h-4" /> },
+              { key: 'letter', label: 'Powerchart Letter', icon: <ClipboardCopy className="w-4 h-4" /> },
+            ] as const).map(({ key, label, icon }) => (
+              <button
+                key={key}
+                onClick={() => setActiveReportTab(key)}
+                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors rounded-none whitespace-nowrap
+                  ${activeReportTab === key
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
+                  }`}
+              >
+                {icon}{label}
+              </button>
+            ))}
+          </div>
+
+          {/* Document */}
+          {activeReportTab === 'report' && <ClinicalReport data={lastSavedRecord} />}
+          {activeReportTab === 'handout' && <PatientHandout data={lastSavedRecord} />}
+          {activeReportTab === 'letter' && <PowerchartLetter data={lastSavedRecord} patient={selectedPatient} />}
+
+          {/* Action buttons */}
+          <div className="grid grid-cols-3 gap-3 no-print mt-4">
             <Button onClick={() => window.print()} size="lg" variant="outline" className="py-5 h-auto text-sm rounded-none">
-              <Printer className="w-4 h-4 mr-2" /> Print Report
+              <Printer className="w-4 h-4 mr-2" /> Print
             </Button>
-            <Button onClick={() => { navigator.clipboard.writeText(formatClinicalReportAsText(lastSavedRecord)); showToast.success('Report copied to clipboard'); }} size="lg" variant="outline" className="py-5 h-auto text-sm rounded-none">
+            <Button onClick={handleCopyTab} size="lg" variant="outline" className="py-5 h-auto text-sm rounded-none">
               <Copy className="w-4 h-4 mr-2" /> Copy as Text
             </Button>
-            <Button onClick={() => setScreen(Screen.PATIENT_SUMMARY)} size="lg" variant="secondary" className="py-5 h-auto text-sm rounded-none">
-              <User className="w-4 h-4 mr-2" /> Patient Handout
-            </Button>
-            <Button onClick={() => setScreen(Screen.POWERCHART_LETTER)} size="lg" variant="secondary" className="py-5 h-auto text-sm rounded-none">
-              <ClipboardCopy className="w-4 h-4 mr-2" /> Powerchart Letter
+            <Button onClick={handleEmailTab} size="lg" variant="outline" className="py-5 h-auto text-sm rounded-none">
+              <Mail className="w-4 h-4 mr-2" /> Email
             </Button>
           </div>
+
+          {/* Start New Log */}
           <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
             <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
-              <Plus className="w-5 h-5 mr-2" /> Start New Log
-            </Button>
-          </div>
-        </ScreenLayout>
-      );
-    }
-
-    if (screen === Screen.PATIENT_SUMMARY && lastSavedRecord) {
-      return (
-        <ScreenLayout title="Patient Handout" subtitle={APP_SUBTITLE} icon={<User className="w-5 h-5" />} {...layoutProps}
-          actions={<Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className={BACK_BTN}><LayoutDashboard className={BACK_ICON} /> Dashboard</Button>}
-          contentClassName="p-4 space-y-4"
-        >
-          <PatientHandout data={lastSavedRecord} />
-          <div className="flex flex-col sm:flex-row gap-4 no-print mt-6">
-            <Button onClick={() => setScreen(Screen.SUMMARY)} size="lg" variant="ghost" className="flex-1 py-6 h-auto text-base rounded-none">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Clinical Report
-            </Button>
-            <Button onClick={() => window.print()} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-none border-slate-300">
-              <Printer className="w-4 h-4 mr-2" /> Print Handout
-            </Button>
-            <Button onClick={() => { navigator.clipboard.writeText(formatPatientHandoutAsText(lastSavedRecord)); showToast.success('Handout copied to clipboard'); }} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-none border-slate-300">
-              <Copy className="w-4 h-4 mr-2" /> Copy as Text
-            </Button>
-          </div>
-          <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
-            <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg bg-primary hover:bg-primary/90 text-white rounded-none font-semibold transition-colors">
-              <Plus className="w-5 h-5 mr-2" /> Start New Log
-            </Button>
-          </div>
-        </ScreenLayout>
-      );
-    }
-
-    if (screen === Screen.POWERCHART_LETTER && lastSavedRecord) {
-      return (
-        <ScreenLayout title="Powerchart Letter" subtitle={APP_SUBTITLE} icon={<ClipboardCopy className="w-5 h-5" />} {...layoutProps}
-          actions={<Button onClick={() => setScreen(Screen.SUMMARY)} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back to Report</Button>}
-          contentClassName="p-4 space-y-4"
-        >
-          <PowerchartLetter data={lastSavedRecord} patient={selectedPatient} />
-          <div className="flex flex-col sm:flex-row gap-4 no-print mt-6">
-            <Button onClick={() => setScreen(Screen.SUMMARY)} size="lg" variant="ghost" className="flex-1 py-6 h-auto text-base rounded-none">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Clinical Report
-            </Button>
-            <Button onClick={() => window.print()} size="lg" variant="outline" className="flex-1 py-6 h-auto text-base rounded-none border-slate-300">
-              <Printer className="w-4 h-4 mr-2" /> Print Letter
-            </Button>
-          </div>
-          <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
-            <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg bg-primary hover:bg-primary/90 text-white rounded-none font-semibold transition-colors">
               <Plus className="w-5 h-5 mr-2" /> Start New Log
             </Button>
           </div>

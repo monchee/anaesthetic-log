@@ -91,7 +91,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     };
 
     return (
-        <div className={`min-h-screen bg-background dark:bg-background flex flex-col ${className || ''}`}>
+        <div className={`min-h-screen print:min-h-0 bg-background dark:bg-background flex flex-col ${className || ''}`}>
             {/* Skip to Main Content Link */}
             <a
                 href="#main-content"
