@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
-import { Info, Home, Stethoscope, Users, Target, Shield } from 'lucide-react';
+import { Card, CardContent, Button } from '@/components/ui';
+import { Home, Stethoscope, Users, Target, Shield } from 'lucide-react';
 import { Screen } from '@shared/types';
 
 interface AboutPageProps {
@@ -11,17 +11,6 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
       <Card>
-        <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
-              <Info className="w-6 h-6 text-white dark:text-primary" />
-            </div>
-            <div>
-              <CardTitle className="text-xl font-semibold text-slate-900 dark:text-slate-100">About</CardTitle>
-              <p className="text-sm text-slate-500 dark:text-slate-400">RPAH Anaesthetic Allergy Clinic Tool</p>
-            </div>
-          </div>
-        </CardHeader>
         <CardContent className="pt-6 space-y-6">
           
           {/* Introduction */}

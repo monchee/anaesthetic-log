@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, Button } from '@/components/ui';
-import { Tag, Home, Sparkles, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
+import { Button } from '@/components/ui';
+import { Home, Sparkles, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { Screen } from '@shared/types';
 import changelogData from '@shared/data/changelog.json';
 
@@ -29,21 +29,6 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      {/* Page header */}
-      <Card>
-        <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
-              <Tag className="w-6 h-6 text-white dark:text-primary" />
-            </div>
-            <div>
-              <CardTitle className="text-xl text-slate-900 dark:text-slate-100">What's New</CardTitle>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Version history and release notes</p>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
-
       {/* Latest release hero */}
       {highlightedVersion && (
         <div className="border-l-4 border-primary bg-gradient-to-r from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent p-6 border border-primary/20 dark:border-primary/30">

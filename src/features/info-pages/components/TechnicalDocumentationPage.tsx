@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
-import { Cpu, Lock, Smartphone, Home, Database, Globe, Code } from 'lucide-react';
+import { Card, CardContent, Button } from '@/components/ui';
+import { Lock, Smartphone, Home, Database, Globe, Code, Cpu } from 'lucide-react';
 import { Screen } from '@shared/types';
 
 interface TechnicalDocumentationPageProps {
@@ -11,19 +11,6 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
   return (
     <div className="py-4 sm:p-6 space-y-6">
       <Card>
-        <CardHeader className="border-b border-slate-100 dark:border-slate-800 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary dark:bg-slate-900/40 rounded-none">
-              <Code className="w-6 h-6 text-white dark:text-primary" />
-            </div>
-            <div>
-              <CardTitle className="text-xl text-slate-900 dark:text-slate-100">Technical Documentation</CardTitle>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Architecture, security, and technical specifications
-              </p>
-            </div>
-          </div>
-        </CardHeader>
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
@@ -219,7 +206,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
             <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
               <div className="flex justify-between py-2 border-b border-slate-200 dark:border-slate-700">
                 <span>Current Version</span>
-                <span className="font-mono">v0.32.0 (Vecuronium)</span>
+                <span className="font-mono">v0.34.0 (Suxamethonium)</span>
               </div>
               <p className="text-xs mt-2">
                 For detailed changelog information, see the <button onClick={() => setScreen(Screen.CHANGELOG)} className="text-primary hover:underline">Changelog page</button>.

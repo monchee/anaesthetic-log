@@ -1,8 +1,18 @@
 [
   {
+    "version": "v0.35.0",
+    "codename": "Thiopentone",
+    "highlight": true,
+    "changes": [
+      "Modal routing bug fixed — dismissing the Quick Start modal now always lands on the Home screen, regardless of which page was last visited.",
+      "Duplicate page titles removed — all info pages no longer show a redundant title card below the navigation bar; the nav bar is the sole title authority.",
+      "Technical Documentation page version reference updated to current version."
+    ]
+  },
+  {
     "version": "v0.34.0",
     "codename": "Suxamethonium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Navigation overhaul — 'Log' nav pill renamed to 'Home'; all dropdown menu items now have matching icons for visual consistency.",
       "Info page icons fixed — Changelog, About, FAQ, Drug Reference, Contact, and Resources pages now show appropriate icons instead of a generic user icon.",

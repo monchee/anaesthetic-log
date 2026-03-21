@@ -8,23 +8,26 @@ import {
   Activity,
 } from 'lucide-react';
 import { parseRedcapCSV } from '@shared/utils';
-import { Patient } from '@/types';
+import { Patient, Screen } from '@/types';
 import toast from 'react-hot-toast';
 
 interface HelpModalProps {
   onUploadPatients?: (patients: Patient[]) => void;
   hideTrigger?: boolean;
   hasData?: boolean;
+  setScreen?: (screen: Screen) => void;
 }
 
-export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrigger = false, hasData = false }) => {
+export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrigger = false, hasData = false, setScreen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-open whenever no CSV data has been loaded
+  // Auto-open whenever no CSV data has been loaded; navigate home so the
+  // correct screen is shown when the modal is dismissed
   useEffect(() => {
     if (!hasData) {
       setIsOpen(true);
+      setScreen?.(Screen.LOG);
     }
   }, [hasData]);
 
