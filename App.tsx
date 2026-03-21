@@ -113,7 +113,7 @@ function AnaestheticLogApp() {
       return (
         <ScreenLayout title="Reports" subtitle={APP_SUBTITLE} icon={<FileText className="w-5 h-5" />} {...layoutProps}
           actions={<Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className={BACK_BTN}><LayoutDashboard className={BACK_ICON} /> Dashboard</Button>}
-          contentClassName="p-4 space-y-4"
+          contentClassName="py-4 space-y-4"
         >
           {/* Tab bar */}
           <div className="flex border-b border-slate-200 dark:border-slate-800 no-print">
@@ -181,7 +181,7 @@ function AnaestheticLogApp() {
           subtitle={selectedPatient ? `Patient: ${selectedPatient.lastName}, ${selectedPatient.firstName} (ID: ${selectedPatient.id === 'manual' ? 'New' : selectedPatient.id})` : APP_SUBTITLE}
           {...layoutProps}
           actions={<Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
-          contentClassName="p-4" className="pb-32"
+          contentClassName="py-4" className="pb-32"
         >
           <TestingLogForm formData={formData} setFormData={setFormData} onSubmit={handleSubmit}
             drugCategories={DRUG_CATEGORIES} symptomOptions={APP_CONFIG.SYMPTOM_OPTIONS} interventionOptions={APP_CONFIG.INTERVENTION_OPTIONS}
@@ -193,7 +193,7 @@ function AnaestheticLogApp() {
     // Default: LOG screen
     return (
       <ScreenLayout title="Anaesthetic Allergy Clinic" subtitle={APP_SUBTITLE} icon={<Stethoscope className="w-5 h-5" />} {...layoutProps}
-        contentClassName="p-3 space-y-4" className="pb-10"
+        contentClassName="py-3 space-y-4" className="pb-10"
       >
         <Card className="shadow-sm rounded-none">
           <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
