@@ -92,7 +92,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
   return (
     <>
-      <Card className="border-t-4 border-slate-400 dark:border-slate-500 bg-white dark:bg-slate-900 shadow-md overflow-hidden">
+      <Card className="bg-white dark:bg-slate-900 shadow-md overflow-hidden">
         <div 
             className="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             onClick={() => setIsOpen(!isOpen)}

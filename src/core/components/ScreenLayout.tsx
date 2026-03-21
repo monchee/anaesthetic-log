@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, Button } from '@/components/ui';
-import { Sun, Moon, Menu, HelpCircle, Upload } from 'lucide-react';
+import { Sun, Moon, Menu, HelpCircle, Upload, Stethoscope, LayoutDashboard } from 'lucide-react';
 import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
 import { useTheme } from './ThemeProvider';
@@ -17,6 +17,7 @@ interface ScreenLayoutProps {
     actions?: React.ReactNode;
     children: React.ReactNode;
     setScreen: (screen: Screen) => void;
+    currentScreen?: Screen;
     databaseDate: string;
     showFooter?: boolean;
     className?: string;
@@ -27,6 +28,11 @@ interface ScreenLayoutProps {
     onUploadPatients?: (patients: Patient[]) => void;
 }
 
+const primaryNav = [
+    { label: 'Log', icon: Stethoscope, screen: Screen.LOG },
+    { label: 'Dashboard', icon: LayoutDashboard, screen: Screen.DASHBOARD },
+];
+
 export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     title,
     subtitle,
@@ -34,6 +40,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     actions,
     children,
     setScreen,
+    currentScreen,
     databaseDate,
     showFooter = true,
     className,
@@ -107,7 +114,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                     {/* Safe Area Padding for mobile notch support */}
                     <div className="pt-[env(safe-area-inset-top)]">
                         <div className="max-w-6xl mx-auto px-3 py-2 sm:px-4 sm:py-3 lg:py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-                            
+
                             {/* Title Area */}
                             <div className="flex items-center gap-3 w-full sm:w-auto">
                                 <div className="bg-white/10 p-2 rounded-none backdrop-blur-sm border border-white/10 shrink-0">
@@ -123,31 +130,48 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
                             {/* Actions Area */}
                             <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+
+                                {/* Primary Nav Pills */}
+                                <nav aria-label="Primary navigation" className="flex items-center gap-1">
+                                    {primaryNav.map(({ label, icon: Icon, screen }) => {
+                                        const isActive = currentScreen === screen;
+                                        return (
+                                            <button
+                                                key={screen}
+                                                onClick={() => setScreen(screen)}
+                                                aria-current={isActive ? 'page' : undefined}
+                                                className={`h-9 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-all duration-200 shadow-sm
+                                                    ${isActive
+                                                        ? 'bg-white text-primary font-medium'
+                                                        : 'bg-white/10 hover:bg-white/30 text-white'
+                                                    }`}
+                                            >
+                                                <Icon className="w-4 h-4" />
+                                                <span className="hidden sm:inline">{label}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </nav>
+
+                                {actions && <div className="h-6 w-px bg-white/10 mx-1" />}
                                 {actions}
-                                
+
                                 <div className="h-6 w-px bg-white/10 mx-1 hidden sm:block"></div>
 
                                 {/* Hamburger Menu */}
-                                <nav aria-label="Main navigation">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger
                                         className="h-9 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-all duration-200 shadow-sm group"
                                         title="Open Navigation Menu"
                                     >
                                         <Menu className="w-4 h-4 text-white opacity-90 group-hover:opacity-100 transition-opacity" />
-                                        <span className="text-sm">Menu</span>
+                                        <span className="text-sm hidden sm:inline">Menu</span>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56">
-                                        {/* Upload CSV */}
-                                        <DropdownMenuItem onClick={() => {
-                                            const trigger = document.querySelector('[data-csv-upload-trigger]') as HTMLButtonElement;
-                                            trigger?.click();
-                                        }}>
+                                        <DropdownMenuItem onClick={() => setIsCSVUploadSheetOpen(true)}>
                                             <Upload className="w-4 h-4 mr-2" />
                                             Upload CSV
                                         </DropdownMenuItem>
-
-                                        {/* Quick Start Guide */}
                                         <DropdownMenuItem onClick={() => {
                                             const helpButton = document.querySelector('[data-help-modal-trigger]') as HTMLButtonElement;
                                             helpButton?.click();
@@ -158,42 +182,27 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
                                         <DropdownMenuSeparator />
 
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.ABOUT)}>
-                                            About
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.FAQ)}>
-                                            FAQ
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.DRUG_REFERENCE)}>
-                                            Drug Reference
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.CONTACT)}>
-                                            Contact / Support
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.RESOURCES)}>
-                                            Resources / Links
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.CHANGELOG)}>
-                                            Changelog
-                                        </DropdownMenuItem>
-                                        
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.ABOUT)}>About</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.FAQ)}>FAQ</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.DRUG_REFERENCE)}>Drug Reference</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.CONTACT)}>Contact / Support</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.RESOURCES)}>Resources / Links</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.CHANGELOG)}>Changelog</DropdownMenuItem>
+
                                         <DropdownMenuSeparator />
-                                        
-                                        {/* Dark Mode Toggle */}
+
                                         <DropdownMenuItem onClick={toggleTheme}>
                                             {theme === 'dark' ? <Sun className="w-4 h-4 mr-2" /> : <Moon className="w-4 h-4 mr-2" />}
                                             {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                </nav>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Disclaimer Banner - Attached to Header */}
-                {/* Only show if enabled AND user has not uploaded their own data */}
                 {showDisclaimer && !isCustomData && onDismissDisclaimer && (
                     <div className="print:hidden">
                         <DisclaimerBanner onClose={onDismissDisclaimer} />
@@ -235,15 +244,6 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 onChange={handleFileUpload}
                 className="hidden"
             />
-
-            {/* Hidden trigger button for CSV upload sheet */}
-            <Button
-                className="hidden"
-                data-csv-upload-trigger
-                onClick={() => setIsCSVUploadSheetOpen(true)}
-            >
-                Upload CSV
-            </Button>
 
             {/* Global CSV Upload Instructions Sheet */}
             {onUploadPatients && (

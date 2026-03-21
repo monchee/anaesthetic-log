@@ -8,12 +8,12 @@ export default {
     "./lib/**/*.{js,ts,jsx,tsx}",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: "class",
+  darkMode: ["class", "class"],
   theme: {
   	extend: {
   		fontFamily: {
   			sans: [
-  				'"Public Sans"',
+  				'Public Sans"',
   				'Inter',
   				'sans-serif'
   			]
@@ -67,12 +67,22 @@ export default {
   			},
   			'nsw-blue': {
   				DEFAULT: 'hsl(var(--nsw-blue))',
-  				light: 'hsl(var(--nsw-blue-light))',
+  				light: 'hsl(var(--nsw-blue-light))'
   			},
   			'nsw-info': {
   				DEFAULT: 'hsl(var(--nsw-info))',
-  				bg: 'hsl(var(--nsw-info-bg))',
+  				bg: 'hsl(var(--nsw-info-bg))'
   			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
+  			}
   		},
   		keyframes: {
   			'accordion-down': {

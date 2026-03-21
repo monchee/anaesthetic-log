@@ -47,7 +47,7 @@ function AnaestheticLogApp() {
   const [activeReportTab, setActiveReportTab] = React.useState<'report' | 'handout' | 'letter'>('report');
 
   const layoutProps = {
-    setScreen, databaseDate, showDisclaimer,
+    setScreen, currentScreen: screen, databaseDate, showDisclaimer,
     isCustomData: hasUploadedData,
     onDismissDisclaimer: handleDismissDisclaimer,
     onUploadPatients: handleUploadPatients,
@@ -78,7 +78,6 @@ function AnaestheticLogApp() {
     if (screen === Screen.DASHBOARD) {
       return (
         <ScreenLayout title="Clinical Dashboard" subtitle={APP_SUBTITLE} icon={<LayoutDashboard className="w-5 h-5" />} {...layoutProps}
-          actions={<Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back to Log</Button>}
         >
           <Dashboard
             setScreen={setScreen} existingPatients={patients} recentLogs={recentLogs}
@@ -194,10 +193,9 @@ function AnaestheticLogApp() {
     // Default: LOG screen
     return (
       <ScreenLayout title="Anaesthetic Allergy Clinic" subtitle={APP_SUBTITLE} icon={<Stethoscope className="w-5 h-5" />} {...layoutProps}
-        actions={<Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className={BACK_BTN}><LayoutDashboard className={BACK_ICON} /> Dashboard</Button>}
         contentClassName="p-3 space-y-4" className="pb-10"
       >
-        <Card className="border-t-4 border-primary shadow-sm rounded-none">
+        <Card className="shadow-sm rounded-none">
           <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
             <CardTitle className="flex items-center gap-2 text-lg">
               <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none"><User className="w-4 h-4 text-primary" /></div>

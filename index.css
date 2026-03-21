@@ -60,7 +60,7 @@
 
     /* Override --accent with NSW Brand Light (replaces slate-100) */
     --accent: 199 92% 89%;         /* #CBEDFD — pale NSW blue for hover states */
-    --accent-foreground: 218 100% 20%; /* Dark navy on light blue */
+    --accent-foreground: 218 100% 20%; /* Dark navy on light blue */ --sidebar-background: 0 0% 98%; --sidebar-foreground: 240 5.3% 26.1%; --sidebar-primary: 240 5.9% 10%; --sidebar-primary-foreground: 0 0% 98%; --sidebar-accent: 240 4.8% 95.9%; --sidebar-accent-foreground: 240 5.9% 10%; --sidebar-border: 220 13% 91%; --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
     --background: 222.2 84% 4.9%; /* slate-900/950 */
@@ -103,7 +103,7 @@
 
     /* Override --accent with NSW dark blue hover */
     --accent: 218 40% 18%;         /* Dark navy-blue for hover backgrounds */
-    --accent-foreground: 199 80% 85%; /* Light blue text in dark mode */
+    --accent-foreground: 199 80% 85%; /* Light blue text in dark mode */ --sidebar-background: 240 5.9% 10%; --sidebar-foreground: 240 4.8% 95.9%; --sidebar-primary: 224.3 76.3% 48%; --sidebar-primary-foreground: 0 0% 100%; --sidebar-accent: 240 3.7% 15.9%; --sidebar-accent-foreground: 240 4.8% 95.9%; --sidebar-border: 240 3.7% 15.9%; --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
