@@ -95,16 +95,23 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         <span>{history.tryptase}</span>
                     </div>
                 )}
-                <div className="flex flex-col items-end gap-1">
+                {gradeDesc && gradeDesc !== gradeLabel ? (
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Badge variant={getGradeVariant(history.grade)} className="shadow-sm whitespace-nowrap cursor-help">
+                                {gradeLabel}
+                            </Badge>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-64 text-left p-3" sideOffset={4}>
+                            <p className="font-bold mb-1 text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-1">{gradeLabel}</p>
+                            <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{gradeDesc}</p>
+                        </PopoverContent>
+                    </Popover>
+                ) : (
                     <Badge variant={getGradeVariant(history.grade)} className="shadow-sm whitespace-nowrap">
                         {gradeLabel}
                     </Badge>
-                    {gradeDesc && gradeDesc !== gradeLabel && (
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 text-right leading-tight max-w-[160px]">
-                            {gradeDesc}
-                        </span>
-                    )}
-                </div>
+                )}
             </div>
         </div>
 

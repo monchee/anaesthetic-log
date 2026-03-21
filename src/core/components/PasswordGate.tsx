@@ -115,11 +115,11 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
           </CardContent>
         </Card>
 
-        <div className="flex justify-between text-xs text-muted-foreground">
+        <div className="text-xs text-muted-foreground text-center">
           <span>RPAH Department of Clinical Immunology &amp; Allergy</span>
-          <span className="font-mono">v{APP_VERSION}</span>
         </div>
       </div>
+      <span className="fixed bottom-4 right-4 md:bottom-6 md:right-6 text-xs font-mono text-muted-foreground">v{APP_VERSION}</span>
     </div>
   );
 };

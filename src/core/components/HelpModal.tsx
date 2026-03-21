@@ -135,9 +135,9 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="w-full flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-primary dark:hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer"
+              className="w-full flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-red-600 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors cursor-pointer"
             >
-              <div className="flex items-center justify-center w-12 h-12 bg-primary">
+              <div className="flex items-center justify-center w-12 h-12 bg-red-600">
                 <Upload className="w-6 h-6 text-white" />
               </div>
               <div className="text-center">

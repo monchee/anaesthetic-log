@@ -113,41 +113,49 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
             <CardContent className="p-4 sm:p-6">
                 <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-6">
 
-                    {/* Urgent flag + Reaction Date */}
-                    <div className="flex flex-wrap items-center gap-4">
-                        <div
-                            className={`flex items-center gap-2 px-3 py-2 border cursor-pointer transition-colors ${
-                                urgent
-                                    ? 'border-red-500 bg-red-100 dark:border-red-500 dark:bg-red-900/40'
-                                    : 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950/30'
-                            }`}
-                            onClick={() => setUrgent(!urgent)}
-                        >
-                            <Switch id="urgent" checked={urgent} onCheckedChange={setUrgent} />
-                            <Label
-                                htmlFor="urgent"
-                                className={`text-sm font-bold uppercase tracking-wide cursor-pointer ${
-                                    urgent ? 'text-red-600 dark:text-red-400' : 'text-red-400 dark:text-red-700'
-                                }`}
-                            >
-                                Urgent
-                            </Label>
+                    {/* Request Details: Date of Reaction + Urgent */}
+                    <div className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${
+                        urgent
+                            ? 'bg-red-50 dark:bg-red-900/20 ring-1 ring-red-300 dark:ring-red-800'
+                            : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'
+                    }`}>
+                        <div className={`flex items-center border-b border-dashed pb-1 mb-2 ${
+                            urgent ? 'border-red-300 dark:border-red-800' : 'border-slate-200 dark:border-slate-800'
+                        }`}>
+                            <h4 className={`text-[10px] font-semibold uppercase tracking-wider ${
+                                urgent ? 'text-red-600 dark:text-red-400' : 'text-slate-500 dark:text-slate-400'
+                            }`}>Request Details</h4>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Label htmlFor="reaction-date" className="text-xs font-semibold uppercase text-muted-foreground tracking-wider whitespace-nowrap">Date of Reaction</Label>
-                            <Input
-                                id="reaction-date"
-                                type="date"
-                                value={reactionDate ? reactionDate.slice(0, 10) : ''}
-                                onChange={e => setReactionDate(e.target.value)}
-                                className="h-8 w-auto"
-                            />
+                        <div className="flex flex-wrap items-center gap-4">
+                            <div className="flex items-center gap-2">
+                                <Label htmlFor="reaction-date" className="text-xs font-semibold uppercase text-muted-foreground tracking-wider whitespace-nowrap">Date of Reaction</Label>
+                                <Input
+                                    id="reaction-date"
+                                    type="date"
+                                    value={reactionDate ? reactionDate.slice(0, 10) : ''}
+                                    onChange={e => setReactionDate(e.target.value)}
+                                    className="h-8 w-auto"
+                                />
+                            </div>
+                            <div className="flex items-center gap-2 cursor-pointer" onClick={() => setUrgent(!urgent)}>
+                                <Switch id="urgent" checked={urgent} onCheckedChange={setUrgent} />
+                                <Label
+                                    htmlFor="urgent"
+                                    className={`text-sm font-bold uppercase tracking-wide cursor-pointer ${
+                                        urgent ? 'text-red-600 dark:text-red-400' : 'text-slate-500 dark:text-slate-400'
+                                    }`}
+                                >
+                                    Urgent
+                                </Label>
+                            </div>
                         </div>
                     </div>
 
                     {/* Documents to Chase */}
-                    <div className="space-y-2">
-                        <Label className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">Documents to Chase</Label>
+                    <div className="space-y-2 rounded-none p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors duration-150">
+                        <div className="flex items-center border-b border-dashed border-slate-200 dark:border-slate-800 pb-1 mb-2">
+                            <h4 className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Documents to Chase</h4>
+                        </div>
                         <div className="flex flex-wrap gap-2">
                             <div className="flex items-center gap-2">
                                 <Checkbox id="doc-tryptases" checked={documentsToChase.tryptases} onCheckedChange={() => toggleDoc('tryptases')} />
@@ -172,15 +180,15 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         </div>
                     </div>
 
-                    {/* Notes Section */}
-                    <div className="space-y-2">
-                        <Label className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">Clinical Notes / Indication</Label>
-                        <Textarea
-                            value={notes}
-                            onChange={e => setNotes(e.target.value)}
-                            className="min-h-[60px]"
-                        />
-                    </div>
+                    {/* History legend callout — shown before drug grid */}
+                    {historyDrugs.length > 0 && (
+                        <div className="flex items-start gap-2.5 p-3 border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 rounded-none">
+                            <History className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+                            <p className="text-xs text-amber-700 dark:text-amber-400 leading-snug">
+                                Drugs marked with <History className="inline w-3 h-3 mx-0.5 opacity-80" /> were given at time of reaction and have been <span className="font-semibold">auto-selected</span> from patient history. Review and adjust as needed.
+                            </p>
+                        </div>
+                    )}
 
                     {/* Drug Selection Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
@@ -279,11 +287,15 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         </div>
                     </div>
 
-                    {historyDrugs.length > 0 && (
-                        <p className="text-[10px] text-slate-400 dark:text-slate-500 flex items-center gap-1">
-                            <History className="w-3 h-3" /> = given at time of reaction (auto-selected from patient history)
-                        </p>
-                    )}
+                    {/* Notes Section */}
+                    <div className="space-y-2">
+                        <Label className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">Clinical Notes / Indication</Label>
+                        <Textarea
+                            value={notes}
+                            onChange={e => setNotes(e.target.value)}
+                            className="min-h-[60px]"
+                        />
+                    </div>
 
                     <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
                         <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-white shadow-md font-semibold">
