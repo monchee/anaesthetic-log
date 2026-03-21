@@ -1,7 +1,7 @@
 [
   {
     "version": "v0.32.0",
-    "codename": "Vecuronium",
+    "codename": "Propofol",
     "highlight": true,
     "changes": [
       "Professional report redesign — all three report tabs (Clinical Report, Patient Handout, Powerchart Letter) now feature minimal left-accent bar headers replacing dark backgrounds.",
@@ -16,7 +16,7 @@
   },
   {
     "version": "v0.31.0",
-    "codename": "Rocuronium",
+    "codename": "Penicillin",
     "highlight": true,
     "changes": [
       "Typography refined project-wide — improved line height for body text, tighter heading leading, and a new section-label utility replacing ad-hoc 10px uppercase patterns throughout.",
@@ -32,7 +32,7 @@
   },
   {
     "version": "v0.30.0",
-    "codename": "Pancuronium",
+    "codename": "Cephalosporin",
     "highlight": false,
     "changes": [
       "Mobile and tablet layout improvements across the whole app — iPhone X and newer, iPad mini, iPad Air, and iPad Pro.",
@@ -50,7 +50,7 @@
   },
   {
     "version": "v0.29.0",
-    "codename": "Mivacurium",
+    "codename": "Fentanyl",
     "highlight": true,
     "changes": [
       "Testing plan document redesigned — branded header stripe, section icons, amber badge pills for documents to chase, and boxed drug categories with dot-style items.",
@@ -61,7 +61,7 @@
   },
   {
     "version": "v0.28.0",
-    "codename": "Cisatracurium",
+    "codename": "Midazolam",
     "highlight": true,
     "changes": [
       "PIN login screen redesigned with cleaner layout — muted background, brand header, and card-based form.",
@@ -70,7 +70,7 @@
   },
   {
     "version": "v0.27.0",
-    "codename": "Rocuronium",
+    "codename": "Remifentanil",
     "highlight": true,
     "changes": [
       "New Powerchart letter template with auto-generated clinical narrative from patient history and test results.",
@@ -99,7 +99,7 @@
   },
   {
     "version": "v0.25.0",
-    "codename": "Vecuronium",
+    "codename": "Atracurium",
     "highlight": false,
     "changes": [
       "The app now loads faster and responds more quickly.",
@@ -109,7 +109,7 @@
   },
   {
     "version": "v0.24.10",
-    "codename": "Suxamethonium (Patch 10)",
+    "codename": "Mivacurium (Patch 10)",
     "highlight": false,
     "changes": [
       "Fixed CSV import - phone numbers now import correctly from REDCap exports.",
@@ -120,7 +120,7 @@
   },
   {
     "version": "v0.24.9",
-    "codename": "Suxamethonium (Patch 9)",
+    "codename": "Vecuronium (Patch 9)",
     "highlight": false,
     "changes": [
       "Redesigned changelog page with a cleaner, more professional appearance.",
@@ -129,7 +129,7 @@
   },
   {
     "version": "v0.24.8",
-    "codename": "Suxamethonium (Patch 8)",
+    "codename": "Rocuronium (Patch 8)",
     "highlight": false,
     "changes": [
       "Fixed display issues with page icons in light mode."
@@ -137,7 +137,7 @@
   },
   {
     "version": "v0.24.7",
-    "codename": "Suxamethonium (Patch 7)",
+    "codename": "Pancuronium (Patch 7)",
     "highlight": false,
     "changes": [
       "Fixed headings appearing too dark to read in dark mode."
@@ -145,7 +145,7 @@
   },
   {
     "version": "v0.24.6",
-    "codename": "Suxamethonium (Patch 6)",
+    "codename": "Cisatracurium (Patch 6)",
     "highlight": false,
     "changes": [
       "Fixed heading text visibility issues in dark mode across all pages."
@@ -153,7 +153,7 @@
   },
   {
     "version": "v0.24.5",
-    "codename": "Suxamethonium (Patch 5)",
+    "codename": "Chlorhexidine (Patch 5)",
     "highlight": false,
     "changes": [
       "Fixed heading visibility in the dashboard when using dark mode."
@@ -161,7 +161,7 @@
   },
   {
     "version": "v0.24.4",
-    "codename": "Suxamethonium (Patch 4)",
+    "codename": "Latex (Patch 4)",
     "highlight": false,
     "changes": [
       "Fixed button and search bar appearance in dark mode."
@@ -169,7 +169,7 @@
   },
   {
     "version": "v0.24.3",
-    "codename": "Suxamethonium (Patch 3)",
+    "codename": "IV Contrast (Patch 3)",
     "highlight": false,
     "changes": [
       "Fixed heading visibility in clinical reports and printed documents when using dark mode."
@@ -177,7 +177,7 @@
   },
   {
     "version": "v0.24.2",
-    "codename": "Suxamethonium (Patch 2)",
+    "codename": "Ondansetron (Patch 2)",
     "highlight": false,
     "changes": [
       "Fixed text and table visibility issues in clinical reports when using dark mode.",
@@ -186,7 +186,7 @@
   },
   {
     "version": "v0.24.1",
-    "codename": "Suxamethonium (Patch)",
+    "codename": "Vancomycin (Patch)",
     "highlight": false,
     "changes": [
       "Improved text readability and result highlighting in dark mode.",
@@ -195,7 +195,7 @@
   },
   {
     "version": "v0.24.0",
-    "codename": "Suxamethonium",
+    "codename": "Acetaminophen",
     "highlight": true,
     "changes": [
       "Comprehensive dark mode update with easier-on-the-eyes colors.",
@@ -206,7 +206,7 @@
   },
   {
     "version": "v0.23.0",
-    "codename": "Rocuronium",
+    "codename": "Amoxicillin",
     "highlight": false,
     "changes": [
       "Simplified code structure for better maintainability.",
@@ -215,7 +215,7 @@
   },
   {
     "version": "v0.22.0",
-    "codename": "Propofol",
+    "codename": "Sulfamethoxazole",
     "highlight": false,
     "changes": [
       "Improved layout on mobile phones and tablets - content is now easier to see and navigate.",
@@ -224,7 +224,7 @@
   },
   {
     "version": "v0.21.0",
-    "codename": "Etomidate",
+    "codename": "Doxycycline",
     "highlight": false,
     "changes": [
       "Fixed tooltip visibility issues in light and dark modes.",
@@ -233,7 +233,7 @@
   },
   {
     "version": "v0.20.0",
-    "codename": "Ketamine",
+    "codename": "Fluoroquinolone",
     "highlight": false,
     "changes": [
       "Added direct links to pages - you can now bookmark and share specific screens.",
@@ -242,7 +242,7 @@
   },
   {
     "version": "v0.19.0",
-    "codename": "Cisatracurium",
+    "codename": "Macrolide",
     "highlight": false,
     "changes": [
       "Improved button responsiveness and visual feedback throughout the app.",
@@ -251,7 +251,7 @@
   },
   {
     "version": "v0.18.0",
-    "codename": "Sugammadex",
+    "codename": "Ibuprofen",
     "highlight": false,
     "changes": [
       "Redesigned filter bar with easier-to-use controls.",
@@ -261,7 +261,7 @@
   },
   {
     "version": "v0.17.0",
-    "codename": "Remifentanil",
+    "codename": "Aspirin",
     "highlight": false,
     "changes": [
       "App now loads faster on first open.",
@@ -271,7 +271,7 @@
   },
   {
     "version": "v0.16.0",
-    "codename": "Bupivacaine",
+    "codename": "Paracetamol",
     "highlight": false,
     "changes": [
       "Updated design with a cleaner, sharper clinical appearance.",
@@ -280,7 +280,7 @@
   },
   {
     "version": "v0.15.0",
-    "codename": "Lignocaine",
+    "codename": "Epinephrine",
     "highlight": false,
     "changes": [
       "Updated fonts and colors to match NSW Health branding standards.",
@@ -289,7 +289,7 @@
   },
   {
     "version": "v0.14.0",
-    "codename": "Rocuronium",
+    "codename": "Hydrocortisone",
     "highlight": false,
     "changes": [
       "Internal improvements - code quality checks now run faster and more reliably.",
@@ -299,7 +299,7 @@
   },
   {
     "version": "v0.13.0",
-    "codename": "Neostigmine",
+    "codename": "Dexamethasone",
     "highlight": false,
     "changes": [
       "Added legal and governance documentation pages (Privacy Policy, Clinical Governance, Terms of Use, Technical Documentation, Disclaimer).",
@@ -309,7 +309,7 @@
   },
   {
     "version": "v0.12.0",
-    "codename": "Propofol",
+    "codename": "Trimethoprim",
     "highlight": false,
     "changes": [
       "Condensed Quick Start Guide - now more compact and easier to scan.",
@@ -319,7 +319,7 @@
   },
   {
     "version": "v0.11.0",
-    "codename": "Suxamethonium",
+    "codename": "Clindamycin",
     "highlight": false,
     "changes": [
       "Improved accessibility throughout the app - better keyboard navigation and screen reader support.",
@@ -332,7 +332,7 @@
   },
   {
     "version": "v0.10.0",
-    "codename": "Sevoflurane",
+    "codename": "Metronidazole",
     "changes": [
       "App now works offline - you can use it without an internet connection.",
       "Faster loading times and quicker access to patient data.",
@@ -344,7 +344,7 @@
   },
   {
     "version": "v0.9.0",
-    "codename": "Desflurane",
+    "codename": "Fluconazole",
     "changes": [
       "Added new information pages: About, FAQ, Drug Reference, Contact, and Resources.",
       "Redesigned dashboard with cleaner statistics display.",
@@ -354,7 +354,7 @@
   },
   {
     "version": "v0.8.0",
-    "codename": "Propofol",
+    "codename": "Ketoconazole",
     "changes": [
       "New Quick Start Guide to help you get started.",
       "Advanced Search with filters for reaction grade, date range, hospital, outcome, and suspected agents.",
@@ -364,7 +364,7 @@
   },
   {
     "version": "v0.7.0",
-    "codename": "Sevoflurane",
+    "codename": "Cefazolin",
     "changes": [
       "Improved layout and spacing in the testing forms.",
       "Printed reports no longer include the header - cleaner printed output.",
@@ -373,7 +373,7 @@
   },
   {
     "version": "v0.6.0",
-    "codename": "Fentanyl",
+    "codename": "Allopurinol",
     "changes": [
       "Fixed issues with saving clinical records - forms now save correctly.",
       "Better error messages when something goes wrong.",
@@ -383,7 +383,7 @@
   },
   {
     "version": "v0.5.0",
-    "codename": "Midazolam",
+    "codename": "Carbamazepine",
     "changes": [
       "Enhanced security to better protect patient information.",
       "Faster loading and uses less data.",
@@ -392,7 +392,7 @@
   },
   {
     "version": "v0.4.0",
-    "codename": "Rocuronium",
+    "codename": "Phenytoin",
     "changes": [
       "Smoother, less distracting animations in the dashboard.",
       "More stable - fewer crashes and errors."
@@ -400,7 +400,7 @@
   },
   {
     "version": "v0.3.0",
-    "codename": "Ketamine",
+    "codename": "NSAIDs",
     "changes": [
       "Easier workflow for viewing patient history and entering test results.",
       "New Testing Plan Generator for printable request forms.",
@@ -410,7 +410,7 @@
   },
   {
     "version": "v0.2.0",
-    "codename": "Atracurium",
+    "codename": "Valproic Acid",
     "changes": [
       "Upload patient databases from CSV files.",
       "New dashboard with statistics and patient overview.",
@@ -420,7 +420,7 @@
   },
   {
     "version": "v0.1.0",
-    "codename": "Lignocaine",
+    "codename": "Cisplatin",
     "changes": [
       "Initial release of the Anaesthetic Allergy Clinic application.",
       "Record skin tests and drug challenges.",
