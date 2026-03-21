@@ -26,7 +26,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
   };
 
   return (
-    <Card className="max-w-6xl mx-auto mt-8 border-t-4 border-t-primary print:shadow-none print:border-none print:border-t-4 print:border-t-primary print:max-w-none print:mt-0">
+    <Card className="w-full mt-8 border-t-4 border-t-primary print:shadow-none print:border-none print:border-t-4 print:border-t-primary print:max-w-none print:mt-0">
         {/* Screen-only Controls */}
         <div className="p-4 border-b border-slate-200 bg-slate-50 dark:bg-slate-900/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">
             <h3 className="text-lg font-semibold tracking-tight text-slate-800 dark:text-slate-100">Testing Plan Document</h3>
