@@ -2,6 +2,9 @@ import React, { useState, useRef } from 'react';
 import { Button, Label, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
 import { Lock } from 'lucide-react';
 
+// @ts-expect-error - __APP_VERSION__ is injected by Vite during build
+const APP_VERSION = __APP_VERSION__;
+
 const HARDCODED_PIN = '2050';
 
 interface PasswordGateProps {
@@ -65,57 +68,68 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
   if (unlocked) return <>{children}</>;
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6 animate-content-enter">
-        <div className="flex items-center gap-2 self-center font-medium">
-          <div className="flex size-6 items-center justify-center bg-primary text-primary-foreground">
-            <Lock className="size-4" />
-          </div>
-          Anaesthetic Allergy Clinic
-        </div>
-
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">Welcome back</CardTitle>
-            <CardDescription>Enter your PIN to continue</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-3 items-center">
-                <Label>PIN</Label>
-                <div className="flex gap-3" role="group" aria-label="PIN entry">
-                  {[0, 1, 2, 3].map(i => (
-                    <input
-                      key={i}
-                      ref={el => { inputRefs.current[i] = el; }}
-                      type="password"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      maxLength={1}
-                      value={digits[i]}
-                      autoFocus={i === 0}
-                      autoComplete={i === 0 ? 'one-time-code' : 'off'}
-                      aria-label={`PIN digit ${i + 1} of 4`}
-                      onChange={e => handleDigitChange(i, e.target.value)}
-                      onKeyDown={e => handleKeyDown(i, e)}
-                      onPaste={i === 0 ? handlePaste : undefined}
-                      className="w-12 h-14 text-center text-xl border border-input bg-background
-                                 focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring
-                                 transition-colors"
-                    />
-                  ))}
-                </div>
-              </div>
-              {error && <p className="text-destructive text-sm text-center">{error}</p>}
-              <Button onClick={() => handleUnlock()} className="w-full">Unlock</Button>
+    <div className="flex min-h-svh flex-col bg-muted">
+      <div className="flex flex-1 items-center justify-center p-6 md:p-10">
+        <div className="flex w-full max-w-sm flex-col gap-6 animate-content-enter">
+          <div className="flex items-center gap-2 self-center font-medium">
+            <div className="flex size-6 items-center justify-center bg-primary text-primary-foreground">
+              <Lock className="size-4" />
             </div>
-          </CardContent>
-        </Card>
+            Anaesthetic Allergy Clinic
+          </div>
 
-        <p className="text-center text-xs text-muted-foreground">
-          RPAH Department of Clinical Immunology &amp; Allergy
-        </p>
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="text-xl">Welcome back</CardTitle>
+              <CardDescription>Enter your PIN to continue</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3 items-center">
+                  <Label>PIN</Label>
+                  <div className="flex gap-3" role="group" aria-label="PIN entry">
+                    {[0, 1, 2, 3].map(i => (
+                      <input
+                        key={i}
+                        ref={el => { inputRefs.current[i] = el; }}
+                        type="password"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={1}
+                        value={digits[i]}
+                        autoFocus={i === 0}
+                        autoComplete={i === 0 ? 'one-time-code' : 'off'}
+                        aria-label={`PIN digit ${i + 1} of 4`}
+                        onChange={e => handleDigitChange(i, e.target.value)}
+                        onKeyDown={e => handleKeyDown(i, e)}
+                        onPaste={i === 0 ? handlePaste : undefined}
+                        className="w-12 h-14 text-center text-xl border border-input bg-background
+                                   focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring
+                                   transition-colors"
+                      />
+                    ))}
+                  </div>
+                </div>
+                {error && <p className="text-destructive text-sm text-center">{error}</p>}
+                <Button onClick={() => handleUnlock()} className="w-full">Unlock</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <p className="text-center text-xs text-muted-foreground">
+            RPAH Department of Clinical Immunology &amp; Allergy
+          </p>
+        </div>
       </div>
+
+      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-4 py-3">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <span className="font-semibold text-primary">RPAH Anaesthetic Allergy Clinic</span>
+            <span className="font-semibold font-mono">v{APP_VERSION}</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
