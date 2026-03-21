@@ -1,5 +1,20 @@
 [
   {
+    "version": "v0.32.0",
+    "codename": "Vecuronium",
+    "highlight": true,
+    "changes": [
+      "Professional report redesign — all three report tabs (Clinical Report, Patient Handout, Powerchart Letter) now feature minimal left-accent bar headers replacing dark backgrounds.",
+      "Reports now use refined card-based layouts with rounded corners and subtle backgrounds for better visual separation and hierarchy.",
+      "Improved spacing and breathing room across all reports — increased padding and consistent gaps between sections for a more polished appearance.",
+      "Typography refined — streamlined heading styles, consistent label sizing, and improved contrast throughout.",
+      "Testing Plan document now matches the professional styling of reports — minimal accent bar header, card-based patient banner, and improved drug category presentation.",
+      "Consolidated report navigation — unified tab-based interface after saving records, with consistent Print, Copy as Text, and Email buttons across all three report types.",
+      "Dark mode support enhanced across all print documents with improved color contrast and readability.",
+      "Print output optimized — cleaner, lighter styling with proper media queries ensuring professional appearance when printed or exported."
+    ]
+  },
+  {
     "version": "v0.31.0",
     "codename": "Rocuronium",
     "highlight": true,
