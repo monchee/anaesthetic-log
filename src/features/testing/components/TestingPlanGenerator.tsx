@@ -110,11 +110,11 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
         </div>
 
         {isOpen && (
-            <CardContent className="pt-0 pb-6 px-6">
+            <CardContent className="p-4 sm:p-6">
                 <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-6">
 
                     {/* Urgent flag + Reaction Date */}
-                    <div className="flex flex-wrap items-center gap-6">
+                    <div className="flex flex-wrap items-center gap-4">
                         <div
                             className={`flex items-center gap-2 px-3 py-2 border cursor-pointer transition-colors ${
                                 urgent
@@ -148,7 +148,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     {/* Documents to Chase */}
                     <div className="space-y-2">
                         <Label className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">Documents to Chase</Label>
-                        <div className="flex flex-wrap gap-4">
+                        <div className="flex flex-wrap gap-2">
                             <div className="flex items-center gap-2">
                                 <Checkbox id="doc-tryptases" checked={documentsToChase.tryptases} onCheckedChange={() => toggleDoc('tryptases')} />
                                 <Label htmlFor="doc-tryptases" className="text-sm cursor-pointer">Tryptases</Label>
@@ -176,7 +176,6 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     <div className="space-y-2">
                         <Label className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">Clinical Notes / Indication</Label>
                         <Textarea
-                            placeholder="e.g. History of reaction to Rocuronium. Please test standard panel plus..."
                             value={notes}
                             onChange={e => setNotes(e.target.value)}
                             className="min-h-[60px]"
@@ -184,7 +183,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     </div>
 
                     {/* Drug Selection Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
                         {Object.entries(drugCategories).map(([category, drugs]) => {
                             const categoryDrugs = drugs as string[];
                             const allCategorySelected = categoryDrugs.every(d => selectedDrugs.includes(d));

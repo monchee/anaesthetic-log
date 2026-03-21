@@ -40,10 +40,10 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </div>
         </div>
 
-        <CardContent className="p-8 md:p-10 print:p-0">
+        <CardContent className="p-6 md:p-8 print:p-4">
              {/* Urgent Banner */}
              {urgent && (
-                 <div className="mb-6 print:mb-3 flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-3 print:py-1.5 font-bold uppercase tracking-widest text-sm print:text-xs">
+                 <div className="mb-4 print:mb-2 flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-2 print:py-1 font-bold uppercase tracking-widest text-sm print:text-xs">
                      <AlertTriangle className="w-5 h-5 print:w-4 print:h-4 shrink-0" />
                      URGENT — Priority Testing Required
                  </div>
@@ -65,7 +65,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </div>
 
             {/* Patient Banner */}
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-none grid grid-cols-2 sm:grid-cols-3 gap-4 mt-8 print:grid-cols-3 print:bg-slate-50 print:p-2 print:mt-2 print:gap-2">
+            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 sm:p-4 rounded-none grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mt-8 print:grid-cols-3 print:bg-slate-50 print:p-2 print:mt-2 print:gap-2">
                 <div>
                     <p className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider print:text-[9px]">Patient Name</p>
                     <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{patient.firstName} {patient.lastName}</p>
@@ -98,7 +98,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
             {/* Documents to Chase */}
             {documentsToChase && (documentsToChase.tryptases || documentsToChase.anaestheticChart || documentsToChase.other) && (
-                <div className="mt-6 print:mt-2">
+                <div className="mt-5 print:mt-1.5">
                     <h4 className="font-semibold text-[10px] uppercase tracking-widest border-b border-slate-200 dark:border-slate-700 mb-2 pb-1 print:text-[10px] print:mb-1 print:pb-0.5 flex items-center gap-1.5">
                         <span className="inline-block w-0.5 h-3 bg-primary shrink-0" />
                         <FolderSearch className="w-3.5 h-3.5 print:w-3 print:h-3" />
@@ -129,7 +129,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
             {/* Notes */}
             {notes && (
-                <div className="mt-8 print:mt-2">
+                <div className="mt-6 print:mt-1.5">
                     <h4 className="font-semibold text-[10px] uppercase tracking-widest border-b border-slate-100 dark:border-slate-700 mb-2 pb-1 print:text-[10px] print:mb-1 print:pb-0.5 flex items-center gap-1.5">
                         <span className="inline-block w-0.5 h-3 bg-primary shrink-0" />
                         <NotebookText className="w-3.5 h-3.5 print:w-3 print:h-3" />
@@ -140,22 +140,22 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             )}
 
             {/* Selected Drugs List */}
-            <div className="mt-8 print:mt-2">
-                <h4 className="font-semibold text-[10px] uppercase tracking-widest border-b-2 border-slate-800 dark:border-slate-700 mb-4 pb-1 print:text-[10px] print:mb-2 print:pb-1 print:border-b flex items-center gap-1.5">
+            <div className="mt-6 print:mt-1.5">
+                <h4 className="font-semibold text-[10px] uppercase tracking-widest border-b-2 border-slate-800 dark:border-slate-700 mb-3 pb-1 print:text-[10px] print:mb-1.5 print:pb-0.5 print:border-b flex items-center gap-1.5">
                     <span className="inline-block w-0.5 h-3 bg-primary shrink-0" />
                     <FileText className="w-4 h-4 print:w-3 print:h-3" /> Requested Panel
                 </h4>
-                
+
                 {selectedDrugs.length > 0 ? (
-                    <div className="columns-2 md:columns-3 gap-6 space-y-4 print:columns-3 print:gap-4 print:space-y-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 print:grid-cols-3 print:gap-2">
                         {/* Group selected drugs by category for display */}
                         {Object.entries(drugCategories).map(([category, drugs]) => {
                             const activeInCat = (drugs as string[]).filter(d => selectedDrugs.includes(d));
                             if (activeInCat.length === 0) return null;
                             
                             return (
-                                <div key={category} className="break-inside-avoid mb-4 bg-slate-50 border border-slate-100 p-3 print:mb-2 print:p-2 print:bg-slate-50 print:border print:border-slate-100">
-                                    <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary border-b border-slate-200 pb-1 mb-2 print:text-[9px] print:pb-0.5 print:mb-1">{category}</h5>
+                                <div key={category} className="break-inside-avoid mb-0 bg-slate-50 border border-slate-100 p-3 print:mb-0 print:p-2 print:bg-slate-50 print:border print:border-slate-100">
+                                    <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary border-b border-slate-200 pb-1 mb-1.5 print:text-[9px] print:pb-0.5 print:mb-1">{category}</h5>
                                     <ul className="space-y-1 print:space-y-0">
                                         {activeInCat.map(d => (
                                             <li key={d} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 print:text-xs print:gap-1.5">
@@ -170,8 +170,8 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
                         {/* Custom Drugs Group */}
                         {customDrugs.filter(d => selectedDrugs.includes(d)).length > 0 && (
-                            <div className="break-inside-avoid mb-4 bg-slate-50 border border-slate-100 p-3 print:mb-2 print:p-2 print:bg-slate-50 print:border print:border-slate-100">
-                                <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary border-b border-slate-200 pb-1 mb-2 print:text-[9px] print:pb-0.5 print:mb-1">Additional</h5>
+                            <div className="break-inside-avoid mb-0 bg-slate-50 border border-slate-100 p-3 print:mb-0 print:p-2 print:bg-slate-50 print:border print:border-slate-100">
+                                <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary border-b border-slate-200 pb-1 mb-1.5 print:text-[9px] print:pb-0.5 print:mb-1">Additional</h5>
                                 <ul className="space-y-1 print:space-y-0">
                                     {customDrugs.filter(d => selectedDrugs.includes(d)).map(d => (
                                         <li key={d} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 print:text-xs print:gap-1.5">
@@ -189,7 +189,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </div>
             
             {/* Signature Area */}
-            <div className="mt-10 pt-6 border-t border-slate-200 flex justify-between gap-12 print:flex print:mt-4 print:pt-3 print:gap-8">
+            <div className="mt-8 pt-4 border-t border-slate-200 flex justify-between gap-12 print:flex print:mt-2 print:pt-2 print:gap-6">
                 <div className="flex-1 border-t border-black pt-2 print:pt-1">
                     <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Requested By (Name & Signature)</p>
                 </div>
@@ -199,7 +199,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </div>
 
             {/* Proceed Action (Hidden on Print) */}
-            <div className="mt-12 pt-6 border-t border-slate-100 print:hidden flex justify-end">
+            <div className="mt-8 pt-4 border-t border-slate-100 print:hidden flex justify-end">
                 <Button size="lg" onClick={onProceed} className="shadow-lg shadow-slate-200 dark:shadow-slate-900/50">
                     Proceed to Testing Panel <ChevronRight className="ml-2 w-4 h-4" />
                 </Button>

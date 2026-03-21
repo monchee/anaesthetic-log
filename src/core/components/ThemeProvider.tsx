@@ -39,6 +39,12 @@ export function ThemeProvider({
     const root = window.document.documentElement
     root.classList.remove("light", "dark")
     root.classList.add(theme)
+
+    // Update browser theme color for address bar and tab
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]')
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute('content', theme === 'dark' ? '#4D8FFF' : '#002664')
+    }
   }, [theme])
 
   const toggleTheme = () => {
