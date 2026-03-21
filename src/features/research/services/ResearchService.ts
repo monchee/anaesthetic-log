@@ -67,6 +67,13 @@ export async function submitResult(submission: ResearchSubmission): Promise<void
   if (error) throw new Error(error.message);
 }
 
+export async function deleteResult(id: string): Promise<void> {
+  if (!supabase) throw new Error('Research database is not configured.');
+
+  const { error } = await supabase.from(TABLE).delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
 export async function fetchAllResults(): Promise<ResearchRecord[]> {
   if (!supabase) return [];
 

@@ -45,3 +45,7 @@ CREATE POLICY "anon_insert" ON research_submissions
 -- Allow the anonymous (app) user to SELECT records (data is de-identified)
 CREATE POLICY "anon_select" ON research_submissions
   FOR SELECT TO anon USING (true);
+
+-- Allow the anonymous (app) user to DELETE records
+CREATE POLICY "anon_delete" ON research_submissions
+  FOR DELETE TO anon USING (true);

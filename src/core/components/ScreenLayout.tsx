@@ -26,6 +26,7 @@ interface ScreenLayoutProps {
     isCustomData?: boolean;
     onDismissDisclaimer?: () => void;
     onUploadPatients?: (patients: Patient[]) => void;
+    showNav?: boolean;
 }
 
 const primaryNav = [
@@ -49,7 +50,8 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     showDisclaimer,
     isCustomData = false,
     onDismissDisclaimer,
-    onUploadPatients
+    onUploadPatients,
+    showNav = true
 }) => {
     const { theme, toggleTheme } = useTheme();
     const [isCSVUploadSheetOpen, setIsCSVUploadSheetOpen] = useState(false);
@@ -133,6 +135,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                             <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
 
                                 {/* Primary Nav Pills */}
+                                {showNav && (
                                 <nav aria-label="Primary navigation" className="flex items-center gap-1">
                                     {primaryNav.map(({ label, icon: Icon, screen }) => {
                                         const isActive = currentScreen === screen;
@@ -153,14 +156,15 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                         );
                                     })}
                                 </nav>
+                                )}
 
                                 {actions && <div className="h-6 w-px bg-white/10 mx-1" />}
                                 {actions}
 
-                                <div className="h-6 w-px bg-white/10 mx-1 hidden sm:block"></div>
+                                {showNav && <div className="h-6 w-px bg-white/10 mx-1 hidden sm:block"></div>}
 
                                 {/* Hamburger Menu */}
-                                <DropdownMenu>
+                                {showNav && <DropdownMenu>
                                     <DropdownMenuTrigger
                                         className="h-9 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-all duration-200 shadow-sm group"
                                         title="Open Navigation Menu"
@@ -197,7 +201,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                             {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
-                                </DropdownMenu>
+                                </DropdownMenu>}
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2 } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2, LogOut } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
@@ -115,11 +115,12 @@ function AnaestheticLogApp() {
 
       return (
         <ScreenLayout title="Reports" icon={<FileText className="w-5 h-5" />} {...layoutProps}
-          actions={<Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className={BACK_BTN}><LayoutDashboard className={BACK_ICON} /> Dashboard</Button>}
+          showNav={false} showFooter={false}
+          actions={<Button onClick={() => { research.reset(); resetForm(); }} variant="ghost" className={BACK_BTN}><LogOut className={BACK_ICON} /> Exit</Button>}
           contentClassName="py-4 space-y-4"
         >
           {/* Tab bar */}
-          <div className="flex border-b border-slate-200 dark:border-slate-800 no-print">
+          <div className="flex overflow-x-auto border-b border-slate-200 dark:border-slate-800 no-print -mx-1 px-1">
             {([
               { key: 'report', label: 'Clinical Report', icon: <FileText className="w-4 h-4" /> },
               { key: 'handout', label: 'Patient Handout', icon: <User className="w-4 h-4" /> },
@@ -128,7 +129,7 @@ function AnaestheticLogApp() {
               <button
                 key={key}
                 onClick={() => setActiveReportTab(key)}
-                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors rounded-none whitespace-nowrap
+                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors rounded-none whitespace-nowrap shrink-0
                   ${activeReportTab === key
                     ? 'border-primary text-primary'
                     : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
@@ -187,7 +188,7 @@ function AnaestheticLogApp() {
 
           {/* Start New Log */}
           <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
-            <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
+            <Button onClick={() => { research.reset(); resetForm(); }} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
               <Plus className="w-5 h-5 mr-2" /> Start New Log
             </Button>
           </div>

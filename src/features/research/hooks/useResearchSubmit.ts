@@ -9,6 +9,7 @@ interface UseResearchSubmitResult {
   isSubmitted: boolean;
   error: string | null;
   submit: (formData: LogFormData, redcapId?: string) => Promise<void>;
+  reset: () => void;
 }
 
 export function useResearchSubmit(): UseResearchSubmitResult {
@@ -30,11 +31,17 @@ export function useResearchSubmit(): UseResearchSubmitResult {
     }
   };
 
+  const reset = () => {
+    setIsSubmitted(false);
+    setError(null);
+  };
+
   return {
     isAvailable: isSupabaseConfigured,
     isSubmitting,
     isSubmitted,
     error,
     submit,
+    reset,
   };
 }
