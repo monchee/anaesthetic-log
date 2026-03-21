@@ -135,9 +135,14 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-4 sm:mt-6 md:mt-8">
       
       {/* Section Header */}
-      <div className="flex items-center gap-2 border-b-2 border-slate-200 dark:border-slate-800 pb-2 mb-2">
-        <Stethoscope className="w-6 h-6 text-primary dark:text-primary" />
-        <h2 className="text-xl font-semibold tracking-tight text-primary dark:text-primary uppercase">Anaesthetic Allergy Testing</h2>
+      <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4 mb-2">
+        <div className="p-2 bg-primary dark:bg-slate-800 rounded-none shrink-0">
+          <Stethoscope className="w-5 h-5 text-white dark:text-primary" />
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">Anaesthetic Allergy Testing</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Record skin prick, intradermal, and drug challenge results</p>
+        </div>
       </div>
 
       {/* 1. Visit Details & Patient Info */}
@@ -284,7 +289,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                 <button
                                     key={drug}
                                     onClick={() => toggleDrug(drug)}
-                                    className={`text-xs px-2.5 py-1.5 rounded border transition-all duration-150 flex items-center gap-1.5 text-left ${
+                                    className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${
                                     isSelected
                                     ? theme.btnSelected
                                     : `bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 ${theme.btnHover}`
@@ -299,7 +304,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                             {category === 'Others' && (
                                 <button
                                     onClick={addCustomDrug}
-                                    className={`text-xs px-2.5 py-1.5 rounded border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
+                                    className={`text-xs px-2.5 py-1.5 rounded-none border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
                                 >
                                     <Plus className="w-3 h-3 shrink-0" />
                                     Other

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, Button } from '@/components/ui';
-import { Sun, Moon, Menu, HelpCircle, Upload, Stethoscope, LayoutDashboard } from 'lucide-react';
+import { Sun, Moon, Menu, HelpCircle, Upload, Stethoscope, LayoutDashboard, Info, FlaskConical, Mail, BookOpen, ScrollText } from 'lucide-react';
 import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
 import { useTheme } from './ThemeProvider';
@@ -29,7 +29,7 @@ interface ScreenLayoutProps {
 }
 
 const primaryNav = [
-    { label: 'Log', icon: Stethoscope, screen: Screen.LOG },
+    { label: 'Home', icon: Stethoscope, screen: Screen.LOG },
     { label: 'Dashboard', icon: LayoutDashboard, screen: Screen.DASHBOARD },
 ];
 
@@ -124,7 +124,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                     <h1 className="text-xl font-semibold tracking-tight leading-none truncate m-0 text-white">
                                         {title}
                                     </h1>
-                                    {subtitle && <div className="text-[0.625rem] sm:text-xs text-white/80 truncate font-normal mt-1 italic opacity-90">{subtitle}</div>}
+                                    {subtitle && <div className="text-[0.625rem] sm:text-xs text-white/80 truncate font-normal mt-1 opacity-90">{subtitle}</div>}
                                 </div>
                             </div>
 
@@ -182,12 +182,12 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
                                         <DropdownMenuSeparator />
 
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.ABOUT)}>About</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.FAQ)}>FAQ</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.DRUG_REFERENCE)}>Drug Reference</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.CONTACT)}>Contact / Support</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.RESOURCES)}>Resources / Links</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setScreen(Screen.CHANGELOG)}>Changelog</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.ABOUT)}><Info className="w-4 h-4 mr-2" />About</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.FAQ)}><HelpCircle className="w-4 h-4 mr-2" />FAQ</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.DRUG_REFERENCE)}><FlaskConical className="w-4 h-4 mr-2" />Drug Reference</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.CONTACT)}><Mail className="w-4 h-4 mr-2" />Contact / Support</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.RESOURCES)}><BookOpen className="w-4 h-4 mr-2" />Resources / Links</DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => setScreen(Screen.CHANGELOG)}><ScrollText className="w-4 h-4 mr-2" />Changelog</DropdownMenuItem>
 
                                         <DropdownMenuSeparator />
 

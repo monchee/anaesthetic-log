@@ -1,5 +1,22 @@
 [
   {
+    "version": "v0.34.0",
+    "codename": "Suxamethonium",
+    "highlight": true,
+    "changes": [
+      "Navigation overhaul — 'Log' nav pill renamed to 'Home'; all dropdown menu items now have matching icons for visual consistency.",
+      "Info page icons fixed — Changelog, About, FAQ, Drug Reference, Contact, and Resources pages now show appropriate icons instead of a generic user icon.",
+      "Descriptive subtitles added to six info pages (Changelog, About, FAQ, Drug Reference, Contact, Resources) visible in the header bar.",
+      "Header subtitle polish — removed italic styling from subtitle text; secondary screens (Dashboard, Reports, Testing Plan Preview) no longer show the redundant department name subtitle.",
+      "Testing page header reworked — now uses the project-wide card header pattern with icon in a primary-coloured box, normal-case title, and descriptive subtitle.",
+      "Request form layout improved — Date of Reaction and Urgent merged into a single styled card; Documents to Chase restyled as a category card; history notice moved above the drug grid as an amber callout box; Clinical Notes moved to the bottom.",
+      "Drug selection buttons in testing forms now have sharp square corners, consistent with the project's design language.",
+      "Grade badge in reaction history restored as a tap/hover popover instead of always-visible subtext.",
+      "Upload CSV box and icon in the Quick Start modal changed to red, consistent with other upload buttons.",
+      "PIN screen version number repositioned to the fixed bottom-right corner of the screen."
+    ]
+  },
+  {
     "version": "v0.33.0",
     "codename": "Esmolol",
     "highlight": false,

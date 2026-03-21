@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Shield, ShieldCheck, FileCheck, Cpu, AlertTriangle } from 'lucide-react';
+import { ScrollText, Info, HelpCircle, FlaskConical, Mail, BookOpen, Shield, ShieldCheck, FileCheck, Cpu, AlertTriangle } from 'lucide-react';
 import { Screen } from '@shared/types';
 
 interface InfoPageRoute {
@@ -16,37 +16,43 @@ export const INFO_PAGE_ROUTES: InfoPageRoute[] = [
   {
     screen: Screen.CHANGELOG,
     title: 'Application Changelog',
-    icon: <User className="w-5 h-5" />,
+    subtitle: 'Version history and release notes',
+    icon: <ScrollText className="w-5 h-5" />,
     component: React.lazy(() => import('@features/info-pages/components/Changelog')),
   },
   {
     screen: Screen.ABOUT,
     title: 'About',
-    icon: <User className="w-5 h-5" />,
+    subtitle: 'About this application and the clinic',
+    icon: <Info className="w-5 h-5" />,
     component: React.lazy(() => import('@features/info-pages/components/AboutPage')),
   },
   {
     screen: Screen.FAQ,
     title: 'FAQ',
-    icon: <User className="w-5 h-5" />,
+    subtitle: 'Frequently asked questions',
+    icon: <HelpCircle className="w-5 h-5" />,
     component: React.lazy(() => import('@features/info-pages/components/FAQPage')),
   },
   {
     screen: Screen.DRUG_REFERENCE,
     title: 'Drug Reference',
-    icon: <User className="w-5 h-5" />,
+    subtitle: 'Anaesthetic agents and allergy risk reference',
+    icon: <FlaskConical className="w-5 h-5" />,
     component: React.lazy(() => import('@features/info-pages/components/DrugReferencePage')),
   },
   {
     screen: Screen.CONTACT,
     title: 'Contact',
-    icon: <User className="w-5 h-5" />,
+    subtitle: 'Get in touch with the team',
+    icon: <Mail className="w-5 h-5" />,
     component: React.lazy(() => import('@features/info-pages/components/ContactPage')),
   },
   {
     screen: Screen.RESOURCES,
     title: 'Resources',
-    icon: <User className="w-5 h-5" />,
+    subtitle: 'External links and clinical references',
+    icon: <BookOpen className="w-5 h-5" />,
     component: React.lazy(() => import('@features/info-pages/components/ResourcesPage')),
   },
   {

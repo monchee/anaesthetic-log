@@ -61,7 +61,7 @@ function AnaestheticLogApp() {
       return (
         <ScreenLayout
           title={infoRoute.title}
-          subtitle={infoRoute.subtitle || APP_SUBTITLE}
+          subtitle={infoRoute.subtitle}
           icon={infoRoute.icon}
           {...layoutProps}
           actions={
@@ -77,7 +77,7 @@ function AnaestheticLogApp() {
 
     if (screen === Screen.DASHBOARD) {
       return (
-        <ScreenLayout title="Clinical Dashboard" subtitle={APP_SUBTITLE} icon={<LayoutDashboard className="w-5 h-5" />} {...layoutProps}
+        <ScreenLayout title="Clinical Dashboard" icon={<LayoutDashboard className="w-5 h-5" />} {...layoutProps}
         >
           <Dashboard
             setScreen={setScreen} existingPatients={patients} recentLogs={recentLogs}
@@ -111,7 +111,7 @@ function AnaestheticLogApp() {
       };
 
       return (
-        <ScreenLayout title="Reports" subtitle={APP_SUBTITLE} icon={<FileText className="w-5 h-5" />} {...layoutProps}
+        <ScreenLayout title="Reports" icon={<FileText className="w-5 h-5" />} {...layoutProps}
           actions={<Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className={BACK_BTN}><LayoutDashboard className={BACK_ICON} /> Dashboard</Button>}
           contentClassName="py-4 space-y-4"
         >
@@ -166,7 +166,7 @@ function AnaestheticLogApp() {
 
     if (screen === Screen.PRINT_PLAN && selectedPatient && testingPlanData) {
       return (
-        <ScreenLayout title="Testing Plan Preview" subtitle={APP_SUBTITLE} icon={<ClipboardList className="w-5 h-5" />} {...layoutProps} showFooter={false}
+        <ScreenLayout title="Testing Plan Preview" icon={<ClipboardList className="w-5 h-5" />} {...layoutProps} showFooter={false}
           actions={<Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
         >
           <TestingPlanPrintView patient={selectedPatient} data={testingPlanData} drugCategories={DRUG_CATEGORIES} onProceed={() => setScreen(Screen.TESTING)} />
@@ -178,7 +178,7 @@ function AnaestheticLogApp() {
       return (
         <ScreenLayout
           title="Testing Session" icon={<TestTube2 className="w-5 h-5" />}
-          subtitle={selectedPatient ? `Patient: ${selectedPatient.lastName}, ${selectedPatient.firstName} (ID: ${selectedPatient.id === 'manual' ? 'New' : selectedPatient.id})` : APP_SUBTITLE}
+          subtitle={selectedPatient ? `Patient: ${selectedPatient.lastName}, ${selectedPatient.firstName} (ID: ${selectedPatient.id === 'manual' ? 'New' : selectedPatient.id})` : undefined}
           {...layoutProps}
           actions={<Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
           contentClassName="py-4" className="pb-32"
