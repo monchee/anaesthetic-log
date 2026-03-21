@@ -72,9 +72,14 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
                 Found a bug or something not working correctly?
               </p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Please note the steps to reproduce the issue and report to your administrator.
-              </p>
+              <div className="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+                <p>
+                  <strong>Standard issues:</strong> Report to your clinic administrator with steps to reproduce.
+                </p>
+                <p>
+                  <strong>Urgent/Critical issues:</strong> Contact the allergy nursing team directly at <strong>SLHD-RPA-allergynurses@health.nsw.gov.au</strong> if the issue impacts patient care.
+                </p>
+              </div>
             </div>
 
             <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
