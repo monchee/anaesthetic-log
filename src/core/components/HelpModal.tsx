@@ -4,6 +4,8 @@ import {
   HelpCircle,
   Upload,
   FileSpreadsheet,
+  LayoutDashboard,
+  Activity,
 } from 'lucide-react';
 import { parseRedcapCSV } from '@shared/utils';
 import { Patient } from '@/types';
@@ -103,9 +105,32 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
             </DialogTitle>
           </DialogHeader>
 
-          <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-            Upload a REDCap CSV export to load patient data into the app.
-          </p>
+          {/* Greeting */}
+          <div className="mb-4">
+            <h2 className="font-semibold text-slate-900 dark:text-white text-base mb-1">
+              Welcome to the RPAH Anaesthetic Allergy Clinic Tool
+            </h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Manage patient records, test results, and allergy workups from your REDCap database.
+            </p>
+          </div>
+
+          {/* Feature summary */}
+          <div className="space-y-2 mb-5">
+            {[
+              { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', desc: 'Patient stats, search, and filter' },
+              { icon: <Activity className="w-4 h-4" />, label: 'Testing', desc: 'Record SPT, IDT, and drug challenge results' },
+              { icon: <FileSpreadsheet className="w-4 h-4" />, label: 'Database', desc: 'Full reaction timelines and severity grades' },
+            ].map(({ icon, label, desc }) => (
+              <div key={label} className="flex items-center gap-3 text-sm">
+                <span className="text-slate-400 dark:text-slate-500 shrink-0">{icon}</span>
+                <span className="font-medium text-slate-800 dark:text-slate-200 w-20 shrink-0">{label}</span>
+                <span className="text-slate-500 dark:text-slate-400">{desc}</span>
+              </div>
+            ))}
+          </div>
+
+          <hr className="border-slate-200 dark:border-slate-700 mb-5" />
 
           {/* CSV Upload Hero */}
           {onUploadPatients && (
