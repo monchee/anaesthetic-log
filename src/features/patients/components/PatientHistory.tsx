@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Badge, HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui';
 import { Patient } from '@/types';
 import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck, FlaskConical } from 'lucide-react';
-import { formatDate, getGradeVariant, parsePatientTimeline } from '@shared/utils';
+import { formatDate, getGradeVariant, parsePatientTimeline, calculateTimeDifference } from '@shared/utils';
 
 interface PatientHistoryProps {
   patient: Patient;
@@ -49,11 +49,26 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
 
   const doctorName = history.referringDoctor || history.anaesthetist || "Unknown";
 
+  const getGradeBorderColor = (variant: ReturnType<typeof getGradeVariant>): string => {
+    switch (variant) {
+      case 'grade4': return 'border-l-rose-600';
+      case 'grade3': return 'border-l-orange-500';
+      case 'grade2': return 'border-l-amber-500';
+      case 'grade1': return 'border-l-emerald-600';
+      default:       return 'border-l-slate-300 dark:border-l-slate-600';
+    }
+  };
+
+  const elapsedMinutes = calculateTimeDifference(history.inductionTime, history.reactionTime);
+  const elapsedLabel = elapsedMinutes !== null
+    ? (elapsedMinutes < 60 ? `+${elapsedMinutes}m` : `+${Math.floor(elapsedMinutes / 60)}h ${elapsedMinutes % 60}m`)
+    : null;
+
   return (
     <Card className="shadow-md bg-white dark:bg-slate-900">
       <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
         <CardTitle className="flex items-center gap-2 text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-          <div className="bg-primary/10 dark:bg-slate-900/40 p-1.5 rounded-none">
+          <div className="bg-primary/15 dark:bg-primary/20 p-1.5 rounded-none">
             <History className="h-4 w-4 text-primary dark:text-primary" />
           </div>
           Reaction History
@@ -62,7 +77,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
       <CardContent className="p-5 space-y-6">
         
         {/* Header Information Box */}
-        <div className="mt-2 bg-slate-50 dark:bg-slate-950 p-4 rounded-none border border-slate-100 dark:border-slate-800 shadow-sm flex flex-wrap items-center justify-between gap-y-2 gap-x-3">
+        <div className={`mt-2 bg-slate-50 dark:bg-slate-950 p-4 rounded-none border border-slate-100 dark:border-slate-800 border-l-4 ${getGradeBorderColor(getGradeVariant(history.grade))} shadow-sm flex flex-wrap items-center justify-between gap-y-2 gap-x-3`}>
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
             <span className="font-semibold text-slate-900 dark:text-white text-lg tracking-tight">
                 {formatDate(history.date)}
@@ -102,11 +117,11 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 {/* 1. Suspected Agents */}
                 {history.suspectedAgents && history.suspectedAgents.length > 0 && (
                     <div className="space-y-2">
-                            <div className="section-label flex items-center gap-2">
-                            <AlertTriangle className="h-3.5 w-3.5 text-red-500" /> 
-                            Suspected Culprit Agents
+                            <div className="flex items-center gap-2">
+                            <AlertTriangle className="h-3.5 w-3.5 text-red-500 shrink-0" />
+                            <span className="text-[0.625rem] font-bold uppercase tracking-wider text-red-600 dark:text-red-400">Suspected Culprit Agents</span>
                         </div>
-                        <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-none border border-slate-100 dark:border-slate-800 flex flex-wrap gap-2 shadow-sm min-h-[44px] items-center">
+                        <div className="bg-red-50 dark:bg-red-950/20 p-3 rounded-none border border-red-100 dark:border-red-900/30 flex flex-wrap gap-2 shadow-sm min-h-[44px] items-center">
                             {history.suspectedAgents.map((agent, i) => (
                                 <Badge key={i} variant="danger" className="text-xs px-2.5 py-0.5">{agent}</Badge>
                             ))}
@@ -152,13 +167,13 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             {(history.firstSymptom || history.predominantSymptom) && (
                                 <div className="space-y-2 border-b border-slate-200 dark:border-slate-800 pb-3 mb-1">
                                     {history.firstSymptom && (
-                                        <div className="flex flex-col bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-700 shadow-sm">
+                                        <div className="flex flex-col bg-white dark:bg-slate-900 p-2 rounded-none border border-slate-200 dark:border-slate-700 border-l-2 border-l-amber-400 shadow-sm">
                                             <span className="section-label mb-0.5">First Sign</span>
                                             <span className="text-slate-800 dark:text-slate-200 font-semibold text-sm leading-tight">{history.firstSymptom}</span>
                                         </div>
                                     )}
                                     {history.predominantSymptom && (
-                                        <div className="flex flex-col bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-700 shadow-sm">
+                                        <div className="flex flex-col bg-white dark:bg-slate-900 p-2 rounded-none border border-slate-200 dark:border-slate-700 shadow-sm">
                                             <span className="section-label mb-0.5">Predominant</span>
                                             <span className="text-slate-800 dark:text-slate-200 font-semibold text-sm leading-tight">{history.predominantSymptom}</span>
                                         </div>
@@ -172,7 +187,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                         s.detail ? (
                                             <HoverCard key={i}>
                                                 <HoverCardTrigger asChild>
-                                                    <div className="inline-flex items-center gap-1 rounded-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm cursor-help hover:border-brand/50 hover:text-brand transition-colors">
+                                                    <div className="inline-flex items-center gap-1 rounded-none bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm cursor-help hover:border-primary/50 hover:text-primary transition-colors">
                                                         {s.label}
                                                         <Info className="w-3 h-3 opacity-50 text-blue-500" />
                                                     </div>
@@ -182,7 +197,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                 </HoverCardContent>
                                             </HoverCard>
                                         ) : (
-                                            <span key={i} className="inline-flex items-center rounded-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm">
+                                            <span key={i} className="inline-flex items-center rounded-none bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm">
                                                 {s.label}
                                             </span>
                                         )
@@ -199,8 +214,13 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         </div>
                         <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-none border border-slate-100 dark:border-slate-800 shadow-sm flex-1">
                             {history.treatment && history.treatment.length > 0 ? (
-                                <ul className="list-disc list-inside text-slate-700 dark:text-slate-300 text-xs space-y-1">
-                                    {history.treatment.map((t, i) => <li key={i}>{t}</li>)}
+                                <ul className="text-slate-700 dark:text-slate-300 text-xs space-y-1.5">
+                                    {history.treatment.map((t, i) => (
+                                        <li key={i} className="flex items-start gap-1.5">
+                                            <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0 mt-0.5" />
+                                            <span>{t}</span>
+                                        </li>
+                                    ))}
                                 </ul>
                             ) : <span className="text-slate-400 italic text-xs">None recorded</span>}
                         </div>
@@ -247,13 +267,16 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 <div className="bg-slate-50 dark:bg-slate-950 rounded-none border border-slate-100 dark:border-slate-800 shadow-sm overflow-visible flex-1 flex flex-col">
                     
                     {/* Key Times Header */}
-                    <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2 flex justify-between gap-2 text-xs shrink-0 rounded-none">
+                    <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2 flex items-center gap-4 text-xs shrink-0 rounded-none">
                         <div className="flex items-center gap-1.5">
                             <span className="section-label">Induction:</span>
                             <span className="font-mono font-semibold text-primary dark:text-primary text-xs">
                                 {formatTime(history.inductionTime)}
                             </span>
                         </div>
+                        {elapsedLabel && (
+                            <span className="font-mono text-[10px] font-medium text-slate-400 dark:text-slate-500">{elapsedLabel}</span>
+                        )}
                         <div className="flex items-center gap-1.5">
                             <span className="section-label">Reaction:</span>
                             <span className="font-mono font-bold text-red-600 dark:text-red-400 text-xs">
@@ -268,10 +291,12 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             <div className="relative border-l-2 border-slate-200 dark:border-slate-700 ml-1.5 space-y-4">
                                 {sortedEvents.map((event, idx) => (
                                     <div key={idx} className="relative pl-6">
-                                        <div className={`absolute -left-[6px] top-1 h-3 w-3 rounded-full border-2 shadow-sm z-10 
-                                            ${event.type === 'reaction' ? 'bg-red-500 border-white dark:border-slate-900' : 
-                                                event.type === 'induction' ? 'bg-primary border-white dark:border-slate-900' :
-                                                'bg-slate-300 dark:bg-slate-600 border-white dark:border-slate-900'}`} 
+                                        <div className={`absolute top-0.5 rounded-full border-2 shadow-sm z-10
+                                            ${event.type === 'reaction'
+                                                ? 'h-4 w-4 -left-[8px] bg-red-500 border-white dark:border-slate-900 ring-2 ring-red-200 dark:ring-red-900/50'
+                                                : event.type === 'induction'
+                                                ? 'h-3.5 w-3.5 -left-[7px] bg-primary border-white dark:border-slate-900'
+                                                : 'h-2.5 w-2.5 -left-[5px] bg-slate-300 dark:bg-slate-600 border-white dark:border-slate-900'}`}
                                         />
                                         
                                         <div className="flex flex-col gap-0.5">
@@ -301,7 +326,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                                 <HoverCard>
                                                                     <HoverCardTrigger asChild>
                                                                         <div className="flex items-center gap-1.5 cursor-help">
-                                                                            <span className="font-semibold text-xs text-red-700 dark:text-red-300">
+                                                                            <span className="font-bold text-xs text-red-700 dark:text-red-300">
                                                                                 {event.label}
                                                                             </span>
                                                                             <Info className="w-3.5 h-3.5 text-red-500" />
@@ -342,7 +367,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     {/* Untimed Agents Section */}
                     {untimedAdministered.length > 0 && (
                         <div className="border-t border-slate-100 dark:border-slate-800 px-3 py-3 bg-white/50 dark:bg-slate-900/50">
-                            <h5 className="text-xs uppercase font-bold text-slate-400 mb-2 tracking-wider">Agents with no listed time</h5>
+                            <p className="section-label mb-2">Agents with no listed time</p>
                             <div className="flex flex-wrap gap-1.5">
                                 {untimedAdministered.map((drug, idx) => (
                                     <Badge 
