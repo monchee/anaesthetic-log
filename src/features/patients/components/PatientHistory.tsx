@@ -1,6 +1,6 @@
 
 import React, { useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Badge, HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui';
+import { Card, CardContent, CardHeader, CardTitle, Badge, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { Patient } from '@/types';
 import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck, FlaskConical } from 'lucide-react';
 import { formatDate, getGradeVariant, parsePatientTimeline, calculateTimeDifference } from '@shared/utils';
@@ -95,17 +95,16 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         <span>{history.tryptase}</span>
                     </div>
                 )}
-                <HoverCard>
-                    <HoverCardTrigger asChild>
-                        <Badge variant={getGradeVariant(history.grade)} className="shadow-sm cursor-help whitespace-nowrap">
-                            {gradeLabel}
-                        </Badge>
-                    </HoverCardTrigger>
-                    <HoverCardContent className="w-64 text-left p-3">
-                        <p className="font-bold mb-1 text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-1">{gradeLabel}</p>
-                        <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{gradeDesc}</p>
-                    </HoverCardContent>
-                </HoverCard>
+                <div className="flex flex-col items-end gap-1">
+                    <Badge variant={getGradeVariant(history.grade)} className="shadow-sm whitespace-nowrap">
+                        {gradeLabel}
+                    </Badge>
+                    {gradeDesc && gradeDesc !== gradeLabel && (
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 text-right leading-tight max-w-[160px]">
+                            {gradeDesc}
+                        </span>
+                    )}
+                </div>
             </div>
         </div>
 
@@ -185,17 +184,17 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                 {history.symptoms && history.symptoms.length > 0 ? (
                                     history.symptoms.map((s, i) => (
                                         s.detail ? (
-                                            <HoverCard key={i}>
-                                                <HoverCardTrigger asChild>
-                                                    <div className="inline-flex items-center gap-1 rounded-none bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm cursor-help hover:border-primary/50 hover:text-primary transition-colors">
+                                            <Popover key={i}>
+                                                <PopoverTrigger asChild>
+                                                    <div className="inline-flex items-center gap-1 rounded-none bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm cursor-pointer hover:border-primary/50 hover:text-primary transition-colors">
                                                         {s.label}
                                                         <Info className="w-3 h-3 opacity-50 text-blue-500" />
                                                     </div>
-                                                </HoverCardTrigger>
-                                                <HoverCardContent>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-64 text-xs p-3" sideOffset={4}>
                                                     {s.detail}
-                                                </HoverCardContent>
-                                            </HoverCard>
+                                                </PopoverContent>
+                                            </Popover>
                                         ) : (
                                             <span key={i} className="inline-flex items-center rounded-none bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm">
                                                 {s.label}
@@ -303,56 +302,34 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                             <div className="flex items-center justify-between gap-2">
                                                 <div className="flex items-center gap-1.5">
                                                     {event.type === 'induction' ? (
-                                                        <HoverCard>
-                                                            <HoverCardTrigger asChild>
-                                                                <div className="cursor-help flex items-center gap-1.5 group">
-                                                                    <span className="font-semibold text-xs text-primary dark:text-primary">
-                                                                        {event.label}
-                                                                    </span>
-                                                                    <MonitorCheck className="w-3.5 h-3.5 text-primary opacity-70" />
-                                                                </div>
-                                                            </HoverCardTrigger>
-                                                            <HoverCardContent className="w-auto px-3 py-1.5 z-50">
-                                                                <span className="font-medium text-xs whitespace-nowrap">
-                                                                    {(history.anaesthesiaType && history.anaesthesiaType.length > 0) 
-                                                                        ? history.anaesthesiaType.join(', ') 
-                                                                        : 'Not specified'}
-                                                                </span>
-                                                            </HoverCardContent>
-                                                        </HoverCard>
-                                                    ) : (
                                                         <div className="flex items-center gap-1.5">
-                                                            {event.type === 'reaction' ? (
-                                                                <HoverCard>
-                                                                    <HoverCardTrigger asChild>
-                                                                        <div className="flex items-center gap-1.5 cursor-help">
-                                                                            <span className="font-bold text-xs text-red-700 dark:text-red-300">
-                                                                                {event.label}
-                                                                            </span>
-                                                                            <Info className="w-3.5 h-3.5 text-red-500" />
-                                                                        </div>
-                                                                    </HoverCardTrigger>
-                                                                    <HoverCardContent>
-                                                                        <span className="text-xs">{history.grade}</span>
-                                                                    </HoverCardContent>
-                                                                </HoverCard>
-                                                            ) : (
-                                                                <span className="font-semibold text-xs text-slate-800 dark:text-slate-200">
-                                                                    {event.label}
-                                                                </span>
-                                                            )}
+                                                            <span className="font-semibold text-xs text-primary dark:text-primary">
+                                                                {event.label}
+                                                            </span>
+                                                            <MonitorCheck className="w-3.5 h-3.5 text-primary opacity-70" />
                                                         </div>
+                                                    ) : event.type === 'reaction' ? (
+                                                        <span className="font-bold text-xs text-red-700 dark:text-red-300">
+                                                            {event.label}
+                                                        </span>
+                                                    ) : (
+                                                        <span className="font-semibold text-xs text-slate-800 dark:text-slate-200">
+                                                            {event.label}
+                                                        </span>
                                                     )}
                                                 </div>
                                                 <span className={`font-mono text-xs font-bold ${
-                                                    event.type === 'reaction' ? 'text-red-600 dark:text-red-400' : 
+                                                    event.type === 'reaction' ? 'text-red-600 dark:text-red-400' :
                                                     event.type === 'induction' ? 'text-primary dark:text-primary' :
                                                     'text-slate-400 dark:text-slate-500'
                                                 }`}>
                                                     {formatTime(event.time)}
                                                 </span>
                                             </div>
-                                            {event.subtext && event.type !== 'reaction' && (
+                                            {event.type === 'induction' && history.anaesthesiaType && history.anaesthesiaType.length > 0 && (
+                                                <div className="text-xs opacity-80 text-slate-500 dark:text-slate-400">{history.anaesthesiaType.join(', ')}</div>
+                                            )}
+                                            {event.subtext && event.type !== 'reaction' && event.type !== 'induction' && (
                                                 <div className="text-xs opacity-80 text-slate-500 dark:text-slate-400">{event.subtext}</div>
                                             )}
                                         </div>
