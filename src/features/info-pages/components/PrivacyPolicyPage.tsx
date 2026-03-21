@@ -8,7 +8,7 @@ interface PrivacyPolicyPageProps {
 }
 
 const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
-  const lastUpdated = 'December 2025';
+  const lastUpdated = 'March 2026';
 
   return (
     <div className="py-4 sm:p-6 space-y-6">

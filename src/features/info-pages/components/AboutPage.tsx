@@ -74,11 +74,17 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
             <ul className="grid sm:grid-cols-2 gap-3">
               {[
                 "Dashboard with patient statistics and analytics",
-                "Advanced search and filtering capabilities",
+                "Advanced search and filtering with multiple criteria",
                 "Detailed patient history and timeline views",
                 "Skin test and drug challenge result recording",
-                "Clinical report generation",
-                "REDCap data import and management"
+                "Three professional clinical report formats",
+                "Patient handout and Powerchart letter generation",
+                "Testing plan request form creation and management",
+                "Print-optimised layouts for all documents",
+                "REDCap data import and management",
+                "Dark/light theme and font size customisation",
+                "De-identified audit data export (CSV)",
+                "Offline access via Progressive Web App (PWA)"
               ].map((feature, idx) => (
                 <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
                   <span className="text-primary mt-0.5">•</span>

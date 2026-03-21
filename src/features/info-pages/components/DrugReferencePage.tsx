@@ -57,7 +57,21 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
           </div>
         </CardHeader>
         <CardContent className="pt-6 space-y-6">
-          
+
+          {/* Clinical Guidance */}
+          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
+            <div>
+              <h3 className="font-semibold text-lg mb-2 text-slate-900 dark:text-white">How to Use This Reference</h3>
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
+                This reference lists the anaesthetic and associated drugs tested in the clinic, organised by pharmacological category.
+                For each category, you'll find information on cross-reactivity patterns and suitable alternative drugs. This information
+                is intended to support clinical decision-making during allergy testing. Always consider individual patient history,
+                reaction severity, and current clinical guidelines (particularly ASCIA recommendations) when planning investigations and
+                selecting safe alternatives.
+              </p>
+            </div>
+          </div>
+
           {/* Drug Categories */}
           <div>
             <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
@@ -126,9 +140,11 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
 
           {/* Disclaimer */}
           <div className="bg-amber-50 dark:bg-amber-900/20 rounded-none p-4 border border-amber-200 dark:border-amber-800/40">
-            <p className="text-sm text-amber-800 dark:text-amber-200">
-              <strong>Note:</strong> This reference is for general guidance only. Always consult current guidelines 
-              and consider individual patient factors when making clinical decisions.
+            <p className="text-sm text-amber-800 dark:text-amber-200 space-y-2">
+              <strong>Important:</strong> This reference is for general guidance only. Always consult current clinical guidelines
+              (particularly ASCIA recommendations on drug allergy investigation) and consider individual patient factors when making
+              clinical decisions. Interpretation of test results must be performed in context with clinical history and should follow
+              established protocols for drug allergy testing.
             </p>
           </div>
 

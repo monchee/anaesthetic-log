@@ -61,6 +61,56 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
       ]
     },
     {
+      category: "Clinical Reports",
+      items: [
+        {
+          question: "How do I generate a clinical report?",
+          answer: "Click on a patient record to view their details. Once you've entered or reviewed their test results, click 'Generate Clinical Report' to create a formal report with all testing outcomes."
+        },
+        {
+          question: "What report formats are available?",
+          answer: "The application generates three report types: Clinical Report (detailed test results), Patient Handout (patient-friendly summary), and Powerchart Letter (narrative for medical records). Each can be printed or saved as PDF."
+        },
+        {
+          question: "Can I print reports directly?",
+          answer: "Yes. Each report has a 'Print' button that opens a printer-friendly layout. You can then print to paper or save as a PDF file from your browser."
+        },
+        {
+          question: "How do I create a testing plan request?",
+          answer: "Navigate to a patient's record and select 'Create Testing Plan Request'. Select the drugs you want to test, note any urgent indicators, list documents to chase, and add clinical notes. This generates a printable request form."
+        },
+        {
+          question: "Can I export or email reports?",
+          answer: "You can copy reports as plain text to your clipboard, and testing plans can be emailed to the allergy nursing team. All exports maintain proper formatting for clinical use."
+        }
+      ]
+    },
+    {
+      category: "Test Interpretation",
+      items: [
+        {
+          question: "What do positive and negative test results mean?",
+          answer: "A positive result indicates the patient reacted to that drug (either skin test, intradermal test, or challenge reaction). Negative means no reaction occurred. Test interpretation should be done in context with clinical history."
+        },
+        {
+          question: "How do I interpret skin prick test results?",
+          answer: "Skin prick tests measure local reactions. A positive result (wheal and flare) suggests possible IgE-mediated allergy to that drug. Results must be interpreted alongside clinical history and other test results."
+        },
+        {
+          question: "What's the difference between intradermal testing and skin prick testing?",
+          answer: "Skin prick testing is less sensitive but safer for initial screening. Intradermal testing is more sensitive but carries higher risk. Intradermal is typically used after negative skin prick tests to investigate delayed or non-IgE-mediated reactions."
+        },
+        {
+          question: "When is a drug challenge test used?",
+          answer: "Drug challenge tests are used when skin and intradermal tests are negative, but clinical suspicion remains high. The patient is given graded doses of the suspected drug under controlled medical supervision and monitored for reactions."
+        },
+        {
+          question: "Can I document the clinical reasoning for my test choices?",
+          answer: "Yes. Each testing plan includes a 'Clinical Notes' field where you can document your clinical reasoning, relevant history, and why specific drugs are being tested."
+        }
+      ]
+    },
+    {
       category: "Troubleshooting",
       items: [
         {

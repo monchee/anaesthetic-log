@@ -20,9 +20,15 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
         },
         {
           title: "ASCIA - Australasian Society of Clinical Immunology and Allergy",
-          description: "Information on drug allergy and clinical immunology resources.",
+          description: "Drug allergy testing and management guidelines for clinical immunology.",
           url: "https://www.allergy.org.au",
           icon: <BookOpen className="w-5 h-5 text-green-500" />
+        },
+        {
+          title: "NHMRC - National Health & Medical Research Council",
+          description: "Australian health and medical research guidelines and evidence-based resources.",
+          url: "https://www.nhmrc.gov.au",
+          icon: <Globe className="w-5 h-5 text-slate-600" />
         }
       ]
     },
@@ -38,19 +44,25 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
       ]
     },
     {
-      category: "Guidelines",
+      category: "Guidelines & Standards",
       items: [
         {
           title: "ANZCA - Australian and New Zealand College of Anaesthetists",
-          description: "Professional standards and guidelines for anaesthetic practice.",
+          description: "Professional standards and guidelines for anaesthetic practice and perioperative safety.",
           url: "https://www.anzca.edu.au",
           icon: <BookOpen className="w-5 h-5 text-primary" />
         },
         {
           title: "NAP6 - 6th National Audit Project",
-          description: "UK national audit on perioperative anaphylaxis - comprehensive guidelines and data.",
+          description: "UK national audit on perioperative anaphylaxis - comprehensive guidelines and recommendations.",
           url: "https://www.nationalauditprojects.org.uk/NAP6home",
           icon: <Globe className="w-5 h-5 text-amber-500" />
+        },
+        {
+          title: "TGA - Therapeutic Goods Administration",
+          description: "Australian medicines regulation, adverse event reporting, and therapeutic safety information.",
+          url: "https://www.tga.gov.au",
+          icon: <BookOpen className="w-5 h-5 text-red-500" />
         }
       ]
     }

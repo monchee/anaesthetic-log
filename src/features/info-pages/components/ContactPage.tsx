@@ -29,10 +29,21 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-4">
               <Building2 className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-2">RPAH Anaesthetic Allergy Clinic</h3>
-                <div className="space-y-1 text-sm text-slate-600 dark:text-slate-300">
-                  <p>Royal Prince Alfred Hospital</p>
-                  <p>Missenden Road, Camperdown NSW 2050</p>
+                <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-3">RPAH Anaesthetic Allergy Clinic</h3>
+                <div className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                  <div>
+                    <p className="font-semibold text-slate-900 dark:text-white">Department of Clinical Immunology & Allergy</p>
+                    <p>Royal Prince Alfred Hospital</p>
+                    <p>Missenden Road, Camperdown NSW 2050</p>
+                  </div>
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-400">
+                    <p><strong>Phone:</strong> (02) 9515 8814</p>
+                    <p><strong>Email:</strong> SLHD-RPA-ClinicalImmunology@health.nsw.gov.au</p>
+                    <p><strong>Clinic Location:</strong> Level 5, Gloucester House</p>
+                  </div>
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-400">
+                    <p className="text-xs italic text-slate-500 dark:text-slate-400">Standard business hours: Monday to Friday, 9:00 AM – 5:00 PM</p>
+                  </div>
                 </div>
               </div>
             </div>

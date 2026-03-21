@@ -36,7 +36,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
                   Welcome to the RPAH Anaesthetic Allergy Clinic application. By accessing or using this application, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use this application.
                 </p>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-3">
-                  Last updated: December 2025
+                  Last updated: March 2026
                 </p>
               </div>
             </div>
