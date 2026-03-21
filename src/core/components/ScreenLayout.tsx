@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, Button } from '@/components/ui';
-import { Sun, Moon, Menu, HelpCircle, Upload, Stethoscope, LayoutDashboard, Info, FlaskConical, Mail, BookOpen, ScrollText } from 'lucide-react';
+import { Sun, Moon, Menu, HelpCircle, Upload, Stethoscope, LayoutDashboard, Info, FlaskConical, Mail, BookOpen, ScrollText, Database } from 'lucide-react';
 import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
 import { useTheme } from './ThemeProvider';
@@ -31,6 +31,7 @@ interface ScreenLayoutProps {
 const primaryNav = [
     { label: 'Home', icon: Stethoscope, screen: Screen.LOG },
     { label: 'Dashboard', icon: LayoutDashboard, screen: Screen.DASHBOARD },
+    { label: 'Research', icon: Database, screen: Screen.RESEARCH },
 ];
 
 export const ScreenLayout: React.FC<ScreenLayoutProps> = ({

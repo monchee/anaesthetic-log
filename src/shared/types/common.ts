@@ -16,7 +16,8 @@ export enum Screen {
   TERMS_OF_USE = 'terms-of-use',
   TECHNICAL_DOCUMENTATION = 'technical-documentation',
   DISCLAIMER = 'disclaimer',
-  POWERCHART_LETTER = 'powerchart-letter'
+  POWERCHART_LETTER = 'powerchart-letter',
+  RESEARCH = 'research'
 }
 
 export interface CategoryTheme {

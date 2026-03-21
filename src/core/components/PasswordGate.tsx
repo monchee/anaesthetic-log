@@ -119,7 +119,7 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
           <span>RPAH Department of Clinical Immunology &amp; Allergy</span>
         </div>
       </div>
-      <span className="fixed bottom-4 right-4 md:bottom-6 md:right-6 text-xs font-mono text-muted-foreground">v{APP_VERSION}</span>
+      <span className="fixed bottom-4 right-4 md:bottom-6 md:right-6 text-xs font-mono text-slate-400 dark:text-slate-500">v{APP_VERSION}</span>
     </div>
   );
 };

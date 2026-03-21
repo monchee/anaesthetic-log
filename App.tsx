@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2 } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
@@ -11,6 +11,7 @@ import PowerchartLetter from '@features/reports/components/PowerchartLetter';
 import Dashboard from '@features/dashboard/components/Dashboard';
 import TestingPlanGenerator from '@features/testing/components/TestingPlanGenerator';
 import TestingPlanPrintView from '@features/testing/components/TestingPlanPrintView';
+import ResearchDashboard from '@features/research/components/ResearchDashboard';
 import { ScreenLayout } from '@core/components/ScreenLayout';
 import { ThemeProvider } from '@core/components/ThemeProvider';
 import { FontSizeProvider } from '@core/components/FontSizeProvider';
@@ -24,6 +25,7 @@ import { formatClinicalReportAsText, formatPatientHandoutAsText } from '@shared/
 import { generateLetterText } from '@features/reports/components/PowerchartLetter';
 import { reportWebVitals } from './src/lib/analytics';
 import { findInfoPageRoute } from '@core/routes/infoPageConfig';
+import { useResearchSubmit } from '@features/research/hooks/useResearchSubmit';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
@@ -45,6 +47,7 @@ function AnaestheticLogApp() {
   } = useAnaestheticApp();
 
   const [activeReportTab, setActiveReportTab] = React.useState<'report' | 'handout' | 'letter'>('report');
+  const research = useResearchSubmit();
 
   const layoutProps = {
     setScreen, currentScreen: screen, databaseDate, showDisclaimer,
@@ -154,6 +157,34 @@ function AnaestheticLogApp() {
             </Button>
           </div>
 
+          {/* Research DB submission */}
+          {research.isAvailable && (
+            <div className="no-print">
+              {research.isSubmitted ? (
+                <div className="flex items-center justify-center gap-2 py-3 text-sm text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
+                  <CheckCircle2 className="w-4 h-4" /> Saved to research database
+                </div>
+              ) : (
+                <Button
+                  onClick={() => research.submit(lastSavedRecord, selectedPatient?.redcapId)}
+                  disabled={research.isSubmitting}
+                  size="lg"
+                  variant="outline"
+                  className="w-full py-5 h-auto text-sm rounded-none border-dashed"
+                >
+                  {research.isSubmitting ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving to research database…</>
+                  ) : (
+                    <><Database className="w-4 h-4 mr-2" /> Save to Research DB</>
+                  )}
+                </Button>
+              )}
+              {research.error && (
+                <p className="mt-1 text-xs text-red-600 dark:text-red-400 text-center">{research.error}</p>
+              )}
+            </div>
+          )}
+
           {/* Start New Log */}
           <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
             <Button onClick={resetForm} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
@@ -186,6 +217,17 @@ function AnaestheticLogApp() {
           <TestingLogForm formData={formData} setFormData={setFormData} onSubmit={handleSubmit}
             drugCategories={DRUG_CATEGORIES} symptomOptions={APP_CONFIG.SYMPTOM_OPTIONS} interventionOptions={APP_CONFIG.INTERVENTION_OPTIONS}
           />
+        </ScreenLayout>
+      );
+    }
+
+    if (screen === Screen.RESEARCH) {
+      return (
+        <ScreenLayout title="Research Database" icon={<Database className="w-5 h-5" />} {...layoutProps}
+          actions={<Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className={BACK_BTN}><LayoutDashboard className={BACK_ICON} /> Dashboard</Button>}
+          contentClassName="py-4"
+        >
+          <ResearchDashboard />
         </ScreenLayout>
       );
     }
