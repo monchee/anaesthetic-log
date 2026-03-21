@@ -233,7 +233,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
             </main>
 
             {/* Hidden HelpModal - triggered from dropdown menu */}
-            <HelpModal onUploadPatients={onUploadPatients} hideTrigger={true} />
+            <HelpModal onUploadPatients={onUploadPatients} hideTrigger={true} hasData={isCustomData} />
 
             {/* Hidden file input for CSV upload */}
             <input

@@ -10,25 +10,23 @@ import {
 import { parseRedcapCSV } from '@shared/utils';
 import { Patient } from '@/types';
 import toast from 'react-hot-toast';
-import { useLocalStorage } from '@shared/hooks/useLocalStorage';
 
 interface HelpModalProps {
   onUploadPatients?: (patients: Patient[]) => void;
   hideTrigger?: boolean;
+  hasData?: boolean;
 }
 
-export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrigger = false }) => {
+export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrigger = false, hasData = false }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [hasSeenQuickStart, setHasSeenQuickStart] = useLocalStorage('hasSeenQuickStart', false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-open on page load for first-time users
+  // Auto-open whenever no CSV data has been loaded
   useEffect(() => {
-    if (!hasSeenQuickStart) {
+    if (!hasData) {
       setIsOpen(true);
-      setHasSeenQuickStart(true);
     }
-  }, [hasSeenQuickStart, setHasSeenQuickStart]);
+  }, [hasData]);
 
   const handleClose = (open: boolean) => {
     setIsOpen(open);
@@ -106,7 +104,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
           </DialogHeader>
 
           {/* Greeting */}
-          <div className="mb-4">
+          <div className="border-l-4 border-primary pl-4 mb-5">
             <h2 className="font-semibold text-slate-900 dark:text-white text-base mb-1">
               Welcome to the RPAH Anaesthetic Allergy Clinic Tool
             </h2>
@@ -123,7 +121,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
               { icon: <FileSpreadsheet className="w-4 h-4" />, label: 'Database', desc: 'Full reaction timelines and severity grades' },
             ].map(({ icon, label, desc }) => (
               <div key={label} className="flex items-center gap-3 text-sm">
-                <span className="text-slate-400 dark:text-slate-500 shrink-0">{icon}</span>
+                <span className="bg-primary/10 dark:bg-primary/20 text-primary p-1.5 rounded-sm shrink-0">{icon}</span>
                 <span className="font-medium text-slate-800 dark:text-slate-200 w-20 shrink-0">{label}</span>
                 <span className="text-slate-500 dark:text-slate-400">{desc}</span>
               </div>
@@ -137,9 +135,9 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="w-full flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-slate-900 dark:hover:border-primary hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer"
+              className="w-full flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-primary dark:hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer"
             >
-              <div className="flex items-center justify-center w-12 h-12 bg-slate-900 dark:bg-primary">
+              <div className="flex items-center justify-center w-12 h-12 bg-primary">
                 <Upload className="w-6 h-6 text-white" />
               </div>
               <div className="text-center">
