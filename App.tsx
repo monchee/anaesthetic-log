@@ -47,6 +47,7 @@ function AnaestheticLogApp() {
   } = useAnaestheticApp();
 
   const [activeReportTab, setActiveReportTab] = React.useState<'report' | 'handout' | 'letter'>('report');
+  const [csvUploadSheetOpen, setCsvUploadSheetOpen] = React.useState(false);
   const research = useResearchSubmit();
 
   const layoutProps = {
@@ -54,6 +55,8 @@ function AnaestheticLogApp() {
     isCustomData: hasUploadedData,
     onDismissDisclaimer: handleDismissDisclaimer,
     onUploadPatients: handleUploadPatients,
+    csvUploadSheetOpen,
+    onCSVUploadSheetOpenChange: setCsvUploadSheetOpen,
   };
 
   const renderScreenContent = () => {
@@ -276,7 +279,7 @@ function AnaestheticLogApp() {
                     </li>
                     <li className="flex gap-2">
                       <span className="font-semibold text-blue-700 dark:text-blue-400 shrink-0">2.</span>
-                      <span>If your patient database isn't loaded yet, upload a patient CSV using the menu in the top-right corner.</span>
+                      <span>If your patient database isn't loaded yet, <button onClick={() => setCsvUploadSheetOpen(true)} className="underline text-blue-700 dark:text-blue-400 hover:text-primary dark:hover:text-primary transition-colors">upload a patient CSV</button>.</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="font-semibold text-blue-700 dark:text-blue-400 shrink-0">3.</span>

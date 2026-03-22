@@ -27,6 +27,8 @@ interface ScreenLayoutProps {
     onDismissDisclaimer?: () => void;
     onUploadPatients?: (patients: Patient[], fileLastModified?: number) => void;
     showNav?: boolean;
+    csvUploadSheetOpen?: boolean;
+    onCSVUploadSheetOpenChange?: (open: boolean) => void;
 }
 
 const primaryNav = [
@@ -51,10 +53,14 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     isCustomData = false,
     onDismissDisclaimer,
     onUploadPatients,
-    showNav = true
+    showNav = true,
+    csvUploadSheetOpen,
+    onCSVUploadSheetOpenChange,
 }) => {
     const { theme, toggleTheme } = useTheme();
-    const [isCSVUploadSheetOpen, setIsCSVUploadSheetOpen] = useState(false);
+    const [isCSVUploadSheetOpenLocal, setIsCSVUploadSheetOpenLocal] = useState(false);
+    const isCSVUploadSheetOpen = csvUploadSheetOpen ?? isCSVUploadSheetOpenLocal;
+    const setIsCSVUploadSheetOpen = onCSVUploadSheetOpenChange ?? setIsCSVUploadSheetOpenLocal;
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
