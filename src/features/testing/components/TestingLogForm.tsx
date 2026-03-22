@@ -190,22 +190,11 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 2. Skin Testing Panel */}
         <Card>
           <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
-            <CardTitle className="flex items-center justify-between text-base text-slate-900 dark:text-slate-100">
-              <div className="flex items-center gap-2">
-                <div className="bg-slate-100 dark:bg-slate-900/40 p-1.5 rounded-none">
-                   <Activity className="w-4 h-4 text-primary dark:text-primary" />
-                </div>
-                SPT &amp; IDT Panel
+            <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-slate-100">
+              <div className="bg-slate-100 dark:bg-slate-900/40 p-1.5 rounded-none">
+                 <Activity className="w-4 h-4 text-primary dark:text-primary" />
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setFormData(prev => ({ ...prev, testPanel: [] }))}
-                className="text-xs text-slate-400 hover:text-destructive h-7 px-2 rounded-none font-normal"
-                title="Clear all selected drugs"
-              >
-                Clear All
-              </Button>
+              SPT &amp; IDT Panel
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-3 sm:pt-4 md:pt-4 space-y-4 sm:space-y-5 md:space-y-6">
@@ -214,6 +203,15 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
             <div className="space-y-4 mb-6">
                <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
                    <Label className="text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold tracking-wider">Select Drugs to Test:</Label>
+                   <Button
+                     variant="ghost"
+                     size="sm"
+                     onClick={() => setFormData(prev => ({ ...prev, testPanel: [] }))}
+                     className="text-xs text-slate-400 hover:text-destructive h-6 px-2 rounded-none font-normal"
+                     title="Clear all selected drugs"
+                   >
+                     Clear All
+                   </Button>
                </div>
 
                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
