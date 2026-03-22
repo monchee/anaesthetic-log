@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Button, Label, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
 
 // @ts-expect-error - __APP_VERSION__ is injected by Vite during build
 const APP_VERSION = __APP_VERSION__;
@@ -71,20 +71,19 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
   return (
     <div className={`flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10 ${isExiting ? 'animate-gate-exit pointer-events-none' : ''}`}>
       <div className="flex w-full max-w-sm flex-col gap-6 animate-content-enter">
-        <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-primary">DREAM</h1>
-          <p className="text-sm text-muted-foreground">Drug Reaction Evaluation &amp; Anaesthetic Management</p>
+        <div className="flex flex-col items-center gap-1.5 text-center">
+          <h1 className="text-5xl font-bold tracking-widest text-primary">DREAM</h1>
+          <p className="text-xs tracking-wide text-muted-foreground/80">Drug Reaction Evaluation &amp; Anaesthetic Management</p>
         </div>
 
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="text-xl">Welcome back</CardTitle>
+            <CardTitle className="text-2xl font-semibold tracking-tight">Welcome back</CardTitle>
             <CardDescription>Enter your PIN to continue</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-3 items-center">
-                <Label>PIN</Label>
                 <div className="flex gap-3" role="group" aria-label="PIN entry">
                   {[0, 1, 2, 3].map(i => (
                     <input
@@ -114,7 +113,7 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
           </CardContent>
         </Card>
 
-        <div className="text-xs text-muted-foreground text-center">
+        <div className="text-xs tracking-wide text-muted-foreground/60 text-center">
           <span>RPAH Department of Clinical Immunology &amp; Allergy</span>
         </div>
       </div>
