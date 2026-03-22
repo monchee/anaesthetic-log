@@ -192,7 +192,7 @@ function AnaestheticLogApp() {
           {/* Start New Log */}
           <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
             <Button onClick={() => { research.reset(); resetForm(); }} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
-              <Plus className="w-5 h-5 mr-2" /> Start New Log
+              <LogOut className="w-5 h-5 mr-2" /> Exit
             </Button>
           </div>
         </ScreenLayout>
