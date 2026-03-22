@@ -15,14 +15,14 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
 }) => {
   return (
     <Card className="w-full shadow-sm border-t-4 border-t-green-500 animate-enter-subtle">
-      <CardHeader className="py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/10">
+      <CardHeader className="py-4 border-b border-slate-100 dark:border-border bg-slate-50 dark:bg-card/10">
         <CardTitle className="text-lg text-slate-800 dark:text-primary flex items-center gap-2">
           <Clock className="w-5 h-5 text-primary dark:text-primary" /> Recent Skin Testing Activity
         </CardTitle>
       </CardHeader>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
-          <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
+          <thead className="bg-slate-50 dark:bg-card text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
             <tr>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3">Patient</th>
@@ -30,7 +30,7 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
               <th className="px-4 py-3">Challenge Outcome</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
+          <tbody className="divide-y divide-slate-100 dark:divide-border bg-white dark:bg-background">
             {recentLogs.length > 0 ? (
               recentLogs.map((log, idx) => {
                 const positives: string[] = [];
@@ -48,7 +48,7 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                   <tr
                     key={idx}
                     style={{ '--row-index': Math.min(idx, 9) } as React.CSSProperties}
-                    className="hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer transition-colors group animate-row-enter"
+                    className="hover:bg-slate-50 dark:hover:bg-card/50 cursor-pointer transition-colors group animate-row-enter"
                     onClick={() => onViewLog(log)}
                   >
                     <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">{formatDate(log.visitDate)}</td>
@@ -56,7 +56,7 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1 items-center">
                         {positives.map(p => <Badge key={p} variant="danger" className="text-[10px] px-1.5 py-0 h-5">{p}</Badge>)}
-                        {negatives.map(n => <span key={n} className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">{n}</span>)}
+                        {negatives.map(n => <span key={n} className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-muted px-1.5 py-0.5 rounded border border-slate-200 dark:border-border">{n}</span>)}
                         {positives.length === 0 && negatives.length === 0 && <span className="text-slate-400 italic text-xs">-</span>}
                       </div>
                     </td>

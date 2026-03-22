@@ -61,7 +61,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
 
   return (
     <Card className="w-full shadow-sm animate-enter-subtle">
-      <CardHeader className="py-2.5 sm:py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+      <CardHeader className="py-2.5 sm:py-4 border-b border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/20">
         <div className="flex flex-col gap-3 sm:gap-4">
           {/* Header Top Row: Title + Update Button */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
@@ -122,7 +122,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 <Input
                   placeholder="Search by Name, MRN..."
                   aria-label="Search patients by name, medical record number (MRN), or city"
-                  className="pl-9 h-9 bg-white dark:bg-slate-800"
+                  className="pl-9 h-9 bg-white dark:bg-muted"
                   value={filters.textQuery}
                   onChange={(e) => updateFilter('textQuery', e.target.value)}
                 />
@@ -151,7 +151,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
       {/* Desktop View (Table) */}
       <div className="hidden md:block overflow-x-auto">
         <table role="table" aria-label="Patient database" className="w-full text-sm text-left">
-          <thead className="bg-slate-50 dark:bg-slate-900 text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
+          <thead className="bg-slate-50 dark:bg-card text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
             <tr>
               <th scope="col" className="px-4 py-3 w-28">Date</th>
               <th scope="col" className="px-4 py-3 w-48">Patient</th>
@@ -160,7 +160,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
               <th scope="col" className="px-4 py-3 text-center w-28">Grade</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
+          <tbody className="divide-y divide-slate-100 dark:divide-border bg-white dark:bg-background">
             {paginatedPatients.length > 0 ? (
               paginatedPatients.map((p, index) => {
                 const { events: timelineEvents } = parsePatientTimeline(p.history);
@@ -170,7 +170,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                     role="button"
                     tabIndex={0}
                     style={{ '--row-index': Math.min(index, 9) } as React.CSSProperties}
-                    className="hover:bg-slate-50/80 dark:hover:bg-slate-900/50 transition-colors cursor-pointer group animate-row-enter"
+                    className="hover:bg-slate-50/80 dark:hover:bg-card/50 transition-colors cursor-pointer group animate-row-enter"
                     onClick={() => onSelectPatient(p)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -235,7 +235,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
       </div>
 
       {/* Mobile View (Card List) */}
-      <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
+      <div className="md:hidden divide-y divide-slate-100 dark:divide-border">
         {paginatedPatients.length > 0 ? (
           paginatedPatients.map((p, index) => {
             const { events: timelineEvents } = parsePatientTimeline(p.history);
@@ -243,7 +243,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
               <div
                 key={p.id}
                 style={{ '--row-index': Math.min(index, 9) } as React.CSSProperties}
-                className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800 animate-row-enter"
+                className="p-2.5 hover:bg-slate-50 dark:hover:bg-card/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800 animate-row-enter"
                 onClick={() => onSelectPatient(p)}
               >
                 <div className="flex justify-between items-start mb-1 gap-2">
@@ -290,7 +290,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
 
       {/* Pagination Controls */}
       {filteredPatients.length > 0 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/20">
           <div className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
             Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredPatients.length)} of {filteredPatients.length} records
           </div>

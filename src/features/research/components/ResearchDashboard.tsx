@@ -24,7 +24,7 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
   };
 
   return (
-    <div className="px-4 py-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 space-y-4">
+    <div className="px-4 py-4 bg-slate-50 dark:bg-card/50 border-t border-slate-100 dark:border-border space-y-4">
       {/* Controls */}
       <div>
         <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Controls</p>
@@ -39,16 +39,16 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
       {record.test_panel.length > 0 && (
         <div>
           <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Test panel</p>
-          <div className="border border-slate-200 dark:border-slate-700 overflow-x-auto">
+          <div className="border border-slate-200 dark:border-border overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+                <tr className="bg-slate-100 dark:bg-muted border-b border-slate-200 dark:border-border">
                   {['Drug', 'SPT', '1:100', '1:10', 'Neat', 'Result'].map(h => (
                     <th key={h} className="px-3 py-1.5 text-left font-medium text-slate-500 dark:text-slate-400">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-100 dark:divide-border">
                 {record.test_panel.map((d, i) => (
                   <tr key={i} className={d.is_positive ? 'bg-red-50 dark:bg-red-950/20' : ''}>
                     <td className="px-3 py-1.5 font-medium text-slate-700 dark:text-slate-200">{d.drug_name}</td>
@@ -239,7 +239,7 @@ export default function ResearchDashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
 
         {/* Sessions */}
-        <div className="border border-slate-200 dark:border-slate-800 border-l-4 border-l-blue-500 bg-white dark:bg-slate-950 p-4 rounded-none">
+        <div className="border border-slate-200 dark:border-border border-l-4 border-l-blue-500 bg-white dark:bg-background p-4 rounded-none">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Sessions</span>
             <div className="bg-blue-50 dark:bg-blue-900/30 p-1.5 rounded-none">
@@ -255,7 +255,7 @@ export default function ResearchDashboard() {
         </div>
 
         {/* Drugs tested */}
-        <div className="border border-slate-200 dark:border-slate-800 border-l-4 border-l-violet-500 bg-white dark:bg-slate-950 p-4 rounded-none">
+        <div className="border border-slate-200 dark:border-border border-l-4 border-l-violet-500 bg-white dark:bg-background p-4 rounded-none">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Drugs Tested</span>
             <div className="bg-violet-50 dark:bg-violet-900/30 p-1.5 rounded-none">
@@ -271,7 +271,7 @@ export default function ResearchDashboard() {
         </div>
 
         {/* Overall positivity */}
-        <div className="border border-slate-200 dark:border-slate-800 border-l-4 border-l-amber-500 bg-white dark:bg-slate-950 p-4 rounded-none">
+        <div className="border border-slate-200 dark:border-border border-l-4 border-l-amber-500 bg-white dark:bg-background p-4 rounded-none">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Positivity Rate</span>
             <div className="bg-amber-50 dark:bg-amber-900/30 p-1.5 rounded-none">
@@ -289,7 +289,7 @@ export default function ResearchDashboard() {
         </div>
 
         {/* Challenge pass rate */}
-        <div className="border border-slate-200 dark:border-slate-800 border-l-4 border-l-emerald-500 bg-white dark:bg-slate-950 p-4 rounded-none">
+        <div className="border border-slate-200 dark:border-border border-l-4 border-l-emerald-500 bg-white dark:bg-background p-4 rounded-none">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Challenge Pass</span>
             <div className="bg-emerald-50 dark:bg-emerald-900/30 p-1.5 rounded-none">
@@ -309,7 +309,7 @@ export default function ResearchDashboard() {
 
       {/* Drug positivity breakdown */}
       <Card className="shadow-sm rounded-none">
-        <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+        <CardHeader className="pb-3 border-b border-slate-100 dark:border-border bg-slate-50 dark:bg-card">
           <CardTitle className="flex items-center gap-2 text-lg">
             <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
               <BarChart2 className="w-4 h-4 text-primary" />
@@ -322,7 +322,7 @@ export default function ResearchDashboard() {
         </CardHeader>
         <CardContent className="p-0">
           {stats.drugStats.length > 0 ? (
-            <div className="divide-y divide-slate-100 dark:divide-slate-800">
+            <div className="divide-y divide-slate-100 dark:divide-border">
               {stats.drugStats.map((d, i) => {
                 const { bar, text } = positivityColor(d.rate);
                 const isTop = i === 0 && d.positive > 0;
@@ -359,7 +359,7 @@ export default function ResearchDashboard() {
 
       {/* Records list */}
       <Card className="shadow-sm rounded-none">
-        <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+        <CardHeader className="pb-3 border-b border-slate-100 dark:border-border bg-slate-50 dark:bg-card">
           <CardTitle className="flex items-center justify-between gap-2 text-lg">
             <span className="flex items-center gap-2">
               <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
@@ -380,14 +380,14 @@ export default function ResearchDashboard() {
               <p className="text-xs">Complete a testing session and click "Save to Research Database".</p>
             </div>
           ) : (
-          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          <div className="divide-y divide-slate-100 dark:divide-border">
             {records.map((r) => {
               const isExpanded = expandedId === r.id;
               return (
                 <div key={r.id}>
                   <button
                     onClick={() => setExpandedId(isExpanded ? null : r.id)}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-card/50 transition-colors"
                   >
                     <div className="flex-1 min-w-0 grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-0.5 text-xs">
                       <div>

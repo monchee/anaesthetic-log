@@ -123,7 +123,7 @@ function AnaestheticLogApp() {
           contentClassName="py-4 space-y-4"
         >
           {/* Tab bar */}
-          <div className="flex overflow-x-auto border-b border-slate-200 dark:border-slate-800 no-print -mx-1 px-1">
+          <div className="flex overflow-x-auto border-b border-slate-200 dark:border-border no-print -mx-1 px-1">
             {([
               { key: 'report', label: 'Clinical Report', icon: <FileText className="w-4 h-4" /> },
               { key: 'handout', label: 'Patient Handout', icon: <User className="w-4 h-4" /> },
@@ -190,7 +190,7 @@ function AnaestheticLogApp() {
           )}
 
           {/* Start New Log */}
-          <div className="no-print border-t border-slate-200 dark:border-slate-800 pt-6 mt-4">
+          <div className="no-print border-t border-slate-200 dark:border-border pt-6 mt-4">
             <Button onClick={() => { research.reset(); resetForm(); }} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
               <LogOut className="w-5 h-5 mr-2" /> Exit
             </Button>
@@ -240,7 +240,7 @@ function AnaestheticLogApp() {
         contentClassName="py-3 space-y-4" className="pb-10"
       >
         <Card className="shadow-sm rounded-none">
-          <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+          <CardHeader className="pb-3 border-b border-slate-100 dark:border-border bg-slate-50 dark:bg-card">
             <CardTitle className="flex items-center gap-2 text-lg">
               <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none"><User className="w-4 h-4 text-primary" /></div>
               Patient Selection
@@ -310,7 +310,7 @@ function AnaestheticLogApp() {
 
             {/* Purpose + Privacy */}
             <div className="grid sm:grid-cols-2 gap-4">
-              <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 shadow-sm rounded-none">
+              <div className="bg-slate-50 dark:bg-card border border-slate-200 dark:border-border p-4 shadow-sm rounded-none">
                 <div className="flex items-center gap-2 mb-2">
                   <Target className="w-4 h-4 text-primary" />
                   <span className="font-semibold text-sm">Purpose</span>
@@ -320,7 +320,7 @@ function AnaestheticLogApp() {
                   recording test results, and generating reports and testing plans.
                 </p>
               </div>
-              <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 shadow-sm rounded-none">
+              <div className="bg-slate-50 dark:bg-card border border-slate-200 dark:border-border p-4 shadow-sm rounded-none">
                 <div className="flex items-center gap-2 mb-2">
                   <Shield className="w-4 h-4 text-primary" />
                   <span className="font-semibold text-sm">Data Privacy</span>
@@ -333,7 +333,7 @@ function AnaestheticLogApp() {
             </div>
 
             {/* Key Features */}
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 shadow-sm rounded-none">
+            <div className="bg-slate-50 dark:bg-card border border-slate-200 dark:border-border p-4 shadow-sm rounded-none">
               <div className="flex items-center gap-2 mb-3">
                 <Users className="w-4 h-4 text-primary" />
                 <span className="font-semibold text-sm">Key Features</span>
@@ -365,35 +365,35 @@ function AnaestheticLogApp() {
               <div className="space-y-4 py-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">First Name</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">First Name</Label>
                     <Input value={selectedPatient.firstName} onChange={(e) => handleManualDetailChange('firstName', e.target.value)} placeholder="Enter first name" />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">Last Name</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">Last Name</Label>
                     <Input value={selectedPatient.lastName} onChange={(e) => handleManualDetailChange('lastName', e.target.value)} placeholder="Enter last name" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">MRN</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">MRN</Label>
                     <Input value={selectedPatient.mrn} onChange={(e) => handleManualDetailChange('mrn', e.target.value)} placeholder="Medical Record Number..." />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">REDCap Record ID</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">REDCap Record ID</Label>
                     <Input value={selectedPatient.redcapId || ''} onChange={(e) => handleManualDetailChange('redcapId', e.target.value)} placeholder="REDCap ID..." />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">Date of Birth</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">Date of Birth</Label>
                     <Input type="date" value={selectedPatient.dob} onChange={(e) => handleManualDetailChange('dob', e.target.value)} />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">Gender</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">Gender</Label>
                     <Input value={selectedPatient.gender} onChange={(e) => handleManualDetailChange('gender', e.target.value)} placeholder="Gender..." />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500">City / Suburb</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">City / Suburb</Label>
                     <Input value={selectedPatient.city} onChange={(e) => handleManualDetailChange('city', e.target.value)} placeholder="City..." />
                   </div>
                 </div>
@@ -441,7 +441,7 @@ function App() {
           </PasswordGate>
           <Toaster position="top-center" expand={false} richColors closeButton duration={5000}
             toastOptions={{ classNames: {
-              toast: 'border border-slate-200 dark:border-slate-800 rounded-none shadow-sm',
+              toast: 'border border-slate-200 dark:border-border rounded-none shadow-sm',
               actionButton: 'bg-primary text-white hover:bg-primary/90 transition-colors',
               description: 'text-slate-600 dark:text-slate-300',
             }}}

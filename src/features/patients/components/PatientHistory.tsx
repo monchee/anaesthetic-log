@@ -65,8 +65,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
     : null;
 
   return (
-    <Card className="shadow-md bg-white dark:bg-slate-900">
-      <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+    <Card className="shadow-md bg-white dark:bg-card">
+      <CardHeader className="pb-3 border-b border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/20">
         <CardTitle className="flex items-center gap-2 text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           <div className="bg-primary/15 dark:bg-primary/20 p-1.5 rounded-none">
             <History className="h-4 w-4 text-primary dark:text-primary" />
@@ -77,7 +77,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
       <CardContent className="p-5 space-y-6">
         
         {/* Header Information Box */}
-        <div className={`mt-2 bg-slate-50 dark:bg-slate-950 p-4 rounded-none border border-slate-100 dark:border-slate-800 border-l-4 ${getGradeBorderColor(getGradeVariant(history.grade))} shadow-sm flex flex-wrap items-center justify-between gap-y-2 gap-x-3`}>
+        <div className={`mt-2 bg-slate-50 dark:bg-background p-4 rounded-none border border-slate-100 dark:border-border border-l-4 ${getGradeBorderColor(getGradeVariant(history.grade))} shadow-sm flex flex-wrap items-center justify-between gap-y-2 gap-x-3`}>
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
             <span className="font-semibold text-slate-900 dark:text-white text-lg tracking-tight">
                 {formatDate(history.date)}
@@ -103,7 +103,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             </Badge>
                         </PopoverTrigger>
                         <PopoverContent className="w-64 text-left p-3" sideOffset={4}>
-                            <p className="font-bold mb-1 text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-1">{gradeLabel}</p>
+                            <p className="font-bold mb-1 text-slate-900 dark:text-white border-b border-slate-200 dark:border-border pb-1">{gradeLabel}</p>
                             <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{gradeDesc}</p>
                         </PopoverContent>
                     </Popover>
@@ -142,7 +142,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             <FileText className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Reaction Summary
                         </div>
-                        <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-none border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 leading-relaxed shadow-sm text-sm">
+                        <div className="bg-slate-50 dark:bg-background p-3 rounded-none border border-slate-100 dark:border-border text-slate-700 dark:text-slate-300 leading-relaxed shadow-sm text-sm">
                             {history.reactionSummary || "No summary provided."}
                         </div>
                     </div>
@@ -153,7 +153,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                 <MessageSquare className="h-3.5 w-3.5 text-slate-500" /> 
                                 Additional Comments
                             </div>
-                            <div className="bg-white dark:bg-slate-900 p-3 rounded-none border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 leading-relaxed shadow-sm text-xs italic">
+                            <div className="bg-white dark:bg-card p-3 rounded-none border border-slate-200 dark:border-border text-slate-600 dark:text-slate-400 leading-relaxed shadow-sm text-xs italic">
                                 {history.comments}
                             </div>
                         </div>
@@ -167,19 +167,19 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             <Activity className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Clinical Features
                         </div>
-                        <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-none border border-slate-100 dark:border-slate-800 flex flex-col gap-3 shadow-sm flex-1">
+                        <div className="bg-slate-50 dark:bg-background p-3 rounded-none border border-slate-100 dark:border-border flex flex-col gap-3 shadow-sm flex-1">
                             
                             {/* Key Symptom Highlights */}
                             {(history.firstSymptom || history.predominantSymptom) && (
-                                <div className="space-y-2 border-b border-slate-200 dark:border-slate-800 pb-3 mb-1">
+                                <div className="space-y-2 border-b border-slate-200 dark:border-border pb-3 mb-1">
                                     {history.firstSymptom && (
-                                        <div className="flex flex-col bg-white dark:bg-slate-900 p-2 rounded-none border border-slate-200 dark:border-slate-700 border-l-2 border-l-amber-400 shadow-sm">
+                                        <div className="flex flex-col bg-white dark:bg-card p-2 rounded-none border border-slate-200 dark:border-border border-l-2 border-l-amber-400 shadow-sm">
                                             <span className="section-label mb-0.5">First Sign</span>
                                             <span className="text-slate-800 dark:text-slate-200 font-semibold text-sm leading-tight">{history.firstSymptom}</span>
                                         </div>
                                     )}
                                     {history.predominantSymptom && (
-                                        <div className="flex flex-col bg-white dark:bg-slate-900 p-2 rounded-none border border-slate-200 dark:border-slate-700 shadow-sm">
+                                        <div className="flex flex-col bg-white dark:bg-card p-2 rounded-none border border-slate-200 dark:border-border shadow-sm">
                                             <span className="section-label mb-0.5">Predominant</span>
                                             <span className="text-slate-800 dark:text-slate-200 font-semibold text-sm leading-tight">{history.predominantSymptom}</span>
                                         </div>
@@ -193,7 +193,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                         s.detail ? (
                                             <Popover key={i}>
                                                 <PopoverTrigger asChild>
-                                                    <div className="inline-flex items-center gap-1 rounded-none bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm cursor-pointer hover:border-primary/50 hover:text-primary transition-colors">
+                                                    <div className="inline-flex items-center gap-1 rounded-none bg-slate-100 dark:bg-muted border border-slate-300 dark:border-slate-600 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm cursor-pointer hover:border-primary/50 hover:text-primary transition-colors">
                                                         {s.label}
                                                         <Info className="w-3 h-3 opacity-50 text-blue-500" />
                                                     </div>
@@ -203,7 +203,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                 </PopoverContent>
                                             </Popover>
                                         ) : (
-                                            <span key={i} className="inline-flex items-center rounded-none bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm">
+                                            <span key={i} className="inline-flex items-center rounded-none bg-slate-100 dark:bg-muted border border-slate-300 dark:border-slate-600 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-slate-200 shadow-sm">
                                                 {s.label}
                                             </span>
                                         )
@@ -218,7 +218,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             <Syringe className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Treatment
                         </div>
-                        <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-none border border-slate-100 dark:border-slate-800 shadow-sm flex-1">
+                        <div className="bg-slate-50 dark:bg-background p-3 rounded-none border border-slate-100 dark:border-border shadow-sm flex-1">
                             {history.treatment && history.treatment.length > 0 ? (
                                 <ul className="text-slate-700 dark:text-slate-300 text-xs space-y-1.5">
                                     {history.treatment.map((t, i) => (
@@ -234,7 +234,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 </div>
 
                 {/* 4. Context Bar */}
-                <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-none border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row gap-4 shadow-sm">
+                <div className="bg-slate-50 dark:bg-background p-3 rounded-none border border-slate-100 dark:border-border flex flex-col sm:flex-row gap-4 shadow-sm">
                     <div className="space-y-1 flex-1 min-w-0">
                         <span className="section-label flex items-center gap-1.5">
                             <User className="h-3 w-3" /> Referring Doctor
@@ -254,7 +254,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         </div>
                     </div>
 
-                    <div className="space-y-1 flex-1 min-w-0 sm:border-l sm:border-slate-200 sm:dark:border-slate-800 sm:pl-4">
+                    <div className="space-y-1 flex-1 min-w-0 sm:border-l sm:border-slate-200 sm:dark:border-border sm:pl-4">
                         <span className="section-label flex items-center gap-1.5">
                             <Building2 className="h-3 w-3" /> Hospital
                         </span>
@@ -270,10 +270,10 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     Timeline & Medications
                 </div>
                 {/* Removed overflow-hidden and overflow-y-auto to allow tooltips to display without clipping */}
-                <div className="bg-slate-50 dark:bg-slate-950 rounded-none border border-slate-100 dark:border-slate-800 shadow-sm overflow-visible flex-1 flex flex-col">
+                <div className="bg-slate-50 dark:bg-background rounded-none border border-slate-100 dark:border-border shadow-sm overflow-visible flex-1 flex flex-col">
                     
                     {/* Key Times Header */}
-                    <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2 flex items-center gap-4 text-xs shrink-0 rounded-none">
+                    <div className="bg-slate-100 dark:bg-card border-b border-slate-200 dark:border-border px-4 py-2 flex items-center gap-4 text-xs shrink-0 rounded-none">
                         <div className="flex items-center gap-1.5">
                             <span className="section-label">Induction:</span>
                             <span className="font-mono font-semibold text-primary dark:text-primary text-xs">
@@ -294,7 +294,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     {/* Timeline Area - Removed max-height constraints to prevent scrolling and clipping */}
                     <div className="p-4 flex-1">
                         {sortedEvents.length > 0 ? (
-                            <div className="relative border-l-2 border-slate-200 dark:border-slate-700 ml-1.5 space-y-4">
+                            <div className="relative border-l-2 border-slate-200 dark:border-border ml-1.5 space-y-4">
                                 {sortedEvents.map((event, idx) => (
                                     <div key={idx} className="relative pl-6">
                                         <div className={`absolute top-0.5 rounded-full border-2 shadow-sm z-10
@@ -350,14 +350,14 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     
                     {/* Untimed Agents Section */}
                     {untimedAdministered.length > 0 && (
-                        <div className="border-t border-slate-100 dark:border-slate-800 px-3 py-3 bg-white/50 dark:bg-slate-900/50">
+                        <div className="border-t border-slate-100 dark:border-border px-3 py-3 bg-white/50 dark:bg-card/50">
                             <p className="section-label mb-2">Agents with no listed time</p>
                             <div className="flex flex-wrap gap-1.5">
                                 {untimedAdministered.map((drug, idx) => (
                                     <Badge 
                                         key={idx} 
                                         variant="secondary"
-                                        className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                                        className="text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-muted border-slate-200 dark:border-border"
                                     >
                                         {drug}
                                     </Badge>
@@ -367,7 +367,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     )}
 
                     {/* Outcome Footer */}
-                    <div className="bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 py-2 flex items-center justify-between shrink-0 rounded-none">
+                    <div className="bg-slate-100 dark:bg-card border-t border-slate-200 dark:border-border px-4 py-2 flex items-center justify-between shrink-0 rounded-none">
                             <span className="section-label">Outcome</span>
                             <div className={`font-bold text-xs flex items-center gap-1.5 ${outcomeConfig.color}`}>
                             <OutcomeIcon className="h-3.5 w-3.5" />

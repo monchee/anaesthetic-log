@@ -37,7 +37,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
               <code className={`text-sm font-mono font-bold px-2.5 py-1 ${
                 v.highlight
                   ? 'bg-primary/10 dark:bg-primary/20 text-primary'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                  : 'bg-slate-100 dark:bg-muted text-slate-700 dark:text-slate-300'
               }`}>
                 {v.version}
               </code>
@@ -57,12 +57,12 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
           {/* Right content with timeline */}
           <div className="flex-1 md:pl-8 relative">
             {/* Vertical timeline line */}
-            <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px bg-slate-200 dark:bg-slate-800" />
+            <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px bg-slate-200 dark:bg-muted" />
             {/* Timeline dot */}
             <div className={`hidden md:block absolute left-0 top-1.5 -translate-x-1/2 w-3 h-3 rounded-full border-2 ${
               v.highlight
                 ? 'bg-primary border-primary'
-                : 'bg-white dark:bg-slate-950 border-slate-300 dark:border-slate-700'
+                : 'bg-white dark:bg-background border-slate-300 dark:border-border'
             }`} />
 
             <ul className="space-y-2 pt-0.5">

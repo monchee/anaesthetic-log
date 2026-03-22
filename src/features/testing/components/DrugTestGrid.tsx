@@ -43,7 +43,7 @@ const DrugRow = React.memo(({
 
   return (
     <div
-      className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-none group`}
+      className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-4 md:p-3 items-start md:items-center bg-white dark:bg-background border border-slate-100 dark:border-border border-l-[6px] ${borderClass} shadow-sm rounded-none group`}
     >
       {/* Name Column */}
       <div className="col-span-2 md:col-span-1 flex items-center gap-2">
@@ -101,7 +101,7 @@ export const DrugTestGrid: React.FC<DrugTestGridProps> = ({
 }) => {
   if (testPanel.length === 0) {
     return (
-      <div className="text-center py-10 bg-slate-50 dark:bg-slate-900 rounded-none border border-dashed border-slate-300 dark:border-slate-700">
+      <div className="text-center py-10 bg-slate-50 dark:bg-card rounded-none border border-dashed border-slate-300 dark:border-border">
         <p className="text-slate-500 dark:text-slate-400 text-sm">No drugs selected. Choose a category above to begin.</p>
       </div>
     );
@@ -109,7 +109,7 @@ export const DrugTestGrid: React.FC<DrugTestGridProps> = ({
 
   return (
     <div className="rounded-none overflow-hidden animate-in fade-in slide-in-from-top-2">
-      <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-100/50 dark:bg-slate-900/50 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase border-b border-slate-200 dark:border-slate-800 mb-2 rounded-none text-center">
+      <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-100/50 dark:bg-card/50 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase border-b border-slate-200 dark:border-border mb-2 rounded-none text-center">
         <div className="text-left md:text-center">Drug</div>
         <div>SPT</div>
         <div>1:100</div>
