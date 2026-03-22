@@ -86,7 +86,7 @@ function AnaestheticLogApp() {
             setScreen={setScreen} existingPatients={patients} recentLogs={recentLogs}
             drugOptions={FLAT_DRUG_OPTIONS} drugCategories={DRUG_CATEGORIES}
             onViewLog={(log) => { setLastSavedRecord(log); setScreen(Screen.SUMMARY); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            onSelectPatient={handleDashboardPatientSelect} onUploadPatients={handleUploadPatients} databaseDate={databaseDate}
+            onSelectPatient={handleDashboardPatientSelect} onUploadPatients={handleUploadPatients} databaseDate={databaseDate} isCustomData={hasUploadedData}
           />
         </ScreenLayout>
       );
@@ -225,7 +225,6 @@ function AnaestheticLogApp() {
     if (screen === Screen.RESEARCH) {
       return (
         <ScreenLayout title="Research Database" icon={<Database className="w-5 h-5" />} {...layoutProps}
-          actions={<Button onClick={() => setScreen(Screen.DASHBOARD)} variant="ghost" className={BACK_BTN}><LayoutDashboard className={BACK_ICON} /> Dashboard</Button>}
           contentClassName="py-4"
         >
           <ResearchDashboard />

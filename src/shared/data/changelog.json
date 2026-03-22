@@ -1,8 +1,25 @@
 [
   {
+    "version": "v0.37.0",
+    "codename": "Rocuronium",
+    "highlight": true,
+    "changes": [
+      "Research database — de-identified test results can now be saved to a persistent Supabase database for cross-patient research. Results are stripped of all patient identifiers (name, MRN, DOB); only the REDCap ID is retained as a link.",
+      "Save to Research DB button added to the Reports screen after completing a test, with submission state that resets when starting a new log.",
+      "Research Dashboard screen added — shows aggregate stats (total submissions, positivity rate by drug), a full record list with click-to-expand detail, per-record delete, and bulk CSV export.",
+      "Reports screen now hides the navigation bar and shows a dedicated Exit button, preventing accidental navigation mid-session.",
+      "Latex and Chlorhexidine pre-selected by default on the allergy testing form.",
+      "Reference Controls section moved to below the drug selection table in the testing form.",
+      "Testing plan pre-fill icons — Chlorhexidine and Latex now show a Pin icon, with a matching legend line explaining standard pre-fills alongside the existing patient-history legend.",
+      "Footer dataset label now shows 'Demo' when sample data is in use, and updates to the CSV file's last-modified date after a real upload.",
+      "Disclaimer banner 'Upload a REDCap CSV export' is now a clickable link that opens the CSV upload instructions sheet directly.",
+      "Duplicate Dashboard button removed from the Research page header."
+    ]
+  },
+  {
     "version": "v0.35.0",
     "codename": "Thiopentone",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Modal routing bug fixed — dismissing the Quick Start modal now always lands on the Home screen, regardless of which page was last visited.",
       "Duplicate page titles removed — all info pages no longer show a redundant title card below the navigation bar; the nav bar is the sole title authority.",

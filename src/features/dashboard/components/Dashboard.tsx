@@ -19,11 +19,12 @@ interface DashboardProps {
   drugCategories: Record<string, string[]>;
   onViewLog: (log: LogFormData) => void;
   onSelectPatient: (patient: Patient) => void;
-  onUploadPatients: (patients: Patient[]) => void;
+  onUploadPatients: (patients: Patient[], fileLastModified?: number) => void;
   databaseDate: string;
+  isCustomData?: boolean;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate }) => {
+const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate, isCustomData }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -99,7 +100,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                             { duration: 10000 }
                         );
                     } else {
-                        onUploadPatients(result.data);
+                        onUploadPatients(result.data, file.lastModified);
                         toast.success(
                             <div className="flex flex-col gap-1">
                                 <span className="font-bold">Database updated</span>
@@ -234,6 +235,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
           isFiltersExpanded={isFiltersExpanded}
           setIsFiltersExpanded={setIsFiltersExpanded}
           databaseDate={databaseDate}
+          isCustomData={isCustomData}
           onSelectPatient={onSelectPatient}
           handleFileUpload={handleFileUpload}
           isSheetOpen={isSheetOpen}

@@ -27,9 +27,10 @@ export function usePatientState() {
     });
   };
 
-  const handleUploadPatients = (newPatients: Patient[]) => {
+  const handleUploadPatients = (newPatients: Patient[], fileLastModified?: number) => {
     setPatients(newPatients);
-    setDatabaseDate(new Date().toLocaleDateString('en-AU'));
+    const date = fileLastModified ? new Date(fileLastModified) : new Date();
+    setDatabaseDate(date.toLocaleDateString('en-AU'));
     setHasUploadedData(true);
   };
 

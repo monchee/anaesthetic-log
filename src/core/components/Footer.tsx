@@ -10,9 +10,10 @@ interface FooterProps {
   setScreen: (screen: Screen) => void;
   databaseDate: string;
   onUploadPatients?: (patients: Patient[]) => void;
+  isCustomData?: boolean;
 }
 
-const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
+const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, isCustomData = false }) => {
   const navLinks = [
     { label: 'About', screen: Screen.ABOUT },
     { label: 'FAQ', screen: Screen.FAQ },
@@ -69,7 +70,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate }) => {
               <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-none border border-slate-200 dark:border-slate-700">
                 <Database className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                 <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-                  Dataset: <span className="font-mono">{databaseDate}</span>
+                  Dataset: <span className="font-mono">{isCustomData ? databaseDate : 'Demo'}</span>
                 </span>
               </div>
 

@@ -25,7 +25,7 @@ interface ScreenLayoutProps {
     showDisclaimer?: boolean;
     isCustomData?: boolean;
     onDismissDisclaimer?: () => void;
-    onUploadPatients?: (patients: Patient[]) => void;
+    onUploadPatients?: (patients: Patient[], fileLastModified?: number) => void;
     showNav?: boolean;
 }
 
@@ -70,7 +70,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                     const result = parseRedcapCSV(text);
 
                     if (result.success) {
-                        onUploadPatients(result.data);
+                        onUploadPatients(result.data, file.lastModified);
                         toast.success(
                             <div className="flex flex-col gap-1">
                                 <span className="font-bold">Database updated</span>
@@ -210,7 +210,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 {/* Disclaimer Banner - Attached to Header */}
                 {showDisclaimer && !isCustomData && onDismissDisclaimer && (
                     <div className="print:hidden">
-                        <DisclaimerBanner onClose={onDismissDisclaimer} />
+                        <DisclaimerBanner onClose={onDismissDisclaimer} onUploadClick={() => setIsCSVUploadSheetOpen(true)} />
                     </div>
                 )}
             </header>
@@ -261,7 +261,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
             )}
 
             {/* Footer */}
-            {showFooter && <Footer setScreen={setScreen} databaseDate={databaseDate} onUploadPatients={onUploadPatients} />}
+            {showFooter && <Footer setScreen={setScreen} databaseDate={databaseDate} onUploadPatients={onUploadPatients} isCustomData={isCustomData} />}
         </div>
     );
 };

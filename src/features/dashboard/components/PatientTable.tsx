@@ -21,6 +21,7 @@ interface PatientTableProps {
   isFiltersExpanded: boolean;
   setIsFiltersExpanded: (expanded: boolean) => void;
   databaseDate: string;
+  isCustomData?: boolean;
   onSelectPatient: (patient: Patient) => void;
   handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isSheetOpen: boolean;
@@ -45,6 +46,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
   isFiltersExpanded,
   setIsFiltersExpanded,
   databaseDate,
+  isCustomData = false,
   onSelectPatient,
   handleFileUpload,
   isSheetOpen,
@@ -68,7 +70,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 <FileText className="w-5 h-5 text-primary" /> REDCap Record Database
               </CardTitle>
               <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                <span>Updated {databaseDate}</span>
+                <span>{isCustomData ? `Updated ${databaseDate}` : 'Demo data'}</span>
               </div>
             </div>
 
