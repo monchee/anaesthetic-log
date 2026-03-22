@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, Button, Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui';
-import { Home } from 'lucide-react';
+import { Home, BookOpen, LayoutDashboard, Users, FileText, FlaskConical, Wrench } from 'lucide-react';
 import { Screen } from '@shared/types';
 
 interface FAQPageProps {
@@ -11,6 +11,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
   const faqs = [
     {
       category: "Getting Started",
+      icon: BookOpen,
       items: [
         {
           question: "How do I upload patient data?",
@@ -28,6 +29,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
     },
     {
       category: "Using the Dashboard",
+      icon: LayoutDashboard,
       items: [
         {
           question: "How do I search for a patient?",
@@ -45,6 +47,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
     },
     {
       category: "Patient Records",
+      icon: Users,
       items: [
         {
           question: "How do I view a patient's full history?",
@@ -62,6 +65,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
     },
     {
       category: "Clinical Reports",
+      icon: FileText,
       items: [
         {
           question: "How do I generate a clinical report?",
@@ -87,6 +91,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
     },
     {
       category: "Test Interpretation",
+      icon: FlaskConical,
       items: [
         {
           question: "What do positive and negative test results mean?",
@@ -112,6 +117,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
     },
     {
       category: "Troubleshooting",
+      icon: Wrench,
       items: [
         {
           question: "My CSV file won't upload - what should I do?",
@@ -135,7 +141,8 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         <CardContent className="pt-6 space-y-6">
           {faqs.map((category, idx) => (
             <div key={idx} className="space-y-2">
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
+                <category.icon className="w-4 h-4 text-primary shrink-0" />
                 {category.category}
               </h3>
               <Accordion type="multiple" className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 px-4">
@@ -163,7 +170,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         <Button 
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 hover:bg-[var(--primary)] text-white px-8"
+          className="bg-slate-900 hover:bg-primary text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home
