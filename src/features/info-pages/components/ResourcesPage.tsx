@@ -28,7 +28,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           title: "NHMRC - National Health & Medical Research Council",
           description: "Australian health and medical research guidelines and evidence-based resources.",
           url: "https://www.nhmrc.gov.au",
-          icon: <Globe className="w-5 h-5 text-slate-600" />
+          icon: <Globe className="w-5 h-5 text-muted-foreground" />
         }
       ]
     },

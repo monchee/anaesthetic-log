@@ -70,26 +70,26 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                     <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{patient.firstName} {patient.lastName}</p>
                 </div>
                 <div>
-                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">MRN</p>
+                    <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">MRN</p>
                     <p className="text-lg font-mono font-medium text-slate-700 dark:text-slate-300 print:text-xs">{patient.mrn}</p>
                 </div>
                 {patient.redcapId && patient.redcapId !== patient.mrn && (
                 <div>
-                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">REDCap Record ID</p>
+                    <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">REDCap Record ID</p>
                     <p className="text-lg font-mono font-medium text-slate-700 dark:text-slate-300 print:text-xs">{patient.redcapId}</p>
                 </div>
                 )}
                 <div>
-                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">DOB</p>
+                    <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">DOB</p>
                     <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{formatDate(patient.dob)}</p>
                 </div>
                 <div>
-                    <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Gender</p>
-                    <p className="text-slate-700 font-medium print:text-xs">{patient.gender}</p>
+                    <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Gender</p>
+                    <p className="text-foreground/80 font-medium print:text-xs">{patient.gender}</p>
                 </div>
                 {reactionDate && (
                     <div className="col-span-2 sm:col-span-1 print:col-span-1">
-                        <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Date of Reaction</p>
+                        <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Date of Reaction</p>
                         <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{formatDate(reactionDate)}</p>
                     </div>
                 )}
@@ -183,7 +183,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                         )}
                     </div>
                 ) : (
-                    <p className="text-slate-400 italic print:text-xs">No drugs selected.</p>
+                    <p className="text-muted-foreground italic print:text-xs">No drugs selected.</p>
                 )}
             </div>
             
@@ -191,10 +191,10 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             <div className="pt-6 border-t border-slate-200 dark:border-slate-700 print:pt-3">
                 <div className="flex justify-between gap-12 print:gap-6">
                     <div className="flex-1 border-t border-black pt-2 print:pt-1">
-                        <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Requested By (Name & Signature)</p>
+                        <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Requested By (Name & Signature)</p>
                     </div>
                     <div className="w-40 border-t border-black pt-2 print:pt-1 print:w-32">
-                        <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Date</p>
+                        <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Date</p>
                     </div>
                 </div>
             </div>

@@ -293,7 +293,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
         <div className="w-full border border-slate-200 dark:border-border bg-white dark:bg-background shadow-sm flex flex-col animate-in slide-in-from-top-2 fade-in duration-200">
           <div className="px-4 py-3 border-b border-slate-100 dark:border-border bg-slate-50/50 dark:bg-card/50 flex flex-wrap items-center gap-4 justify-between">
             <div className="relative w-full max-w-[320px]">
-              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
                 placeholder="Search specific drugs or agents..." 
                 value={agentSearch}
@@ -310,7 +310,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
               )}
             </div>
             
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 opacity-70 flex items-center gap-2">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-70 flex items-center gap-2">
                {hasAgents && <span className="text-primary">{filters.suspectedAgents.length} Selected</span>}
                {!hasAgents && <span>0 Selected</span>}
             </div>
@@ -347,7 +347,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                   );
                 })
               ) : (
-                <div className="text-xs text-slate-400 py-8 text-center w-full font-medium italic">
+                <div className="text-xs text-muted-foreground py-8 text-center w-full font-medium italic">
                   No agents found matching "{agentSearch}"
                 </div>
               )}

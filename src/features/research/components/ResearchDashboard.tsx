@@ -59,7 +59,7 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
                     <td className="px-3 py-1.5">
                       {d.is_positive
                         ? <span className="text-red-600 dark:text-red-400 font-semibold">Positive</span>
-                        : <span className="text-slate-400">Negative</span>
+                        : <span className="text-muted-foreground">Negative</span>
                       }
                     </td>
                   </tr>
@@ -189,7 +189,7 @@ export default function ResearchDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-16 text-slate-500">
+      <div className="flex items-center justify-center py-16 text-muted-foreground">
         <RefreshCw className="w-5 h-5 animate-spin mr-2" /> Loading research data…
       </div>
     );
@@ -316,7 +316,7 @@ export default function ResearchDashboard() {
             </div>
             Positivity by Drug
             {stats.drugStats.length > 0 && (
-              <span className="text-xs font-normal text-slate-400 ml-1">top {stats.drugStats.length}</span>
+              <span className="text-xs font-normal text-muted-foreground ml-1">top {stats.drugStats.length}</span>
             )}
           </CardTitle>
         </CardHeader>
@@ -349,7 +349,7 @@ export default function ResearchDashboard() {
               })}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-10 gap-2 text-slate-400">
+            <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted-foreground">
               <BarChart2 className="w-6 h-6" />
               <p className="text-sm">No data yet. Save a testing session to populate this chart.</p>
             </div>
@@ -374,7 +374,7 @@ export default function ResearchDashboard() {
         </CardHeader>
         <CardContent className="p-0">
           {records.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10 gap-2 text-slate-400">
+            <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted-foreground">
               <Database className="w-6 h-6" />
               <p className="text-sm">No submissions yet.</p>
               <p className="text-xs">Complete a testing session and click "Save to Research Database".</p>

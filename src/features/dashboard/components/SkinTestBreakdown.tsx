@@ -84,7 +84,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                     >
                       <td colSpan={6} className="px-4 py-2.5">
                         <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wide">
-                          {isExpanded ? <ChevronDown className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
+                          {isExpanded ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
                           {categoryGroup.category}
                         </div>
                       </td>
@@ -94,7 +94,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                             {totalCategoryPositives}
                           </span>
                         ) : (
-                          <span className="text-slate-400 text-xs">-</span>
+                          <span className="text-muted-foreground text-xs">-</span>
                         )}
                       </td>
                     </tr>
@@ -116,7 +116,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
               })
             ) : (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-slate-500 italic">
+                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground italic">
                   No data available.
                 </td>
               </tr>

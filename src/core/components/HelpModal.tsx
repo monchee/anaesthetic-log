@@ -101,7 +101,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
         <DialogContent className="max-w-full sm:!max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader className="pb-2">
             <DialogTitle className="flex items-center gap-2 text-lg">
-              <FileSpreadsheet className="w-5 h-5 text-slate-900" />
+              <FileSpreadsheet className="w-5 h-5 text-foreground" />
               Quick Start
             </DialogTitle>
           </DialogHeader>

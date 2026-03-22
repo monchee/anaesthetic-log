@@ -27,11 +27,11 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
            {/* Header Info */}
             <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 flex justify-between items-start print:bg-white print:border-slate-300 print:p-2">
                <div>
-                  <p className="text-[10px] text-slate-500 uppercase font-semibold tracking-wider print:text-[9px]">Patient Name</p>
+                  <p className="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Patient Name</p>
                   <p className="text-xl font-semibold tracking-tight text-primary print:text-sm">{data.firstName} {data.lastName}</p>
                </div>
                <div className="text-right">
-                  <p className="text-[10px] text-slate-500 uppercase font-semibold tracking-wider print:text-[9px]">Date</p>
+                  <p className="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Date</p>
                   <p className="text-lg font-medium print:text-sm">{formatDate(data.visitDate)}</p>
                </div>
             </div>
@@ -51,7 +51,7 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
                     ))}
                  </ul>
               ) : (
-                 <p className="text-slate-500 italic p-4 bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 print:p-2 print:text-xs">No positive reactions recorded today.</p>
+                 <p className="text-muted-foreground italic p-4 bg-muted/30 dark:bg-muted/20 rounded-none border border-border print:p-2 print:text-xs">No positive reactions recorded today.</p>
               )}
            </div>
 
@@ -70,7 +70,7 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
                     ))}
                  </ul>
               ) : (
-                 <p className="text-slate-500 italic p-4 bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 print:p-2 print:text-xs">No negative results recorded.</p>
+                 <p className="text-muted-foreground italic p-4 bg-muted/30 dark:bg-muted/20 rounded-none border border-border print:p-2 print:text-xs">No negative results recorded.</p>
               )}
            </div>
 

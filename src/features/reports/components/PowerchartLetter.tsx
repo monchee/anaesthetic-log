@@ -132,41 +132,41 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 print:bg-white print:border-slate-300">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 print:grid-cols-2 print:gap-2">
           <div>
-            <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Patient Name</p>
+            <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Patient Name</p>
             <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{fullName}</p>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">MRN</p>
+            <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">MRN</p>
             <p className="text-lg font-mono font-medium text-slate-700 dark:text-slate-300 print:text-xs">{data.mrn}</p>
           </div>
           {patient?.redcapId && patient.redcapId !== data.mrn && (
             <div>
-              <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">REDCap Record ID</p>
+              <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">REDCap Record ID</p>
               <p className="text-lg font-mono font-medium text-slate-700 dark:text-slate-300 print:text-xs">{patient.redcapId}</p>
             </div>
           )}
           {patient && patient.id !== 'manual' && (
             <>
               <div>
-                <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Date of Reaction</p>
+                <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Date of Reaction</p>
                 <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{formatDate(patient.history.date)}</p>
               </div>
               <div>
-                <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Hospital</p>
+                <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Hospital</p>
                 <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{patient.history.hospital || 'Unknown'}</p>
               </div>
               <div>
-                <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Operation</p>
+                <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Operation</p>
                 <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{patient.history.procedure}</p>
               </div>
               <div>
-                <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Procedure Outcome</p>
+                <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Procedure Outcome</p>
                 <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs capitalize">{getOutcomeText(patient)}</p>
               </div>
             </>
           )}
           <div>
-            <p className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider print:text-[9px]">Testing Date</p>
+            <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Testing Date</p>
             <p className="text-slate-700 dark:text-slate-300 font-medium print:text-xs">{testingDate}</p>
           </div>
           </div>

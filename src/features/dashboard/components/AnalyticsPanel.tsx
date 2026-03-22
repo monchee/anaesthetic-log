@@ -86,7 +86,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-slate-900 dark:text-white">{animatedAvgTime}</span>
-                <span className="text-sm text-slate-500">min</span>
+                <span className="text-sm text-muted-foreground">min</span>
               </div>
             </div>
           </div>
@@ -192,7 +192,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
               })}
             </div>
           ) : (
-            <div className="text-center py-4 text-slate-400 italic text-sm">
+            <div className="text-center py-4 text-muted-foreground italic text-sm">
               No agents recorded yet.
             </div>
           )}

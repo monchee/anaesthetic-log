@@ -72,7 +72,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
         
         {/* Visual Switch */}
         <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-150 ease-in-out ${proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}>
-          <div className={`w-5 h-5 bg-white rounded-none shadow-sm transform transition-transform duration-150 ease-in-out ${proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
+          <div className={`w-5 h-5 bg-background rounded-none shadow-sm transform transition-transform duration-150 ease-in-out ${proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
         </div>
       </div>
 
@@ -86,7 +86,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
             </Label>
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1 group">
-                <Syringe className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 group-hover:text-primary transition-colors pointer-events-none" />
+                <Syringe className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors pointer-events-none" />
                 <select 
                   value={challengeDrug} 
                   onChange={(e) => onChange('challengeDrug', e.target.value)}

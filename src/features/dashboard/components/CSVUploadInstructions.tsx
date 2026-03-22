@@ -36,7 +36,7 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
               Go to <a href="https://redcap.slhd.nsw.gov.au/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline font-medium">redcap.slhd.nsw.gov.au</a> and log in with your credentials.
             </p>
-            <p className="text-xs text-slate-500 italic">(You must have data export rights)</p>
+            <p className="text-xs text-muted-foreground italic">(You must have data export rights)</p>
           </div>
 
           <div className="space-y-4">
@@ -92,7 +92,7 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
               accept=".csv"
               onChange={onUpload}
               disabled={isUploading}
-              className="block w-full text-sm text-slate-500
+              className="block w-full text-sm text-muted-foreground
                 file:mr-4 file:py-2 file:px-4
                 rounded-full
                 file:border-0

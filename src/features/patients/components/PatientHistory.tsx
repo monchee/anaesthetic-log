@@ -41,7 +41,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
       const lower = outcome.toLowerCase();
       if (lower.includes('completed') || lower === '2') return { text: "Completed", color: "text-green-600 dark:text-green-400", icon: CheckCircle2 };
       if (lower.includes('abandoned') || lower.includes('adandoned') || lower === '1') return { text: "Abandoned", color: "text-red-600 dark:text-red-400", icon: AlertCircle };
-      return { text: outcome, color: "text-slate-600", icon: HelpCircle };
+      return { text: outcome, color: "text-foreground/70", icon: HelpCircle };
   };
 
   const outcomeConfig = getOutcomeConfig(history.procedureOutcome);
@@ -150,7 +150,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     {history.comments && (
                         <div className="space-y-2">
                             <div className="section-label flex items-center gap-2">
-                                <MessageSquare className="h-3.5 w-3.5 text-slate-500" /> 
+                                <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" /> 
                                 Additional Comments
                             </div>
                             <div className="bg-white dark:bg-card p-3 rounded-none border border-slate-200 dark:border-border text-slate-600 dark:text-slate-400 leading-relaxed shadow-sm text-xs italic">
@@ -208,7 +208,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                             </span>
                                         )
                                     ))
-                                ) : <span className="text-slate-400 italic text-xs">None recorded</span>}
+                                ) : <span className="text-muted-foreground italic text-xs">None recorded</span>}
                             </div>
                         </div>
                     </div>
@@ -344,7 +344,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-slate-400 italic text-center py-4 text-xs">No timed events.</div>
+                            <div className="text-muted-foreground italic text-center py-4 text-xs">No timed events.</div>
                         )}
                     </div>
                     

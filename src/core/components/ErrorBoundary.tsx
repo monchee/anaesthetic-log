@@ -35,23 +35,23 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-background p-4">
           <div className="max-w-md w-full">
-            <div className="bg-white dark:bg-gray-800 rounded-none shadow-lg p-6 text-center">
+            <div className="bg-card rounded-none shadow-lg p-6 text-center">
               <div className="flex justify-center mb-4">
                 <AlertTriangle className="h-12 w-12 text-red-500" aria-hidden="true" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              <h2 className="text-xl font-semibold text-foreground mb-2">
                 Something went wrong
               </h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-2">
+              <p className="text-muted-foreground mb-2">
                 An unexpected error occurred. Don't worry, your data is safe.
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <p className="text-sm text-muted-foreground mb-6">
                 Try these steps to recover:
               </p>
               <div className="space-y-3 text-left mb-6">
-                <ol className="text-sm text-gray-600 dark:text-gray-300 space-y-2 list-decimal list-inside">
+                <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
                   <li>Click <strong>"Try Again"</strong> to reset the current screen</li>
                   <li>Click <strong>"Reload Page"</strong> to refresh the application</li>
                   <li>If the issue persists, contact IT support with the error details below</li>
@@ -73,10 +73,10 @@ class ErrorBoundary extends Component<Props, State> {
               </div>
               {this.state.error && (
                 <details className="mt-4 text-left">
-                  <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                  <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
                     Error Details (for IT support)
                   </summary>
-                  <div className="mt-2 text-xs bg-gray-100 dark:bg-gray-700 p-3 rounded overflow-auto space-y-2">
+                  <div className="mt-2 text-xs bg-muted p-3 rounded overflow-auto space-y-2">
                     <div><strong>Message:</strong> {this.state.error.message}</div>
                     {this.state.error.stack && (
                       <div>

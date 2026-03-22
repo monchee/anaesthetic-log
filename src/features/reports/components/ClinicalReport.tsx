@@ -101,7 +101,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                              <td className="py-2 print:py-1 print:text-xs">{row.idt100 || '-'} mm</td>
                              <td className="py-2 print:py-1 print:text-xs">{row.idt10 || '-'} mm</td>
                              <td className="py-2 print:py-1 print:text-xs">{row.idtNeat || '-'} mm</td>
-                             <td className="py-2 print:py-1 print:text-xs text-slate-500">{row.notes || ''}</td>
+                             <td className="py-2 print:py-1 print:text-xs text-muted-foreground">{row.notes || ''}</td>
                           </tr>
                         ))}
                      </tbody>
@@ -121,27 +121,27 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                                  <span className="font-medium">{row.sptWheal || '-'} mm</span>
                               </div>
                               <div>
-                                 <span className="text-[10px] text-slate-500 uppercase font-bold block">IDT 1:100</span>
+                                 <span className="text-[10px] text-muted-foreground uppercase font-bold block">IDT 1:100</span>
                                  <span className="font-medium">{row.idt100 || '-'} mm</span>
                               </div>
                               <div>
-                                 <span className="text-[10px] text-slate-500 uppercase font-bold block">IDT 1:10</span>
+                                 <span className="text-[10px] text-muted-foreground uppercase font-bold block">IDT 1:10</span>
                                  <span className="font-medium">{row.idt10 || '-'} mm</span>
                               </div>
                               <div>
-                                 <span className="text-[10px] text-slate-500 uppercase font-bold block">IDT Neat</span>
+                                 <span className="text-[10px] text-muted-foreground uppercase font-bold block">IDT Neat</span>
                                  <span className="font-medium">{row.idtNeat || '-'} mm</span>
                               </div>
                           </div>
                           {row.notes && (
-                              <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500">{row.notes}</div>
+                              <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700 text-xs text-muted-foreground">{row.notes}</div>
                           )}
                       </div>
                    ))}
                 </div>
               </>
             ) : (
-              <p className="text-slate-500 italic">No panel testing recorded.</p>
+              <p className="text-muted-foreground italic">No panel testing recorded.</p>
             )}
          </div>
 
@@ -170,7 +170,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                   )}
                </div>
             ) : (
-               <p className="text-slate-500 italic print:text-xs">No drug challenge performed.</p>
+               <p className="text-muted-foreground italic print:text-xs">No drug challenge performed.</p>
             )}
          </div>
 

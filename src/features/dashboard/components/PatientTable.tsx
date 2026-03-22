@@ -191,7 +191,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                     </td>
                     <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
                       <div className="line-clamp-1 max-w-xs" title={p.history.procedure}>
-                        {p.history.procedure || <span className="italic text-slate-400">Unknown</span>}
+                        {p.history.procedure || <span className="italic text-muted-foreground">Unknown</span>}
                       </div>
                     </td>
                     <td className="px-4 py-3">
@@ -251,7 +251,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                     <div className="font-bold text-slate-900 dark:text-slate-100">
                       {p.lastName}, {p.firstName}
                     </div>
-                    <div className="text-xs text-slate-500 font-mono mt-0.5 truncate max-w-[200px]">
+                    <div className="text-xs text-muted-foreground font-mono mt-0.5 truncate max-w-[200px]">
                       {formatDate(p.history.date)}
                     </div>
                   </div>
@@ -276,13 +276,13 @@ const PatientTable: React.FC<PatientTableProps> = ({
                       `}
                     />
                   ))}
-                  {timelineEvents.length === 0 && <span className="text-xs text-slate-400">No timed events</span>}
+                  {timelineEvents.length === 0 && <span className="text-xs text-muted-foreground">No timed events</span>}
                 </div>
               </div>
             );
           })
         ) : (
-          <div className="p-8 text-center text-slate-500 italic text-sm">
+          <div className="p-8 text-center text-muted-foreground italic text-sm">
             No matching records found.
           </div>
         )}
