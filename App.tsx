@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2, LogOut, Info } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2, LogOut, Info, Target, Shield, Users } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
@@ -290,6 +290,73 @@ function AnaestheticLogApp() {
               </div>
             </CardContent>
           </Card>
+        )}
+
+        {!selectedPatient && (
+          <div className="space-y-4">
+            {/* Clinic intro */}
+            <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 p-5 border border-slate-900/10 dark:border-primary/30 shadow-sm rounded-none">
+              <div className="flex items-start gap-3">
+                <Stethoscope className="w-6 h-6 text-slate-900 dark:text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-sm mb-1">RPAH Anaesthetic Allergy Clinic</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    A specialist service for patients who have experienced a suspected allergic reaction
+                    during an anaesthetic. Our team investigates these reactions to identify the drug
+                    responsible and help plan safe anaesthesia for future procedures.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Purpose + Privacy */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 shadow-sm rounded-none">
+                <div className="flex items-center gap-2 mb-2">
+                  <Target className="w-4 h-4 text-primary" />
+                  <span className="font-semibold text-sm">Purpose</span>
+                </div>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Helps clinicians prepare for allergy clinic appointments — reviewing patient histories,
+                  recording test results, and generating reports and testing plans.
+                </p>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 shadow-sm rounded-none">
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="w-4 h-4 text-primary" />
+                  <span className="font-semibold text-sm">Data Privacy</span>
+                </div>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  All patient data is stored and processed on your own device. Nothing is sent to
+                  external servers. Your data stays with you.
+                </p>
+              </div>
+            </div>
+
+            {/* Key Features */}
+            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 shadow-sm rounded-none">
+              <div className="flex items-center gap-2 mb-3">
+                <Users className="w-4 h-4 text-primary" />
+                <span className="font-semibold text-sm">Key Features</span>
+              </div>
+              <ul className="grid sm:grid-cols-2 gap-2">
+                {[
+                  "Dashboard showing patient statistics at a glance",
+                  "Search and filter patients by name, reaction grade, and date",
+                  "Detailed patient history and timeline views",
+                  "Skin test and drug challenge result recording",
+                  "Three report types: clinical report, patient handout, and clinical letter",
+                  "Create and print testing plan request forms for nursing staff",
+                  "Import patient records from your clinic database",
+                  "Works offline — use the app without internet access",
+                ].map((f, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
+                    <span className="text-primary mt-0.5 shrink-0">•</span>{f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         )}
 
         {selectedPatient?.id === 'manual' && (
