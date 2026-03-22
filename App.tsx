@@ -404,15 +404,23 @@ function AnaestheticLogApp() {
         )}
 
         {selectedPatient && (
-          <div key={selectedPatient.id} className="animate-enter space-y-8">
-            {selectedPatient.id !== 'manual' && <PatientHistory patient={selectedPatient} />}
-            <TestingPlanGenerator patient={selectedPatient} drugCategories={DRUG_CATEGORIES}
-              onPreview={(data) => { setTestingPlanData(data); setScreen(Screen.PRINT_PLAN); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            />
-            <div className="flex justify-end pt-4">
-              <Button size="lg" className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors btn-press" onClick={() => setScreen(Screen.TESTING)}>
-                Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
-              </Button>
+          <div key={selectedPatient.id} className="space-y-8">
+            {selectedPatient.id !== 'manual' && (
+              <div style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
+                <PatientHistory patient={selectedPatient} />
+              </div>
+            )}
+            <div style={{ '--section-index': selectedPatient.id !== 'manual' ? 1 : 0 } as React.CSSProperties} className="animate-section-reveal">
+              <TestingPlanGenerator patient={selectedPatient} drugCategories={DRUG_CATEGORIES}
+                onPreview={(data) => { setTestingPlanData(data); setScreen(Screen.PRINT_PLAN); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              />
+            </div>
+            <div style={{ '--section-index': selectedPatient.id !== 'manual' ? 2 : 1 } as React.CSSProperties} className="animate-section-reveal">
+              <div className="flex justify-end pt-4">
+                <Button size="lg" className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors btn-press" onClick={() => setScreen(Screen.TESTING)}>
+                  Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
+                </Button>
+              </div>
             </div>
           </div>
         )}
