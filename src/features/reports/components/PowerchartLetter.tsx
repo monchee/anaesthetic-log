@@ -127,7 +127,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         </div>
       </div>
 
-      <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-3 print:space-y-3">
+      <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-2 print:space-y-2">
         {/* Patient Details */}
         <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 print:bg-white print:border-slate-300">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 print:grid-cols-2 print:gap-2">
@@ -221,8 +221,8 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         </div>
 
         {/* Results Summary */}
-        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4 print:bg-white print:border-slate-300 print:p-2 print:space-y-2">
-          <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-slate-900 dark:text-slate-100 print:text-xs print:pb-1">Results</h3>
+        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4 print:bg-white print:border-slate-300 print:p-1.5 print:space-y-1">
+          <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-slate-900 dark:text-slate-100 print:text-xs print:pb-0.5">Results</h3>
           {posResults.length > 0 && (
             <div className="space-y-2">
               {posResults.map((drug, i) => (
@@ -240,8 +240,8 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         </div>
 
         {/* Recommendations */}
-        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4 print:bg-white print:border-slate-300 print:p-2 print:space-y-2">
-          <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-slate-900 dark:text-slate-100 print:text-xs print:pb-1">Recommendations</h3>
+        <div className="bg-slate-50 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4 print:bg-white print:border-slate-300 print:p-1.5 print:space-y-1">
+          <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-slate-900 dark:text-slate-100 print:text-xs print:pb-0.5">Recommendations</h3>
           {posResults.length > 0 && (
             <p className="text-red-700 dark:text-red-400 font-bold text-sm print:text-xs">
               Avoid {posResults.map(d => d.toUpperCase()).join(', ')}
@@ -255,14 +255,14 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         </div>
 
         {/* MDT Signature */}
-        <div className="pt-6 border-t border-slate-200 print:pt-3">
+        <div className="pt-6 border-t border-slate-200 print:pt-2">
           <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 print:text-xs">
             Allergy MDT: Dr. D Zalcberg, Dr. A Stoyanov and CNC K. Wells.
           </p>
         </div>
 
         {/* Print signature lines */}
-        <div className="hidden print:flex pt-8 justify-between gap-12">
+        <div className="hidden print:flex print:pt-4 justify-between gap-12">
           <div className="flex-1 border-t border-black pt-1">
             <p className="text-[9px] uppercase font-semibold text-slate-500 tracking-wider">Clinician Signature</p>
           </div>
