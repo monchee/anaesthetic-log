@@ -522,7 +522,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                         value={formData.interventionType}
                                         onValueChange={(value) => handleInputChange('interventionType', value)}
                                     >
-                                        <SelectTrigger className="bg-white dark:bg-slate-950 border-red-200 focus:border-red-400 focus:ring-red-400" aria-label="Select treatment intervention">
+                                        <SelectTrigger className="h-10 bg-white dark:bg-slate-950 border-red-200 focus:border-red-400 focus:ring-red-400" aria-label="Select treatment intervention">
                                             <SelectValue placeholder="Select intervention..." />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -602,7 +602,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 <textarea
                     id="clinical-plan"
                     className="flex min-h-[120px] w-full rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
-                    placeholder="Enter clinical notes, interpretation of results, and future recommendations..."
+                    placeholder=""
                     value={formData.plan}
                     onChange={(e) => handleInputChange('plan', e.target.value)}
                 />
