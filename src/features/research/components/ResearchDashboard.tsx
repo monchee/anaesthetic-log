@@ -7,14 +7,17 @@ import { ResearchRecord } from '../types';
 function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDelete: () => void }) {
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const handleDelete = async () => {
     if (!confirmDelete) { setConfirmDelete(true); return; }
     setDeleting(true);
+    setDeleteError(null);
     try {
       await deleteResult(record.id);
       onDelete();
-    } catch {
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : 'Failed to delete record.');
       setDeleting(false);
       setConfirmDelete(false);
     }
@@ -96,7 +99,10 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
       )}
 
       {/* Delete */}
-      <div className="flex justify-end pt-1">
+      <div className="flex flex-col items-end gap-1 pt-1">
+        {deleteError && (
+          <p className="text-xs text-red-600 dark:text-red-400">{deleteError}</p>
+        )}
         {confirmDelete ? (
           <div className="flex items-center gap-2">
             <span className="text-xs text-red-600 dark:text-red-400">Delete this record?</span>
@@ -139,8 +145,6 @@ export default function ResearchDashboard() {
   useEffect(() => { load(); }, []);
 
   const stats = useMemo(() => {
-    if (records.length === 0) return null;
-
     const totalDrugs = records.reduce((s, r) => s + r.total_drugs_tested, 0);
     const totalPositive = records.reduce((s, r) => s + r.positive_count, 0);
     const challenges = records.filter((r) => r.proceed_to_challenge);
@@ -196,72 +200,57 @@ export default function ResearchDashboard() {
     );
   }
 
-  if (records.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 gap-3 text-slate-400">
-        <FlaskConical className="w-8 h-8" />
-        <p className="text-sm">No research submissions yet.</p>
-        <p className="text-xs text-slate-400">Complete a testing session and click "Save to Research DB".</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       {/* Summary stats */}
-      {stats && (
-        <Card className="shadow-sm rounded-none">
-          <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
-            <div className="flex items-center justify-between gap-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-                  <Database className="w-4 h-4 text-primary" />
-                </div>
-                Research Summary
-              </CardTitle>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={load} className="rounded-none">
-                  <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Refresh
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => exportToCsv(records)} className="rounded-none">
-                  <Download className="w-3.5 h-3.5 mr-1.5" /> Export CSV
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-4">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[
-                { label: 'Submissions', value: stats.totalSubmissions },
-                { label: 'Drugs tested', value: stats.totalDrugs },
-                { label: 'Overall positivity', value: `${stats.overallPositivityRate}%` },
-                {
-                  label: 'Challenge success',
-                  value: stats.challengeSuccessRate !== null ? `${stats.challengeSuccessRate}%` : 'N/A',
-                },
-              ].map(({ label, value }) => (
-                <div key={label} className="border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-4">
-                  <div className="text-2xl font-semibold text-slate-800 dark:text-slate-100">{value}</div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{label}</div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Drug positivity breakdown */}
-      {stats && stats.drugStats.length > 0 && (
-        <Card className="shadow-sm rounded-none">
-          <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+      <Card className="shadow-sm rounded-none">
+        <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+          <div className="flex items-center justify-between gap-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-                <FlaskConical className="w-4 h-4 text-primary" />
+                <Database className="w-4 h-4 text-primary" />
               </div>
-              Positivity by Drug
+              Research Summary
             </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={load} className="rounded-none">
+                <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Refresh
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => exportToCsv(records)} disabled={records.length === 0} className="rounded-none">
+                <Download className="w-3.5 h-3.5 mr-1.5" /> Export CSV
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { label: 'Submissions', value: stats.totalSubmissions },
+              { label: 'Drugs tested', value: stats.totalDrugs },
+              { label: 'Overall positivity', value: stats.totalDrugs > 0 ? `${stats.overallPositivityRate}%` : '—' },
+              { label: 'Challenge success', value: stats.challengeSuccessRate !== null ? `${stats.challengeSuccessRate}%` : '—' },
+            ].map(({ label, value }) => (
+              <div key={label} className="border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-4">
+                <div className="text-2xl font-semibold text-slate-800 dark:text-slate-100">{value}</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{label}</div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Drug positivity breakdown */}
+      <Card className="shadow-sm rounded-none">
+        <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
+              <FlaskConical className="w-4 h-4 text-primary" />
+            </div>
+            Positivity by Drug
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          {stats.drugStats.length > 0 ? (
             <div className="divide-y divide-slate-100 dark:divide-slate-800">
               {stats.drugStats.map((d) => (
                 <div key={d.name} className="flex items-center gap-3 px-4 py-2.5 text-sm">
@@ -279,9 +268,14 @@ export default function ResearchDashboard() {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-      )}
+          ) : (
+            <div className="flex flex-col items-center justify-center py-10 gap-2 text-slate-400">
+              <FlaskConical className="w-6 h-6" />
+              <p className="text-sm">No data yet. Save a testing session to populate this chart.</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Records list */}
       <Card className="shadow-sm rounded-none">
@@ -299,6 +293,13 @@ export default function ResearchDashboard() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
+          {records.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-10 gap-2 text-slate-400">
+              <Database className="w-6 h-6" />
+              <p className="text-sm">No submissions yet.</p>
+              <p className="text-xs">Complete a testing session and click "Save to Research DB".</p>
+            </div>
+          ) : (
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {records.map((r) => {
               const isExpanded = expandedId === r.id;
@@ -358,6 +359,7 @@ export default function ResearchDashboard() {
               );
             })}
           </div>
+          )}
         </CardContent>
       </Card>
     </div>
