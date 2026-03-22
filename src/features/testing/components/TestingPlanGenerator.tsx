@@ -106,7 +106,18 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Select drugs to generate a printable testing plan</p>
                 </div>
              </div>
-             <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
+             <div className="flex items-center gap-2">
+               <Button
+                 variant="ghost"
+                 size="sm"
+                 onClick={(e) => { e.stopPropagation(); setSelectedDrugs([]); setCustomDrugs([]); }}
+                 className="text-xs text-slate-400 hover:text-destructive h-7 px-2 rounded-none"
+                 title="Clear all selected drugs"
+               >
+                 Clear All
+               </Button>
+               <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
+             </div>
         </div>
 
         {isOpen && (

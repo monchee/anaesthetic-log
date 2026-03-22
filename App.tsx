@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2, LogOut } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2, LogOut, Info } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
@@ -257,6 +257,37 @@ function AnaestheticLogApp() {
             </div>
           </CardContent>
         </Card>
+
+        {!selectedPatient && (
+          <Card className="shadow-sm rounded-none border-blue-100 dark:border-blue-900 bg-blue-50/60 dark:bg-blue-950/20">
+            <CardContent className="pt-5 pb-5">
+              <div className="flex gap-3">
+                <div className="bg-blue-100 dark:bg-blue-900/40 p-1.5 rounded-none h-fit mt-0.5">
+                  <Info className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div className="space-y-3">
+                  <p className="font-semibold text-blue-900 dark:text-blue-100 text-sm">
+                    Welcome — here's how to get started
+                  </p>
+                  <ol className="space-y-1.5 text-sm text-slate-700 dark:text-slate-300">
+                    <li className="flex gap-2">
+                      <span className="font-semibold text-blue-700 dark:text-blue-400 shrink-0">1.</span>
+                      <span>Select a patient from the dropdown above — search by name, ID, or date of birth. Choose <strong>New Patient (Manual Entry)</strong> if the patient is not in the database.</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-semibold text-blue-700 dark:text-blue-400 shrink-0">2.</span>
+                      <span>If your patient database isn't loaded yet, upload a patient CSV using the menu in the top-right corner.</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-semibold text-blue-700 dark:text-blue-400 shrink-0">3.</span>
+                      <span>Once a patient is selected, review their allergy history and generate a personalised drug testing plan.</span>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {selectedPatient?.id === 'manual' && (
           <Dialog open={isPatientDialogOpen} onOpenChange={setIsPatientDialogOpen}>
