@@ -20,7 +20,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
               <div>
                 <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-2">Terms of Use</h3>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Welcome to the RPAH Anaesthetic Allergy Clinic application. By accessing or using this application, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use this application.
+                  Welcome to DREAM (Drug Reaction Evaluation & Anaesthetic Management). By accessing or using this application, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use this application.
                 </p>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-3">
                   Last updated: March 2026

@@ -20,7 +20,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
               <div>
                 <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-2">Technical Overview</h3>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  The RPAH Anaesthetic Allergy Clinic application is a Progressive Web App (PWA) built with modern web technologies. It is designed for local-first data processing, ensuring patient data never leaves the user's device during normal operation.
+                  DREAM (Drug Reaction Evaluation & Anaesthetic Management) is a Progressive Web App (PWA) built with modern web technologies. It is designed for local-first data processing, ensuring patient data never leaves the user's device during normal operation.
                 </p>
               </div>
             </div>

@@ -18,7 +18,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-4">
               <Building2 className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-3">RPAH Anaesthetic Allergy Clinic</h3>
+                <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-3">DREAM</h3>
                 <div className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
                   <div>
                     <p className="font-semibold text-slate-900 dark:text-white">Department of Clinical Immunology & Allergy</p>

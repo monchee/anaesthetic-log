@@ -12,9 +12,9 @@ export default defineConfig(() => {
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
       manifest: {
-        name: 'RPAH Anaesthetic Allergy Clinic',
-        short_name: 'Allergy Clinic',
-        description: 'Anaesthetic allergy testing and patient management system for Royal Prince Alfred Hospital',
+        name: 'DREAM',
+        short_name: 'DREAM',
+        description: 'Drug Reaction Evaluation & Anaesthetic Management — Safe sleep, clear answers',
         theme_color: '#441170',
         background_color: '#ffffff',
         display: 'standalone',

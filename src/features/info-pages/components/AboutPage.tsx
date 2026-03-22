@@ -18,7 +18,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-4">
               <Stethoscope className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg mb-2">RPAH Anaesthetic Allergy Clinic</h3>
+                <h3 className="font-semibold text-lg mb-2">DREAM</h3>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                   The Royal Prince Alfred Hospital (RPAH) Anaesthetic Allergy Clinic is a specialist service
                   for patients who have experienced a suspected allergic reaction during an anaesthetic.

@@ -64,6 +64,8 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, isCustomData =
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3">
             <div className="text-center sm:text-left">
               <span className="font-semibold text-primary">RPAH Anaesthetic Allergy Clinic</span>
+              <span className="text-slate-400 dark:text-slate-500 mx-1.5">·</span>
+              <span className="italic text-slate-400 dark:text-slate-500">Safe sleep, clear answers</span>
             </div>
 
             <div className="flex items-center gap-4">

@@ -153,7 +153,7 @@ export const DEFAULT_SELECTED_DRUGS: string[] = ["Chlorhexidine", "Latex"];
 
 // App Configuration
 export const APP_CONFIG = {
-  APP_SUBTITLE: "RPAH Department of Clinical Immunology & Allergy",
+  APP_SUBTITLE: "Drug Reaction Evaluation & Anaesthetic Management",
   DATABASE_DEFAULT_DATE: "18/03/2026",
   SYMPTOM_OPTIONS: ['Urticaria', 'Angioedema', 'Bronchospasm', 'Hypotension', 'Flushing', 'Desaturation', 'Other'],
   INTERVENTION_OPTIONS: ['None (Observation)', 'Adrenaline', 'Antihistamine', 'Other'],

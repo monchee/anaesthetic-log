@@ -1,7 +1,7 @@
 {
-  "name": "RPAH Anaesthetic Allergy Clinic",
-  "short_name": "Allergy Clinic",
-  "description": "Anaesthetic allergy testing and patient management system for Royal Prince Alfred Hospital",
+  "name": "DREAM",
+  "short_name": "DREAM",
+  "description": "Drug Reaction Evaluation & Anaesthetic Management — Safe sleep, clear answers",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

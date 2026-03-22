@@ -236,7 +236,7 @@ function AnaestheticLogApp() {
 
     // Default: LOG screen
     return (
-      <ScreenLayout title="Anaesthetic Allergy Clinic" subtitle={APP_SUBTITLE} icon={<Stethoscope className="w-5 h-5" />} {...layoutProps}
+      <ScreenLayout title="DREAM" subtitle={APP_SUBTITLE} icon={<Stethoscope className="w-5 h-5" />} {...layoutProps}
         contentClassName="py-3 space-y-4" className="pb-10"
       >
         <Card className="shadow-sm rounded-none">
@@ -298,7 +298,7 @@ function AnaestheticLogApp() {
               <div className="flex items-start gap-3">
                 <Stethoscope className="w-6 h-6 text-slate-900 dark:text-primary shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-sm mb-1">RPAH Anaesthetic Allergy Clinic</p>
+                  <p className="font-semibold text-sm mb-1">DREAM</p>
                   <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     A specialist service for patients who have experienced a suspected allergic reaction
                     during an anaesthetic. Our team investigates these reactions to identify the drug

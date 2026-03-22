@@ -1,8 +1,18 @@
 [
   {
+    "version": "v0.41.0",
+    "codename": "Propofol",
+    "highlight": true,
+    "changes": [
+      "Rebranded to DREAM — Drug Reaction Evaluation & Anaesthetic Management.",
+      "New tagline: Safe sleep, clear answers.",
+      "RPAH Anaesthetic Allergy Clinic attribution moved to the footer."
+    ]
+  },
+  {
     "version": "v0.25.0",
     "codename": "Vecuronium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "The app now loads faster and responds more quickly.",
       "Improved dashboard organization and layout.",
