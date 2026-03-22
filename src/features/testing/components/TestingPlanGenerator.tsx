@@ -106,18 +106,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Select drugs to generate a printable testing plan</p>
                 </div>
              </div>
-             <div className="flex items-center gap-2">
-               <Button
-                 variant="ghost"
-                 size="sm"
-                 onClick={(e) => { e.stopPropagation(); setSelectedDrugs([]); setCustomDrugs([]); }}
-                 className="text-xs text-slate-400 hover:text-destructive h-7 px-2 rounded-none"
-                 title="Clear all selected drugs"
-               >
-                 Clear All
-               </Button>
-               <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
-             </div>
+             <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
         </div>
 
         {isOpen && (
@@ -193,8 +182,17 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                     {/* Drug Selection Grid */}
                     <div className="space-y-2 rounded-none p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors duration-150">
-                        <div className="flex items-center border-b border-dashed border-slate-200 dark:border-slate-800 pb-1 mb-2">
+                        <div className="flex items-center justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-1 mb-2">
                             <h4 className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Select Drugs for Testing</h4>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => { setSelectedDrugs([]); setCustomDrugs([]); }}
+                              className="text-xs text-slate-400 hover:text-destructive h-6 px-2 rounded-none"
+                              title="Clear all selected drugs"
+                            >
+                              Clear All
+                            </Button>
                         </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
                         {Object.entries(drugCategories).map(([category, drugs]) => {
