@@ -130,7 +130,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {gradeCounts.Ungraded > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.Ungraded / totalPatients) * 100}%` : '0%' }} 
-                className="bg-slate-300 h-full transition-all duration-500 delay-100" 
+                className="bg-slate-300 dark:bg-slate-600 h-full transition-all duration-500 delay-100"
               />
             )}
           </div>
@@ -153,7 +153,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
               <span className="text-slate-600 dark:text-slate-400">IV: <b className="text-slate-900 dark:text-white">{gradeCounts.IV}</b></span>
             </div>
             <div className="flex items-center gap-1.5 col-span-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600"></span>
               <span className="text-slate-600 dark:text-slate-400">Ungraded: <b className="text-slate-900 dark:text-white">{gradeCounts.Ungraded}</b></span>
             </div>
           </div>

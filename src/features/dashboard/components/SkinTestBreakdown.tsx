@@ -107,7 +107,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                         <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.idtNeat || '-'}</td>
                         <td className="px-4 py-3 text-center text-slate-500 dark:text-slate-400">{item.challenge || '-'}</td>
                         <td className="px-4 py-3 text-center font-bold text-slate-900 dark:text-slate-100 bg-slate-50/30 dark:bg-slate-900/30 border-l border-slate-100 dark:border-slate-800">
-                          {item.total || <span className="text-slate-300 dark:text-slate-600 font-normal">-</span>}
+                          {item.total || <span className="text-slate-300 dark:text-slate-500 font-normal">-</span>}
                         </td>
                       </tr>
                     ))}

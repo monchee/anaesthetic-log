@@ -105,19 +105,19 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                     </h4>
                     <div className="flex flex-wrap gap-2 mt-1 print:gap-1">
                         {documentsToChase.tryptases && (
-                            <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 font-semibold uppercase tracking-wide print:text-[10px] print:bg-amber-50 print:border-amber-300 print:text-amber-800">
+                            <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-amber-50 print:border-amber-300 print:text-amber-800">
                                 <span className="w-1.5 h-1.5 bg-amber-500 inline-block shrink-0" />
                                 Tryptases
                             </Badge>
                         )}
                         {documentsToChase.anaestheticChart && (
-                            <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 font-semibold uppercase tracking-wide print:text-[10px] print:bg-amber-50 print:border-amber-300 print:text-amber-800">
+                            <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-amber-50 print:border-amber-300 print:text-amber-800">
                                 <span className="w-1.5 h-1.5 bg-amber-500 inline-block shrink-0" />
                                 Anaesthetic Chart
                             </Badge>
                         )}
                         {documentsToChase.other && (
-                            <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 font-semibold uppercase tracking-wide print:text-[10px] print:bg-amber-50 print:border-amber-300 print:text-amber-800">
+                            <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-amber-50 print:border-amber-300 print:text-amber-800">
                                 <span className="w-1.5 h-1.5 bg-amber-500 inline-block shrink-0" />
                                 Other{documentsToChase.otherText ? `: ${documentsToChase.otherText}` : ''}
                             </Badge>

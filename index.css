@@ -9,7 +9,7 @@
 
   /* Focus Visible Styles for Keyboard Navigation */
   *:focus-visible {
-    outline: 2px solid #002664;
+    outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
   }
 
@@ -63,47 +63,68 @@
     --accent-foreground: 218 100% 20%; /* Dark navy on light blue */ --sidebar-background: 0 0% 98%; --sidebar-foreground: 240 5.3% 26.1%; --sidebar-primary: 240 5.9% 10%; --sidebar-primary-foreground: 0 0% 98%; --sidebar-accent: 240 4.8% 95.9%; --sidebar-accent-foreground: 240 5.9% 10%; --sidebar-border: 220 13% 91%; --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
-    --background: 222.2 84% 4.9%; /* slate-900/950 */
-    --foreground: 210 40% 98%; /* slate-50 */
-    --card: 222.2 84% 4.9%; /* slate-900/950 */
-    --card-foreground: 210 40% 98%; /* slate-50 */
-    --popover: 222.2 84% 4.9%; /* slate-900/950 */
-    --popover-foreground: 210 40% 98%; /* slate-50 */
-    --primary: 217 90% 60%; /* Lighter blue for dark mode visibility */
-    --primary-foreground: 222.2 84% 4.9%; /* slate-900 */
-    --secondary: 217.2 32.6% 17.5%; /* slate-800 */
-    --secondary-foreground: 210 40% 98%; /* slate-50 */
-    --muted: 217.2 32.6% 17.5%; /* slate-800 */
-    --muted-foreground: 215 20.2% 65.1%; /* slate-400 */
-    --accent: 217.2 32.6% 17.5%; /* slate-800 */
-    --accent-foreground: 210 40% 98%; /* slate-50 */
-    --destructive: 0 62.8% 30.6%; /* darker red */
-    --destructive-foreground: 210 40% 98%; /* slate-50 */
-    --border: 217.2 32.6% 17.5%; /* slate-800 */
-    --input: 217.2 32.6% 17.5%; /* slate-800 */
-    --ring: 217 90% 60%; /* Lighter blue for dark mode visibility */
+    /* ── Core Surfaces ────────────────────────────────────────── */
+    --background:         220 40% 7%;
+    --foreground:         210 40% 96%;
 
-    /* Medical Status Colors (Dark mode equivalents - kept bright for contrast) */
-    --status-grade1: 142.1 70.6% 45.3%; /* emerald-500 */
-    --status-grade2: 47.9 95.8% 53.1%; /* yellow-500 */
-    --status-grade3: 24.6 95% 53.1%; /* orange-500 */
-    --status-grade4: 346.8 77.2% 49.8%; /* rose-600 */
+    --card:               220 38% 11%;
+    --card-foreground:    210 40% 96%;
 
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --popover:            220 38% 11%;
+    --popover-foreground: 210 40% 96%;
 
-    /* NSW Government Design System — dark mode */
-    --nsw-blue: 218 98% 65%;       /* Brightened for dark bg readability */
-    --nsw-blue-light: 218 60% 25%; /* Dark navy-blue light variant */
-    --nsw-info: 220 70% 65%;       /* Lighter info blue for dark bg */
-    --nsw-info-bg: 220 40% 18%;    /* Dark navy-blue info background */
+    /* ── Brand Primary ────────────────────────────────────────── */
+    --primary:            217 85% 58%;
+    --primary-foreground: 220 40% 7%;
 
-    /* Override --accent with NSW dark blue hover */
-    --accent: 218 40% 18%;         /* Dark navy-blue for hover backgrounds */
-    --accent-foreground: 199 80% 85%; /* Light blue text in dark mode */ --sidebar-background: 240 5.9% 10%; --sidebar-foreground: 240 4.8% 95.9%; --sidebar-primary: 224.3 76.3% 48%; --sidebar-primary-foreground: 0 0% 100%; --sidebar-accent: 240 3.7% 15.9%; --sidebar-accent-foreground: 240 4.8% 95.9%; --sidebar-border: 240 3.7% 15.9%; --sidebar-ring: 217.2 91.2% 59.8%;
+    /* ── Secondary & Muted ────────────────────────────────────── */
+    --secondary:          220 35% 15%;
+    --secondary-foreground: 210 40% 96%;
+
+    --muted:              220 35% 15%;
+    --muted-foreground:   215 20% 60%;
+
+    /* ── Accent ──────────────────────────────────────────────── */
+    --accent:             220 45% 18%;
+    --accent-foreground:  210 40% 96%;
+
+    /* ── Destructive ─────────────────────────────────────────── */
+    --destructive:        0 65% 45%;
+    --destructive-foreground: 210 40% 96%;
+
+    /* ── Structural ──────────────────────────────────────────── */
+    --border:             220 30% 20%;
+    --input:              220 30% 20%;
+    --ring:               217 85% 58%;
+
+    /* ── Medical Status (vivid for clinical readability) ─────── */
+    --status-grade1:      142 65% 48%;
+    --status-grade2:      44  90% 52%;
+    --status-grade3:      25  90% 55%;
+    --status-grade4:      347 75% 55%;
+
+    /* ── Chart Colors ────────────────────────────────────────── */
+    --chart-1: 220 70% 55%;
+    --chart-2: 160 55% 48%;
+    --chart-3: 30  75% 58%;
+    --chart-4: 280 60% 62%;
+    --chart-5: 340 70% 58%;
+
+    /* ── NSW Government Design System ───────────────────────── */
+    --nsw-blue:       218 92% 65%;
+    --nsw-blue-light: 218 55% 22%;
+    --nsw-info:       220 70% 62%;
+    --nsw-info-bg:    220 38% 16%;
+
+    /* ── Sidebar ─────────────────────────────────────────────── */
+    --sidebar-background:         220 40% 7%;
+    --sidebar-foreground:         210 40% 96%;
+    --sidebar-primary:            217 85% 58%;
+    --sidebar-primary-foreground: 220 40% 7%;
+    --sidebar-accent:             220 45% 14%;
+    --sidebar-accent-foreground:  210 40% 96%;
+    --sidebar-border:             220 30% 20%;
+    --sidebar-ring:               217 85% 58%;
   }
 }
 
@@ -116,7 +137,7 @@
 @layer components {
   /* Standard card styling */
   .card-compact {
-    @apply bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-none p-4 shadow-sm;
+    @apply bg-slate-50 dark:bg-card border border-slate-200 dark:border-border rounded-none p-4 shadow-sm;
   }
 
   /* Card with hover effect */

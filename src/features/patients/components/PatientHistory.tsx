@@ -82,7 +82,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
             <span className="font-semibold text-slate-900 dark:text-white text-lg tracking-tight">
                 {formatDate(history.date)}
             </span>
-            <span className="text-slate-300 dark:text-slate-700 text-xl font-light hidden sm:inline">|</span>
+            <span className="text-slate-200 dark:text-slate-700 text-xl font-light hidden sm:inline">|</span>
             <span className="text-base text-primary dark:text-primary font-semibold uppercase tracking-wide leading-tight break-words">
                 {history.procedure}
             </span>
@@ -247,7 +247,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                 <span className="font-medium text-slate-600 dark:text-slate-300">{history.referringDoctorPosition}</span>
                             )}
                             {(history.referringDoctorPosition && (history.providerNumber || history.referringPhone)) && (
-                                <span className="text-slate-300 dark:text-slate-600">|</span>
+                                <span className="text-slate-200 dark:text-slate-600">|</span>
                             )}
                             {history.providerNumber && <span className="opacity-80">#{history.providerNumber}</span>}
                             {history.referringPhone && <span className="opacity-80 flex items-center gap-0.5"><Phone className="h-2 w-2" /> {history.referringPhone}</span>}

@@ -203,12 +203,12 @@ const PatientTable: React.FC<PatientTableProps> = ({
                               h-2.5 w-2.5 rounded-full cursor-help inline-block
                               ${e.type === 'reaction' ? 'bg-red-500' : ''}
                               ${e.type === 'induction' ? 'bg-primary' : ''}
-                              ${e.type === 'med' ? 'bg-slate-300' : ''}
+                              ${e.type === 'med' ? 'bg-slate-300 dark:bg-slate-600' : ''}
                             `}
                             title={`${e.time} - ${e.label}`}
                           />
                         ))}
-                        {timelineEvents.length === 0 && <span className="text-slate-300 text-xs">-</span>}
+                        {timelineEvents.length === 0 && <span className="text-slate-400 dark:text-slate-500 text-xs">-</span>}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-center">

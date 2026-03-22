@@ -62,7 +62,7 @@ const DrugRow = React.memo(({
 
         <button
           onClick={() => removeRow(index)}
-          className={`shrink-0 text-slate-300 hover:text-red-500 transition-opacity p-2 md:p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-100 md:opacity-0 md:group-hover:opacity-100'}`}
+          className={`shrink-0 text-slate-300 dark:text-slate-600 hover:text-red-500 dark:hover:text-red-400 transition-opacity p-2 md:p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-100 md:opacity-0 md:group-hover:opacity-100'}`}
           aria-label="Remove drug"
           title="Remove drug"
         >
@@ -93,7 +93,7 @@ const DrugRow = React.memo(({
       <div className="col-span-2 md:col-span-4 md:col-start-2">
         <Input
           aria-label={`${row.drugName} notes`}
-          className="h-8 text-xs text-slate-600 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-600"
+          className="h-8 text-xs text-slate-600 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-500"
           placeholder="Notes..."
           value={row.notes || ''}
           onChange={(e) => updateDrugData(index, 'notes', e.target.value)}
