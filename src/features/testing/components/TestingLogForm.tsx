@@ -198,57 +198,6 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-3 sm:pt-4 md:pt-4 space-y-4 sm:space-y-5 md:space-y-6">
-            
-            {/* Controls */}
-            <div className="bg-slate-50 dark:bg-slate-900 px-4 py-4 rounded-none border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
-              <div className="section-label">
-                Reference Controls (mm):
-              </div>
-              
-              <div className="grid grid-cols-3 gap-2 md:flex md:flex-wrap md:items-center md:gap-x-8 md:gap-y-4">
-                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
-                  <Label htmlFor="histamine-spt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Histamine (SPT)</Label>
-                  <Input
-                    id="histamine-spt"
-                    type="number"
-                    min="0"
-                    onKeyDown={preventNegativeInput}
-                    placeholder="0"
-                    className="bg-white dark:bg-slate-950 h-9 w-full md:w-20 text-center text-sm font-mono"
-                    value={formData.controls.histamineSpt}
-                    onChange={(e) => handleControlChange('histamineSpt', e.target.value)}
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
-                  <Label htmlFor="saline-spt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (SPT)</Label>
-                  <Input
-                    id="saline-spt"
-                    type="number"
-                    min="0"
-                    onKeyDown={preventNegativeInput}
-                    placeholder="0"
-                    className="bg-white dark:bg-slate-950 h-9 w-full md:w-20 text-center text-sm font-mono"
-                    value={formData.controls.salineSpt}
-                    onChange={(e) => handleControlChange('salineSpt', e.target.value)}
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
-                  <Label htmlFor="saline-idt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (IDT)</Label>
-                  <Input
-                    id="saline-idt"
-                    type="number"
-                    min="0"
-                    onKeyDown={preventNegativeInput}
-                    placeholder="0"
-                    className="bg-white dark:bg-slate-950 h-9 w-full md:w-20 text-center text-sm font-mono"
-                    value={formData.controls.salineIdt}
-                    onChange={(e) => handleControlChange('salineIdt', e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
 
             {/* Selection Area: Categories */}
             <div className="space-y-4 mb-6">
@@ -314,6 +263,54 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     </div>
                   )})}
                </div>
+            </div>
+
+            {/* Reference Controls */}
+            <div className="bg-slate-50 dark:bg-slate-900 px-4 py-4 rounded-none border border-slate-200 dark:border-slate-800 flex flex-col gap-4">
+              <div className="section-label">
+                Reference Controls (mm):
+              </div>
+              <div className="grid grid-cols-3 gap-2 md:flex md:flex-wrap md:items-center md:gap-x-8 md:gap-y-4">
+                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
+                  <Label htmlFor="histamine-spt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Histamine (SPT)</Label>
+                  <Input
+                    id="histamine-spt"
+                    type="number"
+                    min="0"
+                    onKeyDown={preventNegativeInput}
+                    placeholder="0"
+                    className="bg-white dark:bg-slate-950 h-9 w-full md:w-20 text-center text-sm font-mono"
+                    value={formData.controls.histamineSpt}
+                    onChange={(e) => handleControlChange('histamineSpt', e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
+                  <Label htmlFor="saline-spt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (SPT)</Label>
+                  <Input
+                    id="saline-spt"
+                    type="number"
+                    min="0"
+                    onKeyDown={preventNegativeInput}
+                    placeholder="0"
+                    className="bg-white dark:bg-slate-950 h-9 w-full md:w-20 text-center text-sm font-mono"
+                    value={formData.controls.salineSpt}
+                    onChange={(e) => handleControlChange('salineSpt', e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
+                  <Label htmlFor="saline-idt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (IDT)</Label>
+                  <Input
+                    id="saline-idt"
+                    type="number"
+                    min="0"
+                    onKeyDown={preventNegativeInput}
+                    placeholder="0"
+                    className="bg-white dark:bg-slate-950 h-9 w-full md:w-20 text-center text-sm font-mono"
+                    value={formData.controls.salineIdt}
+                    onChange={(e) => handleControlChange('salineIdt', e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Data Entry Table */}

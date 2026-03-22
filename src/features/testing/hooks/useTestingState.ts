@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { LogFormData, TestingPlanData } from '../types';
+import { DEFAULT_SELECTED_DRUGS } from '@shared/utils/constants';
 
 const INITIAL_FORM_STATE: LogFormData = {
   mrn: '',
@@ -11,7 +12,13 @@ const INITIAL_FORM_STATE: LogFormData = {
     salineSpt: '',
     salineIdt: '',
   },
-  testPanel: [],
+  testPanel: DEFAULT_SELECTED_DRUGS.map(drugName => ({
+    drugName,
+    sptWheal: '',
+    idt100: '',
+    idt10: '',
+    idtNeat: '',
+  })),
   proceedToChallenge: false,
   challengeDrug: '',
   challengeDrugCustom: '',
