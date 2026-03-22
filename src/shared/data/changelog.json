@@ -1,8 +1,18 @@
 [
   {
+    "version": "v0.40.0",
+    "codename": "Cisatracurium",
+    "highlight": true,
+    "changes": [
+      "Welcome guide added to the LOG screen — a contextual instructions box appears below patient selection when no patient is loaded, explaining how to select a patient, upload a CSV, and proceed to testing. Disappears automatically once a patient is selected.",
+      "Clear All button added to the Testing Plan / Request Form — deselects all drugs and removes custom entries in one click.",
+      "Clear All button added to the SPT & IDT Panel header — empties the entire test panel drug selection in one click."
+    ]
+  },
+  {
     "version": "v0.39.0",
     "codename": "Atracurium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Testing plan legend wording made more concise — pin and history icon descriptions are now shorter and clearer.",
       "Testing plan section header styling made consistent with other section headers in the form.",
