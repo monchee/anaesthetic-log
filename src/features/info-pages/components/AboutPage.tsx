@@ -12,7 +12,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
     <div className="py-4 sm:p-6 space-y-6">
       <Card>
         <CardContent className="pt-6 space-y-6">
-          
+
           {/* Introduction */}
           <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
             <div className="flex items-start gap-4">
@@ -20,10 +20,10 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
               <div>
                 <h3 className="font-semibold text-lg mb-2">RPAH Anaesthetic Allergy Clinic</h3>
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  The Royal Prince Alfred Hospital (RPAH) Anaesthetic Allergy Clinic is a specialised service 
-                  investigating patients who have experienced suspected allergic reactions during anaesthesia. 
-                  Our multidisciplinary team works to identify the causative agent and provide safe alternatives 
-                  for future procedures.
+                  The Royal Prince Alfred Hospital (RPAH) Anaesthetic Allergy Clinic is a specialist service
+                  for patients who have experienced a suspected allergic reaction during an anaesthetic.
+                  Our team investigates these reactions to identify the drug responsible and help plan
+                  safe anaesthesia for future procedures.
                 </p>
               </div>
             </div>
@@ -37,8 +37,9 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
                 <h4 className="font-semibold">Purpose</h4>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                This tool streamlines the management of patient data from REDCap, enabling clinicians to 
-                quickly search, filter, and review patient histories before clinic appointments.
+                This tool helps clinicians prepare for allergy clinic appointments — quickly reviewing
+                patient histories, recording skin test and drug challenge results, and generating
+                professional reports and testing plans.
               </p>
             </div>
 
@@ -48,8 +49,8 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
                 <h4 className="font-semibold">Data Privacy</h4>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                All patient data is processed locally in your browser. No data is transmitted to external 
-                servers. The application uses your local REDCap export files.
+                All patient data is stored and processed on your own device. Nothing is sent to
+                external servers. Your data stays with you.
               </p>
             </div>
           </div>
@@ -62,18 +63,18 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
             </div>
             <ul className="grid sm:grid-cols-2 gap-3">
               {[
-                "Dashboard with patient statistics and analytics",
-                "Advanced search and filtering with multiple criteria",
+                "Dashboard showing patient statistics at a glance",
+                "Search and filter patients by name, reaction grade, date, and more",
                 "Detailed patient history and timeline views",
                 "Skin test and drug challenge result recording",
-                "Three professional clinical report formats",
-                "Patient handout and Powerchart letter generation",
-                "Testing plan request form creation and management",
+                "Three report types: clinical report, patient handout, and clinical letter",
+                "Create and print testing plan request forms for nursing staff",
                 "Print-optimised layouts for all documents",
-                "REDCap data import and management",
-                "Dark/light theme and font size customisation",
-                "De-identified audit data export (CSV)",
-                "Offline access via Progressive Web App (PWA)"
+                "Import patient records from your clinic database",
+                "Export anonymised testing data for research and audit",
+                "Adjustable appearance — dark mode and font size options",
+                "Works offline — use the app without internet access",
+                "Research database for contributing to cross-patient studies"
               ].map((feature, idx) => (
                 <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
                   <span className="text-primary mt-0.5">•</span>
@@ -87,7 +88,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
       </Card>
 
       <div className="flex justify-center">
-        <Button 
+        <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
           className="bg-slate-900 hover:bg-primary text-white px-8"
