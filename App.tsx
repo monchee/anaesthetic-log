@@ -165,8 +165,8 @@ function AnaestheticLogApp() {
           {research.isAvailable && (
             <div className="no-print">
               {research.isSubmitted ? (
-                <div className="flex items-center justify-center gap-2 py-3 text-sm text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
-                  <CheckCircle2 className="w-4 h-4" /> Saved to research database
+                <div className="flex items-center justify-center gap-2 py-5 text-sm text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
+                  <CheckCircle2 className="w-4 h-4" /> Saved to Research Database
                 </div>
               ) : (
                 <Button
@@ -177,9 +177,9 @@ function AnaestheticLogApp() {
                   className="w-full py-5 h-auto text-sm rounded-none border-dashed"
                 >
                   {research.isSubmitting ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving to research database…</>
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving to Research Database…</>
                   ) : (
-                    <><Database className="w-4 h-4 mr-2" /> Save to Research DB</>
+                    <><Database className="w-4 h-4 mr-2" /> Save to Research Database</>
                   )}
                 </Button>
               )}
