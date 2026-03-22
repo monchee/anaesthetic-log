@@ -25,7 +25,9 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const hiddenCount = versions.length - INITIAL_VISIBLE;
 
   return (
-    <div className="py-4 sm:py-6 space-y-0">
+    <div className="py-4 sm:p-6 space-y-6">
+      <Card>
+        <CardContent className="pt-6">
       {visibleVersions.map((v, idx) => (
         <div key={idx} className="flex flex-col md:flex-row gap-y-3 pb-10">
 
@@ -104,9 +106,11 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
           </button>
         </div>
       )}
+        </CardContent>
+      </Card>
 
       {/* Return Home */}
-      <div className="flex justify-center pt-8">
+      <div className="flex justify-center">
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
