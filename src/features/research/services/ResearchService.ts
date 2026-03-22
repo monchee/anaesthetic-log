@@ -70,8 +70,11 @@ export async function submitResult(submission: ResearchSubmission): Promise<void
 export async function deleteResult(id: string): Promise<void> {
   if (!supabase) throw new Error('Research database is not configured.');
 
-  const { error } = await supabase.from(TABLE).delete().eq('id', id);
+  const { data, error } = await supabase.from(TABLE).delete().eq('id', id).select();
   if (error) throw new Error(error.message);
+  if (!data || data.length === 0) {
+    throw new Error('Delete was blocked. Run this in Supabase SQL Editor: CREATE POLICY "anon_delete" ON research_submissions FOR DELETE TO anon USING (true);');
+  }
 }
 
 export async function fetchAllResults(): Promise<ResearchRecord[]> {
