@@ -29,7 +29,7 @@ import { useResearchSubmit } from '@features/research/hooks/useResearchSubmit';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
-const BACK_BTN = "h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none";
+const BACK_BTN = "h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none btn-press";
 const BACK_ICON = "w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity";
 
 function AnaestheticLogApp() {
@@ -410,7 +410,7 @@ function AnaestheticLogApp() {
               onPreview={(data) => { setTestingPlanData(data); setScreen(Screen.PRINT_PLAN); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             />
             <div className="flex justify-end pt-4">
-              <Button size="lg" className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors" onClick={() => setScreen(Screen.TESTING)}>
+              <Button size="lg" className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors btn-press" onClick={() => setScreen(Screen.TESTING)}>
                 Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
               </Button>
             </div>

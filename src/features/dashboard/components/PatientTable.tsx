@@ -162,14 +162,15 @@ const PatientTable: React.FC<PatientTableProps> = ({
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-950">
             {paginatedPatients.length > 0 ? (
-              paginatedPatients.map((p) => {
+              paginatedPatients.map((p, index) => {
                 const { events: timelineEvents } = parsePatientTimeline(p.history);
                 return (
                   <tr
                     key={p.id}
                     role="button"
                     tabIndex={0}
-                    className="hover:bg-slate-50/80 dark:hover:bg-slate-900/50 transition-colors cursor-pointer group"
+                    style={{ '--row-index': Math.min(index, 9) } as React.CSSProperties}
+                    className="hover:bg-slate-50/80 dark:hover:bg-slate-900/50 transition-colors cursor-pointer group animate-row-enter"
                     onClick={() => onSelectPatient(p)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -236,12 +237,13 @@ const PatientTable: React.FC<PatientTableProps> = ({
       {/* Mobile View (Card List) */}
       <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
         {paginatedPatients.length > 0 ? (
-          paginatedPatients.map(p => {
+          paginatedPatients.map((p, index) => {
             const { events: timelineEvents } = parsePatientTimeline(p.history);
             return (
               <div
                 key={p.id}
-                className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800"
+                style={{ '--row-index': Math.min(index, 9) } as React.CSSProperties}
+                className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800 animate-row-enter"
                 onClick={() => onSelectPatient(p)}
               >
                 <div className="flex justify-between items-start mb-1 gap-2">

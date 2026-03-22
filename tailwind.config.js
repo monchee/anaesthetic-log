@@ -86,20 +86,12 @@ export default {
   		},
   		keyframes: {
   			'accordion-down': {
-  				from: {
-  					height: '0'
-  				},
-  				to: {
-  					height: 'var(--radix-accordion-content-height)'
-  				}
+  				from: { height: '0', opacity: '0' },
+  				to: { height: 'var(--radix-accordion-content-height)', opacity: '1' }
   			},
   			'accordion-up': {
-  				from: {
-  					height: 'var(--radix-accordion-content-height)'
-  				},
-  				to: {
-  					height: '0'
-  				}
+  				from: { height: 'var(--radix-accordion-content-height)', opacity: '1' },
+  				to: { height: '0', opacity: '0' }
   			},
   			'content-enter': {
   				'0%': {
@@ -128,6 +120,22 @@ export default {
   				'100%': {
   					backgroundPosition: '1000px 0'
   				}
+  			},
+  			'screen-enter': {
+  				'0%': { opacity: '0', transform: 'translateY(8px)' },
+  				'100%': { opacity: '1', transform: 'translateY(0)' }
+  			},
+  			'row-enter': {
+  				'0%': { opacity: '0', transform: 'translateY(4px)' },
+  				'100%': { opacity: '1', transform: 'translateY(0)' }
+  			},
+  			'section-reveal': {
+  				'0%': { opacity: '0', transform: 'translateY(6px)' },
+  				'100%': { opacity: '1', transform: 'translateY(0)' }
+  			},
+  			'gate-exit': {
+  				'0%': { opacity: '1', transform: 'scale(1)' },
+  				'100%': { opacity: '0', transform: 'scale(0.97)' }
   			}
   		},
   		animation: {
@@ -135,7 +143,11 @@ export default {
   			'accordion-up': 'accordion-up 0.2s ease-out',
   			'content-enter': 'content-enter 0.2s ease-out forwards',
   			'content-enter-subtle': 'content-enter-subtle 0.15s ease-out forwards',
-  			shimmer: 'shimmer 2s linear infinite'
+  			shimmer: 'shimmer 2s linear infinite',
+  			'screen-enter': 'screen-enter 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+  			'row-enter': 'row-enter 0.2s cubic-bezier(0.4, 0, 0.2, 1) both',
+  			'section-reveal': 'section-reveal 0.25s cubic-bezier(0.4, 0, 0.2, 1) both',
+  			'gate-exit': 'gate-exit 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
   		},
   		borderRadius: {
   			lg: '0',

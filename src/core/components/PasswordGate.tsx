@@ -13,13 +13,15 @@ interface PasswordGateProps {
 
 const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
   const [unlocked, setUnlocked] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
   const [digits, setDigits] = useState(['', '', '', '']);
   const [error, setError] = useState('');
   const inputRefs = useRef<(HTMLInputElement | null)[]>([null, null, null, null]);
 
   const handleUnlock = (currentDigits = digits) => {
     if (currentDigits.join('') === HARDCODED_PIN) {
-      setUnlocked(true);
+      setIsExiting(true);
+      setTimeout(() => setUnlocked(true), 300);
     } else {
       setError('Incorrect PIN');
       setDigits(['', '', '', '']);
@@ -65,10 +67,10 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
     }
   };
 
-  if (unlocked) return <>{children}</>;
+  if (unlocked) return <div className="animate-screen-enter">{children}</div>;
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+    <div className={`flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10 ${isExiting ? 'animate-gate-exit pointer-events-none' : ''}`}>
       <div className="flex w-full max-w-sm flex-col gap-6 animate-content-enter">
         <div className="flex items-center gap-2 self-center font-medium">
           <div className="flex size-6 items-center justify-center bg-primary text-primary-foreground">

@@ -150,7 +150,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                                 key={screen}
                                                 onClick={() => setScreen(screen)}
                                                 aria-current={isActive ? 'page' : undefined}
-                                                className={`h-9 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-all duration-200 shadow-sm
+                                                className={`h-9 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-all duration-200 shadow-sm btn-press
                                                     ${isActive
                                                         ? 'bg-white text-primary font-medium'
                                                         : 'bg-white/10 hover:bg-white/30 text-white'
@@ -172,7 +172,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                 {/* Hamburger Menu */}
                                 {showNav && <DropdownMenu>
                                     <DropdownMenuTrigger
-                                        className="h-9 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-all duration-200 shadow-sm group"
+                                        className="h-9 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-all duration-200 shadow-sm group btn-press"
                                         title="Open Navigation Menu"
                                     >
                                         <Menu className="w-4 h-4 text-white opacity-90 group-hover:opacity-100 transition-opacity" />
@@ -223,11 +223,12 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
             {/* Main Content */}
             <main
+                key={currentScreen}
                 id="main-content"
                 role="main"
                 aria-label="Main content"
                 tabIndex={-1}
-                className="flex-1 w-full max-w-6xl mx-auto sm:px-5 md:px-6 py-3 sm:py-4 md:py-6 flex flex-col relative z-10"
+                className="flex-1 w-full max-w-6xl mx-auto sm:px-5 md:px-6 py-3 sm:py-4 md:py-6 flex flex-col relative z-10 animate-screen-enter"
             >
                 <div className={`${contentClassName || ''} flex-1 flex flex-col`}>
                     <React.Suspense fallback={

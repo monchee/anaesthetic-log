@@ -202,19 +202,21 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
   return (
     <div className="space-y-8">
-        
+
         {/* Modern Stats Grid */}
-        <AnalyticsPanel
-          animatedTotalPatients={animatedTotalPatients}
-          animatedSevereCount={animatedSevereCount}
-          severeRate={severeRate}
-          animatedAbandonedCount={animatedAbandonedCount}
-          abandonedRate={abandonedRate}
-          animatedAvgTime={animatedAvgTime}
-          gradeCounts={analytics.gradeCounts}
-          topAgents={analytics.topAgentsByCount}
-          animateCharts={animateCharts}
-        />
+        <div style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
+          <AnalyticsPanel
+            animatedTotalPatients={animatedTotalPatients}
+            animatedSevereCount={animatedSevereCount}
+            severeRate={severeRate}
+            animatedAbandonedCount={animatedAbandonedCount}
+            abandonedRate={abandonedRate}
+            animatedAvgTime={animatedAvgTime}
+            gradeCounts={analytics.gradeCounts}
+            topAgents={analytics.topAgentsByCount}
+            animateCharts={animateCharts}
+          />
+        </div>
 
         {/* Screen reader announcement for search results */}
         <div aria-live="polite" aria-atomic="true" className="sr-only">
@@ -222,45 +224,50 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
         </div>
 
         {/* Patient Database Table (Full Width) - Paginated */}
-        <PatientTable
-          paginatedPatients={paginatedPatients}
-          filteredPatients={filteredPatients}
-          currentPage={currentPage}
-          ITEMS_PER_PAGE={ITEMS_PER_PAGE}
-          filters={filters}
-          updateFilter={updateFilter}
-          clearFilters={clearFilters}
-          activeFilterCount={activeFilterCount}
-          suggestions={suggestions}
-          isFiltersExpanded={isFiltersExpanded}
-          setIsFiltersExpanded={setIsFiltersExpanded}
-          databaseDate={databaseDate}
-          isCustomData={isCustomData}
-          onSelectPatient={onSelectPatient}
-          handleFileUpload={handleFileUpload}
-          isSheetOpen={isSheetOpen}
-          setIsSheetOpen={setIsSheetOpen}
-          isUploading={isUploading}
-          fileInputRef={fileInputRef}
-          handleNextPage={handleNextPage}
-          handlePrevPage={handlePrevPage}
-          allPatients={existingPatients}
-        />
-
+        <div style={{ '--section-index': 1 } as React.CSSProperties} className="animate-section-reveal">
+          <PatientTable
+            paginatedPatients={paginatedPatients}
+            filteredPatients={filteredPatients}
+            currentPage={currentPage}
+            ITEMS_PER_PAGE={ITEMS_PER_PAGE}
+            filters={filters}
+            updateFilter={updateFilter}
+            clearFilters={clearFilters}
+            activeFilterCount={activeFilterCount}
+            suggestions={suggestions}
+            isFiltersExpanded={isFiltersExpanded}
+            setIsFiltersExpanded={setIsFiltersExpanded}
+            databaseDate={databaseDate}
+            isCustomData={isCustomData}
+            onSelectPatient={onSelectPatient}
+            handleFileUpload={handleFileUpload}
+            isSheetOpen={isSheetOpen}
+            setIsSheetOpen={setIsSheetOpen}
+            isUploading={isUploading}
+            fileInputRef={fileInputRef}
+            handleNextPage={handleNextPage}
+            handlePrevPage={handlePrevPage}
+            allPatients={existingPatients}
+          />
+        </div>
 
         {/* Recent Skin Testing Activity Card */}
-        <RecentTestingActivity
-          recentLogs={recentLogs}
-          onViewLog={onViewLog}
-        />
+        <div style={{ '--section-index': 2 } as React.CSSProperties} className="animate-section-reveal">
+          <RecentTestingActivity
+            recentLogs={recentLogs}
+            onViewLog={onViewLog}
+          />
+        </div>
 
         {/* Positive Skin Test Breakdown */}
-        <SkinTestBreakdown
-          statsByCategory={analytics.statsByCategory}
-          expandedCategories={expandedCategories}
-          toggleCategory={toggleCategory}
-          toggleAllCategories={toggleAllCategories}
-        />
+        <div style={{ '--section-index': 3 } as React.CSSProperties} className="animate-section-reveal">
+          <SkinTestBreakdown
+            statsByCategory={analytics.statsByCategory}
+            expandedCategories={expandedCategories}
+            toggleCategory={toggleCategory}
+            toggleAllCategories={toggleAllCategories}
+          />
+        </div>
 
     </div>
   );

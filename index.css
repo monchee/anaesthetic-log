@@ -149,6 +149,28 @@
     @apply text-[0.625rem] font-bold uppercase tracking-wider
            text-slate-500 dark:text-slate-400;
   }
+
+  /* Screen-level entrance animation */
+  .animate-screen-enter {
+    animation: screen-enter 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* Staggered row entrance — set --row-index inline on each <tr> or list item */
+  .animate-row-enter {
+    animation: row-enter 0.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--row-index, 0) * 30ms);
+  }
+
+  /* Staggered section/card entrance — set --section-index inline */
+  .animate-section-reveal {
+    animation: section-reveal 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--section-index, 0) * 60ms);
+  }
+
+  /* Button press micro-interaction */
+  .btn-press {
+    @apply active:scale-[0.96] transition-transform duration-100;
+  }
 }
 
 /* Print Utilities */
@@ -168,6 +190,8 @@
   * {
     page-break-inside: avoid;
     page-break-after: avoid;
+    animation: none !important;
+    transition: none !important;
   }
   h1, h2, h3, h4, h5, h6 {
     page-break-after: avoid;
@@ -179,6 +203,26 @@
   }
   tr {
     page-break-inside: avoid;
+  }
+}
+
+/* Reduced Motion — disable all animations for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .animate-screen-enter,
+  .animate-row-enter,
+  .animate-section-reveal,
+  .animate-content-enter,
+  .animate-content-enter-subtle {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .btn-press,
+  .hover-scale,
+  .card-interactive {
+    transition: none !important;
+    transform: none !important;
   }
 }
 

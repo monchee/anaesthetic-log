@@ -45,9 +45,10 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                 });
                 
                 return (
-                  <tr 
-                    key={idx} 
-                    className="hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer transition-colors group"
+                  <tr
+                    key={idx}
+                    style={{ '--row-index': Math.min(idx, 9) } as React.CSSProperties}
+                    className="hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer transition-colors group animate-row-enter"
                     onClick={() => onViewLog(log)}
                   >
                     <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">{formatDate(log.visitDate)}</td>

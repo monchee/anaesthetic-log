@@ -78,7 +78,8 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                 return (
                   <React.Fragment key={cIdx}>
                     <tr
-                      className="bg-slate-50 dark:bg-slate-900 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 cursor-pointer transition-colors"
+                      style={{ '--row-index': Math.min(cIdx, 9) } as React.CSSProperties}
+                      className="bg-slate-50 dark:bg-slate-900 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 cursor-pointer transition-colors animate-row-enter"
                       onClick={() => toggleCategory(categoryGroup.category)}
                     >
                       <td colSpan={6} className="px-4 py-2.5">

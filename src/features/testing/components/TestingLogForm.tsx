@@ -135,7 +135,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-4 sm:mt-6 md:mt-8">
       
 {/* 1. Visit Details & Patient Info */}
-      <Card>
+      <Card style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
         <CardContent className="pt-4 sm:pt-5 md:pt-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-6">
                 <div className="flex items-center gap-4">
@@ -177,7 +177,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       </Card>
 
       {/* 2. Skin Testing Panel */}
-        <Card>
+        <Card style={{ '--section-index': 1 } as React.CSSProperties} className="animate-section-reveal">
           <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
             <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-slate-100">
               <div className="bg-slate-100 dark:bg-slate-900/40 p-1.5 rounded-none">
@@ -344,7 +344,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
         </Card>
 
       {/* 3. Drug Challenge */}
-      <Card>
+      <Card style={{ '--section-index': 2 } as React.CSSProperties} className="animate-section-reveal">
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
           <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-slate-100">
              <div className="bg-primary/10 dark:bg-slate-900/40 p-1.5 rounded-none">
@@ -576,7 +576,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       </Card>
 
       {/* 4. Plan & Assessment */}
-      <Card>
+      <Card style={{ '--section-index': 3 } as React.CSSProperties} className="animate-section-reveal">
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
            <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-slate-100">
              <div className="bg-emerald-100 dark:bg-emerald-900/40 p-1.5 rounded-none">
