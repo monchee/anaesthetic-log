@@ -137,7 +137,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     className="h-8 w-auto"
                                 />
                             </div>
-                            <div className="flex items-center gap-2 cursor-pointer" onClick={() => setUrgent(!urgent)}>
+                            <div className="flex items-center gap-2 cursor-pointer ml-auto" onClick={() => setUrgent(!urgent)}>
                                 <Switch id="urgent" checked={urgent} onCheckedChange={setUrgent} />
                                 <Label
                                     htmlFor="urgent"
