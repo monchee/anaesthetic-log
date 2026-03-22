@@ -87,7 +87,7 @@
   {
     "version": "v0.32.0",
     "codename": "Propofol",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Reports redesigned with cleaner styling — all printed reports now have a professional appearance.",
       "Improved layouts — cleaner organization of information in cards with better visual separation.",
@@ -101,7 +101,7 @@
   {
     "version": "v0.31.0",
     "codename": "Penicillin",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Typography refined — improved line spacing and heading sizes for better readability.",
       "Color scheme updated — updated to match NSW Health official standards.",
@@ -127,7 +127,7 @@
   {
     "version": "v0.29.0",
     "codename": "Fentanyl",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Testing plan document redesigned — cleaner, more professional appearance with section headings and icons.",
       "Mobile-friendly testing plans — documents now work well on tablets and phones.",
@@ -138,7 +138,7 @@
   {
     "version": "v0.28.0",
     "codename": "Midazolam",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "PIN login screen redesigned — cleaner, more secure-looking design.",
       "PIN entry improved — individual digit boxes make entry easier and faster, auto-advances between boxes."
@@ -147,7 +147,7 @@
   {
     "version": "v0.27.0",
     "codename": "Remifentanil",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "New letter template added — generates professional clinical letters with your test results.",
       "Copy reports as text — easily copy reports to clipboard for use in emails or other programs.",
@@ -161,7 +161,7 @@
   {
     "version": "v0.26.0",
     "codename": "Sugammadex",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "New reversal agents category added — includes reversal medications.",
       "Testing plan auto-population — drugs given at time of reaction are automatically included.",
@@ -223,7 +223,7 @@
   {
     "version": "v0.24.0",
     "codename": "Acetaminophen",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Dark mode added — app now supports dark theme for comfortable use in low light.",
       "Auto dark mode — respects your device's light/dark mode preference.",
@@ -358,7 +358,7 @@
   {
     "version": "v0.10.0",
     "codename": "Metronidazole",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Offline access added — you can now use the app without internet.",
       "Faster performance — quicker loading and smoother navigation.",
