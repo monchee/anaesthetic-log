@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Download, RefreshCw, AlertCircle, FlaskConical, ChevronDown, ChevronUp, Trash2, Database } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui';
+import { Download, RefreshCw, AlertCircle, FlaskConical, ChevronDown, ChevronUp, Trash2, Database, ClipboardList, TrendingUp, CheckCircle2, XCircle, Syringe, BarChart2, Trophy } from 'lucide-react';
+import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Progress } from '../../../../components/ui';
 import { fetchAllResults, exportToCsv, deleteResult } from '../services/ResearchService';
 import { ResearchRecord } from '../types';
 
@@ -149,6 +149,8 @@ export default function ResearchDashboard() {
     const totalPositive = records.reduce((s, r) => s + r.positive_count, 0);
     const challenges = records.filter((r) => r.proceed_to_challenge);
     const successfulChallenges = challenges.filter((r) => r.challenge_outcome === 'SUCCESS');
+    const positiveSessionCount = records.filter((r) => r.positive_count > 0).length;
+    const avgDrugsPerSession = records.length > 0 ? (totalDrugs / records.length).toFixed(1) : null;
 
     const drugMap: Record<string, { tested: number; positive: number }> = {};
     for (const record of records) {
@@ -163,7 +165,7 @@ export default function ResearchDashboard() {
         name,
         tested: v.tested,
         positive: v.positive,
-        rate: ((v.positive / v.tested) * 100).toFixed(0),
+        rate: v.tested > 0 ? (v.positive / v.tested) * 100 : 0,
       }))
       .sort((a, b) => b.positive - a.positive)
       .slice(0, 10);
@@ -172,8 +174,11 @@ export default function ResearchDashboard() {
       totalSubmissions: records.length,
       totalDrugs,
       totalPositive,
+      positiveSessionCount,
+      avgDrugsPerSession,
       overallPositivityRate: totalDrugs > 0 ? ((totalPositive / totalDrugs) * 100).toFixed(1) : '0.0',
       challengeCount: challenges.length,
+      challengeSuccessCount: successfulChallenges.length,
       challengeSuccessRate:
         challenges.length > 0
           ? ((successfulChallenges.length / challenges.length) * 100).toFixed(0)
@@ -200,77 +205,152 @@ export default function ResearchDashboard() {
     );
   }
 
+  const positivityColor = (rate: number) => {
+    if (rate >= 25) return { bar: 'bg-red-500', text: 'text-red-600 dark:text-red-400', badge: 'destructive' as const };
+    if (rate >= 10) return { bar: 'bg-amber-500', text: 'text-amber-600 dark:text-amber-400', badge: 'outline' as const };
+    return { bar: 'bg-primary', text: 'text-primary', badge: 'secondary' as const };
+  };
+
   return (
     <div className="space-y-4">
-      {/* Summary stats */}
-      <Card className="shadow-sm rounded-none">
-        <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
-          <div className="flex items-center justify-between gap-3">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-                <Database className="w-4 h-4 text-primary" />
-              </div>
-              Research Summary
-            </CardTitle>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={load} className="rounded-none">
-                <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Refresh
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => exportToCsv(records)} disabled={records.length === 0} className="rounded-none">
-                <Download className="w-3.5 h-3.5 mr-1.5" /> Export CSV
-              </Button>
+
+      {/* Header + actions */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
+            <Database className="w-4 h-4 text-primary" />
+          </div>
+          <div>
+            <p className="font-semibold text-sm text-slate-900 dark:text-slate-100">Research Database</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{records.length} de-identified session{records.length !== 1 ? 's' : ''}</p>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={load} className="rounded-none">
+            <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Refresh
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => exportToCsv(records)} disabled={records.length === 0} className="rounded-none">
+            <Download className="w-3.5 h-3.5 mr-1.5" /> Export CSV
+          </Button>
+        </div>
+      </div>
+
+      {/* Stat cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+
+        {/* Sessions */}
+        <div className="border border-slate-200 dark:border-slate-800 border-l-4 border-l-blue-500 bg-white dark:bg-slate-950 p-4 rounded-none">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Sessions</span>
+            <div className="bg-blue-50 dark:bg-blue-900/30 p-1.5 rounded-none">
+              <ClipboardList className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="pt-4">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { label: 'Submissions', value: stats.totalSubmissions },
-              { label: 'Drugs tested', value: stats.totalDrugs },
-              { label: 'Overall positivity', value: stats.totalDrugs > 0 ? `${stats.overallPositivityRate}%` : '—' },
-              { label: 'Challenge success', value: stats.challengeSuccessRate !== null ? `${stats.challengeSuccessRate}%` : '—' },
-            ].map(({ label, value }) => (
-              <div key={label} className="border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-4">
-                <div className="text-2xl font-semibold text-slate-800 dark:text-slate-100">{value}</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{label}</div>
-              </div>
-            ))}
+          <div className="text-3xl font-bold text-slate-800 dark:text-slate-100 tabular-nums leading-none mb-1">
+            {stats.totalSubmissions}
           </div>
-        </CardContent>
-      </Card>
+          <div className="text-xs text-slate-500 dark:text-slate-400">
+            {stats.avgDrugsPerSession ? `avg ${stats.avgDrugsPerSession} drugs/session` : 'no data yet'}
+          </div>
+        </div>
+
+        {/* Drugs tested */}
+        <div className="border border-slate-200 dark:border-slate-800 border-l-4 border-l-violet-500 bg-white dark:bg-slate-950 p-4 rounded-none">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Drugs Tested</span>
+            <div className="bg-violet-50 dark:bg-violet-900/30 p-1.5 rounded-none">
+              <FlaskConical className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
+            </div>
+          </div>
+          <div className="text-3xl font-bold text-slate-800 dark:text-slate-100 tabular-nums leading-none mb-1">
+            {stats.totalDrugs}
+          </div>
+          <div className="text-xs text-slate-500 dark:text-slate-400">
+            {stats.totalPositive > 0 ? `${stats.totalPositive} positive result${stats.totalPositive !== 1 ? 's' : ''}` : 'across all sessions'}
+          </div>
+        </div>
+
+        {/* Overall positivity */}
+        <div className="border border-slate-200 dark:border-slate-800 border-l-4 border-l-amber-500 bg-white dark:bg-slate-950 p-4 rounded-none">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Positivity Rate</span>
+            <div className="bg-amber-50 dark:bg-amber-900/30 p-1.5 rounded-none">
+              <TrendingUp className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+            </div>
+          </div>
+          <div className="text-3xl font-bold text-slate-800 dark:text-slate-100 tabular-nums leading-none mb-1">
+            {stats.totalDrugs > 0 ? `${stats.overallPositivityRate}%` : '—'}
+          </div>
+          <div className="text-xs text-slate-500 dark:text-slate-400">
+            {stats.positiveSessionCount > 0
+              ? `${stats.positiveSessionCount} session${stats.positiveSessionCount !== 1 ? 's' : ''} with positives`
+              : 'no positive results yet'}
+          </div>
+        </div>
+
+        {/* Challenge pass rate */}
+        <div className="border border-slate-200 dark:border-slate-800 border-l-4 border-l-emerald-500 bg-white dark:bg-slate-950 p-4 rounded-none">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Challenge Pass</span>
+            <div className="bg-emerald-50 dark:bg-emerald-900/30 p-1.5 rounded-none">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+          </div>
+          <div className="text-3xl font-bold text-slate-800 dark:text-slate-100 tabular-nums leading-none mb-1">
+            {stats.challengeSuccessRate !== null ? `${stats.challengeSuccessRate}%` : '—'}
+          </div>
+          <div className="text-xs text-slate-500 dark:text-slate-400">
+            {stats.challengeCount > 0
+              ? `${stats.challengeSuccessCount}/${stats.challengeCount} challenge${stats.challengeCount !== 1 ? 's' : ''} passed`
+              : 'no challenges recorded'}
+          </div>
+        </div>
+      </div>
 
       {/* Drug positivity breakdown */}
       <Card className="shadow-sm rounded-none">
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
           <CardTitle className="flex items-center gap-2 text-lg">
             <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-              <FlaskConical className="w-4 h-4 text-primary" />
+              <BarChart2 className="w-4 h-4 text-primary" />
             </div>
             Positivity by Drug
+            {stats.drugStats.length > 0 && (
+              <span className="text-xs font-normal text-slate-400 ml-1">top {stats.drugStats.length}</span>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           {stats.drugStats.length > 0 ? (
             <div className="divide-y divide-slate-100 dark:divide-slate-800">
-              {stats.drugStats.map((d) => (
-                <div key={d.name} className="flex items-center gap-3 px-4 py-2.5 text-sm">
-                  <span className="flex-1 font-medium text-slate-700 dark:text-slate-200">{d.name}</span>
-                  <span className="text-slate-400 text-xs">{d.positive}/{d.tested} tested</span>
-                  <div className="w-24 bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full ${parseInt(d.rate) >= 10 ? 'bg-red-500' : 'bg-primary'}`}
-                      style={{ width: `${Math.min(parseInt(d.rate), 100)}%` }}
-                    />
+              {stats.drugStats.map((d, i) => {
+                const { bar, text } = positivityColor(d.rate);
+                const isTop = i === 0 && d.positive > 0;
+                return (
+                  <div key={d.name} className="flex items-center gap-3 px-4 py-3">
+                    <span className="w-5 text-xs font-semibold text-slate-400 dark:text-slate-500 tabular-nums text-right shrink-0">
+                      {i + 1}
+                    </span>
+                    <span className="flex-1 font-medium text-sm text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                      {d.name}
+                      {isTop && <Trophy className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
+                    </span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500 shrink-0 hidden sm:block">
+                      {d.positive}/{d.tested}
+                    </span>
+                    <div className="w-28 sm:w-36 shrink-0">
+                      <Progress value={Math.min(d.rate, 100)} className="h-2 rounded-none" />
+                    </div>
+                    <span className={`w-10 text-right text-xs font-bold tabular-nums shrink-0 ${text}`}>
+                      {d.rate.toFixed(0)}%
+                    </span>
                   </div>
-                  <span className={`w-10 text-right text-xs font-semibold ${parseInt(d.rate) >= 10 ? 'text-red-600 dark:text-red-400' : 'text-slate-600 dark:text-slate-300'}`}>
-                    {d.rate}%
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-10 gap-2 text-slate-400">
-              <FlaskConical className="w-6 h-6" />
+              <BarChart2 className="w-6 h-6" />
               <p className="text-sm">No data yet. Save a testing session to populate this chart.</p>
             </div>
           )}
@@ -288,7 +368,7 @@ export default function ResearchDashboard() {
               All Submissions
             </span>
             <span className="text-sm font-normal text-slate-500 dark:text-slate-400">
-              {records.length} de-identified record{records.length !== 1 ? 's' : ''}
+              {records.length} record{records.length !== 1 ? 's' : ''}
             </span>
           </CardTitle>
         </CardHeader>
@@ -297,7 +377,7 @@ export default function ResearchDashboard() {
             <div className="flex flex-col items-center justify-center py-10 gap-2 text-slate-400">
               <Database className="w-6 h-6" />
               <p className="text-sm">No submissions yet.</p>
-              <p className="text-xs">Complete a testing session and click "Save to Research DB".</p>
+              <p className="text-xs">Complete a testing session and click "Save to Research Database".</p>
             </div>
           ) : (
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -320,23 +400,21 @@ export default function ResearchDashboard() {
                         <span className="text-slate-400 dark:text-slate-500">REDCap </span>
                         <span className="font-medium text-slate-700 dark:text-slate-200">{r.redcap_id ?? '—'}</span>
                       </div>
-                      <div>
-                        <span className="text-slate-400 dark:text-slate-500">Drugs </span>
-                        <span className="font-medium text-slate-700 dark:text-slate-200">
-                          {r.total_drugs_tested} tested,{' '}
-                          <span className={r.positive_count > 0 ? 'text-red-600 dark:text-red-400 font-semibold' : ''}>
-                            {r.positive_count} positive
-                          </span>
-                        </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-slate-400 dark:text-slate-500">{r.total_drugs_tested} drugs</span>
+                        {r.positive_count > 0 ? (
+                          <Badge variant="destructive" className="text-[10px] h-4 px-1.5 rounded-none">
+                            {r.positive_count} +ve
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-[10px] h-4 px-1.5 rounded-none">all –ve</Badge>
+                        )}
                       </div>
                       <div>
                         {r.proceed_to_challenge ? (
-                          <>
-                            <span className="text-slate-400 dark:text-slate-500">Challenge </span>
-                            <span className={`font-medium ${r.challenge_outcome === 'SUCCESS' ? 'text-emerald-600 dark:text-emerald-400' : r.challenge_outcome === 'UNSUCCESS' ? 'text-red-600 dark:text-red-400' : 'text-slate-500'}`}>
-                              {r.challenge_outcome === 'SUCCESS' ? 'Pass' : r.challenge_outcome === 'UNSUCCESS' ? 'Fail' : '—'}
-                            </span>
-                          </>
+                          <span className={`font-medium ${r.challenge_outcome === 'SUCCESS' ? 'text-emerald-600 dark:text-emerald-400' : r.challenge_outcome === 'UNSUCCESS' ? 'text-red-600 dark:text-red-400' : 'text-slate-500'}`}>
+                            Challenge: {r.challenge_outcome === 'SUCCESS' ? 'Pass' : r.challenge_outcome === 'UNSUCCESS' ? 'Fail' : '—'}
+                          </span>
                         ) : (
                           <span className="text-slate-300 dark:text-slate-600">No challenge</span>
                         )}
