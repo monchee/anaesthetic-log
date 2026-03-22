@@ -404,10 +404,10 @@ export default function ResearchDashboard() {
                         <span className="text-slate-400 dark:text-slate-500">{r.total_drugs_tested} drugs</span>
                         {r.positive_count > 0 ? (
                           <Badge variant="destructive" className="text-[10px] h-4 px-1.5 rounded-none">
-                            {r.positive_count} +ve
+                            {r.positive_count} +
                           </Badge>
                         ) : (
-                          <Badge variant="secondary" className="text-[10px] h-4 px-1.5 rounded-none">all –ve</Badge>
+                          <Badge variant="secondary" className="text-[10px] h-4 px-1.5 rounded-none">all −</Badge>
                         )}
                       </div>
                       <div>

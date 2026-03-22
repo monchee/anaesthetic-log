@@ -298,7 +298,7 @@ function AnaestheticLogApp() {
               <div className="flex items-start gap-3">
                 <Stethoscope className="w-6 h-6 text-slate-900 dark:text-primary shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-sm mb-1">DREAM</p>
+                  <p className="font-semibold text-sm mb-1">The DREAM App</p>
                   <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     A specialist service for patients who have experienced a suspected allergic reaction
                     during an anaesthetic. Our team investigates these reactions to identify the drug

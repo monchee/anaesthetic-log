@@ -1,10 +1,12 @@
-# DREAM — Drug Reaction Evaluation & Anaesthetic Management
+# The DREAM App
 
 <div align="center">
 <img width="1200" height="475" alt="Clinic Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 
 *Safe sleep, clear answers*
 </div>
+
+**DREAM** — Drug Reaction Evaluation & Anaesthetic Management. *Safe sleep, clear answers.*
 
 A specialist web application for investigating and managing suspected anaesthetic drug reactions at the RPAH Department of Clinical Immunology & Allergy.
 

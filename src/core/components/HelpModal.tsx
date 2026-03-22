@@ -109,7 +109,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
           {/* Greeting */}
           <div className="border-l-4 border-primary pl-4 mb-5">
             <h2 className="font-semibold text-slate-900 dark:text-white text-base mb-1">
-              Welcome to DREAM
+              Welcome to The DREAM App
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">
               Manage patient records, test results, and allergy workups from your REDCap database.

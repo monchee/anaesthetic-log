@@ -12,7 +12,7 @@ export default defineConfig(() => {
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
       manifest: {
-        name: 'DREAM',
+        name: 'The DREAM App',
         short_name: 'DREAM',
         description: 'Drug Reaction Evaluation & Anaesthetic Management — Safe sleep, clear answers',
         theme_color: '#441170',
