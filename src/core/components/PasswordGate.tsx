@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { Button, Label, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
-import { Lock } from 'lucide-react';
 
 // @ts-expect-error - __APP_VERSION__ is injected by Vite during build
 const APP_VERSION = __APP_VERSION__;
@@ -72,11 +71,9 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
   return (
     <div className={`flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10 ${isExiting ? 'animate-gate-exit pointer-events-none' : ''}`}>
       <div className="flex w-full max-w-sm flex-col gap-6 animate-content-enter">
-        <div className="flex items-center gap-2 self-center font-medium">
-          <div className="flex size-6 items-center justify-center bg-primary text-primary-foreground">
-            <Lock className="size-4" />
-          </div>
-          Anaesthetic Allergy Clinic
+        <div className="flex flex-col items-center gap-1 text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-primary">DREAM</h1>
+          <p className="text-sm text-muted-foreground">Drug Reaction Evaluation &amp; Anaesthetic Management</p>
         </div>
 
         <Card>
