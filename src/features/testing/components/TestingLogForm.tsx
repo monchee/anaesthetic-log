@@ -93,7 +93,7 @@ const DrugRow = React.memo(({
       <div className="col-span-2 md:col-span-4 md:col-start-2">
         <Input
           aria-label={`${row.drugName} notes`}
-          className="h-8 text-xs text-slate-600 dark:text-foreground/80 placeholder:text-slate-300 dark:placeholder:text-slate-500"
+          className="h-8 text-xs text-slate-600 dark:text-foreground/80 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
           placeholder="Notes..."
           value={row.notes || ''}
           onChange={(e) => updateDrugData(index, 'notes', e.target.value)}

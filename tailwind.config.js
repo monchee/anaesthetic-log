@@ -8,7 +8,7 @@ export default {
     "./lib/**/*.{js,ts,jsx,tsx}",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: ["class", "class"],
+  darkMode: "class",
   theme: {
   	extend: {
   		fontFamily: {

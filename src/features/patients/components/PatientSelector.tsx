@@ -93,7 +93,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-labelledby="patient-selector-label"
-          className="flex min-h-10 h-auto w-full items-center justify-between rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white cursor-pointer hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 dark:bg-background dark:border-border dark:hover:bg-card dark:focus-visible:ring-slate-300 transition-all"
+          className="flex min-h-10 h-auto w-full items-center justify-between rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white cursor-pointer hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 dark:bg-background dark:border-border dark:hover:bg-card dark:focus-visible:ring-primary/40 transition-all"
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className={`mr-2 whitespace-normal text-left leading-tight ${selectedPatient || isManualSelection ? "text-slate-900 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>
