@@ -404,7 +404,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                     value={formData.challengeDrug}
                                     onValueChange={(value) => handleInputChange('challengeDrug', value)}
                                 >
-                                    <SelectTrigger className="pl-10 h-11 border-slate-200 focus:border-primary focus:ring-primary" aria-label="Select challenge drug">
+                                    <SelectTrigger className="pl-10 h-11 border-slate-200 dark:border-border focus:border-primary focus:ring-primary" aria-label="Select challenge drug">
                                         <SelectValue placeholder="Choose drug from list..." />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -590,7 +590,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 <Label htmlFor="clinical-plan">Comments / Plan</Label>
                 <textarea
                     id="clinical-plan"
-                    className="flex min-h-[120px] w-full rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-border dark:bg-background dark:ring-offset-background dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
+                    className="flex min-h-[120px] w-full rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-border dark:bg-background dark:ring-offset-background dark:placeholder:text-muted-foreground dark:focus-visible:ring-primary/40"
                     placeholder=""
                     value={formData.plan}
                     onChange={(e) => handleInputChange('plan', e.target.value)}
