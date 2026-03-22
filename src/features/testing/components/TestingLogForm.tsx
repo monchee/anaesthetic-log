@@ -44,7 +44,7 @@ const DrugRow = React.memo(({
       className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-3 sm:p-3.5 md:p-4 items-start md:items-center bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-800 border-l-[6px] ${borderClass} shadow-sm rounded-none group`}
     >
       {/* Name Column (Full width on mobile) */}
-      <div className="col-span-2 md:col-span-1 flex items-center gap-2">
+      <div className="col-span-2 md:col-span-1 flex items-center gap-2 md:self-center">
         {row.drugName === 'Other' ? (
           <Input
             className="h-10 md:h-9 text-sm flex-1 min-w-0 font-medium font-mono"
@@ -90,7 +90,7 @@ const DrugRow = React.memo(({
       </div>
 
       {/* Notes Row */}
-      <div className="col-span-2 md:col-span-5">
+      <div className="col-span-2 md:col-span-4 md:col-start-2">
         <Input
           aria-label={`${row.drugName} notes`}
           className="h-8 text-xs text-slate-600 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-600"
