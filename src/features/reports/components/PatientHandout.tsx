@@ -44,7 +44,7 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
               {posResults.length > 0 ? (
                  <ul className="space-y-3 print:space-y-1">
                     {posResults.map((drugName, idx) => (
-                        <li key={idx} className="border-l-4 border-red-500 bg-white dark:bg-slate-900 p-4 rounded-lg flex justify-between items-center print:bg-white print:border-l-2 print:p-1.5 print:text-xs">
+                        <li key={idx} className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-700 p-4 rounded-none flex justify-between items-center print:bg-red-50 print:p-1.5 print:text-xs">
                            <span className="font-semibold text-red-900 text-lg print:text-xs">{drugName}</span>
                            <span className="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded print:px-1 print:py-0.5 print:text-[9px]">AVOID</span>
                         </li>
@@ -63,7 +63,7 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
               {negResults.length > 0 ? (
                  <ul className="space-y-3 print:space-y-1">
                     {negResults.map((drugName, idx) => (
-                        <li key={idx} className="border-l-4 border-green-500 bg-white dark:bg-slate-900 p-4 rounded-lg flex justify-between items-center print:bg-white print:border-l-2 print:p-1.5 print:text-xs">
+                        <li key={idx} className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-700 p-4 rounded-none flex justify-between items-center print:bg-green-50 print:p-1.5 print:text-xs">
                            <span className="font-semibold text-green-900 text-lg print:text-xs">{drugName}</span>
                            <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded print:px-1 print:py-0.5 print:text-[9px]">SAFE</span>
                         </li>
