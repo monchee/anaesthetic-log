@@ -506,12 +506,14 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                     <Input
                                         id="reaction-time"
                                         type="number"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
                                         min="0"
                                         onKeyDown={preventNegativeInput}
                                         value={formData.reactionTime}
                                         onChange={(e) => handleInputChange('reactionTime', e.target.value)}
                                         placeholder="Minutes"
-                                        className="h-10 border-slate-200 dark:border-slate-800 focus:ring-primary/20 transition-all rounded-none"
+                                        className="h-10 border-slate-200 dark:border-slate-800 focus:ring-primary/20 transition-all rounded-none bg-white dark:bg-slate-950"
                                     />
                                 </div>
                                 <div className="space-y-2">
