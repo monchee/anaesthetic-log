@@ -181,8 +181,10 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     </div>
 
                     {/* Drug Selection Grid */}
-                    <div>
-                    <Label className="text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-3 block">Select Drugs for Testing</Label>
+                    <div className="space-y-2 rounded-none p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors duration-150">
+                        <div className="flex items-center border-b border-dashed border-slate-200 dark:border-slate-800 pb-1 mb-2">
+                            <h4 className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Select Drugs for Testing</h4>
+                        </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
                         {Object.entries(drugCategories).map(([category, drugs]) => {
                             const categoryDrugs = drugs as string[];
@@ -289,14 +291,14 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         <div className="flex items-start gap-2.5">
                             <Pin className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
                             <p className="text-xs text-amber-700 dark:text-amber-400 leading-snug">
-                                Drugs marked with <Pin className="inline w-3 h-3 mx-0.5 opacity-80" /> are <span className="font-semibold">standard pre-fills</span> included by default for all patients.
+                                <Pin className="inline w-3 h-3 mx-0.5 opacity-80" /> <span className="font-semibold">Pre-filled</span> for all patients by default.
                             </p>
                         </div>
                         {historyDrugs.length > 0 && (
                             <div className="flex items-start gap-2.5">
                                 <History className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
                                 <p className="text-xs text-amber-700 dark:text-amber-400 leading-snug">
-                                    Drugs marked with <History className="inline w-3 h-3 mx-0.5 opacity-80" /> were given at time of reaction and have been <span className="font-semibold">auto-selected</span> from patient history. Review and adjust as needed.
+                                    <History className="inline w-3 h-3 mx-0.5 opacity-80" /> <span className="font-semibold">Auto-selected</span> from patient history — given at time of reaction.
                                 </p>
                             </div>
                         )}

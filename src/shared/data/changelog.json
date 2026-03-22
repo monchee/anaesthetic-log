@@ -1,8 +1,18 @@
 [
   {
+    "version": "v0.39.0",
+    "codename": "Atracurium",
+    "highlight": true,
+    "changes": [
+      "Testing plan legend wording made more concise — pin and history icon descriptions are now shorter and clearer.",
+      "Testing plan section header styling made consistent with other section headers in the form.",
+      "Top navigation bar height standardised across all screen sizes."
+    ]
+  },
+  {
     "version": "v0.38.0",
     "codename": "Vecuronium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Testing plan drug selection now has a 'Select Drugs for Testing' section header for clarity.",
       "Legend callout (pre-fill and history icons) moved to below the drug selection grid."

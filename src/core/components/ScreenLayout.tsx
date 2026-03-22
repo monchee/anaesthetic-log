@@ -116,7 +116,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 <div className="bg-primary text-white w-full">
                     {/* Safe Area Padding for mobile notch support */}
                     <div className="pt-[env(safe-area-inset-top)]">
-                        <div className="max-w-6xl mx-auto px-3 py-2 sm:px-4 sm:py-3 lg:py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div className="max-w-6xl mx-auto px-3 py-3 sm:px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
 
                             {/* Title Area */}
                             <div className="flex items-center gap-3 w-full sm:w-auto">
