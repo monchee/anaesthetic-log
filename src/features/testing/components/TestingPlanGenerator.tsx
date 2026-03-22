@@ -180,25 +180,9 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         </div>
                     </div>
 
-                    {/* Legend callout */}
-                    <div className="flex flex-col gap-1.5 p-3 border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 rounded-none">
-                        <div className="flex items-start gap-2.5">
-                            <Pin className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
-                            <p className="text-xs text-amber-700 dark:text-amber-400 leading-snug">
-                                Drugs marked with <Pin className="inline w-3 h-3 mx-0.5 opacity-80" /> are <span className="font-semibold">standard pre-fills</span> included by default for all patients.
-                            </p>
-                        </div>
-                        {historyDrugs.length > 0 && (
-                            <div className="flex items-start gap-2.5">
-                                <History className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
-                                <p className="text-xs text-amber-700 dark:text-amber-400 leading-snug">
-                                    Drugs marked with <History className="inline w-3 h-3 mx-0.5 opacity-80" /> were given at time of reaction and have been <span className="font-semibold">auto-selected</span> from patient history. Review and adjust as needed.
-                                </p>
-                            </div>
-                        )}
-                    </div>
-
                     {/* Drug Selection Grid */}
+                    <div>
+                    <Label className="text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-3 block">Select Drugs for Testing</Label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
                         {Object.entries(drugCategories).map(([category, drugs]) => {
                             const categoryDrugs = drugs as string[];
@@ -297,6 +281,25 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                 </Button>
                             </div>
                         </div>
+                    </div>
+                    </div>
+
+                    {/* Legend callout */}
+                    <div className="flex flex-col gap-1.5 p-3 border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 rounded-none">
+                        <div className="flex items-start gap-2.5">
+                            <Pin className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+                            <p className="text-xs text-amber-700 dark:text-amber-400 leading-snug">
+                                Drugs marked with <Pin className="inline w-3 h-3 mx-0.5 opacity-80" /> are <span className="font-semibold">standard pre-fills</span> included by default for all patients.
+                            </p>
+                        </div>
+                        {historyDrugs.length > 0 && (
+                            <div className="flex items-start gap-2.5">
+                                <History className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+                                <p className="text-xs text-amber-700 dark:text-amber-400 leading-snug">
+                                    Drugs marked with <History className="inline w-3 h-3 mx-0.5 opacity-80" /> were given at time of reaction and have been <span className="font-semibold">auto-selected</span> from patient history. Review and adjust as needed.
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Notes Section */}

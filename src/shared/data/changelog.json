@@ -1,8 +1,17 @@
 [
   {
+    "version": "v0.38.0",
+    "codename": "Vecuronium",
+    "highlight": true,
+    "changes": [
+      "Testing plan drug selection now has a 'Select Drugs for Testing' section header for clarity.",
+      "Legend callout (pre-fill and history icons) moved to below the drug selection grid."
+    ]
+  },
+  {
     "version": "v0.37.0",
     "codename": "Rocuronium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Research database — de-identified test results can now be saved to a persistent Supabase database for cross-patient research. Results are stripped of all patient identifiers (name, MRN, DOB); only the REDCap ID is retained as a link.",
       "Save to Research DB button added to the Reports screen after completing a test, with submission state that resets when starting a new log.",
