@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui';
+import { Button, Card, CardContent } from '@/components/ui';
 import { Home, Sparkles, ArrowRight } from 'lucide-react';
 import { Screen } from '@shared/types';
 import changelogData from '@shared/data/changelog.json';
