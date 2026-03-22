@@ -213,7 +213,6 @@ function AnaestheticLogApp() {
       return (
         <ScreenLayout
           title="Testing Session" icon={<TestTube2 className="w-5 h-5" />}
-          subtitle={selectedPatient ? `Patient: ${selectedPatient.lastName}, ${selectedPatient.firstName} (ID: ${selectedPatient.id === 'manual' ? 'New' : selectedPatient.id})` : undefined}
           {...layoutProps}
           actions={<Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
           contentClassName="py-4" className="pb-32"

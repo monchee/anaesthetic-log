@@ -134,18 +134,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   return (
     <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-4 sm:mt-6 md:mt-8">
       
-      {/* Section Header */}
-      <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4 mb-2">
-        <div className="p-2 bg-primary dark:bg-slate-800 rounded-none shrink-0">
-          <Stethoscope className="w-5 h-5 text-white dark:text-primary" />
-        </div>
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">Anaesthetic Allergy Testing</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Record skin prick, intradermal, and drug challenge results</p>
-        </div>
-      </div>
-
-      {/* 1. Visit Details & Patient Info */}
+{/* 1. Visit Details & Patient Info */}
       <Card>
         <CardContent className="pt-4 sm:pt-5 md:pt-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-6">
