@@ -168,7 +168,7 @@
      Uses rem so it scales correctly with the FontSizeProvider (85%–125%). */
   .section-label {
     @apply text-[0.625rem] font-bold uppercase tracking-wider
-           text-slate-500 dark:text-slate-400;
+           text-slate-500 dark:text-muted-foreground;
   }
 
   /* Screen-level entrance animation */

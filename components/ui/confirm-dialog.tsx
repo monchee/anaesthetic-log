@@ -40,7 +40,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           <DialogTitle className="text-lg">{title}</DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <p className="text-sm text-slate-600 dark:text-slate-300">{message}</p>
+          <p className="text-sm text-slate-600 dark:text-foreground/80">{message}</p>
         </div>
         <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
           <Button

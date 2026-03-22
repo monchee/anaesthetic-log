@@ -100,7 +100,7 @@ export const LegacyToaster = () => {
       }}
       toastOptions={{
         duration: 5000,
-        className: 'dark:bg-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-xl rounded-none text-sm font-medium',
+        className: 'dark:bg-card dark:text-foreground border border-slate-200 dark:border-border shadow-xl rounded-none text-sm font-medium',
         style: {
           padding: '12px 16px',
           maxWidth: '500px',

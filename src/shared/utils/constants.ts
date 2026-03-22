@@ -81,15 +81,15 @@ export const CATEGORY_THEMES: Record<string, CategoryTheme> = {
     actionText: "text-teal-600 dark:text-teal-400"
   },
   "Others": {
-    activeBg: "bg-slate-100 dark:bg-slate-800",
-    activeRing: "ring-slate-200 dark:ring-slate-700",
-    headerText: "text-slate-700 dark:text-slate-300",
-    headerBorder: "border-slate-300 dark:border-slate-700",
-    btnSelected: "bg-slate-600 border-slate-600 text-white shadow-sm ring-1 ring-slate-200 dark:ring-slate-500",
-    btnHover: "hover:border-slate-500 hover:text-slate-700 dark:hover:text-slate-300 dark:hover:border-slate-500",
+    activeBg: "bg-slate-100 dark:bg-muted",
+    activeRing: "ring-slate-200 dark:ring-border",
+    headerText: "text-slate-700 dark:text-foreground/80",
+    headerBorder: "border-slate-300 dark:border-border",
+    btnSelected: "bg-slate-600 border-slate-600 text-white shadow-sm ring-1 ring-slate-200 dark:ring-muted-foreground",
+    btnHover: "hover:border-slate-500 hover:text-slate-700 dark:hover:text-foreground/80 dark:hover:border-border",
     pulse: "bg-slate-600",
     rowBorder: "border-l-slate-600",
-    actionText: "text-slate-600 dark:text-slate-400"
+    actionText: "text-slate-600 dark:text-muted-foreground"
   },
   "Reversal Agents": {
     activeBg: "bg-amber-50 dark:bg-amber-900/20",

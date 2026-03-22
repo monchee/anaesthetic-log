@@ -135,7 +135,7 @@ function AnaestheticLogApp() {
                 className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors rounded-none whitespace-nowrap shrink-0
                   ${activeReportTab === key
                     ? 'border-primary text-primary'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-muted-foreground dark:hover:text-foreground/90'
                   }`}
               >
                 {icon}{label}
@@ -271,7 +271,7 @@ function AnaestheticLogApp() {
                   <p className="font-semibold text-blue-900 dark:text-blue-100 text-sm">
                     Welcome — here's how to get started
                   </p>
-                  <ol className="space-y-1.5 text-sm text-slate-700 dark:text-slate-300">
+                  <ol className="space-y-1.5 text-sm text-slate-700 dark:text-foreground/80">
                     <li className="flex gap-2">
                       <span className="font-semibold text-blue-700 dark:text-blue-400 shrink-0">1.</span>
                       <span>Select a patient from the dropdown above — search by name, ID, or date of birth. Choose <strong>New Patient (Manual Entry)</strong> if the patient is not in the database.</span>
@@ -299,7 +299,7 @@ function AnaestheticLogApp() {
                 <Stethoscope className="w-6 h-6 text-slate-900 dark:text-primary shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold text-sm mb-1">The DREAM App</p>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <p className="text-sm text-slate-600 dark:text-foreground/80 leading-relaxed">
                     A specialist service for patients who have experienced a suspected allergic reaction
                     during an anaesthetic. Our team investigates these reactions to identify the drug
                     responsible and help plan safe anaesthesia for future procedures.
@@ -315,7 +315,7 @@ function AnaestheticLogApp() {
                   <Target className="w-4 h-4 text-primary" />
                   <span className="font-semibold text-sm">Purpose</span>
                 </div>
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">
                   Helps clinicians prepare for allergy clinic appointments — reviewing patient histories,
                   recording test results, and generating reports and testing plans.
                 </p>
@@ -325,7 +325,7 @@ function AnaestheticLogApp() {
                   <Shield className="w-4 h-4 text-primary" />
                   <span className="font-semibold text-sm">Data Privacy</span>
                 </div>
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">
                   All patient data is stored and processed on your own device. Nothing is sent to
                   external servers. Your data stays with you.
                 </p>
@@ -349,7 +349,7 @@ function AnaestheticLogApp() {
                   "Import patient records from your clinic database",
                   "Works offline — use the app without internet access",
                 ].map((f, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
+                  <li key={i} className="flex items-start gap-2 text-sm text-slate-600 dark:text-muted-foreground">
                     <span className="text-primary mt-0.5 shrink-0">•</span>{f}
                   </li>
                 ))}
@@ -365,35 +365,35 @@ function AnaestheticLogApp() {
               <div className="space-y-4 py-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">First Name</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-muted-foreground">First Name</Label>
                     <Input value={selectedPatient.firstName} onChange={(e) => handleManualDetailChange('firstName', e.target.value)} placeholder="Enter first name" />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">Last Name</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-muted-foreground">Last Name</Label>
                     <Input value={selectedPatient.lastName} onChange={(e) => handleManualDetailChange('lastName', e.target.value)} placeholder="Enter last name" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">MRN</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-muted-foreground">MRN</Label>
                     <Input value={selectedPatient.mrn} onChange={(e) => handleManualDetailChange('mrn', e.target.value)} placeholder="Medical Record Number..." />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">REDCap Record ID</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-muted-foreground">REDCap Record ID</Label>
                     <Input value={selectedPatient.redcapId || ''} onChange={(e) => handleManualDetailChange('redcapId', e.target.value)} placeholder="REDCap ID..." />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">Date of Birth</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-muted-foreground">Date of Birth</Label>
                     <Input type="date" value={selectedPatient.dob} onChange={(e) => handleManualDetailChange('dob', e.target.value)} />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">Gender</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-muted-foreground">Gender</Label>
                     <Input value={selectedPatient.gender} onChange={(e) => handleManualDetailChange('gender', e.target.value)} placeholder="Gender..." />
                   </div>
                   <div>
-                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-slate-400">City / Suburb</Label>
+                    <Label className="text-xs uppercase mb-1.5 block text-slate-500 dark:text-muted-foreground">City / Suburb</Label>
                     <Input value={selectedPatient.city} onChange={(e) => handleManualDetailChange('city', e.target.value)} placeholder="City..." />
                   </div>
                 </div>
@@ -443,7 +443,7 @@ function App() {
             toastOptions={{ classNames: {
               toast: 'border border-slate-200 dark:border-border rounded-none shadow-sm',
               actionButton: 'bg-primary text-white hover:bg-primary/90 transition-colors',
-              description: 'text-slate-600 dark:text-slate-300',
+              description: 'text-slate-600 dark:text-foreground/80',
             }}}
           />
         </FontSizeProvider>

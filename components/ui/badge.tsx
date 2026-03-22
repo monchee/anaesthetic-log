@@ -21,7 +21,7 @@ const badgeVariants = cva(
         grade3: "border-transparent bg-status-grade3 text-white hover:bg-status-grade3/90",
         grade2: "border-transparent bg-status-grade2 text-slate-900 hover:bg-status-grade2/90",
         grade1: "border-transparent bg-status-grade1 text-white hover:bg-status-grade1/90",
-        ungraded: "border-transparent bg-slate-200 text-slate-600 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600",
+        ungraded: "border-transparent bg-slate-200 text-slate-600 hover:bg-slate-300 dark:bg-muted dark:text-foreground/80 dark:hover:bg-muted/80",
       },
     },
     defaultVariants: {
