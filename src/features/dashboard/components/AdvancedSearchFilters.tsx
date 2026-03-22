@@ -23,7 +23,7 @@ const GRADE_OPTIONS = [
   { value: 'II', label: 'Grade II', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800' },
   { value: 'III', label: 'Grade III', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300 border-orange-200 dark:border-orange-800' },
   { value: 'IV', label: 'Grade IV', color: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300 border-red-200 dark:border-red-800' },
-  { value: 'ungraded', label: 'Ungraded', color: 'bg-slate-100 text-slate-600 dark:bg-muted dark:text-slate-400 border-slate-200 dark:border-border' },
+  { value: 'ungraded', label: 'Ungraded', color: 'bg-slate-100 text-slate-600 dark:bg-muted dark:text-muted-foreground border-slate-200 dark:border-border' },
 ];
 
 export const AdvancedSearchFilters: React.FC<Pick<AdvancedSearchFiltersProps, 'activeFilterCount' | 'isExpanded' | 'setIsExpanded'>> = ({
@@ -38,8 +38,8 @@ export const AdvancedSearchFilters: React.FC<Pick<AdvancedSearchFiltersProps, 'a
       onClick={() => setIsExpanded(!isExpanded)}
       className={`h-9 font-medium text-xs border-slate-200 dark:border-border transition-colors ${
         isExpanded 
-          ? 'bg-slate-100 dark:bg-muted text-slate-900 dark:text-slate-100' 
-          : 'bg-white dark:bg-card hover:bg-slate-50 dark:hover:bg-muted text-slate-700 dark:text-slate-300'
+          ? 'bg-slate-100 dark:bg-muted text-slate-900 dark:text-foreground' 
+          : 'bg-white dark:bg-card hover:bg-slate-50 dark:hover:bg-muted text-slate-700 dark:text-foreground/80'
       }`}
     >
       <Filter className="w-4 h-4 mr-2" />
@@ -78,10 +78,10 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
   };
 
   const getOutcomeStyle = (outcome: string, isSelected: boolean) => {
-    if (!isSelected) return 'bg-white dark:bg-card text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-slate-700';
+    if (!isSelected) return 'bg-white dark:bg-card text-slate-600 dark:text-muted-foreground border border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border';
     
     switch (outcome) {
-      case 'all': return 'bg-slate-900 dark:bg-slate-100 text-slate-50 dark:text-slate-900 border-transparent shadow-sm';
+      case 'all': return 'bg-slate-900 dark:bg-muted text-slate-50 dark:text-foreground border-transparent shadow-sm';
       case 'completed': return 'bg-emerald-600 dark:bg-emerald-500 text-white border-transparent shadow-sm';
       case 'abandoned': return 'bg-rose-600 dark:bg-rose-500 text-white border-transparent shadow-sm';
       default: return 'bg-primary text-primary-foreground border-transparent shadow-sm';
@@ -106,7 +106,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
     h-8 text-xs rounded-none border-dashed transition-all
     ${isActive 
       ? "border-primary/50 bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary" 
-      : "border-slate-200 dark:border-border text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-card hover:text-slate-900 dark:hover:text-slate-200"
+      : "border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-card hover:text-slate-900 dark:hover:text-foreground/90"
     }
   `;
 
@@ -128,7 +128,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[280px] p-4 rounded-none border-slate-200 dark:border-border shadow-md" align="start">
-            <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
+            <Label className="text-[10px] font-bold text-slate-900 dark:text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
               Reaction Severity
             </Label>
             <div className="grid grid-cols-3 gap-2 w-full">
@@ -145,7 +145,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                       h-9 rounded-none border text-[10px] font-bold transition-all flex items-center justify-center gap-1
                       ${isSelected
                         ? `${grade.color} ring-1 ring-inset ring-current shadow-sm`
-                        : 'bg-white dark:bg-card text-slate-500 dark:text-slate-400 border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-slate-700'
+                        : 'bg-white dark:bg-card text-slate-500 dark:text-muted-foreground border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border'
                       }
                     `}
                   >
@@ -166,7 +166,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[280px] p-4 rounded-none border-slate-200 dark:border-border shadow-md" align="start">
-            <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
+            <Label className="text-[10px] font-bold text-slate-900 dark:text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
               Procedure Outcome
             </Label>
             <div className="flex bg-slate-100 dark:bg-card p-1 border border-slate-200 dark:border-border h-9">
@@ -203,7 +203,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-4 rounded-none border-slate-200 dark:border-border shadow-md" align="start">
-            <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 opacity-70 flex items-center gap-1.5">
+            <Label className="text-[10px] font-bold text-slate-900 dark:text-foreground uppercase tracking-[0.1em] mb-3 opacity-70 flex items-center gap-1.5">
               Date Range
             </Label>
             <div className="flex items-center gap-2 h-9">
@@ -236,14 +236,14 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[280px] p-4 rounded-none border-slate-200 dark:border-border shadow-md" align="start">
-            <Label className="text-[10px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.1em] mb-3 block opacity-70">
+            <Label className="text-[10px] font-bold text-slate-900 dark:text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
               Hospital Location
             </Label>
             <div className="relative h-9">
               <select
                 value={filters.hospital}
                 onChange={(e) => updateFilter('hospital', e.target.value)}
-                className="w-full h-full px-3 text-[11px] appearance-none rounded-none border border-slate-200 dark:border-border bg-white dark:bg-card text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-primary transition-colors cursor-pointer pr-10"
+                className="w-full h-full px-3 text-[11px] appearance-none rounded-none border border-slate-200 dark:border-border bg-white dark:bg-card text-slate-900 dark:text-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-colors cursor-pointer pr-10"
               >
                 <option value="">All Hospitals</option>
                 {suggestions.hospitals.map(h => (
@@ -334,7 +334,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                         px-3 py-1.5 text-[10px] font-bold transition-all relative overflow-hidden group
                         ${isSelected
                           ? `${theme.btnSelected} ring-1 ring-inset ring-black/5 dark:ring-white/5 shadow-sm scale-[1.02]`
-                          : `bg-slate-50 dark:bg-card text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-border hover:border-slate-400 dark:hover:border-slate-600 hover:bg-white dark:hover:bg-slate-950`
+                          : `bg-slate-50 dark:bg-card text-slate-500 dark:text-muted-foreground border border-slate-200 dark:border-border hover:border-slate-400 dark:hover:border-border hover:bg-white dark:hover:bg-background`
                         }
                       `}
                       title={category}

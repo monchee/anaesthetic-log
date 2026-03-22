@@ -83,7 +83,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
 
   return (
     <div className="w-full" ref={dropdownRef}>
-      <span className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 block" id="patient-selector-label">
+      <span className="text-sm font-medium text-slate-700 dark:text-foreground/80 mb-1 block" id="patient-selector-label">
         Select Patient from Database
       </span>
 
@@ -96,7 +96,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
           className="flex min-h-10 h-auto w-full items-center justify-between rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white cursor-pointer hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 dark:bg-background dark:border-border dark:hover:bg-card dark:focus-visible:ring-slate-300 transition-all"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span className={`mr-2 whitespace-normal text-left leading-tight ${selectedPatient || isManualSelection ? "text-slate-900 dark:text-slate-100" : "text-slate-500 dark:text-slate-400"}`}>
+          <span className={`mr-2 whitespace-normal text-left leading-tight ${selectedPatient || isManualSelection ? "text-slate-900 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>
             {isManualSelection
                 ? "[New] Manual Entry"
                 : selectedPatient
@@ -104,7 +104,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                     : "Search or select patient..."
             }
           </span>
-          <ChevronDown className="h-4 w-4 opacity-50 dark:text-slate-400 shrink-0" />
+          <ChevronDown className="h-4 w-4 opacity-50 dark:text-muted-foreground shrink-0" />
         </button>
 
         {isOpen && (
@@ -116,7 +116,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                     <input
                         type="text"
                         aria-label="Filter patients by ID or name"
-                        className="w-full rounded-none border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-2 text-xs focus:outline-none focus:ring-1 focus:ring-slate-400 dark:bg-muted dark:border-border dark:text-slate-100 dark:focus:ring-slate-500"
+                        className="w-full rounded-none border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-2 text-xs focus:outline-none focus:ring-1 focus:ring-slate-400 dark:bg-muted dark:border-border dark:text-foreground dark:focus:ring-slate-500"
                         placeholder="Filter by ID or Name..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -129,15 +129,15 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
             <div
                 role="option"
                 aria-selected={isManualSelection}
-                className="cursor-pointer select-none py-2 px-3 border-b border-slate-100 dark:border-border hover:bg-slate-50 dark:hover:bg-muted/50 flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300 transition-colors"
+                className="cursor-pointer select-none py-2 px-3 border-b border-slate-100 dark:border-border hover:bg-slate-50 dark:hover:bg-muted/50 flex items-center gap-3 text-sm text-slate-700 dark:text-foreground/80 transition-colors"
                 onClick={handleManualEntry}
             >
-                <div className="bg-slate-100 dark:bg-muted p-1.5 rounded-none text-slate-500 dark:text-slate-400">
+                <div className="bg-slate-100 dark:bg-muted p-1.5 rounded-none text-slate-500 dark:text-muted-foreground">
                     <UserPlus className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col">
                     <span className="font-semibold text-primary">New Patient (Manual Entry)</span>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-500">Create a record without database ID</span>
+                    <span className="text-[10px] text-slate-500 dark:text-muted-foreground">Create a record without database ID</span>
                 </div>
                 {isManualSelection && (
                     <div className="ml-auto text-primary">
@@ -147,7 +147,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
             </div>
             
             {filteredPatients.length === 0 ? (
-                <div className="px-2 py-4 text-center text-xs text-slate-500 dark:text-slate-400">
+                <div className="px-2 py-4 text-center text-xs text-slate-500 dark:text-muted-foreground">
                     No matching records found.
                 </div>
             ) : (
@@ -163,10 +163,10 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                 >
                     <div className="flex flex-col gap-0.5">
                         <span className="block whitespace-normal leading-tight">
-                            <span className="text-slate-500 dark:text-slate-500 mr-2 font-mono text-xs">[{patient.id}]</span>
-                            <span className="font-medium text-slate-900 dark:text-slate-100">{patient.lastName}, {patient.firstName}</span>
+                            <span className="text-slate-500 dark:text-muted-foreground mr-2 font-mono text-xs">[{patient.id}]</span>
+                            <span className="font-medium text-slate-900 dark:text-foreground">{patient.lastName}, {patient.firstName}</span>
                         </span>
-                        <span className="block text-xs text-slate-500 dark:text-slate-400 pl-8">
+                        <span className="block text-xs text-slate-500 dark:text-muted-foreground pl-8">
                             DOB: {formatDate(patient.dob)}
                         </span>
                     </div>

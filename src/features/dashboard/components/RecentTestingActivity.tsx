@@ -22,7 +22,7 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
       </CardHeader>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
-          <thead className="bg-slate-50 dark:bg-card text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">
+          <thead className="bg-slate-50 dark:bg-card text-xs uppercase text-slate-500 dark:text-muted-foreground font-semibold">
             <tr>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3">Patient</th>
@@ -51,12 +51,12 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                     className="hover:bg-slate-50 dark:hover:bg-card/50 cursor-pointer transition-colors group animate-row-enter"
                     onClick={() => onViewLog(log)}
                   >
-                    <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">{formatDate(log.visitDate)}</td>
-                    <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100 group-hover:text-primary dark:group-hover:text-primary transition-colors">{log.lastName}, {log.firstName}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-slate-500 dark:text-muted-foreground group-hover:text-slate-700 dark:group-hover:text-foreground/80 transition-colors">{formatDate(log.visitDate)}</td>
+                    <td className="px-4 py-3 font-medium text-slate-900 dark:text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">{log.lastName}, {log.firstName}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1 items-center">
                         {positives.map(p => <Badge key={p} variant="danger" className="text-[10px] px-1.5 py-0 h-5">{p}</Badge>)}
-                        {negatives.map(n => <span key={n} className="text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-muted px-1.5 py-0.5 rounded border border-slate-200 dark:border-border">{n}</span>)}
+                        {negatives.map(n => <span key={n} className="text-[10px] text-slate-500 dark:text-muted-foreground bg-slate-100 dark:bg-muted px-1.5 py-0.5 rounded border border-slate-200 dark:border-border">{n}</span>)}
                         {positives.length === 0 && negatives.length === 0 && <span className="text-slate-400 italic text-xs">-</span>}
                       </div>
                     </td>
@@ -65,14 +65,14 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                         log.outcome === 'SUCCESS' 
                         ? <Badge variant="success" className="text-[10px]">Negative Challenge</Badge> 
                         : <Badge variant="danger" className="text-[10px]">Positive Challenge</Badge>
-                      ) : <span className="text-slate-500 dark:text-slate-400">No Challenge</span>}
+                      ) : <span className="text-slate-500 dark:text-muted-foreground">No Challenge</span>}
                     </td>
                   </tr>
                 );
               })
             ) : (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-slate-500 dark:text-slate-400 italic">
+                <td colSpan={4} className="px-4 py-8 text-center text-slate-500 dark:text-muted-foreground italic">
                   No recent activity recorded in this session.
                 </td>
               </tr>

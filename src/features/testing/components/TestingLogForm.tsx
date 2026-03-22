@@ -55,14 +55,14 @@ const DrugRow = React.memo(({
             autoFocus
           />
         ) : (
-          <span className="font-medium text-sm text-slate-700 dark:text-slate-200 flex-1">
+          <span className="font-medium text-sm text-slate-700 dark:text-foreground/90 flex-1">
             {row.drugName}
           </span>
         )}
 
         <button
           onClick={() => removeRow(index)}
-          className={`shrink-0 text-slate-300 dark:text-slate-600 hover:text-red-500 dark:hover:text-red-400 transition-opacity p-2 md:p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-100 md:opacity-0 md:group-hover:opacity-100'}`}
+          className={`shrink-0 text-slate-300 dark:text-muted-foreground hover:text-red-500 dark:hover:text-red-400 transition-opacity p-2 md:p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-100 md:opacity-0 md:group-hover:opacity-100'}`}
           aria-label="Remove drug"
           title="Remove drug"
         >
@@ -93,7 +93,7 @@ const DrugRow = React.memo(({
       <div className="col-span-2 md:col-span-4 md:col-start-2">
         <Input
           aria-label={`${row.drugName} notes`}
-          className="h-8 text-xs text-slate-600 dark:text-slate-300 placeholder:text-slate-300 dark:placeholder:text-slate-500"
+          className="h-8 text-xs text-slate-600 dark:text-foreground/80 placeholder:text-slate-300 dark:placeholder:text-slate-500"
           placeholder="Notes..."
           value={row.notes || ''}
           onChange={(e) => updateDrugData(index, 'notes', e.target.value)}
@@ -179,7 +179,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 2. Skin Testing Panel */}
         <Card style={{ '--section-index': 1 } as React.CSSProperties} className="animate-section-reveal">
           <CardHeader className="pb-3 border-b border-slate-100 dark:border-border">
-            <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-slate-100">
+            <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-foreground">
               <div className="bg-slate-100 dark:bg-card/40 p-1.5 rounded-none">
                  <Activity className="w-4 h-4 text-primary dark:text-primary" />
               </div>
@@ -191,7 +191,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
             {/* Selection Area: Categories */}
             <div className="space-y-4 mb-6">
                <div className="flex justify-between items-center border-b border-slate-100 dark:border-border pb-2">
-                   <Label className="text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold tracking-wider">Select Drugs to Test:</Label>
+                   <Label className="text-xs uppercase text-slate-500 dark:text-muted-foreground font-semibold tracking-wider">Select Drugs to Test:</Label>
                    <Button
                      variant="ghost"
                      size="sm"
@@ -218,13 +218,13 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     return (
                     <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-card/50'}`}>
                         <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-slate-200 dark:border-border'}`}>
-                            <h3 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-slate-400'}`}>
+                            <h3 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-muted-foreground'}`}>
                                 {category}
                                 {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-full ${theme.pulse} animate-pulse`}></span>}
                             </h3>
                             <button
                                 onClick={(e) => { e.preventDefault(); toggleCategory(categoryDrugs); }}
-                                className={`text-[10px] hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}`}
+                                className={`text-[10px] hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-slate-800 dark:text-muted-foreground dark:hover:text-foreground/90'}`}
                             >
                                 {allCategorySelected ? 'Select None' : 'Select All'}
                             </button>
@@ -239,7 +239,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                     className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${
                                     isSelected
                                     ? theme.btnSelected
-                                    : `bg-white dark:bg-card text-slate-600 dark:text-slate-300 border-slate-200 dark:border-border hover:bg-slate-50 dark:hover:bg-muted ${theme.btnHover}`
+                                    : `bg-white dark:bg-card text-slate-600 dark:text-foreground/80 border-slate-200 dark:border-border hover:bg-slate-50 dark:hover:bg-muted ${theme.btnHover}`
                                     }`}
                                 >
                                     {isSelected && <Check className="w-3 h-3 shrink-0" />}
@@ -251,7 +251,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                             {category === 'Others' && (
                                 <button
                                     onClick={addCustomDrug}
-                                    className={`text-xs px-2.5 py-1.5 rounded-none border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-muted transition-all duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
+                                    className={`text-xs px-2.5 py-1.5 rounded-none border border-dashed border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted transition-all duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
                                 >
                                     <Plus className="w-3 h-3 shrink-0" />
                                     Other
@@ -270,7 +270,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
               </div>
               <div className="grid grid-cols-3 gap-2 md:flex md:flex-wrap md:items-center md:gap-x-8 md:gap-y-4">
                 <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
-                  <Label htmlFor="histamine-spt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Histamine (SPT)</Label>
+                  <Label htmlFor="histamine-spt" className="text-xs font-medium text-slate-700 dark:text-foreground/80">Histamine (SPT)</Label>
                   <Input
                     id="histamine-spt"
                     type="number"
@@ -283,7 +283,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                   />
                 </div>
                 <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
-                  <Label htmlFor="saline-spt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (SPT)</Label>
+                  <Label htmlFor="saline-spt" className="text-xs font-medium text-slate-700 dark:text-foreground/80">Saline (SPT)</Label>
                   <Input
                     id="saline-spt"
                     type="number"
@@ -296,7 +296,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                   />
                 </div>
                 <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
-                  <Label htmlFor="saline-idt" className="text-xs font-medium text-slate-700 dark:text-slate-300">Saline (IDT)</Label>
+                  <Label htmlFor="saline-idt" className="text-xs font-medium text-slate-700 dark:text-foreground/80">Saline (IDT)</Label>
                   <Input
                     id="saline-idt"
                     type="number"
@@ -314,7 +314,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
             {/* Data Entry Table */}
             {formData.testPanel.length > 0 ? (
               <div className={`rounded-none overflow-hidden animate-in fade-in slide-in-from-top-2`}>
-                 <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-100/50 dark:bg-card/50 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase border-b border-slate-200 dark:border-border mb-2 rounded-none text-center">
+                 <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-100/50 dark:bg-card/50 text-xs font-bold text-slate-500 dark:text-muted-foreground uppercase border-b border-slate-200 dark:border-border mb-2 rounded-none text-center">
                     <div className="text-left md:text-center">Drug</div>
                     <div>SPT</div>
                     <div>1:100</div>
@@ -337,7 +337,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
               </div>
             ) : (
                 <div className="text-center py-10 bg-slate-50 dark:bg-card rounded-none border border-dashed border-slate-300 dark:border-border">
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">No drugs selected. Choose a category above to begin.</p>
+                    <p className="text-slate-500 dark:text-muted-foreground text-sm">No drugs selected. Choose a category above to begin.</p>
                 </div>
             )}
           </CardContent>
@@ -346,7 +346,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 3. Drug Challenge */}
       <Card style={{ '--section-index': 2 } as React.CSSProperties} className="animate-section-reveal">
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-border">
-          <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-slate-100">
+          <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-foreground">
              <div className="bg-primary/10 dark:bg-card/40 p-1.5 rounded-none">
                  <Syringe className="w-4 h-4 text-primary dark:text-primary" />
              </div>
@@ -364,27 +364,27 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 className={`flex w-full items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-all duration-150 group ${
                     formData.proceedToChallenge
                     ? 'border-primary bg-[white] dark:bg-card/10 shadow-sm'
-                    : 'border-slate-100 hover:border-slate-300 dark:border-border dark:hover:border-slate-700 bg-white dark:bg-background'
+                    : 'border-slate-100 hover:border-slate-300 dark:border-border dark:hover:border-border bg-white dark:bg-background'
                 }`}
             >
                 <div className="flex items-center gap-4">
                     <div className={`p-2.5 rounded-none transition-colors ${
                         formData.proceedToChallenge
                         ? 'bg-primary text-white'
-                        : 'bg-slate-100 text-slate-400 dark:bg-muted dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'
+                        : 'bg-slate-100 text-slate-400 dark:bg-muted dark:text-muted-foreground group-hover:text-slate-600 dark:group-hover:text-foreground/80'
                     }`}>
                         <Activity className="w-5 h-5" />
                     </div>
                     <div className="text-left">
-                        <span className={`font-semibold tracking-tight transition-colors ${formData.proceedToChallenge ? 'text-slate-900 dark:text-primary' : 'text-slate-700 dark:text-slate-300'}`}>
+                        <span className={`font-semibold tracking-tight transition-colors ${formData.proceedToChallenge ? 'text-slate-900 dark:text-primary' : 'text-slate-700 dark:text-foreground/80'}`}>
                             Drug Challenge
                         </span>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">Proceed with live drug challenge</p>
+                        <p className="text-xs text-slate-500 dark:text-muted-foreground">Proceed with live drug challenge</p>
                     </div>
                 </div>
 
                 {/* Visual Switch */}
-                <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-150 ease-in-out ${formData.proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}>
+                <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-150 ease-in-out ${formData.proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-muted'}`}>
                     <div className={`w-5 h-5 bg-background rounded-none shadow-sm transform transition-transform duration-150 ease-in-out ${formData.proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
                 </div>
             </button>
@@ -394,7 +394,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
                     {/* Drug Selection */}
                     <div className="space-y-3">
-                         <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                         <Label className="text-sm font-semibold text-slate-700 dark:text-foreground/80 flex items-center gap-2">
                             Select Challenge Drug
                          </Label>
                          <div className="flex flex-col sm:flex-row gap-3">
@@ -427,7 +427,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
                     {/* Outcome Selection */}
                     <div className="space-y-3">
-                         <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Observation Outcome</Label>
+                         <Label className="text-sm font-semibold text-slate-700 dark:text-foreground/80">Observation Outcome</Label>
                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                              <button
                                 type="button"
@@ -435,7 +435,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                 className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
                                     formData.outcome === 'SUCCESS'
                                     ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                                    : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-background dark:border-border dark:text-slate-400 dark:hover:border-green-800 dark:hover:bg-green-900/20'
+                                    : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-green-800 dark:hover:bg-green-900/20'
                                 }`}
                              >
                                  <div className={`p-3 rounded-none ${
@@ -457,7 +457,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                 className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
                                     formData.outcome === 'UNSUCCESS'
                                     ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300'
-                                    : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-background dark:border-border dark:text-slate-400 dark:hover:border-red-800 dark:hover:bg-red-900/20'
+                                    : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-red-800 dark:hover:bg-red-900/20'
                                 }`}
                              >
                                  <div className={`p-3 rounded-none ${
@@ -578,7 +578,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* 4. Plan & Assessment */}
       <Card style={{ '--section-index': 3 } as React.CSSProperties} className="animate-section-reveal">
         <CardHeader className="pb-3 border-b border-slate-100 dark:border-border">
-           <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-slate-100">
+           <CardTitle className="flex items-center gap-2 text-base text-slate-900 dark:text-foreground">
              <div className="bg-emerald-100 dark:bg-emerald-900/40 p-1.5 rounded-none">
                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
              </div>

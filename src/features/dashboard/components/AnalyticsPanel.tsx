@@ -38,15 +38,15 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {/* Left Column - Key Stats */}
       <Card className="lg:col-span-1 shadow-sm">
-        <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
-          <CardTitle className="text-base text-slate-900 dark:text-slate-100 flex items-center gap-2">
+        <CardHeader className="pb-3 border-b border-slate-100 dark:border-border bg-slate-50 dark:bg-card">
+          <CardTitle className="text-base text-slate-900 dark:text-foreground flex items-center gap-2">
             <Users className="w-4 h-4 text-primary dark:text-primary" /> Overview
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 pt-6">
           <div className="grid grid-cols-2 gap-3">
             {/* Total */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800 border-l-4 border-l-primary">
+            <div className="bg-slate-50 dark:bg-card rounded-none p-3 border border-slate-200 dark:border-border border-l-4 border-l-primary">
               <div className="flex items-center gap-2 mb-1">
                 <Users className="w-4 h-4 text-primary" />
                 <span className="section-label">Records</span>
@@ -55,7 +55,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             </div>
 
             {/* Severe */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800 border-l-4 border-l-red-500">
+            <div className="bg-slate-50 dark:bg-card rounded-none p-3 border border-slate-200 dark:border-border border-l-4 border-l-red-500">
               <div className="flex items-center gap-2 mb-1">
                 <AlertTriangle className="w-4 h-4 text-red-500" />
                 <span className="section-label">Severe</span>
@@ -67,7 +67,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             </div>
 
             {/* Abandoned */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800 border-l-4 border-l-amber-500">
+            <div className="bg-slate-50 dark:bg-card rounded-none p-3 border border-slate-200 dark:border-border border-l-4 border-l-amber-500">
               <div className="flex items-center gap-2 mb-1">
                 <Ban className="w-4 h-4 text-status-grade2" />
                 <span className="section-label">Abandoned</span>
@@ -79,7 +79,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             </div>
 
             {/* Avg Time */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-3 border border-slate-200 dark:border-slate-800 border-l-4 border-l-nsw-blue">
+            <div className="bg-slate-50 dark:bg-card rounded-none p-3 border border-slate-200 dark:border-border border-l-4 border-l-nsw-blue">
               <div className="flex items-center gap-2 mb-1">
                 <Timer className="w-4 h-4 text-nsw-blue" />
                 <span className="section-label">Onset</span>
@@ -95,14 +95,14 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
 
       {/* Middle Column - Grade Distribution */}
       <Card className="shadow-sm">
-        <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
-          <CardTitle className="text-base text-slate-900 dark:text-slate-100 flex items-center gap-2">
+        <CardHeader className="pb-3 border-b border-slate-100 dark:border-border bg-slate-50 dark:bg-card">
+          <CardTitle className="text-base text-slate-900 dark:text-foreground flex items-center gap-2">
             <PieChart className="w-4 h-4 text-primary dark:text-primary" /> Severity Distribution
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 pt-6">
           {/* Stacked Bar */}
-          <div className="flex h-8 w-full rounded-none overflow-hidden mb-4 bg-slate-100 dark:bg-slate-800">
+          <div className="flex h-8 w-full rounded-none overflow-hidden mb-4 bg-slate-100 dark:bg-card">
             {gradeCounts.I > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.I / totalPatients) * 100}%` : '0%' }} 
@@ -130,7 +130,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {gradeCounts.Ungraded > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.Ungraded / totalPatients) * 100}%` : '0%' }} 
-                className="bg-slate-300 dark:bg-slate-600 h-full transition-all duration-500 delay-100"
+                className="bg-slate-300 dark:bg-muted/60 h-full transition-all duration-500 delay-100"
               />
             )}
           </div>
@@ -138,23 +138,23 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs mt-4">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-status-grade1"></span>
-              <span className="text-slate-600 dark:text-slate-400">I: <b className="text-slate-900 dark:text-white">{gradeCounts.I}</b></span>
+              <span className="text-slate-600 dark:text-muted-foreground">I: <b className="text-slate-900 dark:text-white">{gradeCounts.I}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-status-grade2"></span>
-              <span className="text-slate-600 dark:text-slate-400">II: <b className="text-slate-900 dark:text-white">{gradeCounts.II}</b></span>
+              <span className="text-slate-600 dark:text-muted-foreground">II: <b className="text-slate-900 dark:text-white">{gradeCounts.II}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-              <span className="text-slate-600 dark:text-slate-400">III: <b className="text-slate-900 dark:text-white">{gradeCounts.III}</b></span>
+              <span className="text-slate-600 dark:text-muted-foreground">III: <b className="text-slate-900 dark:text-white">{gradeCounts.III}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-status-grade4"></span>
-              <span className="text-slate-600 dark:text-slate-400">IV: <b className="text-slate-900 dark:text-white">{gradeCounts.IV}</b></span>
+              <span className="text-slate-600 dark:text-muted-foreground">IV: <b className="text-slate-900 dark:text-white">{gradeCounts.IV}</b></span>
             </div>
             <div className="flex items-center gap-1.5 col-span-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600"></span>
-              <span className="text-slate-600 dark:text-slate-400">Ungraded: <b className="text-slate-900 dark:text-white">{gradeCounts.Ungraded}</b></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-muted/60"></span>
+              <span className="text-slate-600 dark:text-muted-foreground">Ungraded: <b className="text-slate-900 dark:text-white">{gradeCounts.Ungraded}</b></span>
             </div>
           </div>
         </CardContent>
@@ -162,8 +162,8 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
 
       {/* Right Column - Top Agents */}
       <Card className="shadow-sm">
-        <CardHeader className="pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
-          <CardTitle className="text-base text-slate-900 dark:text-slate-100 flex items-center gap-2">
+        <CardHeader className="pb-3 border-b border-slate-100 dark:border-border bg-slate-50 dark:bg-card">
+          <CardTitle className="text-base text-slate-900 dark:text-foreground flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-primary dark:text-primary" /> Top Suspected Agents
           </CardTitle>
         </CardHeader>
@@ -175,10 +175,10 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                 return (
                   <div key={idx} className="group">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="font-medium text-slate-700 dark:text-slate-300 truncate pr-2">{agent.name}</span>
+                      <span className="font-medium text-slate-700 dark:text-foreground/80 truncate pr-2">{agent.name}</span>
                       <span className="font-bold text-slate-900 dark:text-white shrink-0">{agent.count}</span>
                     </div>
-                    <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-none overflow-hidden">
+                    <div className="h-2 w-full bg-slate-100 dark:bg-card rounded-none overflow-hidden">
                       <div 
                         className="h-full bg-primary rounded-none transition-all duration-500" 
                         style={{ 

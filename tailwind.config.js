@@ -13,7 +13,7 @@ export default {
   	extend: {
   		fontFamily: {
   			sans: [
-  				'Public Sans"',
+  				'Public Sans',
   				'Inter',
   				'sans-serif'
   			]

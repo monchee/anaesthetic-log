@@ -27,8 +27,8 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
     <div className="px-4 py-4 bg-slate-50 dark:bg-card/50 border-t border-slate-100 dark:border-border space-y-4">
       {/* Controls */}
       <div>
-        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Controls</p>
-        <div className="flex gap-4 text-xs text-slate-700 dark:text-slate-300">
+        <p className="text-xs font-medium text-slate-500 dark:text-muted-foreground uppercase tracking-wide mb-1.5">Controls</p>
+        <div className="flex gap-4 text-xs text-slate-700 dark:text-foreground/80">
           <span>Histamine SPT: <strong>{record.histamine_spt || '—'}</strong></span>
           <span>Saline SPT: <strong>{record.saline_spt || '—'}</strong></span>
           <span>Saline IDT: <strong>{record.saline_idt || '—'}</strong></span>
@@ -38,24 +38,24 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
       {/* Test Panel */}
       {record.test_panel.length > 0 && (
         <div>
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Test panel</p>
+          <p className="text-xs font-medium text-slate-500 dark:text-muted-foreground uppercase tracking-wide mb-1.5">Test panel</p>
           <div className="border border-slate-200 dark:border-border overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-slate-100 dark:bg-muted border-b border-slate-200 dark:border-border">
                   {['Drug', 'SPT', '1:100', '1:10', 'Neat', 'Result'].map(h => (
-                    <th key={h} className="px-3 py-1.5 text-left font-medium text-slate-500 dark:text-slate-400">{h}</th>
+                    <th key={h} className="px-3 py-1.5 text-left font-medium text-slate-500 dark:text-muted-foreground">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-border">
                 {record.test_panel.map((d, i) => (
                   <tr key={i} className={d.is_positive ? 'bg-red-50 dark:bg-red-950/20' : ''}>
-                    <td className="px-3 py-1.5 font-medium text-slate-700 dark:text-slate-200">{d.drug_name}</td>
-                    <td className="px-3 py-1.5 text-slate-600 dark:text-slate-300">{d.spt_wheal || '—'}</td>
-                    <td className="px-3 py-1.5 text-slate-600 dark:text-slate-300">{d.idt_100 || '—'}</td>
-                    <td className="px-3 py-1.5 text-slate-600 dark:text-slate-300">{d.idt_10 || '—'}</td>
-                    <td className="px-3 py-1.5 text-slate-600 dark:text-slate-300">{d.idt_neat || '—'}</td>
+                    <td className="px-3 py-1.5 font-medium text-slate-700 dark:text-foreground/90">{d.drug_name}</td>
+                    <td className="px-3 py-1.5 text-slate-600 dark:text-foreground/80">{d.spt_wheal || '—'}</td>
+                    <td className="px-3 py-1.5 text-slate-600 dark:text-foreground/80">{d.idt_100 || '—'}</td>
+                    <td className="px-3 py-1.5 text-slate-600 dark:text-foreground/80">{d.idt_10 || '—'}</td>
+                    <td className="px-3 py-1.5 text-slate-600 dark:text-foreground/80">{d.idt_neat || '—'}</td>
                     <td className="px-3 py-1.5">
                       {d.is_positive
                         ? <span className="text-red-600 dark:text-red-400 font-semibold">Positive</span>
@@ -73,8 +73,8 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
       {/* Challenge */}
       {record.proceed_to_challenge && (
         <div>
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Challenge test</p>
-          <div className="flex flex-wrap gap-4 text-xs text-slate-700 dark:text-slate-300">
+          <p className="text-xs font-medium text-slate-500 dark:text-muted-foreground uppercase tracking-wide mb-1.5">Challenge test</p>
+          <div className="flex flex-wrap gap-4 text-xs text-slate-700 dark:text-foreground/80">
             <span>Drug: <strong>{record.challenge_drug || '—'}</strong></span>
             <span>Outcome: <strong className={record.challenge_outcome === 'SUCCESS' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}>
               {record.challenge_outcome === 'SUCCESS' ? 'Pass' : record.challenge_outcome === 'UNSUCCESS' ? 'Fail' : '—'}
@@ -83,7 +83,7 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
             {record.intervention_type && <span>Intervention: <strong>{record.intervention_type}</strong></span>}
           </div>
           {record.symptoms.length > 0 && (
-            <div className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+            <div className="mt-1 text-xs text-slate-600 dark:text-foreground/80">
               Symptoms: {record.symptoms.join(', ')}
             </div>
           )}
@@ -93,8 +93,8 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
       {/* Plan */}
       {record.plan && (
         <div>
-          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Plan</p>
-          <p className="text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap">{record.plan}</p>
+          <p className="text-xs font-medium text-slate-500 dark:text-muted-foreground uppercase tracking-wide mb-1">Plan</p>
+          <p className="text-xs text-slate-700 dark:text-foreground/80 whitespace-pre-wrap">{record.plan}</p>
         </div>
       )}
 
@@ -221,8 +221,8 @@ export default function ResearchDashboard() {
             <Database className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <p className="font-semibold text-sm text-slate-900 dark:text-slate-100">Research Database</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">{records.length} de-identified session{records.length !== 1 ? 's' : ''}</p>
+            <p className="font-semibold text-sm text-slate-900 dark:text-foreground">Research Database</p>
+            <p className="text-xs text-slate-500 dark:text-muted-foreground">{records.length} de-identified session{records.length !== 1 ? 's' : ''}</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -241,15 +241,15 @@ export default function ResearchDashboard() {
         {/* Sessions */}
         <div className="border border-slate-200 dark:border-border border-l-4 border-l-blue-500 bg-white dark:bg-background p-4 rounded-none">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Sessions</span>
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-muted-foreground">Sessions</span>
             <div className="bg-blue-50 dark:bg-blue-900/30 p-1.5 rounded-none">
               <ClipboardList className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
-          <div className="text-3xl font-bold text-slate-800 dark:text-slate-100 tabular-nums leading-none mb-1">
+          <div className="text-3xl font-bold text-slate-800 dark:text-foreground tabular-nums leading-none mb-1">
             {stats.totalSubmissions}
           </div>
-          <div className="text-xs text-slate-500 dark:text-slate-400">
+          <div className="text-xs text-slate-500 dark:text-muted-foreground">
             {stats.avgDrugsPerSession ? `avg ${stats.avgDrugsPerSession} drugs/session` : 'no data yet'}
           </div>
         </div>
@@ -257,15 +257,15 @@ export default function ResearchDashboard() {
         {/* Drugs tested */}
         <div className="border border-slate-200 dark:border-border border-l-4 border-l-violet-500 bg-white dark:bg-background p-4 rounded-none">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Drugs Tested</span>
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-muted-foreground">Drugs Tested</span>
             <div className="bg-violet-50 dark:bg-violet-900/30 p-1.5 rounded-none">
               <FlaskConical className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
             </div>
           </div>
-          <div className="text-3xl font-bold text-slate-800 dark:text-slate-100 tabular-nums leading-none mb-1">
+          <div className="text-3xl font-bold text-slate-800 dark:text-foreground tabular-nums leading-none mb-1">
             {stats.totalDrugs}
           </div>
-          <div className="text-xs text-slate-500 dark:text-slate-400">
+          <div className="text-xs text-slate-500 dark:text-muted-foreground">
             {stats.totalPositive > 0 ? `${stats.totalPositive} positive result${stats.totalPositive !== 1 ? 's' : ''}` : 'across all sessions'}
           </div>
         </div>
@@ -273,15 +273,15 @@ export default function ResearchDashboard() {
         {/* Overall positivity */}
         <div className="border border-slate-200 dark:border-border border-l-4 border-l-amber-500 bg-white dark:bg-background p-4 rounded-none">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Positivity Rate</span>
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-muted-foreground">Positivity Rate</span>
             <div className="bg-amber-50 dark:bg-amber-900/30 p-1.5 rounded-none">
               <TrendingUp className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
             </div>
           </div>
-          <div className="text-3xl font-bold text-slate-800 dark:text-slate-100 tabular-nums leading-none mb-1">
+          <div className="text-3xl font-bold text-slate-800 dark:text-foreground tabular-nums leading-none mb-1">
             {stats.totalDrugs > 0 ? `${stats.overallPositivityRate}%` : '—'}
           </div>
-          <div className="text-xs text-slate-500 dark:text-slate-400">
+          <div className="text-xs text-slate-500 dark:text-muted-foreground">
             {stats.positiveSessionCount > 0
               ? `${stats.positiveSessionCount} session${stats.positiveSessionCount !== 1 ? 's' : ''} with positives`
               : 'no positive results yet'}
@@ -291,15 +291,15 @@ export default function ResearchDashboard() {
         {/* Challenge pass rate */}
         <div className="border border-slate-200 dark:border-border border-l-4 border-l-emerald-500 bg-white dark:bg-background p-4 rounded-none">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Challenge Pass</span>
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-muted-foreground">Challenge Pass</span>
             <div className="bg-emerald-50 dark:bg-emerald-900/30 p-1.5 rounded-none">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
             </div>
           </div>
-          <div className="text-3xl font-bold text-slate-800 dark:text-slate-100 tabular-nums leading-none mb-1">
+          <div className="text-3xl font-bold text-slate-800 dark:text-foreground tabular-nums leading-none mb-1">
             {stats.challengeSuccessRate !== null ? `${stats.challengeSuccessRate}%` : '—'}
           </div>
-          <div className="text-xs text-slate-500 dark:text-slate-400">
+          <div className="text-xs text-slate-500 dark:text-muted-foreground">
             {stats.challengeCount > 0
               ? `${stats.challengeSuccessCount}/${stats.challengeCount} challenge${stats.challengeCount !== 1 ? 's' : ''} passed`
               : 'no challenges recorded'}
@@ -328,14 +328,14 @@ export default function ResearchDashboard() {
                 const isTop = i === 0 && d.positive > 0;
                 return (
                   <div key={d.name} className="flex items-center gap-3 px-4 py-3">
-                    <span className="w-5 text-xs font-semibold text-slate-400 dark:text-slate-500 tabular-nums text-right shrink-0">
+                    <span className="w-5 text-xs font-semibold text-slate-400 dark:text-muted-foreground tabular-nums text-right shrink-0">
                       {i + 1}
                     </span>
-                    <span className="flex-1 font-medium text-sm text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                    <span className="flex-1 font-medium text-sm text-slate-700 dark:text-foreground/90 flex items-center gap-2">
                       {d.name}
                       {isTop && <Trophy className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
                     </span>
-                    <span className="text-xs text-slate-400 dark:text-slate-500 shrink-0 hidden sm:block">
+                    <span className="text-xs text-slate-400 dark:text-muted-foreground shrink-0 hidden sm:block">
                       {d.positive}/{d.tested}
                     </span>
                     <div className="w-28 sm:w-36 shrink-0">
@@ -367,7 +367,7 @@ export default function ResearchDashboard() {
               </div>
               All Submissions
             </span>
-            <span className="text-sm font-normal text-slate-500 dark:text-slate-400">
+            <span className="text-sm font-normal text-slate-500 dark:text-muted-foreground">
               {records.length} record{records.length !== 1 ? 's' : ''}
             </span>
           </CardTitle>
@@ -391,17 +391,17 @@ export default function ResearchDashboard() {
                   >
                     <div className="flex-1 min-w-0 grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-0.5 text-xs">
                       <div>
-                        <span className="text-slate-400 dark:text-slate-500">Visit </span>
-                        <span className="font-medium text-slate-700 dark:text-slate-200">
+                        <span className="text-slate-400 dark:text-muted-foreground">Visit </span>
+                        <span className="font-medium text-slate-700 dark:text-foreground/90">
                           {r.visit_date ? new Date(r.visit_date).toLocaleDateString('en-AU') : '—'}
                         </span>
                       </div>
                       <div>
-                        <span className="text-slate-400 dark:text-slate-500">REDCap </span>
-                        <span className="font-medium text-slate-700 dark:text-slate-200">{r.redcap_id ?? '—'}</span>
+                        <span className="text-slate-400 dark:text-muted-foreground">REDCap </span>
+                        <span className="font-medium text-slate-700 dark:text-foreground/90">{r.redcap_id ?? '—'}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-slate-400 dark:text-slate-500">{r.total_drugs_tested} drugs</span>
+                        <span className="text-slate-400 dark:text-muted-foreground">{r.total_drugs_tested} drugs</span>
                         {r.positive_count > 0 ? (
                           <Badge variant="destructive" className="text-[10px] h-4 px-1.5 rounded-none">
                             {r.positive_count} +
@@ -416,11 +416,11 @@ export default function ResearchDashboard() {
                             Challenge: {r.challenge_outcome === 'SUCCESS' ? 'Pass' : r.challenge_outcome === 'UNSUCCESS' ? 'Fail' : '—'}
                           </span>
                         ) : (
-                          <span className="text-slate-300 dark:text-slate-600">No challenge</span>
+                          <span className="text-slate-300 dark:text-muted-foreground">No challenge</span>
                         )}
                       </div>
                     </div>
-                    <div className="shrink-0 text-slate-400 dark:text-slate-500">
+                    <div className="shrink-0 text-slate-400 dark:text-muted-foreground">
                       {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </div>
                   </button>

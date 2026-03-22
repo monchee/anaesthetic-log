@@ -56,7 +56,7 @@ const DrugRow = React.memo(({
             autoFocus
           />
         ) : (
-          <span className="font-medium text-sm text-slate-700 dark:text-slate-200 flex-1">
+          <span className="font-medium text-sm text-slate-700 dark:text-foreground/90 flex-1">
             {row.drugName}
           </span>
         )}
@@ -102,14 +102,14 @@ export const DrugTestGrid: React.FC<DrugTestGridProps> = ({
   if (testPanel.length === 0) {
     return (
       <div className="text-center py-10 bg-slate-50 dark:bg-card rounded-none border border-dashed border-slate-300 dark:border-border">
-        <p className="text-slate-500 dark:text-slate-400 text-sm">No drugs selected. Choose a category above to begin.</p>
+        <p className="text-slate-500 dark:text-muted-foreground text-sm">No drugs selected. Choose a category above to begin.</p>
       </div>
     );
   }
 
   return (
     <div className="rounded-none overflow-hidden animate-in fade-in slide-in-from-top-2">
-      <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-100/50 dark:bg-card/50 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase border-b border-slate-200 dark:border-border mb-2 rounded-none text-center">
+      <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-100/50 dark:bg-card/50 text-xs font-bold text-slate-500 dark:text-muted-foreground uppercase border-b border-slate-200 dark:border-border mb-2 rounded-none text-center">
         <div className="text-left md:text-center">Drug</div>
         <div>SPT</div>
         <div>1:100</div>

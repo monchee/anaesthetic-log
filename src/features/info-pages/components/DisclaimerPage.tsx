@@ -56,12 +56,12 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Clinical Judgment Required */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-primary" />
               <h4 className="font-semibold text-slate-900 dark:text-white">Clinical Judgment Required</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
               <p>
                 This application provides decision support based on established clinical protocols and guidelines. However:
               </p>
@@ -87,9 +87,9 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* No Warranty */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">No Warranty</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
               <p>
                 This application is provided "as is" and "as available" without warranty of any kind, whether express or implied.
               </p>
@@ -114,9 +114,9 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Limitation of Liability */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Limitation of Liability</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
               <p>
                 To the maximum extent permitted by law, Sydney Local Health District, Royal Prince Alfred Hospital, the Department of Clinical Immunology & Allergy, and their respective officers, employees, and agents:
               </p>
@@ -142,9 +142,9 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Professional Use Only */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Professional Use Only</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
               <p>
                 This application is intended exclusively for use by authorised healthcare professionals within the context of their professional duties. Use by unauthorised individuals or for purposes other than legitimate clinical assessment is strictly prohibited.
               </p>
@@ -155,9 +155,9 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Guidelines Change */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-none p-5 border border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
             <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Clinical Guidelines Evolve</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
               <p>
                 Medical knowledge and clinical guidelines are continuously evolving. This application reflects best practices at the time of development but may not incorporate the most recent guideline changes.
               </p>
@@ -170,7 +170,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           {/* Acceptance */}
           <div className="bg-nsw-info-bg dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
             <h4 className="font-semibold text-nsw-info dark:text-nsw-blue mb-3">Use of Application Constitutes Acceptance</h4>
-            <div className="text-sm text-slate-700 dark:text-slate-300">
+            <div className="text-sm text-slate-700 dark:text-foreground/80">
               <p>
                 By accessing and using this application, you acknowledge that you have read, understood, and agree to be bound by this disclaimer. If you do not agree with any part of this disclaimer, you must not use this application.
               </p>
@@ -184,7 +184,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 hover:bg-primary text-white px-8"
+          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

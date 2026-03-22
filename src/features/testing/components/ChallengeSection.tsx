@@ -51,27 +51,27 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
         className={`flex items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-all duration-150 group ${
           proceedToChallenge 
           ? 'border-primary bg-slate-50 dark:bg-card/10 shadow-sm' 
-          : 'border-slate-100 hover:border-slate-300 dark:border-border dark:hover:border-slate-700 bg-white dark:bg-background'
+          : 'border-slate-100 hover:border-slate-300 dark:border-border dark:hover:border-border bg-white dark:bg-background'
         }`}
       >
         <div className="flex items-center gap-4">
           <div className={`p-2.5 rounded-none transition-colors ${
             proceedToChallenge 
             ? 'bg-primary text-primary-foreground' 
-            : 'bg-slate-100 text-slate-400 dark:bg-muted dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'
+            : 'bg-slate-100 text-slate-400 dark:bg-muted dark:text-muted-foreground group-hover:text-slate-600 dark:group-hover:text-foreground/80'
           }`}>
             <Activity className="w-5 h-5" />
           </div>
           <div>
-            <h3 className={`font-bold transition-colors ${proceedToChallenge ? 'text-slate-800 dark:text-primary' : 'text-slate-700 dark:text-slate-300'}`}>
+            <h3 className={`font-bold transition-colors ${proceedToChallenge ? 'text-slate-800 dark:text-primary' : 'text-slate-700 dark:text-foreground/80'}`}>
               Drug Challenge
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Proceed with live drug challenge</p>
+            <p className="text-xs text-slate-500 dark:text-muted-foreground">Proceed with live drug challenge</p>
           </div>
         </div>
         
         {/* Visual Switch */}
-        <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-150 ease-in-out ${proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'}`}>
+        <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-150 ease-in-out ${proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-muted'}`}>
           <div className={`w-5 h-5 bg-background rounded-none shadow-sm transform transition-transform duration-150 ease-in-out ${proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
         </div>
       </div>
@@ -81,7 +81,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
           
           {/* Drug Selection */}
           <div className="space-y-3">
-            <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <Label className="text-sm font-semibold text-slate-700 dark:text-foreground/80 flex items-center gap-2">
               Select Challenge Drug
             </Label>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -110,7 +110,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
 
           {/* Outcome Selection */}
           <div className="space-y-3">
-            <Label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Observation Outcome</Label>
+            <Label className="text-sm font-semibold text-slate-700 dark:text-foreground/80">Observation Outcome</Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <button 
                 type="button" 
@@ -118,7 +118,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                 className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
                   outcome === 'SUCCESS' 
                   ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300' 
-                  : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-background dark:border-border dark:text-slate-400 dark:hover:border-green-800 dark:hover:bg-green-900/20'
+                  : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-green-800 dark:hover:bg-green-900/20'
                 }`}
               >
                 <div className={`p-3 rounded-none ${
@@ -140,7 +140,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                 className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
                   outcome === 'UNSUCCESS' 
                   ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300' 
-                  : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-background dark:border-border dark:text-slate-400 dark:hover:border-red-800 dark:hover:bg-red-900/20'
+                  : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-red-800 dark:hover:bg-red-900/20'
                 }`}
               >
                 <div className={`p-3 rounded-none ${

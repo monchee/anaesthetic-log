@@ -21,8 +21,8 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
 }) => {
   return (
     <div className="space-y-4 mb-6">
-      <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
-        <Label className="text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold tracking-wider">Select Drugs to Test:</Label>
+      <div className="flex justify-between items-center border-b border-slate-100 dark:border-border pb-2">
+        <Label className="text-xs uppercase text-slate-500 dark:text-muted-foreground font-semibold tracking-wider">Select Drugs to Test:</Label>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
@@ -39,14 +39,14 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
 
           return (
             <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
-              <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-slate-200 dark:border-slate-800'}`}>
-                <h4 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-slate-400'}`}>
+              <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-slate-200 dark:border-border'}`}>
+                <h4 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-muted-foreground'}`}>
                   {category}
                   {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-none ${theme.pulse} animate-pulse`}></span>}
                 </h4>
                 <button 
                   onClick={(e) => { e.preventDefault(); onToggleCategory(categoryDrugs); }}
-                  className={`text-[10px] hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'}`}
+                  className={`text-[10px] hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-slate-800 dark:text-muted-foreground dark:hover:text-foreground/90'}`}
                 >
                   {allCategorySelected ? 'Select None' : 'Select All'}
                 </button>
@@ -61,7 +61,7 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
                       className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${
                         isSelected 
                         ? theme.btnSelected
-                        : `bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 ${theme.btnHover}`
+                        : `bg-white dark:bg-card text-slate-600 dark:text-foreground/80 border-slate-200 dark:border-border hover:bg-slate-50 dark:hover:bg-card ${theme.btnHover}`
                       }`}
                     >
                       {isSelected && <Check className="w-3 h-3 shrink-0" />}
@@ -73,7 +73,7 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
                 {category === 'Others' && (
                   <button
                     onClick={onAddCustomDrug}
-                    className={`text-xs px-2.5 py-1.5 rounded-none border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
+                    className={`text-xs px-2.5 py-1.5 rounded-none border border-dashed border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-card transition-all duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
                   >
                     <Plus className="w-3 h-3 shrink-0" />
                     Other

@@ -51,7 +51,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
           <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
             <div>
               <h3 className="font-semibold text-lg mb-2 text-slate-900 dark:text-white">How to Use This Reference</h3>
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
+              <p className="text-slate-600 dark:text-foreground/80 leading-relaxed text-sm">
                 This reference lists the anaesthetic and associated drugs tested in the clinic, organised by pharmacological category.
                 For each category, you'll find information on cross-reactivity patterns and suitable alternative drugs. This information
                 is intended to support clinical decision-making during allergy testing. Always consider individual patient history,
@@ -63,7 +63,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
 
           {/* Drug Categories */}
           <div>
-            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-foreground uppercase tracking-wide mb-3">
               Drug Categories
             </h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -72,7 +72,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
                 return (
                   <div 
                     key={category}
-                    className="bg-slate-50 dark:bg-slate-900 rounded-none p-4 border border-slate-200 dark:border-slate-800"
+                    className="bg-slate-50 dark:bg-card rounded-none p-4 border border-slate-200 dark:border-border"
                   >
                     <h4 className={`font-semibold mb-2 ${theme?.headerText || 'text-slate-900 dark:text-white'}`}>
                       {category}
@@ -81,7 +81,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
                       {drugs.map(drug => (
                         <span 
                           key={drug}
-                          className="px-2 py-0.5 text-xs rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
+                          className="px-2 py-0.5 text-xs rounded bg-white dark:bg-card border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground"
                         >
                           {drug}
                         </span>
@@ -95,23 +95,23 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
 
           {/* Cross-Reactivity & Alternatives */}
           <div>
-            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-foreground uppercase tracking-wide mb-3">
               Cross-Reactivity & Alternatives
             </h3>
-            <Accordion type="multiple" className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 px-4">
+            <Accordion type="multiple" className="bg-slate-50 dark:bg-card rounded-none border border-slate-200 dark:border-border px-4">
               {crossReactivityInfo.map((item, idx) => (
                 <AccordionItem 
                   key={idx}
                   value={`item-${idx}`}
-                  className="border-b border-slate-200 dark:border-slate-800 last:border-0"
+                  className="border-b border-slate-200 dark:border-border last:border-0"
                 >
                   <AccordionTrigger className="text-slate-900 dark:text-white font-medium hover:no-underline">
                       {item.category}
                   </AccordionTrigger>
-                  <AccordionContent className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed pb-4 space-y-3">
+                  <AccordionContent className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed pb-4 space-y-3">
                     <div className="flex items-start gap-2 pt-2">
                       <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                      <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                      <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">
                         {item.info}
                       </p>
                     </div>
@@ -144,7 +144,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
         <Button 
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 hover:bg-primary text-white px-8"
+          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

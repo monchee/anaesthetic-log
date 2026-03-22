@@ -37,12 +37,12 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
               <code className={`text-sm font-mono font-bold px-2.5 py-1 ${
                 v.highlight
                   ? 'bg-primary/10 dark:bg-primary/20 text-primary'
-                  : 'bg-slate-100 dark:bg-muted text-slate-700 dark:text-slate-300'
+                  : 'bg-slate-100 dark:bg-muted text-slate-700 dark:text-foreground/80'
               }`}>
                 {v.version}
               </code>
               {v.codename && (
-                <span className="text-xs text-slate-400 dark:text-slate-500 italic md:pl-0.5">
+                <span className="text-xs text-slate-400 dark:text-muted-foreground italic md:pl-0.5">
                   {v.codename}
                 </span>
               )}
@@ -69,13 +69,13 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
               {v.changes.map((change, cIdx) => (
                 <li key={cIdx} className={`flex gap-2.5 text-sm leading-relaxed ${
                   v.highlight
-                    ? 'text-slate-700 dark:text-slate-300'
-                    : 'text-slate-600 dark:text-slate-400'
+                    ? 'text-slate-700 dark:text-foreground/80'
+                    : 'text-slate-600 dark:text-muted-foreground'
                 }`}>
                   {v.highlight ? (
                     <ArrowRight className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                   ) : (
-                    <span className="text-slate-300 dark:text-slate-600 mt-0.5 shrink-0 select-none">—</span>
+                    <span className="text-slate-300 dark:text-muted-foreground mt-0.5 shrink-0 select-none">—</span>
                   )}
                   <span>{change}</span>
                 </li>
@@ -90,7 +90,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
         <div className="md:pl-52">
           <button
             onClick={() => setShowAll(true)}
-            className="text-sm text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors underline underline-offset-2"
+            className="text-sm text-slate-400 hover:text-slate-700 dark:hover:text-foreground/90 transition-colors underline underline-offset-2"
           >
             Show {hiddenCount} older versions
           </button>
@@ -100,7 +100,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
         <div className="md:pl-52">
           <button
             onClick={() => setShowAll(false)}
-            className="text-sm text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors underline underline-offset-2"
+            className="text-sm text-slate-400 hover:text-slate-700 dark:hover:text-foreground/90 transition-colors underline underline-offset-2"
           >
             Show less
           </button>
@@ -114,7 +114,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 hover:bg-primary text-white px-8"
+          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

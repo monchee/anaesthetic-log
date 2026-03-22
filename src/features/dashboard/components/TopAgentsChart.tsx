@@ -20,7 +20,7 @@ export const TopAgentsChart: React.FC<TopAgentsChartProps> = ({
 
   return (
     <Card className="shadow-sm h-full">
-      <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
+      <CardHeader className="pb-4 border-b border-border bg-muted/30 dark:bg-card/20">
         <CardTitle className="text-lg text-slate-800 dark:text-primary flex items-center gap-2">
           <BarChart3 className="w-5 h-5" /> Top 5 Suspected Agents
         </CardTitle>
@@ -31,11 +31,11 @@ export const TopAgentsChart: React.FC<TopAgentsChartProps> = ({
             const percentage = (agent.count / max) * 100;
             return (
               <div key={idx} className="space-y-1 group">
-                <div className="flex justify-between text-sm font-medium text-slate-700 dark:text-slate-300">
+                <div className="flex justify-between text-sm font-medium text-slate-700 dark:text-foreground/80">
                   <span>{agent.name}</span>
                   <span>{agent.count}</span>
                 </div>
-                <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-none overflow-hidden">
+                <div className="h-3 w-full bg-slate-100 dark:bg-card rounded-none overflow-hidden">
                   <div 
                     className="h-full bg-primary dark:bg-primary rounded-none transition-all duration-1000 ease-out group-hover:bg-primary dark:group-hover:bg-primary" 
                     style={{ 

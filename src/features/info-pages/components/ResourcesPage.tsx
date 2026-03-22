@@ -75,7 +75,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           
           {resources.map((section, idx) => (
             <div key={idx}>
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-foreground uppercase tracking-wide mb-3">
                 {section.category}
               </h3>
               <div className="space-y-3">
@@ -85,10 +85,10 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block bg-slate-50 dark:bg-slate-900 rounded-none p-4 border border-slate-200 dark:border-slate-800 hover:border-primary dark:hover:border-primary transition-colors group"
+                    className="block bg-slate-50 dark:bg-card rounded-none p-4 border border-slate-200 dark:border-border hover:border-primary dark:hover:border-primary transition-colors group"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="p-2 bg-white dark:bg-slate-800 rounded-none border border-slate-200 dark:border-slate-700 shrink-0">
+                      <div className="p-2 bg-white dark:bg-card rounded-none border border-slate-200 dark:border-border shrink-0">
                         {item.icon}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -98,7 +98,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
                           </h4>
                           <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-primary dark:group-hover:text-primary transition-colors" />
                         </div>
-                        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                        <p className="text-sm text-slate-600 dark:text-muted-foreground mt-1">
                           {item.description}
                         </p>
                       </div>
@@ -110,8 +110,8 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           ))}
 
           {/* Disclaimer */}
-          <div className="bg-slate-100 dark:bg-slate-800 rounded-none p-4 border border-slate-200 dark:border-slate-700">
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+          <div className="bg-slate-100 dark:bg-card rounded-none p-4 border border-slate-200 dark:border-border">
+            <p className="text-xs text-slate-500 dark:text-muted-foreground">
               These links are provided for informational purposes. We are not responsible for the content 
               of external websites. Links were verified at the time of publication but may change.
             </p>
@@ -124,7 +124,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
         <Button 
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 hover:bg-primary text-white px-8"
+          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

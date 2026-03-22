@@ -93,7 +93,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                                 <span className="text-sm font-normal">
                                     {duplicates.length} record(s) already exist in the database. Import would create duplicates.
                                 </span>
-                                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                <span className="text-xs text-slate-500 dark:text-muted-foreground mt-1">
                                     {duplicates.length > 3 ? `First few: ${duplicates.slice(0, 3).map(d => d.id).join(', ')}...` : `IDs: ${duplicates.map(d => d.id).join(', ')}`}
                                 </span>
                             </div>,
@@ -119,7 +119,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                         <div className="flex flex-col gap-1">
                              <span className="font-bold">Failed to parse CSV file</span>
                              <span className="text-sm font-normal">{result.error || "Please check the file format."}</span>
-                             <span className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                             <span className="text-xs text-slate-500 dark:text-muted-foreground mt-1">
                                 Make sure the CSV was exported from REDCap and has the correct headers.
                              </span>
                         </div>,
@@ -131,7 +131,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                     <div className="flex flex-col gap-1">
                          <span className="font-bold">Error processing file</span>
                          <span className="text-sm font-normal">An unexpected error occurred while processing the file.</span>
-                         <span className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                         <span className="text-xs text-slate-500 dark:text-muted-foreground mt-1">
                             Please check the file format and try again. If the issue persists, contact IT support.
                          </span>
                     </div>,
@@ -146,7 +146,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                 <div className="flex flex-col gap-1">
                      <span className="font-bold">Error reading file</span>
                      <span className="text-sm font-normal">Failed to read the file. It may be corrupted or in an unsupported format.</span>
-                     <span className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                     <span className="text-xs text-slate-500 dark:text-muted-foreground mt-1">
                         Please try exporting the CSV again from REDCap and upload the new file.
                      </span>
                 </div>,

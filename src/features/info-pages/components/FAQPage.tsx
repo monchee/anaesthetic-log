@@ -141,21 +141,21 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         <CardContent className="pt-6 space-y-6">
           {faqs.map((category, idx) => (
             <div key={idx} className="space-y-2">
-              <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100 uppercase tracking-wide mb-3">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-foreground uppercase tracking-wide mb-3">
                 <category.icon className="w-4 h-4 text-primary shrink-0" />
                 {category.category}
               </h3>
-              <Accordion type="multiple" className="bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-200 dark:border-slate-800 px-4">
+              <Accordion type="multiple" className="bg-slate-50 dark:bg-card rounded-none border border-slate-200 dark:border-border px-4">
                 {category.items.map((item, itemIdx) => (
                   <AccordionItem 
                     key={itemIdx}
                     value={`item-${itemIdx}`}
-                    className="border-b border-slate-200 dark:border-slate-800 last:border-0"
+                    className="border-b border-slate-200 dark:border-border last:border-0"
                   >
                     <AccordionTrigger className="text-slate-900 dark:text-white font-medium hover:no-underline">
                         {item.question}
                     </AccordionTrigger>
-                    <AccordionContent className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed pb-4">
+                    <AccordionContent className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed pb-4">
                       {item.answer}
                     </AccordionContent>
                   </AccordionItem>
@@ -170,7 +170,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         <Button 
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 hover:bg-primary text-white px-8"
+          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

@@ -93,8 +93,8 @@
     --destructive-foreground: 210 40% 96%;
 
     /* ── Structural ──────────────────────────────────────────── */
-    --border:             220 30% 20%;
-    --input:              220 30% 20%;
+    --border:             220 30% 25%;
+    --input:              220 30% 25%;
     --ring:               217 85% 58%;
 
     /* ── Medical Status (vivid for clinical readability) ─────── */
