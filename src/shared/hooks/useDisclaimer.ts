@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocalStorage } from './useLocalStorage';
-import { APP_CONFIG } from '../../../lib/constants';
+import { APP_CONFIG } from '@shared/utils/constants';
 
 export function useDisclaimer() {
   const [disclaimerDismissed, setDisclaimerDismissed] = useLocalStorage(

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Label } from '../../../../components/ui';
 import { Check, Plus } from 'lucide-react';
-import { CATEGORY_THEMES, DEFAULT_THEME } from '../../../../lib/constants';
+import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 import { DrugTestRow } from '../../../../types';
 
 interface DrugSelectionPanelProps {

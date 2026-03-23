@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
-import { ThemeProvider } from '../../../components/ThemeProvider';
-import { FontSizeProvider } from '../../../components/FontSizeProvider';
+import { ThemeProvider } from '@core/components/ThemeProvider';
+import { FontSizeProvider } from '@core/components/FontSizeProvider';
 
 /**
  * Custom render function that wraps components with all necessary providers

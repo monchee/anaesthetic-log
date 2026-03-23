@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Patient } from '../types';
-import { MOCK_PATIENTS } from '../../../../data/mockPatients';
-import { APP_CONFIG } from '../../../../lib/constants';
+import { MOCK_PATIENTS } from '@shared/data/mockPatients';
+import { APP_CONFIG } from '@shared/utils/constants';
 
 export function usePatientState() {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);

@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TestingLogForm from './TestingLogForm';
-import { LogFormData } from '../types';
+import { LogFormData } from '@/types';
 
 
 
@@ -114,7 +114,7 @@ describe('TestingLogForm', () => {
 
     it('renders intervention selection', async () => {
       render(<TestWrapper initialData={{ ...mockFormData, proceedToChallenge: true }} props={mockProps} />);
-      
+
       // First click on the outcome button to show interventions
       const reactionButton = screen.getByText('Reaction Occurred');
       fireEvent.click(reactionButton);
@@ -255,7 +255,7 @@ describe('TestingLogForm', () => {
 
       const rashButton = screen.getByText('Rash');
       expect(rashButton).toHaveClass('bg-red-600');
-      
+
       fireEvent.click(rashButton);
 
       await waitFor(() => {
@@ -342,4 +342,3 @@ describe('TestingLogForm', () => {
     });
   });
 });
-;

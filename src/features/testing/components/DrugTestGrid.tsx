@@ -2,7 +2,7 @@ import React from 'react';
 import { Input } from '../../../../components/ui';
 import { X } from 'lucide-react';
 import { DrugTestRow } from '../../../../types';
-import { CATEGORY_THEMES, DEFAULT_THEME } from '../../../../lib/constants';
+import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 
 interface DrugTestGridProps {
   testPanel: DrugTestRow[];

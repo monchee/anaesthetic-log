@@ -1,10 +1,9 @@
-// Backward compatibility - re-export new hooks with old interface
 import { useEffect } from 'react';
-import { usePatientState } from '../src/features/patients/hooks/usePatientState';
-import { useTestingState } from '../src/features/testing/hooks/useTestingState';
-import { useAppNavigation } from '../src/core/hooks/useAppNavigation';
-import { useDisclaimer } from '../src/shared/hooks/useDisclaimer';
-import { Patient, Screen } from '../types';
+import { usePatientState } from '@features/patients/hooks/usePatientState';
+import { useTestingState } from '@features/testing/hooks/useTestingState';
+import { useAppNavigation } from './useAppNavigation';
+import { useDisclaimer } from '@shared/hooks/useDisclaimer';
+import { Patient, Screen } from '@/types';
 
 export function useAnaestheticApp() {
   const patientState = usePatientState();
@@ -57,12 +56,11 @@ export function useAnaestheticApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Maintain backward compatibility by returning the same interface
   return {
     // Navigation
     screen: navigation.screen,
     setScreen: navigation.setScreen,
-    
+
     // Testing state
     formData: testingState.formData,
     setFormData: testingState.setFormData,
@@ -72,7 +70,7 @@ export function useAnaestheticApp() {
     setTestingPlanData: testingState.setTestingPlanData,
     recentLogs: testingState.recentLogs,
     INITIAL_FORM_STATE: testingState.INITIAL_FORM_STATE,
-    
+
     // Patient state
     selectedPatient: patientState.selectedPatient,
     setSelectedPatient: patientState.setSelectedPatient,
@@ -81,10 +79,10 @@ export function useAnaestheticApp() {
     patients: patientState.patients,
     databaseDate: patientState.databaseDate,
     hasUploadedData: patientState.hasUploadedData,
-    
+
     // Disclaimer
     showDisclaimer: disclaimer.showDisclaimer,
-    
+
     // Handlers
     handleDismissDisclaimer: disclaimer.handleDismissDisclaimer,
     handlePatientSelect,

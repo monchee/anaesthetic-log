@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Filter, Calendar, Building2, Activity, Search as SearchIcon } from 'lucide-react';
 import { Button, Badge, Input, Label, Popover, PopoverContent, PopoverTrigger } from '../../../../components/ui';
 import { AdvancedSearchFilters as Filters } from '../hooks/useAdvancedSearch';
-import { DRUG_CATEGORIES, CATEGORY_THEMES } from '../../../../lib/constants';
+import { DRUG_CATEGORIES, CATEGORY_THEMES } from '@shared/utils/constants';
 
 interface AdvancedSearchFiltersProps {
   filters: Filters;

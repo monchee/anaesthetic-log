@@ -2,39 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Dashboard from './Dashboard';
-import { Patient, LogFormData } from '../types';
+import { Patient, LogFormData } from '@/types';
 
-// Mock dependencies
-vi.mock('../lib/utils', () => ({
-  formatDate: (date: any) => typeof date === 'string' ? date : new Date(date).toLocaleDateString(),
-  parseRedcapCSV: vi.fn(() => ({ success: true, data: [] })),
-  getGradeVariant: (_grade: string) => 'default',
-  parsePatientTimeline: vi.fn(() => ({ events: [] })),
-  calculateTimeDifference: vi.fn(() => 15),
-  isSkinTestPositive: vi.fn(() => false),
-  cn: (...args: any[]) => {
-    return args
-      .flat()
-      .filter(Boolean)
-      .map(arg => {
-        if (typeof arg === 'string') return arg;
-        if (typeof arg === 'object') {
-          return Object.entries(arg)
-            .filter(([_, value]) => value)
-            .map(([key]) => key)
-            .join(' ');
-        }
-        return '';
-      })
-      .filter(Boolean)
-      .join(' ');
-  },
-}));
-
-// The Dashboard component imports parseRedcapCSV from @shared/utils (not lib/utils),
-// so we need a separate mock for that resolved path.
 vi.mock('@shared/utils', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../src/shared/utils')>();
+  const actual = await importOriginal<typeof import('@shared/utils')>();
   return {
     ...actual,
     parseRedcapCSV: vi.fn(() => ({ success: true, data: [] })),
@@ -48,7 +19,7 @@ vi.mock('react-hot-toast', () => ({
   },
 }));
 
-vi.mock('../hooks/useCountUp', () => ({
+vi.mock('@shared/hooks/useCountUp', () => ({
   useCountUp: (value: number) => value,
 }));
 
@@ -156,7 +127,7 @@ describe('Dashboard', () => {
       // Use getAllByText and check for '3' since it appears in both stats and count header
       const statElements = screen.getAllByText('3');
       expect(statElements.length).toBeGreaterThan(0);
-      
+
       // Be more specific for the severe count
       expect(screen.getByText('Severe').parentElement?.parentElement?.querySelector('.text-2xl')).toHaveTextContent('0');
     });

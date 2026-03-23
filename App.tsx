@@ -20,7 +20,7 @@ import PasswordGate from '@core/components/PasswordGate';
 import { Screen } from '@shared/types';
 import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from '@shared/utils/constants';
 import { showToast } from '@shared/utils';
-import { useAnaestheticApp } from './hooks/useAnaestheticApp';
+import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
 import { formatClinicalReportAsText, formatPatientHandoutAsText } from '@shared/utils/reportExporter';
 import { generateLetterText } from '@features/reports/components/PowerchartLetter';
 import { reportWebVitals } from './src/lib/analytics';

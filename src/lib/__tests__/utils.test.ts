@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatDate } from '../../../lib/utils';
+import { formatDate } from '@shared/utils';
 
 describe('utils', () => {
   describe('formatDate', () => {
