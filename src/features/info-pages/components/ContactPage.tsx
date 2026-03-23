@@ -18,20 +18,20 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-4">
               <Building2 className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-3">The DREAM App</h3>
-                <div className="space-y-2 text-sm text-slate-600 dark:text-foreground/80">
+                <h3 className="font-semibold text-lg text-foreground mb-3">The DREAM App</h3>
+                <div className="space-y-2 text-sm text-muted-foreground">
                   <div>
-                    <p className="font-semibold text-slate-900 dark:text-white">Department of Clinical Immunology & Allergy</p>
+                    <p className="font-semibold text-foreground">Department of Clinical Immunology & Allergy</p>
                     <p>Royal Prince Alfred Hospital</p>
                     <p>Missenden Road, Camperdown NSW 2050</p>
                   </div>
-                  <div className="pt-2 border-t border-slate-200 dark:border-border">
+                  <div className="pt-2 border-t border-border">
                     <p><strong>Phone:</strong> (02) 9515 8814</p>
                     <p><strong>Email:</strong> SLHD-RPA-ClinicalImmunology@health.nsw.gov.au</p>
                     <p><strong>Clinic Location:</strong> Level 5, Gloucester House</p>
                   </div>
-                  <div className="pt-2 border-t border-slate-200 dark:border-border">
-                    <p className="text-xs italic text-slate-500 dark:text-muted-foreground">Standard business hours: Monday to Friday, 9:00 AM – 5:00 PM</p>
+                  <div className="pt-2 border-t border-border">
+                    <p className="text-xs italic text-muted-foreground">Standard business hours: Monday to Friday, 9:00 AM – 5:00 PM</p>
                   </div>
                 </div>
               </div>
@@ -40,28 +40,28 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
 
           {/* Support Options */}
           <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+            <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
                 <MessageSquare className="w-5 h-5 text-blue-500" />
-                <h4 className="font-semibold text-slate-900 dark:text-white">General Enquiries</h4>
+                <h4 className="font-semibold text-foreground">General Enquiries</h4>
               </div>
-              <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed mb-3">
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                 For questions about using the application or general support.
               </p>
-              <p className="text-sm text-slate-500 dark:text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 Contact your clinic administrator or IT support.
               </p>
             </div>
 
-            <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+            <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
                 <Bug className="w-5 h-5 text-red-500" />
-                <h4 className="font-semibold text-slate-900 dark:text-white">Report an Issue</h4>
+                <h4 className="font-semibold text-foreground">Report an Issue</h4>
               </div>
-              <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed mb-3">
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                 Found a bug or something not working correctly?
               </p>
-              <div className="space-y-2 text-sm text-slate-500 dark:text-muted-foreground">
+              <div className="space-y-2 text-sm text-muted-foreground">
                 <p>
                   <strong>Standard issues:</strong> Report to your clinic administrator with steps to reproduce.
                 </p>
@@ -71,15 +71,15 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
               </div>
             </div>
 
-            <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+            <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
                 <Lightbulb className="w-5 h-5 text-amber-500" />
-                <h4 className="font-semibold text-slate-900 dark:text-white">Feature Requests</h4>
+                <h4 className="font-semibold text-foreground">Feature Requests</h4>
               </div>
-              <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed mb-3">
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                 Have an idea to improve the application?
               </p>
-              <p className="text-sm text-slate-500 dark:text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 We welcome feedback! Share your suggestions with the development team.
               </p>
             </div>

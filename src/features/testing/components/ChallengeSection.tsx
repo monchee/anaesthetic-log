@@ -51,7 +51,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
         className={`flex items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-all duration-150 group ${
           proceedToChallenge 
           ? 'border-primary bg-slate-50 dark:bg-card/10 shadow-sm' 
-          : 'border-slate-100 hover:border-slate-300 dark:border-border dark:hover:border-border bg-white dark:bg-background'
+          : 'border-slate-100 hover:border-border dark:hover:border-border bg-background'
         }`}
       >
         <div className="flex items-center gap-4">
@@ -66,12 +66,12 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
             <h3 className={`font-bold transition-colors ${proceedToChallenge ? 'text-slate-800 dark:text-primary' : 'text-slate-700 dark:text-foreground/80'}`}>
               Drug Challenge
             </h3>
-            <p className="text-xs text-slate-500 dark:text-muted-foreground">Proceed with live drug challenge</p>
+            <p className="text-xs text-muted-foreground">Proceed with live drug challenge</p>
           </div>
         </div>
         
         {/* Visual Switch */}
-        <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-150 ease-in-out ${proceedToChallenge ? 'bg-primary' : 'bg-slate-200 dark:bg-muted'}`}>
+        <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-150 ease-in-out ${proceedToChallenge ? 'bg-primary' : 'bg-muted'}`}>
           <div className={`w-5 h-5 bg-background rounded-none shadow-sm transform transition-transform duration-150 ease-in-out ${proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
         </div>
       </div>
@@ -179,7 +179,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                     onKeyDown={preventNegativeInput}
                     value={reactionTime} 
                     onChange={(e) => onChange('reactionTime', e.target.value)} 
-                    className="bg-white dark:bg-background border-red-200 dark:border-red-900/30 focus:border-red-400 focus:ring-red-400"
+                    className="bg-background border-red-200 dark:border-red-900/30 focus:border-red-400 focus:ring-red-400"
                     placeholder="e.g. 5"
                   />
                 </div>
@@ -190,7 +190,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                   <select 
                     value={interventionType} 
                     onChange={(e) => onChange('interventionType', e.target.value)}
-                    className="w-full h-11 px-3 border-red-200 border rounded-none focus:border-red-400 focus:ring-red-400 bg-white dark:bg-background dark:border-red-900/30 focus:outline-none focus:ring-2"
+                    className="w-full h-11 px-3 border-red-200 border rounded-none focus:border-red-400 focus:ring-red-400 bg-background dark:border-red-900/30 focus:outline-none focus:ring-2"
                   >
                     <option value="" disabled>Select intervention...</option>
                     {interventionOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
@@ -204,7 +204,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                   <Input 
                     value={interventionOther} 
                     onChange={(e) => onChange('interventionOther', e.target.value)} 
-                    className="bg-white dark:bg-background border-red-200 dark:border-red-900/30"
+                    className="bg-background border-red-200 dark:border-red-900/30"
                     placeholder="Describe intervention..."
                   />
                 </div>
@@ -235,7 +235,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                   <Input 
                     value={symptomsOther} 
                     onChange={(e) => onChange('symptomsOther', e.target.value)} 
-                    className="bg-white dark:bg-background border-red-200 dark:border-red-900/30"
+                    className="bg-background border-red-200 dark:border-red-900/30"
                     placeholder="Describe symptoms..."
                   />
                 </div>

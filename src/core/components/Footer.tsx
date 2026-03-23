@@ -40,7 +40,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, isCustomData =
               <button
                 key={link.screen}
                 onClick={() => setScreen(link.screen)}
-                className="text-slate-500 dark:text-muted-foreground hover:text-primary dark:hover:text-primary transition-colors"
+                className="text-muted-foreground hover:text-primary dark:hover:text-primary transition-colors"
               >
                 {link.label}
               </button>
@@ -53,7 +53,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, isCustomData =
               <button
                 key={link.screen}
                 onClick={() => setScreen(link.screen)}
-                className="text-slate-400 dark:text-muted-foreground hover:text-primary dark:hover:text-primary transition-colors"
+                className="text-muted-foreground hover:text-primary dark:hover:text-primary transition-colors"
               >
                 {link.label}
               </button>
@@ -61,17 +61,17 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, isCustomData =
           </div>
 
           {/* Bottom Row */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-slate-500 dark:text-muted-foreground border-t border-slate-100 dark:border-border pt-3">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-muted-foreground border-t border-border pt-3">
             <div className="text-center sm:text-left">
               <span className="font-semibold text-primary">RPAH Anaesthetic Allergy Clinic</span>
-              <span className="text-slate-400 dark:text-muted-foreground mx-1.5">·</span>
-              <span className="italic text-slate-400 dark:text-muted-foreground">Safe sleep, clear answers</span>
+              <span className="text-muted-foreground mx-1.5">·</span>
+              <span className="italic text-muted-foreground">Safe sleep, clear answers</span>
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-slate-100 dark:bg-card px-3 py-1.5 rounded-none border border-slate-200 dark:border-border">
-                <Database className="w-3.5 h-3.5 text-slate-500 dark:text-muted-foreground" />
-                <span className="text-xs font-semibold text-slate-600 dark:text-foreground/80">
+              <div className="flex items-center gap-2 bg-slate-100 dark:bg-card px-3 py-1.5 rounded-none border border-border">
+                <Database className="w-3.5 h-3.5 text-muted-foreground" />
+                <span className="text-xs font-semibold text-muted-foreground">
                   Dataset: <span className="font-mono">{isCustomData ? databaseDate : 'Demo'}</span>
                 </span>
               </div>

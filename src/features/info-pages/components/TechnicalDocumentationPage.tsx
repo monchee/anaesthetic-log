@@ -18,8 +18,8 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
             <div className="flex items-start gap-4">
               <Cpu className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-2">Technical Overview</h3>
-                <p className="text-slate-600 dark:text-foreground/80 leading-relaxed">
+                <h3 className="font-semibold text-lg text-foreground mb-2">Technical Overview</h3>
+                <p className="text-muted-foreground leading-relaxed">
                   The DREAM App is a Progressive Web App (PWA) built with modern web technologies. It is designed for local-first data processing, ensuring patient data never leaves the user's device during normal operation.
                 </p>
               </div>
@@ -27,46 +27,46 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Architecture */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Code className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Technology Stack</h4>
+              <h4 className="font-semibold text-foreground">Technology Stack</h4>
             </div>
             <div className="grid md:grid-cols-2 gap-3 text-sm">
-              <div className="bg-white dark:bg-card p-3 rounded border border-slate-200 dark:border-border">
-                <p className="font-medium text-slate-800 dark:text-foreground/90">Frontend Framework</p>
-                <p className="text-xs text-slate-500 dark:text-muted-foreground">React 19 with TypeScript</p>
+              <div className="bg-card p-3 rounded border border-border">
+                <p className="font-medium text-foreground/90">Frontend Framework</p>
+                <p className="text-xs text-muted-foreground">React 19 with TypeScript</p>
               </div>
-              <div className="bg-white dark:bg-card p-3 rounded border border-slate-200 dark:border-border">
-                <p className="font-medium text-slate-800 dark:text-foreground/90">Build Tool</p>
-                <p className="text-xs text-slate-500 dark:text-muted-foreground">Vite</p>
+              <div className="bg-card p-3 rounded border border-border">
+                <p className="font-medium text-foreground/90">Build Tool</p>
+                <p className="text-xs text-muted-foreground">Vite</p>
               </div>
-              <div className="bg-white dark:bg-card p-3 rounded border border-slate-200 dark:border-border">
-                <p className="font-medium text-slate-800 dark:text-foreground/90">Styling</p>
-                <p className="text-xs text-slate-500 dark:text-muted-foreground">Tailwind CSS + shadcn/ui</p>
+              <div className="bg-card p-3 rounded border border-border">
+                <p className="font-medium text-foreground/90">Styling</p>
+                <p className="text-xs text-muted-foreground">Tailwind CSS + shadcn/ui</p>
               </div>
-              <div className="bg-white dark:bg-card p-3 rounded border border-slate-200 dark:border-border">
-                <p className="font-medium text-slate-800 dark:text-foreground/90">Testing</p>
-                <p className="text-xs text-slate-500 dark:text-muted-foreground">Vitest + Playwright</p>
+              <div className="bg-card p-3 rounded border border-border">
+                <p className="font-medium text-foreground/90">Testing</p>
+                <p className="text-xs text-muted-foreground">Vitest + Playwright</p>
               </div>
-              <div className="bg-white dark:bg-card p-3 rounded border border-slate-200 dark:border-border">
-                <p className="font-medium text-slate-800 dark:text-foreground/90">Deployment</p>
-                <p className="text-xs text-slate-500 dark:text-muted-foreground">Cloudflare Pages</p>
+              <div className="bg-card p-3 rounded border border-border">
+                <p className="font-medium text-foreground/90">Deployment</p>
+                <p className="text-xs text-muted-foreground">Cloudflare Pages</p>
               </div>
-              <div className="bg-white dark:bg-card p-3 rounded border border-slate-200 dark:border-border">
-                <p className="font-medium text-slate-800 dark:text-foreground/90">Application Type</p>
-                <p className="text-xs text-slate-500 dark:text-muted-foreground">Progressive Web App (PWA)</p>
+              <div className="bg-card p-3 rounded border border-border">
+                <p className="font-medium text-foreground/90">Application Type</p>
+                <p className="text-xs text-muted-foreground">Progressive Web App (PWA)</p>
               </div>
             </div>
           </div>
 
           {/* Security */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Lock className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Security Architecture</h4>
+              <h4 className="font-semibold text-foreground">Security Architecture</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>The application follows a privacy-by-design approach with the following security features:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -94,12 +94,12 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Data Flow */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Database className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Data Flow</h4>
+              <h4 className="font-semibold text-foreground">Data Flow</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>The application follows this data workflow:</p>
               <ol className="space-y-2 ml-4 list-decimal">
                 <li>Clinician exports patient data from REDCap (CSV format)</li>
@@ -113,12 +113,12 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Offline Functionality */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Smartphone className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Offline Functionality (PWA)</h4>
+              <h4 className="font-semibold text-foreground">Offline Functionality (PWA)</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>As a Progressive Web App, the application supports offline usage:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -142,12 +142,12 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Browser Compatibility */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Globe className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Browser Compatibility</h4>
+              <h4 className="font-semibold text-foreground">Browser Compatibility</h4>
             </div>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-2 text-sm text-muted-foreground">
               <p>The application supports modern browsers with JavaScript enabled:</p>
               <ul className="grid grid-cols-2 gap-2 mt-3 ml-4">
                 <li className="flex items-center gap-2">
@@ -171,9 +171,9 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Accessibility */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Accessibility Features</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
+          <div className="bg-card rounded-none p-5 border border-border">
+            <h4 className="font-semibold text-foreground mb-4">Accessibility Features</h4>
+            <div className="space-y-2 text-sm text-muted-foreground">
               <p>The application includes accessibility features to support diverse user needs:</p>
               <ul className="space-y-1 ml-4">
                 <li className="flex items-start gap-2">
@@ -201,10 +201,10 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           </div>
 
           {/* Version History */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Version History</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
-              <div className="flex justify-between py-2 border-b border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
+            <h4 className="font-semibold text-foreground mb-4">Version History</h4>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <div className="flex justify-between py-2 border-b border-border">
                 <span>Current Version</span>
                 <span className="font-mono">v0.34.0 (Suxamethonium)</span>
               </div>

@@ -92,18 +92,18 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
   return (
     <>
-      <Card className="bg-white dark:bg-card shadow-md overflow-hidden">
+      <Card className="bg-card shadow-md overflow-hidden">
         <div 
             className="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-card transition-colors"
             onClick={() => setIsOpen(!isOpen)}
         >
              <div className="flex items-center gap-3">
-                <div className="bg-slate-100 dark:bg-card p-1.5 rounded-none text-slate-600 dark:text-muted-foreground">
+                <div className="bg-slate-100 dark:bg-card p-1.5 rounded-none text-muted-foreground">
                     <ClipboardList className="w-5 h-5" />
                 </div>
                 <div>
                     <h3 className="font-semibold text-primary dark:text-primary text-lg">Testing Plan / Request Form</h3>
-                    <p className="text-xs text-slate-500 dark:text-muted-foreground font-medium">Select drugs to generate a printable testing plan</p>
+                    <p className="text-xs text-muted-foreground font-medium">Select drugs to generate a printable testing plan</p>
                 </div>
              </div>
              <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
@@ -111,7 +111,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
         {isOpen && (
             <CardContent className="p-4 sm:p-6">
-                <div className="border-t border-slate-100 dark:border-border pt-4 space-y-6">
+                <div className="border-t border-border pt-4 space-y-6">
 
                     {/* Request Details: Date of Reaction + Urgent */}
                     <div className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${
@@ -120,10 +120,10 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'
                     }`}>
                         <div className={`flex items-center border-b border-dashed pb-1 mb-2 ${
-                            urgent ? 'border-red-300 dark:border-red-800' : 'border-slate-200 dark:border-border'
+                            urgent ? 'border-red-300 dark:border-red-800' : 'border-border'
                         }`}>
                             <h4 className={`text-[10px] font-semibold uppercase tracking-wider ${
-                                urgent ? 'text-red-600 dark:text-red-400' : 'text-slate-500 dark:text-muted-foreground'
+                                urgent ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'
                             }`}>Request Details</h4>
                         </div>
                         <div className="flex flex-wrap items-center gap-4">
@@ -142,7 +142,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                 <Label
                                     htmlFor="urgent"
                                     className={`text-sm font-bold uppercase tracking-wide cursor-pointer ${
-                                        urgent ? 'text-red-600 dark:text-red-400' : 'text-slate-500 dark:text-muted-foreground'
+                                        urgent ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'
                                     }`}
                                 >
                                     Urgent
@@ -153,8 +153,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                     {/* Documents to Chase */}
                     <div className="space-y-2 rounded-none p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors duration-150">
-                        <div className="flex items-center border-b border-dashed border-slate-200 dark:border-border pb-1 mb-2">
-                            <h4 className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-muted-foreground">Documents to Chase</h4>
+                        <div className="flex items-center border-b border-dashed border-border pb-1 mb-2">
+                            <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Documents to Chase</h4>
                         </div>
                         <div className="flex flex-wrap gap-2">
                             <div className="flex items-center gap-2">
@@ -182,8 +182,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                     {/* Drug Selection Grid */}
                     <div className="space-y-2 rounded-none p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors duration-150">
-                        <div className="flex items-center justify-between border-b border-dashed border-slate-200 dark:border-border pb-1 mb-2">
-                            <h4 className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-muted-foreground">Select Drugs for Testing</h4>
+                        <div className="flex items-center justify-between border-b border-dashed border-border pb-1 mb-2">
+                            <h4 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Select Drugs for Testing</h4>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -207,14 +207,14 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     key={category} 
                                     className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}
                                 >
-                                    <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-slate-200 dark:border-border'}`}>
-                                        <h4 className={`text-[10px] font-semibold uppercase tracking-wider flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-slate-500 dark:text-muted-foreground'}`}>
+                                    <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-border'}`}>
+                                        <h4 className={`text-[10px] font-semibold uppercase tracking-wider flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-muted-foreground'}`}>
                                             {category}
                                             {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-none ${theme.pulse} animate-pulse`}></span>}
                                         </h4>
                                         <button 
                                             onClick={(e) => { e.stopPropagation(); toggleCategory(categoryDrugs); }}
-                                            className={`text-[10px] hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-slate-800 dark:text-muted-foreground dark:hover:text-foreground/90'}`}
+                                            className={`text-[10px] hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-muted-foreground dark:hover:text-foreground/90'}`}
                                         >
                                             {allCategorySelected ? 'Select None' : 'Select All'}
                                         </button>
@@ -230,7 +230,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                                 className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${
                                                 selectedDrugs.includes(drug)
                                                 ? theme.btnSelected
-                                                : `bg-white dark:bg-card text-slate-600 dark:text-foreground/80 border-slate-200 dark:border-border hover:bg-slate-50 dark:hover:bg-card ${theme.btnHover}`
+                                                : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-card ${theme.btnHover}`
                                                 }`}
                                             >
                                                 {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
@@ -251,8 +251,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                         {/* Custom Drugs Section */}
                         <div className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
-                            <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasCustomActive ? `${customTheme.headerBorder}` : 'border-slate-200 dark:border-border'}`}>
-                                <h4 className={`text-[10px] font-semibold uppercase tracking-wider flex items-center gap-2 ${hasCustomActive ? customTheme.headerText : 'text-slate-500 dark:text-muted-foreground'}`}>
+                            <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasCustomActive ? `${customTheme.headerBorder}` : 'border-border'}`}>
+                                <h4 className={`text-[10px] font-semibold uppercase tracking-wider flex items-center gap-2 ${hasCustomActive ? customTheme.headerText : 'text-muted-foreground'}`}>
                                     Additional Items
                                     {hasCustomActive && <span className={`flex h-1.5 w-1.5 rounded-none ${customTheme.pulse} animate-pulse`}></span>}
                                 </h4>
@@ -265,7 +265,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left group ${
                                             selectedDrugs.includes(drug) 
                                             ? customTheme.btnSelected
-                                            : `bg-white dark:bg-card text-slate-600 dark:text-foreground/80 border-slate-200 dark:border-border hover:bg-slate-50 dark:hover:bg-card ${customTheme.btnHover}`
+                                            : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-card ${customTheme.btnHover}`
                                         }`}
                                     >
                                         {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
@@ -323,7 +323,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         />
                     </div>
 
-                    <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-border">
+                    <div className="flex justify-end pt-4 border-t border-border">
                         <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-white shadow-md font-semibold">
                             <Printer className="w-4 h-4 mr-2" /> Preview & Print Plan
                         </Button>

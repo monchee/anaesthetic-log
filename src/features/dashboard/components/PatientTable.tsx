@@ -61,15 +61,15 @@ const PatientTable: React.FC<PatientTableProps> = ({
 
   return (
     <Card className="w-full shadow-sm animate-enter-subtle">
-      <CardHeader className="py-2.5 sm:py-4 border-b border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/20">
+      <CardHeader className="py-2.5 sm:py-4 border-b border-border bg-slate-50/50 dark:bg-muted/20">
         <div className="flex flex-col gap-3 sm:gap-4">
           {/* Header Top Row: Title + Update Button */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
             <div className="space-y-1">
-              <CardTitle className="text-lg flex items-center gap-2 text-slate-900 dark:text-foreground">
+              <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                 <FileText className="w-5 h-5 text-primary" /> REDCap Record Database
               </CardTitle>
-              <div className="text-xs text-slate-500 dark:text-muted-foreground flex items-center gap-2">
+              <div className="text-xs text-muted-foreground flex items-center gap-2">
                 <span>{isCustomData ? `Updated ${databaseDate}` : 'Demo data'}</span>
               </div>
             </div>
@@ -118,11 +118,11 @@ const PatientTable: React.FC<PatientTableProps> = ({
             {/* Row 1: Search Box + Filter Button Toggle */}
             <div className="flex flex-wrap gap-2 items-center">
               <div className="relative flex-1 sm:flex-none sm:w-64">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-muted-foreground" aria-hidden="true" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
                 <Input
                   placeholder="Search by Name, MRN..."
                   aria-label="Search patients by name, medical record number (MRN), or city"
-                  className="pl-9 h-9 bg-white dark:bg-muted"
+                  className="pl-9 h-9 bg-muted"
                   value={filters.textQuery}
                   onChange={(e) => updateFilter('textQuery', e.target.value)}
                 />
@@ -151,7 +151,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
       {/* Desktop View (Table) */}
       <div className="hidden md:block overflow-x-auto">
         <table role="table" aria-label="Patient database" className="w-full text-sm text-left">
-          <thead className="bg-slate-50 dark:bg-card text-xs uppercase text-slate-500 dark:text-muted-foreground font-semibold">
+          <thead className="bg-card text-xs uppercase text-muted-foreground font-semibold">
             <tr>
               <th scope="col" className="px-4 py-3 w-28">Date</th>
               <th scope="col" className="px-4 py-3 w-48">Patient</th>
@@ -160,7 +160,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
               <th scope="col" className="px-4 py-3 text-center w-28">Grade</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-border bg-white dark:bg-background">
+          <tbody className="divide-y divide-border bg-background">
             {paginatedPatients.length > 0 ? (
               paginatedPatients.map((p, index) => {
                 const { events: timelineEvents } = parsePatientTimeline(p.history);
@@ -181,15 +181,15 @@ const PatientTable: React.FC<PatientTableProps> = ({
                     aria-label={`View details for patient: ${p.firstName} ${p.lastName}`}
                     title="Click to view patient details"
                   >
-                    <td className="px-4 py-3 whitespace-nowrap text-slate-500 dark:text-muted-foreground font-mono text-xs">
+                    <td className="px-4 py-3 whitespace-nowrap text-muted-foreground font-mono text-xs">
                       {formatDate(p.history.date)}
                     </td>
-                    <td className="px-4 py-3 font-medium text-slate-900 dark:text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">
+                    <td className="px-4 py-3 font-medium text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">
                       <div className="truncate max-w-[180px]" title={`${p.lastName}, ${p.firstName}`}>
                         {p.lastName}, {p.firstName}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-slate-600 dark:text-muted-foreground">
+                    <td className="px-4 py-3 text-muted-foreground">
                       <div className="line-clamp-1 max-w-xs" title={p.history.procedure}>
                         {p.history.procedure || <span className="italic text-muted-foreground">Unknown</span>}
                       </div>
@@ -208,7 +208,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                             title={`${e.time} - ${e.label}`}
                           />
                         ))}
-                        {timelineEvents.length === 0 && <span className="text-slate-400 dark:text-muted-foreground text-xs">-</span>}
+                        {timelineEvents.length === 0 && <span className="text-muted-foreground text-xs">-</span>}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -225,7 +225,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
               })
             ) : (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-500 dark:text-muted-foreground italic">
+                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground italic">
                   No matching records found.
                 </td>
               </tr>
@@ -235,7 +235,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
       </div>
 
       {/* Mobile View (Card List) */}
-      <div className="md:hidden divide-y divide-slate-100 dark:divide-border">
+      <div className="md:hidden divide-y divide-border">
         {paginatedPatients.length > 0 ? (
           paginatedPatients.map((p, index) => {
             const { events: timelineEvents } = parsePatientTimeline(p.history);
@@ -248,7 +248,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
               >
                 <div className="flex justify-between items-start mb-1 gap-2">
                   <div>
-                    <div className="font-bold text-slate-900 dark:text-foreground">
+                    <div className="font-bold text-foreground">
                       {p.lastName}, {p.firstName}
                     </div>
                     <div className="text-xs text-muted-foreground font-mono mt-0.5 truncate max-w-[200px]">
@@ -260,7 +260,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                   </Badge>
                 </div>
 
-                <div className="text-sm text-slate-600 dark:text-muted-foreground mt-1 line-clamp-1 italic">
+                <div className="text-sm text-muted-foreground mt-1 line-clamp-1 italic">
                   {p.history.procedure || 'Unknown Procedure'}
                 </div>
 
@@ -290,12 +290,12 @@ const PatientTable: React.FC<PatientTableProps> = ({
 
       {/* Pagination Controls */}
       {filteredPatients.length > 0 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/20">
-          <div className="text-xs text-slate-500 dark:text-muted-foreground hidden sm:block">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-border bg-slate-50/50 dark:bg-muted/20">
+          <div className="text-xs text-muted-foreground hidden sm:block">
             Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredPatients.length)} of {filteredPatients.length} records
           </div>
           <div
-            className="text-xs text-slate-500 dark:text-muted-foreground sm:hidden"
+            className="text-xs text-muted-foreground sm:hidden"
             aria-live="polite"
             aria-atomic="true"
           >

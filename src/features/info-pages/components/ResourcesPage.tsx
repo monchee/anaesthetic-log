@@ -75,7 +75,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           
           {resources.map((section, idx) => (
             <div key={idx}>
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-foreground uppercase tracking-wide mb-3">
+              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-3">
                 {section.category}
               </h3>
               <div className="space-y-3">
@@ -85,20 +85,20 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block bg-slate-50 dark:bg-card rounded-none p-4 border border-slate-200 dark:border-border hover:border-primary dark:hover:border-primary transition-colors group"
+                    className="block bg-card rounded-none p-4 border border-border hover:border-primary dark:hover:border-primary transition-colors group"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="p-2 bg-white dark:bg-card rounded-none border border-slate-200 dark:border-border shrink-0">
+                      <div className="p-2 bg-card rounded-none border border-border shrink-0">
                         {item.icon}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors">
+                          <h4 className="font-semibold text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">
                             {item.title}
                           </h4>
                           <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-primary dark:group-hover:text-primary transition-colors" />
                         </div>
-                        <p className="text-sm text-slate-600 dark:text-muted-foreground mt-1">
+                        <p className="text-sm text-muted-foreground mt-1">
                           {item.description}
                         </p>
                       </div>
@@ -110,8 +110,8 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           ))}
 
           {/* Disclaimer */}
-          <div className="bg-slate-100 dark:bg-card rounded-none p-4 border border-slate-200 dark:border-border">
-            <p className="text-xs text-slate-500 dark:text-muted-foreground">
+          <div className="bg-slate-100 dark:bg-card rounded-none p-4 border border-border">
+            <p className="text-xs text-muted-foreground">
               These links are provided for informational purposes. We are not responsible for the content 
               of external websites. Links were verified at the time of publication but may change.
             </p>

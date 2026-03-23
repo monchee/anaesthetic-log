@@ -20,7 +20,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
             <p className="text-slate-700 dark:text-foreground/80 leading-relaxed">
               <strong>Royal Prince Alfred Hospital (RPAH) Anaesthetic Allergy Clinic</strong> is committed to protecting the privacy and confidentiality of your personal and health information. This Privacy Policy explains how we collect, use, store, and safeguard information through this application.
             </p>
-            <p className="text-sm text-slate-500 dark:text-muted-foreground mt-3">
+            <p className="text-sm text-muted-foreground mt-3">
               Last updated: {lastUpdated}
             </p>
           </div>
@@ -39,12 +39,12 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Information We Collect */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Eye className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Information We Collect</h4>
+              <h4 className="font-semibold text-foreground">Information We Collect</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>The application may process the following types of information when you use REDCap data exports:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -64,12 +64,12 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* How We Use Your Information */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">How We Use Your Information</h4>
+              <h4 className="font-semibold text-foreground">How We Use Your Information</h4>
             </div>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-2 text-sm text-muted-foreground">
               <p>Your information is used solely for:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -93,12 +93,12 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Data Storage and Security */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Lock className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Data Storage and Security</h4>
+              <h4 className="font-semibold text-foreground">Data Storage and Security</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>We implement appropriate security measures to protect your information:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -122,12 +122,12 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Your Rights */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Your Rights</h4>
+              <h4 className="font-semibold text-foreground">Your Rights</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>Under the <strong>Health Records and Information Privacy Act 2002 (NSW)</strong> and the <strong>Privacy Act 1988 (Cth)</strong>, you have the right to:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -151,9 +151,9 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Cookies and Tracking */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Cookies and Tracking</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
+          <div className="bg-card rounded-none p-5 border border-border">
+            <h4 className="font-semibold text-foreground mb-4">Cookies and Tracking</h4>
+            <div className="space-y-2 text-sm text-muted-foreground">
               <p>This application does not use tracking cookies or third-party analytics. Any browser storage (localStorage) is used solely for:</p>
               <ul className="space-y-1 ml-4">
                 <li className="flex items-start gap-2">
@@ -181,7 +181,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
                 <p className="text-sm text-slate-700 dark:text-foreground/80">
                   For privacy-related enquiries or complaints, please contact the RPAH Department of Clinical Immunology & Allergy or the Sydney Local Health District Privacy Officer.
                 </p>
-                <p className="text-xs text-slate-600 dark:text-muted-foreground mt-2">
+                <p className="text-xs text-muted-foreground mt-2">
                   General enquiries can be made through the <button onClick={() => setScreen(Screen.CONTACT)} className="underline text-nsw-info dark:text-nsw-blue hover:opacity-80">Contact page</button>.
                 </p>
               </div>

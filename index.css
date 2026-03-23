@@ -137,7 +137,7 @@
 @layer components {
   /* Standard card styling */
   .card-compact {
-    @apply bg-slate-50 dark:bg-card border border-slate-200 dark:border-border rounded-none p-4 shadow-sm;
+    @apply bg-card border border-border rounded-none p-4 shadow-sm;
   }
 
   /* Card with hover effect */
@@ -167,8 +167,7 @@
   /* Section/field group label — replaces scattered text-[10px] uppercase patterns.
      Uses rem so it scales correctly with the FontSizeProvider (85%–125%). */
   .section-label {
-    @apply text-[0.625rem] font-bold uppercase tracking-wider
-           text-slate-500 dark:text-muted-foreground;
+    @apply text-[0.625rem] font-bold uppercase tracking-wider text-muted-foreground;
   }
 
   /* Screen-level entrance animation */
@@ -269,4 +268,30 @@ html {
   h2 { @apply text-2xl mb-3 sm:mb-3.5 lg:mb-4; }
   h3 { @apply text-xl mb-3; }
   h4 { @apply text-sm mb-2; }
+}
+
+/* ─── Dark Mode: Hardcoded Color Safety Net ─────────────────────────────────
+   Covers dynamic class strings and any remaining slate-* colors that weren't
+   caught by the semantic token migration. Two-class selectors (0,2,0) beat
+   single-class utilities (0,1,0), so these always win in dark mode.
+
+   Backgrounds are excluded — explicit dark:bg-card/xx opacity variants are
+   intentional and must not be overridden.                                   */
+@layer utilities {
+  /* ── Text ──────────────────────────────────────────────────────────────── */
+  .dark .text-slate-900 { color: hsl(var(--foreground)); }
+  .dark .text-slate-800 { color: hsl(var(--foreground)); }
+  .dark .text-slate-700 { color: hsl(var(--foreground) / 0.8); }
+  .dark .text-slate-600 { color: hsl(var(--muted-foreground)); }
+  .dark .text-slate-500 { color: hsl(var(--muted-foreground)); }
+  .dark .text-slate-400 { color: hsl(var(--muted-foreground) / 0.8); }
+
+  /* ── Borders ────────────────────────────────────────────────────────────── */
+  .dark .border-slate-100 { border-color: hsl(var(--border)); }
+  .dark .border-slate-200 { border-color: hsl(var(--border)); }
+  .dark .border-slate-300 { border-color: hsl(var(--border)); }
+
+  /* ── Dividers ────────────────────────────────────────────────────────────── */
+  .dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: hsl(var(--border)); }
+  .dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: hsl(var(--border)); }
 }

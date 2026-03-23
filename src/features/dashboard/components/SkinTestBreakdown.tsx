@@ -35,13 +35,13 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
 
   return (
     <Card className="w-full shadow-sm animate-enter-subtle">
-      <CardHeader className="py-4 border-b border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/20">
+      <CardHeader className="py-4 border-b border-border bg-slate-50/50 dark:bg-muted/20">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <CardTitle className="text-lg flex items-center gap-2 text-slate-900 dark:text-foreground">
+            <CardTitle className="text-lg flex items-center gap-2 text-foreground">
               <Thermometer className="w-5 h-5 text-primary" /> Positive Skin Test Breakdown
             </CardTitle>
-            <p className="text-sm text-slate-500 dark:text-muted-foreground">Number of positive patient reactions by drug (SPT/IDT &gt; 3mm or Positive Challenge).</p>
+            <p className="text-sm text-muted-foreground">Number of positive patient reactions by drug (SPT/IDT &gt; 3mm or Positive Challenge).</p>
           </div>
           <Button variant="outline" size="sm" onClick={toggleAllCategories} className="shrink-0 h-8">
             {areAllExpanded ? (
@@ -58,18 +58,18 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
       </CardHeader>
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm relative border-collapse">
-          <thead className="bg-slate-50 dark:bg-card text-xs uppercase text-slate-500 dark:text-muted-foreground font-semibold sticky top-0 z-10 shadow-sm">
+          <thead className="bg-card text-xs uppercase text-muted-foreground font-semibold sticky top-0 z-10 shadow-sm">
             <tr>
-              <th className="px-4 py-3 text-left bg-slate-50 dark:bg-card w-1/3">Drug</th>
-              <th className="px-4 py-3 text-center bg-slate-50 dark:bg-card">SPT</th>
-              <th className="px-4 py-3 text-center bg-slate-50 dark:bg-card">IDT 1:100</th>
-              <th className="px-4 py-3 text-center bg-slate-50 dark:bg-card">IDT 1:10</th>
-              <th className="px-4 py-3 text-center bg-slate-50 dark:bg-card">IDT Neat</th>
-              <th className="px-4 py-3 text-center bg-slate-50 dark:bg-card">Challenge Pos</th>
-              <th className="px-4 py-3 text-center bg-slate-100/50 dark:bg-muted/50 border-l border-slate-200 dark:border-border">Total Cases</th>
+              <th className="px-4 py-3 text-left bg-card w-1/3">Drug</th>
+              <th className="px-4 py-3 text-center bg-card">SPT</th>
+              <th className="px-4 py-3 text-center bg-card">IDT 1:100</th>
+              <th className="px-4 py-3 text-center bg-card">IDT 1:10</th>
+              <th className="px-4 py-3 text-center bg-card">IDT Neat</th>
+              <th className="px-4 py-3 text-center bg-card">Challenge Pos</th>
+              <th className="px-4 py-3 text-center bg-slate-100/50 dark:bg-muted/50 border-l border-border">Total Cases</th>
             </tr>
           </thead>
-          <tbody className="bg-white dark:bg-background">
+          <tbody className="bg-background">
             {statsByCategory.length > 0 ? (
               statsByCategory.map((categoryGroup, cIdx) => {
                 const isExpanded = expandedCategories.includes(categoryGroup.category);
@@ -79,16 +79,16 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                   <React.Fragment key={cIdx}>
                     <tr
                       style={{ '--row-index': Math.min(cIdx, 9) } as React.CSSProperties}
-                      className="bg-slate-50 dark:bg-card hover:bg-slate-100/80 dark:hover:bg-muted/80 border-b border-slate-200 dark:border-border cursor-pointer transition-colors animate-row-enter"
+                      className="bg-card hover:bg-slate-100/80 dark:hover:bg-muted/80 border-b border-border cursor-pointer transition-colors animate-row-enter"
                       onClick={() => toggleCategory(categoryGroup.category)}
                     >
                       <td colSpan={6} className="px-4 py-2.5">
-                        <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-foreground uppercase tracking-wide">
+                        <div className="flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-wide">
                           {isExpanded ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
                           {categoryGroup.category}
                         </div>
                       </td>
-                      <td className="px-4 py-2.5 text-center border-l border-slate-200 dark:border-border">
+                      <td className="px-4 py-2.5 text-center border-l border-border">
                         {totalCategoryPositives > 0 ? (
                           <span className="inline-flex items-center px-2 py-0.5 rounded-none text-xs font-medium bg-slate-100 dark:bg-card/50 text-slate-800 dark:text-primary">
                             {totalCategoryPositives}
@@ -101,13 +101,13 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                     {isExpanded && categoryGroup.stats.map((item, i) => (
                       <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-card/50 transition-colors border-b border-slate-50 dark:border-border animate-in fade-in slide-in-from-top-1">
                         <td className="px-4 py-3 font-medium text-slate-700 dark:text-foreground/80 pl-10 border-l-4 border-l-primary hover:border-l-primary transition-all">{item.name}</td>
-                        <td className="px-4 py-3 text-center text-slate-500 dark:text-muted-foreground">{item.spt || '-'}</td>
-                        <td className="px-4 py-3 text-center text-slate-500 dark:text-muted-foreground">{item.idt100 || '-'}</td>
-                        <td className="px-4 py-3 text-center text-slate-500 dark:text-muted-foreground">{item.idt10 || '-'}</td>
-                        <td className="px-4 py-3 text-center text-slate-500 dark:text-muted-foreground">{item.idtNeat || '-'}</td>
-                        <td className="px-4 py-3 text-center text-slate-500 dark:text-muted-foreground">{item.challenge || '-'}</td>
-                        <td className="px-4 py-3 text-center font-bold text-slate-900 dark:text-foreground bg-slate-50/30 dark:bg-card/30 border-l border-slate-100 dark:border-border">
-                          {item.total || <span className="text-slate-300 dark:text-muted-foreground font-normal">-</span>}
+                        <td className="px-4 py-3 text-center text-muted-foreground">{item.spt || '-'}</td>
+                        <td className="px-4 py-3 text-center text-muted-foreground">{item.idt100 || '-'}</td>
+                        <td className="px-4 py-3 text-center text-muted-foreground">{item.idt10 || '-'}</td>
+                        <td className="px-4 py-3 text-center text-muted-foreground">{item.idtNeat || '-'}</td>
+                        <td className="px-4 py-3 text-center text-muted-foreground">{item.challenge || '-'}</td>
+                        <td className="px-4 py-3 text-center font-bold text-foreground bg-slate-50/30 dark:bg-card/30 border-l border-border">
+                          {item.total || <span className="text-muted-foreground font-normal">-</span>}
                         </td>
                       </tr>
                     ))}

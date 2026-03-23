@@ -37,12 +37,12 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
               <code className={`text-sm font-mono font-bold px-2.5 py-1 ${
                 v.highlight
                   ? 'bg-primary/10 dark:bg-primary/20 text-primary'
-                  : 'bg-slate-100 dark:bg-muted text-slate-700 dark:text-foreground/80'
+                  : 'bg-muted text-slate-700 dark:text-foreground/80'
               }`}>
                 {v.version}
               </code>
               {v.codename && (
-                <span className="text-xs text-slate-400 dark:text-muted-foreground italic md:pl-0.5">
+                <span className="text-xs text-muted-foreground italic md:pl-0.5">
                   {v.codename}
                 </span>
               )}
@@ -57,12 +57,12 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
           {/* Right content with timeline */}
           <div className="flex-1 md:pl-8 relative">
             {/* Vertical timeline line */}
-            <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px bg-slate-200 dark:bg-muted" />
+            <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px bg-muted" />
             {/* Timeline dot */}
             <div className={`hidden md:block absolute left-0 top-1.5 -translate-x-1/2 w-3 h-3 rounded-full border-2 ${
               v.highlight
                 ? 'bg-primary border-primary'
-                : 'bg-white dark:bg-background border-slate-300 dark:border-border'
+                : 'bg-background border-border'
             }`} />
 
             <ul className="space-y-2 pt-0.5">
@@ -70,12 +70,12 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                 <li key={cIdx} className={`flex gap-2.5 text-sm leading-relaxed ${
                   v.highlight
                     ? 'text-slate-700 dark:text-foreground/80'
-                    : 'text-slate-600 dark:text-muted-foreground'
+                    : 'text-muted-foreground'
                 }`}>
                   {v.highlight ? (
                     <ArrowRight className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                   ) : (
-                    <span className="text-slate-300 dark:text-muted-foreground mt-0.5 shrink-0 select-none">—</span>
+                    <span className="text-muted-foreground mt-0.5 shrink-0 select-none">—</span>
                   )}
                   <span>{change}</span>
                 </li>

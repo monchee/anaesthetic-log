@@ -18,11 +18,11 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-4">
               <Gavel className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-2">Terms of Use</h3>
-                <p className="text-slate-600 dark:text-foreground/80 leading-relaxed">
+                <h3 className="font-semibold text-lg text-foreground mb-2">Terms of Use</h3>
+                <p className="text-muted-foreground leading-relaxed">
                   Welcome to The DREAM App. By accessing or using this application, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use this application.
                 </p>
-                <p className="text-sm text-slate-500 dark:text-muted-foreground mt-3">
+                <p className="text-sm text-muted-foreground mt-3">
                   Last updated: March 2026
                 </p>
               </div>
@@ -30,12 +30,12 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Acceptance of Terms */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <UserCheck className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">1. Acceptance of Terms</h4>
+              <h4 className="font-semibold text-foreground">1. Acceptance of Terms</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>
                 By accessing, browsing, or using this application, you acknowledge that you have read, understood, and agree to be bound by these Terms of Use. If you do not agree with any part of these terms, you must not use this application.
               </p>
@@ -46,9 +46,9 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Permitted Use */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">2. Permitted Use</h4>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+          <div className="bg-card rounded-none p-5 border border-border">
+            <h4 className="font-semibold text-foreground mb-4">2. Permitted Use</h4>
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>This application is intended for use by:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -71,9 +71,9 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* User Responsibilities */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">3. User Responsibilities</h4>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+          <div className="bg-card rounded-none p-5 border border-border">
+            <h4 className="font-semibold text-foreground mb-4">3. User Responsibilities</h4>
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>As a user of this application, you agree to:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -101,12 +101,12 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Intellectual Property */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Copyright className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">4. Intellectual Property</h4>
+              <h4 className="font-semibold text-foreground">4. Intellectual Property</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>
                 This application and its content, including but not limited to text, graphics, layout, and code, are owned by Sydney Local Health District and the Royal Prince Alfred Hospital Department of Clinical Immunology & Allergy.
               </p>
@@ -135,9 +135,9 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* No Warranty */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">6. No Warranty</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
+          <div className="bg-card rounded-none p-5 border border-border">
+            <h4 className="font-semibold text-foreground mb-4">6. No Warranty</h4>
+            <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 This application is provided "as is" without warranty of any kind, whether express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
               </p>
@@ -148,9 +148,9 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Limitation of Liability */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">7. Limitation of Liability</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
+          <div className="bg-card rounded-none p-5 border border-border">
+            <h4 className="font-semibold text-foreground mb-4">7. Limitation of Liability</h4>
+            <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 To the fullest extent permitted by law, Sydney Local Health District, RPAH, and their officers, employees, and agents shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from or related to your use of the application.
               </p>
@@ -161,9 +161,9 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Termination */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">8. Termination</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
+          <div className="bg-card rounded-none p-5 border border-border">
+            <h4 className="font-semibold text-foreground mb-4">8. Termination</h4>
+            <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 Sydney Local Health District reserves the right to suspend or terminate access to this application at any time, with or without notice, for any reason, including but not limited to breach of these Terms of Use.
               </p>
@@ -171,9 +171,9 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Governing Law */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">9. Governing Law</h4>
-            <div className="space-y-2 text-sm text-slate-600 dark:text-muted-foreground">
+          <div className="bg-card rounded-none p-5 border border-border">
+            <h4 className="font-semibold text-foreground mb-4">9. Governing Law</h4>
+            <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 These Terms of Use are governed by and construed in accordance with the laws of New South Wales, Australia. You agree to submit to the exclusive jurisdiction of the courts of New South Wales.
               </p>

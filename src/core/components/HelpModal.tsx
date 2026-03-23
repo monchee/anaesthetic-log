@@ -108,10 +108,10 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
 
           {/* Greeting */}
           <div className="border-l-4 border-primary pl-4 mb-5">
-            <h2 className="font-semibold text-slate-900 dark:text-white text-base mb-1">
+            <h2 className="font-semibold text-foreground text-base mb-1">
               Welcome to The DREAM App
             </h2>
-            <p className="text-sm text-slate-500 dark:text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Manage patient records, test results, and allergy workups from your REDCap database.
             </p>
           </div>
@@ -125,27 +125,27 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
             ].map(({ icon, label, desc }) => (
               <div key={label} className="flex items-center gap-3 text-sm">
                 <span className="bg-primary/10 dark:bg-primary/20 text-primary p-1.5 rounded-sm shrink-0">{icon}</span>
-                <span className="font-medium text-slate-800 dark:text-foreground/90 w-20 shrink-0">{label}</span>
-                <span className="text-slate-500 dark:text-muted-foreground">{desc}</span>
+                <span className="font-medium text-foreground/90 w-20 shrink-0">{label}</span>
+                <span className="text-muted-foreground">{desc}</span>
               </div>
             ))}
           </div>
 
-          <hr className="border-slate-200 dark:border-border mb-5" />
+          <hr className="border-border mb-5" />
 
           {/* CSV Upload Hero */}
           {onUploadPatients && (
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="w-full flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-slate-300 dark:border-border hover:border-red-600 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors cursor-pointer"
+              className="w-full flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-border hover:border-red-600 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors cursor-pointer"
             >
               <div className="flex items-center justify-center w-12 h-12 bg-red-600">
                 <Upload className="w-6 h-6 text-white" />
               </div>
               <div className="text-center">
-                <p className="font-semibold text-slate-900 dark:text-white text-sm">Upload REDCap CSV</p>
-                <p className="text-xs text-slate-500 dark:text-muted-foreground mt-1">
+                <p className="font-semibold text-foreground text-sm">Upload REDCap CSV</p>
+                <p className="text-xs text-muted-foreground mt-1">
                   Export using "CSV / Microsoft Excel (labels)" format
                 </p>
               </div>
@@ -158,7 +158,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(false)}
-              className="text-slate-500 hover:text-slate-900 dark:text-muted-foreground dark:hover:text-white text-xs"
+              className="text-slate-500 hover:text-muted-foreground dark:hover:text-white text-xs"
             >
               Skip for now
             </Button>

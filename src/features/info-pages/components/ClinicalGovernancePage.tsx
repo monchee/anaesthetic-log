@@ -18,8 +18,8 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
             <div className="flex items-start gap-4">
               <Hospital className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-slate-900 dark:text-white mb-2">RPAH Clinical Governance Framework</h3>
-                <p className="text-slate-600 dark:text-foreground/80 leading-relaxed">
+                <h3 className="font-semibold text-lg text-foreground mb-2">RPAH Clinical Governance Framework</h3>
+                <p className="text-muted-foreground leading-relaxed">
                   This application operates under the clinical governance framework of the Royal Prince Alfred Hospital (RPAH) Department of Clinical Immunology & Allergy, within the Sydney Local Health District (SLHD). Our governance practices align with the National Safety and Quality Health Service (NSQHS) Standards and the Australian Digital Health Agency's Clinical Governance Framework for digital health solutions.
                 </p>
               </div>
@@ -27,12 +27,12 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           </div>
 
           {/* Governance Structure */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Award className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Governance Structure</h4>
+              <h4 className="font-semibold text-foreground">Governance Structure</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>The application is developed and maintained under the oversight of:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -56,12 +56,12 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           </div>
 
           {/* Clinical Safety and Risk Management */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <AlertTriangle className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Clinical Safety and Risk Management</h4>
+              <h4 className="font-semibold text-foreground">Clinical Safety and Risk Management</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>We maintain clinical safety through:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -89,12 +89,12 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           </div>
 
           {/* Partnership with Consumers */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Users className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Partnership with Consumers</h4>
+              <h4 className="font-semibold text-foreground">Partnership with Consumers</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>We engage with patients and consumers to ensure our services meet their needs:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -118,12 +118,12 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           </div>
 
           {/* Clinical Effectiveness */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
+          <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <FileCheck className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-slate-900 dark:text-white">Clinical Effectiveness and Quality Improvement</h4>
+              <h4 className="font-semibold text-foreground">Clinical Effectiveness and Quality Improvement</h4>
             </div>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>We are committed to continuous improvement and evidence-based practice:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
@@ -147,26 +147,26 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           </div>
 
           {/* Alignment with Standards */}
-          <div className="bg-slate-50 dark:bg-card rounded-none p-5 border border-slate-200 dark:border-border">
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-4">Alignment with National Standards</h4>
-            <div className="space-y-3 text-sm text-slate-600 dark:text-muted-foreground">
+          <div className="bg-card rounded-none p-5 border border-border">
+            <h4 className="font-semibold text-foreground mb-4">Alignment with National Standards</h4>
+            <div className="space-y-3 text-sm text-muted-foreground">
               <p>This application aligns with the following frameworks:</p>
               <div className="grid md:grid-cols-2 gap-3 mt-3">
-                <div className="bg-white dark:bg-card p-3 rounded border border-slate-200 dark:border-border">
-                  <p className="font-medium text-slate-800 dark:text-foreground/90">NSQHS Standard 1</p>
-                  <p className="text-xs text-slate-500 dark:text-muted-foreground">Clinical Governance</p>
+                <div className="bg-card p-3 rounded border border-border">
+                  <p className="font-medium text-foreground/90">NSQHS Standard 1</p>
+                  <p className="text-xs text-muted-foreground">Clinical Governance</p>
                 </div>
-                <div className="bg-white dark:bg-card p-3 rounded border border-slate-200 dark:border-border">
-                  <p className="font-medium text-slate-800 dark:text-foreground/90">NSQHS Standard 2</p>
-                  <p className="text-xs text-slate-500 dark:text-muted-foreground">Partnering with Consumers</p>
+                <div className="bg-card p-3 rounded border border-border">
+                  <p className="font-medium text-foreground/90">NSQHS Standard 2</p>
+                  <p className="text-xs text-muted-foreground">Partnering with Consumers</p>
                 </div>
-                <div className="bg-white dark:bg-card p-3 rounded border border-slate-200 dark:border-border">
-                  <p className="font-medium text-slate-800 dark:text-foreground/90">ADHA Framework</p>
-                  <p className="text-xs text-slate-500 dark:text-muted-foreground">Digital Health Clinical Governance</p>
+                <div className="bg-card p-3 rounded border border-border">
+                  <p className="font-medium text-foreground/90">ADHA Framework</p>
+                  <p className="text-xs text-muted-foreground">Digital Health Clinical Governance</p>
                 </div>
-                <div className="bg-white dark:bg-card p-3 rounded border border-slate-200 dark:border-border">
-                  <p className="font-medium text-slate-800 dark:text-foreground/90">NSW Health Policy</p>
-                  <p className="text-xs text-slate-500 dark:text-muted-foreground">Privacy & Security</p>
+                <div className="bg-card p-3 rounded border border-border">
+                  <p className="font-medium text-foreground/90">NSW Health Policy</p>
+                  <p className="text-xs text-muted-foreground">Privacy & Security</p>
                 </div>
               </div>
             </div>
