@@ -31,6 +31,16 @@ vi.mock('../lib/utils', () => ({
   },
 }));
 
+// The Dashboard component imports parseRedcapCSV from @shared/utils (not lib/utils),
+// so we need a separate mock for that resolved path.
+vi.mock('@shared/utils', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../src/shared/utils')>();
+  return {
+    ...actual,
+    parseRedcapCSV: vi.fn(() => ({ success: true, data: [] })),
+  };
+});
+
 vi.mock('react-hot-toast', () => ({
   default: {
     success: vi.fn(),
@@ -233,10 +243,10 @@ describe('Dashboard', () => {
     });
 
     it('handles CSV file upload', async () => {
-      const { parseRedcapCSV } = await import('../lib/utils');
+      const { parseRedcapCSV } = await import('@shared/utils');
       (parseRedcapCSV as any).mockReturnValue({
         success: true,
-        data: [...mockPatients, {
+        data: [{
           id: '3',
           firstName: 'New',
           lastName: 'Patient',
@@ -273,7 +283,7 @@ describe('Dashboard', () => {
     });
 
     it('shows error message on failed CSV parse', async () => {
-      const { parseRedcapCSV } = await import('../lib/utils');
+      const { parseRedcapCSV } = await import('@shared/utils');
       (parseRedcapCSV as any).mockReturnValue({
         success: false,
         error: 'Invalid CSV format',

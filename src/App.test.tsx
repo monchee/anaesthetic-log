@@ -11,13 +11,13 @@ describe('App', () => {
   it('renders with theme provider', () => {
     render(<App />);
     // App should render the main layout
-    expect(document.querySelector('.min-h-screen')).toBeTruthy();
+    expect(document.querySelector('.min-h-svh')).toBeTruthy();
   });
 
   it('displays initial screen', () => {
     render(<App />);
-    // Should show the patient selection screen by default - there are multiple instances of this text
-    const headings = screen.getAllByText(/Anaesthetic Allergy Clinic/i);
+    // Should show the password gate screen with the app name
+    const headings = screen.getAllByText(/DREAM/i);
     expect(headings.length).toBeGreaterThan(0);
     expect(headings[0]).toBeInTheDocument();
   });
