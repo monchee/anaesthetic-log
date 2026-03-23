@@ -235,10 +235,10 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                                 {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
                                                 {drug}
                                                 {isDefault && (
-                                                    <Pin className="w-3 h-3 shrink-0 opacity-70" title="Standard pre-fill" />
+                                                    <Pin className="w-3 h-3 shrink-0 opacity-70" aria-label="Standard pre-fill" />
                                                 )}
                                                 {fromHistory && (
-                                                    <History className="w-3 h-3 shrink-0 opacity-70" title="Given at time of reaction" />
+                                                    <History className="w-3 h-3 shrink-0 opacity-70" aria-label="Given at time of reaction" />
                                                 )}
                                             </button>
                                             );

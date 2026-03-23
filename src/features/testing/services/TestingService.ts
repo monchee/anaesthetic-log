@@ -32,6 +32,12 @@ export class TestingService {
     if (formData.testPanel.length === 0) {
       errors.push('At least one drug test is required');
     }
+    const unnamedOtherRows = formData.testPanel.filter(
+      (row: DrugTestRow) => row.drugName === 'Other' && !row.customName?.trim()
+    );
+    if (unnamedOtherRows.length > 0) {
+      errors.push("Custom drug name must be specified for all 'Other' entries");
+    }
 
     // Challenge validation
     if (formData.proceedToChallenge) {

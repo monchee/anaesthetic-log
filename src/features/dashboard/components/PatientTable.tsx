@@ -6,7 +6,7 @@ import { Patient } from '@/types';
 import { AdvancedSearchFilters, AdvancedSearchPanel } from './AdvancedSearchFilters';
 import { CSVUploadInstructions } from './CSVUploadInstructions';
 import { exportDeidentifiedCSV, downloadFile } from '@shared/utils/auditExporter';
-import { SearchFilters } from '../hooks/useAdvancedSearch';
+import { AdvancedSearchFilters as SearchFilters } from '../hooks/useAdvancedSearch';
 
 interface PatientTableProps {
   paginatedPatients: Patient[];
@@ -17,7 +17,11 @@ interface PatientTableProps {
   updateFilter: (key: keyof SearchFilters, value: any) => void;
   clearFilters: () => void;
   activeFilterCount: number;
-  suggestions: Record<string, string[]>;
+  suggestions: {
+    procedures: string[];
+    hospitals: string[];
+    agents: string[];
+  };
   isFiltersExpanded: boolean;
   setIsFiltersExpanded: (expanded: boolean) => void;
   databaseDate: string;

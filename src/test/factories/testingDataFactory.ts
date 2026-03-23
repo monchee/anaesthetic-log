@@ -66,6 +66,14 @@ export function createMockTestingPlanData(overrides?: Partial<TestingPlanData>):
     selectedDrugs: ['Rocuronium', 'Propofol'],
     customDrugs: [],
     notes: 'Standard testing protocol',
+    urgent: false,
+    reactionDate: '',
+    documentsToChase: {
+      tryptases: false,
+      anaestheticChart: false,
+      other: false,
+      otherText: '',
+    },
   };
 
   return { ...defaultPlanData, ...overrides };

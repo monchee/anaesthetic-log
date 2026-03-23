@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { LogFormData, DrugTestRow } from '@/types';
-import { Calendar, Activity, Syringe, CheckCircle2, Check, X, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { Calendar, Activity, Syringe, CheckCircle2, Check, X, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Loader2 } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 import { useTestingLogLogic } from '../hooks/useTestingLogLogic';
+import { TestingService } from '../services/TestingService';
 
 interface TestingLogFormProps {
   formData: LogFormData;
@@ -131,6 +132,23 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     challengeOptions
   } = useTestingLogLogic({ formData, setFormData, drugCategories });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
+  const testingService = new TestingService();
+
+  const handleSave = () => {
+    const { isValid, errors } = testingService.validateForm(formData);
+    if (!isValid) {
+      setValidationErrors(errors);
+      return;
+    }
+    setValidationErrors([]);
+    setIsSubmitting(true);
+    onSubmit();
+    setIsSubmitting(false);
+  };
+
   return (
     <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-4 sm:mt-6 md:mt-8">
       
@@ -158,7 +176,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
                 <div className="flex items-center gap-2 md:gap-4 border-t md:border-t-0 pt-3 md:pt-0">
                     <Label htmlFor="visit-date" className="whitespace-nowrap text-base font-semibold text-slate-900 dark:text-primary flex items-center gap-2">
-                        <Calendar className="w-5 h-5" aria-hidden="true" /> Visit Date:
+                        <Calendar className="w-5 h-5" aria-hidden="true" /> Visit Date:<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
                     </Label>
                     <Input
                         id="visit-date"
@@ -191,7 +209,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
             {/* Selection Area: Categories */}
             <div className="space-y-4 mb-6">
                <div className="flex justify-between items-center border-b border-border pb-2">
-                   <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">Select Drugs to Test:</Label>
+                   <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">Select Drugs to Test:<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>
                    <Button
                      variant="ghost"
                      size="sm"
@@ -600,10 +618,21 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       </Card>
 
       {/* Save Action */}
-      <div className="pt-4 pb-20">
-         <Button onClick={onSubmit} size="lg" className="w-full h-14 text-lg shadow-lg hover:shadow-xl transition-all bg-primary hover:bg-primary font-semibold">
-             <Save className="w-5 h-5 mr-2" /> Save Clinical Record
-         </Button>
+      <div className="pt-4 pb-20 space-y-3">
+        {validationErrors.length > 0 && (
+          <div role="alert" className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive space-y-1">
+            <p className="font-semibold">Please fix the following before saving:</p>
+            <ul className="list-disc list-inside space-y-0.5">
+              {validationErrors.map((e, i) => <li key={i}>{e}</li>)}
+            </ul>
+          </div>
+        )}
+        <Button onClick={handleSave} disabled={isSubmitting} size="lg" className="w-full h-14 text-lg shadow-lg hover:shadow-xl transition-all bg-primary hover:bg-primary font-semibold">
+          {isSubmitting
+            ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Saving...</>
+            : <><Save className="w-5 h-5 mr-2" /> Save Clinical Record</>
+          }
+        </Button>
       </div>
 
     </div>
