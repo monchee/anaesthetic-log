@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Patient } from '../types';
-import { MOCK_PATIENTS } from '@shared/data/mockPatients';
 import { APP_CONFIG } from '@shared/utils/constants';
 
 export function usePatientState() {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [isPatientDialogOpen, setIsPatientDialogOpen] = useState(false);
-  const [patients, setPatients] = useState<Patient[]>(MOCK_PATIENTS);
+  const [patients, setPatients] = useState<Patient[]>([]);
+
+  useEffect(() => {
+    import('@shared/data/mockPatients').then(({ MOCK_PATIENTS }) => {
+      setPatients(prev => prev.length === 0 ? MOCK_PATIENTS : prev);
+    });
+  }, []);
   const [databaseDate, setDatabaseDate] = useState<string>(APP_CONFIG.DATABASE_DEFAULT_DATE);
   const [hasUploadedData, setHasUploadedData] = useState(false);
 

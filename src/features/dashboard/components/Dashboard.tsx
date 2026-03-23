@@ -38,10 +38,10 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
   const ITEMS_PER_PAGE = 10;
 
-  // Trigger chart animations on mount - reduced delay for less aggressive animation
+  // Trigger chart animations on mount
   useEffect(() => {
-    const timer = setTimeout(() => setAnimateCharts(true), 50);
-    return () => clearTimeout(timer);
+    const raf = requestAnimationFrame(() => setAnimateCharts(true));
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   // --- Analytics Calculation ---

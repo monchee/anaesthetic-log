@@ -184,7 +184,7 @@ export default defineConfig(() => {
             // Icons - heavily used throughout app
             'icons': ['lucide-react'],
             // Notifications
-            'notifications': ['react-hot-toast', 'sonner'],
+            'notifications': ['sonner'],
           },
         },
       },
