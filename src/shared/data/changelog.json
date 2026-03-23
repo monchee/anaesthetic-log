@@ -1,8 +1,19 @@
 [
   {
+    "version": "v0.42.0",
+    "codename": "Pancuronium",
+    "highlight": true,
+    "changes": [
+      "Dark mode now follows your device's system setting — the app automatically switches between light and dark based on your OS preference.",
+      "Manual light/dark toggle still available via the Menu, and your choice is remembered for future visits.",
+      "Dark mode completely overhauled — consistent styling across all screens, forms, reports, and info pages.",
+      "App rebranded to DREAM — Drug Reaction Evaluation and Anaesthetic Management."
+    ]
+  },
+  {
     "version": "v0.40.0",
     "codename": "Cisatracurium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Welcome guide added — a helpful instructions box now appears on the home screen to help you get started.",
       "Clear All buttons added — quickly deselect all drugs in one click when setting up your testing plan.",
