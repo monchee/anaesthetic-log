@@ -30,7 +30,9 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem(storageKey) as Theme) || defaultTheme
+      const stored = localStorage.getItem(storageKey) as Theme | null
+      if (stored === "light" || stored === "dark") return stored
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
     }
     return defaultTheme
   })
@@ -46,6 +48,18 @@ export function ThemeProvider({
       themeColorMeta.setAttribute('content', theme === 'dark' ? '#4D8FFF' : '#002664')
     }
   }, [theme])
+
+  // Follow OS theme changes when no manual preference is stored
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)")
+    const handler = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem(storageKey)) {
+        setTheme(e.matches ? "dark" : "light")
+      }
+    }
+    mq.addEventListener("change", handler)
+    return () => mq.removeEventListener("change", handler)
+  }, [storageKey])
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light"
