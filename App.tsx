@@ -4,14 +4,14 @@ import { LayoutDashboard, Stethoscope, FileText, User, Printer, Plus, ArrowLeft,
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
-import TestingLogForm from '@features/testing/components/TestingLogForm';
-import ClinicalReport from '@features/reports/components/ClinicalReport';
-import PatientHandout from '@features/reports/components/PatientHandout';
-import PowerchartLetter from '@features/reports/components/PowerchartLetter';
-import Dashboard from '@features/dashboard/components/Dashboard';
 import TestingPlanGenerator from '@features/testing/components/TestingPlanGenerator';
-import TestingPlanPrintView from '@features/testing/components/TestingPlanPrintView';
-import ResearchDashboard from '@features/research/components/ResearchDashboard';
+const TestingLogForm = React.lazy(() => import('@features/testing/components/TestingLogForm'));
+const ClinicalReport = React.lazy(() => import('@features/reports/components/ClinicalReport'));
+const PatientHandout = React.lazy(() => import('@features/reports/components/PatientHandout'));
+const PowerchartLetter = React.lazy(() => import('@features/reports/components/PowerchartLetter'));
+const Dashboard = React.lazy(() => import('@features/dashboard/components/Dashboard'));
+const TestingPlanPrintView = React.lazy(() => import('@features/testing/components/TestingPlanPrintView'));
+const ResearchDashboard = React.lazy(() => import('@features/research/components/ResearchDashboard'));
 import { ScreenLayout } from '@core/components/ScreenLayout';
 import { ThemeProvider } from '@core/components/ThemeProvider';
 import { FontSizeProvider } from '@core/components/FontSizeProvider';
@@ -22,7 +22,7 @@ import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from '@shared/utils/co
 import { showToast } from '@shared/utils';
 import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
 import { formatClinicalReportAsText, formatPatientHandoutAsText } from '@shared/utils/reportExporter';
-import { generateLetterText } from '@features/reports/components/PowerchartLetter';
+import { generateLetterText } from '@shared/utils/reportExporter';
 import { reportWebVitals } from './src/lib/analytics';
 import { findInfoPageRoute } from '@core/routes/infoPageConfig';
 import { useResearchSubmit } from '@features/research/hooks/useResearchSubmit';
@@ -428,7 +428,11 @@ function AnaestheticLogApp() {
     );
   };
 
-  return <>{renderScreenContent()}</>;
+  return (
+    <React.Suspense fallback={<div className="min-h-svh bg-background" />}>
+      {renderScreenContent()}
+    </React.Suspense>
+  );
 }
 
 function App() {
