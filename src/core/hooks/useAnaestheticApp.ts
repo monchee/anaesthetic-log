@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { toast } from 'sonner';
 import { usePatientState } from '@features/patients/hooks/usePatientState';
 import { useTestingState } from '@features/testing/hooks/useTestingState';
 import { useAppNavigation } from './useAppNavigation';
@@ -43,6 +44,7 @@ export function useAnaestheticApp() {
 
   const handleSubmit = () => {
     const savedRecord = originalHandleSubmit();
+    toast.success(`Record saved for ${savedRecord.lastName}, ${savedRecord.firstName}`, { duration: 4000 });
     navigation.setScreen(Screen.SUMMARY);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return savedRecord;

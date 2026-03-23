@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { parseRedcapCSV } from '@shared/utils';
 import { Screen, Patient, LogFormData } from '@/types';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { useCountUp } from '@shared/hooks/useCountUp';
 import { useDashboardAnalytics } from '../hooks/useDashboardAnalytics';
 import AnalyticsPanel from './AnalyticsPanel';
@@ -87,71 +87,40 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                     const duplicates = result.data.filter(p => existingIds.has(p.id));
 
                     if (duplicates.length > 0) {
-                        toast.error(
-                            <div className="flex flex-col gap-1">
-                                <span className="font-bold">Duplicate records detected</span>
-                                <span className="text-sm font-normal">
-                                    {duplicates.length} record(s) already exist in the database. Import would create duplicates.
-                                </span>
-                                <span className="text-xs text-muted-foreground mt-1">
-                                    {duplicates.length > 3 ? `First few: ${duplicates.slice(0, 3).map(d => d.id).join(', ')}...` : `IDs: ${duplicates.map(d => d.id).join(', ')}`}
-                                </span>
-                            </div>,
-                            { duration: 10000 }
-                        );
+                        const dupDetail = duplicates.length > 3
+                            ? `First few: ${duplicates.slice(0, 3).map(d => d.id).join(', ')}...`
+                            : `IDs: ${duplicates.map(d => d.id).join(', ')}`;
+                        toast.error('Duplicate records detected', {
+                            description: `${duplicates.length} record(s) already exist in the database. ${dupDetail}`,
+                            duration: 10000,
+                        });
                     } else {
                         onUploadPatients(result.data, file.lastModified);
-                        toast.success(
-                            <div className="flex flex-col gap-1">
-                                <span className="font-bold">Database updated</span>
-                                <span className="text-sm font-normal">Successfully loaded {result.data.length} records from CSV.</span>
-                                {result.details && (
-                                    <span className="text-xs text-amber-600 dark:text-amber-400 mt-1">
-                                        {result.details.join(' ')}
-                                    </span>
-                                )}
-                            </div>
-                        );
+                        toast.success('Database updated', {
+                            description: `Successfully loaded ${result.data.length} records from CSV.${result.details ? ` ${result.details.join(' ')}` : ''}`,
+                        });
                         setIsSheetOpen(false);
                     }
                 } else {
-                    toast.error(
-                        <div className="flex flex-col gap-1">
-                             <span className="font-bold">Failed to parse CSV file</span>
-                             <span className="text-sm font-normal">{result.error || "Please check the file format."}</span>
-                             <span className="text-xs text-muted-foreground mt-1">
-                                Make sure the CSV was exported from REDCap and has the correct headers.
-                             </span>
-                        </div>,
-                        { duration: 8000 }
-                    );
+                    toast.error('Failed to parse CSV file', {
+                        description: `${result.error || 'Please check the file format.'} Make sure the CSV was exported from REDCap and has the correct headers.`,
+                        duration: 8000,
+                    });
                 }
               } catch {
-                  toast.error(
-                    <div className="flex flex-col gap-1">
-                         <span className="font-bold">Error processing file</span>
-                         <span className="text-sm font-normal">An unexpected error occurred while processing the file.</span>
-                         <span className="text-xs text-muted-foreground mt-1">
-                            Please check the file format and try again. If the issue persists, contact IT support.
-                         </span>
-                    </div>,
-                    { duration: 8000 }
-                  );
+                  toast.error('Error processing file', {
+                      description: 'An unexpected error occurred. Please check the file format and try again.',
+                      duration: 8000,
+                  });
               } finally {
                   setIsUploading(false);
               }
           };
           reader.onerror = () => {
-              toast.error(
-                <div className="flex flex-col gap-1">
-                     <span className="font-bold">Error reading file</span>
-                     <span className="text-sm font-normal">Failed to read the file. It may be corrupted or in an unsupported format.</span>
-                     <span className="text-xs text-muted-foreground mt-1">
-                        Please try exporting the CSV again from REDCap and upload the new file.
-                     </span>
-                </div>,
-                { duration: 8000 }
-              );
+              toast.error('Error reading file', {
+                  description: 'Failed to read the file. It may be corrupted or in an unsupported format. Please try exporting from REDCap again.',
+                  duration: 8000,
+              });
               setIsUploading(false);
           };
           reader.readAsText(file);

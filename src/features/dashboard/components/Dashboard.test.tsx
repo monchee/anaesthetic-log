@@ -12,8 +12,8 @@ vi.mock('@shared/utils', async (importOriginal) => {
   };
 });
 
-vi.mock('react-hot-toast', () => ({
-  default: {
+vi.mock('sonner', () => ({
+  toast: {
     success: vi.fn(),
     error: vi.fn(),
   },
@@ -271,8 +271,8 @@ describe('Dashboard', () => {
       fireEvent.change(fileInput, { target: { files: [file] } });
 
       await waitFor(async () => {
-        const toast = await import('react-hot-toast');
-        expect(toast.default.error).toHaveBeenCalled();
+        const { toast } = await import('sonner');
+        expect(toast.error).toHaveBeenCalled();
       });
     });
   });

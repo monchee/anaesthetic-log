@@ -3,6 +3,7 @@ import { Download, RefreshCw, AlertCircle, FlaskConical, ChevronDown, ChevronUp,
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Progress } from '../../../../components/ui';
 import { fetchAllResults, exportToCsv, deleteResult } from '../services/ResearchService';
 import { ResearchRecord } from '../types';
+import { toast } from 'sonner';
 
 function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDelete: () => void }) {
   const [deleting, setDeleting] = useState(false);
@@ -15,9 +16,12 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
     setDeleteError(null);
     try {
       await deleteResult(record.id);
+      toast.success('Research record deleted');
       onDelete();
     } catch (err) {
-      setDeleteError(err instanceof Error ? err.message : 'Failed to delete record.');
+      const message = err instanceof Error ? err.message : 'Failed to delete record.';
+      setDeleteError(message);
+      toast.error('Failed to delete record', { description: message, duration: 8000 });
       setDeleting(false);
       setConfirmDelete(false);
     }

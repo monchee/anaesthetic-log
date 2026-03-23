@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { parseRedcapCSV } from '@shared/utils';
 import { Patient, Screen } from '@/types';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 interface HelpModalProps {
   onUploadPatients?: (patients: Patient[]) => void;
@@ -48,23 +48,18 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
 
           if (result.success) {
             onUploadPatients(result.data);
-            toast.success(
-              <div className="flex flex-col gap-1">
-                <span className="font-bold">Database updated</span>
-                <span className="text-sm font-normal">Successfully loaded {result.data.length} records from CSV.</span>
-              </div>
-            );
+            toast.success('Database updated', {
+              description: `Successfully loaded ${result.data.length} records from CSV.`,
+            });
             setIsOpen(false);
           } else {
-            toast.error(
-              <div className="flex flex-col gap-1">
-                <span className="font-bold">Failed to parse CSV</span>
-                <span className="text-sm font-normal">{result.error || "Please check the file format."}</span>
-              </div>
-            );
+            toast.error('Failed to parse CSV', {
+              description: result.error || 'Please check the file format.',
+              duration: 8000,
+            });
           }
         } catch {
-          toast.error("Error reading file");
+          toast.error('Error reading file', { duration: 8000 });
         }
       };
       reader.readAsText(file);
