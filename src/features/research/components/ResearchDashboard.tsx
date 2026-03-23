@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Download, RefreshCw, AlertCircle, FlaskConical, ChevronDown, ChevronUp, Trash2, Database, ClipboardList, TrendingUp, CheckCircle2, XCircle, Syringe, BarChart2, Trophy } from 'lucide-react';
+import { Download, RefreshCw, AlertCircle, FlaskConical, ChevronDown, ChevronUp, Trash2, Database, ClipboardList, TrendingUp, CheckCircle2, BarChart2, Trophy } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Progress } from '../../../../components/ui';
 import { fetchAllResults, exportToCsv, deleteResult } from '../services/ResearchService';
 import { ResearchRecord } from '../types';
@@ -324,7 +324,7 @@ export default function ResearchDashboard() {
           {stats.drugStats.length > 0 ? (
             <div className="divide-y divide-border">
               {stats.drugStats.map((d, i) => {
-                const { bar, text } = positivityColor(d.rate);
+                const { text } = positivityColor(d.rate);
                 const isTop = i === 0 && d.positive > 0;
                 return (
                   <div key={d.name} className="flex items-center gap-3 px-4 py-3">

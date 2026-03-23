@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, Button } from '@/components/ui';
-import { Eye, Lock, Home, AlertCircle, Mail } from 'lucide-react';
+import { Eye, Lock, Home, AlertCircle, Mail, Shield } from 'lucide-react';
 import { Screen } from '@shared/types';
 
 interface PrivacyPolicyPageProps {

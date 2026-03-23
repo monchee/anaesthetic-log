@@ -13,7 +13,6 @@ interface TestingPlanGeneratorProps {
 const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, drugCategories, onPreview }) => {
   // Drugs pre-selected based on patient's medication history before reaction
   const historyDrugs = useMemo(() => {
-    const allFlat = Object.values(drugCategories).flat().map(d => d.toLowerCase());
     const patientDrugs = [
       ...(patient.history.preInductionDrugs ?? []),
       ...(patient.history.postInductionDrugs ?? []),

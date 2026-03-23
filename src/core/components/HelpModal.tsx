@@ -29,6 +29,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
       setIsOpen(true);
       setScreen?.(Screen.LOG);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasData]);
 
   const handleClose = (open: boolean) => {

@@ -10,8 +10,6 @@ interface InfoPageRoute {
   component: React.LazyExoticComponent<React.ComponentType<{ setScreen: (s: Screen) => void }>>;
 }
 
-const APP_SUBTITLE = "RPAH Department of Clinical Immunology & Allergy";
-
 export const INFO_PAGE_ROUTES: InfoPageRoute[] = [
   {
     screen: Screen.CHANGELOG,

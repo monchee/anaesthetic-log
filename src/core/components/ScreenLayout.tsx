@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, Button } from '@/components/ui';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui';
 import { Sun, Moon, Menu, HelpCircle, Upload, Stethoscope, LayoutDashboard, Info, FlaskConical, Mail, BookOpen, ScrollText, Database } from 'lucide-react';
 import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
