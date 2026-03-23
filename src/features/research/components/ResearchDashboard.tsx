@@ -220,29 +220,31 @@ export default function ResearchDashboard() {
   return (
     <div className="space-y-4">
 
-      {/* Header + actions */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-            <Database className="w-4 h-4 text-primary" />
+      {/* Header + stat cards */}
+      <Card className="shadow-sm rounded-none">
+        <CardHeader className="pb-3 border-b border-border bg-card">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
+                <Database className="w-4 h-4 text-primary" />
+              </div>
+              <div>
+                <p className="font-semibold text-sm text-foreground">Research Database</p>
+                <p className="text-xs text-muted-foreground">{records.length} de-identified session{records.length !== 1 ? 's' : ''}</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={load} className="rounded-none">
+                <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Refresh
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => exportToCsv(records)} disabled={records.length === 0} className="rounded-none">
+                <Download className="w-3.5 h-3.5 mr-1.5" /> Export CSV
+              </Button>
+            </div>
           </div>
-          <div>
-            <p className="font-semibold text-sm text-foreground">Research Database</p>
-            <p className="text-xs text-muted-foreground">{records.length} de-identified session{records.length !== 1 ? 's' : ''}</p>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={load} className="rounded-none">
-            <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Refresh
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => exportToCsv(records)} disabled={records.length === 0} className="rounded-none">
-            <Download className="w-3.5 h-3.5 mr-1.5" /> Export CSV
-          </Button>
-        </div>
-      </div>
-
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        </CardHeader>
+        <CardContent className="pt-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
 
         {/* Sessions */}
         <div className="border border-border border-l-4 border-l-blue-500 bg-background p-4 rounded-none">
@@ -311,7 +313,9 @@ export default function ResearchDashboard() {
               : 'no challenges recorded'}
           </div>
         </div>
-      </div>
+        </div>
+        </CardContent>
+      </Card>
 
       {/* Drug positivity breakdown */}
       <Card className="shadow-sm rounded-none">
