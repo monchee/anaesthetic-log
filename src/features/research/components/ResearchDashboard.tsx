@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Download, RefreshCw, AlertCircle, FlaskConical, ChevronDown, ChevronUp, Trash2, Database, ClipboardList, TrendingUp, CheckCircle2, BarChart2, Trophy } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Progress } from '../../../../components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Progress, Skeleton } from '../../../../components/ui';
 import { fetchAllResults, exportToCsv, deleteResult } from '../services/ResearchService';
 import { ResearchRecord } from '../types';
 import { toast } from 'sonner';
@@ -193,8 +193,10 @@ export default function ResearchDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-16 text-muted-foreground">
-        <RefreshCw className="w-5 h-5 animate-spin mr-2" /> Loading research data…
+      <div className="space-y-3 py-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-14 w-full" />
+        ))}
       </div>
     );
   }

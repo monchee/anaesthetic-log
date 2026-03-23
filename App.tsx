@@ -40,7 +40,7 @@ function AnaestheticLogApp() {
     selectedPatient, lastSavedRecord, setLastSavedRecord,
     testingPlanData, setTestingPlanData,
     isPatientDialogOpen, setIsPatientDialogOpen,
-    patients, databaseDate, hasUploadedData, recentLogs,
+    patients, databaseDate, hasUploadedData, isLoadingPatients, recentLogs,
     showDisclaimer, handleDismissDisclaimer,
     handlePatientSelect, handleManualDetailChange,
     handleSubmit, handleUploadPatients, handleDashboardPatientSelect, resetForm,
@@ -89,7 +89,7 @@ function AnaestheticLogApp() {
             setScreen={setScreen} existingPatients={patients} recentLogs={recentLogs}
             drugOptions={FLAT_DRUG_OPTIONS} drugCategories={DRUG_CATEGORIES}
             onViewLog={(log) => { setLastSavedRecord(log); setScreen(Screen.SUMMARY); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            onSelectPatient={handleDashboardPatientSelect} onUploadPatients={handleUploadPatients} databaseDate={databaseDate} isCustomData={hasUploadedData}
+            onSelectPatient={handleDashboardPatientSelect} onUploadPatients={handleUploadPatients} databaseDate={databaseDate} isCustomData={hasUploadedData} isLoadingPatients={isLoadingPatients}
           />
         </ScreenLayout>
       );

@@ -22,9 +22,10 @@ interface DashboardProps {
   onUploadPatients: (patients: Patient[], fileLastModified?: number) => void;
   databaseDate: string;
   isCustomData?: boolean;
+  isLoadingPatients?: boolean;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate, isCustomData }) => {
+const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate, isCustomData, isLoadingPatients }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -217,6 +218,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
             handleNextPage={handleNextPage}
             handlePrevPage={handlePrevPage}
             allPatients={existingPatients}
+            isLoading={isLoadingPatients}
           />
         </div>
 

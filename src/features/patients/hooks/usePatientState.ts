@@ -6,10 +6,12 @@ export function usePatientState() {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [isPatientDialogOpen, setIsPatientDialogOpen] = useState(false);
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [isLoadingPatients, setIsLoadingPatients] = useState(true);
 
   useEffect(() => {
     import('@shared/data/mockPatients').then(({ MOCK_PATIENTS }) => {
       setPatients(prev => prev.length === 0 ? MOCK_PATIENTS : prev);
+      setIsLoadingPatients(false);
     });
   }, []);
   const [databaseDate, setDatabaseDate] = useState<string>(APP_CONFIG.DATABASE_DEFAULT_DATE);
@@ -47,6 +49,7 @@ export function usePatientState() {
     patients,
     databaseDate,
     hasUploadedData,
+    isLoadingPatients,
     handlePatientSelect,
     handleManualDetailChange,
     handleUploadPatients,

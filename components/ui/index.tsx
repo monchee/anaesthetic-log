@@ -62,7 +62,7 @@ export {
   TableHeader,
   TableRow,
 } from './table';
-export { Skeleton } from './skeleton';
+export { Skeleton, SkeletonText, SkeletonCard } from './skeleton';
 export { Progress } from './progress';
 export { Checkbox } from './checkbox';
 export { RadioGroup, RadioGroupItem } from './radio-group';

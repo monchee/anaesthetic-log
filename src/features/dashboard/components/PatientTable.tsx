@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, Button, Input, Badge } from '@/components/ui';
+import { Card, CardHeader, CardTitle, Button, Input, Badge, Skeleton } from '@/components/ui';
 import { ChevronLeft, ChevronRight, FileText, Search, Upload, Download } from 'lucide-react';
 import { formatDate, getGradeVariant, parsePatientTimeline } from '@shared/utils';
 import { Patient } from '@/types';
@@ -35,6 +35,7 @@ interface PatientTableProps {
   handleNextPage: () => void;
   handlePrevPage: () => void;
   allPatients: Patient[];
+  isLoading?: boolean;
 }
 
 const PatientTable: React.FC<PatientTableProps> = ({
@@ -60,6 +61,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
   handleNextPage,
   handlePrevPage,
   allPatients,
+  isLoading = false,
 }) => {
   const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
 
@@ -165,7 +167,17 @@ const PatientTable: React.FC<PatientTableProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-border bg-background">
-            {paginatedPatients.length > 0 ? (
+            {isLoading ? (
+              Array.from({ length: 10 }).map((_, i) => (
+                <tr key={i} className="border-b border-border">
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-20" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-32" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-40" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
+                  <td className="px-4 py-3 text-center"><Skeleton className="h-5 w-16 mx-auto" /></td>
+                </tr>
+              ))
+            ) : paginatedPatients.length > 0 ? (
               paginatedPatients.map((p, index) => {
                 const { events: timelineEvents } = parsePatientTimeline(p.history);
                 return (
@@ -227,10 +239,20 @@ const PatientTable: React.FC<PatientTableProps> = ({
                   </tr>
                 );
               })
-            ) : (
+            ) : activeFilterCount > 0 ? (
               <tr>
                 <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground italic">
                   No matching records found.
+                </td>
+              </tr>
+            ) : (
+              <tr>
+                <td colSpan={5} className="px-4 py-10 text-center">
+                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                    <Upload className="w-8 h-8 opacity-40" aria-hidden="true" />
+                    <p className="text-sm font-medium">No patient data loaded</p>
+                    <p className="text-xs">Upload a REDCap CSV to get started.</p>
+                  </div>
                 </td>
               </tr>
             )}
@@ -240,7 +262,15 @@ const PatientTable: React.FC<PatientTableProps> = ({
 
       {/* Mobile View (Card List) */}
       <div className="md:hidden divide-y divide-border">
-        {paginatedPatients.length > 0 ? (
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="p-4 border-b border-border space-y-2">
+              <Skeleton className="h-4 w-36" />
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-3 w-20" />
+            </div>
+          ))
+        ) : paginatedPatients.length > 0 ? (
           paginatedPatients.map((p, index) => {
             const { events: timelineEvents } = parsePatientTimeline(p.history);
             return (
@@ -285,9 +315,17 @@ const PatientTable: React.FC<PatientTableProps> = ({
               </div>
             );
           })
-        ) : (
+        ) : activeFilterCount > 0 ? (
           <div className="p-8 text-center text-muted-foreground italic text-sm">
             No matching records found.
+          </div>
+        ) : (
+          <div className="p-10 text-center">
+            <div className="flex flex-col items-center gap-2 text-muted-foreground">
+              <Upload className="w-8 h-8 opacity-40" aria-hidden="true" />
+              <p className="text-sm font-medium">No patient data loaded</p>
+              <p className="text-xs">Upload a REDCap CSV to get started.</p>
+            </div>
           </div>
         )}
       </div>
