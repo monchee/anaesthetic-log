@@ -1,13 +1,35 @@
 [
   {
+    "version": "v0.43.0",
+    "codename": "Rapacuronium",
+    "highlight": true,
+    "changes": [
+      "Loading animation added — the patient table now shows a smooth shimmer animation while data loads on startup.",
+      "Smarter empty states — the patient table shows a helpful upload prompt when no records are loaded, and a 'no matches' message only when filters are active.",
+      "Research page redesigned — the header and statistics are now grouped in a card for a cleaner, more consistent layout.",
+      "Research loading improved — the research page now shows a shimmer animation while data is fetching."
+    ]
+  },
+  {
     "version": "v0.42.0",
     "codename": "Pancuronium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Dark mode now follows your device's system setting — the app automatically switches between light and dark based on your OS preference.",
       "Manual light/dark toggle still available via the Menu, and your choice is remembered for future visits.",
       "Dark mode completely overhauled — consistent styling across all screens, forms, reports, and info pages.",
       "App rebranded to DREAM — Drug Reaction Evaluation and Anaesthetic Management."
+    ]
+  },
+  {
+    "version": "v0.41.0",
+    "codename": "Orocuronium",
+    "highlight": false,
+    "changes": [
+      "Notifications redesigned — success and error messages now use a modern toast style consistent throughout the app.",
+      "Save confirmation — a success message appears after saving a testing record so you know it worked.",
+      "Delete confirmation — removing a research record now shows a clear success or error message.",
+      "Upload feedback improved — CSV import now shows detailed success and error messages including record counts."
     ]
   },
   {
