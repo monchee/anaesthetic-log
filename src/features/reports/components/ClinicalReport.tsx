@@ -85,9 +85,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                         <tr className="border-b-2 border-slate-200 text-muted-foreground">
                           <th className="py-2 font-semibold print:py-1 print:text-[10px]">Drug Tested</th>
                           <th className="py-2 font-semibold print:py-1 print:text-[10px]">SPT</th>
-                          <th className="py-2 font-semibold print:py-1 print:text-[10px]">IDT 1:100</th>
-                          <th className="py-2 font-semibold print:py-1 print:text-[10px]">IDT 1:10</th>
-                          <th className="py-2 font-semibold print:py-1 print:text-[10px]">IDT Neat</th>
+                          <th className="py-2 font-semibold print:py-1 print:text-[10px]">IDT Results</th>
                           <th className="py-2 font-semibold print:py-1 print:text-[10px]">Notes</th>
                         </tr>
                      </thead>
@@ -98,9 +96,11 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                                {row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName}
                              </td>
                              <td className="py-2 print:py-1 print:text-xs">{row.sptWheal || '-'} mm</td>
-                             <td className="py-2 print:py-1 print:text-xs">{row.idt100 || '-'} mm</td>
-                             <td className="py-2 print:py-1 print:text-xs">{row.idt10 || '-'} mm</td>
-                             <td className="py-2 print:py-1 print:text-xs">{row.idtNeat || '-'} mm</td>
+                             <td className="py-2 print:py-1 print:text-xs">
+                               {row.idtResults?.length
+                                 ? row.idtResults.filter(Boolean).map((v, i) => `IDT ${i + 1}: ${v}mm`).join(' / ') || '-'
+                                 : [row.idt100 && `1:100: ${row.idt100}mm`, row.idt10 && `1:10: ${row.idt10}mm`, row.idtNeat && `Neat: ${row.idtNeat}mm`].filter(Boolean).join(' / ') || '-'}
+                             </td>
                              <td className="py-2 print:py-1 print:text-xs text-muted-foreground">{row.notes || ''}</td>
                           </tr>
                         ))}
@@ -121,16 +121,12 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                                  <span className="font-medium">{row.sptWheal || '-'} mm</span>
                               </div>
                               <div>
-                                 <span className="text-[10px] text-muted-foreground uppercase font-bold block">IDT 1:100</span>
-                                 <span className="font-medium">{row.idt100 || '-'} mm</span>
-                              </div>
-                              <div>
-                                 <span className="text-[10px] text-muted-foreground uppercase font-bold block">IDT 1:10</span>
-                                 <span className="font-medium">{row.idt10 || '-'} mm</span>
-                              </div>
-                              <div>
-                                 <span className="text-[10px] text-muted-foreground uppercase font-bold block">IDT Neat</span>
-                                 <span className="font-medium">{row.idtNeat || '-'} mm</span>
+                                 <span className="text-[10px] text-muted-foreground uppercase font-bold block">IDT Results</span>
+                                 <span className="font-medium">
+                                   {row.idtResults?.length
+                                     ? row.idtResults.filter(Boolean).map((v, i) => `IDT ${i + 1}: ${v}mm`).join(' / ') || '-'
+                                     : [row.idt100 && `1:100: ${row.idt100}mm`, row.idt10 && `1:10: ${row.idt10}mm`, row.idtNeat && `Neat: ${row.idtNeat}mm`].filter(Boolean).join(' / ') || '-'}
+                                 </span>
                               </div>
                           </div>
                           {row.notes && (

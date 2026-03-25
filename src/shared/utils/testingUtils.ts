@@ -3,11 +3,11 @@ import { DrugTestRow, LogFormData } from '@features/testing/types';
 // Testing utility functions
 
 export const isSkinTestPositive = (row: DrugTestRow): boolean => {
-    const spt = parseInt(row.sptWheal || '0', 10);
-    const idt100 = parseInt(row.idt100 || '0', 10);
-    const idt10 = parseInt(row.idt10 || '0', 10);
-    const idtNeat = parseInt(row.idtNeat || '0', 10);
-    return spt >= 3 || idt100 >= 3 || idt10 >= 3 || idtNeat >= 3;
+    const check = (v: string | undefined) => (parseInt(v ?? '0', 10) || 0) >= 3;
+    if (check(row.sptWheal)) return true;
+    if (row.idtResults?.some(v => check(v))) return true;
+    // Legacy fallback
+    return check(row.idt100) || check(row.idt10) || check(row.idtNeat);
 };
 
 export const getPositiveResults = (record: LogFormData) => {

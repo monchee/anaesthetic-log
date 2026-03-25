@@ -191,12 +191,10 @@ export class AnalyticsService {
    * Helper: Check if test is positive
    */
   private isPositive(test: any): boolean {
-    const spt = parseInt(test.sptWheal) || 0;
-    const idt100 = parseInt(test.idt100) || 0;
-    const idt10 = parseInt(test.idt10) || 0;
-    const idtNeat = parseInt(test.idtNeat) || 0;
-
-    return spt >= 3 || idt100 >= 3 || idt10 >= 3 || idtNeat >= 3;
+    const check = (v: string | undefined) => (parseInt(v ?? '0') || 0) >= 3;
+    if (check(test.sptWheal)) return true;
+    if (Array.isArray(test.idtResults) && test.idtResults.some((v: string) => check(v))) return true;
+    return check(test.idt100) || check(test.idt10) || check(test.idtNeat);
   }
 
   /**

@@ -109,9 +109,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
                 <tr className="border-b-2 border-slate-200 text-muted-foreground">
                   <th className="py-2 text-left font-semibold print:py-1 print:text-[10px]">Agent</th>
                   <th className="py-2 text-left font-semibold print:py-1 print:text-[10px]">SPT</th>
-                  <th className="py-2 text-left font-semibold print:py-1 print:text-[10px]">IDT 1:100</th>
-                  <th className="py-2 text-left font-semibold print:py-1 print:text-[10px]">IDT 1:10</th>
-                  <th className="py-2 text-left font-semibold print:py-1 print:text-[10px]">IDT Neat</th>
+                  <th className="py-2 text-left font-semibold print:py-1 print:text-[10px]">IDT Results</th>
                 </tr>
               </thead>
               <tbody>
@@ -122,9 +120,12 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
                     <tr key={i} className={`${i % 2 === 0 ? 'bg-slate-50 dark:bg-card/20' : 'bg-card'} border-b border-border ${isPositive ? 'font-bold' : ''} print:bg-white`}>
                       <td className={`py-2 print:py-1 ${isPositive ? 'text-red-700 dark:text-red-400 uppercase' : ''}`}>{drugName}</td>
                       <td className="py-2 print:py-1">{row.sptWheal || '-'} mm</td>
-                      <td className="py-2 print:py-1">{row.idt100 || '-'} mm</td>
-                      <td className="py-2 print:py-1">{row.idt10 || '-'} mm</td>
-                      <td className="py-2 print:py-1">{row.idtNeat || '-'} mm</td>
+                      <td className="py-2 print:py-1">
+                        {row.idtResults?.length
+                          ? row.idtResults.map((v, i) => v ? `IDT${i + 1}: ${v}mm` : null).filter(Boolean).join(' / ') || '-'
+                          : [row.idt100 && `1:100: ${row.idt100}mm`, row.idt10 && `1:10: ${row.idt10}mm`, row.idtNeat && `Neat: ${row.idtNeat}mm`].filter(Boolean).join(' / ') || '-'
+                        }
+                      </td>
                     </tr>
                   );
                 })}

@@ -2,8 +2,9 @@ import React from 'react';
 import { Button, Card, CardContent, Badge } from '@/components/ui';
 import { Patient, TestingPlanData } from '@/types';
 import { formatDate } from '@shared/utils';
-import { Printer, FileText, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText } from 'lucide-react';
+import { Printer, FileText, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText, FlaskConical } from 'lucide-react';
 import { formatTestingPlanAsText } from '@shared/utils/testingPlanFormatter';
+import { getSkinProtocolsForDrug, getProtocolsForDrug } from '@shared/data/drugMasterlist';
 
 interface TestingPlanPrintViewProps {
   patient: Patient;
@@ -138,44 +139,157 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                 </div>
             )}
 
-            {/* Selected Drugs List */}
+            {/* Requested Panel — Protocol Table */}
             <div className="mt-6 print:mt-1.5">
                 <h4 className="font-semibold text-[10px] uppercase tracking-widest border-b-2 border-slate-800 dark:border-border mb-3 pb-1 print:text-[10px] print:mb-1.5 print:pb-0.5 print:border-b flex items-center gap-1.5">
                     <span className="inline-block w-0.5 h-3 bg-primary shrink-0" />
-                    <FileText className="w-4 h-4 print:w-3 print:h-3" /> Requested Panel
+                    <FileText className="w-4 h-4 print:w-3 print:h-3" /> Requested Skin Testing Panel
                 </h4>
 
+                {/* Reference Controls */}
+                <div className="mb-3 print:mb-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-xs print:text-[10px]">
+                    <span className="font-semibold text-muted-foreground uppercase tracking-wide text-[10px] print:text-[9px]">Reference Controls:</span>
+                    {[
+                        { label: 'Histamine (SPT)', unit: 'mm' },
+                        { label: 'Saline (SPT)', unit: 'mm' },
+                        { label: 'Saline (IDT)', unit: 'mm' },
+                    ].map(({ label, unit }) => (
+                        <span key={label} className="flex items-center gap-1">
+                            <span className="text-slate-700 dark:text-foreground/80 print:text-slate-700">{label}</span>
+                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[3rem]" />
+                            <span className="text-muted-foreground text-[9px]">{unit}</span>
+                        </span>
+                    ))}
+                </div>
+
                 {selectedDrugs.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 print:grid-cols-3 print:gap-2">
-                        {/* Group selected drugs by category for display */}
+                    <div className="space-y-4 print:space-y-2">
                         {Object.entries(drugCategories).map(([category, drugs]) => {
                             const activeInCat = (drugs as string[]).filter(d => selectedDrugs.includes(d));
                             if (activeInCat.length === 0) return null;
-
                             return (
-                                <div key={category} className="break-inside-avoid mb-0 bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-3 print:mb-0 print:p-2 print:bg-white print:border-slate-300">
-                                    <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary border-b border-border pb-1 mb-1.5 print:text-[9px] print:pb-0.5 print:mb-1">{category}</h5>
-                                    <ul className="space-y-1 print:space-y-0">
-                                        {activeInCat.map(d => (
-                                            <li key={d} className="flex items-center gap-2 text-sm text-slate-700 dark:text-foreground/80 print:text-xs print:gap-1.5">
-                                                <span className="w-1.5 h-1.5 bg-primary/40 shrink-0 inline-block print:w-1 print:h-1" />
-                                                {d}
-                                            </li>
-                                        ))}
+                                <div key={category} className="break-inside-avoid bg-slate-50 dark:bg-card/30 border border-border rounded-lg overflow-hidden print:bg-white print:border-slate-300">
+                                    <div className="px-3 py-1.5 bg-slate-100 dark:bg-card/50 border-b border-border rounded-t-lg print:bg-slate-100 print:border-slate-300">
+                                        <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary print:text-[9px]">{category}</h5>
+                                    </div>
+
+                                    {/* Mobile card list — hidden on md+ and print */}
+                                    <ul className="divide-y divide-border/50 md:hidden print:hidden">
+                                        {activeInCat.map(d => {
+                                            const protocols = getSkinProtocolsForDrug(d);
+                                            const protocolIdx = data.selectedProtocols?.[d] ?? 0;
+                                            const protocol = protocols[protocolIdx] ?? protocols[0];
+                                            return (
+                                                <li key={d} className="px-3 py-2 space-y-1.5 text-xs">
+                                                    <div className="font-medium text-slate-800 dark:text-foreground/90">
+                                                        {d}
+                                                        {protocols.length > 1 && protocol && (
+                                                            <span className="ml-1 text-[10px] text-muted-foreground">({protocol.protocolLabel})</span>
+                                                        )}
+                                                    </div>
+                                                    {protocol?.presentation && (
+                                                        <div className="text-muted-foreground">{protocol.presentation}</div>
+                                                    )}
+                                                    <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                                                        <div className="text-muted-foreground">
+                                                            <span className="font-medium text-slate-700 dark:text-foreground/80">SPT prep:</span> {protocol?.sptNeatConcentration || '—'}
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <span className="font-medium text-slate-700 dark:text-foreground/80">SPT:</span>
+                                                            <span className="border-b border-gray-400 inline-block min-w-[2.5rem]" />
+                                                            <span className="text-muted-foreground text-[10px]">mm</span>
+                                                        </div>
+                                                    </div>
+                                                    {protocol?.idtSteps && protocol.idtSteps.length > 0 && (
+                                                        <div className="space-y-1">
+                                                            <span className="font-medium text-slate-700 dark:text-foreground/80">IDT:</span>
+                                                            {protocol.idtSteps.map((s, i) => (
+                                                                <div key={i} className="flex items-center gap-2 font-mono pl-2">
+                                                                    <span className="text-muted-foreground">{s.ratio}{s.concentration ? ` (${s.concentration})` : ''}</span>
+                                                                    <span className="border-b border-gray-400 inline-block min-w-[2.5rem]" />
+                                                                    <span className="text-muted-foreground text-[10px]">mm</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
+
+                                    {/* Desktop/print table — hidden on mobile */}
+                                    <table className="hidden md:table print:table w-full text-xs print:text-[9px]">
+                                        <thead>
+                                            <tr className="border-b border-border text-muted-foreground uppercase text-[9px] tracking-wide print:border-slate-300">
+                                                <th className="text-left px-3 py-1.5 font-semibold w-1/5">Drug</th>
+                                                <th className="text-left px-3 py-1.5 font-semibold w-1/5">Presentation</th>
+                                                <th className="text-left px-3 py-1.5 font-semibold w-1/5">SPT Preparation</th>
+                                                <th className="text-center px-3 py-1.5 font-semibold w-[70px]">SPT Result</th>
+                                                <th className="text-left px-3 py-1.5 font-semibold">IDT Protocol / Result</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {activeInCat.map(d => {
+                                                const protocols = getSkinProtocolsForDrug(d);
+                                                const protocolIdx = data.selectedProtocols?.[d] ?? 0;
+                                                const protocol = protocols[protocolIdx] ?? protocols[0];
+                                                return (
+                                                    <tr key={d} className="border-b border-border/50 last:border-0 print:border-slate-200">
+                                                        <td className="px-3 py-2 font-medium text-slate-700 dark:text-foreground/90 print:text-slate-800">
+                                                            {d}
+                                                            {protocols.length > 1 && protocol && (
+                                                                <span className="ml-1 text-[8px] text-muted-foreground">({protocol.protocolLabel})</span>
+                                                            )}
+                                                        </td>
+                                                        <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.presentation || '—'}</td>
+                                                        <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.sptNeatConcentration || '—'}</td>
+                                                        <td className="px-3 py-2 text-center">
+                                                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[3rem]" />
+                                                            <span className="text-muted-foreground text-[9px] ml-0.5">mm</span>
+                                                        </td>
+                                                        <td className="px-3 py-2 text-muted-foreground font-mono print:text-slate-600">
+                                                            {protocol?.idtSteps && protocol.idtSteps.length > 0 ? (
+                                                                <div className="space-y-1">
+                                                                    {protocol.idtSteps.map((s, i) => (
+                                                                        <div key={i} className="flex items-center gap-2">
+                                                                            <span>{s.ratio}{s.concentration ? ` (${s.concentration})` : ''}</span>
+                                                                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[3rem]" />
+                                                                            <span className="text-muted-foreground text-[9px]">mm</span>
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            ) : '—'}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
                                 </div>
                             );
                         })}
 
-                        {/* Custom Drugs Group */}
-                        {customDrugs.filter(d => selectedDrugs.includes(d)).length > 0 && (
-                            <div className="break-inside-avoid mb-0 bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-3 print:mb-0 print:p-2 print:bg-white print:border-slate-300">
-                                <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary border-b border-border pb-1 mb-1.5 print:text-[9px] print:pb-0.5 print:mb-1">Additional</h5>
-                                <ul className="space-y-1 print:space-y-0">
-                                    {customDrugs.filter(d => selectedDrugs.includes(d)).map(d => (
-                                        <li key={d} className="flex items-center gap-2 text-sm text-slate-700 dark:text-foreground/80 print:text-xs print:gap-1.5">
-                                            <span className="w-1.5 h-1.5 bg-primary/40 shrink-0 inline-block print:w-1 print:h-1" />
-                                            {d}
+                        {/* Custom Drugs */}
+                        {customDrugs.filter(e => selectedDrugs.includes(e.name)).length > 0 && (
+                            <div className="break-inside-avoid bg-slate-50 dark:bg-card/30 border border-border rounded-lg overflow-hidden print:bg-white print:border-slate-300">
+                                <div className="px-3 py-1.5 bg-slate-100 dark:bg-card/50 border-b border-border print:bg-slate-100">
+                                    <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary print:text-[9px]">Additional</h5>
+                                </div>
+                                <ul className="divide-y divide-border/50 print:divide-slate-200">
+                                    {customDrugs.filter(e => selectedDrugs.includes(e.name)).map(entry => (
+                                        <li key={entry.name} className="px-3 py-2 print:text-xs">
+                                            <div className="font-medium text-sm text-slate-700 dark:text-foreground/80 print:text-xs">{entry.name}</div>
+                                            {(entry.sptConcentration || (entry.idtSteps && entry.idtSteps.length > 0)) ? (
+                                                <div className="mt-0.5 text-xs text-muted-foreground space-y-0.5 print:text-[10px]">
+                                                    {entry.sptConcentration && <div>SPT: {entry.sptConcentration}</div>}
+                                                    {entry.idtSteps?.map((step, i) => (
+                                                        <div key={i}>IDT {i + 1}: {step.ratio}{step.concentration ? ` — ${step.concentration}` : ''}</div>
+                                                    ))}
+                                                    {entry.includeInChallenge && <div>Drug Challenge: Yes</div>}
+                                                </div>
+                                            ) : (
+                                                <span className="text-muted-foreground italic text-xs">protocol not in library</span>
+                                            )}
                                         </li>
                                     ))}
                                 </ul>
@@ -186,7 +300,98 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                     <p className="text-muted-foreground italic print:text-xs">No drugs selected.</p>
                 )}
             </div>
+
+            {/* Challenge Protocols section */}
+            {(() => {
+                const challengeDrugs = selectedDrugs.filter(d => {
+                    const protos = getProtocolsForDrug(d);
+                    return protos.some(p => p.testType === 'challenge' && p.challengeSteps.length > 0);
+                });
+                if (challengeDrugs.length === 0) return null;
+                return (
+                    <div className="mt-6 print:mt-2">
+                        <h4 className="font-semibold text-[10px] uppercase tracking-widest border-b-2 border-slate-800 dark:border-border mb-3 pb-1 print:text-[10px] print:mb-1.5 print:pb-0.5 print:border-b flex items-center gap-1.5">
+                            <span className="inline-block w-0.5 h-3 bg-primary shrink-0" />
+                            <FlaskConical className="w-4 h-4 print:w-3 print:h-3" /> Challenge / Desensitisation Protocols
+                        </h4>
+                        <div className="space-y-4 print:space-y-2">
+                            {challengeDrugs.map(d => {
+                                const challengeProtos = getProtocolsForDrug(d).filter(p => p.testType === 'challenge' && p.challengeSteps.length > 0);
+                                return challengeProtos.map((proto, pi) => (
+                                    <div key={`${d}-${pi}`} className="break-inside-avoid bg-slate-50 dark:bg-card/30 border border-border rounded-lg overflow-hidden print:bg-white print:border-slate-300">
+                                        <div className="px-3 py-1.5 bg-slate-100 dark:bg-card/50 border-b border-border rounded-t-lg print:bg-slate-100">
+                                            <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary print:text-[9px]">
+                                                {d} — {proto.protocolLabel} {proto.presentation ? `(${proto.presentation})` : ''}
+                                            </h5>
+                                        </div>
+
+                                        {/* Mobile card list — hidden on md+ and print */}
+                                        <ul className="divide-y divide-border/50 md:hidden print:hidden">
+                                            {proto.challengeSteps.map(step => (
+                                                <li key={step.step} className="px-3 py-2 text-xs space-y-1">
+                                                    <div className="flex items-baseline gap-2">
+                                                        <span className="font-mono text-muted-foreground w-10 shrink-0">Step {step.step}</span>
+                                                        <span className="font-medium text-slate-800 dark:text-foreground/90">{step.dose}</span>
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-x-4 text-muted-foreground pl-12">
+                                                        {step.volume && <div>Vol: {step.volume}</div>}
+                                                        {step.cumulative && <div>Cumul: {step.cumulative}</div>}
+                                                    </div>
+                                                    <div className="flex items-center gap-2 pl-12">
+                                                        <span className="text-muted-foreground">Result:</span>
+                                                        <span className="border-b border-gray-400 inline-block min-w-[6rem]" />
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        {/* Desktop/print table — hidden on mobile */}
+                                        <table className="hidden md:table print:table w-full text-xs print:text-[9px]">
+                                            <thead>
+                                                <tr className="border-b border-border text-muted-foreground uppercase text-[9px] tracking-wide print:border-slate-300">
+                                                    <th className="text-left px-3 py-1.5 font-semibold w-12">Step</th>
+                                                    <th className="text-left px-3 py-1.5 font-semibold">Dose</th>
+                                                    <th className="text-left px-3 py-1.5 font-semibold">Volume</th>
+                                                    <th className="text-left px-3 py-1.5 font-semibold">Cumulative</th>
+                                                    <th className="text-left px-3 py-1.5 font-semibold">Result / Observations</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {proto.challengeSteps.map(step => (
+                                                    <tr key={step.step} className="border-b border-border/50 last:border-0 print:border-slate-200">
+                                                        <td className="px-3 py-2 font-mono text-muted-foreground">{step.step}</td>
+                                                        <td className="px-3 py-2 font-medium text-slate-700 dark:text-foreground/90 print:text-slate-800">{step.dose}</td>
+                                                        <td className="px-3 py-2 text-muted-foreground">{step.volume || '—'}</td>
+                                                        <td className="px-3 py-2 text-muted-foreground">{step.cumulative || '—'}</td>
+                                                        <td className="px-3 py-2">
+                                                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[6rem]" />
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ));
+                            })}
+                        </div>
+                    </div>
+                );
+            })()}
             
+            {/* Nurse / Time / Date sign-off */}
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-1 text-xs print:text-[10px] pt-4 print:pt-2">
+                {[
+                    { label: 'Date of testing', width: 'min-w-[6rem]' },
+                    { label: 'Time', width: 'min-w-[4rem]' },
+                    { label: 'Nurse', width: 'min-w-[10rem]' },
+                ].map(({ label, width }) => (
+                    <span key={label} className="flex items-center gap-1.5">
+                        <span className="font-semibold text-slate-700 dark:text-foreground/80 print:text-slate-700">{label}:</span>
+                        <span className={`border-b border-gray-400 print:border-gray-500 inline-block ${width}`} />
+                    </span>
+                ))}
+            </div>
+
             {/* Signature Area */}
             <div className="pt-6 border-t border-border print:pt-3">
                 <div className="flex justify-between gap-12 print:gap-6">

@@ -1,4 +1,5 @@
 import { Patient, TestingPlanData } from '@/types';
+import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 
 export function formatTestingPlanAsText(
   patient: Patient,
@@ -46,7 +47,7 @@ export function formatTestingPlanAsText(
     lines.push('');
   }
 
-  // Selected drugs grouped by category
+  // Selected drugs grouped by category, with protocol details
   lines.push('REQUESTED TESTING PANEL');
   lines.push('-----------------------');
   let hasAnyDrug = false;
@@ -54,15 +55,30 @@ export function formatTestingPlanAsText(
     const active = (drugs as string[]).filter(d => selectedDrugs.includes(d));
     if (active.length > 0) {
       lines.push(`${category}:`);
-      active.forEach(d => lines.push(`  - ${d}`));
+      active.forEach(d => {
+        const protocols = getSkinProtocolsForDrug(d);
+        const protocolIdx = data.selectedProtocols?.[d] ?? 0;
+        const protocol = protocols[protocolIdx] ?? protocols[0];
+        if (protocol?.sptNeatConcentration) {
+          const idtChain = protocol.idtSteps.map(s => `${s.ratio}${s.concentration ? ` (${s.concentration})` : ''}`).join(' → ');
+          const protocolNote = idtChain ? `SPT: ${protocol.sptNeatConcentration} | IDT: ${idtChain}` : `SPT: ${protocol.sptNeatConcentration}`;
+          lines.push(`  - ${d}${protocol.presentation ? ` (${protocol.presentation})` : ''}`);
+          lines.push(`      ${protocolNote}`);
+        } else {
+          lines.push(`  - ${d}`);
+        }
+      });
       hasAnyDrug = true;
     }
   }
-  // Custom drugs
-  const activeCustom = customDrugs.filter(d => selectedDrugs.includes(d));
+  const activeCustom = customDrugs.filter(e => selectedDrugs.includes(e.name));
   if (activeCustom.length > 0) {
     lines.push('Additional:');
-    activeCustom.forEach(d => lines.push(`  - ${d}`));
+    activeCustom.forEach(e => {
+      const spt = e.sptConcentration ? ` | SPT: ${e.sptConcentration}` : '';
+      const idt = e.idtSteps?.length ? ` | IDT: ${e.idtSteps.map(s => s.ratio).filter(Boolean).join(', ')}` : '';
+      lines.push(`  - ${e.name}${spt}${idt}`);
+    });
     hasAnyDrug = true;
   }
   if (!hasAnyDrug) {

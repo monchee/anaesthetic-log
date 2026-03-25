@@ -1,8 +1,22 @@
 [
   {
+    "version": "v0.44.0",
+    "codename": "Suxamethonium",
+    "highlight": true,
+    "changes": [
+      "Drug protocol library added — each drug now has a built-in testing protocol with the correct SPT concentration, IDT dilution chain, and challenge steps.",
+      "Protocol-driven testing form — IDT columns now adapt automatically to match the number of dilution steps in each drug's protocol.",
+      "Multiple protocol variants — drugs with more than one accepted testing protocol (e.g. Sugammadex alone vs. with Rocuronium) let you choose the relevant variant.",
+      "Custom drug support — when adding unlisted drugs, you can now configure your own SPT concentration, IDT dilution steps, and whether to include in graded challenge.",
+      "Drug search added — filter the drug list in both the testing form and plan generator to quickly find what you need.",
+      "Proton Pump Inhibitors category added — Omeprazole, Pantoprazole, Esomeprazole, and others now appear as a dedicated drug group.",
+      "Reports updated — clinical reports and Powerchart letters now display IDT results dynamically based on the protocol used, with automatic fallback for older records."
+    ]
+  },
+  {
     "version": "v0.43.0",
     "codename": "Rapacuronium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Loading animation added — the patient table now shows a smooth shimmer animation while data loads on startup.",
       "Smarter empty states — the patient table shows a helpful upload prompt when no records are loaded, and a 'no matches' message only when filters are active.",

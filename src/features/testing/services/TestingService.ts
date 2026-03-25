@@ -102,17 +102,30 @@ export class TestingService {
   }
 
   /**
-   * Get recent testing logs
+   * Get recent testing logs, migrating any legacy DrugTestRow records on read.
    */
   getRecentLogs(): LogFormData[] {
     try {
       const data = localStorage.getItem(this.STORAGE_KEY);
       if (!data) return [];
-      return JSON.parse(data);
+      const logs = JSON.parse(data) as LogFormData[];
+      return logs.map(log => ({
+        ...log,
+        testPanel: (log.testPanel || []).map(this.migrateRow),
+      }));
     } catch (error) {
       console.error('Error reading recent logs:', error);
       return [];
     }
+  }
+
+  private migrateRow(row: any): DrugTestRow {
+    if (Array.isArray(row.idtResults)) return row as DrugTestRow;
+    return {
+      ...row,
+      idtResults: [row.idt100 ?? '', row.idt10 ?? '', row.idtNeat ?? ''],
+      protocolIndex: 0,
+    };
   }
 
   /**
@@ -129,15 +142,14 @@ export class TestingService {
   }
 
   /**
-   * Check if skin test is positive
+   * Check if skin test is positive (≥3mm). Handles new idtResults array and legacy fields.
    */
   isSkinTestPositive(test: DrugTestRow): boolean {
-    const spt = parseInt(test.sptWheal) || 0;
-    const idt100 = parseInt(test.idt100) || 0;
-    const idt10 = parseInt(test.idt10) || 0;
-    const idtNeat = parseInt(test.idtNeat) || 0;
-
-    return spt >= 3 || idt100 >= 3 || idt10 >= 3 || idtNeat >= 3;
+    const check = (v: string | undefined) => (parseInt(v ?? '0') || 0) >= 3;
+    if (check(test.sptWheal)) return true;
+    if (test.idtResults?.some(v => check(v))) return true;
+    // Legacy fallback
+    return check(test.idt100) || check(test.idt10) || check(test.idtNeat);
   }
 
   /**

@@ -1,4 +1,5 @@
 import { CategoryTheme } from '../types';
+import { getDrugsByCategory } from '../data/drugMasterlist';
 
 // Shared Constants and Configuration
 
@@ -101,6 +102,17 @@ export const CATEGORY_THEMES: Record<string, CategoryTheme> = {
     pulse: "bg-amber-500",
     rowBorder: "border-l-amber-500",
     actionText: "text-amber-600 dark:text-amber-400"
+  },
+  "Proton Pump Inhibitors": {
+    activeBg: "bg-rose-50 dark:bg-rose-900/20",
+    activeRing: "ring-rose-100 dark:ring-rose-900/50",
+    headerText: "text-rose-700 dark:text-rose-300",
+    headerBorder: "border-rose-200 dark:border-rose-800",
+    btnSelected: "bg-rose-600 border-rose-600 text-white shadow-sm ring-1 ring-rose-100 dark:ring-rose-900",
+    btnHover: "hover:border-rose-500 hover:text-rose-600 dark:hover:text-rose-400 dark:hover:border-rose-400",
+    pulse: "bg-rose-600",
+    rowBorder: "border-l-rose-600",
+    actionText: "text-rose-600 dark:text-rose-400"
   }
 };
 
@@ -116,36 +128,7 @@ export const DEFAULT_THEME: CategoryTheme = {
     actionText: "text-[#8055f1] dark:text-purple-400"
 };
 
-export const DRUG_CATEGORIES: Record<string, string[]> = {
-  "Muscle Relaxants": [
-    "Cis-atracurium", "Rocuronium", "Pancuronium", "Vecuronium", "Suxamethonium"
-  ],
-  "Reversal Agents": [
-    "Sugammadex", "Sugammadex/Roc", "Sugammadex/Vec"
-  ],
-  "Penicillins": [
-    "Major/Minor Determinants", "Ampicillin", "Amoxycillin", "Methoxybenzylpenicillin", "Benzylpenicillin"
-  ],
-  "Cephalosporins": [
-    "Cefazolin", "Cefotaxime", "Ceftazidime", "Ceftriaxone", "Cefepime"
-  ],
-  "Hypnotics": [
-    "Midazolam", "Propofol"
-  ],
-  "Local Anaesthetics": [
-    "Lignocaine", "Mepivacaine", "Bupivacaine", "Ropivacaine"
-  ],
-  "Opioids": [
-    "Alfentanil", "Fentanyl", "Morphine", "Remifentanil", "Oxycodone"
-  ],
-  "Antiseptics": [
-    "Chlorhexidine", "Povidone Iodine"
-  ],
-  "Others": [
-    "Latex", "Paracetamol", "Patent Blue", "Methylene Blue", "Atropine", "Neostigmine",
-    "Ondansetron", "Parecoxib", "IV Contrast"
-  ]
-};
+export const DRUG_CATEGORIES: Record<string, string[]> = getDrugsByCategory();
 
 export const FLAT_DRUG_OPTIONS = Object.values(DRUG_CATEGORIES).flat();
 

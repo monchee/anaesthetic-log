@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
-import { LogFormData, DrugTestRow } from '@/types';
-import { Calendar, Activity, Syringe, CheckCircle2, Check, X, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Loader2 } from 'lucide-react';
+import { LogFormData } from '@/types';
+import { Calendar, Activity, Syringe, CheckCircle2, Check, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Loader2, Search, X } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 import { useTestingLogLogic } from '../hooks/useTestingLogLogic';
 import { TestingService } from '../services/TestingService';
+import { DrugTestGrid } from './DrugTestGrid';
 
 interface TestingLogFormProps {
   formData: LogFormData;
@@ -15,99 +16,8 @@ interface TestingLogFormProps {
   interventionOptions: readonly string[] | string[];
 }
 
-const FIELD_LABELS: Record<string, string> = {
-  sptWheal: 'SPT',
-  idt100: '1:100',
-  idt10: '1:10',
-  idtNeat: 'Neat'
-};
-
-// Memoized drug row component for better performance
-const DrugRow = React.memo(({
-  row,
-  index,
-  drugToCategoryMap,
-  updateDrugData,
-  removeRow
-}: {
-  row: DrugTestRow;
-  index: number;
-  drugToCategoryMap: Record<string, string>;
-  updateDrugData: (index: number, field: string, value: string) => void;
-  removeRow: (index: number) => void;
-}) => {
-  const category = drugToCategoryMap[row.drugName] || 'Others';
-  const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
-  const borderClass = row.drugName === 'Other' ? DEFAULT_THEME.rowBorder : theme.rowBorder;
-
-  return (
-    <div
-      className={`grid grid-cols-2 md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-x-3 gap-y-4 md:gap-2 p-3 sm:p-3.5 md:p-4 items-start md:items-center bg-background border border-border border-l-[6px] ${borderClass} shadow-sm rounded-none group`}
-    >
-      {/* Name Column (Full width on mobile) */}
-      <div className="col-span-2 md:col-span-1 flex items-center gap-2 md:self-center">
-        {row.drugName === 'Other' ? (
-          <Input
-            className="h-10 md:h-9 text-sm flex-1 min-w-0 font-medium font-mono"
-            placeholder="Specify name..."
-            aria-label="Custom drug name"
-            value={row.customName || ''}
-            onChange={(e) => updateDrugData(index, 'customName', e.target.value)}
-            autoFocus
-          />
-        ) : (
-          <span className="font-medium text-sm text-slate-700 dark:text-foreground/90 flex-1">
-            {row.drugName}
-          </span>
-        )}
-
-        <button
-          onClick={() => removeRow(index)}
-          className={`shrink-0 text-muted-foreground hover:text-red-500 dark:hover:text-red-400 transition-opacity p-2 md:p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-100 md:opacity-0 md:group-hover:opacity-100'}`}
-          aria-label="Remove drug"
-          title="Remove drug"
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* Result Columns - 4 Grid Layout */}
-      <div className="col-span-2 md:col-span-4 grid grid-cols-2 gap-x-2 gap-y-5 md:grid-cols-4 md:gap-2">
-        {['sptWheal', 'idt100', 'idt10', 'idtNeat'].map((field) => (
-          <div key={field} className="relative">
-            <span className="md:hidden section-label absolute -top-3 left-0">{FIELD_LABELS[field]}</span>
-            <Input
-              type="number"
-              min="0"
-              onKeyDown={preventNegativeInput}
-              aria-label={`${row.drugName} ${FIELD_LABELS[field]} result (mm)`}
-              className={`h-9 text-center font-mono ${parseInt(row[field] || '0') >= 3 ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
-              placeholder="-"
-              value={row[field] || ''}
-              onChange={(e) => updateDrugData(index, field, e.target.value)}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Notes Row */}
-      <div className="col-span-2 md:col-span-4 md:col-start-2">
-        <Input
-          aria-label={`${row.drugName} notes`}
-          className="h-8 text-xs text-muted-foreground placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
-          placeholder="Notes..."
-          value={row.notes || ''}
-          onChange={(e) => updateDrugData(index, 'notes', e.target.value)}
-        />
-      </div>
-    </div>
-  );
-});
-
 const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (["-", "e", "E", "+"].includes(e.key)) {
-        e.preventDefault();
-    }
+  if (['-', 'e', 'E', '+'].includes(e.key)) e.preventDefault();
 };
 
 const TestingLogForm: React.FC<TestingLogFormProps> = ({ 
@@ -125,7 +35,10 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     handleControlChange,
     toggleDrug,
     toggleCategory,
+    selectProtocol,
     addCustomDrug,
+    addCustomIdtStep,
+    removeCustomIdtStep,
     removeRow,
     updateDrugData,
     toggleSymptom,
@@ -134,6 +47,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [drugFilter, setDrugFilter] = useState('');
 
   const testingService = new TestingService();
 
@@ -221,9 +135,33 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                    </Button>
                </div>
 
+               <div className="relative">
+                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+                 <Input
+                   value={drugFilter}
+                   onChange={e => setDrugFilter(e.target.value)}
+                   placeholder="Filter drugs..."
+                   className="h-8 pl-8 pr-8 text-xs rounded-none"
+                 />
+                 {drugFilter && (
+                   <button
+                     onClick={() => setDrugFilter('')}
+                     className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                   >
+                     <X className="w-3.5 h-3.5" />
+                   </button>
+                 )}
+               </div>
+
                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                   {Object.entries(drugCategories).map(([category, drugs]) => {
                     const categoryDrugs = drugs as string[];
+                    const filteredDrugs = drugFilter
+                      ? categoryDrugs.filter(d => d.toLowerCase().includes(drugFilter.toLowerCase()))
+                      : categoryDrugs;
+
+                    if (drugFilter && filteredDrugs.length === 0) return null;
+
                     const hasActiveSelection = categoryDrugs.some(drug =>
                         formData.testPanel.some(r => r.drugName === drug && !r.id)
                     );
@@ -234,7 +172,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
 
                     return (
-                    <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-card/50'}`}>
+                    <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${category === 'Others' ? 'col-span-full' : ''} ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-card/50'}`}>
                         <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-border'}`}>
                             <h3 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-muted-foreground'}`}>
                                 {category}
@@ -247,14 +185,14 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                 {allCategorySelected ? 'Select None' : 'Select All'}
                             </button>
                         </div>
-                        <div className="flex flex-wrap gap-2">
-                            {(drugs as string[]).map(drug => {
+                        <div className={category === 'Others' ? 'flex flex-wrap gap-2 md:grid md:grid-cols-3 lg:grid-cols-4' : 'flex flex-wrap gap-2'}>
+                            {filteredDrugs.map(drug => {
                                 const isSelected = formData.testPanel.some(r => r.drugName === drug && !r.id);
                                 return (
                                 <button
                                     key={drug}
                                     onClick={() => toggleDrug(drug)}
-                                    className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${
+                                    className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${category === 'Others' ? 'md:w-full' : ''} ${
                                     isSelected
                                     ? theme.btnSelected
                                     : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-muted ${theme.btnHover}`
@@ -269,7 +207,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                             {category === 'Others' && (
                                 <button
                                     onClick={addCustomDrug}
-                                    className={`text-xs px-2.5 py-1.5 rounded-none border border-dashed border-border text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted transition-all duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
+                                    className={`md:w-full text-xs px-2.5 py-1.5 rounded-none border border-dashed border-border text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted transition-all duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
                                 >
                                     <Plus className="w-3 h-3 shrink-0" />
                                     Other
@@ -278,6 +216,11 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                         </div>
                     </div>
                   )})}
+                  {drugFilter && Object.values(drugCategories).every(
+                    drugs => !(drugs as string[]).some(d => d.toLowerCase().includes(drugFilter.toLowerCase()))
+                  ) && (
+                    <p className="text-xs text-muted-foreground col-span-full py-2">No drugs match &ldquo;{drugFilter}&rdquo;</p>
+                  )}
                </div>
             </div>
 
@@ -329,35 +272,16 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
               </div>
             </div>
 
-            {/* Data Entry Table */}
-            {formData.testPanel.length > 0 ? (
-              <div className={`rounded-none overflow-hidden animate-in fade-in slide-in-from-top-2`}>
-                 <div className="hidden md:grid md:grid-cols-[1fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 p-3 bg-slate-100/50 dark:bg-card/50 text-xs font-bold text-muted-foreground uppercase border-b border-border mb-2 rounded-none text-center">
-                    <div className="text-left md:text-center">Drug</div>
-                    <div>SPT</div>
-                    <div>1:100</div>
-                    <div>1:10</div>
-                    <div>Neat</div>
-                 </div>
-
-                 <div className="space-y-3">
-                   {formData.testPanel.map((row, index) => (
-                     <DrugRow
-                       key={row.id || row.drugName}
-                       row={row}
-                       index={index}
-                       drugToCategoryMap={drugToCategoryMap}
-                       updateDrugData={updateDrugData}
-                       removeRow={removeRow}
-                     />
-                   ))}
-                 </div>
-              </div>
-            ) : (
-                <div className="text-center py-10 bg-card rounded-none border border-dashed border-border">
-                    <p className="text-muted-foreground text-sm">No drugs selected. Choose a category above to begin.</p>
-                </div>
-            )}
+            {/* Data Entry Grid */}
+            <DrugTestGrid
+              testPanel={formData.testPanel}
+              drugToCategoryMap={drugToCategoryMap}
+              onUpdate={updateDrugData}
+              onSelectProtocol={selectProtocol}
+              onRemove={removeRow}
+              onAddCustomIdtStep={addCustomIdtStep}
+              onRemoveCustomIdtStep={removeCustomIdtStep}
+            />
           </CardContent>
         </Card>
 

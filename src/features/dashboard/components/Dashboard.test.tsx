@@ -79,9 +79,8 @@ const mockLogs: LogFormData[] = [
       {
         drugName: 'Rocuronium',
         sptWheal: '8',
-        idt100: '5',
-        idt10: '0',
-        idtNeat: '0',
+        idtResults: ['5', '0', '0'],
+        protocolIndex: 0,
       },
     ],
     proceedToChallenge: false,

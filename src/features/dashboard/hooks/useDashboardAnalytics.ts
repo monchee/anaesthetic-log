@@ -136,9 +136,11 @@ export const useDashboardAnalytics = ({
                 if (key) {
                     drugStats[key].total += 1; 
                     if (test.sptWheal && parseInt(test.sptWheal) >= 3) drugStats[key].spt++;
-                    if (test.idt100 && parseInt(test.idt100) >= 3) drugStats[key].idt100++;
-                    if (test.idt10 && parseInt(test.idt10) >= 3) drugStats[key].idt10++;
-                    if (test.idtNeat && parseInt(test.idtNeat) >= 3) drugStats[key].idtNeat++;
+                    // New format: idtResults array; legacy: idt100/idt10/idtNeat
+                    const r = test.idtResults?.length ? test.idtResults : [test.idt100, test.idt10, test.idtNeat];
+                    if (r[0] && parseInt(r[0]) >= 3) drugStats[key].idt100++;
+                    if (r[1] && parseInt(r[1]) >= 3) drugStats[key].idt10++;
+                    if (r[2] && parseInt(r[2]) >= 3) drugStats[key].idtNeat++;
                 }
             }
         });

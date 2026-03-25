@@ -1,13 +1,49 @@
+export interface IDTStep {
+  ratio: string;         // e.g. "1:1,000"
+  concentration: string; // e.g. "0.01mg/mL"
+}
+
+export interface ChallengeStep {
+  step: number;
+  dose: string;
+  volume: string;
+  cumulative: string;
+}
+
+export interface DrugProtocol {
+  drugName: string;
+  category: string;
+  testType: 'skin' | 'challenge' | 'control' | 'experimental';
+  presentation: string;
+  sptNeatConcentration: string;
+  idtSteps: IDTStep[];
+  challengeSteps: ChallengeStep[];
+  protocolLabel: string;
+}
+
+export interface CustomDrugEntry {
+  name: string;
+  sptConcentration?: string;
+  idtSteps?: IDTStep[];
+  includeInChallenge?: boolean;
+}
+
 export interface DrugTestRow {
   id?: string;
   drugName: string;
-  sptWheal: string;
-  idt100: string;
-  idt10: string;
-  idtNeat: string;
   customName?: string;
+  protocolIndex?: number;
+  sptWheal: string;
+  idtResults: string[];
   notes?: string;
-  [key: string]: string | undefined;
+  // Custom protocol fields — used when drugName === 'Other'
+  customSptConcentration?: string;
+  customIdtSteps?: IDTStep[];
+  includeInChallenge?: boolean;
+  // Legacy fields — read-only, kept for migration of old localStorage records
+  idt100?: string;
+  idt10?: string;
+  idtNeat?: string;
 }
 
 export interface Controls {
@@ -51,7 +87,8 @@ export interface DocumentsToChase {
 
 export interface TestingPlanData {
   selectedDrugs: string[];
-  customDrugs: string[];
+  selectedProtocols: Record<string, number>;
+  customDrugs: CustomDrugEntry[];
   notes: string;
   urgent: boolean;
   reactionDate: string;

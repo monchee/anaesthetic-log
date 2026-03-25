@@ -37,9 +37,8 @@ export function createMockDrugTestRow(overrides?: Partial<DrugTestRow>): DrugTes
     id: `drug-${Date.now()}`,
     drugName: 'Rocuronium',
     sptWheal: '',
-    idt100: '',
-    idt10: '',
-    idtNeat: '',
+    idtResults: [],
+    protocolIndex: 0,
   };
 
   return { ...defaultRow, ...overrides };
@@ -93,16 +92,12 @@ export function createCompletedLogFormData(): LogFormData {
       createMockDrugTestRow({
         drugName: 'Rocuronium',
         sptWheal: '0',
-        idt100: '0',
-        idt10: '0',
-        idtNeat: '0',
+        idtResults: ['0', '0'],
       }),
       createMockDrugTestRow({
         drugName: 'Propofol',
         sptWheal: '0',
-        idt100: '0',
-        idt10: '0',
-        idtNeat: '0',
+        idtResults: ['0', '0', '0'],
       }),
     ],
     proceedToChallenge: true,

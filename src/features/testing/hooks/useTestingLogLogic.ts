@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 import { LogFormData } from '../types';
+import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 
 
 interface UseTestingLogLogicProps {
@@ -33,28 +34,39 @@ export const useTestingLogLogic = ({ formData, setFormData, drugCategories }: Us
     }));
   }, [setFormData]);
 
+  const makeNewRow = useCallback((drugName: string) => {
+    const protocols = getSkinProtocolsForDrug(drugName);
+    const idtStepCount = protocols[0]?.idtSteps.length ?? 0;
+    return {
+      drugName,
+      sptWheal: '',
+      idtResults: Array(idtStepCount).fill(''),
+      protocolIndex: 0,
+      customName: '',
+    };
+  }, []);
+
   const toggleDrug = useCallback((drugName: string) => {
     setFormData(prev => {
       const exists = prev.testPanel.find(row => row.drugName === drugName && !row.id);
       if (exists) {
         return {
           ...prev,
-          testPanel: prev.testPanel.filter(row => row.drugName !== drugName || row.id) 
+          testPanel: prev.testPanel.filter(row => row.drugName !== drugName || row.id)
         };
       } else {
         return {
           ...prev,
-          testPanel: [...prev.testPanel, { drugName, sptWheal: '', idt100: '', idt10: '', idtNeat: '', customName: '' }]
+          testPanel: [...prev.testPanel, makeNewRow(drugName)]
         };
       }
     });
-  }, [setFormData]);
+  }, [setFormData, makeNewRow]);
 
   const toggleCategory = useCallback((categoryDrugs: string[]) => {
     setFormData(prev => {
       const currentPanelDrugs = prev.testPanel.filter(r => !r.id).map(row => row.drugName);
       const allSelected = categoryDrugs.every(d => currentPanelDrugs.includes(d));
-
       if (allSelected) {
         return {
           ...prev,
@@ -62,50 +74,119 @@ export const useTestingLogLogic = ({ formData, setFormData, drugCategories }: Us
         };
       } else {
         const missingDrugs = categoryDrugs.filter(d => !currentPanelDrugs.includes(d));
-        const newRows = missingDrugs.map(d => ({
-            drugName: d,
-            sptWheal: '',
-            idt100: '',
-            idt10: '',
-            idtNeat: '',
-            customName: ''
-        }));
         return {
           ...prev,
-          testPanel: [...prev.testPanel, ...newRows]
+          testPanel: [...prev.testPanel, ...missingDrugs.map(makeNewRow)]
         };
       }
     });
+  }, [setFormData, makeNewRow]);
+
+  const selectProtocol = useCallback((rowIndex: number, protocolIndex: number) => {
+    setFormData(prev => ({
+      ...prev,
+      testPanel: prev.testPanel.map((row, i) => {
+        if (i !== rowIndex) return row;
+        const protocols = getSkinProtocolsForDrug(row.drugName);
+        const protocol = protocols[protocolIndex];
+        return {
+          ...row,
+          protocolIndex,
+          idtResults: Array(protocol?.idtSteps.length ?? 0).fill(''),
+        };
+      }),
+    }));
   }, [setFormData]);
 
   const addCustomDrug = useCallback(() => {
     setFormData(prev => ({
       ...prev,
       testPanel: [
-        ...prev.testPanel, 
-        { 
-            id: `custom-${Date.now()}-${Math.random()}`,
-            drugName: 'Other', 
-            sptWheal: '', 
-            idt100: '', 
-            idt10: '', 
-            idtNeat: '', 
-            customName: '' 
+        ...prev.testPanel,
+        {
+          id: `custom-${Date.now()}-${Math.random()}`,
+          drugName: 'Other',
+          sptWheal: '',
+          idtResults: [],
+          protocolIndex: 0,
+          customName: '',
+          customSptConcentration: '',
+          customIdtSteps: [],
+          includeInChallenge: false,
         }
       ]
     }));
   }, [setFormData]);
 
+  const addCustomIdtStep = useCallback((rowIndex: number) => {
+    setFormData(prev => ({
+      ...prev,
+      testPanel: prev.testPanel.map((row, i) => {
+        if (i !== rowIndex) return row;
+        const steps = [...(row.customIdtSteps ?? []), { ratio: '', concentration: '' }];
+        return { ...row, customIdtSteps: steps, idtResults: [...(row.idtResults ?? []), ''] };
+      }),
+    }));
+  }, [setFormData]);
+
+  const removeCustomIdtStep = useCallback((rowIndex: number, stepIndex: number) => {
+    setFormData(prev => ({
+      ...prev,
+      testPanel: prev.testPanel.map((row, i) => {
+        if (i !== rowIndex) return row;
+        const steps = (row.customIdtSteps ?? []).filter((_, si) => si !== stepIndex);
+        const results = (row.idtResults ?? []).filter((_, si) => si !== stepIndex);
+        return { ...row, customIdtSteps: steps, idtResults: results };
+      }),
+    }));
+  }, [setFormData]);
+
   const removeRow = useCallback((index: number) => {
     setFormData(prev => ({
-        ...prev,
-        testPanel: prev.testPanel.filter((_, i) => i !== index)
+      ...prev,
+      testPanel: prev.testPanel.filter((_, i) => i !== index)
     }));
   }, [setFormData]);
 
   const updateDrugData = useCallback((index: number, field: string, value: string) => {
-    if (['sptWheal', 'idt100', 'idt10', 'idtNeat'].includes(field)) {
-        if (value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) < 0) return;
+    if (field === 'includeInChallenge') {
+      setFormData(prev => ({
+        ...prev,
+        testPanel: prev.testPanel.map((row, i) => i === index ? { ...row, includeInChallenge: value === 'true' } : row),
+      }));
+      return;
+    }
+    if (field.startsWith('customIdtStep_')) {
+      const parts = field.split('_');
+      const subField = parts[1]; // 'ratio' or 'concentration'
+      const stepIdx = parseInt(parts[2], 10);
+      setFormData(prev => ({
+        ...prev,
+        testPanel: prev.testPanel.map((row, i) => {
+          if (i !== index) return row;
+          const steps = [...(row.customIdtSteps ?? [])];
+          steps[stepIdx] = { ...(steps[stepIdx] ?? { ratio: '', concentration: '' }), [subField]: value };
+          return { ...row, customIdtSteps: steps };
+        }),
+      }));
+      return;
+    }
+    if (field === 'sptWheal') {
+      if (value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) < 0) return;
+    }
+    if (field.startsWith('idt_')) {
+      if (value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) < 0) return;
+      const idx = parseInt(field.slice(4), 10);
+      setFormData(prev => ({
+        ...prev,
+        testPanel: prev.testPanel.map((row, i) => {
+          if (i !== index) return row;
+          const updated = [...(row.idtResults ?? [])];
+          updated[idx] = value;
+          return { ...row, idtResults: updated };
+        }),
+      }));
+      return;
     }
     setFormData(prev => ({
       ...prev,
@@ -140,7 +221,10 @@ export const useTestingLogLogic = ({ formData, setFormData, drugCategories }: Us
     handleControlChange,
     toggleDrug,
     toggleCategory,
+    selectProtocol,
     addCustomDrug,
+    addCustomIdtStep,
+    removeCustomIdtStep,
     removeRow,
     updateDrugData,
     toggleSymptom,

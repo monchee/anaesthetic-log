@@ -34,9 +34,7 @@ interface DeidentifiedTestLog {
   testPanel: Array<{
     drugName: string;
     sptWheal: string;
-    idt100: string;
-    idt10: string;
-    idtNeat: string;
+    idtResults: string;
     notes: string;
   }>;
   proceedToChallenge: boolean;
@@ -88,9 +86,9 @@ export function deidentifyTestLogs(logs: LogFormData[]): DeidentifiedTestLog[] {
     testPanel: (log.testPanel || []).map(row => ({
       drugName: row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName,
       sptWheal: row.sptWheal || '',
-      idt100: row.idt100 || '',
-      idt10: row.idt10 || '',
-      idtNeat: row.idtNeat || '',
+      idtResults: row.idtResults?.length
+        ? row.idtResults.join(' | ')
+        : [row.idt100, row.idt10, row.idtNeat].filter(Boolean).join(' | '),
       notes: row.notes || '',
     })),
     proceedToChallenge: log.proceedToChallenge,

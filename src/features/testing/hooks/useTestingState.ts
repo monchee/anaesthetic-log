@@ -15,9 +15,8 @@ const INITIAL_FORM_STATE: LogFormData = {
   testPanel: DEFAULT_SELECTED_DRUGS.map(drugName => ({
     drugName,
     sptWheal: '',
-    idt100: '',
-    idt10: '',
-    idtNeat: '',
+    idtResults: [],
+    protocolIndex: 0,
   })),
   proceedToChallenge: false,
   challengeDrug: '',
@@ -58,10 +57,12 @@ export function useTestingState() {
           id: row.id ? String(row.id) : undefined,
           drugName: String(row.drugName || ''),
           sptWheal: String(row.sptWheal || ''),
-          idt100: String(row.idt100 || ''),
-          idt10: String(row.idt10 || ''),
-          idtNeat: String(row.idtNeat || ''),
+          idtResults: Array.isArray(row.idtResults)
+            ? row.idtResults.map((v: unknown) => String(v ?? ''))
+            : [String(row.idt100 || ''), String(row.idt10 || ''), String(row.idtNeat || '')].filter((_, i, a) => a.slice(i).some(v => v !== '') || i === 0),
+          protocolIndex: typeof row.protocolIndex === 'number' ? row.protocolIndex : 0,
           customName: row.customName ? String(row.customName) : undefined,
+          notes: row.notes ? String(row.notes) : undefined,
         })),
         proceedToChallenge: Boolean(parsed.proceedToChallenge),
         challengeDrug: String(parsed.challengeDrug || ''),

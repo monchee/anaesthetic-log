@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, Button, Label, Switch, Checkbox, Input, Textarea } from '@/components/ui';
-import { Patient, TestingPlanData } from '@/types';
-import { Printer, Check, X, ClipboardList, ChevronDown, Plus, History, Pin } from 'lucide-react';
+import { Patient, TestingPlanData, CustomDrugEntry } from '@/types';
+import { Printer, Check, X, ClipboardList, ChevronDown, Plus, History, Pin, Search } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME, DEFAULT_SELECTED_DRUGS } from '@shared/utils/constants';
 
 interface TestingPlanGeneratorProps {
@@ -29,8 +29,9 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   const [selectedDrugs, setSelectedDrugs] = useState<string[]>(() => [
     ...new Set([...DEFAULT_SELECTED_DRUGS, ...historyDrugs])
   ]);
-  const [customDrugs, setCustomDrugs] = useState<string[]>([]);
+  const [customDrugs, setCustomDrugs] = useState<CustomDrugEntry[]>([]);
   const [notes, setNotes] = useState('');
+  const [drugFilter, setDrugFilter] = useState('');
   const [newCustomDrug, setNewCustomDrug] = useState('');
   const [urgent, setUrgent] = useState(false);
   const [reactionDate, setReactionDate] = useState(patient.history.date ?? '');
@@ -64,20 +65,47 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
   const addCustomDrug = () => {
     if (newCustomDrug.trim()) {
-      setCustomDrugs([...customDrugs, newCustomDrug.trim()]);
-      setSelectedDrugs([...selectedDrugs, newCustomDrug.trim()]);
+      const name = newCustomDrug.trim();
+      setCustomDrugs(prev => [...prev, { name, sptConcentration: '', idtSteps: [], includeInChallenge: false }]);
+      setSelectedDrugs(prev => [...prev, name]);
       setNewCustomDrug('');
     }
   };
 
-  const removeCustomDrug = (drug: string) => {
-    setCustomDrugs(prev => prev.filter(d => d !== drug));
-    setSelectedDrugs(prev => prev.filter(d => d !== drug));
+  const removeCustomDrug = (name: string) => {
+    setCustomDrugs(prev => prev.filter(e => e.name !== name));
+    setSelectedDrugs(prev => prev.filter(d => d !== name));
+  };
+
+  const updateCustomEntry = (name: string, field: keyof CustomDrugEntry, value: any) => {
+    setCustomDrugs(prev => prev.map(e => e.name === name ? { ...e, [field]: value } : e));
+  };
+
+  const updateCustomEntryStep = (name: string, si: number, field: string, value: string) => {
+    setCustomDrugs(prev => prev.map(e => {
+      if (e.name !== name) return e;
+      const steps = [...(e.idtSteps ?? [])];
+      steps[si] = { ...(steps[si] ?? { ratio: '', concentration: '' }), [field]: value };
+      return { ...e, idtSteps: steps };
+    }));
+  };
+
+  const addCustomEntryIdtStep = (name: string) => {
+    setCustomDrugs(prev => prev.map(e =>
+      e.name === name ? { ...e, idtSteps: [...(e.idtSteps ?? []), { ratio: '', concentration: '' }] } : e
+    ));
+  };
+
+  const removeCustomEntryIdtStep = (name: string, idx: number) => {
+    setCustomDrugs(prev => prev.map(e =>
+      e.name === name ? { ...e, idtSteps: (e.idtSteps ?? []).filter((_, i) => i !== idx) } : e
+    ));
   };
 
   const handlePreview = () => {
     onPreview({
         selectedDrugs,
+        selectedProtocols: {},
         customDrugs,
         notes,
         urgent,
@@ -87,7 +115,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   };
 
   const customTheme = CATEGORY_THEMES['Others'] || DEFAULT_THEME;
-  const hasCustomActive = customDrugs.some(d => selectedDrugs.includes(d));
+  const hasCustomActive = customDrugs.some(e => selectedDrugs.includes(e.name));
 
   return (
     <>
@@ -193,18 +221,41 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                               Clear All
                             </Button>
                         </div>
+                    <div className="relative">
+                      <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+                      <Input
+                        value={drugFilter}
+                        onChange={e => setDrugFilter(e.target.value)}
+                        placeholder="Filter drugs..."
+                        className="h-8 pl-8 pr-8 text-xs rounded-none"
+                      />
+                      {drugFilter && (
+                        <button
+                          onClick={() => setDrugFilter('')}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
                         {Object.entries(drugCategories).map(([category, drugs]) => {
                             const categoryDrugs = drugs as string[];
+                            const filteredDrugs = drugFilter
+                              ? categoryDrugs.filter(d => d.toLowerCase().includes(drugFilter.toLowerCase()))
+                              : categoryDrugs;
+
+                            if (drugFilter && filteredDrugs.length === 0) return null;
+
                             const allCategorySelected = categoryDrugs.every(d => selectedDrugs.includes(d));
                             const hasActiveSelection = categoryDrugs.some(d => selectedDrugs.includes(d));
-                            
+
                             const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
 
                             return (
-                                <div 
-                                    key={category} 
-                                    className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}
+                                <div
+                                    key={category}
+                                    className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${category === 'Others' ? 'col-span-full' : ''} ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}
                                 >
                                     <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-border'}`}>
                                         <h4 className={`text-[10px] font-semibold uppercase tracking-wider flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-muted-foreground'}`}>
@@ -218,15 +269,15 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             {allCategorySelected ? 'Select None' : 'Select All'}
                                         </button>
                                     </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {categoryDrugs.map(drug => {
+                                    <div className={category === 'Others' ? 'flex flex-wrap gap-2 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' : 'flex flex-wrap gap-2'}>
+                                        {filteredDrugs.map(drug => {
                                             const fromHistory = historyDrugs.includes(drug);
                                             const isDefault = DEFAULT_SELECTED_DRUGS.includes(drug);
                                             return (
                                             <button
                                                 key={drug}
                                                 onClick={() => toggleDrug(drug)}
-                                                className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${
+                                                className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${category === 'Others' ? 'md:w-full' : ''} ${
                                                 selectedDrugs.includes(drug)
                                                 ? theme.btnSelected
                                                 : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-card ${theme.btnHover}`
@@ -247,30 +298,35 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                 </div>
                             );
                         })}
+                        {drugFilter && Object.values(drugCategories).every(
+                          drugs => !(drugs as string[]).some(d => d.toLowerCase().includes(drugFilter.toLowerCase()))
+                        ) && (
+                          <p className="text-xs text-muted-foreground col-span-full py-2">No drugs match &ldquo;{drugFilter}&rdquo;</p>
+                        )}
 
                         {/* Custom Drugs Section */}
-                        <div className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
+                        <div className={`col-span-full space-y-2 rounded-none p-3 transition-colors duration-150 ${hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
                             <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasCustomActive ? `${customTheme.headerBorder}` : 'border-border'}`}>
                                 <h4 className={`text-[10px] font-semibold uppercase tracking-wider flex items-center gap-2 ${hasCustomActive ? customTheme.headerText : 'text-muted-foreground'}`}>
                                     Additional Items
                                     {hasCustomActive && <span className={`flex h-1.5 w-1.5 rounded-none ${customTheme.pulse} animate-pulse`}></span>}
                                 </h4>
                             </div>
-                            <div className="flex flex-wrap gap-2 mb-2">
-                                {customDrugs.map(drug => (
+                            <div className="flex flex-wrap gap-2 mb-2 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                                {customDrugs.map(entry => (
                                     <button
-                                        key={drug}
-                                        onClick={() => toggleDrug(drug)}
-                                        className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left group ${
-                                            selectedDrugs.includes(drug) 
+                                        key={entry.name}
+                                        onClick={() => toggleDrug(entry.name)}
+                                        className={`md:w-full text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left group ${
+                                            selectedDrugs.includes(entry.name)
                                             ? customTheme.btnSelected
                                             : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-card ${customTheme.btnHover}`
                                         }`}
                                     >
-                                        {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
-                                        {drug}
-                                        <span 
-                                            onClick={(e) => { e.stopPropagation(); removeCustomDrug(drug); }}
+                                        {selectedDrugs.includes(entry.name) && <Check className="w-3 h-3 shrink-0" />}
+                                        {entry.name}
+                                        <span
+                                            onClick={(e) => { e.stopPropagation(); removeCustomDrug(entry.name); }}
                                             className="ml-1 opacity-50 hover:opacity-100 hover:text-red-400 dark:hover:text-red-300 transition-all"
                                         >
                                             <X className="w-3 h-3" />
@@ -278,6 +334,40 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     </button>
                                 ))}
                             </div>
+                            {/* Inline protocol editing for selected custom drugs */}
+                            {customDrugs.filter(e => selectedDrugs.includes(e.name)).map(entry => (
+                                <div key={`proto-${entry.name}`} className="border border-dashed border-border p-2 space-y-2 bg-slate-50/50 dark:bg-card/30 mb-2">
+                                    <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">{entry.name} — Protocol</div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground shrink-0 w-7">SPT</span>
+                                        <Input
+                                            className="h-7 text-xs flex-1"
+                                            placeholder="Neat concentration (e.g. 10mg/mL)..."
+                                            value={entry.sptConcentration || ''}
+                                            onChange={ev => updateCustomEntry(entry.name, 'sptConcentration', ev.target.value)}
+                                        />
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">IDT Dilutions</div>
+                                        {(entry.idtSteps ?? []).map((step, si) => (
+                                            <div key={si} className="flex items-center gap-1.5">
+                                                <Input className="h-7 text-xs flex-1" placeholder="Ratio (e.g. 1:100)" value={step.ratio} onChange={ev => updateCustomEntryStep(entry.name, si, 'ratio', ev.target.value)} />
+                                                <Input className="h-7 text-xs flex-1" placeholder="Conc. (e.g. 0.1mg/mL)" value={step.concentration} onChange={ev => updateCustomEntryStep(entry.name, si, 'concentration', ev.target.value)} />
+                                                <button onClick={() => removeCustomEntryIdtStep(entry.name, si)} className="shrink-0 text-slate-300 hover:text-red-500 transition-colors" title="Remove step">
+                                                    <X className="w-3.5 h-3.5" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                        <button onClick={() => addCustomEntryIdtStep(entry.name)} className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors">
+                                            <Plus className="w-3 h-3" /> Add IDT dilution step
+                                        </button>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <input type="checkbox" id={`plan-challenge-${entry.name}`} checked={entry.includeInChallenge || false} onChange={ev => updateCustomEntry(entry.name, 'includeInChallenge', ev.target.checked)} className="w-3.5 h-3.5 accent-primary" />
+                                        <label htmlFor={`plan-challenge-${entry.name}`} className="text-xs text-muted-foreground cursor-pointer select-none">Include in drug challenge</label>
+                                    </div>
+                                </div>
+                            ))}
                             <div className="flex gap-2">
                                 <Input
                                     className="flex-1 h-8 text-xs"

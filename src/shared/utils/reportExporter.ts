@@ -26,13 +26,16 @@ export function formatClinicalReportAsText(data: LogFormData): string {
   // Test Panel
   if (data.testPanel && data.testPanel.length > 0) {
     lines.push('Skin & Intradermal Testing:');
-    lines.push('Drug | SPT | IDT 1:100 | IDT 1:10 | IDT Neat | Notes');
+    lines.push('Drug | SPT | IDT Results | Notes');
     lines.push('-'.repeat(70));
     data.testPanel.forEach(row => {
       const name = row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName;
       const positive = isSkinTestPositive(row) ? ' *POSITIVE*' : '';
       const notes = row.notes ? ` | ${row.notes}` : '';
-      lines.push(`${name} | ${row.sptWheal || '-'}mm | ${row.idt100 || '-'}mm | ${row.idt10 || '-'}mm | ${row.idtNeat || '-'}mm${notes}${positive}`);
+      const idtStr = row.idtResults?.length
+        ? row.idtResults.map((v, i) => v ? `IDT${i + 1}:${v}mm` : null).filter(Boolean).join(' ')
+        : [row.idt100 && `1:100:${row.idt100}mm`, row.idt10 && `1:10:${row.idt10}mm`, row.idtNeat && `Neat:${row.idtNeat}mm`].filter(Boolean).join(' ') || '-';
+      lines.push(`${name} | ${row.sptWheal || '-'}mm | ${idtStr || '-'}${notes}${positive}`);
     });
     lines.push('');
   }
@@ -174,11 +177,12 @@ export function generateLetterText(data: LogFormData, patient: Patient | null): 
   if (data.testPanel && data.testPanel.length > 0) {
     data.testPanel.forEach(row => {
       const drugName = row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName;
+      const idtNarrative = row.idtResults?.length
+        ? row.idtResults.map((v, i) => v ? `IDT ${i + 1} ${v}mm` : null).filter(Boolean)
+        : [row.idt100 && `IDT 1:100 ${row.idt100}mm`, row.idt10 && `IDT 1:10 ${row.idt10}mm`, row.idtNeat && `IDT Neat ${row.idtNeat}mm`].filter(Boolean);
       const results = [
         row.sptWheal ? `SPT ${row.sptWheal}mm` : null,
-        row.idt100 ? `IDT 1:100 ${row.idt100}mm` : null,
-        row.idt10 ? `IDT 1:10 ${row.idt10}mm` : null,
-        row.idtNeat ? `IDT Neat ${row.idtNeat}mm` : null,
+        ...idtNarrative,
       ].filter(Boolean).join(', ');
       lines.push(`${drugName}: ${results || 'no results recorded'}`);
     });

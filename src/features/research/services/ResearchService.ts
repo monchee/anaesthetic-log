@@ -8,21 +8,19 @@ const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '
 const TABLE = 'research_submissions';
 
 function isSkinTestPositive(test: DrugTestRow): boolean {
-  return (
-    (parseInt(test.sptWheal) || 0) >= 3 ||
-    (parseInt(test.idt100) || 0) >= 3 ||
-    (parseInt(test.idt10) || 0) >= 3 ||
-    (parseInt(test.idtNeat) || 0) >= 3
-  );
+  const check = (v: string | undefined) => (parseInt(v ?? '0') || 0) >= 3;
+  if (check(test.sptWheal)) return true;
+  if (test.idtResults?.some(v => check(v))) return true;
+  return check(test.idt100) || check(test.idt10) || check(test.idtNeat);
 }
 
 export function deidentify(formData: LogFormData, redcapId?: string): ResearchSubmission {
   const testPanel = formData.testPanel.map((t) => ({
     drug_name: t.customName || t.drugName,
     spt_wheal: t.sptWheal,
-    idt_100: t.idt100,
-    idt_10: t.idt10,
-    idt_neat: t.idtNeat,
+    idt_results: t.idtResults?.length
+      ? t.idtResults.join(' | ')
+      : [t.idt100, t.idt10, t.idtNeat].filter(Boolean).join(' | '),
     is_positive: isSkinTestPositive(t),
   }));
 

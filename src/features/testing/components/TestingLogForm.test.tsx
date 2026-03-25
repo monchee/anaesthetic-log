@@ -21,9 +21,8 @@ const mockFormData: LogFormData = {
     {
       drugName: 'Rocuronium',
       sptWheal: '3',
-      idt100: '5',
-      idt10: '8',
-      idtNeat: '10',
+      idtResults: ['5', '8', '10'],
+      protocolIndex: 0,
     },
   ],
   proceedToChallenge: false,
@@ -162,8 +161,8 @@ describe('TestingLogForm', () => {
       const formDataWithMultipleDrugs = {
         ...mockFormData,
         testPanel: [
-          { drugName: 'Rocuronium', sptWheal: '3', idt100: '', idt10: '', idtNeat: '' },
-          { drugName: 'Propofol', sptWheal: '', idt100: '', idt10: '5', idtNeat: '' }
+          { drugName: 'Rocuronium', sptWheal: '3', idtResults: [], protocolIndex: 0 },
+          { drugName: 'Propofol', sptWheal: '', idtResults: ['', '5', ''], protocolIndex: 0 }
         ]
       };
 
