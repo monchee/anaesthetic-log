@@ -1258,5 +1258,36 @@ export const MOCK_PATIENTS: Patient[] = [
       tryptase: "120 ng/mL",
       anaesthesiaType: ["Local", "Sedation"]
     }
+  },
+  {
+    id: "44",
+    firstName: "Natalie",
+    lastName: "Brennan",
+    dob: "1975-08-14",
+    mrn: "44",
+    gender: "Female",
+    city: "Parramatta",
+    history: {
+      date: "2024-11-05",
+      grade: "Grade II - Moderate",
+      procedure: "Total Hip Replacement",
+      anaesthetist: "Dr Michael Torres",
+      referringDoctor: "Dr Michael Torres",
+      referringDoctorPosition: "Orthopaedic Anaesthetist",
+      providerNumber: "3456789W",
+      referringEmail: "m.torres@ortho.com.au",
+      referringPhone: "0402334455",
+      hospital: "Westmead Hospital",
+      inductionTime: "07:45",
+      reactionTime: "08:15",
+      medications: ["Aspirin 100mg (pre-op) @ 06:00", "Celecoxib 200mg @ 06:30", "Midazolam 2mg @ 07:40", "Propofol 180mg @ 07:45", "Rocuronium 60mg @ 07:47"],
+      procedureOutcome: "Completed",
+      reactionSummary: "Urticaria and angioedema of lips noted 30 minutes post-induction. Patient had taken pre-operative aspirin and celecoxib as prescribed. No cardiovascular compromise.",
+      comments: "Patient reported aspirin intolerance previously but was still prescribed pre-op aspirin by orthopaedic team without allergy review.",
+      symptoms: [{ label: "Urticaria", detail: "Trunk and arms" }, { label: "Angioedema", detail: "Lips" }],
+      treatment: ["Promethazine", "Hydrocortisone"],
+      suspectedAgents: ["Aspirin", "Celecoxib"],
+      anaesthesiaType: ["General"]
+    }
   }
 ];

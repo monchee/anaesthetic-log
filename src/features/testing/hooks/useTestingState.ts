@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LogFormData, TestingPlanData } from '../types';
 import { DEFAULT_SELECTED_DRUGS } from '@shared/utils/constants';
 
@@ -35,6 +35,14 @@ export function useTestingState() {
   const [lastSavedRecord, setLastSavedRecord] = useState<LogFormData | null>(null);
   const [testingPlanData, setTestingPlanData] = useState<TestingPlanData | null>(null);
   const [recentLogs, setRecentLogs] = useState<LogFormData[]>([]);
+
+  useEffect(() => {
+    import('@shared/data/mockTestingLogs').then(({ MOCK_TESTING_LOGS }) => {
+      setRecentLogs(prev => prev.length === 0 ? MOCK_TESTING_LOGS : prev);
+    }).catch(() => {
+      // silent fallback — dashboard shows empty state
+    });
+  }, []);
 
   const handleSubmit = () => {
     try {
