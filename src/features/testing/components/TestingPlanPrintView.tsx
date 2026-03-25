@@ -395,10 +395,10 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             {/* Signature Area */}
             <div className="pt-6 border-t border-border print:pt-3">
                 <div className="flex justify-between gap-12 print:gap-6">
-                    <div className="flex-1 border-t border-black pt-2 print:pt-1">
+                    <div className="flex-1 border-t border-black pt-2 print:pt-10">
                         <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Requested By (Name & Signature)</p>
                     </div>
-                    <div className="w-40 border-t border-black pt-2 print:pt-1 print:w-32">
+                    <div className="w-40 border-t border-black pt-2 print:pt-10 print:w-32">
                         <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Date</p>
                     </div>
                 </div>
