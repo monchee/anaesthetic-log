@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.45.0] — 2026-03-26 (Suxamethonium-B)
+
+### Added
+- **Mock testing session logs** — 12 clinically realistic `LogFormData` records seeded on first load; powers "Recent Skin Testing Activity" in the Clinical Dashboard for demo
+- **Mock patient coverage test** — 9 machine-checkable Vitest assertions guard NMBA / antibiotic / NSAID / Grade I–IV / Completed / Chlorhexidine+Latex coverage in `MOCK_PATIENTS`
+- **NSAID mock patient** — Natalie Brennan (Aspirin/Celecoxib, Grade II, MRN 44) added to fill coverage gap
+- **E2E testing day flow** — Playwright spec covering full hero workflow: patient select → drug grid → save → Clinical Report → print → Dashboard → Recent Testing Activity
+
+---
+
+## [0.44.0] — 2026-03-25 (Suxamethonium)
+
+### Added
+- **Drug protocol library** (`drugMasterlist.ts`) — SPT concentration, IDT dilution steps, and challenge flags for all 70+ supported drugs
+- **Dynamic IDT columns** — testing grid columns driven by per-drug protocol (replaces hardcoded idt100/10/Neat columns)
+- **Multi-variant protocol picker** — drugs with multiple protocols (e.g. Penicillin Major/Minor) show a variant selector
+- **Custom protocol editor** — users can override SPT concentration, IDT dilution steps, and challenge flag per drug per session
+- **Drug search/filter** — filter field in testing form and plan generator
+- **Proton Pump Inhibitors category** — Esomeprazole, Lansoprazole, Omeprazole, Pantoprazole added to drug list
+
+### Changed
+- Reports updated with dynamic IDT result display + legacy fallback for older records
+
+---
+
 ## [0.43.0] — 2026-03-23 (Rapacuronium)
 
 ### Added
