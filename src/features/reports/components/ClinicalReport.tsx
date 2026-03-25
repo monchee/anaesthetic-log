@@ -24,7 +24,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
   };
 
   return (
-    <Card className="overflow-hidden print:shadow-none print:border-none">
+    <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none">
 
       {/* Minimal Accent Header */}
       <div className="border-l-4 border-primary bg-slate-50 dark:bg-card/30 p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">

@@ -26,7 +26,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
   const testingDate = data.visitDate ? formatDate(data.visitDate) : '[date]';
 
   return (
-    <Card className="overflow-hidden print:shadow-none print:border-none print:bg-white">
+    <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
       {/* Minimal Accent Header */}
       <div className="border-l-4 border-primary bg-slate-50 dark:bg-card/30 p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">
         <div className="flex items-start justify-between gap-4">
@@ -103,7 +103,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
 
           {/* Test Results Table */}
           {data.testPanel && data.testPanel.length > 0 && (
-            <div className="overflow-x-auto -mx-1 print:mx-0">
+            <div className="overflow-x-auto -mx-1 print:mx-0 print:overflow-visible">
             <table className="w-full min-w-[480px] text-sm border-collapse print:text-xs print:min-w-0">
               <thead>
                 <tr className="border-b-2 border-slate-200 text-muted-foreground">
