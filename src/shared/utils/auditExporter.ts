@@ -61,7 +61,9 @@ export function deidentifyPatients(patients: Patient[]): DeidentifiedPatient[] {
     predominantSymptom: p.history.predominantSymptom || '',
     treatment: p.history.treatment ?? [],
     suspectedAgents: p.history.suspectedAgents ?? [],
-    tryptase: p.history.tryptase || '',
+    tryptase: p.history.tryptases?.length
+      ? p.history.tryptases.map((t, i) => `T${i + 1}${t.time ? ` (${t.time})` : ''}: ${t.result}`).join('; ')
+      : (p.history.tryptase || ''),
     procedure: p.history.procedure || '',
     hospital: p.history.hospital || '',
     inductionTime: p.history.inductionTime || '',

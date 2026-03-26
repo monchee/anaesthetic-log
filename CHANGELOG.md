@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.46.0] — 2026-03-26 (Neostigmine)
+
+### Added
+- **Multi-sample tryptase model** — REDCap CSV now parses up to 4 timed tryptase samples (`Serum Tryptase Time/Result` × 4) per patient; clinic investigation fallback (`Biochemical Results: Tryptase 1–4`) also supported
+- **Tryptase display with timestamps** — patient history card shows `T1 (08:45): 12 ng/mL · T2 (10:30): 45 ng/mL` for multi-sample data; single-string values from mock data display unchanged
+- **Audit export updated** — `Tryptase` column in de-identified CSV serialises all samples as semicolon-separated entries
+
 ## [0.45.0] — 2026-03-26 (Suxamethonium-B)
 
 ### Added

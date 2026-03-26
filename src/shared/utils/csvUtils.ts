@@ -354,7 +354,20 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
       }
   });
 
-  // --- 5. Map Anaesthesia Types ---
+  // --- 5. Map Tryptase Columns ---
+  // REDCap repeats identical headers: 'Serum Tryptase Time' × 4 and 'Serum Tryptase Result' × 4
+  // We collect ALL matching indices to pair them up.
+  const tryptaseTimeIndices: number[] = [];
+  const tryptaseResultIndices: number[] = [];
+  const biochemTryptaseIndices: number[] = [];
+  headers.forEach((h, idx) => {
+    const t = h.trim();
+    if (t === 'Serum Tryptase Time') tryptaseTimeIndices.push(idx);
+    else if (t === 'Serum Tryptase Result' || t === 'Serum Tryptase Result ') tryptaseResultIndices.push(idx);
+    else if (/Biochemical Results:\s*Tryptase \d+:/.test(t)) biochemTryptaseIndices.push(idx);
+  });
+
+  // --- 6. Map Anaesthesia Types ---
   const anaesthesiaTypeMap: { label: string, index: number }[] = [];
   headers.forEach((h, idx) => {
       if (h.includes('Type of Anaesthesia')) {
@@ -366,7 +379,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   });
 
 
-  // --- 6. Process Rows ---
+  // --- 7. Process Rows ---
   const parsingErrors: string[] = [];
   const skippedRows: number[] = [];
 
@@ -511,6 +524,26 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
             p.history.anaesthesiaType?.push(t.label);
         }
     });
+
+    // Extract Tryptase Samples
+    const tryptases: Array<{ time?: string; result: string }> = [];
+    const pairCount = Math.min(tryptaseTimeIndices.length, tryptaseResultIndices.length);
+    for (let t = 0; t < pairCount; t++) {
+      const resultVal = row[tryptaseResultIndices[t]]?.trim();
+      if (resultVal) {
+        const timeVal = row[tryptaseTimeIndices[t]]?.trim();
+        const normalized = timeVal ? normalizeTime(timeVal) : undefined;
+        tryptases.push({ time: normalized || undefined, result: resultVal });
+      }
+    }
+    // Fallback: clinic investigation instrument result-only fields
+    if (tryptases.length === 0) {
+      biochemTryptaseIndices.forEach(idx => {
+        const val = row[idx]?.trim();
+        if (val) tryptases.push({ result: val });
+      });
+    }
+    if (tryptases.length > 0) p.history.tryptases = tryptases;
 
     p.history.medications?.sort((a, b) => {
         const timeA = a.includes('@') ? a.split('@')[1].trim() : '99:99';

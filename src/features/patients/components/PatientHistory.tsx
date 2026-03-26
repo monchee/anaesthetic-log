@@ -88,11 +88,19 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
             </span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
-                {history.tryptase && (
+                {(history.tryptases?.length || history.tryptase) && (
                     <div className="flex items-center gap-1.5 text-xs font-medium text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-800 px-2.5 py-1 rounded-none">
                         <FlaskConical className="h-3.5 w-3.5 shrink-0" />
                         <span className="font-semibold uppercase tracking-wide text-[10px]">Tryptase:</span>
-                        <span>{history.tryptase}</span>
+                        {history.tryptases?.length ? (
+                            <span>
+                                {history.tryptases.map((t, i) =>
+                                    `T${i + 1}${t.time ? ` (${t.time})` : ''}: ${t.result}`
+                                ).join(' · ')}
+                            </span>
+                        ) : (
+                            <span>{history.tryptase}</span>
+                        )}
                     </div>
                 )}
                 {gradeDesc && gradeDesc !== gradeLabel ? (

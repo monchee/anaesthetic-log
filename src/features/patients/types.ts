@@ -21,6 +21,7 @@ export interface PatientHistory {
   treatment: string[];
   suspectedAgents: string[];
   tryptase?: string;
+  tryptases?: Array<{ time?: string; result: string }>;
   procedure: string;
   anaesthetist: string;
   referringDoctor?: string;
