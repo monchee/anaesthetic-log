@@ -32,7 +32,9 @@ export const MOCK_PATIENTS: Patient[] = [
       predominantSymptom: "Hypotension",
       treatment: ["Adrenaline", "Hydrocortisone", "Salbutamol nebuliser", "IV Fluids"],
       suspectedAgents: ["Rocuronium"],
-      tryptase: "Pending",
+      tryptases: [
+        { time: '14:50', result: 'Pending' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -184,7 +186,10 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Cough" }, { label: "Erythema" }, { label: "Tachycardia" }, { label: "Hypotension", detail: "SBP 44mmHg" }],
       treatment: ["Adrenaline", "Fluids", "Hydrocortisone", "Phenylephrine"],
       suspectedAgents: ["Rocuronium", "Sugammadex"],
-      tryptase: "45 ng/mL",
+      tryptases: [
+        { time: '14:15', result: '45 ng/mL' },
+        { time: '08:30', result: '9 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -210,7 +215,11 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Difficult ventilation" }, { label: "Bronchospasm" }],
       treatment: ["Adrenaline infusion", "Hydrocortisone", "Intubation"],
       suspectedAgents: ["Rocuronium", "Vecuronium"],
-      tryptase: "Elevated",
+      tryptases: [
+        { time: '09:15', result: '95 ng/mL' },
+        { time: '10:30', result: '78 ng/mL' },
+        { time: '08:00', result: '8 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -397,7 +406,10 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Cardiac Arrest", detail: "PEA" }, { label: "Bradycardia" }],
       treatment: ["Adrenaline", "Fluids", "CPR"],
       suspectedAgents: ["Dexmedetomidine", "Remifentanil", "Plasmalyte"],
-      tryptase: "15 ng/mL",
+      tryptases: [
+        { time: '15:30', result: '15 ng/mL' },
+        { time: '07:30', result: '6 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -451,7 +463,11 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Cough" }, { label: "Hypoxaemia" }, { label: "Difficult Ventilation" }],
       treatment: ["Bronchospasm Treatment", "Adrenaline (empiric)", "Hydrocortisone"],
       suspectedAgents: ["Unknown"],
-      tryptase: "120 ng/mL",
+      tryptases: [
+        { time: '12:25', result: '120 ng/mL' },
+        { time: '14:00', result: '88 ng/mL' },
+        { time: '11:00', result: '7 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -675,7 +691,10 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Bronchospasm" }, { label: "Hypotension" }, { label: "Desaturation" }],
       treatment: ["Adrenaline", "Salbutamol", "Hydrocortisone", "Fluids"],
       suspectedAgents: ["Rocuronium", "Ketamine"],
-      tryptase: "85 ng/mL",
+      tryptases: [
+        { time: '23:20', result: '85 ng/mL' },
+        { time: '08:15', result: '8 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -737,7 +756,9 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Cardiac Arrest", detail: "PEA" }, { label: "Hypotension" }, { label: "Pulseless" }],
       treatment: ["CPR", "Adrenaline", "Vasopressors", "Dantrolene"],
       suspectedAgents: ["Suxamethonium"],
-      tryptase: "Normal",
+      tryptases: [
+        { time: '15:10', result: '8 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -769,7 +790,10 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Bradycardia" }, { label: "Cardiac Arrest", detail: "Asystole" }],
       treatment: ["CPR", "Adrenaline", "Atropine", "Pacing"],
       suspectedAgents: ["Cefazolin", "Fentanyl"],
-      tryptase: "35 ng/mL",
+      tryptases: [
+        { time: '11:20', result: '35 ng/mL' },
+        { time: '07:30', result: '7 ng/mL' },
+      ],
       anaesthesiaType: ["Regional"]
     }
   },
@@ -862,7 +886,11 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Bronchospasm" }, { label: "Angioedema" }],
       treatment: ["Adrenaline", "Hydrocortisone", "Fluids", "Vasopressors"],
       suspectedAgents: ["Suxamethonium"],
-      tryptase: ">200 ng/mL",
+      tryptases: [
+        { time: '04:00', result: '225 ng/mL' },
+        { time: '05:30', result: '195 ng/mL' },
+        { time: '03:00', result: '8 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -894,7 +922,10 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Bronchospasm" }, { label: "Wheeze" }],
       treatment: ["Adrenaline", "Bronchodilators", "Fluids"],
       suspectedAgents: ["Heparin", "Protamine", "Cefazolin"],
-      tryptase: "45 ng/mL",
+      tryptases: [
+        { time: '09:00', result: '45 ng/mL' },
+        { time: '07:00', result: '8 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -956,7 +987,11 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Bronchospasm" }, { label: "Erythema" }],
       treatment: ["Adrenaline", "Hydrocortisone", "Salbutamol", "ICU Admission"],
       suspectedAgents: ["Rocuronium"],
-      tryptase: "150 ng/mL",
+      tryptases: [
+        { time: '23:50', result: '150 ng/mL' },
+        { time: '01:15', result: '122 ng/mL' },
+        { time: '22:30', result: '7 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -1049,7 +1084,11 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Bradycardia" }, { label: "Unresponsive" }],
       treatment: ["Adrenaline", "Atropine", "CPR", "Fluids"],
       suspectedAgents: ["Rocuronium", "Propofol"],
-      tryptase: "90 ng/mL",
+      tryptases: [
+        { time: '09:35', result: '90 ng/mL' },
+        { time: '11:00', result: '72 ng/mL' },
+        { time: '08:30', result: '7 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -1142,7 +1181,9 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Tachycardia" }, { label: "Desaturation" }],
       treatment: ["Noradrenaline", "Dobutamine", "Fluids", "Ventilation"],
       suspectedAgents: ["Fentanyl", "Rocuronium"],
-      tryptase: "Normal",
+      tryptases: [
+        { time: '08:00', result: '9 ng/mL' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -1205,7 +1246,9 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Cardiac Arrest" }, { label: "Hypotension" }, { label: "Bronchospasm" }],
       treatment: ["CPR", "Adrenaline", "Basic life support"],
       suspectedAgents: ["Rocuronium"],
-      tryptase: "Post-mortem elevated",
+      tryptases: [
+        { result: 'Elevated (post-mortem)' },
+      ],
       anaesthesiaType: ["General"]
     }
   },
@@ -1267,7 +1310,11 @@ export const MOCK_PATIENTS: Patient[] = [
       symptoms: [{ label: "Hypotension" }, { label: "Bronchospasm" }, { label: "Desaturation" }],
       treatment: ["Adrenaline", "Salbutamol", "Hydrocortisone", "Fluids"],
       suspectedAgents: ["Contrast dye", "Iodine"],
-      tryptase: "120 ng/mL",
+      tryptases: [
+        { time: '09:45', result: '120 ng/mL' },
+        { time: '11:15', result: '98 ng/mL' },
+        { time: '08:00', result: '7 ng/mL' },
+      ],
       anaesthesiaType: ["Local", "Sedation"]
     }
   },
