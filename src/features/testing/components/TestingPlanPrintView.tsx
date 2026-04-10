@@ -169,7 +169,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                             if (activeInCat.length === 0) return null;
                             return (
                                 <div key={category} className="break-inside-avoid bg-slate-50 dark:bg-card/30 border border-border rounded-lg overflow-hidden print:bg-white print:border-slate-300">
-                                    <div className="px-3 py-1.5 bg-slate-100 dark:bg-card/50 border-b border-border rounded-t-lg print:bg-slate-100 print:border-slate-300">
+                                    <div className="px-3 py-1.5 bg-slate-100 dark:bg-card/50 border-b border-border rounded-t-lg print:bg-white print:border-slate-300">
                                         <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary print:text-[9px]">{category}</h5>
                                     </div>
 
@@ -274,7 +274,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                         {/* Custom Drugs */}
                         {customDrugs.filter(e => selectedDrugs.includes(e.name)).length > 0 && (
                             <div className="break-inside-avoid bg-slate-50 dark:bg-card/30 border border-border rounded-lg overflow-hidden print:bg-white print:border-slate-300">
-                                <div className="px-3 py-1.5 bg-slate-100 dark:bg-card/50 border-b border-border print:bg-slate-100">
+                                <div className="px-3 py-1.5 bg-slate-100 dark:bg-card/50 border-b border-border print:bg-white">
                                     <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary print:text-[9px]">Additional</h5>
                                 </div>
                                 <ul className="divide-y divide-border/50 print:divide-slate-200">
@@ -321,7 +321,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                 const challengeProtos = getProtocolsForDrug(d).filter(p => p.testType === 'challenge' && p.challengeSteps.length > 0);
                                 return challengeProtos.map((proto, pi) => (
                                     <div key={`${d}-${pi}`} className="break-inside-avoid bg-slate-50 dark:bg-card/30 border border-border rounded-lg overflow-hidden print:bg-white print:border-slate-300">
-                                        <div className="px-3 py-1.5 bg-slate-100 dark:bg-card/50 border-b border-border rounded-t-lg print:bg-slate-100">
+                                        <div className="px-3 py-1.5 bg-slate-100 dark:bg-card/50 border-b border-border rounded-t-lg print:bg-white">
                                             <h5 className="font-bold text-[10px] uppercase tracking-wider text-primary print:text-[9px]">
                                                 {d} — {proto.protocolLabel} {proto.presentation ? `(${proto.presentation})` : ''}
                                             </h5>
