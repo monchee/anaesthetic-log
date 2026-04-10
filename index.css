@@ -199,9 +199,13 @@
     margin: 12mm 15mm;
     size: A4;
   }
-  body { 
-    -webkit-print-color-adjust: exact; 
-    print-color-adjust: exact; 
+  :root {
+    --background: 0 0% 100%;
+    --card: 0 0% 100%;
+  }
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
     font-size: 10px;
     line-height: 1.3;
   }
