@@ -1,8 +1,40 @@
 [
   {
+    "version": "v0.47.0",
+    "codename": "Neostigmine",
+    "highlight": true,
+    "changes": [
+      "Testing request form: fixed blank first page in print — the form now correctly starts on page 1.",
+      "Writing space added above result fields — nurses can write SPT readings, IDT measurements, and challenge observations above each underline.",
+      "Nurse sign-off fields aligned to match the new writing-space layout — Date, Time, and Nurse lines all have consistent space for handwriting."
+    ]
+  },
+  {
+    "version": "v0.46.0",
+    "codename": "Mivacurium",
+    "highlight": false,
+    "changes": [
+      "Multi-sample tryptase support — patients can now have multiple tryptase readings recorded with clinical timestamps (acute, 1-hour, 24-hour, and custom).",
+      "Tryptase results display updated — all samples shown in chronological order in the reaction summary.",
+      "REDCap CSV parsing improved — drug columns no longer incorrectly include non-drug fields such as anaesthesia type or adrenaline administration route.",
+      "REDCap CSV parsing fixed — patient reaction comments now map to the correct column instead of the treatment notes column.",
+      "REDCap CSV parsing fixed — referring doctor position field now imports correctly from the CSV export."
+    ]
+  },
+  {
+    "version": "v0.45.0",
+    "codename": "Suxamethonium-B",
+    "highlight": false,
+    "changes": [
+      "Save confirmation added for research database — a success or error toast now appears after saving a record.",
+      "Print fixes — reports and testing plans no longer start on a blank second page.",
+      "Testing request form — added space above the signature line for handwriting."
+    ]
+  },
+  {
     "version": "v0.44.0",
     "codename": "Suxamethonium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Drug protocol library added — each drug now has a built-in testing protocol with the correct SPT concentration, IDT dilution chain, and challenge steps.",
       "Protocol-driven testing form — IDT columns now adapt automatically to match the number of dilution steps in each drug's protocol.",

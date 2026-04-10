@@ -208,8 +208,6 @@
   .no-print { display: none !important; }
   .print-break-inside-avoid { break-inside: avoid; }
   * {
-    page-break-inside: avoid;
-    page-break-after: avoid;
     animation: none !important;
     transition: none !important;
   }

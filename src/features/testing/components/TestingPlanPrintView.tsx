@@ -154,9 +154,9 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                         { label: 'Saline (SPT)', unit: 'mm' },
                         { label: 'Saline (IDT)', unit: 'mm' },
                     ].map(({ label, unit }) => (
-                        <span key={label} className="flex items-center gap-1">
+                        <span key={label} className="flex items-end gap-1">
                             <span className="text-slate-700 dark:text-foreground/80 print:text-slate-700">{label}</span>
-                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[3rem]" />
+                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[3rem] print:h-5" />
                             <span className="text-muted-foreground text-[9px]">{unit}</span>
                         </span>
                     ))}
@@ -244,16 +244,18 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                                         <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.presentation || '—'}</td>
                                                         <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.sptNeatConcentration || '—'}</td>
                                                         <td className="px-3 py-2 text-center">
-                                                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[3rem]" />
-                                                            <span className="text-muted-foreground text-[9px] ml-0.5">mm</span>
+                                                            <span className="flex items-end justify-center print:h-6">
+                                                                <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[3rem] print:h-5" />
+                                                                <span className="text-muted-foreground text-[9px] ml-0.5">mm</span>
+                                                            </span>
                                                         </td>
                                                         <td className="px-3 py-2 text-muted-foreground font-mono print:text-slate-600">
                                                             {protocol?.idtSteps && protocol.idtSteps.length > 0 ? (
                                                                 <div className="space-y-1">
                                                                     {protocol.idtSteps.map((s, i) => (
-                                                                        <div key={i} className="flex items-center gap-2">
+                                                                        <div key={i} className="flex items-end gap-2">
                                                                             <span>{s.ratio}{s.concentration ? ` (${s.concentration})` : ''}</span>
-                                                                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[3rem]" />
+                                                                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[3rem] print:h-5" />
                                                                             <span className="text-muted-foreground text-[9px]">mm</span>
                                                                         </div>
                                                                     ))}
@@ -364,7 +366,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                                         <td className="px-3 py-2 text-muted-foreground">{step.volume || '—'}</td>
                                                         <td className="px-3 py-2 text-muted-foreground">{step.cumulative || '—'}</td>
                                                         <td className="px-3 py-2">
-                                                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[6rem]" />
+                                                            <span className="border-b border-gray-400 print:border-gray-500 inline-block min-w-[6rem] print:h-5" />
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -385,9 +387,9 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                     { label: 'Time', width: 'min-w-[4rem]' },
                     { label: 'Nurse', width: 'min-w-[10rem]' },
                 ].map(({ label, width }) => (
-                    <span key={label} className="flex items-center gap-1.5">
+                    <span key={label} className="flex items-end gap-1.5">
                         <span className="font-semibold text-slate-700 dark:text-foreground/80 print:text-slate-700">{label}:</span>
-                        <span className={`border-b border-gray-400 print:border-gray-500 inline-block ${width}`} />
+                        <span className={`border-b border-gray-400 print:border-gray-500 inline-block print:h-6 ${width}`} />
                     </span>
                 ))}
             </div>
