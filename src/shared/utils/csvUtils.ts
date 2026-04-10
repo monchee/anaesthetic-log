@@ -219,13 +219,13 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
       else if (header === 'Time of Induction:') colIndices['inductionTime'] = idx;
       else if (header === 'Time Reaction First Noted:') colIndices['reactionTime'] = idx;
       else if (header === 'Referring Doctor (Name)') colIndices['referringDoctor'] = idx;
-      else if (header.includes('Position') && (header.includes('Referring') || header.includes('Doctor'))) colIndices['referringDoctorPosition'] = idx;
+      else if (header === 'Position:' || (header.includes('Position') && (header.includes('Referring') || header.includes('Doctor')))) colIndices['referringDoctorPosition'] = idx;
       else if (header === 'Provider Number:') colIndices['providerNumber'] = idx;
       else if (header === 'Email Address:') colIndices['referringEmail'] = idx;
       else if (header === 'Phone Number:') colIndices['phoneNumber'] = idx;
       else if (header.includes('Severity of Allergic Reaction')) colIndices['grade'] = idx;
       else if (header.includes('Write a brief summary')) colIndices['summary'] = idx;
-      else if (header.includes('Comment')) colIndices['comments'] = idx;
+      else if (header === 'Comments' && colIndices['comments'] === undefined) colIndices['comments'] = idx;
       else if (header === 'Outcome?') colIndices['outcome'] = idx;
       else if (header === 'What was first symptom noticed?') colIndices['firstSymptom'] = idx;
       else if (header === 'What was predominant symptom?') colIndices['predominantSymptom'] = idx;
@@ -282,7 +282,18 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
       const match = h.match(DRUG_CHOICE_REGEX);
       if (match) {
           const drugName = match[1].trim();
-          if (h.includes('Relevant Conditions') || h.includes('Patient Taking') || h.includes('acknowledge')) return;
+          if (
+              h.includes('Relevant Conditions') || h.includes('Patient Taking') || h.includes('acknowledge') ||
+              h.includes('Type of Anaesthesia') ||
+              h.includes('Low oxygen saturations') || h.includes('Low Oxygen Saturations') ||
+              h.includes('Flushing') || h.includes('Uticaria') || h.includes('Urticaria') ||
+              h.includes('Bronchospasm:') || h.includes('Gastrointestinal Signs:') ||
+              h.includes('exposed to agents') ||
+              h.includes('Adrenaline Administration Route') ||
+              h.includes('further complications') || h.includes('Documents to Chase') ||
+              h.startsWith('Muscle Relaxant') || h.startsWith('Penicillin (') ||
+              h.startsWith('Cephalospirin') || h.startsWith('Others (')
+          ) return;
 
           let timeIdx = -1;
           const searchTerms = DRUG_TIME_MATCHERS[drugName] || [drugName];
