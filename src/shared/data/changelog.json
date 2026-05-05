@@ -1,12 +1,27 @@
 [
   {
-    "version": "v0.47.0",
-    "codename": "Neostigmine",
+    "version": "v0.48.0",
+    "codename": "Atracurium",
     "highlight": true,
     "changes": [
-      "Testing request form: fixed blank first page in print — the form now correctly starts on page 1.",
-      "Writing space added above result fields — nurses can write SPT readings, IDT measurements, and challenge observations above each underline.",
-      "Nurse sign-off fields aligned to match the new writing-space layout — Date, Time, and Nurse lines all have consistent space for handwriting."
+      "Sugammadex fixed \u2014 you can now select both 'Alone' and '+ Rocuronium' at the same time without one cancelling the other.",
+      "Propofol simplified \u2014 collapsed from two testing protocols to a single IV protocol, removed unnecessary IDT dilution.",
+      "Parecoxib streamlined \u2014 removed extra IDT dilution step that was no longer needed.",
+      "Contact phone number updated.",
+      "Drug plan now carries over to testing \u2014 drugs selected in the testing plan automatically populate the testing panel.",
+      "Print improvements \u2014 browser headers and footers (URLs, dates, page numbers) no longer appear when printing reports.",
+      "Empty result fields now show a dash placeholder correctly on all browsers."
+    ]
+  },
+  {
+    "version": "v0.47.0",
+    "codename": "Neostigmine",
+    "highlight": false,
+    "changes": [
+      "Toast notifications cleaned up \u2014 removed rounded corners for a consistent clinical look.",
+      "Print background fixed \u2014 reports now print with a clean white background.",
+      "Print section headers improved \u2014 removed gray backgrounds that looked messy when printed.",
+      "Signature lines improved \u2014 better layout with writing space above the line."
     ]
   },
   {
@@ -14,11 +29,11 @@
     "codename": "Mivacurium",
     "highlight": false,
     "changes": [
-      "Multi-sample tryptase support — patients can now have multiple tryptase readings recorded with clinical timestamps (acute, 1-hour, 24-hour, and custom).",
-      "Tryptase results display updated — all samples shown in chronological order in the reaction summary.",
-      "REDCap CSV parsing improved — drug columns no longer incorrectly include non-drug fields such as anaesthesia type or adrenaline administration route.",
-      "REDCap CSV parsing fixed — patient reaction comments now map to the correct column instead of the treatment notes column.",
-      "REDCap CSV parsing fixed — referring doctor position field now imports correctly from the CSV export."
+      "Multi-sample tryptase support \u2014 patients can now have multiple tryptase readings recorded with clinical timestamps (acute, 1-hour, 24-hour, and custom).",
+      "Tryptase results display updated \u2014 all samples shown in chronological order in the reaction summary.",
+      "REDCap CSV parsing improved \u2014 drug columns no longer incorrectly include non-drug fields such as anaesthesia type or adrenaline administration route.",
+      "REDCap CSV parsing fixed \u2014 patient reaction comments now map to the correct column instead of the treatment notes column.",
+      "REDCap CSV parsing fixed \u2014 referring doctor position field now imports correctly from the CSV export."
     ]
   },
   {
@@ -26,9 +41,9 @@
     "codename": "Suxamethonium-B",
     "highlight": false,
     "changes": [
-      "Save confirmation added for research database — a success or error toast now appears after saving a record.",
-      "Print fixes — reports and testing plans no longer start on a blank second page.",
-      "Testing request form — added space above the signature line for handwriting."
+      "Save confirmation added for research database \u2014 a success or error toast now appears after saving a record.",
+      "Print fixes \u2014 reports and testing plans no longer start on a blank second page.",
+      "Testing request form \u2014 added space above the signature line for handwriting."
     ]
   },
   {
@@ -36,13 +51,13 @@
     "codename": "Suxamethonium",
     "highlight": false,
     "changes": [
-      "Drug protocol library added — each drug now has a built-in testing protocol with the correct SPT concentration, IDT dilution chain, and challenge steps.",
-      "Protocol-driven testing form — IDT columns now adapt automatically to match the number of dilution steps in each drug's protocol.",
-      "Multiple protocol variants — drugs with more than one accepted testing protocol (e.g. Sugammadex alone vs. with Rocuronium) let you choose the relevant variant.",
-      "Custom drug support — when adding unlisted drugs, you can now configure your own SPT concentration, IDT dilution steps, and whether to include in graded challenge.",
-      "Drug search added — filter the drug list in both the testing form and plan generator to quickly find what you need.",
-      "Proton Pump Inhibitors category added — Omeprazole, Pantoprazole, Esomeprazole, and others now appear as a dedicated drug group.",
-      "Reports updated — clinical reports and Powerchart letters now display IDT results dynamically based on the protocol used, with automatic fallback for older records."
+      "Drug protocol library added \u2014 each drug now has a built-in testing protocol with the correct SPT concentration, IDT dilution chain, and challenge steps.",
+      "Protocol-driven testing form \u2014 IDT columns now adapt automatically to match the number of dilution steps in each drug's protocol.",
+      "Multiple protocol variants \u2014 drugs with more than one accepted testing protocol (e.g. Sugammadex alone vs. with Rocuronium) let you choose the relevant variant.",
+      "Custom drug support \u2014 when adding unlisted drugs, you can now configure your own SPT concentration, IDT dilution steps, and whether to include in graded challenge.",
+      "Drug search added \u2014 filter the drug list in both the testing form and plan generator to quickly find what you need.",
+      "Proton Pump Inhibitors category added \u2014 Omeprazole, Pantoprazole, Esomeprazole, and others now appear as a dedicated drug group.",
+      "Reports updated \u2014 clinical reports and Powerchart letters now display IDT results dynamically based on the protocol used, with automatic fallback for older records."
     ]
   },
   {
@@ -50,10 +65,10 @@
     "codename": "Rapacuronium",
     "highlight": false,
     "changes": [
-      "Loading animation added — the patient table now shows a smooth shimmer animation while data loads on startup.",
-      "Smarter empty states — the patient table shows a helpful upload prompt when no records are loaded, and a 'no matches' message only when filters are active.",
-      "Research page redesigned — the header and statistics are now grouped in a card for a cleaner, more consistent layout.",
-      "Research loading improved — the research page now shows a shimmer animation while data is fetching."
+      "Loading animation added \u2014 the patient table now shows a smooth shimmer animation while data loads on startup.",
+      "Smarter empty states \u2014 the patient table shows a helpful upload prompt when no records are loaded, and a 'no matches' message only when filters are active.",
+      "Research page redesigned \u2014 the header and statistics are now grouped in a card for a cleaner, more consistent layout.",
+      "Research loading improved \u2014 the research page now shows a shimmer animation while data is fetching."
     ]
   },
   {
@@ -61,10 +76,10 @@
     "codename": "Pancuronium",
     "highlight": false,
     "changes": [
-      "Dark mode now follows your device's system setting — the app automatically switches between light and dark based on your OS preference.",
+      "Dark mode now follows your device's system setting \u2014 the app automatically switches between light and dark based on your OS preference.",
       "Manual light/dark toggle still available via the Menu, and your choice is remembered for future visits.",
-      "Dark mode completely overhauled — consistent styling across all screens, forms, reports, and info pages.",
-      "App rebranded to DREAM — Drug Reaction Evaluation and Anaesthetic Management."
+      "Dark mode completely overhauled \u2014 consistent styling across all screens, forms, reports, and info pages.",
+      "App rebranded to DREAM \u2014 Drug Reaction Evaluation and Anaesthetic Management."
     ]
   },
   {
@@ -72,10 +87,10 @@
     "codename": "Orocuronium",
     "highlight": false,
     "changes": [
-      "Notifications redesigned — success and error messages now use a modern toast style consistent throughout the app.",
-      "Save confirmation — a success message appears after saving a testing record so you know it worked.",
-      "Delete confirmation — removing a research record now shows a clear success or error message.",
-      "Upload feedback improved — CSV import now shows detailed success and error messages including record counts."
+      "Notifications redesigned \u2014 success and error messages now use a modern toast style consistent throughout the app.",
+      "Save confirmation \u2014 a success message appears after saving a testing record so you know it worked.",
+      "Delete confirmation \u2014 removing a research record now shows a clear success or error message.",
+      "Upload feedback improved \u2014 CSV import now shows detailed success and error messages including record counts."
     ]
   },
   {
@@ -83,9 +98,9 @@
     "codename": "Cisatracurium",
     "highlight": false,
     "changes": [
-      "Welcome guide added — a helpful instructions box now appears on the home screen to help you get started.",
-      "Clear All buttons added — quickly deselect all drugs in one click when setting up your testing plan.",
-      "Clearer testing form controls — easier to reset and modify your drug selections."
+      "Welcome guide added \u2014 a helpful instructions box now appears on the home screen to help you get started.",
+      "Clear All buttons added \u2014 quickly deselect all drugs in one click when setting up your testing plan.",
+      "Clearer testing form controls \u2014 easier to reset and modify your drug selections."
     ]
   },
   {
@@ -93,8 +108,8 @@
     "codename": "Atracurium",
     "highlight": false,
     "changes": [
-      "Testing plan help text improved — clearer explanations of what each icon means.",
-      "Form headers made more consistent — easier to understand the structure of testing pages.",
+      "Testing plan help text improved \u2014 clearer explanations of what each icon means.",
+      "Form headers made more consistent \u2014 easier to understand the structure of testing pages.",
       "Navigation bar height adjusted for better appearance across all devices."
     ]
   },
@@ -112,16 +127,16 @@
     "codename": "Rocuronium",
     "highlight": false,
     "changes": [
-      "Research database for clinicians — you can now save your test results to help with research and teaching (all patient names are removed for privacy).",
-      "Save to Research Database button added to reports — easily contribute your data to the research database.",
-      "Research Dashboard added — view aggregated testing data, download records, and manage submissions.",
-      "Reports screen improved — dedicated exit button prevents accidental navigation away from your work.",
-      "Common drugs pre-selected — Latex and Chlorhexidine are now automatically selected when you start testing.",
-      "Test controls moved — reference values are now positioned below your drug selections for better flow.",
-      "Frequently-tested drugs highlighted — Latex and Chlorhexidine now have a pin icon to show they're standard options.",
-      "File dates now display correctly — you can see when your patient database was last updated.",
-      "Upload instructions easier to find — help link now opens directly to the instructions.",
-      "Cleaner research page — removed duplicate buttons for a tidier interface."
+      "Research database for clinicians \u2014 you can now save your test results to help with research and teaching (all patient names are removed for privacy).",
+      "Save to Research Database button added to reports \u2014 easily contribute your data to the research database.",
+      "Research Dashboard added \u2014 view aggregated testing data, download records, and manage submissions.",
+      "Reports screen improved \u2014 dedicated exit button prevents accidental navigation away from your work.",
+      "Common drugs pre-selected \u2014 Latex and Chlorhexidine are now automatically selected when you start testing.",
+      "Test controls moved \u2014 reference values are now positioned below your drug selections for better flow.",
+      "Frequently-tested drugs highlighted \u2014 Latex and Chlorhexidine now have a pin icon to show they're standard options.",
+      "File dates now display correctly \u2014 you can see when your patient database was last updated.",
+      "Upload instructions easier to find \u2014 help link now opens directly to the instructions.",
+      "Cleaner research page \u2014 removed duplicate buttons for a tidier interface."
     ]
   },
   {
@@ -129,8 +144,8 @@
     "codename": "Thiopentone",
     "highlight": false,
     "changes": [
-      "Fixed an issue with the welcome dialog — now correctly returns to the home screen when closed.",
-      "Cleaner page layout — removed duplicate title bars that were appearing above content.",
+      "Fixed an issue with the welcome dialog \u2014 now correctly returns to the home screen when closed.",
+      "Cleaner page layout \u2014 removed duplicate title bars that were appearing above content.",
       "Documentation updated to the latest version."
     ]
   },
@@ -139,16 +154,16 @@
     "codename": "Suxamethonium",
     "highlight": false,
     "changes": [
-      "Navigation improved — 'Log' renamed to 'Home' for clarity, and menu items now have matching icons.",
-      "Page icons fixed — all information pages now show the correct icons.",
-      "Page headers improved — added helpful descriptions for each information page.",
-      "Subtitles tidied up — removed redundant department names from secondary screens.",
-      "Testing page redesigned — now matches the clean look of other form pages.",
-      "Form layout improved — dates, urgency flag, and documents are now better organized.",
-      "Visual consistency improved — buttons throughout the app now use consistent squared corners.",
-      "Patient history enhanced — reaction severity now shows as a tooltip instead of always being visible.",
-      "Upload buttons standardized — CSV upload now uses consistent red coloring.",
-      "Version number repositioned — easier to find on the PIN entry screen."
+      "Navigation improved \u2014 'Log' renamed to 'Home' for clarity, and menu items now have matching icons.",
+      "Page icons fixed \u2014 all information pages now show the correct icons.",
+      "Page headers improved \u2014 added helpful descriptions for each information page.",
+      "Subtitles tidied up \u2014 removed redundant department names from secondary screens.",
+      "Testing page redesigned \u2014 now matches the clean look of other form pages.",
+      "Form layout improved \u2014 dates, urgency flag, and documents are now better organized.",
+      "Visual consistency improved \u2014 buttons throughout the app now use consistent squared corners.",
+      "Patient history enhanced \u2014 reaction severity now shows as a tooltip instead of always being visible.",
+      "Upload buttons standardized \u2014 CSV upload now uses consistent red coloring.",
+      "Version number repositioned \u2014 easier to find on the PIN entry screen."
     ]
   },
   {
@@ -156,11 +171,11 @@
     "codename": "Esmolol",
     "highlight": false,
     "changes": [
-      "Information pages thoroughly reviewed — all help and legal pages checked for accuracy.",
-      "Contact page updated — added phone number, email, hours, and escalation guidance for urgent issues.",
-      "Help pages expanded — added new guidance for clinical reports and test result interpretation.",
-      "Drug reference improved — clearer explanations aligned with current guidelines.",
-      "Legal pages updated — Privacy Policy and Terms of Use current as of March 2026."
+      "Information pages thoroughly reviewed \u2014 all help and legal pages checked for accuracy.",
+      "Contact page updated \u2014 added phone number, email, hours, and escalation guidance for urgent issues.",
+      "Help pages expanded \u2014 added new guidance for clinical reports and test result interpretation.",
+      "Drug reference improved \u2014 clearer explanations aligned with current guidelines.",
+      "Legal pages updated \u2014 Privacy Policy and Terms of Use current as of March 2026."
     ]
   },
   {
@@ -168,13 +183,13 @@
     "codename": "Propofol",
     "highlight": false,
     "changes": [
-      "Reports redesigned with cleaner styling — all printed reports now have a professional appearance.",
-      "Improved layouts — cleaner organization of information in cards with better visual separation.",
-      "Better spacing — more breathing room throughout reports makes them easier to read.",
-      "Typography improved — clearer, more consistent headings and text sizes.",
-      "Testing plans now match report styling — consistent professional look across all documents.",
-      "Unified controls — all reports now use the same buttons for printing, copying, and emailing.",
-      "Dark mode support enhanced — better contrast and readability in dark theme."
+      "Reports redesigned with cleaner styling \u2014 all printed reports now have a professional appearance.",
+      "Improved layouts \u2014 cleaner organization of information in cards with better visual separation.",
+      "Better spacing \u2014 more breathing room throughout reports makes them easier to read.",
+      "Typography improved \u2014 clearer, more consistent headings and text sizes.",
+      "Testing plans now match report styling \u2014 consistent professional look across all documents.",
+      "Unified controls \u2014 all reports now use the same buttons for printing, copying, and emailing.",
+      "Dark mode support enhanced \u2014 better contrast and readability in dark theme."
     ]
   },
   {
@@ -182,12 +197,12 @@
     "codename": "Penicillin",
     "highlight": false,
     "changes": [
-      "Typography refined — improved line spacing and heading sizes for better readability.",
-      "Color scheme updated — updated to match NSW Health official standards.",
-      "Header accent stripe added — new blue stripe at the top of pages.",
-      "Button hover states improved — subtle blue tint when you hover over buttons.",
-      "Dashboard cards enhanced — color-coded left borders make it easier to spot different statistics at a glance.",
-      "Help and callout boxes updated — consistent styling throughout the app."
+      "Typography refined \u2014 improved line spacing and heading sizes for better readability.",
+      "Color scheme updated \u2014 updated to match NSW Health official standards.",
+      "Header accent stripe added \u2014 new blue stripe at the top of pages.",
+      "Button hover states improved \u2014 subtle blue tint when you hover over buttons.",
+      "Dashboard cards enhanced \u2014 color-coded left borders make it easier to spot different statistics at a glance.",
+      "Help and callout boxes updated \u2014 consistent styling throughout the app."
     ]
   },
   {
@@ -195,12 +210,12 @@
     "codename": "Cephalosporin",
     "highlight": false,
     "changes": [
-      "Mobile and tablet layout improved — better use of screen space on smaller devices.",
-      "Testing forms work better on mobile — controls fit nicely without awkward wrapping.",
-      "Results entry easier — number input grid adjusted for mobile touch entry.",
-      "Dashboard works on all devices — statistics display correctly on tablets and phones.",
-      "Reports no longer overflow — you can read everything without horizontal scrolling on mobile.",
-      "Touch-friendly design — buttons and selectors are easier to tap on smaller screens."
+      "Mobile and tablet layout improved \u2014 better use of screen space on smaller devices.",
+      "Testing forms work better on mobile \u2014 controls fit nicely without awkward wrapping.",
+      "Results entry easier \u2014 number input grid adjusted for mobile touch entry.",
+      "Dashboard works on all devices \u2014 statistics display correctly on tablets and phones.",
+      "Reports no longer overflow \u2014 you can read everything without horizontal scrolling on mobile.",
+      "Touch-friendly design \u2014 buttons and selectors are easier to tap on smaller screens."
     ]
   },
   {
@@ -208,10 +223,10 @@
     "codename": "Fentanyl",
     "highlight": false,
     "changes": [
-      "Testing plan document redesigned — cleaner, more professional appearance with section headings and icons.",
-      "Mobile-friendly testing plans — documents now work well on tablets and phones.",
-      "Urgent flag improved — now uses a clear red box that stands out when activated.",
-      "Form fields standardized — testing form now uses consistent styling throughout."
+      "Testing plan document redesigned \u2014 cleaner, more professional appearance with section headings and icons.",
+      "Mobile-friendly testing plans \u2014 documents now work well on tablets and phones.",
+      "Urgent flag improved \u2014 now uses a clear red box that stands out when activated.",
+      "Form fields standardized \u2014 testing form now uses consistent styling throughout."
     ]
   },
   {
@@ -219,8 +234,8 @@
     "codename": "Midazolam",
     "highlight": false,
     "changes": [
-      "PIN login screen redesigned — cleaner, more secure-looking design.",
-      "PIN entry improved — individual digit boxes make entry easier and faster, auto-advances between boxes."
+      "PIN login screen redesigned \u2014 cleaner, more secure-looking design.",
+      "PIN entry improved \u2014 individual digit boxes make entry easier and faster, auto-advances between boxes."
     ]
   },
   {
@@ -228,13 +243,13 @@
     "codename": "Remifentanil",
     "highlight": false,
     "changes": [
-      "New letter template added — generates professional clinical letters with your test results.",
-      "Copy reports as text — easily copy reports to clipboard for use in emails or other programs.",
-      "PIN protection added — passcode security to keep patient data safe.",
-      "Patient IDs separated — now shows medical record number and record ID as separate fields.",
-      "Export testing records — download a summary of your testing data without patient names.",
-      "Notes field added — you can now add notes to individual drug test results.",
-      "Notes appear in reports — your notes are included in clinical report output."
+      "New letter template added \u2014 generates professional clinical letters with your test results.",
+      "Copy reports as text \u2014 easily copy reports to clipboard for use in emails or other programs.",
+      "PIN protection added \u2014 passcode security to keep patient data safe.",
+      "Patient IDs separated \u2014 now shows medical record number and record ID as separate fields.",
+      "Export testing records \u2014 download a summary of your testing data without patient names.",
+      "Notes field added \u2014 you can now add notes to individual drug test results.",
+      "Notes appear in reports \u2014 your notes are included in clinical report output."
     ]
   },
   {
@@ -242,14 +257,14 @@
     "codename": "Sugammadex",
     "highlight": false,
     "changes": [
-      "New reversal agents category added — includes reversal medications.",
-      "Testing plan auto-population — drugs given at time of reaction are automatically included.",
-      "Urgent testing flag added — mark when a patient needs priority testing.",
-      "Document tracking — keep track of which documents still need to be chased.",
-      "Email testing plans — send testing requests directly to allergy nurses at SLHD.",
-      "Tryptase results visible — reaction severity now shows on patient summary.",
-      "Drug list expanded — added common antibiotics and additional testing options.",
-      "Smart defaults — common drugs like Chlorhexidine and Latex auto-selected."
+      "New reversal agents category added \u2014 includes reversal medications.",
+      "Testing plan auto-population \u2014 drugs given at time of reaction are automatically included.",
+      "Urgent testing flag added \u2014 mark when a patient needs priority testing.",
+      "Document tracking \u2014 keep track of which documents still need to be chased.",
+      "Email testing plans \u2014 send testing requests directly to allergy nurses at SLHD.",
+      "Tryptase results visible \u2014 reaction severity now shows on patient summary.",
+      "Drug list expanded \u2014 added common antibiotics and additional testing options.",
+      "Smart defaults \u2014 common drugs like Chlorhexidine and Latex auto-selected."
     ]
   },
   {
@@ -257,9 +272,9 @@
     "codename": "Atracurium",
     "highlight": false,
     "changes": [
-      "App loads faster — quicker startup and smoother performance.",
-      "Dashboard improved — cleaner statistics display.",
-      "Smoother interactions — better animation and responsiveness throughout."
+      "App loads faster \u2014 quicker startup and smoother performance.",
+      "Dashboard improved \u2014 cleaner statistics display.",
+      "Smoother interactions \u2014 better animation and responsiveness throughout."
     ]
   },
   {
@@ -267,10 +282,10 @@
     "codename": "Mivacurium (Patch 10)",
     "highlight": false,
     "changes": [
-      "CSV import improved — phone numbers now import correctly.",
-      "Validation added — checks that your patient file has all the required columns before importing.",
-      "Better error messages — clearly shows which rows couldn't import and why.",
-      "Duplicate detection — warns you if the same patient appears to be imported twice."
+      "CSV import improved \u2014 phone numbers now import correctly.",
+      "Validation added \u2014 checks that your patient file has all the required columns before importing.",
+      "Better error messages \u2014 clearly shows which rows couldn't import and why.",
+      "Duplicate detection \u2014 warns you if the same patient appears to be imported twice."
     ]
   },
   {
@@ -278,8 +293,8 @@
     "codename": "Vecuronium (Patch 9)",
     "highlight": false,
     "changes": [
-      "Changelog page redesigned — cleaner, more professional appearance.",
-      "Version number auto-updates — footer now shows current version automatically."
+      "Changelog page redesigned \u2014 cleaner, more professional appearance.",
+      "Version number auto-updates \u2014 footer now shows current version automatically."
     ]
   },
   {
@@ -291,12 +306,12 @@
     ]
   },
   {
-    "version": "v0.24.1–v0.24.7",
+    "version": "v0.24.1\u2013v0.24.7",
     "codename": "Patches",
     "highlight": false,
     "changes": [
-      "Dark mode fixes — improved readability and fixed visibility issues across all pages and forms.",
-      "Text contrast improved — better visibility of headings and content in dark mode."
+      "Dark mode fixes \u2014 improved readability and fixed visibility issues across all pages and forms.",
+      "Text contrast improved \u2014 better visibility of headings and content in dark mode."
     ]
   },
   {
@@ -304,10 +319,10 @@
     "codename": "Acetaminophen",
     "highlight": false,
     "changes": [
-      "Dark mode added — app now supports dark theme for comfortable use in low light.",
-      "Auto dark mode — respects your device's light/dark mode preference.",
-      "Improved colors — better contrast for readability in both light and dark modes.",
-      "Medical colors remain clear — important status colors stay visible for patient safety."
+      "Dark mode added \u2014 app now supports dark theme for comfortable use in low light.",
+      "Auto dark mode \u2014 respects your device's light/dark mode preference.",
+      "Improved colors \u2014 better contrast for readability in both light and dark modes.",
+      "Medical colors remain clear \u2014 important status colors stay visible for patient safety."
     ]
   },
   {
@@ -315,8 +330,8 @@
     "codename": "Amoxicillin",
     "highlight": false,
     "changes": [
-      "App loads faster — uses less data, quicker access to patient information.",
-      "Code simplified — more maintainable for future improvements."
+      "App loads faster \u2014 uses less data, quicker access to patient information.",
+      "Code simplified \u2014 more maintainable for future improvements."
     ]
   },
   {
@@ -324,8 +339,8 @@
     "codename": "Sulfamethoxazole",
     "highlight": false,
     "changes": [
-      "Mobile layout improved — content is easier to see and navigate on phones and tablets.",
-      "Spacing fixed — eliminated awkward gaps and overlaps on smaller screens."
+      "Mobile layout improved \u2014 content is easier to see and navigate on phones and tablets.",
+      "Spacing fixed \u2014 eliminated awkward gaps and overlaps on smaller screens."
     ]
   },
   {
@@ -333,8 +348,8 @@
     "codename": "Doxycycline",
     "highlight": false,
     "changes": [
-      "Tooltip visibility fixed — help information now displays correctly in both light and dark modes.",
-      "Accessibility improved — better keyboard navigation and screen reader support throughout the app."
+      "Tooltip visibility fixed \u2014 help information now displays correctly in both light and dark modes.",
+      "Accessibility improved \u2014 better keyboard navigation and screen reader support throughout the app."
     ]
   },
   {
@@ -342,8 +357,8 @@
     "codename": "Fluoroquinolone",
     "highlight": false,
     "changes": [
-      "Direct page links added — you can now bookmark specific pages and share direct links.",
-      "Browser navigation fixed — back and forward buttons now work correctly."
+      "Direct page links added \u2014 you can now bookmark specific pages and share direct links.",
+      "Browser navigation fixed \u2014 back and forward buttons now work correctly."
     ]
   },
   {
@@ -351,8 +366,8 @@
     "codename": "Macrolide",
     "highlight": false,
     "changes": [
-      "Button feedback improved — buttons now respond more visibly when clicked.",
-      "Animations smoothed — panel and menu slide-ins now feel more polished."
+      "Button feedback improved \u2014 buttons now respond more visibly when clicked.",
+      "Animations smoothed \u2014 panel and menu slide-ins now feel more polished."
     ]
   },
   {
@@ -360,9 +375,9 @@
     "codename": "Ibuprofen",
     "highlight": false,
     "changes": [
-      "Filter controls redesigned — easier to use and understand.",
-      "Instant filter results — changes apply immediately as you select them.",
-      "Touch-friendly — severity and agent selection now work better on touch devices."
+      "Filter controls redesigned \u2014 easier to use and understand.",
+      "Instant filter results \u2014 changes apply immediately as you select them.",
+      "Touch-friendly \u2014 severity and agent selection now work better on touch devices."
     ]
   },
   {
@@ -370,9 +385,9 @@
     "codename": "Aspirin",
     "highlight": false,
     "changes": [
-      "Faster startup — app loads quicker on first open.",
-      "Enhanced security — improved protection for patient information.",
-      "Better loading screens — clearer feedback when navigating between pages."
+      "Faster startup \u2014 app loads quicker on first open.",
+      "Enhanced security \u2014 improved protection for patient information.",
+      "Better loading screens \u2014 clearer feedback when navigating between pages."
     ]
   },
   {
@@ -380,8 +395,8 @@
     "codename": "Paracetamol",
     "highlight": false,
     "changes": [
-      "Design updated — cleaner, more clinical appearance.",
-      "Consistent styling — all buttons, cards, and forms now have a unified professional look."
+      "Design updated \u2014 cleaner, more clinical appearance.",
+      "Consistent styling \u2014 all buttons, cards, and forms now have a unified professional look."
     ]
   },
   {
@@ -389,8 +404,8 @@
     "codename": "Epinephrine",
     "highlight": false,
     "changes": [
-      "Branding updated — fonts and colors now match NSW Health standards.",
-      "Professional appearance — forms and printed documents look more polished."
+      "Branding updated \u2014 fonts and colors now match NSW Health standards.",
+      "Professional appearance \u2014 forms and printed documents look more polished."
     ]
   },
   {
@@ -398,8 +413,8 @@
     "codename": "Hydrocortisone",
     "highlight": false,
     "changes": [
-      "Testing reliability improved — fewer unexpected issues.",
-      "Performance optimizations — smoother updates and faster responses."
+      "Testing reliability improved \u2014 fewer unexpected issues.",
+      "Performance optimizations \u2014 smoother updates and faster responses."
     ]
   },
   {
@@ -407,9 +422,9 @@
     "codename": "Dexamethasone",
     "highlight": false,
     "changes": [
-      "Legal pages added — Privacy Policy, Terms of Use, and other compliance documentation.",
-      "Governance guidance included — aligned with Australian healthcare standards.",
-      "Footer links added — easy access to all important legal information."
+      "Legal pages added \u2014 Privacy Policy, Terms of Use, and other compliance documentation.",
+      "Governance guidance included \u2014 aligned with Australian healthcare standards.",
+      "Footer links added \u2014 easy access to all important legal information."
     ]
   },
   {
@@ -417,8 +432,8 @@
     "codename": "Trimethoprim",
     "highlight": false,
     "changes": [
-      "Quick Start Guide condensed — easier to scan and understand.",
-      "Upload help improved — step-by-step instructions for importing patient records."
+      "Quick Start Guide condensed \u2014 easier to scan and understand.",
+      "Upload help improved \u2014 step-by-step instructions for importing patient records."
     ]
   },
   {
@@ -426,12 +441,12 @@
     "codename": "Clindamycin",
     "highlight": false,
     "changes": [
-      "Accessibility enhanced — better keyboard navigation and screen reader support.",
-      "Notifications improved — clearer, less intrusive messages.",
-      "Visual consistency improved — uniform styling across all screens.",
-      "Color coding improved — clearer reaction severity badges.",
-      "Theme support improved — light and dark modes look better.",
-      "Touch targets enlarged — easier to tap menu items on mobile."
+      "Accessibility enhanced \u2014 better keyboard navigation and screen reader support.",
+      "Notifications improved \u2014 clearer, less intrusive messages.",
+      "Visual consistency improved \u2014 uniform styling across all screens.",
+      "Color coding improved \u2014 clearer reaction severity badges.",
+      "Theme support improved \u2014 light and dark modes look better.",
+      "Touch targets enlarged \u2014 easier to tap menu items on mobile."
     ]
   },
   {
@@ -439,11 +454,11 @@
     "codename": "Metronidazole",
     "highlight": false,
     "changes": [
-      "Offline access added — you can now use the app without internet.",
-      "Faster performance — quicker loading and smoother navigation.",
-      "App installation improved — app icons work correctly when installed on devices.",
-      "Navigation redesigned — new menu button for easier access to help and information.",
-      "Update notifications — you'll be notified when new versions are available."
+      "Offline access added \u2014 you can now use the app without internet.",
+      "Faster performance \u2014 quicker loading and smoother navigation.",
+      "App installation improved \u2014 app icons work correctly when installed on devices.",
+      "Navigation redesigned \u2014 new menu button for easier access to help and information.",
+      "Update notifications \u2014 you'll be notified when new versions are available."
     ]
   },
   {
@@ -451,10 +466,10 @@
     "codename": "Fluconazole",
     "highlight": false,
     "changes": [
-      "Help pages added — About, FAQ, Drug Reference, Contact, and Resources pages.",
-      "Dashboard redesigned — cleaner statistics and easier to understand data.",
-      "Search filters always visible — quicker access to search and filtering.",
-      "Welcome guide added — opens automatically on first use."
+      "Help pages added \u2014 About, FAQ, Drug Reference, Contact, and Resources pages.",
+      "Dashboard redesigned \u2014 cleaner statistics and easier to understand data.",
+      "Search filters always visible \u2014 quicker access to search and filtering.",
+      "Welcome guide added \u2014 opens automatically on first use."
     ]
   },
   {
@@ -462,10 +477,10 @@
     "codename": "Ketoconazole",
     "highlight": false,
     "changes": [
-      "Welcome guide added — helps you get started with the app.",
-      "Advanced search added — filter records by reaction severity, date, location, outcome, and suspected drugs.",
-      "Better patient search — improved filtering and sorting in the dashboard.",
-      "Help button moved to navigation bar — easier to find support."
+      "Welcome guide added \u2014 helps you get started with the app.",
+      "Advanced search added \u2014 filter records by reaction severity, date, location, outcome, and suspected drugs.",
+      "Better patient search \u2014 improved filtering and sorting in the dashboard.",
+      "Help button moved to navigation bar \u2014 easier to find support."
     ]
   },
   {
@@ -473,9 +488,9 @@
     "codename": "Cefazolin",
     "highlight": false,
     "changes": [
-      "Form spacing improved — cleaner layout for easier data entry.",
-      "Print output cleaned up — headers removed for neater printed reports.",
-      "Changelog readability improved — clearer descriptions of changes."
+      "Form spacing improved \u2014 cleaner layout for easier data entry.",
+      "Print output cleaned up \u2014 headers removed for neater printed reports.",
+      "Changelog readability improved \u2014 clearer descriptions of changes."
     ]
   },
   {
@@ -483,10 +498,10 @@
     "codename": "Allopurinol",
     "highlight": false,
     "changes": [
-      "Record saving fixed — forms now save correctly every time.",
-      "Error messages improved — clearer explanation when something goes wrong.",
-      "Spelling standardized — Australian English spelling throughout.",
-      "Print formatting improved — reports fit neatly on single page when printed."
+      "Record saving fixed \u2014 forms now save correctly every time.",
+      "Error messages improved \u2014 clearer explanation when something goes wrong.",
+      "Spelling standardized \u2014 Australian English spelling throughout.",
+      "Print formatting improved \u2014 reports fit neatly on single page when printed."
     ]
   },
   {
@@ -494,9 +509,9 @@
     "codename": "Carbamazepine",
     "highlight": false,
     "changes": [
-      "Security enhanced — better protection for patient information.",
-      "Performance improved — faster loading, uses less data.",
-      "Help tooltips added — helpful information when hovering over items."
+      "Security enhanced \u2014 better protection for patient information.",
+      "Performance improved \u2014 faster loading, uses less data.",
+      "Help tooltips added \u2014 helpful information when hovering over items."
     ]
   },
   {
@@ -504,8 +519,8 @@
     "codename": "Phenytoin",
     "highlight": false,
     "changes": [
-      "Animations refined — smoother, less distracting visual effects.",
-      "Stability improved — fewer crashes and unexpected errors."
+      "Animations refined \u2014 smoother, less distracting visual effects.",
+      "Stability improved \u2014 fewer crashes and unexpected errors."
     ]
   },
   {
@@ -513,10 +528,10 @@
     "codename": "NSAIDs",
     "highlight": false,
     "changes": [
-      "Workflow improved — simpler way to view history and enter test results.",
-      "Testing Plan Generator added — create printable request forms.",
-      "Patient search improved — faster, more reliable searching.",
-      "Reaction grades clearer — easier to understand severity levels."
+      "Workflow improved \u2014 simpler way to view history and enter test results.",
+      "Testing Plan Generator added \u2014 create printable request forms.",
+      "Patient search improved \u2014 faster, more reliable searching.",
+      "Reaction grades clearer \u2014 easier to understand severity levels."
     ]
   },
   {
@@ -524,10 +539,10 @@
     "codename": "Valproic Acid",
     "highlight": false,
     "changes": [
-      "Patient database upload — import patient records from spreadsheet files.",
-      "Dashboard added — statistics and patient overview at a glance.",
-      "Patient history timeline — view all medications and reactions for a patient.",
-      "Record integration — support for standard patient record formats."
+      "Patient database upload \u2014 import patient records from spreadsheet files.",
+      "Dashboard added \u2014 statistics and patient overview at a glance.",
+      "Patient history timeline \u2014 view all medications and reactions for a patient.",
+      "Record integration \u2014 support for standard patient record formats."
     ]
   },
   {
@@ -535,10 +550,10 @@
     "codename": "Cisplatin",
     "highlight": false,
     "changes": [
-      "Initial release — record skin tests and drug challenges.",
-      "Clinical reports — generate professional reports from your test data.",
-      "Patient handouts — create information sheets for patients.",
-      "Patient management — organize and track all patient testing records."
+      "Initial release \u2014 record skin tests and drug challenges.",
+      "Clinical reports \u2014 generate professional reports from your test data.",
+      "Patient handouts \u2014 create information sheets for patients.",
+      "Patient management \u2014 organize and track all patient testing records."
     ]
   }
 ]
