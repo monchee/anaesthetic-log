@@ -19,6 +19,7 @@ import ErrorBoundary from '@core/components/ErrorBoundary';
 import PasswordGate from '@core/components/PasswordGate';
 import { Screen } from '@shared/types';
 import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from '@shared/utils/constants';
+import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 import { showToast } from '@shared/utils';
 import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
 import { formatClinicalReportAsText, formatPatientHandoutAsText } from '@shared/utils/reportExporter';
@@ -49,6 +50,26 @@ function AnaestheticLogApp() {
   const [activeReportTab, setActiveReportTab] = React.useState<'report' | 'handout' | 'letter'>('report');
   const [csvUploadSheetOpen, setCsvUploadSheetOpen] = React.useState(false);
   const research = useResearchSubmit();
+
+  const handleProceedToTesting = () => {
+    if (testingPlanData?.selectedDrugs?.length) {
+      const { selectedDrugs, selectedProtocols } = testingPlanData;
+      const rows = selectedDrugs.map(drug => {
+        const protocolIndex = selectedProtocols?.[drug] ?? 0;
+        const protocols = getSkinProtocolsForDrug(drug);
+        const protocol = protocols[protocolIndex];
+        return {
+          drugName: drug,
+          sptWheal: '',
+          idtResults: Array(protocol?.idtSteps.length ?? 0).fill(''),
+          protocolIndex,
+          customName: '',
+        };
+      });
+      setFormData(prev => ({ ...prev, testPanel: rows }));
+    }
+    setScreen(Screen.TESTING);
+  };
 
   const layoutProps = {
     setScreen, currentScreen: screen, databaseDate, showDisclaimer,
@@ -204,7 +225,7 @@ function AnaestheticLogApp() {
         <ScreenLayout title="Testing Plan Preview" icon={<ClipboardList className="w-5 h-5" />} {...layoutProps} showFooter={false}
           actions={<Button onClick={() => setScreen(Screen.LOG)} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
         >
-          <TestingPlanPrintView patient={selectedPatient} data={testingPlanData} drugCategories={DRUG_CATEGORIES} onProceed={() => setScreen(Screen.TESTING)} />
+          <TestingPlanPrintView patient={selectedPatient} data={testingPlanData} drugCategories={DRUG_CATEGORIES} onProceed={handleProceedToTesting} />
         </ScreenLayout>
       );
     }
@@ -417,7 +438,7 @@ function AnaestheticLogApp() {
             </div>
             <div style={{ '--section-index': selectedPatient.id !== 'manual' ? 2 : 1 } as React.CSSProperties} className="animate-section-reveal">
               <div className="flex justify-end pt-4">
-                <Button size="lg" className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors btn-press" onClick={() => setScreen(Screen.TESTING)}>
+                <Button size="lg" className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors btn-press" onClick={handleProceedToTesting}>
                   Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
                 </Button>
               </div>

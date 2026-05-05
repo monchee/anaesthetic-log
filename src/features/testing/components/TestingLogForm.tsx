@@ -4,6 +4,7 @@ import { LogFormData } from '@/types';
 import { Calendar, Activity, Syringe, CheckCircle2, Check, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Loader2, Search, X } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 import { useTestingLogLogic } from '../hooks/useTestingLogLogic';
+import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 import { TestingService } from '../services/TestingService';
 import { DrugTestGrid } from './DrugTestGrid';
 
@@ -34,6 +35,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     handleInputChange,
     handleControlChange,
     toggleDrug,
+    toggleDrugProtocol,
     toggleCategory,
     selectProtocol,
     addCustomDrug,
@@ -165,9 +167,13 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     const hasActiveSelection = categoryDrugs.some(drug =>
                         formData.testPanel.some(r => r.drugName === drug && !r.id)
                     );
-                    const allCategorySelected = categoryDrugs.every(drug =>
-                        formData.testPanel.some(r => r.drugName === drug && !r.id)
-                    );
+                    const allCategorySelected = categoryDrugs.every(drug => {
+                        const protocols = getSkinProtocolsForDrug(drug);
+                        if (protocols.length > 1) {
+                          return protocols.every((_, pi) => formData.testPanel.some(r => r.drugName === drug && r.protocolIndex === pi && !r.id));
+                        }
+                        return formData.testPanel.some(r => r.drugName === drug && !r.id);
+                    });
 
                     const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
 
@@ -187,6 +193,31 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                         </div>
                         <div className={category === 'Others' ? 'flex flex-wrap gap-2 md:grid md:grid-cols-3 lg:grid-cols-4' : 'flex flex-wrap gap-2'}>
                             {filteredDrugs.map(drug => {
+                                const protocols = getSkinProtocolsForDrug(drug);
+                                const hasMultiProtocol = protocols.length > 1;
+                                if (hasMultiProtocol) {
+                                  return (
+                                    <div key={drug} className="contents">
+                                      {protocols.map((p, pi) => {
+                                        const isSelected = formData.testPanel.some(r => r.drugName === drug && r.protocolIndex === pi && !r.id);
+                                        return (
+                                          <button
+                                            key={`${drug}-${pi}`}
+                                            onClick={() => toggleDrugProtocol(drug, pi)}
+                                            className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${
+                                              isSelected
+                                              ? theme.btnSelected
+                                              : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-muted ${theme.btnHover}`
+                                            }`}
+                                          >
+                                            {isSelected && <Check className="w-3 h-3 shrink-0" />}
+                                            {p.protocolLabel || drug}
+                                          </button>
+                                        );
+                                      })}
+                                    </div>
+                                  );
+                                }
                                 const isSelected = formData.testPanel.some(r => r.drugName === drug && !r.id);
                                 return (
                                 <button

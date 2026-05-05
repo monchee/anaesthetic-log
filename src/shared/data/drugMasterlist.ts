@@ -191,14 +191,8 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   {
     drugName: 'Propofol', category: 'Hypnotics', testType: 'skin',
     presentation: '10mg/mL', sptNeatConcentration: 'Neat (10mg/mL)',
-    idtSteps: [s('1:1,000', '0.01mg/mL'), s('1:100', '0.1mg/mL'), s('1:10', '1mg/mL')],
-    challengeSteps: [], protocolLabel: 'Protocol 1',
-  },
-  {
-    drugName: 'Propofol', category: 'Hypnotics', testType: 'skin',
-    presentation: '10mg/mL', sptNeatConcentration: 'Neat (10mg/mL)',
-    idtSteps: [s('1:1,000', '0.01mg/mL'), s('1:100', '0.1mg/mL'), s('1:10', '1mg/mL')],
-    challengeSteps: [], protocolLabel: 'Protocol 2',
+    idtSteps: [s('1:1,000', '0.01mg/mL'), s('1:10', '1mg/mL')],
+    challengeSteps: [], protocolLabel: 'IV',
   },
   {
     drugName: 'Ketamine', category: 'Hypnotics', testType: 'skin',
@@ -561,7 +555,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   {
     drugName: 'Parecoxib', category: 'Others', testType: 'skin',
     presentation: '40mg', sptNeatConcentration: 'Neat (8mg/mL)',
-    idtSteps: [s('1:100', '0.08mg/mL'), s('1:1,000', '0.1mg/mL')],
+    idtSteps: [s('1:100', '0.08mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
   {

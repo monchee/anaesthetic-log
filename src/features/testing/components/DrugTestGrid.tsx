@@ -172,8 +172,9 @@ const DrugRow = React.memo(({
             {row.drugName === 'Other' ? (row.customSptConcentration || '') : (protocol?.sptNeatConcentration ? 'Neat' : '')}
           </div>
           <Input
-            type="number"
-            min="0"
+            type="text"
+            inputMode="decimal"
+            pattern="[0-9]*"
             onKeyDown={preventNegativeInput}
             className={`h-9 text-center font-mono ${isPositive(row.sptWheal) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
             placeholder="-"
@@ -192,8 +193,9 @@ const DrugRow = React.memo(({
                 {step.concentration}
               </div>
               <Input
-                type="number"
-                min="0"
+                type="text"
+                inputMode="decimal"
+                pattern="[0-9]*"
                 onKeyDown={preventNegativeInput}
                 className={`h-9 text-center font-mono ${isPositive(val) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
                 placeholder="-"
@@ -210,8 +212,9 @@ const DrugRow = React.memo(({
             <div className="text-[10px] font-bold uppercase text-center text-muted-foreground">IDT {si + 1}</div>
             <div className="min-h-[2rem]" />
             <Input
-              type="number"
-              min="0"
+              type="text"
+              inputMode="decimal"
+              pattern="[0-9]*"
               onKeyDown={preventNegativeInput}
               className={`h-9 text-center font-mono ${isPositive(val) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
               placeholder="-"

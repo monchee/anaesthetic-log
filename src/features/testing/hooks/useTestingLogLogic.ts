@@ -63,21 +63,70 @@ export const useTestingLogLogic = ({ formData, setFormData, drugCategories }: Us
     });
   }, [setFormData, makeNewRow]);
 
+  const toggleDrugProtocol = useCallback((drugName: string, protocolIndex: number) => {
+    setFormData(prev => {
+      const exists = prev.testPanel.find(
+        row => row.drugName === drugName && row.protocolIndex === protocolIndex && !row.id
+      );
+      if (exists) {
+        return {
+          ...prev,
+          testPanel: prev.testPanel.filter(
+            row => !(row.drugName === drugName && row.protocolIndex === protocolIndex && !row.id)
+          )
+        };
+      }
+      const protocols = getSkinProtocolsForDrug(drugName);
+      const protocol = protocols[protocolIndex];
+      return {
+        ...prev,
+        testPanel: [...prev.testPanel, {
+          drugName,
+          sptWheal: '',
+          idtResults: Array(protocol?.idtSteps.length ?? 0).fill(''),
+          protocolIndex,
+          customName: '',
+        }]
+      };
+    });
+  }, [setFormData]);
+
   const toggleCategory = useCallback((categoryDrugs: string[]) => {
     setFormData(prev => {
-      const currentPanelDrugs = prev.testPanel.filter(r => !r.id).map(row => row.drugName);
-      const allSelected = categoryDrugs.every(d => currentPanelDrugs.includes(d));
+      const currentPanelDrugs = prev.testPanel.filter(r => !r.id);
+      const allSelected = categoryDrugs.every(d => {
+        const protocols = getSkinProtocolsForDrug(d);
+        if (protocols.length > 1) {
+          return protocols.every((_, pi) => currentPanelDrugs.some(r => r.drugName === d && r.protocolIndex === pi));
+        }
+        return currentPanelDrugs.some(r => r.drugName === d);
+      });
       if (allSelected) {
         return {
           ...prev,
           testPanel: prev.testPanel.filter(row => row.id || !categoryDrugs.includes(row.drugName))
         };
       } else {
-        const missingDrugs = categoryDrugs.filter(d => !currentPanelDrugs.includes(d));
-        return {
-          ...prev,
-          testPanel: [...prev.testPanel, ...missingDrugs.map(makeNewRow)]
-        };
+        const newRows: typeof prev.testPanel = [];
+        categoryDrugs.forEach(d => {
+          const protocols = getSkinProtocolsForDrug(d);
+          if (protocols.length > 1) {
+            protocols.forEach((p, pi) => {
+              if (!currentPanelDrugs.some(r => r.drugName === d && r.protocolIndex === pi)) {
+                newRows.push({
+                  drugName: d,
+                  sptWheal: '',
+                  idtResults: Array(p?.idtSteps.length ?? 0).fill(''),
+                  protocolIndex: pi,
+                  customName: '',
+                });
+              }
+            });
+          } else if (!currentPanelDrugs.some(r => r.drugName === d)) {
+            newRows.push(makeNewRow(d));
+          }
+        });
+        return { ...prev, testPanel: [...prev.testPanel, ...newRows] };
       }
     });
   }, [setFormData, makeNewRow]);
@@ -220,6 +269,7 @@ export const useTestingLogLogic = ({ formData, setFormData, drugCategories }: Us
     handleInputChange,
     handleControlChange,
     toggleDrug,
+    toggleDrugProtocol,
     toggleCategory,
     selectProtocol,
     addCustomDrug,

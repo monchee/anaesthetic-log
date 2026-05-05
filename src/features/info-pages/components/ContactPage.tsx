@@ -26,7 +26,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
                     <p>Missenden Road, Camperdown NSW 2050</p>
                   </div>
                   <div className="pt-2 border-t border-border">
-                    <p><strong>Phone:</strong> (02) 9515 8814</p>
+                    <p><strong>Phone:</strong> (02) 9515 7586</p>
                     <p><strong>Email:</strong> SLHD-RPA-ClinicalImmunology@health.nsw.gov.au</p>
                     <p><strong>Clinic Location:</strong> Level 5, Gloucester House</p>
                   </div>

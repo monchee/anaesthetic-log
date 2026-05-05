@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.48.0] — 2025-05-16 (Atracurium)
+
+### Fixed
+- **Phone number** — updated contact number to (02) 9515 7586
+- **Parecoxib IDT** — removed 1:1,000 dilution step from skin testing protocol
+- **Propofol consolidation** — collapsed from two protocols to single IV protocol; removed IDT 1:100 step
+- **Sugammadex multi-protocol selection** — Sugammadex Alone and +Rocuronium can now be selected simultaneously without deselecting each other
+- **Print headers/footers** — suppressed browser-generated headers (URL, date, page numbers) in Chrome/Edge via `@page { margin: 0 }` with compensating body padding
+- **Empty result fields** — changed input type from `number` to `text` with `inputMode="decimal"` so the "-" placeholder displays correctly on all browsers
+
+### Added
+- **Drug persistence from testing plan** — drugs selected in the testing plan now carry over to the testing panel when proceeding, pre-populating the test grid
+- **`toggleDrugProtocol`** — new hook function allowing per-protocol drug toggling for multi-variant drugs
+
+## [0.47.0] — 2026-05-14 (Neostigmine)
+
+### Fixed
+- **Toast notifications** — removed rounded corners from toast notifications for consistent clinical aesthetic
+- **Print background** — forced pure white background in print view via CSS variable override
+- **Print section headers** — removed gray backgrounds from section headers in print view
+- **Signature lines** — signature fields now use bottom border with writing space above
+
 ## [0.46.0] — 2026-03-26 (Neostigmine)
 
 ### Added
