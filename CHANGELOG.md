@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.50.0] — 2026-05-06
+
+### Added
+- **Print pagination** — CSS page-break rules prevent orphaned headings and split drug entries across pages in all three report types
+- **Report generation timestamps** — footer on Clinical Report, PowerChart Letter, and Patient Handout shows when the report was saved (uses activeReportSavedAt)
+- **Redacted view toggle** — new EyeOff button in the report tab bar replaces patient identifiers with ——- for demos and training; ephemeral (not persisted, print always shows full data)
+- **Redact context provider** — useRedact.tsx hook provides isRedacted, toggleRedact, and redact() across all report components and text exports
+- **Controls empty state** — Clinical Report shows No controls recorded when all control values are empty
+- **Unit tests for testingUtils** — covers isSkinTestPositive, getPositiveResults, getNegativeResults, getCrossSensitizationNotes, buildRecommendations
+- **Unit tests for deidentify** — 15 test cases covering name stripping, REDCap passthrough, challenge handling, legacy IDT fields, custom drug names
+
+### Changed
+- **ResearchDrugResult type** — idt_100, idt_10, idt_neat consolidated to single idt_results string field
+- **ResearchDashboard** — IDT columns consolidated to match new type
+- **testingDataFactory** — added missing selectedProtocols to TestingPlanData factory
+- **Print headers** — section-card wrappers added to all major report sections
+
+### Fixed
+- **Flaky SPT input test** — simplified assertion from waitFor + toHaveValue to direct .value check after fireEvent.change
+
 ## [0.49.0] — 2026-05-06 (Pancuronium)
 
 ### Added
