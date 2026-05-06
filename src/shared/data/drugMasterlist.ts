@@ -68,13 +68,13 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
     drugName: 'Ampicillin', category: 'Penicillins', testType: 'skin',
     presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)',
     idtSteps: [s('1:100', '1mg/mL'), s('1:10', '10mg/mL'), s('1:50', '2mg/0.2mg/mL')],
-    challengeSteps: [], protocolLabel: 'Protocol 1 (Neat)',
+    challengeSteps: [], protocolLabel: 'Neat SPT',
   },
   {
     drugName: 'Ampicillin', category: 'Penicillins', testType: 'skin',
     presentation: '1g', sptNeatConcentration: '1:5 (20mg/mL)',
     idtSteps: [s('1:10', '10mg/mL'), s('1:5', '20mg/mL'), s('1:100', '0.06mg/mL')],
-    challengeSteps: [], protocolLabel: 'Protocol 2 (1:5)',
+    challengeSteps: [], protocolLabel: '1:5 SPT',
   },
   {
     drugName: 'Ampicillin', category: 'Penicillins', testType: 'control',
@@ -86,13 +86,13 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
     drugName: 'Amoxycillin', category: 'Penicillins', testType: 'skin',
     presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)',
     idtSteps: [s('1:100', '1mg/mL'), s('1:10', '10mg/mL')],
-    challengeSteps: [], protocolLabel: 'Protocol 1 (Neat)',
+    challengeSteps: [], protocolLabel: 'Neat SPT',
   },
   {
     drugName: 'Amoxycillin', category: 'Penicillins', testType: 'skin',
     presentation: '1g', sptNeatConcentration: '1:5 (20mg/mL)',
     idtSteps: [s('1:10', '10mg/mL'), s('1:5', '20mg/mL')],
-    challengeSteps: [], protocolLabel: 'Protocol 2 (1:5)',
+    challengeSteps: [], protocolLabel: '1:5 SPT',
   },
   {
     drugName: 'Benzylpenicillin', category: 'Penicillins', testType: 'skin',

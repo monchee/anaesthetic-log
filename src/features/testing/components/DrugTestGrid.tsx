@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
-import { Input } from '../../../../components/ui';
-import { X, Plus } from 'lucide-react';
+import React from 'react';
+import {
+  Input,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '../../../../components/ui';
+import { X, Plus, Check, ChevronDown } from 'lucide-react';
 import { DrugTestRow, DrugProtocol } from '../../../../types';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
@@ -37,12 +43,10 @@ interface DrugRowProps {
 const DrugRow = React.memo(({
   row, index, protocol, allProtocols, drugToCategoryMap, onUpdate, onSelectProtocol, onRemove, onAddCustomIdtStep, onRemoveCustomIdtStep,
 }: DrugRowProps) => {
+  const protocolIndex = row.protocolIndex ?? 0;
   const category = drugToCategoryMap[row.drugName] || 'Others';
   const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
   const borderClass = row.drugName === 'Other' ? DEFAULT_THEME.rowBorder : theme.rowBorder;
-  const protocolIndex = row.protocolIndex ?? 0;
-  const [showProtocols, setShowProtocols] = useState(false);
-
   // Resolve IDT results — handle legacy records that came in via migration
   const idtResults = row.idtResults ?? [];
   const idtSteps = row.drugName === 'Other'
@@ -62,12 +66,35 @@ const DrugRow = React.memo(({
             autoFocus
           />
         ) : (
-          <span className="font-medium text-sm text-slate-700 dark:text-foreground/90 flex-1">
+          <span className="font-medium text-sm text-slate-700 dark:text-foreground/90 flex-1 min-w-0 truncate">
             {row.drugName}
-            {protocol?.presentation && (
-              <span className="ml-1.5 text-xs text-muted-foreground font-normal">({protocol.presentation})</span>
-            )}
           </span>
+        )}
+        {row.drugName !== 'Other' && allProtocols.length > 1 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className={`shrink-0 inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-none border transition-all focus:outline-none focus-visible:ring-1 focus-visible:ring-ring ${theme.btnSelected}`}
+                title="Switch protocol"
+              >
+                <span>{protocol?.protocolLabel || `Protocol ${protocolIndex + 1}`}</span>
+                <ChevronDown className="w-3 h-3" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="rounded-none min-w-[10rem]">
+              {allProtocols.map((p, pi) => (
+                <DropdownMenuItem
+                  key={pi}
+                  onSelect={() => onSelectProtocol(index, pi)}
+                  className="text-xs gap-2 rounded-none cursor-pointer"
+                >
+                  <Check className={`w-3 h-3 shrink-0 ${pi === protocolIndex ? 'opacity-100' : 'opacity-0'}`} />
+                  {p.protocolLabel || `Protocol ${pi + 1}`}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
         <button
           onClick={() => onRemove(index)}
@@ -134,42 +161,6 @@ const DrugRow = React.memo(({
               Include in drug challenge
             </label>
           </div>
-        </div>
-      )}
-
-      {/* Protocol picker — collapsed by default when multiple protocols exist */}
-      {allProtocols.length > 1 && (
-        <div className="flex flex-wrap gap-1.5 items-center">
-          {showProtocols ? (
-            <>
-              {allProtocols.map((p, pi) => (
-                <button
-                  key={pi}
-                  onClick={() => { setShowProtocols(false); onSelectProtocol(index, pi); }}
-                  className={`text-[10px] px-2 py-0.5 rounded-none border transition-all ${
-                    pi === protocolIndex
-                      ? `${theme.btnSelected}`
-                      : `bg-card text-muted-foreground border-border ${theme.btnHover}`
-                  }`}
-                >
-                  {p.protocolLabel || `Protocol ${pi + 1}`}
-                </button>
-              ))}
-              <button
-                onClick={() => setShowProtocols(false)}
-                className="text-[10px] px-1.5 text-muted-foreground hover:text-foreground"
-              >
-                ✕
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={() => setShowProtocols(true)}
-              className={`text-[10px] px-2 py-0.5 rounded-none border bg-card text-muted-foreground border-border hover:bg-muted transition-all ${theme.btnHover}`}
-            >
-              {allProtocols.length} protocols ▾
-            </button>
-          )}
         </div>
       )}
 

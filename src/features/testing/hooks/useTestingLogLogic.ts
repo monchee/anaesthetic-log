@@ -94,38 +94,18 @@ export const useTestingLogLogic = ({ formData, setFormData, drugCategories }: Us
   const toggleCategory = useCallback((categoryDrugs: string[]) => {
     setFormData(prev => {
       const currentPanelDrugs = prev.testPanel.filter(r => !r.id);
-      const allSelected = categoryDrugs.every(d => {
-        const protocols = getSkinProtocolsForDrug(d);
-        if (protocols.length > 1) {
-          return protocols.every((_, pi) => currentPanelDrugs.some(r => r.drugName === d && r.protocolIndex === pi));
-        }
-        return currentPanelDrugs.some(r => r.drugName === d);
-      });
+      const allSelected = categoryDrugs.every(d =>
+        currentPanelDrugs.some(r => r.drugName === d)
+      );
       if (allSelected) {
         return {
           ...prev,
           testPanel: prev.testPanel.filter(row => row.id || !categoryDrugs.includes(row.drugName))
         };
       } else {
-        const newRows: typeof prev.testPanel = [];
-        categoryDrugs.forEach(d => {
-          const protocols = getSkinProtocolsForDrug(d);
-          if (protocols.length > 1) {
-            protocols.forEach((p, pi) => {
-              if (!currentPanelDrugs.some(r => r.drugName === d && r.protocolIndex === pi)) {
-                newRows.push({
-                  drugName: d,
-                  sptWheal: '',
-                  idtResults: Array(p?.idtSteps.length ?? 0).fill(''),
-                  protocolIndex: pi,
-                  customName: '',
-                });
-              }
-            });
-          } else if (!currentPanelDrugs.some(r => r.drugName === d)) {
-            newRows.push(makeNewRow(d));
-          }
-        });
+        const newRows = categoryDrugs
+          .filter(d => !currentPanelDrugs.some(r => r.drugName === d))
+          .map(d => makeNewRow(d));
         return { ...prev, testPanel: [...prev.testPanel, ...newRows] };
       }
     });
