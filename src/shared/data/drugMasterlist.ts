@@ -39,13 +39,13 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
 
   // ── REVERSAL AGENTS ───────────────────────────────────────────────────────
   {
-    drugName: 'Sugammadex', category: 'Reversal Agents', testType: 'skin',
+    drugName: 'Sugammadex (Alone)', category: 'Reversal Agents', testType: 'skin',
     presentation: '200mg/2mL', sptNeatConcentration: 'Neat (100mg/mL)',
     idtSteps: [s('1:1,000', '0.1mg/mL'), s('1:100', '1mg/mL')],
     challengeSteps: [], protocolLabel: 'Alone',
   },
   {
-    drugName: 'Sugammadex', category: 'Reversal Agents', testType: 'skin',
+    drugName: 'Sugammadex (+ Rocuronium)', category: 'Reversal Agents', testType: 'skin',
     presentation: 'Mix with Rocuronium 1:1', sptNeatConcentration: 'Neat (100mg/10mg/mL)',
     idtSteps: [s('1:1,000', '0.1mg/0.01mg/mL'), s('1:100', '1mg/0.1mg/mL')],
     challengeSteps: [], protocolLabel: '+ Rocuronium',

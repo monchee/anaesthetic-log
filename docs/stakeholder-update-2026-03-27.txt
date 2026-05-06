@@ -1,0 +1,46 @@
+Hi Team,
+
+I wanted to share the latest updates to The DREAM App. The main focus has been on building out the drug testing protocols and improving the overall experience.
+
+Project Link: https://dream.yuson.au/
+Passcode: 2050
+
+DRUG TESTING PROTOCOLS
+
+We've added a comprehensive drug protocol library:
+
+• 70+ drugs now have defined testing protocols — including skin prick test concentrations and intradermal dilution steps
+• Smart columns — the testing grid now shows the correct dilution columns for each drug
+• Penicillin variants — drugs with multiple testing protocols (e.g., Penicillin Major/Minor) now let you choose the appropriate one
+• Custom overrides — if a patient needs a non-standard protocol, you can adjust the settings for that session
+• Search function — quickly find drugs using the new filter field
+
+New drugs added: Esomeprazole, Lansoprazole, Omeprazole, Pantoprazole
+
+TRYPTASE DISPLAY
+
+• Multiple samples supported — the system now handles up to4 timed tryptase results per patient
+• Timestamps shown — results display with collection times, e.g., T1 (08:45): 12 ng/mL · T2 (10:30): 45 ng/mL
+
+DASHBOARD & FORMS
+
+• Recent activity feed — the dashboard now shows recent skin testing sessions
+• Clearer forms — required fields are marked, and error messages appear if something is missing
+• Better feedback — success/error notifications now appear reliably when saving records
+
+WHAT'S NEXT
+
+The drug protocol library is now complete. The next step is to integrate these protocols into the printable testing plan documents so they're ready to use during testing sessions.
+
+TRY IT OUT
+
+Please have a look at https://dream.yuson.au/ (passcode: 2050).
+
+Things to explore:
+• Check the tryptase display format on a patient
+• Use the drug search in the testing form
+• Look at the Recent Testing Activity on the dashboard
+
+As always, feel free to send through any feedback or suggestions.
+
+Thanks for your continued input!
