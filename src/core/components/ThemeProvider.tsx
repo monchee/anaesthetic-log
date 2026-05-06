@@ -32,7 +32,7 @@ export function ThemeProvider({
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(storageKey) as Theme | null
       if (stored === "light" || stored === "dark") return stored
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+      return "light"
     }
     return defaultTheme
   })
@@ -49,19 +49,7 @@ export function ThemeProvider({
     }
   }, [theme])
 
-  // Follow OS theme changes when no manual preference is stored
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)")
-    const handler = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem(storageKey)) {
-        setTheme(e.matches ? "dark" : "light")
-      }
-    }
-    mq.addEventListener("change", handler)
-    return () => mq.removeEventListener("change", handler)
-  }, [storageKey])
-
-  const toggleTheme = () => {
+const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light"
     setTheme(newTheme)
     localStorage.setItem(storageKey, newTheme)
