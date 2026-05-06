@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui';
 import { LogFormData } from '@/types';
 import { formatDate, getPositiveResults, getNegativeResults } from '@shared/utils';
+import { getCrossSensitizationNotes, buildRecommendations } from '@shared/utils/testingUtils';
 import { Ban, ShieldCheck } from 'lucide-react';
 
 interface PatientHandoutProps {
@@ -11,6 +12,11 @@ interface PatientHandoutProps {
 const PatientHandout = ({ data }: PatientHandoutProps) => {
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
+  const crossNotes = getCrossSensitizationNotes(posResults);
+  const crossSensitized: string[] = crossNotes.map(n =>
+    n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium'
+  ).filter((v, i, a) => a.indexOf(v) === i);
+  const { avoidList } = buildRecommendations(posResults, crossSensitized);
 
   return (
     <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none">
@@ -41,11 +47,16 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
                <h3 className="text-red-700 dark:text-red-400 font-bold text-sm uppercase tracking-wider mb-4 pb-2 border-b-2 border-red-500 flex items-center gap-2 print:text-xs print:mb-1 print:pb-1">
                   <Ban className="w-5 h-5 print:w-3 print:h-3" /> Drugs to avoid
                </h3>
-              {posResults.length > 0 ? (
+              {avoidList.length > 0 ? (
                  <ul className="space-y-3 print:space-y-1">
-                    {posResults.map((drugName, idx) => (
+                    {avoidList.map((drugName, idx) => (
                         <li key={idx} className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-700 p-4 rounded-none flex justify-between items-center print:bg-red-50 print:p-1.5 print:text-xs">
-                           <span className="font-semibold text-red-900 text-lg print:text-xs">{drugName}</span>
+                           <div>
+                             <span className="font-semibold text-red-900 text-lg print:text-xs">{drugName}</span>
+                             {crossSensitized.includes(drugName) && (
+                               <p className="text-xs text-red-700/70 mt-0.5 print:text-[9px]">cross-sensitization risk</p>
+                             )}
+                           </div>
                            <span className="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded print:px-1 print:py-0.5 print:text-[9px]">AVOID</span>
                         </li>
                     ))}

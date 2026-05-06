@@ -10,7 +10,7 @@ export function useAnaestheticApp() {
   const patientState = usePatientState();
   const { selectedPatient, handlePatientSelect, handleManualDetailChange: originalHandleManualDetailChange } = patientState;
   const testingState = useTestingState();
-  const { setFormData, handleSubmit: originalHandleSubmit, resetForm: originalResetForm, setLastSavedRecord } = testingState;
+  const { setFormData, handleSubmit: originalHandleSubmit, resetForm: originalResetForm, clearActiveReport: originalClearActiveReport } = testingState;
   const navigation = useAppNavigation();
   const disclaimer = useDisclaimer();
 
@@ -53,7 +53,14 @@ export function useAnaestheticApp() {
   const resetForm = () => {
     originalResetForm();
     patientState.setSelectedPatient(null);
-    setLastSavedRecord(null);
+    navigation.setScreen(Screen.LOG);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const clearActiveReport = () => {
+    originalClearActiveReport();
+    patientState.setSelectedPatient(null);
+    originalResetForm();
     navigation.setScreen(Screen.LOG);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -68,6 +75,7 @@ export function useAnaestheticApp() {
     setFormData: testingState.setFormData,
     lastSavedRecord: testingState.lastSavedRecord,
     setLastSavedRecord: testingState.setLastSavedRecord,
+    activeReportSavedAt: testingState.activeReportSavedAt,
     testingPlanData: testingState.testingPlanData,
     setTestingPlanData: testingState.setTestingPlanData,
     recentLogs: testingState.recentLogs,
@@ -94,5 +102,6 @@ export function useAnaestheticApp() {
     handleUploadPatients: patientState.handleUploadPatients,
     handleDashboardPatientSelect,
     resetForm,
+    clearActiveReport,
   };
 }

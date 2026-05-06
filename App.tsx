@@ -32,19 +32,20 @@ const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
 const BACK_BTN = "h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none btn-press";
 const BACK_ICON = "w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity";
+const ACTIVE_REPORT_TTL_MS = 6 * 60 * 60 * 1000;
 
 function AnaestheticLogApp() {
   useEffect(() => { reportWebVitals(); }, []);
 
   const {
     screen, setScreen, formData, setFormData,
-    selectedPatient, lastSavedRecord, setLastSavedRecord,
+    selectedPatient, lastSavedRecord, setLastSavedRecord, activeReportSavedAt,
     testingPlanData, setTestingPlanData,
     isPatientDialogOpen, setIsPatientDialogOpen,
     patients, databaseDate, hasUploadedData, isLoadingPatients, recentLogs,
     showDisclaimer, handleDismissDisclaimer,
     handlePatientSelect, handleManualDetailChange,
-    handleSubmit, handleUploadPatients, handleDashboardPatientSelect, resetForm,
+    handleSubmit, handleUploadPatients, handleDashboardPatientSelect, resetForm, clearActiveReport,
   } = useAnaestheticApp();
 
   const [activeReportTab, setActiveReportTab] = React.useState<'report' | 'handout' | 'letter'>('report');
@@ -140,7 +141,7 @@ function AnaestheticLogApp() {
       return (
         <ScreenLayout title="Reports" icon={<FileText className="w-5 h-5" />} {...layoutProps}
           showNav={false} showFooter={false}
-          actions={<Button onClick={() => { research.reset(); resetForm(); }} variant="ghost" className={BACK_BTN}><LogOut className={BACK_ICON} /> Exit</Button>}
+          actions={<Button onClick={() => { research.reset(); resetForm(); setScreen(Screen.LOG); }} variant="ghost" className={BACK_BTN}><LogOut className={BACK_ICON} /> Exit</Button>}
           contentClassName="py-4 space-y-4"
         >
           {/* Tab bar */}
@@ -212,7 +213,7 @@ function AnaestheticLogApp() {
 
           {/* Start New Log */}
           <div className="no-print border-t border-border pt-6 mt-4">
-            <Button onClick={() => { research.reset(); resetForm(); }} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
+            <Button onClick={() => { research.reset(); resetForm(); setScreen(Screen.LOG); }} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
               <LogOut className="w-5 h-5 mr-2" /> Exit
             </Button>
           </div>
@@ -256,10 +257,35 @@ function AnaestheticLogApp() {
     }
 
     // Default: LOG screen
+    const activeReportExpiresIn = activeReportSavedAt
+      ? (() => {
+          const msLeft = ACTIVE_REPORT_TTL_MS - (Date.now() - activeReportSavedAt);
+          if (msLeft <= 0) return null;
+          const h = Math.floor(msLeft / 3_600_000);
+          const m = Math.floor((msLeft % 3_600_000) / 60_000);
+          return h > 0 ? `${h}h ${m}m` : `${m}m`;
+        })()
+      : null;
+
     return (
       <ScreenLayout title="DREAM" subtitle={APP_SUBTITLE} icon={<Stethoscope className="w-5 h-5" />} {...layoutProps}
         contentClassName="py-3 space-y-4" className="pb-10"
       >
+        {lastSavedRecord && activeReportExpiresIn && (
+          <div className="no-print flex items-center justify-between px-4 py-2.5 bg-primary/10 border border-primary/20 rounded-none gap-3">
+            <div className="flex items-center gap-2 text-sm min-w-0">
+              <FileText className="w-4 h-4 text-primary shrink-0" />
+              <span className="truncate">
+                Active report: <strong>{lastSavedRecord.firstName} {lastSavedRecord.lastName}</strong>
+                <span className="text-muted-foreground text-xs ml-2">· expires in {activeReportExpiresIn}</span>
+              </span>
+            </div>
+            <div className="flex gap-2 shrink-0">
+              <Button size="sm" variant="outline" onClick={() => setScreen(Screen.SUMMARY)} className="rounded-none h-7 text-xs">Open Report</Button>
+              <Button size="sm" variant="ghost" onClick={clearActiveReport} className="rounded-none h-7 text-xs text-muted-foreground hover:text-destructive">Clear</Button>
+            </div>
+          </div>
+        )}
         <Card className="shadow-sm rounded-none">
           <CardHeader className="pb-3 border-b border-border bg-card">
             <CardTitle className="flex items-center gap-2 text-lg">

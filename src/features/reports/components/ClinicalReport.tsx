@@ -3,14 +3,22 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui';
 import { LogFormData } from '@/types';
 import { formatDate } from '@shared/utils';
-import { FileText, Activity, History } from 'lucide-react';
+import { getPositiveResults } from '@shared/utils/testingUtils';
+import { getCrossSensitizationNotes, buildRecommendations } from '@shared/utils/testingUtils';
+import { FileText, Activity, History, ClipboardList, ShieldAlert } from 'lucide-react';
 
 interface ClinicalReportProps {
   data: LogFormData;
 }
 
 const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
-  
+  const posResults = getPositiveResults(data);
+  const crossNotes = getCrossSensitizationNotes(posResults);
+  const crossSensitized = crossNotes.map(n =>
+    n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium'
+  ).filter((v, i, a) => a.indexOf(v) === i);
+  const { avoidList, bullets, noAllergyMessage } = buildRecommendations(posResults, crossSensitized);
+
   const formatSymptoms = (data: LogFormData) => {
     return data.symptoms.map(s => {
       if (s === 'Other') return `Other (${data.symptomsOther})`;
@@ -169,6 +177,68 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                <p className="text-muted-foreground italic print:text-xs">No drug challenge performed.</p>
             )}
          </div>
+
+         {/* Cross-sensitization (3C) */}
+         {crossNotes.length > 0 && (
+           <div className="space-y-1">
+             {crossNotes.map((note, i) => (
+               <p key={i} className="text-sm italic text-foreground/80 border-l-4 border-amber-400 pl-3 print:text-xs">{note}</p>
+             ))}
+           </div>
+         )}
+
+         {/* Recommendations (3D) */}
+         <div>
+           <h3 className="text-sm md:text-base font-bold text-foreground uppercase tracking-wider flex items-center gap-2 border-b-2 border-primary pb-2 mb-4 print:text-xs print:mb-2">
+             <ShieldAlert className="w-5 h-5 print:w-4 print:h-4" /> Recommendations
+           </h3>
+           {noAllergyMessage ? (
+             <p className="text-sm text-slate-700 dark:text-foreground/80 print:text-xs">{noAllergyMessage}</p>
+           ) : (
+             <div className="space-y-3 print:space-y-1">
+               <div className="space-y-2">
+                 {avoidList.map(drug => (
+                   <p key={drug} className="font-bold text-red-700 dark:text-red-400 text-sm uppercase print:text-xs">AVOID {drug}</p>
+                 ))}
+               </div>
+               <ul className="list-disc list-inside space-y-1 text-sm text-slate-700 dark:text-foreground/80 print:text-xs">
+                 {bullets.map(b => <li key={b}>{b}</li>)}
+               </ul>
+             </div>
+           )}
+         </div>
+
+         {/* Nursing Notes */}
+         {data.nurseNotes && (data.nurseNotes.preTesting || data.nurseNotes.duringTesting || data.nurseNotes.postTesting || data.nurseNotes.signedBy) && (
+           <div>
+             <h3 className="text-sm md:text-base font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wider flex items-center gap-2 border-b-2 border-blue-400 pb-2 mb-4 print:text-xs print:mb-2">
+               <ClipboardList className="w-5 h-5 print:w-4 print:h-4" /> Nursing Notes
+             </h3>
+             <div className="space-y-3 print:space-y-2">
+               {data.nurseNotes.preTesting && (
+                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-3 print:bg-white print:border-blue-200 print:p-2">
+                   <p className="text-[10px] uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">Pre-Testing</p>
+                   <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.preTesting}</p>
+                 </div>
+               )}
+               {data.nurseNotes.duringTesting && (
+                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-3 print:bg-white print:border-blue-200 print:p-2">
+                   <p className="text-[10px] uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">During Testing</p>
+                   <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.duringTesting}</p>
+                 </div>
+               )}
+               {data.nurseNotes.postTesting && (
+                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-3 print:bg-white print:border-blue-200 print:p-2">
+                   <p className="text-[10px] uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">Post-Testing / Discharge</p>
+                   <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.postTesting}</p>
+                 </div>
+               )}
+               {data.nurseNotes.signedBy && (
+                 <p className="text-sm text-muted-foreground print:text-xs">Signed: <strong>{data.nurseNotes.signedBy}</strong> (RN)</p>
+               )}
+             </div>
+           </div>
+         )}
 
          {/* Plan */}
          <div className="pb-4 print:pb-2">

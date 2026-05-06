@@ -37,4 +37,7 @@ export interface PatientHistory {
   postInductionDrugs?: string[];
   procedureOutcome?: string;
   anaesthesiaType?: string[];
+  testingPlan?: string[];
+  testingPlanCustom?: string;
+  documentsToChase?: { tryptases?: boolean; anaestheticChart?: boolean; other?: boolean; otherText?: string };
 }

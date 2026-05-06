@@ -1,7 +1,19 @@
-import { LogFormData } from '@features/testing/types';
+import { LogFormData, TryptaseData } from '@features/testing/types';
 import { Patient } from '@/types';
-import { isSkinTestPositive, getPositiveResults, getNegativeResults } from './testingUtils';
+import { isSkinTestPositive, getPositiveResults, getNegativeResults, getCrossSensitizationNotes, buildRecommendations } from './testingUtils';
 import { formatDate } from './dateUtils';
+
+export function formatTryptaseSentence(tryptase: TryptaseData): string {
+  if (!tryptase.obtained) return 'Serial serum tryptase samples were not obtained.';
+  const formatted = tryptase.values
+    .filter(v => v.result)
+    .map((v, i) => `T${i + 1}${v.time ? ` (${v.time})` : ''}: ${v.result}`)
+    .join(', ');
+  if (tryptase.significantElevation) {
+    return `Serial serum tryptase samples revealed clinically significant dynamic tryptase elevation${formatted ? ` (${formatted})` : ''}.`;
+  }
+  return `Serial serum tryptase samples were obtained and were not elevated${formatted ? ` (${formatted})` : ''}.`;
+}
 
 export function formatClinicalReportAsText(data: LogFormData): string {
   const lines: string[] = [];
@@ -53,6 +65,39 @@ export function formatClinicalReportAsText(data: LogFormData): string {
       const intervention = data.interventionType === 'Other' ? `Other: ${data.interventionOther}` : data.interventionType;
       lines.push(`  Intervention: ${intervention}`);
     }
+    lines.push('');
+  }
+
+  // Cross-sensitization (3C)
+  const posResults = getPositiveResults(data);
+  const crossNotes = getCrossSensitizationNotes(posResults);
+  const crossSensitized = crossNotes.map(n =>
+    n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium'
+  ).filter((v, i, a) => a.indexOf(v) === i);
+  if (crossNotes.length > 0) {
+    crossNotes.forEach(n => lines.push(n));
+    lines.push('');
+  }
+
+  // Recommendations (3D)
+  const { avoidList, bullets, noAllergyMessage } = buildRecommendations(posResults, crossSensitized);
+  lines.push('Recommendations:');
+  if (noAllergyMessage) {
+    lines.push(noAllergyMessage);
+  } else {
+    avoidList.forEach(d => lines.push(`AVOID ${d.toUpperCase()}`));
+    bullets.forEach(b => lines.push(`- ${b}`));
+  }
+  lines.push('');
+
+  // Nurse Notes
+  const nn = data.nurseNotes;
+  if (nn && (nn.preTesting || nn.duringTesting || nn.postTesting || nn.signedBy)) {
+    lines.push('Nursing Notes:');
+    if (nn.preTesting) { lines.push('  Pre-Testing:'); lines.push(`  ${nn.preTesting}`); }
+    if (nn.duringTesting) { lines.push('  During Testing:'); lines.push(`  ${nn.duringTesting}`); }
+    if (nn.postTesting) { lines.push('  Post-Testing / Discharge:'); lines.push(`  ${nn.postTesting}`); }
+    if (nn.signedBy) lines.push(`  Signed: ${nn.signedBy} (RN)`);
     lines.push('');
   }
 
@@ -151,6 +196,9 @@ export function getOutcomeText(patient: Patient): string {
 export function generateLetterText(data: LogFormData, patient: Patient | null): string {
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
+  const crossNotes = getCrossSensitizationNotes(posResults);
+  const crossSensitized = crossNotes.map(n => n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium').filter((v, i, a) => a.indexOf(v) === i);
+  const { avoidList, bullets, noAllergyMessage } = buildRecommendations(posResults, crossSensitized);
   const lines: string[] = [];
 
   const fullName = `${data.firstName} ${data.lastName}`;
@@ -170,25 +218,17 @@ export function generateLetterText(data: LogFormData, patient: Patient | null): 
     lines.push('');
   }
 
-  const testingDate = data.visitDate ? formatDate(data.visitDate) : '[date]';
-  lines.push(`${firstName} presented to the RPA ANZAAG Allergy Clinic on ${testingDate}, for Skin Prick (SPT) and Intradermal (IDT) allergy testing. The following agents were tested with results below:`);
-  lines.push('');
-
-  if (data.testPanel && data.testPanel.length > 0) {
-    data.testPanel.forEach(row => {
-      const drugName = row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName;
-      const idtNarrative = row.idtResults?.length
-        ? row.idtResults.map((v, i) => v ? `IDT ${i + 1} ${v}mm` : null).filter(Boolean)
-        : [row.idt100 && `IDT 1:100 ${row.idt100}mm`, row.idt10 && `IDT 1:10 ${row.idt10}mm`, row.idtNeat && `IDT Neat ${row.idtNeat}mm`].filter(Boolean);
-      const results = [
-        row.sptWheal ? `SPT ${row.sptWheal}mm` : null,
-        ...idtNarrative,
-      ].filter(Boolean).join(', ');
-      lines.push(`${drugName}: ${results || 'no results recorded'}`);
-    });
+  // Tryptase sentence (3A)
+  if (data.tryptase) {
+    lines.push(formatTryptaseSentence(data.tryptase));
     lines.push('');
   }
 
+  const testingDate = data.visitDate ? formatDate(data.visitDate) : '[date]';
+  lines.push(`${firstName} presented to the RPA ANZAAG Allergy Clinic on ${testingDate}, for Skin Prick (SPT) and Intradermal (IDT) allergy testing. The following agents were tested:`);
+  lines.push('');
+
+  // Results — drug names only, no IDT measurements (3B)
   lines.push('Results:');
   if (posResults.length > 0) {
     posResults.forEach(drug => lines.push(`${drug.toUpperCase()} — POSITIVE`));
@@ -198,12 +238,32 @@ export function generateLetterText(data: LogFormData, patient: Patient | null): 
   }
   lines.push('');
 
-  lines.push('Recommendations:');
-  if (posResults.length > 0) {
-    lines.push(`Avoid ${posResults.map(d => d.toUpperCase()).join(', ')}`);
+  // Cross-sensitization notes (3C)
+  if (crossNotes.length > 0) {
+    crossNotes.forEach(n => lines.push(n));
+    lines.push('');
   }
-  if (negResults.length > 0) {
-    lines.push(`There was no evidence of sensitisation to ${negResults.join(', ')}`);
+
+  // IV challenge (3E)
+  if (data.proceedToChallenge) {
+    const challengeName = data.challengeDrug === 'Other' ? (data.challengeDrugCustom || 'Other') : data.challengeDrug;
+    if (data.outcome === 'SUCCESS') {
+      lines.push(`Drug challenge with ${challengeName} — tolerated.`);
+    } else if (data.outcome === 'UNSUCCESS') {
+      const symptoms = data.symptoms.map(s => s === 'Other' ? `Other (${data.symptomsOther})` : s).join(', ');
+      const intervention = data.interventionType === 'Other' ? `Other: ${data.interventionOther}` : data.interventionType;
+      lines.push(`Drug challenge with ${challengeName} — reaction at ${data.reactionTime} minutes; symptoms: ${symptoms}; treated with: ${intervention}.`);
+    }
+    lines.push('');
+  }
+
+  // Recommendations (3D)
+  lines.push('Recommendations:');
+  if (noAllergyMessage) {
+    lines.push(noAllergyMessage);
+  } else {
+    avoidList.forEach(d => lines.push(`AVOID ${d.toUpperCase()}`));
+    bullets.forEach(b => lines.push(`- ${b}`));
   }
   lines.push('');
   lines.push('Allergy MDT: Dr. D Zalcberg, Dr. A Stoyanov and CNC K. Wells.');

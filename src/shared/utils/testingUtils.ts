@@ -47,3 +47,42 @@ export const getNegativeResults = (record: LogFormData) => {
 
   return [...new Set(drugs)];
 };
+
+export const MUSCLE_RELAXANTS = ['Rocuronium', 'Vecuronium', 'Suxamethonium', 'Cisatracurium', 'Pancuronium', 'Atracurium', 'Mivacurium'];
+
+export function getCrossSensitizationNotes(positives: string[]): string[] {
+  const notes: string[] = [];
+  const hasRoc = positives.includes('Rocuronium');
+  const hasVec = positives.includes('Vecuronium');
+  if (hasRoc && !hasVec) {
+    notes.push('Given the significant molecular similarity between Rocuronium and Vecuronium, the patient should also be considered sensitized to Vecuronium.');
+  }
+  if (hasVec && !hasRoc) {
+    notes.push('Given the significant molecular similarity between Vecuronium and Rocuronium, the patient should also be considered sensitized to Rocuronium.');
+  }
+  return notes;
+}
+
+export function buildRecommendations(
+  positives: string[],
+  crossSensitized: string[],
+): { avoidList: string[]; bullets: string[]; noAllergyMessage?: string } {
+  if (positives.length === 0) {
+    return {
+      avoidList: [],
+      bullets: [],
+      noAllergyMessage: 'No evidence of IgE-mediated allergy to medications tested.',
+    };
+  }
+  const avoidList = [...positives, ...crossSensitized];
+  const bullets = [
+    'Updated allergy profile on eMR.',
+    'GP to update allergy profile on MyHealth Record.',
+  ];
+  const hasMuscleRelaxant = [...positives, ...crossSensitized].some(d => MUSCLE_RELAXANTS.includes(d));
+  if (hasMuscleRelaxant) {
+    bullets.push('MedicAlert bracelet recommended and advice given.');
+  }
+  bullets.push('Copy of letter to be provided to patient to give to any anaesthetist prior to future surgery.');
+  return { avoidList, bullets };
+}

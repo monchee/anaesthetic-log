@@ -2,11 +2,13 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui';
 import { LogFormData, Patient } from '@/types';
 import { formatDate, getPositiveResults, getNegativeResults } from '@shared/utils';
+import { getCrossSensitizationNotes, buildRecommendations } from '@shared/utils/testingUtils';
 import {
   calculateMinutesAfterInduction,
   formatSymptomsList,
   formatTreatmentList,
   getOutcomeText,
+  formatTryptaseSentence,
 } from '@shared/utils/reportExporter';
 
 interface PowerchartLetterProps {
@@ -20,6 +22,11 @@ export { generateLetterText } from '@shared/utils/reportExporter';
 const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) => {
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
+  const crossNotes = getCrossSensitizationNotes(posResults);
+  const crossSensitized = crossNotes.map(n =>
+    n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium'
+  ).filter((v, i, a) => a.indexOf(v) === i);
+  const { avoidList, bullets, noAllergyMessage } = buildRecommendations(posResults, crossSensitized);
 
   const fullName = `${data.firstName} ${data.lastName}`;
   const firstName = data.firstName;
@@ -97,75 +104,95 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
             </p>
           )}
 
+          {/* Tryptase sentence (3A) */}
+          {data.tryptase && (
+            <p className="italic text-foreground/80">{formatTryptaseSentence(data.tryptase)}</p>
+          )}
+
           <p>
-            {firstName} presented to the RPA ANZAAG Allergy Clinic on {testingDate}, for Skin Prick (SPT) and Intradermal (IDT) allergy testing. The following agents were tested with results below:
+            {firstName} presented to the RPA ANZAAG Allergy Clinic on {testingDate}, for Skin Prick (SPT) and Intradermal (IDT) allergy testing. The following agents were tested:
           </p>
 
-          {/* Test Results Table */}
+          {/* Drug list — names only, no measurements (3B) */}
           {data.testPanel && data.testPanel.length > 0 && (
-            <div className="overflow-x-auto -mx-1 print:mx-0 print:overflow-visible">
-            <table className="w-full min-w-[480px] text-sm border-collapse print:text-xs print:min-w-0">
-              <thead>
-                <tr className="border-b-2 border-slate-200 text-muted-foreground">
-                  <th className="py-2 text-left font-semibold print:py-1 print:text-[10px]">Agent</th>
-                  <th className="py-2 text-left font-semibold print:py-1 print:text-[10px]">SPT</th>
-                  <th className="py-2 text-left font-semibold print:py-1 print:text-[10px]">IDT Results</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.testPanel.map((row, i) => {
-                  const drugName = row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName;
-                  const isPositive = posResults.includes(drugName);
-                  return (
-                    <tr key={i} className={`${i % 2 === 0 ? 'bg-slate-50 dark:bg-card/20' : 'bg-card'} border-b border-border ${isPositive ? 'font-bold' : ''} print:bg-white`}>
-                      <td className={`py-2 print:py-1 ${isPositive ? 'text-red-700 dark:text-red-400 uppercase' : ''}`}>{drugName}</td>
-                      <td className="py-2 print:py-1">{row.sptWheal || '-'} mm</td>
-                      <td className="py-2 print:py-1">
-                        {row.idtResults?.length
-                          ? row.idtResults.map((v, i) => v ? `IDT${i + 1}: ${v}mm` : null).filter(Boolean).join(' / ') || '-'
-                          : [row.idt100 && `1:100: ${row.idt100}mm`, row.idt10 && `1:10: ${row.idt10}mm`, row.idtNeat && `Neat: ${row.idtNeat}mm`].filter(Boolean).join(' / ') || '-'
-                        }
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            </div>
-          )}
-        </div>
-
-        {/* Results Summary */}
-        <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 space-y-4 print:bg-white print:border-slate-300 print:p-1.5 print:space-y-1">
-          <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-foreground print:text-xs print:pb-0.5">Results</h3>
-          {posResults.length > 0 && (
-            <div className="space-y-2">
-              {posResults.map((drug, i) => (
-                <div key={i} className="border-l-4 border-red-500 bg-card p-3 rounded-lg text-red-700 dark:text-red-400 font-bold uppercase text-sm print:bg-white print:border-l-2 print:p-2 print:text-xs">{drug} — POSITIVE</div>
-              ))}
-            </div>
-          )}
-          {negResults.length > 0 && (
-            <ul className="space-y-1">
-              {negResults.map((drug, i) => (
-                <li key={i} className="text-slate-700 dark:text-foreground/80 text-sm print:text-xs">{drug} — Negative</li>
-              ))}
+            <ul className="list-disc list-inside space-y-0.5 text-foreground/80">
+              {data.testPanel.map((row, i) => {
+                const drugName = row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName;
+                return <li key={i}>{drugName}</li>;
+              })}
             </ul>
           )}
         </div>
 
-        {/* Recommendations */}
+        {/* Results Summary (3B restyle) */}
         <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 space-y-4 print:bg-white print:border-slate-300 print:p-1.5 print:space-y-1">
-          <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-foreground print:text-xs print:pb-0.5">Recommendations</h3>
+          <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-foreground print:text-xs print:pb-0.5">Results</h3>
           {posResults.length > 0 && (
-            <p className="text-red-700 dark:text-red-400 font-bold text-sm print:text-xs">
-              Avoid {posResults.map(d => d.toUpperCase()).join(', ')}
-            </p>
+            <div className="space-y-2">
+              <p className="text-[10px] uppercase tracking-wider font-bold text-red-700 dark:text-red-400 print:text-[9px]">Positive</p>
+              {posResults.map((drug, i) => (
+                <div key={i} className="border-l-4 border-red-500 bg-card p-3 rounded-lg print:bg-white print:border-l-2 print:p-2">
+                  <span className="font-bold text-red-700 dark:text-red-400 uppercase text-sm print:text-xs">{drug}</span>
+                  <span className="text-red-600 dark:text-red-400 text-sm font-semibold print:text-xs">: Positive</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {/* Cross-sensitization notes (3C) */}
+          {crossNotes.length > 0 && (
+            <div className="space-y-1 pt-1">
+              {crossNotes.map((note, i) => (
+                <p key={i} className="text-sm italic text-foreground/80 print:text-xs">{note}</p>
+              ))}
+            </div>
           )}
           {negResults.length > 0 && (
-            <p className="text-slate-700 dark:text-foreground/80 text-sm print:text-xs">
-              There was no evidence of sensitisation to {negResults.join(', ')}
+            <div>
+              <p className="text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-1 print:text-[9px]">Negative</p>
+              <ul className="space-y-1">
+                {negResults.map((drug, i) => (
+                  <li key={i} className="text-slate-700 dark:text-foreground/80 text-sm print:text-xs">{drug}: negative</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* IV Challenge (3E) */}
+        {data.proceedToChallenge && (
+          <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 print:bg-white print:border-slate-300 print:p-1.5">
+            <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 mb-3 text-foreground print:text-xs print:pb-0.5 print:mb-1">Drug Challenge</h3>
+            <p className="text-sm print:text-xs">
+              {(() => {
+                const cName = data.challengeDrug === 'Other' ? (data.challengeDrugCustom || 'Other') : data.challengeDrug;
+                if (data.outcome === 'SUCCESS') return `Drug challenge with ${cName} — tolerated.`;
+                if (data.outcome === 'UNSUCCESS') {
+                  const syms = data.symptoms.map(s => s === 'Other' ? `Other (${data.symptomsOther})` : s).join(', ');
+                  const intv = data.interventionType === 'Other' ? `Other: ${data.interventionOther}` : data.interventionType;
+                  return `Drug challenge with ${cName} — reaction at ${data.reactionTime} minutes; symptoms: ${syms}; treated with: ${intv}.`;
+                }
+                return `Drug challenge with ${cName} — outcome not recorded.`;
+              })()}
             </p>
+          </div>
+        )}
+
+        {/* Recommendations (3D) */}
+        <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 space-y-3 print:bg-white print:border-slate-300 print:p-1.5 print:space-y-1">
+          <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-foreground print:text-xs print:pb-0.5">Recommendations</h3>
+          {noAllergyMessage ? (
+            <p className="text-slate-700 dark:text-foreground/80 text-sm print:text-xs">{noAllergyMessage}</p>
+          ) : (
+            <>
+              <div className="space-y-2">
+                {avoidList.map(drug => (
+                  <p key={drug} className="font-bold text-red-700 dark:text-red-400 text-sm uppercase print:text-xs">AVOID {drug}</p>
+                ))}
+              </div>
+              <ul className="list-disc list-inside space-y-1 text-sm text-slate-700 dark:text-foreground/80 print:text-xs">
+                {bullets.map(b => <li key={b}>{b}</li>)}
+              </ul>
+            </>
           )}
         </div>
 

@@ -57,6 +57,24 @@ export enum TestOutcome {
   UNSUCCESS = 'UNSUCCESS'
 }
 
+export interface NurseNotes {
+  preTesting?: string;
+  duringTesting?: string;
+  postTesting?: string;
+  signedBy?: string;
+}
+
+export interface TryptaseValue {
+  time: string;
+  result: string;
+}
+
+export interface TryptaseData {
+  obtained: boolean;
+  significantElevation: boolean;
+  values: TryptaseValue[];
+}
+
 export interface LogFormData {
   id?: string;
   timestamp?: string;
@@ -76,6 +94,8 @@ export interface LogFormData {
   interventionType: string;
   interventionOther: string;
   plan: string;
+  nurseNotes?: NurseNotes;
+  tryptase?: TryptaseData;
 }
 
 export interface DocumentsToChase {

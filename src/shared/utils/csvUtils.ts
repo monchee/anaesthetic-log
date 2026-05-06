@@ -378,7 +378,77 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
     else if (/Biochemical Results:\s*Tryptase \d+:/.test(t)) biochemTryptaseIndices.push(idx);
   });
 
-  // --- 6. Map Anaesthesia Types ---
+  // --- 6. Map Testing Plan Instrument ---
+  // The last REDCap instrument has explicit checkboxes for which drugs to test.
+  // We distinguish it from reaction-drug columns by finding the first
+  // "Muscle Relaxant (choice=…)" header, which only appears in the testing plan.
+  const TESTING_PLAN_DRUG_MAPPING: Record<string, string[]> = {
+    'Cis-atracurium':  ['Cisatracurium'],
+    'Rocuronium':      ['Rocuronium'],
+    'Pancuronium':     ['Pancuronium'],
+    'Vecuronium':      ['Vecuronium'],
+    'Suxamethonium':   ['Suxamethonium'],
+    'Major/Minor':     ['Penicillin Major', 'Penicillin Minor'],
+    'Ampicillin':      ['Ampicillin'],
+    'Amoxycillin':     ['Amoxycillin'],
+    'Cefotaxime':      ['Cefotaxime'],
+    'Cefazolin':       ['Cefazolin'],
+    'Ceftazidime':     ['Ceftazidime'],
+    'Ceftriaxone':     ['Ceftriaxone'],
+    'Cefepime':        ['Cefepime'],
+    'Midazolam':       ['Midazolam'],
+    'Propofol':        ['Propofol'],
+    'Lignocaine':      ['Lignocaine'],
+    'Mepivacaine':     ['Mepivacaine'],
+    'Bupivacaine':     ['Bupivacaine'],
+    'Ropivacaine':     ['Ropivacaine'],
+    'Alfentanil':      ['Alfentanil'],
+    'Fentanyl':        ['Fentanyl'],
+    'Morphine':        ['Morphine'],
+    'Remifentanil':    ['Remifentanil'],
+    'Oxycodone':       ['Oxycodone'],
+    'Chlorhexidine':   ['Chlorhexidine'],
+    'Povidone Iodine': ['Povidone Iodine'],
+    'Latex':           ['Latex'],
+    'Paracetamol':     ['Paracetamol'],
+    'Patent Blue':     ['Patent Blue'],
+    'Methylene Blue':  ['Methylene Blue'],
+    'Atropine':        ['Atropine'],
+    'Neostigmine':     ['Neostigmine'],
+  };
+
+  interface TestingPlanDrugMapping { dreamNames: string[]; columnIndex: number; }
+  const testingPlanDrugMap: TestingPlanDrugMapping[] = [];
+
+  const testingPlanCustomIdx = headers.findIndex(h =>
+    h.trim().startsWith('Others (not listed)') && h.includes('Please write below')
+  );
+
+  interface DocsToChaseMapping { key: 'tryptases' | 'anaestheticChart' | 'other'; columnIndex: number; }
+  const docsToChaseMap: DocsToChaseMapping[] = [];
+  const docsToChaseOtherTextIdx = headers.findIndex(h => h.trim() === 'Other Documents ');
+
+  const testingPlanStartIdx = headers.findIndex(h => h.trim().startsWith('Muscle Relaxant (choice='));
+  if (testingPlanStartIdx !== -1) {
+    for (let idx = testingPlanStartIdx; idx < headers.length; idx++) {
+      const h = headers[idx].trim();
+      const choiceMatch = h.match(DRUG_CHOICE_REGEX);
+      if (choiceMatch && !h.includes('Documents to Chase')) {
+        const redcapName = choiceMatch[1].trim();
+        const dreamNames = TESTING_PLAN_DRUG_MAPPING[redcapName];
+        if (dreamNames) {
+          testingPlanDrugMap.push({ dreamNames, columnIndex: idx });
+        }
+      }
+      if (h.startsWith('Documents to Chase:')) {
+        if (h.includes('Tryptase')) docsToChaseMap.push({ key: 'tryptases', columnIndex: idx });
+        else if (h.includes('Anaesthetic Chart')) docsToChaseMap.push({ key: 'anaestheticChart', columnIndex: idx });
+        else if (h.includes('Other Documents')) docsToChaseMap.push({ key: 'other', columnIndex: idx });
+      }
+    }
+  }
+
+  // --- 7. Map Anaesthesia Types ---
   const anaesthesiaTypeMap: { label: string, index: number }[] = [];
   headers.forEach((h, idx) => {
       if (h.includes('Type of Anaesthesia')) {
@@ -390,7 +460,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   });
 
 
-  // --- 7. Process Rows ---
+  // --- 8. Process Rows ---
   const parsingErrors: string[] = [];
   const skippedRows: number[] = [];
 
@@ -555,6 +625,36 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
       });
     }
     if (tryptases.length > 0) p.history.tryptases = tryptases;
+
+    // Extract Testing Plan (explicit REDCap instrument)
+    if (testingPlanDrugMap.length > 0) {
+      const planDrugs: string[] = [];
+      testingPlanDrugMap.forEach(entry => {
+        const val = row[entry.columnIndex]?.trim().toLowerCase();
+        if (['checked', '1', 'yes'].includes(val)) {
+          planDrugs.push(...entry.dreamNames);
+        }
+      });
+      if (planDrugs.length > 0) p.history.testingPlan = planDrugs;
+
+      const customText = testingPlanCustomIdx !== -1 ? row[testingPlanCustomIdx]?.trim() : '';
+      if (customText) p.history.testingPlanCustom = customText;
+
+      const docs: { tryptases?: boolean; anaestheticChart?: boolean; other?: boolean; otherText?: string } = {};
+      let hasDocs = false;
+      docsToChaseMap.forEach(entry => {
+        const val = row[entry.columnIndex]?.trim().toLowerCase();
+        if (['checked', '1', 'yes'].includes(val)) {
+          docs[entry.key] = true;
+          hasDocs = true;
+        }
+      });
+      if (docsToChaseOtherTextIdx !== -1 && row[docsToChaseOtherTextIdx]?.trim()) {
+        docs.otherText = row[docsToChaseOtherTextIdx].trim();
+        hasDocs = true;
+      }
+      if (hasDocs) p.history.documentsToChase = docs;
+    }
 
     p.history.medications?.sort((a, b) => {
         const timeA = a.includes('@') ? a.split('@')[1].trim() : '99:99';

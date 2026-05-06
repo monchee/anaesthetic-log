@@ -11,24 +11,31 @@ interface TestingPlanGeneratorProps {
 }
 
 const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, drugCategories, onPreview }) => {
-  // Drugs pre-selected based on patient's medication history before reaction
+  // Drugs matched from the patient's reaction history (used for UI badges)
   const historyDrugs = useMemo(() => {
     const patientDrugs = [
       ...(patient.history.preInductionDrugs ?? []),
       ...(patient.history.postInductionDrugs ?? []),
       ...(patient.history.medications ?? []),
     ].map(d => d.toLowerCase());
-
     return Object.values(drugCategories).flat().filter(drug =>
       patientDrugs.some(pd => pd.includes(drug.toLowerCase()) || drug.toLowerCase().includes(pd))
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient.id]);
 
+  const initialDrugs = useMemo(() => {
+    // Priority 1: explicit testing plan from REDCap instrument
+    if (patient.history.testingPlan?.length) {
+      return [...new Set([...DEFAULT_SELECTED_DRUGS, ...patient.history.testingPlan])];
+    }
+    // Fallback: infer from drugs given during the reaction
+    return [...new Set([...DEFAULT_SELECTED_DRUGS, ...historyDrugs])];
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [patient.id]);
+
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedDrugs, setSelectedDrugs] = useState<string[]>(() => [
-    ...new Set([...DEFAULT_SELECTED_DRUGS, ...historyDrugs])
-  ]);
+  const [selectedDrugs, setSelectedDrugs] = useState<string[]>(initialDrugs);
   const [customDrugs, setCustomDrugs] = useState<CustomDrugEntry[]>([]);
   const [notes, setNotes] = useState('');
   const [drugFilter, setDrugFilter] = useState('');
@@ -36,10 +43,10 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   const [urgent, setUrgent] = useState(false);
   const [reactionDate, setReactionDate] = useState(patient.history.date ?? '');
   const [documentsToChase, setDocumentsToChase] = useState({
-    tryptases: false,
-    anaestheticChart: false,
-    other: false,
-    otherText: '',
+    tryptases: patient.history.documentsToChase?.tryptases ?? false,
+    anaestheticChart: patient.history.documentsToChase?.anaestheticChart ?? false,
+    other: patient.history.documentsToChase?.other ?? false,
+    otherText: patient.history.documentsToChase?.otherText ?? '',
   });
 
   const toggleDoc = (key: 'tryptases' | 'anaestheticChart' | 'other') => {

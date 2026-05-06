@@ -1,8 +1,23 @@
 [
   {
+    "version": "v0.49.0",
+    "codename": "Pancuronium",
+    "highlight": true,
+    "changes": [
+      "Tryptase paragraph — testing form now captures tryptase samples; eMR letter auto-generates the correct clinical sentence (not obtained / not elevated / significant elevation).",
+      "Roc/Vec cross-sensitization — positive Rocuronium or Vecuronium automatically adds a cross-sensitization note and AVOID entry for the related drug.",
+      "Recommendations restructured — eMR letter and clinical report now lead with bold AVOID lines per positive drug, followed by standardised action bullets (eMR update, GP/MyHealth, MedicAlert for muscle relaxants, patient letter copy).",
+      "Nursing Notes — new collapsible section in the testing form for pre/during/post-testing observations and nurse sign-off; appears in clinical report only.",
+      "IV challenge now in eMR letter — drug challenge outcome renders as a dedicated block in the PowerChart letter.",
+      "REDCap testing-plan parity — app reads the explicit testing-plan instrument checkboxes from the CSV instead of inferring drugs from the reaction history.",
+      "6-hour report retention — active report survives an accidental exit; banner on the log screen lets you reopen or clear it within 6 hours.",
+      "eMR letter simplified — SPT/IDT measurements removed from the PowerChart letter; drug names only (full data stays in the clinical report)."
+    ]
+  },
+  {
     "version": "v0.48.0",
     "codename": "Atracurium",
-    "highlight": true,
+    "highlight": false,
     "changes": [
       "Sugammadex fixed \u2014 you can now select both 'Alone' and '+ Rocuronium' at the same time without one cancelling the other.",
       "Propofol simplified \u2014 collapsed from two testing protocols to a single IV protocol, removed unnecessary IDT dilution.",

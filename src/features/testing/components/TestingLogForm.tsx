@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { LogFormData } from '@/types';
-import { Calendar, Activity, Syringe, CheckCircle2, Check, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Loader2, Search, X } from 'lucide-react';
+import { Calendar, Activity, Syringe, CheckCircle2, Check, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Loader2, Search, X, ChevronDown, ChevronUp, ClipboardList } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 import { useTestingLogLogic } from '../hooks/useTestingLogLogic';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
@@ -50,6 +50,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [drugFilter, setDrugFilter] = useState('');
+  const [nurseNotesOpen, setNurseNotesOpen] = useState(false);
 
   const testingService = new TestingService();
 
@@ -548,8 +549,126 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
         </CardContent>
       </Card>
 
-      {/* 4. Plan & Assessment */}
+      {/* 4. Tryptase */}
       <Card style={{ '--section-index': 3 } as React.CSSProperties} className="animate-section-reveal">
+        <CardHeader className="pb-3 border-b border-border">
+          <CardTitle className="flex items-center gap-2 text-base text-foreground">
+            <div className="bg-slate-100 dark:bg-card/40 p-1.5 rounded-none">
+              <Activity className="w-4 h-4 text-primary" />
+            </div>
+            Serial Serum Tryptase
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6 space-y-5">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              role="switch"
+              aria-checked={formData.tryptase?.obtained ?? false}
+              onClick={() => setFormData(prev => ({
+                ...prev,
+                tryptase: {
+                  obtained: !(prev.tryptase?.obtained ?? false),
+                  significantElevation: prev.tryptase?.significantElevation ?? false,
+                  values: prev.tryptase?.values ?? [],
+                }
+              }))}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
+                formData.tryptase?.obtained ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'
+              }`}
+            >
+              <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform ${formData.tryptase?.obtained ? 'translate-x-5' : 'translate-x-0'}`} />
+            </button>
+            <Label>Tryptase samples obtained</Label>
+          </div>
+
+          {formData.tryptase?.obtained && (
+            <div className="space-y-5 animate-in fade-in">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={formData.tryptase.significantElevation}
+                  onClick={() => setFormData(prev => ({
+                    ...prev,
+                    tryptase: { ...prev.tryptase!, significantElevation: !prev.tryptase!.significantElevation }
+                  }))}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
+                    formData.tryptase.significantElevation ? 'bg-red-500' : 'bg-slate-200 dark:bg-slate-700'
+                  }`}
+                >
+                  <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform ${formData.tryptase.significantElevation ? 'translate-x-5' : 'translate-x-0'}`} />
+                </button>
+                <Label className={formData.tryptase.significantElevation ? 'text-red-600 font-semibold' : ''}>
+                  Clinically significant dynamic elevation
+                </Label>
+              </div>
+
+              <div className="space-y-3">
+                <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">Sample Values (μg/L)</Label>
+                {(formData.tryptase.values.length === 0 ? [{ time: '', result: '' }] : formData.tryptase.values).map((val, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <div className="flex-1 flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground w-4 shrink-0">T{idx + 1}</span>
+                      <Input
+                        placeholder="Time (e.g. 15:30)"
+                        className="h-9 rounded-none text-sm"
+                        value={formData.tryptase.values[idx]?.time ?? ''}
+                        onChange={e => {
+                          const vals = [...(formData.tryptase?.values ?? [])];
+                          while (vals.length <= idx) vals.push({ time: '', result: '' });
+                          vals[idx] = { ...vals[idx], time: e.target.value };
+                          setFormData(prev => ({ ...prev, tryptase: { ...prev.tryptase!, values: vals } }));
+                        }}
+                      />
+                      <Input
+                        placeholder="Result"
+                        className="h-9 rounded-none text-sm w-28"
+                        value={formData.tryptase.values[idx]?.result ?? ''}
+                        onChange={e => {
+                          const vals = [...(formData.tryptase?.values ?? [])];
+                          while (vals.length <= idx) vals.push({ time: '', result: '' });
+                          vals[idx] = { ...vals[idx], result: e.target.value };
+                          setFormData(prev => ({ ...prev, tryptase: { ...prev.tryptase!, values: vals } }));
+                        }}
+                      />
+                    </div>
+                    {idx > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const vals = formData.tryptase!.values.filter((_, i) => i !== idx);
+                          setFormData(prev => ({ ...prev, tryptase: { ...prev.tryptase!, values: vals } }));
+                        }}
+                        className="text-muted-foreground hover:text-destructive p-1"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {(formData.tryptase.values.length < 4) && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs h-7 px-2 rounded-none"
+                    onClick={() => setFormData(prev => ({
+                      ...prev,
+                      tryptase: { ...prev.tryptase!, values: [...prev.tryptase!.values, { time: '', result: '' }] }
+                    }))}
+                  >
+                    <Plus className="w-3.5 h-3.5 mr-1" /> Add sample
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* 5. Plan & Assessment */}
+      <Card style={{ '--section-index': 4 } as React.CSSProperties} className="animate-section-reveal">
         <CardHeader className="pb-3 border-b border-border">
            <CardTitle className="flex items-center gap-2 text-base text-foreground">
              <div className="bg-emerald-100 dark:bg-emerald-900/40 p-1.5 rounded-none">
@@ -570,6 +689,70 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 />
             </div>
         </CardContent>
+      </Card>
+
+      {/* 6. Nursing Notes */}
+      <Card style={{ '--section-index': 5 } as React.CSSProperties} className="animate-section-reveal border-blue-200 dark:border-blue-900/40">
+        <CardHeader className="pb-3 border-b border-blue-100 dark:border-blue-900/30">
+          <button
+            type="button"
+            className="flex items-center justify-between w-full text-left"
+            onClick={() => setNurseNotesOpen(o => !o)}
+          >
+            <CardTitle className="flex items-center gap-2 text-base text-blue-700 dark:text-blue-400">
+              <div className="bg-blue-100 dark:bg-blue-900/40 p-1.5 rounded-none">
+                <ClipboardList className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              </div>
+              Nursing Notes
+              <span className="text-xs font-normal text-muted-foreground ml-1">(nursing team only)</span>
+            </CardTitle>
+            {nurseNotesOpen ? <ChevronUp className="w-4 h-4 text-blue-500" /> : <ChevronDown className="w-4 h-4 text-blue-500" />}
+          </button>
+        </CardHeader>
+        {nurseNotesOpen && (
+          <CardContent className="pt-6 space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="nurse-pre" className="text-blue-800 dark:text-blue-300 font-medium">Pre-Testing Observations</Label>
+              <textarea
+                id="nurse-pre"
+                className="flex min-h-[80px] w-full rounded-none border border-blue-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:border-blue-900/40 dark:bg-background dark:placeholder:text-muted-foreground"
+                placeholder="e.g. consent obtained, vitals stable, IV access established..."
+                value={formData.nurseNotes?.preTesting || ''}
+                onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, preTesting: e.target.value } }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="nurse-during" className="text-blue-800 dark:text-blue-300 font-medium">During Testing</Label>
+              <textarea
+                id="nurse-during"
+                className="flex min-h-[80px] w-full rounded-none border border-blue-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:border-blue-900/40 dark:bg-background dark:placeholder:text-muted-foreground"
+                placeholder="e.g. patient tolerated well, no adverse events observed..."
+                value={formData.nurseNotes?.duringTesting || ''}
+                onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, duringTesting: e.target.value } }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="nurse-post" className="text-blue-800 dark:text-blue-300 font-medium">Post-Testing / Discharge</Label>
+              <textarea
+                id="nurse-post"
+                className="flex min-h-[80px] w-full rounded-none border border-blue-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:border-blue-900/40 dark:bg-background dark:placeholder:text-muted-foreground"
+                placeholder="e.g. patient discharged in stable condition, instructions given..."
+                value={formData.nurseNotes?.postTesting || ''}
+                onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, postTesting: e.target.value } }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="nurse-signed" className="text-blue-800 dark:text-blue-300 font-medium">Signed by (RN)</Label>
+              <Input
+                id="nurse-signed"
+                className="border-blue-200 dark:border-blue-900/40 focus:ring-blue-400"
+                placeholder="Nurse name..."
+                value={formData.nurseNotes?.signedBy || ''}
+                onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, signedBy: e.target.value } }))}
+              />
+            </div>
+          </CardContent>
+        )}
       </Card>
 
       {/* Save Action */}
