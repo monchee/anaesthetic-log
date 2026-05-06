@@ -2,6 +2,8 @@
   {
     "version": "v0.49.0",
     "codename": "Pancuronium",
+    "date": "6 May 2026",
+    "summary": "eMR letter rewrite, tryptase & cross-sensitization support, REDCap testing-plan parity, and 6-hour report retention.",
     "highlight": true,
     "changes": [
       "Tryptase paragraph — testing form now captures tryptase samples; eMR letter auto-generates the correct clinical sentence (not obtained / not elevated / significant elevation).",
