@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '../../../../components/ui';
 import { X, Plus } from 'lucide-react';
 import { DrugTestRow, DrugProtocol } from '../../../../types';
@@ -41,6 +41,7 @@ const DrugRow = React.memo(({
   const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
   const borderClass = row.drugName === 'Other' ? DEFAULT_THEME.rowBorder : theme.rowBorder;
   const protocolIndex = row.protocolIndex ?? 0;
+  const [showProtocols, setShowProtocols] = useState(false);
 
   // Resolve IDT results — handle legacy records that came in via migration
   const idtResults = row.idtResults ?? [];
@@ -136,22 +137,39 @@ const DrugRow = React.memo(({
         </div>
       )}
 
-      {/* Protocol picker — only when multiple protocols exist */}
+      {/* Protocol picker — collapsed by default when multiple protocols exist */}
       {allProtocols.length > 1 && (
-        <div className="flex flex-wrap gap-1.5">
-          {allProtocols.map((p, pi) => (
+        <div className="flex flex-wrap gap-1.5 items-center">
+          {showProtocols ? (
+            <>
+              {allProtocols.map((p, pi) => (
+                <button
+                  key={pi}
+                  onClick={() => { setShowProtocols(false); onSelectProtocol(index, pi); }}
+                  className={`text-[10px] px-2 py-0.5 rounded-none border transition-all ${
+                    pi === protocolIndex
+                      ? `${theme.btnSelected}`
+                      : `bg-card text-muted-foreground border-border ${theme.btnHover}`
+                  }`}
+                >
+                  {p.protocolLabel || `Protocol ${pi + 1}`}
+                </button>
+              ))}
+              <button
+                onClick={() => setShowProtocols(false)}
+                className="text-[10px] px-1.5 text-muted-foreground hover:text-foreground"
+              >
+                ✕
+              </button>
+            </>
+          ) : (
             <button
-              key={pi}
-              onClick={() => onSelectProtocol(index, pi)}
-              className={`text-[10px] px-2 py-0.5 rounded-none border transition-all ${
-                pi === protocolIndex
-                  ? `${theme.btnSelected}`
-                  : `bg-card text-muted-foreground border-border ${theme.btnHover}`
-              }`}
+              onClick={() => setShowProtocols(true)}
+              className={`text-[10px] px-2 py-0.5 rounded-none border bg-card text-muted-foreground border-border hover:bg-muted transition-all ${theme.btnHover}`}
             >
-              {p.protocolLabel || `Protocol ${pi + 1}`}
+              {allProtocols.length} protocols ▾
             </button>
-          ))}
+          )}
         </div>
       )}
 
