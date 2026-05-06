@@ -6,10 +6,18 @@ import {
   FileSpreadsheet,
   LayoutDashboard,
   Activity,
+  Sparkles,
 } from 'lucide-react';
 import { parseRedcapCSV } from '@shared/utils';
 import { Patient, Screen } from '@/types';
 import { toast } from 'sonner';
+import changelogData from '@shared/data/changelog.json';
+
+const _changelog = changelogData as Array<{ version: string; codename: string; highlight: boolean; changes: string[] }>;
+const CURRENT_VERSION = _changelog[0].version;
+const CURRENT_CODENAME = _changelog[0].codename;
+const LATEST_CHANGES = _changelog[0].changes;
+const LAST_SEEN_KEY = 'dream:last_seen_version';
 
 interface HelpModalProps {
   onUploadPatients?: (patients: Patient[]) => void;
@@ -21,11 +29,19 @@ interface HelpModalProps {
 export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrigger = false, hasData = false, setScreen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isNewVersion, setIsNewVersion] = useState(() => {
+    try { return localStorage.getItem(LAST_SEEN_KEY) !== CURRENT_VERSION; }
+    catch { return false; }
+  });
 
-  // Auto-open whenever no CSV data has been loaded; navigate home so the
-  // correct screen is shown when the modal is dismissed
+  const markSeen = () => {
+    try { localStorage.setItem(LAST_SEEN_KEY, CURRENT_VERSION); } catch {}
+    setIsNewVersion(false);
+  };
+
+  // Auto-open when no CSV loaded, or when a new version hasn't been acknowledged
   useEffect(() => {
-    if (!hasData) {
+    if (!hasData || isNewVersion) {
       setIsOpen(true);
       setScreen?.(Screen.LOG);
     }
@@ -33,6 +49,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
   }, [hasData]);
 
   const handleClose = (open: boolean) => {
+    if (!open) markSeen();
     setIsOpen(open);
   };
 
@@ -101,6 +118,41 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
               Quick Start
             </DialogTitle>
           </DialogHeader>
+
+          {/* What's New */}
+          {isNewVersion && (
+            <div className="bg-primary/8 border border-primary/20 rounded-sm p-4 mb-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-4 h-4 text-primary shrink-0" />
+                <span className="text-sm font-bold text-primary">
+                  What's new · {CURRENT_VERSION} <span className="font-normal opacity-70">({CURRENT_CODENAME})</span>
+                </span>
+              </div>
+              <ul className="space-y-1 mb-3">
+                {LATEST_CHANGES.map((change, i) => (
+                  <li key={i} className="text-xs text-foreground/80 flex gap-2 leading-relaxed">
+                    <span className="text-primary shrink-0 mt-0.5">·</span>
+                    <span>{change}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex items-center gap-3 text-xs">
+                <button
+                  onClick={() => { markSeen(); if (hasData) setIsOpen(false); }}
+                  className="text-primary font-medium hover:underline underline-offset-2"
+                >
+                  Got it
+                </button>
+                <span className="text-border">·</span>
+                <button
+                  onClick={() => { markSeen(); setIsOpen(false); setScreen?.(Screen.CHANGELOG); }}
+                  className="text-muted-foreground hover:text-foreground hover:underline underline-offset-2"
+                >
+                  View full changelog →
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Greeting */}
           <div className="border-l-4 border-primary pl-4 mb-5">

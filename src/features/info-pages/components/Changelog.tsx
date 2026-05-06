@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card, CardContent } from '@/components/ui';
-import { Home, Sparkles, ArrowRight } from 'lucide-react';
+import { Home, Sparkles, ArrowRight, ExternalLink } from 'lucide-react';
 import { Screen } from '@shared/types';
 import changelogData from '@shared/data/changelog.json';
 
@@ -34,13 +34,18 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
           {/* Left sidebar */}
           <div className="md:w-44 flex-shrink-0">
             <div className="md:sticky md:top-8 flex flex-row md:flex-col items-start gap-2 md:gap-1.5">
-              <code className={`text-sm font-mono font-bold px-2.5 py-1 ${
-                v.highlight
-                  ? 'bg-primary/10 dark:bg-primary/20 text-primary'
-                  : 'bg-muted text-slate-700 dark:text-foreground/80'
-              }`}>
-                {v.version}
-              </code>
+              <a
+                href={`https://github.com/monchee/anaesthetic-log/releases/tag/${v.version}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-sm font-mono font-bold px-2.5 py-1 inline-flex items-center gap-1 hover:underline underline-offset-2 ${
+                  v.highlight
+                    ? 'bg-primary/10 dark:bg-primary/20 text-primary'
+                    : 'bg-muted text-slate-700 dark:text-foreground/80'
+                }`}
+              >
+                {v.version} <ExternalLink className="w-3 h-3 opacity-60" />
+              </a>
               {v.codename && (
                 <span className="text-xs text-muted-foreground italic md:pl-0.5">
                   {v.codename}
