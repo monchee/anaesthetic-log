@@ -4,8 +4,6 @@ import {
   HelpCircle,
   Upload,
   FileSpreadsheet,
-  LayoutDashboard,
-  Activity,
   Sparkles,
 } from 'lucide-react';
 import { parseRedcapCSV } from '@shared/utils';
@@ -160,21 +158,6 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
             <p className="text-sm text-muted-foreground">
               Manage patient records, test results, and allergy workups from your REDCap database.
             </p>
-          </div>
-
-          {/* Feature summary */}
-          <div className="space-y-2 mb-5">
-            {[
-              { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', desc: 'Patient stats, search, and filter' },
-              { icon: <Activity className="w-4 h-4" />, label: 'Testing', desc: 'Record SPT, IDT, and drug challenge results' },
-              { icon: <FileSpreadsheet className="w-4 h-4" />, label: 'Database', desc: 'Full reaction timelines and severity grades' },
-            ].map(({ icon, label, desc }) => (
-              <div key={label} className="flex items-center gap-3 text-sm">
-                <span className="bg-primary/10 dark:bg-primary/20 text-primary p-1.5 rounded-sm shrink-0">{icon}</span>
-                <span className="font-medium text-foreground/90 w-20 shrink-0">{label}</span>
-                <span className="text-muted-foreground">{desc}</span>
-              </div>
-            ))}
           </div>
 
           <hr className="border-border mb-5" />
