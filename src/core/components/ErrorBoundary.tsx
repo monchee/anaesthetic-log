@@ -11,6 +11,16 @@ interface State {
   error?: Error;
 }
 
+/**
+ * Single-boundary error isolation for the DREAM clinical application.
+ *
+ * A single top-level ErrorBoundary is safer than per-route boundaries for a
+ * clinical app because partial recovery could corrupt data-entry state (e.g.
+ * half-saved test results, incomplete challenge recording). One reset point
+ * keeps recovery simple and prevents stale, inconsistent state from rendering.
+ *
+ * Falls back to a minimal recovery UI with error details for IT support.
+ */
 class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false

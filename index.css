@@ -227,6 +227,11 @@
   tr {
     page-break-inside: avoid;
   }
+  h3 { page-break-after: avoid; }
+  h3 + * { page-break-before: avoid; }
+  table tr { page-break-inside: avoid; }
+  .avoid-entry { page-break-inside: avoid; }
+  .section-card { page-break-inside: avoid; }
 }
 
 /* Reduced Motion — disable all animations for users who prefer it */

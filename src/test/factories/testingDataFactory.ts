@@ -63,6 +63,7 @@ export function createMockDrugTestPanel(count: number = 3): DrugTestRow[] {
 export function createMockTestingPlanData(overrides?: Partial<TestingPlanData>): TestingPlanData {
   const defaultPlanData: TestingPlanData = {
     selectedDrugs: ['Rocuronium', 'Propofol'],
+    selectedProtocols: {},
     customDrugs: [],
     notes: 'Standard testing protocol',
     urgent: false,

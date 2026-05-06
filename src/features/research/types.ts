@@ -1,9 +1,7 @@
 export interface ResearchDrugResult {
   drug_name: string;
   spt_wheal: string;
-  idt_100: string;
-  idt_10: string;
-  idt_neat: string;
+  idt_results: string;
   is_positive: boolean;
 }
 

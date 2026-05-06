@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRedact } from '../hooks/useRedact';
 import { Card, CardContent } from '@/components/ui';
 import { LogFormData } from '@/types';
 import { formatDate, getPositiveResults, getNegativeResults } from '@shared/utils';
@@ -7,9 +8,11 @@ import { Ban, ShieldCheck } from 'lucide-react';
 
 interface PatientHandoutProps {
   data: LogFormData;
+  activeReportSavedAt?: number | null;
 }
 
-const PatientHandout = ({ data }: PatientHandoutProps) => {
+const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
+  const { redact } = useRedact();
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
   const crossNotes = getCrossSensitizationNotes(posResults);
@@ -31,10 +34,10 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
         <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-3 print:space-y-2">
            
            {/* Header Info */}
-            <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 flex justify-between items-start print:bg-white print:border-slate-300 print:p-2">
+            <div className="section-card bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 flex justify-between items-start print:bg-white print:border-slate-300 print:p-2">
                <div>
                   <p className="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Patient Name</p>
-                  <p className="text-xl font-semibold tracking-tight text-primary print:text-sm">{data.firstName} {data.lastName}</p>
+                  <p className="text-xl font-semibold tracking-tight text-primary print:text-sm">{redact(`${data.firstName} ${data.lastName}`)}</p>
                </div>
                <div className="text-right">
                   <p className="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Date</p>
@@ -43,7 +46,7 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
             </div>
 
            {/* Positive Results */}
-            <div>
+            <div className="section-card">
                <h3 className="text-red-700 dark:text-red-400 font-bold text-sm uppercase tracking-wider mb-4 pb-2 border-b-2 border-red-500 flex items-center gap-2 print:text-xs print:mb-1 print:pb-1">
                   <Ban className="w-5 h-5 print:w-3 print:h-3" /> Drugs to avoid
                </h3>
@@ -67,7 +70,7 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
            </div>
 
            {/* Negative Results */}
-            <div>
+            <div className="section-card">
                <h3 className="text-green-700 dark:text-green-400 font-bold text-sm uppercase tracking-wider mb-4 pb-2 border-b-2 border-green-500 flex items-center gap-2 print:text-xs print:mb-1 print:pb-1">
                   <ShieldCheck className="w-5 h-5 print:w-3 print:h-3" /> Drugs tolerated
                </h3>
@@ -86,7 +89,7 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
            </div>
 
            {/* Department Info */}
-            <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 text-sm space-y-2 print:bg-white print:border-slate-300 print:p-2 print:space-y-0.5 print:text-xs">
+            <div className="section-card bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 text-sm space-y-2 print:bg-white print:border-slate-300 print:p-2 print:space-y-0.5 print:text-xs">
                <h3 className="font-semibold text-primary dark:text-primary mb-2 uppercase text-[11px] tracking-wider print:text-[10px] print:mb-1">Contact Information</h3>
                <p className="font-semibold dark:text-foreground/90 print:text-xs">Department of Clinical Immunology & Allergy</p>
               <p className="dark:text-foreground/80 print:text-xs">Royal Prince Alfred Hospital</p>
@@ -96,11 +99,17 @@ const PatientHandout = ({ data }: PatientHandoutProps) => {
               <p className="pt-2 text-muted-foreground italic print:pt-1 print:text-xs">If you have any questions about these results, please contact the clinic.</p>
            </div>
 
-           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4 text-center text-sm print:bg-white print:border-slate-300 print:text-xs">
+           <div className="section-card bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4 text-center text-sm print:bg-white print:border-slate-300 print:text-xs">
               <p className="text-slate-700 dark:text-foreground/80">This report summarises your skin and/or challenge tests performed today.</p>
               <p className="font-semibold text-foreground mt-2 print:mt-1">Please provide this document to your anaesthetist before any future surgery.</p>
            </div>
 
+        {/* Report Timestamp */}
+        {activeReportSavedAt && (
+          <div className="text-[9px] text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
+            Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+          </div>
+        )}
         </CardContent>
     </Card>
   );

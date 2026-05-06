@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRedact } from '../hooks/useRedact';
 import { Card, CardContent } from '@/components/ui';
 import { LogFormData, Patient } from '@/types';
 import { formatDate, getPositiveResults, getNegativeResults } from '@shared/utils';
@@ -14,12 +15,14 @@ import {
 interface PowerchartLetterProps {
   data: LogFormData;
   patient: Patient | null;
+  activeReportSavedAt?: number | null;
 }
 
 // Re-export for backward compatibility with any direct imports
 export { generateLetterText } from '@shared/utils/reportExporter';
 
-const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) => {
+const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, activeReportSavedAt }) => {
+  const { redact } = useRedact();
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
   const crossNotes = getCrossSensitizationNotes(posResults);
@@ -54,16 +57,16 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 print:grid-cols-2 print:gap-2">
           <div>
             <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Patient Name</p>
-            <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{fullName}</p>
+            <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{redact(fullName)}</p>
           </div>
           <div>
             <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">MRN</p>
-            <p className="text-lg font-mono font-medium text-slate-700 dark:text-foreground/80 print:text-xs">{data.mrn}</p>
+            <p className="text-lg font-mono font-medium text-slate-700 dark:text-foreground/80 print:text-xs">{redact(data.mrn)}</p>
           </div>
           {patient?.redcapId && patient.redcapId !== data.mrn && (
             <div>
               <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">REDCap Record ID</p>
-              <p className="text-lg font-mono font-medium text-slate-700 dark:text-foreground/80 print:text-xs">{patient.redcapId}</p>
+              <p className="text-lg font-mono font-medium text-slate-700 dark:text-foreground/80 print:text-xs">{redact(patient.redcapId)}</p>
             </div>
           )}
           {patient && patient.id !== 'manual' && (
@@ -94,7 +97,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         </div>
 
         {/* Narrative */}
-        <div className="bg-card border border-border rounded-lg p-4 space-y-4 text-sm leading-relaxed text-foreground/90 print:bg-white print:border-slate-300 print:p-2 print:text-xs print:space-y-2">
+        <div className="section-card bg-card border border-border rounded-lg p-4 space-y-4 text-sm leading-relaxed text-foreground/90 print:bg-white print:border-slate-300 print:p-2 print:text-xs print:space-y-2">
           {patient && patient.id !== 'manual' && (
             <p>
               {fullName} presented to {patient.history.hospital || '[hospital]'} for a {patient.history.procedure?.toLowerCase() || '[procedure]'} on the {formatDate(patient.history.date)}.
@@ -125,7 +128,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         </div>
 
         {/* Results Summary (3B restyle) */}
-        <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 space-y-4 print:bg-white print:border-slate-300 print:p-1.5 print:space-y-1">
+        <div className="section-card bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 space-y-4 print:bg-white print:border-slate-300 print:p-1.5 print:space-y-1">
           <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-foreground print:text-xs print:pb-0.5">Results</h3>
           {posResults.length > 0 && (
             <div className="space-y-2">
@@ -160,7 +163,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
 
         {/* IV Challenge (3E) */}
         {data.proceedToChallenge && (
-          <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 print:bg-white print:border-slate-300 print:p-1.5">
+          <div className="section-card bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 print:bg-white print:border-slate-300 print:p-1.5">
             <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 mb-3 text-foreground print:text-xs print:pb-0.5 print:mb-1">Drug Challenge</h3>
             <p className="text-sm print:text-xs">
               {(() => {
@@ -178,7 +181,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
         )}
 
         {/* Recommendations (3D) */}
-        <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 space-y-3 print:bg-white print:border-slate-300 print:p-1.5 print:space-y-1">
+        <div className="section-card bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 space-y-3 print:bg-white print:border-slate-300 print:p-1.5 print:space-y-1">
           <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-foreground print:text-xs print:pb-0.5">Recommendations</h3>
           {noAllergyMessage ? (
             <p className="text-slate-700 dark:text-foreground/80 text-sm print:text-xs">{noAllergyMessage}</p>
@@ -195,6 +198,13 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient }) =>
             </>
           )}
         </div>
+
+        {/* Report Timestamp */}
+        {activeReportSavedAt && (
+          <div className="text-[9px] text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
+            Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+          </div>
+        )}
 
         {/* MDT Signature */}
         <div className="pt-6 border-t border-slate-200 print:pt-2">

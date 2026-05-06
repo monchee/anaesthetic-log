@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useRedact } from '../hooks/useRedact';
 import { Card, CardContent } from '@/components/ui';
 import { LogFormData } from '@/types';
 import { formatDate } from '@shared/utils';
@@ -9,9 +10,11 @@ import { FileText, Activity, History, ClipboardList, ShieldAlert } from 'lucide-
 
 interface ClinicalReportProps {
   data: LogFormData;
+  activeReportSavedAt?: number | null;
 }
 
-const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
+const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSavedAt }) => {
+  const { redact } = useRedact();
   const posResults = getPositiveResults(data);
   const crossNotes = getCrossSensitizationNotes(posResults);
   const crossSensitized = crossNotes.map(n =>
@@ -43,7 +46,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
           </div>
           <div className="text-right">
             <p className="text-xs uppercase tracking-wider text-muted-foreground">Generated</p>
-            <p className="text-sm font-semibold text-foreground">{new Date().toLocaleDateString('en-AU')}</p>
+            <p className="text-sm font-semibold text-foreground">{activeReportSavedAt ? new Date(activeReportSavedAt).toLocaleDateString('en-AU') : new Date().toLocaleDateString('en-AU')}</p>
           </div>
         </div>
       </div>
@@ -51,15 +54,15 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
       <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-3 print:space-y-3">
          
          {/* Patient Details */}
-         <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 print:bg-white print:border-slate-300">
+         <div className="section-card bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 print:bg-white print:border-slate-300">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 print:grid-cols-2 print:gap-2">
             <div>
                <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">Patient Name</label>
-               <p className="text-xl md:text-2xl font-semibold tracking-tight text-primary print:text-base">{data.firstName} {data.lastName}</p>
+               <p className="text-xl md:text-2xl font-semibold tracking-tight text-primary print:text-base">{redact(`${data.firstName} ${data.lastName}`)}</p>
             </div>
             <div>
                <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">MRN</label>
-               <p className="text-lg font-mono font-medium text-foreground print:text-sm">{data.mrn}</p>
+               <p className="text-lg font-mono font-medium text-foreground print:text-sm">{redact(data.mrn)}</p>
             </div>
             <div className="md:col-span-2 print:col-span-2">
                <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">Visit Date</label>
@@ -69,7 +72,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
          </div>
 
          {/* Skin Testing Results */}
-         <div>
+         <div className="section-card">
             <h3 className="text-sm md:text-base font-bold text-foreground uppercase tracking-wider flex items-center gap-2 border-b-2 border-primary pb-2 mb-4 print:text-xs print:mb-2">
               <Activity className="w-5 h-5 print:w-4 print:h-4" /> Skin & Intradermal Testing
             </h3>
@@ -83,6 +86,9 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                    <span>Saline IDT: <strong>{data.controls?.salineIdt || '-'}</strong></span>
                </div>
             </div>
+            {!data.controls?.histamineSpt && !data.controls?.salineSpt && !data.controls?.salineIdt && (
+              <p className="text-muted-foreground italic text-sm print:text-xs">No controls recorded.</p>
+            )}
 
             {(data.testPanel || []).length > 0 ? (
               <>
@@ -150,7 +156,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
          </div>
 
          {/* Challenge Results */}
-         <div>
+         <div className="section-card">
             <h3 className="text-sm md:text-base font-bold text-foreground uppercase tracking-wider flex items-center gap-2 border-b-2 border-primary pb-2 mb-4 print:text-xs print:mb-2">
               <History className="w-5 h-5 print:w-4 print:h-4" /> Drug Challenge Details
             </h3>
@@ -180,7 +186,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
 
          {/* Cross-sensitization (3C) */}
          {crossNotes.length > 0 && (
-           <div className="space-y-1">
+           <div className="section-card space-y-1">
              {crossNotes.map((note, i) => (
                <p key={i} className="text-sm italic text-foreground/80 border-l-4 border-amber-400 pl-3 print:text-xs">{note}</p>
              ))}
@@ -188,7 +194,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
          )}
 
          {/* Recommendations (3D) */}
-         <div>
+         <div className="section-card">
            <h3 className="text-sm md:text-base font-bold text-foreground uppercase tracking-wider flex items-center gap-2 border-b-2 border-primary pb-2 mb-4 print:text-xs print:mb-2">
              <ShieldAlert className="w-5 h-5 print:w-4 print:h-4" /> Recommendations
            </h3>
@@ -209,6 +215,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
          </div>
 
          {/* Nursing Notes */}
+         <div className="section-card">
          {data.nurseNotes && (data.nurseNotes.preTesting || data.nurseNotes.duringTesting || data.nurseNotes.postTesting || data.nurseNotes.signedBy) && (
            <div>
              <h3 className="text-sm md:text-base font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wider flex items-center gap-2 border-b-2 border-blue-400 pb-2 mb-4 print:text-xs print:mb-2">
@@ -239,9 +246,10 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
              </div>
            </div>
          )}
+         </div>
 
          {/* Plan */}
-         <div className="pb-4 print:pb-2">
+         <div className="section-card pb-4 print:pb-2">
             <h3 className="tracking-tight text-lg mb-2 flex items-center gap-2 text-foreground print:text-sm print:mb-1">
               <FileText className="w-5 h-5 print:w-4 print:h-4" /> Assessment & Plan
             </h3>
@@ -249,6 +257,13 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data }) => {
                {data.plan || 'No comments recorded.'}
             </div>
          </div>
+
+         {/* Report Timestamp */}
+         {activeReportSavedAt && (
+           <div className="text-[9px] text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
+             Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+           </div>
+         )}
 
          {/* Print Footer */}
          <div className="hidden print:block pt-4 border-t border-slate-200 mt-4">

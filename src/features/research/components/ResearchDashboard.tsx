@@ -47,7 +47,7 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-muted border-b border-border">
-                  {['Drug', 'SPT', '1:100', '1:10', 'Neat', 'Result'].map(h => (
+                  {['Drug', 'SPT', 'IDT Results', 'Result'].map(h => (
                     <th key={h} className="px-3 py-1.5 text-left font-medium text-muted-foreground">{h}</th>
                   ))}
                 </tr>
@@ -57,9 +57,7 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
                   <tr key={i} className={d.is_positive ? 'bg-red-50 dark:bg-red-950/20' : ''}>
                     <td className="px-3 py-1.5 font-medium text-slate-700 dark:text-foreground/90">{d.drug_name}</td>
                     <td className="px-3 py-1.5 text-muted-foreground">{d.spt_wheal || '—'}</td>
-                    <td className="px-3 py-1.5 text-muted-foreground">{d.idt_100 || '—'}</td>
-                    <td className="px-3 py-1.5 text-muted-foreground">{d.idt_10 || '—'}</td>
-                    <td className="px-3 py-1.5 text-muted-foreground">{d.idt_neat || '—'}</td>
+                    <td className="px-3 py-1.5 text-muted-foreground">{d.idt_results || '—'}</td>
                     <td className="px-3 py-1.5">
                       {d.is_positive
                         ? <span className="text-red-600 dark:text-red-400 font-semibold">Positive</span>

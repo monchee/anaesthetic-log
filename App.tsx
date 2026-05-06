@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2, LogOut, Info, Target, Shield, Users } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2, LogOut, Info, Target, Shield, Users, EyeOff } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
@@ -24,6 +24,7 @@ import { showToast } from '@shared/utils';
 import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
 import { formatClinicalReportAsText, formatPatientHandoutAsText } from '@shared/utils/reportExporter';
 import { generateLetterText } from '@shared/utils/reportExporter';
+import { RedactProvider, useRedact } from '@features/reports/hooks/useRedact';
 import { reportWebVitals } from './src/lib/analytics';
 import { findInfoPageRoute } from '@core/routes/infoPageConfig';
 import { useResearchSubmit } from '@features/research/hooks/useResearchSubmit';
@@ -33,6 +34,27 @@ const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 const BACK_BTN = "h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none btn-press";
 const BACK_ICON = "w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity";
 const ACTIVE_REPORT_TTL_MS = 6 * 60 * 60 * 1000;
+
+
+function RedactToggle() {
+  const { isRedacted, toggleRedact } = useRedact();
+  return (
+    <div className="flex justify-end mb-2 no-print">
+      <button
+        onClick={toggleRedact}
+        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border rounded-none transition-colors ${
+          isRedacted
+            ? 'border-amber-400 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
+            : 'border-border bg-card text-muted-foreground hover:text-foreground'
+        }`}
+        title={isRedacted ? 'Show identifying data' : 'Hide identifying data'}
+      >
+        <EyeOff className="w-3 h-3" />
+        {isRedacted ? 'Show' : 'Redact'}
+      </button>
+    </div>
+  );
+}
 
 function AnaestheticLogApp() {
   useEffect(() => { reportWebVitals(); }, []);
@@ -166,9 +188,12 @@ function AnaestheticLogApp() {
           </div>
 
           {/* Document */}
-          {activeReportTab === 'report' && <ClinicalReport data={lastSavedRecord} />}
-          {activeReportTab === 'handout' && <PatientHandout data={lastSavedRecord} />}
-          {activeReportTab === 'letter' && <PowerchartLetter data={lastSavedRecord} patient={selectedPatient} />}
+          <RedactProvider>
+            <RedactToggle />
+            {activeReportTab === 'report' && <ClinicalReport data={lastSavedRecord} activeReportSavedAt={activeReportSavedAt} />}
+            {activeReportTab === 'handout' && <PatientHandout data={lastSavedRecord} activeReportSavedAt={activeReportSavedAt} />}
+            {activeReportTab === 'letter' && <PowerchartLetter data={lastSavedRecord} patient={selectedPatient} activeReportSavedAt={activeReportSavedAt} />}
+          </RedactProvider>
 
           {/* Action buttons */}
           <div className="grid grid-cols-3 gap-3 no-print mt-4">

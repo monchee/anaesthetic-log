@@ -187,9 +187,7 @@ describe('TestingLogForm', () => {
       const sptInput = screen.getAllByPlaceholderText('-')[0];
       fireEvent.change(sptInput, { target: { value: '5' } });
 
-      await waitFor(() => {
-        expect(sptInput).toHaveValue(5);
-      });
+      expect(sptInput.value).toBe('5');
     });
 
     it('highlights positive tests (≥3mm) in red', () => {

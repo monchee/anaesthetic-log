@@ -15,14 +15,14 @@ export function formatTryptaseSentence(tryptase: TryptaseData): string {
   return `Serial serum tryptase samples were obtained and were not elevated${formatted ? ` (${formatted})` : ''}.`;
 }
 
-export function formatClinicalReportAsText(data: LogFormData): string {
+export function formatClinicalReportAsText(data: LogFormData, redact?: (value: string) => string): string {
   const lines: string[] = [];
 
   lines.push('ANAESTHETIC TESTING REPORT');
   lines.push('Clinical Immunology & Allergy — Royal Prince Alfred Hospital');
   lines.push('');
-  lines.push(`Patient: ${data.firstName} ${data.lastName}`);
-  lines.push(`MRN: ${data.mrn}`);
+  lines.push(`Patient: ${redact ? redact(`${data.firstName} ${data.lastName}`) : `${data.firstName} ${data.lastName}`}`);
+  lines.push(`MRN: ${redact ? redact(data.mrn) : data.mrn}`);
   lines.push(`Visit Date: ${data.visitDate ? new Date(data.visitDate).toLocaleDateString('en-AU') : 'Unknown'}`);
   lines.push('');
 
@@ -32,6 +32,13 @@ export function formatClinicalReportAsText(data: LogFormData): string {
     lines.push(`  Histamine SPT: ${data.controls.histamineSpt || '-'}`);
     lines.push(`  Saline SPT: ${data.controls.salineSpt || '-'}`);
     lines.push(`  Saline IDT: ${data.controls.salineIdt || '-'}`);
+    lines.push('');
+  }
+
+  // Tryptase
+  if (data.tryptase) {
+    lines.push('Tryptase:');
+    lines.push(`  ${formatTryptaseSentence(data.tryptase)}`);
     lines.push('');
   }
 
@@ -113,7 +120,7 @@ export function formatClinicalReportAsText(data: LogFormData): string {
   return lines.join('\n');
 }
 
-export function formatPatientHandoutAsText(data: LogFormData): string {
+export function formatPatientHandoutAsText(data: LogFormData, redact?: (value: string) => string): string {
   const lines: string[] = [];
   const posResults: string[] = [];
   const negResults: string[] = [];
@@ -132,7 +139,7 @@ export function formatPatientHandoutAsText(data: LogFormData): string {
 
   lines.push('ALLERGY TESTING RESULTS — PATIENT INFORMATION HANDOUT');
   lines.push('');
-  lines.push(`Patient: ${data.firstName} ${data.lastName}`);
+  lines.push(`Patient: ${redact ? redact(`${data.firstName} ${data.lastName}`) : `${data.firstName} ${data.lastName}`}`);
   lines.push(`Date: ${data.visitDate ? new Date(data.visitDate).toLocaleDateString('en-AU') : 'Unknown'}`);
   lines.push('');
 
@@ -193,7 +200,7 @@ export function getOutcomeText(patient: Patient): string {
   return 'completed/abandoned';
 }
 
-export function generateLetterText(data: LogFormData, patient: Patient | null): string {
+export function generateLetterText(data: LogFormData, patient: Patient | null, redact?: (value: string) => string): string {
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
   const crossNotes = getCrossSensitizationNotes(posResults);
@@ -201,8 +208,8 @@ export function generateLetterText(data: LogFormData, patient: Patient | null): 
   const { avoidList, bullets, noAllergyMessage } = buildRecommendations(posResults, crossSensitized);
   const lines: string[] = [];
 
-  const fullName = `${data.firstName} ${data.lastName}`;
-  const firstName = data.firstName;
+  const fullName = redact ? redact(`${data.firstName} ${data.lastName}`) : `${data.firstName} ${data.lastName}`;
+  const firstName = redact ? redact(data.firstName) : data.firstName;
 
   if (patient && patient.id !== 'manual') {
     const { history } = patient;
