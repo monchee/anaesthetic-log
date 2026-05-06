@@ -1,19 +1,36 @@
 [
   {
+    "version": "v0.50.0",
+    "codename": "",
+    "date": "6 May 2026",
+    "summary": "Print pagination, report timestamps, redacted view toggle, redact context provider, unit test expansion, and technical debt cleanup.",
+    "highlight": true,
+    "changes": [
+      "Print pagination \u2014 CSS page-break rules prevent orphaned headings and split AVOID entries across pages.",
+      "Report generation timestamps \u2014 footer on all three report types shows when the report was saved (not when viewed).",
+      "Redacted view toggle \u2014 EyeOff button replaces patient identifiers with \u2014\u2014\u2014 for demos and training; ephemeral, print always shows full data.",
+      "Redact context provider \u2014 useRedact hook provides redact() across all report components and text export functions.",
+      "Controls empty state \u2014 Clinical Report shows No controls recorded. when all control values are empty.",
+      "ResearchDrugResult type consolidated \u2014 idt_100, idt_10, idt_neat fields merged into single idt_results string.",
+      "Unit tests for testingUtils \u2014 all 5 exports covered (isSkinTestPositive, getPositiveResults, getNegativeResults, getCrossSensitizationNotes, buildRecommendations).",
+      "Unit tests for deidentify \u2014 15 test cases covering name stripping, REDCap passthrough, challenge handling, legacy IDT fields, custom drug names."
+    ]
+  },
+  {
     "version": "v0.49.0",
     "codename": "Pancuronium",
     "date": "6 May 2026",
     "summary": "eMR letter rewrite, tryptase & cross-sensitization support, REDCap testing-plan parity, and 6-hour report retention.",
     "highlight": true,
     "changes": [
-      "Tryptase paragraph — testing form now captures tryptase samples; eMR letter auto-generates the correct clinical sentence (not obtained / not elevated / significant elevation).",
-      "Roc/Vec cross-sensitization — positive Rocuronium or Vecuronium automatically adds a cross-sensitization note and AVOID entry for the related drug.",
-      "Recommendations restructured — eMR letter and clinical report now lead with bold AVOID lines per positive drug, followed by standardised action bullets (eMR update, GP/MyHealth, MedicAlert for muscle relaxants, patient letter copy).",
-      "Nursing Notes — new collapsible section in the testing form for pre/during/post-testing observations and nurse sign-off; appears in clinical report only.",
-      "IV challenge now in eMR letter — drug challenge outcome renders as a dedicated block in the PowerChart letter.",
-      "REDCap testing-plan parity — app reads the explicit testing-plan instrument checkboxes from the CSV instead of inferring drugs from the reaction history.",
-      "6-hour report retention — active report survives an accidental exit; banner on the log screen lets you reopen or clear it within 6 hours.",
-      "eMR letter simplified — SPT/IDT measurements removed from the PowerChart letter; drug names only (full data stays in the clinical report)."
+      "Tryptase paragraph \u2014 testing form now captures tryptase samples; eMR letter auto-generates the correct clinical sentence (not obtained / not elevated / significant elevation).",
+      "Roc/Vec cross-sensitization \u2014 positive Rocuronium or Vecuronium automatically adds a cross-sensitization note and AVOID entry for the related drug.",
+      "Recommendations restructured \u2014 eMR letter and clinical report now lead with bold AVOID lines per positive drug, followed by standardised action bullets (eMR update, GP/MyHealth, MedicAlert for muscle relaxants, patient letter copy).",
+      "Nursing Notes \u2014 new collapsible section in the testing form for pre/during/post-testing observations and nurse sign-off; appears in clinical report only.",
+      "IV challenge now in eMR letter \u2014 drug challenge outcome renders as a dedicated block in the PowerChart letter.",
+      "REDCap testing-plan parity \u2014 app reads the explicit testing-plan instrument checkboxes from the CSV instead of inferring drugs from the reaction history.",
+      "6-hour report retention \u2014 active report survives an accidental exit; banner on the log screen lets you reopen or clear it within 6 hours.",
+      "eMR letter simplified \u2014 SPT/IDT measurements removed from the PowerChart letter; drug names only (full data stays in the clinical report)."
     ]
   },
   {
