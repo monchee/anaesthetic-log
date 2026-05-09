@@ -1,3 +1,13 @@
+## [0.50.2] — 2026-05-09
+
+### Changed
+- **PWA update notification** — replaced gradient purple DOM overlay (30s auto-dismiss) with persistent Sonner toast (duration: Infinity, close button, Reload now action).
+- **Gate auto-update** — when Screen Lock gate is showing, new SW activates silently (no prompt, no work to lose).
+- **Visibility-change polling** — registration.update() fires on visibilitychange for faster catch-up after tab is backgrounded.
+- **registerType** — renamed from autoUpdate to prompt for accuracy.
+
+### Chore
+- Version bump to 0.50.2
 
 ## [0.50.1] — 2026-05-09
 
@@ -14,8 +24,6 @@
 
 ### Chore
 - Version bump to 0.50.1
-# Changelog
-
 ## [0.50.0] — 2026-05-06
 
 ### Added

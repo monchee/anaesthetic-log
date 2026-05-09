@@ -1,5 +1,18 @@
 [
   {
+    "version": "v0.50.2",
+    "codename": "",
+    "date": "9 May 2026",
+    "summary": "PWA update flow: persistent Sonner toast replaces DOM overlay, auto-updates at gate, visibility polling.",
+    "highlight": true,
+    "changes": [
+      "PWA update notification replaced - old gradient purple DOM overlay (30s auto-dismiss) replaced with persistent Sonner toast (duration: Infinity, close button, Reload now action).",
+      "Gate auto-update - when Screen Lock gate is showing, new SW activates silently (no prompt, no work to lose).",
+      "Visibility-change polling - registration.update() fires on visibilitychange for faster catch-up after tab is backgrounded.",
+      "registerType renamed to prompt for accuracy."
+    ]
+  },
+  {
     "version": "v0.50.1",
     "codename": "",
     "date": "9 May 2026",
@@ -608,4 +621,4 @@
       "Patient management \u2014 organize and track all patient testing records."
     ]
   }
-] 
+]
