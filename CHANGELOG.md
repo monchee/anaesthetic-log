@@ -1,3 +1,19 @@
+
+## [0.50.1] — 2026-05-09
+
+### Fixed
+- **PIN session persistence** — unlock state now survives page reload via sessionStorage; deep-link redirects preserve original route
+- **Dark mode header** — header bar now uses `bg-primary` theme token; no more light-blue residue in dark mode
+- **Patient dropdown overflow** — popover capped at `max-h-80` with overflow scroll for 44+ patient lists
+- **Mobile nav accessibility** — all icon-only nav buttons now carry `aria-label` attributes
+- **Quick Start dialog** — added `DialogDescription` for proper `aria-describedby`; removed empty trailing parenthetical `()` in changelog header
+- **Contact page** — email addresses are now clickable `mailto:` links with visible focus rings
+
+### Changed
+- **PIN gate copy** — reworded to "Screen Lock" with footnoted disclaimer clarifying it prevents shoulder-surfing; patient data security is governed by database access controls
+
+### Chore
+- Version bump to 0.50.1
 # Changelog
 
 ## [0.50.0] — 2026-05-06

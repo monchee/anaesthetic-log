@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, Button } from '@/components/ui';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Button } from '@/components/ui';
 import {
   HelpCircle,
   Upload,
@@ -16,7 +16,7 @@ const CURRENT_VERSION = _changelog[0].version;
 const CURRENT_CODENAME = _changelog[0].codename;
 const CURRENT_DATE = _changelog[0].date ?? '';
 const CURRENT_SUMMARY = _changelog[0].summary ?? '';
-const LAST_SEEN_KEY = 'dream:last_seen_version';
+const LAST_SEEN_KEY = 'dream:…sion';
 
 interface HelpModalProps {
   onUploadPatients?: (patients: Patient[]) => void;
@@ -34,7 +34,10 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
   });
 
   const markSeen = () => {
-    try { localStorage.setItem(LAST_SEEN_KEY, CURRENT_VERSION); } catch {}
+    
+try { localStorage.setItem(LAST_SEEN_KEY, CURRENT_VERSION); } catch {
+  // localStorage not available
+}
     setIsNewVersion(false);
   };
 
@@ -86,6 +89,10 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
     }
   };
 
+  const versionLabel = CURRENT_CODENAME
+    ? `Updated ${CURRENT_DATE} · ${CURRENT_VERSION} (${CURRENT_CODENAME})`
+    : `Updated ${CURRENT_DATE} · ${CURRENT_VERSION}`;
+
   return (
     <>
       <Button
@@ -116,6 +123,9 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
               <FileSpreadsheet className="w-5 h-5 text-foreground" />
               Quick Start
             </DialogTitle>
+            <DialogDescription>
+              New patient workflow shortcuts and recent changelog.
+            </DialogDescription>
           </DialogHeader>
 
           {/* What's New */}
@@ -125,7 +135,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
                 <div className="flex items-center gap-1.5 min-w-0">
                   <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                   <span className="text-xs font-semibold text-amber-800 dark:text-amber-300">
-                    Updated {CURRENT_DATE} · {CURRENT_VERSION} ({CURRENT_CODENAME})
+                    {versionLabel}
                   </span>
                 </div>
               </div>

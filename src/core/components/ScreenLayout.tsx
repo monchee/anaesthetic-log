@@ -114,14 +114,14 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
             {/* Full Width Header (Static) */}
             <header role="banner" aria-label="Application header" className="w-full flex flex-col shadow-sm z-50 relative no-print">
                 {/* Main Navigation Bar */}
-                <div className="bg-primary text-white w-full">
+                <div className="bg-primary dark:bg-primary w-full transition-colors">
                     {/* Safe Area Padding for mobile notch support */}
                     <div className="pt-[env(safe-area-inset-top)]">
                         <div className="max-w-6xl mx-auto px-3 py-3 sm:px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
 
                             {/* Title Area */}
                             <div className="flex items-center gap-3 w-full sm:w-auto">
-                                <div className="bg-white/10 p-2 rounded-none backdrop-blur-sm border border-white/10 shrink-0">
+                                <div className="bg-white/10 p-2 rounded-none backdrop-blur-sm border border-white/10 shrink-0 dark:border-white/20">
                                     {icon}
                                 </div>
                                 <div className="min-w-0">
@@ -145,6 +145,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                                 key={screen}
                                                 onClick={() => setScreen(screen)}
                                                 aria-current={isActive ? 'page' : undefined}
+                                                aria-label={label}
                                                 className={`h-9 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-all duration-200 shadow-sm btn-press
                                                     ${isActive
                                                         ? 'bg-white text-primary font-medium'
@@ -169,6 +170,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                     <DropdownMenuTrigger
                                         className="h-9 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-all duration-200 shadow-sm group btn-press"
                                         title="Open Navigation Menu"
+                                        aria-label="Menu"
                                     >
                                         <Menu className="w-4 h-4 text-white opacity-90 group-hover:opacity-100 transition-opacity" />
                                         <span className="text-sm hidden sm:inline">Menu</span>
