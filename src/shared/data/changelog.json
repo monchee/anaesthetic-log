@@ -1,5 +1,23 @@
 [
   {
+    "version": "v0.50.1",
+    "codename": "",
+    "date": "9 May 2026",
+    "summary": "QA fixes: PIN session persistence, dark mode header tokens, patient dropdown overflow & ARIA, mobile nav labels, Quick Start dialog description, changelog formatting, contact mailto links. PIN gate reworded as screen lock.",
+    "highlight": true,
+    "changes": [
+      "PIN session persistence \u2014 unlock state now survives page reload via sessionStorage; deep-link redirects preserve original route.",
+      "Dark mode header \u2014 header bar now uses theme token; no more light-blue residue in dark mode.",
+      "Patient dropdown overflow \u2014 popover capped at max-h-80 with overflow scroll for 44+ patient lists.",
+      "Patient list ARIA tree \u2014 all patient options are DOM descendants of the listbox.",
+      "Mobile nav accessibility \u2014 all icon-only nav buttons now carry aria-label attributes.",
+      "Quick Start dialog \u2014 added DialogDescription for proper aria-describedby.",
+      "Contact page \u2014 email addresses are now clickable mailto: links with visible focus rings.",
+      "PIN gate reworded to Screen Lock with clarifying footnote about security boundaries.",
+      "Empty trailing parentheses removed from changelog header."
+    ]
+  },
+  {
     "version": "v0.50.0",
     "codename": "",
     "date": "6 May 2026",
