@@ -32,4 +32,15 @@ export const showToast = {
       },
     });
   },
+  update: (onReload: () => void) => {
+    toast.message('A new version is ready', {
+      description: 'Reload to get the latest fixes.',
+      duration: Infinity,
+      closeButton: true,
+      action: { label: 'Reload now', onClick: onReload },
+      classNames: {
+        toast: 'border-l-4 border-l-primary',
+      },
+    });
+  },
 };
