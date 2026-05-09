@@ -27,7 +27,14 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
                   </div>
                   <div className="pt-2 border-t border-border">
                     <p><strong>Phone:</strong> (02) 9515 7586</p>
-                    <p><strong>Email:</strong> SLHD-RPA-ClinicalImmunology@health.nsw.gov.au</p>
+                    <p><strong>Email:</strong>{' '}
+                      <a
+                        href="mailto:SLHD-RPA-ClinicalImmunology@health.nsw.gov.au"
+                        className="underline underline-offset-2 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded-none"
+                      >
+                        SLHD-RPA-ClinicalImmunology@health.nsw.gov.au
+                      </a>
+                    </p>
                     <p><strong>Clinic Location:</strong> Level 5, Gloucester House</p>
                   </div>
                   <div className="pt-2 border-t border-border">
@@ -66,7 +73,14 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
                   <strong>Standard issues:</strong> Report to your clinic administrator with steps to reproduce.
                 </p>
                 <p>
-                  <strong>Urgent/Critical issues:</strong> Contact the allergy nursing team directly at <strong>SLHD-RPA-allergynurses@health.nsw.gov.au</strong> if the issue impacts patient care.
+                  <strong>Urgent/Critical issues:</strong> Contact the allergy nursing team directly at{' '}
+                  <a
+                    href="mailto:SLHD-RPA-allergynurses@health.nsw.gov.au"
+                    className="font-semibold underline underline-offset-2 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded-none"
+                  >
+                    SLHD-RPA-allergynurses@health.nsw.gov.au
+                  </a>{' '}
+                  if the issue impacts patient care.
                 </p>
               </div>
             </div>

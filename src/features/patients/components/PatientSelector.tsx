@@ -108,7 +108,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
         </button>
 
         {isOpen && (
-          <div role="listbox" aria-label="Patient list" className="absolute z-50 mt-1 max-h-[50vh] sm:max-h-60 w-full overflow-auto rounded-none border border-slate-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm animate-in fade-in zoom-in-95 duration-100 dark:bg-card dark:border-border dark:shadow-xl">
+          <div role="listbox" aria-label="Patient list" className="absolute z-50 mt-1 max-h-[50vh] sm:max-h-80 w-full overflow-auto rounded-none border border-slate-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm animate-in fade-in zoom-in-95 duration-100 dark:bg-card dark:border-border dark:shadow-xl">
             {/* Sticky Search Header */}
             <div className="sticky top-0 z-10 bg-card border-b border-border px-2 py-1.5">
                 <div className="relative">

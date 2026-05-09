@@ -1,21 +1,36 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
 
 // @ts-expect-error - __APP_VERSION__ is injected by Vite during build
 const APP_VERSION = __APP_VERSION__;
 
 const HARDCODED_PIN = '2050';
+const UNLOCK_KEY = 'dream:unlocked';
+
+function getStoredUnlock(): boolean {
+  try { return sessionStorage.getItem(UNLOCK_KEY) === 'true'; }
+  catch { return false; }
+}
+
+function setStoredUnlock(val: boolean) {
+  try { if (val) sessionStorage.setItem(UNLOCK_KEY, 'true'); else sessionStorage.removeItem(UNLOCK_KEY); }
+  catch { /* Safari private mode */ }
+}
 
 interface PasswordGateProps {
   children: React.ReactNode;
 }
 
 const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
-  const [unlocked, setUnlocked] = useState(false);
+  const [unlocked, setUnlocked] = useState(getStoredUnlock);
   const [isExiting, setIsExiting] = useState(false);
   const [digits, setDigits] = useState(['', '', '', '']);
   const [error, setError] = useState('');
   const inputRefs = useRef<(HTMLInputElement | null)[]>([null, null, null, null]);
+
+  useEffect(() => {
+    if (unlocked) setStoredUnlock(true);
+  }, [unlocked]);
 
   const handleUnlock = (currentDigits = digits) => {
     if (currentDigits.join('') === HARDCODED_PIN) {
@@ -78,8 +93,8 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
 
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-semibold tracking-tight">Welcome back</CardTitle>
-            <CardDescription>Enter your PIN to continue</CardDescription>
+            <CardTitle className="text-2xl font-semibold tracking-tight">Screen Lock</CardTitle>
+            <CardDescription>Enter PIN to continue</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-4">
@@ -109,6 +124,9 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
               </div>
               {error && <p className="text-destructive text-sm text-center">{error}</p>}
               <Button onClick={() => handleUnlock()} className="w-full">Unlock</Button>
+              <p className="text-[10px] text-muted-foreground/60 text-center leading-tight">
+                This is a screen lock to prevent shoulder-surfing on shared workstations. Patient data security is governed separately by the database access controls.
+              </p>
             </div>
           </CardContent>
         </Card>
