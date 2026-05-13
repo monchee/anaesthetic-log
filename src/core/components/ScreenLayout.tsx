@@ -128,7 +128,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                     <h1 className="text-xl font-semibold tracking-tight leading-none truncate m-0 text-white">
                                         {title}
                                     </h1>
-                                    {subtitle && <div className="text-[0.625rem] sm:text-xs text-white/80 truncate font-normal mt-1 opacity-90">{subtitle}</div>}
+                                    {subtitle && <div className="text-xs text-white/80 truncate font-normal mt-1 opacity-90">{subtitle}</div>}
                                 </div>
                             </div>
 
@@ -146,7 +146,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                                 onClick={() => setScreen(screen)}
                                                 aria-current={isActive ? 'page' : undefined}
                                                 aria-label={label}
-                                                className={`h-9 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-all duration-200 shadow-sm btn-press
+                                                className={`h-11 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-all duration-200 shadow-sm btn-press
                                                     ${isActive
                                                         ? 'bg-white text-primary font-medium'
                                                         : 'bg-white/10 hover:bg-white/30 text-white'
@@ -168,7 +168,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                 {/* Hamburger Menu */}
                                 {showNav && <DropdownMenu>
                                     <DropdownMenuTrigger
-                                        className="h-9 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-all duration-200 shadow-sm group btn-press"
+                                        className="h-11 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-all duration-200 shadow-sm group btn-press"
                                         title="Open Navigation Menu"
                                         aria-label="Menu"
                                     >

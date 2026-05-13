@@ -41,6 +41,7 @@ export function ThemeProvider({
     const root = window.document.documentElement
     root.classList.remove("light", "dark")
     root.classList.add(theme)
+    root.style.colorScheme = theme
 
     // Update browser theme color for address bar and tab
     const themeColorMeta = document.querySelector('meta[name="theme-color"]')

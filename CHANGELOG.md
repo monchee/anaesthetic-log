@@ -1,3 +1,21 @@
+## [0.50.3] — 2026-05-14
+
+### Fixed
+- **Nav touch targets** — primary nav buttons and menu trigger increased from 36px (`h-9`) to 44px (`h-11`) to meet WCAG 2.5.5 minimum
+- **Disclaimer dismiss button** — added `min-h-[44px] min-w-[44px]` to meet touch target requirements; upload link gets `min-h-[24px]`
+- **Research page error state** — replaced raw `TypeError: Failed to fetch` with friendly state that detects unconfigured Supabase and shows contextual message
+- **section-label font size** — raised from 10px to 11px (above 10px absolute minimum for readable UI text)
+- **Select All/None buttons** — text size increased from 10px to 12px for legibility
+- **Subtitle text size** — unified to `text-xs` (12px) for all viewports, removing 10px mobile-only sizing
+- **Drug category heading semantics** — replaced `<h3>` with `<p>` for label-styled category headers (semantic/size mismatch)
+
+### Changed
+- **Transition performance** — replaced `transition-all` with specific GPU-composited properties (`color, background-color, border-color, transform, opacity, box-shadow`) across 5 utility classes
+- **Dark mode color-scheme** — ThemeProvider now sets `root.style.colorScheme` so browser-native UI elements (scrollbars, inputs, date pickers) respect dark mode
+
+### Chore
+- Version bump to 0.50.3
+
 ## [0.50.2] — 2026-05-09
 
 ### Changed

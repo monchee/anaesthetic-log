@@ -15,7 +15,7 @@ const DisclaimerBanner = ({ onClose, onUploadClick }: DisclaimerBannerProps) => 
             <div className="text-xs text-amber-900 dark:text-amber-100 leading-tight text-center sm:text-left">
                  <span className="font-semibold">Demo System:</span> Sample data is currently used.{' '}
                  {onUploadClick ? (
-                   <button onClick={onUploadClick} className="underline underline-offset-2 hover:text-amber-700 dark:hover:text-amber-200 transition-colors">Upload a REDCap CSV export</button>
+                   <button onClick={onUploadClick} className="underline underline-offset-2 hover:text-amber-700 dark:hover:text-amber-200 transition-colors inline-flex items-center min-h-[24px]">Upload a REDCap CSV export</button>
                  ) : (
                    'Upload a REDCap CSV export'
                  )}{' '}to use real patient data.
@@ -23,7 +23,7 @@ const DisclaimerBanner = ({ onClose, onUploadClick }: DisclaimerBannerProps) => 
         </div>
         <button 
             onClick={onClose}
-            className="text-amber-700 hover:text-amber-900 dark:text-amber-400 dark:hover:text-amber-200 transition-colors shrink-0 p-1 rounded-none hover:bg-amber-200/50 dark:hover:bg-amber-800/50"
+            className="text-amber-700 hover:text-amber-900 dark:text-amber-400 dark:hover:text-amber-200 transition-colors shrink-0 p-1 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-none hover:bg-amber-200/50 dark:hover:bg-amber-800/50"
             aria-label="Dismiss"
         >
             <X className="w-4 h-4" />

@@ -200,11 +200,21 @@ export default function ResearchDashboard() {
   }
 
   if (error) {
+    const isUnconfigured = error.includes('not configured') || error.includes('Failed to fetch');
     return (
-      <div className="flex flex-col items-center justify-center py-16 gap-3 text-red-600 dark:text-red-400">
-        <AlertCircle className="w-6 h-6" />
-        <p className="text-sm">{error}</p>
-        <Button variant="outline" size="sm" onClick={load} className="rounded-none">Retry</Button>
+      <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
+        <Database className="w-8 h-8 text-muted-foreground" />
+        <p className="font-medium text-foreground">
+          {isUnconfigured ? 'Research database not available' : 'Could not load research data'}
+        </p>
+        <p className="text-sm text-muted-foreground max-w-sm">
+          {isUnconfigured
+            ? 'This feature requires a Supabase research database. Demo mode uses local data only.'
+            : error}
+        </p>
+        {!isUnconfigured && (
+          <Button variant="outline" size="sm" onClick={load} className="rounded-none">Retry</Button>
+        )}
       </div>
     );
   }
