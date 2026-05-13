@@ -146,7 +146,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                                 onClick={() => setScreen(screen)}
                                                 aria-current={isActive ? 'page' : undefined}
                                                 aria-label={label}
-                                                className={`h-11 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-all duration-200 shadow-sm btn-press
+                                                className={`h-11 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-[color,background-color,border-color,transform,box-shadow] duration-200 shadow-sm btn-press
                                                     ${isActive
                                                         ? 'bg-white text-primary font-medium'
                                                         : 'bg-white/10 hover:bg-white/30 text-white'
@@ -168,7 +168,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                 {/* Hamburger Menu */}
                                 {showNav && <DropdownMenu>
                                     <DropdownMenuTrigger
-                                        className="h-11 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-all duration-200 shadow-sm group btn-press"
+                                        className="h-11 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-[color,background-color,border-color,transform,box-shadow] duration-200 shadow-sm group btn-press"
                                         title="Open Navigation Menu"
                                         aria-label="Menu"
                                     >

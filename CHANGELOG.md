@@ -1,3 +1,11 @@
+## [0.50.4] — 2026-05-14
+
+### Fixed
+- **Nav button transitions** — replaced `transition-all` with specific GPU-composited properties on nav pill buttons and menu trigger (missed in the 0.50.3 CSS utility class pass)
+
+### Chore
+- Version bump to 0.50.4
+
 ## [0.50.3] — 2026-05-14
 
 ### Fixed
