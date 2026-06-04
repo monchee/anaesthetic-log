@@ -16,7 +16,7 @@ const CURRENT_VERSION = _changelog[0].version;
 const CURRENT_CODENAME = _changelog[0].codename;
 const CURRENT_DATE = _changelog[0].date ?? '';
 const CURRENT_SUMMARY = _changelog[0].summary ?? '';
-const LAST_SEEN_KEY = 'dream:…sion';
+const LAST_SEEN_KEY = 'dream:last_seen_version';
 
 interface HelpModalProps {
   onUploadPatients?: (patients: Patient[]) => void;

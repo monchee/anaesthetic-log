@@ -17,6 +17,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
   const versions = changelogData as Array<{
     version: string;
     codename: string;
+    date?: string;
     highlight: boolean;
     changes: string[];
   }>;
@@ -28,7 +29,9 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
     <div className="py-4 sm:p-6 space-y-6">
       <Card>
         <CardContent className="pt-6">
-      {visibleVersions.map((v, idx) => (
+      {visibleVersions.map((v, idx) => {
+        const isLatest = idx === 0;
+        return (
         <div key={idx} className="flex flex-col md:flex-row gap-y-3 pb-10">
 
           {/* Left sidebar */}
@@ -39,7 +42,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`text-sm font-mono font-bold px-2.5 py-1 inline-flex items-center gap-1 hover:underline underline-offset-2 ${
-                  v.highlight
+                  isLatest
                     ? 'bg-primary/10 dark:bg-primary/20 text-primary'
                     : 'bg-muted text-slate-700 dark:text-foreground/80'
                 }`}
@@ -51,7 +54,12 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                   {v.codename}
                 </span>
               )}
-              {v.highlight && (
+              {v.date && (
+                <span className="text-xs text-muted-foreground md:pl-0.5">
+                  {v.date}
+                </span>
+              )}
+              {isLatest && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 dark:bg-primary/20 md:mt-1">
                   <Sparkles className="w-2.5 h-2.5" /> Latest
                 </span>
@@ -65,7 +73,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
             <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px bg-muted" />
             {/* Timeline dot */}
             <div className={`hidden md:block absolute left-0 top-1.5 -translate-x-1/2 w-3 h-3 rounded-full border-2 ${
-              v.highlight
+              isLatest
                 ? 'bg-primary border-primary'
                 : 'bg-background border-border'
             }`} />
@@ -73,11 +81,11 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
             <ul className="space-y-2 pt-0.5">
               {v.changes.map((change, cIdx) => (
                 <li key={cIdx} className={`flex gap-2.5 text-sm leading-relaxed ${
-                  v.highlight
+                  isLatest
                     ? 'text-slate-700 dark:text-foreground/80'
                     : 'text-muted-foreground'
                 }`}>
-                  {v.highlight ? (
+                  {isLatest ? (
                     <ArrowRight className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                   ) : (
                     <span className="text-muted-foreground mt-0.5 shrink-0 select-none">—</span>
@@ -88,7 +96,8 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
             </ul>
           </div>
         </div>
-      ))}
+        );
+      })}
 
       {/* Expand / collapse */}
       {!showAll && hiddenCount > 0 && (

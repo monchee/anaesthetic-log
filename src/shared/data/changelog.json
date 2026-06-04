@@ -1,5 +1,63 @@
 [
   {
+    "version": "v0.51.1",
+    "codename": "",
+    "date": "4 June 2026",
+    "summary": "Changelog page was 3 releases behind",
+    "highlight": false,
+    "changes": [
+      "Changelog page was 3 releases behind \u2014 the Quick Start \"What's New\" banner and the Changelog page read from `changelog.json`, which had drifted to v0.50.2; backfilled v0.50.3, v0.50.4, and v0.51.0 so both now show the current release",
+      "Multiple \"Latest\" badges \u2014 the Changelog page tagged every highlighted version as \"Latest\" (four at once); now only the newest release carries the badge and emphasis styling",
+      "Quick Start version banner key \u2014 fixed a corrupted localStorage key that tracked the last-seen version",
+      "Release dates on the Changelog page \u2014 each version now shows its date next to the version number",
+      "Automatic changelog sync \u2014 a `prebuild` script regenerates `changelog.json` from `CHANGELOG.md` before every build, so the in-app changelog can no longer fall behind"
+    ]
+  },
+  {
+    "version": "v0.51.0",
+    "codename": "",
+    "date": "4 June 2026",
+    "summary": "Tryptase line always present in eMR letter",
+    "highlight": false,
+    "changes": [
+      "Tryptase line always present in eMR letter \u2014 the tryptase sentence now always appears in the PowerChart letter even when no tryptase data was entered in the form; defaults to \"Serial serum tryptase samples were not obtained.\" so one of the three standardised sentences is always present",
+      "PowerChart paste encoding \u2014 replaced em dashes (`\u2014`) with ASCII-safe separators in the copied eMR letter text; results now paste cleanly into PowerChart and other legacy clinical systems without garbled characters",
+      "REDCap testing plan: Cis-atracurium \u2014 fixed drug-name mismatch (`Cisatracurium` \u2192 `Cis-atracurium`) that caused Cis-atracurium to appear in the testing plan without its IDT protocol steps",
+      "Patient Handout phone number \u2014 corrected clinic phone in the Patient Handout text export from (02) 9515 8814 to (02) 9515 7586",
+      "Referrer email in eMR letter \u2014 if a referring doctor email address is present in the REDCap data, it now appears at the bottom of the PowerChart letter (both the rendered view and the copied text), making it easier to send correspondence directly from the report",
+      "REDCap testing plan: Sugammadex \u2014 Sugammadex now auto-selects both Alone and + Rocuronium variants when checked in the REDCap testing plan instrument",
+      "REDCap testing plan: Parecoxib \u2014 Parecoxib now recognised in the REDCap testing plan instrument"
+    ]
+  },
+  {
+    "version": "v0.50.4",
+    "codename": "",
+    "date": "14 May 2026",
+    "summary": "Nav button transitions",
+    "highlight": false,
+    "changes": [
+      "Nav button transitions \u2014 replaced `transition-all` with specific GPU-composited properties on nav pill buttons and menu trigger (missed in the 0.50.3 CSS utility class pass)"
+    ]
+  },
+  {
+    "version": "v0.50.3",
+    "codename": "",
+    "date": "14 May 2026",
+    "summary": "Nav touch targets",
+    "highlight": false,
+    "changes": [
+      "Nav touch targets \u2014 primary nav buttons and menu trigger increased from 36px (`h-9`) to 44px (`h-11`) to meet WCAG 2.5.5 minimum",
+      "Disclaimer dismiss button \u2014 added `min-h-[44px] min-w-[44px]` to meet touch target requirements; upload link gets `min-h-[24px]`",
+      "Research page error state \u2014 replaced raw `TypeError: Failed to fetch` with friendly state that detects unconfigured Supabase and shows contextual message",
+      "section-label font size \u2014 raised from 10px to 11px (above 10px absolute minimum for readable UI text)",
+      "Select All/None buttons \u2014 text size increased from 10px to 12px for legibility",
+      "Subtitle text size \u2014 unified to `text-xs` (12px) for all viewports, removing 10px mobile-only sizing",
+      "Drug category heading semantics \u2014 replaced `<h3>` with `<p>` for label-styled category headers (semantic/size mismatch)",
+      "Transition performance \u2014 replaced `transition-all` with specific GPU-composited properties (`color, background-color, border-color, transform, opacity, box-shadow`) across 5 utility classes",
+      "Dark mode color-scheme \u2014 ThemeProvider now sets `root.style.colorScheme` so browser-native UI elements (scrollbars, inputs, date pickers) respect dark mode"
+    ]
+  },
+  {
     "version": "v0.50.2",
     "codename": "",
     "date": "9 May 2026",

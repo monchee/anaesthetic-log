@@ -1,3 +1,17 @@
+## [0.51.1] — 2026-06-04
+
+### Fixed
+- **Changelog page was 3 releases behind** — the Quick Start "What's New" banner and the Changelog page read from `changelog.json`, which had drifted to v0.50.2; backfilled v0.50.3, v0.50.4, and v0.51.0 so both now show the current release
+- **Multiple "Latest" badges** — the Changelog page tagged every highlighted version as "Latest" (four at once); now only the newest release carries the badge and emphasis styling
+- **Quick Start version banner key** — fixed a corrupted localStorage key that tracked the last-seen version
+
+### Added
+- **Release dates on the Changelog page** — each version now shows its date next to the version number
+- **Automatic changelog sync** — a `prebuild` script regenerates `changelog.json` from `CHANGELOG.md` before every build, so the in-app changelog can no longer fall behind
+
+### Chore
+- Version bump to 0.51.1
+
 ## [0.51.0] — 2026-06-04
 
 ### Fixed
