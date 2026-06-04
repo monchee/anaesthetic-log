@@ -107,10 +107,10 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
             </p>
           )}
 
-          {/* Tryptase sentence (3A) */}
-          {data.tryptase && (
-            <p className="italic text-foreground/80">{formatTryptaseSentence(data.tryptase)}</p>
-          )}
+          {/* Tryptase sentence (3A) — always rendered; defaults to "not obtained" */}
+          <p className="italic text-foreground/80">
+            {formatTryptaseSentence(data.tryptase ?? { obtained: false, significantElevation: false, values: [] })}
+          </p>
 
           <p>
             {firstName} presented to the RPA ANZAAG Allergy Clinic on {testingDate}, for Skin Prick (SPT) and Intradermal (IDT) allergy testing. The following agents were tested:
@@ -203,6 +203,13 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
         {activeReportSavedAt && (
           <div className="text-[9px] text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
             Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+          </div>
+        )}
+
+        {/* Correspondence details */}
+        {patient?.history?.referringEmail && (
+          <div className="text-sm print:text-xs text-foreground/80">
+            <span className="font-semibold">Referrer email: </span>{patient.history.referringEmail}
           </div>
         )}
 

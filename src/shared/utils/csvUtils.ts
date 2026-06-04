@@ -383,11 +383,12 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   // We distinguish it from reaction-drug columns by finding the first
   // "Muscle Relaxant (choice=…)" header, which only appears in the testing plan.
   const TESTING_PLAN_DRUG_MAPPING: Record<string, string[]> = {
-    'Cis-atracurium':  ['Cisatracurium'],
+    'Cis-atracurium':  ['Cis-atracurium'],
     'Rocuronium':      ['Rocuronium'],
     'Pancuronium':     ['Pancuronium'],
     'Vecuronium':      ['Vecuronium'],
     'Suxamethonium':   ['Suxamethonium'],
+    'Sugammadex':      ['Sugammadex (Alone)', 'Sugammadex (+ Rocuronium)'],
     'Major/Minor':     ['Penicillin Major', 'Penicillin Minor'],
     'Ampicillin':      ['Ampicillin'],
     'Amoxycillin':     ['Amoxycillin'],
@@ -411,6 +412,7 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
     'Povidone Iodine': ['Povidone Iodine'],
     'Latex':           ['Latex'],
     'Paracetamol':     ['Paracetamol'],
+    'Parecoxib':       ['Parecoxib'],
     'Patent Blue':     ['Patent Blue'],
     'Methylene Blue':  ['Methylene Blue'],
     'Atropine':        ['Atropine'],

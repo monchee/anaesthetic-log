@@ -158,7 +158,7 @@ export function formatPatientHandoutAsText(data: LogFormData, redact?: (value: s
   lines.push('Department of Clinical Immunology & Allergy');
   lines.push('Royal Prince Alfred Hospital');
   lines.push('Level 5, Gloucester House');
-  lines.push('Phone: (02) 9515 8814');
+  lines.push('Phone: (02) 9515 7586');
   lines.push('Email: SLHD-RPA-ClinicalImmunology@health.nsw.gov.au');
   lines.push('');
   lines.push('Please provide this document to your anaesthetist before any future surgery.');
@@ -225,11 +225,9 @@ export function generateLetterText(data: LogFormData, patient: Patient | null, r
     lines.push('');
   }
 
-  // Tryptase sentence (3A)
-  if (data.tryptase) {
-    lines.push(formatTryptaseSentence(data.tryptase));
-    lines.push('');
-  }
+  // Tryptase sentence (3A) — always present; defaults to "not obtained"
+  lines.push(formatTryptaseSentence(data.tryptase ?? { obtained: false, significantElevation: false, values: [] }));
+  lines.push('');
 
   const testingDate = data.visitDate ? formatDate(data.visitDate) : '[date]';
   lines.push(`${firstName} presented to the RPA ANZAAG Allergy Clinic on ${testingDate}, for Skin Prick (SPT) and Intradermal (IDT) allergy testing. The following agents were tested:`);
@@ -238,10 +236,10 @@ export function generateLetterText(data: LogFormData, patient: Patient | null, r
   // Results — drug names only, no IDT measurements (3B)
   lines.push('Results:');
   if (posResults.length > 0) {
-    posResults.forEach(drug => lines.push(`${drug.toUpperCase()} — POSITIVE`));
+    posResults.forEach(drug => lines.push(`${drug.toUpperCase()}: Positive`));
   }
   if (negResults.length > 0) {
-    negResults.forEach(drug => lines.push(`${drug} — Negative`));
+    negResults.forEach(drug => lines.push(`${drug}: Negative`));
   }
   lines.push('');
 
@@ -255,11 +253,11 @@ export function generateLetterText(data: LogFormData, patient: Patient | null, r
   if (data.proceedToChallenge) {
     const challengeName = data.challengeDrug === 'Other' ? (data.challengeDrugCustom || 'Other') : data.challengeDrug;
     if (data.outcome === 'SUCCESS') {
-      lines.push(`Drug challenge with ${challengeName} — tolerated.`);
+      lines.push(`Drug challenge with ${challengeName}: tolerated.`);
     } else if (data.outcome === 'UNSUCCESS') {
       const symptoms = data.symptoms.map(s => s === 'Other' ? `Other (${data.symptomsOther})` : s).join(', ');
       const intervention = data.interventionType === 'Other' ? `Other: ${data.interventionOther}` : data.interventionType;
-      lines.push(`Drug challenge with ${challengeName} — reaction at ${data.reactionTime} minutes; symptoms: ${symptoms}; treated with: ${intervention}.`);
+      lines.push(`Drug challenge with ${challengeName} - reaction at ${data.reactionTime} minutes; symptoms: ${symptoms}; treated with: ${intervention}.`);
     }
     lines.push('');
   }
@@ -273,6 +271,9 @@ export function generateLetterText(data: LogFormData, patient: Patient | null, r
     bullets.forEach(b => lines.push(`- ${b}`));
   }
   lines.push('');
+  if (patient?.history?.referringEmail) {
+    lines.push(`Referrer email: ${patient.history.referringEmail}`);
+  }
   lines.push('Allergy MDT: Dr. D Zalcberg, Dr. A Stoyanov and CNC K. Wells.');
 
   return lines.join('\n');
