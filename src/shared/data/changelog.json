@@ -11,7 +11,8 @@
       "Quick Start version banner key \u2014 fixed a corrupted localStorage key that tracked the last-seen version",
       "Release dates on the Changelog page \u2014 each version now shows its date next to the version number",
       "Automatic changelog sync \u2014 a `prebuild` script regenerates `changelog.json` from `CHANGELOG.md` before every build, so the in-app changelog can no longer fall behind"
-    ]
+    ],
+    "skipBanner": true
   },
   {
     "version": "v0.51.0",

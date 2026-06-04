@@ -11,11 +11,14 @@ import { Patient, Screen } from '@/types';
 import { toast } from 'sonner';
 import changelogData from '@shared/data/changelog.json';
 
-const _changelog = changelogData as Array<{ version: string; codename: string; date?: string; summary?: string; highlight: boolean; changes: string[] }>;
+const _changelog = changelogData as Array<{ version: string; codename: string; date?: string; summary?: string; highlight: boolean; skipBanner?: boolean; changes: string[] }>;
 const CURRENT_VERSION = _changelog[0].version;
-const CURRENT_CODENAME = _changelog[0].codename;
-const CURRENT_DATE = _changelog[0].date ?? '';
-const CURRENT_SUMMARY = _changelog[0].summary ?? '';
+// skipBanner allows a meta/tooling patch to be skipped in the "What's New" banner
+// so the banner highlights the most recent substantive release instead.
+const DISPLAY_ENTRY = _changelog.find(e => !e.skipBanner) ?? _changelog[0];
+const CURRENT_CODENAME = DISPLAY_ENTRY.codename;
+const CURRENT_DATE = DISPLAY_ENTRY.date ?? '';
+const CURRENT_SUMMARY = DISPLAY_ENTRY.summary ?? '';
 const LAST_SEEN_KEY = 'dream:last_seen_version';
 
 interface HelpModalProps {
@@ -90,8 +93,8 @@ try { localStorage.setItem(LAST_SEEN_KEY, CURRENT_VERSION); } catch {
   };
 
   const versionLabel = CURRENT_CODENAME
-    ? `Updated ${CURRENT_DATE} · ${CURRENT_VERSION} (${CURRENT_CODENAME})`
-    : `Updated ${CURRENT_DATE} · ${CURRENT_VERSION}`;
+    ? `Updated ${CURRENT_DATE} · ${DISPLAY_ENTRY.version} (${CURRENT_CODENAME})`
+    : `Updated ${CURRENT_DATE} · ${DISPLAY_ENTRY.version}`;
 
   return (
     <>
