@@ -24,15 +24,18 @@ function isUnlocked(): boolean {
 }
 
 // Register Service Worker with improved update flow
-registerSW({
+const updateSW = registerSW({
   onNeedRefresh() {
     if (!isUnlocked()) {
       // Gate is showing — no work to lose, activate silently
-      window.location.reload();
+      updateSW(true);
     } else {
       // User is in the app — show persistent toast
+      // updateSW(true) calls skipWaiting on the waiting SW then reloads,
+      // preventing the toast from looping (plain reload() leaves the new SW
+      // waiting, so onNeedRefresh fires again on every reload).
       import('./src/shared/utils/toast-config').then(({ showToast }) => {
-        showToast.update(() => window.location.reload());
+        showToast.update(() => updateSW(true));
       });
     }
   },
