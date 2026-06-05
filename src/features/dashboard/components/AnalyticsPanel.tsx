@@ -106,31 +106,31 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {gradeCounts.I > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.I / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade1 h-full transition-all duration-500" 
+                className="bg-status-grade1 h-full transition-[width] duration-500" 
               />
             )}
             {gradeCounts.II > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.II / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade2 h-full transition-all duration-500 delay-75" 
+                className="bg-status-grade2 h-full transition-[width] duration-500 delay-75" 
               />
             )}
             {gradeCounts.III > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.III / totalPatients) * 100}%` : '0%' }} 
-                className="bg-red-500 h-full transition-all duration-500 delay-75" 
+                className="bg-red-500 h-full transition-[width] duration-500 delay-75" 
               />
             )}
             {gradeCounts.IV > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.IV / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade4 h-full transition-all duration-500 delay-100" 
+                className="bg-status-grade4 h-full transition-[width] duration-500 delay-100" 
               />
             )}
             {gradeCounts.Ungraded > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.Ungraded / totalPatients) * 100}%` : '0%' }} 
-                className="bg-slate-300 dark:bg-muted/60 h-full transition-all duration-500 delay-100"
+                className="bg-slate-300 dark:bg-muted/60 h-full transition-[width] duration-500 delay-100"
               />
             )}
           </div>
@@ -180,7 +180,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                     </div>
                     <div className="h-2 w-full bg-slate-100 dark:bg-card rounded-none overflow-hidden">
                       <div 
-                        className="h-full bg-primary rounded-none transition-all duration-500" 
+                        className="h-full bg-primary rounded-none transition-[width] duration-500" 
                         style={{ 
                           width: animateCharts ? `${percentage}%` : '0%',
                           transitionDelay: `${idx * 50}ms`

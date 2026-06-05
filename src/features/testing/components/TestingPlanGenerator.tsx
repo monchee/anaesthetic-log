@@ -284,7 +284,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             <button
                                                 key={drug}
                                                 onClick={() => toggleDrug(drug)}
-                                                className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${category === 'Others' ? 'md:w-full' : ''} ${
+                                                className={`text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left ${category === 'Others' ? 'md:w-full' : ''} ${
                                                 selectedDrugs.includes(drug)
                                                 ? theme.btnSelected
                                                 : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-card ${theme.btnHover}`
@@ -324,7 +324,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     <button
                                         key={entry.name}
                                         onClick={() => toggleDrug(entry.name)}
-                                        className={`md:w-full text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left group ${
+                                        className={`md:w-full text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left group ${
                                             selectedDrugs.includes(entry.name)
                                             ? customTheme.btnSelected
                                             : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-card ${customTheme.btnHover}`
@@ -334,7 +334,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         {entry.name}
                                         <span
                                             onClick={(e) => { e.stopPropagation(); removeCustomDrug(entry.name); }}
-                                            className="ml-1 opacity-50 hover:opacity-100 hover:text-red-400 dark:hover:text-red-300 transition-all"
+                                            className="ml-1 opacity-50 hover:opacity-100 hover:text-red-400 dark:hover:text-red-300 transition-[opacity,color]"
                                         >
                                             <X className="w-3 h-3" />
                                         </span>

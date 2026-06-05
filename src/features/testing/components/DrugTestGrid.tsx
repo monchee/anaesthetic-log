@@ -75,7 +75,7 @@ const DrugRow = React.memo(({
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className={`shrink-0 inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-none border transition-all focus:outline-none focus-visible:ring-1 focus-visible:ring-ring ${theme.btnSelected}`}
+                className={`shrink-0 inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-none border transition-[color,background-color,border-color,box-shadow] focus:outline-none focus-visible:ring-1 focus-visible:ring-ring ${theme.btnSelected}`}
                 title="Switch protocol"
               >
                 <span>{protocol?.protocolLabel || `Protocol ${protocolIndex + 1}`}</span>

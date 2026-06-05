@@ -103,7 +103,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
   const hasAgents = filters.suspectedAgents.length > 0;
 
   const triggerClassName = (isActive: boolean) => `
-    h-8 text-xs rounded-none border-dashed transition-all
+    h-8 text-xs rounded-none border-dashed transition-[color,background-color,border-color,box-shadow]
     ${isActive 
       ? "border-primary/50 bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary" 
       : "border-border text-muted-foreground hover:bg-slate-50 dark:hover:bg-card hover:text-slate-900 dark:hover:text-foreground/90"
@@ -142,7 +142,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                     aria-label={grade.label}
                     className={`
                       ${isUngraded ? 'col-span-2' : 'col-span-1'}
-                      h-9 rounded-none border text-[10px] font-bold transition-all flex items-center justify-center gap-1
+                      h-9 rounded-none border text-[10px] font-bold transition-[color,background-color,border-color,box-shadow] flex items-center justify-center gap-1
                       ${isSelected
                         ? `${grade.color} ring-1 ring-inset ring-current shadow-sm`
                         : 'bg-card text-muted-foreground border-border hover:border-slate-300 dark:hover:border-border'
@@ -175,7 +175,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                   key={outcome}
                   onClick={() => updateFilter('outcomeFilter', outcome)}
                   className={`
-                    flex-1 px-3 text-[10px] font-bold transition-all capitalize whitespace-nowrap flex items-center justify-center
+                    flex-1 px-3 text-[10px] font-bold transition-[color,background-color,border-color,box-shadow] capitalize whitespace-nowrap flex items-center justify-center
                     ${getOutcomeStyle(outcome, filters.outcomeFilter === outcome)}
                   `}
                 >
@@ -331,7 +331,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                         toggleAgent(drug);
                       }}
                       className={`
-                        px-3 py-1.5 text-[10px] font-bold transition-all relative overflow-hidden group
+                        px-3 py-1.5 text-[10px] font-bold transition-[color,background-color,border-color,box-shadow] relative overflow-hidden group
                         ${isSelected
                           ? `${theme.btnSelected} ring-1 ring-inset ring-black/5 dark:ring-white/5 shadow-sm scale-[1.02]`
                           : `bg-card text-muted-foreground border border-border hover:border-slate-400 dark:hover:border-border hover:bg-white dark:hover:bg-background`
