@@ -57,15 +57,15 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
          <div className="section-card bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 print:bg-white print:border-slate-300">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 print:grid-cols-2 print:gap-2">
             <div>
-               <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">Patient Name</label>
+               <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">Patient Name</label>
                <p className="text-xl md:text-2xl font-semibold tracking-tight text-primary print:text-base">{redact(`${data.firstName} ${data.lastName}`)}</p>
             </div>
             <div>
-               <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">MRN</label>
+               <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">MRN</label>
                <p className="text-lg font-mono font-medium text-foreground print:text-sm">{redact(data.mrn)}</p>
             </div>
             <div className="md:col-span-2 print:col-span-2">
-               <label className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">Visit Date</label>
+               <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">Visit Date</label>
                <p className="text-lg font-medium text-foreground print:text-sm">{formatDate(data.visitDate)}</p>
             </div>
            </div>
@@ -131,11 +131,11 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
                           </div>
                           <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
                               <div>
-                                 <span className="text-[10px] text-muted-foreground uppercase font-bold block">SPT</span>
+                                 <span className="text-xs text-muted-foreground uppercase font-bold block">SPT</span>
                                  <span className="font-medium">{row.sptWheal || '-'} mm</span>
                               </div>
                               <div>
-                                 <span className="text-[10px] text-muted-foreground uppercase font-bold block">IDT Results</span>
+                                 <span className="text-xs text-muted-foreground uppercase font-bold block">IDT Results</span>
                                  <span className="font-medium">
                                    {row.idtResults?.length
                                      ? row.idtResults.filter(Boolean).map((v, i) => `IDT ${i + 1}: ${v}mm`).join(' / ') || '-'
@@ -224,19 +224,19 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
              <div className="space-y-3 print:space-y-2">
                {data.nurseNotes.preTesting && (
                  <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-3 print:bg-white print:border-blue-200 print:p-2">
-                   <p className="text-[10px] uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">Pre-Testing</p>
+                   <p className="text-xs uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">Pre-Testing</p>
                    <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.preTesting}</p>
                  </div>
                )}
                {data.nurseNotes.duringTesting && (
                  <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-3 print:bg-white print:border-blue-200 print:p-2">
-                   <p className="text-[10px] uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">During Testing</p>
+                   <p className="text-xs uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">During Testing</p>
                    <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.duringTesting}</p>
                  </div>
                )}
                {data.nurseNotes.postTesting && (
                  <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-3 print:bg-white print:border-blue-200 print:p-2">
-                   <p className="text-[10px] uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">Post-Testing / Discharge</p>
+                   <p className="text-xs uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">Post-Testing / Discharge</p>
                    <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.postTesting}</p>
                  </div>
                )}
@@ -260,7 +260,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
 
          {/* Report Timestamp */}
          {activeReportSavedAt && (
-           <div className="text-[9px] text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
+           <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
              Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
            </div>
          )}

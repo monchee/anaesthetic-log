@@ -91,7 +91,7 @@ class ErrorBoundary extends Component<Props, State> {
                     {this.state.error.stack && (
                       <div>
                         <strong>Stack:</strong>
-                        <pre className="mt-1 whitespace-pre-wrap text-[10px]">{this.state.error.stack}</pre>
+                        <pre className="mt-1 whitespace-pre-wrap text-xs">{this.state.error.stack}</pre>
                       </div>
                     )}
                   </div>

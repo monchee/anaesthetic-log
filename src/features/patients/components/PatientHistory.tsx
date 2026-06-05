@@ -91,7 +91,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 {(history.tryptases?.length || history.tryptase) && (
                     <div className="flex items-center gap-1.5 text-xs font-medium text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-800 px-2.5 py-1 rounded-none">
                         <FlaskConical className="h-3.5 w-3.5 shrink-0" />
-                        <span className="font-semibold uppercase tracking-wide text-[10px]">Tryptase:</span>
+                        <span className="font-semibold uppercase tracking-wide text-xs">Tryptase:</span>
                         {history.tryptases?.length ? (
                             <span>
                                 {history.tryptases.map((t, i) =>
@@ -289,7 +289,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             </span>
                         </div>
                         {elapsedLabel && (
-                            <span className="font-mono text-[10px] font-medium text-muted-foreground">{elapsedLabel}</span>
+                            <span className="font-mono text-xs font-medium text-muted-foreground">{elapsedLabel}</span>
                         )}
                         <div className="flex items-center gap-1.5">
                             <span className="section-label">Reaction:</span>

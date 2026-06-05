@@ -46,7 +46,7 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
                 </h4>
                 <button 
                   onClick={(e) => { e.preventDefault(); onToggleCategory(categoryDrugs); }}
-                  className={`text-[10px] hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-muted-foreground dark:hover:text-foreground/90'}`}
+                  className={`text-xs hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-muted-foreground dark:hover:text-foreground/90'}`}
                 >
                   {allCategorySelected ? 'Select None' : 'Select All'}
                 </button>

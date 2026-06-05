@@ -36,11 +36,11 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
            {/* Header Info */}
             <div className="section-card bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 flex justify-between items-start print:bg-white print:border-slate-300 print:p-2">
                <div>
-                  <p className="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Patient Name</p>
+                  <p className="text-xs text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Patient Name</p>
                   <p className="text-xl font-semibold tracking-tight text-primary print:text-sm">{redact(`${data.firstName} ${data.lastName}`)}</p>
                </div>
                <div className="text-right">
-                  <p className="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Date</p>
+                  <p className="text-xs text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Date</p>
                   <p className="text-lg font-medium print:text-sm">{formatDate(data.visitDate)}</p>
                </div>
             </div>
@@ -106,7 +106,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
 
         {/* Report Timestamp */}
         {activeReportSavedAt && (
-          <div className="text-[9px] text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
+          <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
             Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
           </div>
         )}

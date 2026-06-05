@@ -137,7 +137,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                 </div>
                 <div className="flex flex-col">
                     <span className="font-semibold text-primary">New Patient (Manual Entry)</span>
-                    <span className="text-[10px] text-muted-foreground">Create a record without database ID</span>
+                    <span className="text-xs text-muted-foreground">Create a record without database ID</span>
                 </div>
                 {isManualSelection && (
                     <div className="ml-auto text-primary">

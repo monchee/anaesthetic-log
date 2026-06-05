@@ -75,7 +75,7 @@ const DrugRow = React.memo(({
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className={`shrink-0 inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-none border transition-[color,background-color,border-color,box-shadow] focus:outline-none focus-visible:ring-1 focus-visible:ring-ring ${theme.btnSelected}`}
+                className={`shrink-0 inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-none border transition-[color,background-color,border-color,box-shadow] focus:outline-none focus-visible:ring-1 focus-visible:ring-ring ${theme.btnSelected}`}
                 title="Switch protocol"
               >
                 <span>{protocol?.protocolLabel || `Protocol ${protocolIndex + 1}`}</span>
@@ -109,7 +109,7 @@ const DrugRow = React.memo(({
       {row.drugName === 'Other' && (
         <div className="border border-dashed border-border p-2 space-y-2 bg-slate-50/50 dark:bg-card/30">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground shrink-0 w-7">SPT</span>
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground shrink-0 w-7">SPT</span>
             <Input
               className="h-7 text-xs flex-1"
               placeholder="Neat concentration (e.g. 10mg/mL)..."
@@ -118,7 +118,7 @@ const DrugRow = React.memo(({
             />
           </div>
           <div className="space-y-1.5">
-            <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">IDT Dilutions</div>
+            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">IDT Dilutions</div>
             {(row.customIdtSteps ?? []).map((step, si) => (
               <div key={si} className="flex items-center gap-1.5">
                 <Input
@@ -144,7 +144,7 @@ const DrugRow = React.memo(({
             ))}
             <button
               onClick={() => onAddCustomIdtStep(index)}
-              className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+              className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
             >
               <Plus className="w-3 h-3" /> Add IDT dilution step
             </button>
@@ -166,7 +166,7 @@ const DrugRow = React.memo(({
 
       {/* SPT concentration reference */}
       {protocol?.sptNeatConcentration && (
-        <div className="text-[10px] text-muted-foreground">
+        <div className="text-xs text-muted-foreground">
           <span className="font-semibold uppercase tracking-wide">SPT Preparation: </span>
           {protocol.sptNeatConcentration}
         </div>
@@ -176,8 +176,8 @@ const DrugRow = React.memo(({
       <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${1 + idtSteps.length}, minmax(0, 1fr))` }}>
         {/* SPT */}
         <div className="space-y-1">
-          <div className="text-[10px] font-bold uppercase text-center text-muted-foreground">SPT</div>
-          <div className="text-[9px] text-center text-muted-foreground/60 leading-tight min-h-[2rem] flex items-center justify-center">
+          <div className="text-xs font-bold uppercase text-center text-muted-foreground">SPT</div>
+          <div className="text-xs text-center text-muted-foreground/60 leading-tight min-h-[2rem] flex items-center justify-center">
             {row.drugName === 'Other' ? (row.customSptConcentration || '') : (protocol?.sptNeatConcentration ? 'Neat' : '')}
           </div>
           <Input
@@ -197,8 +197,8 @@ const DrugRow = React.memo(({
           const val = idtResults[si] ?? '';
           return (
             <div key={si} className="space-y-1">
-              <div className="text-[10px] font-bold uppercase text-center text-muted-foreground">IDT {step.ratio}</div>
-              <div className="text-[9px] text-center text-muted-foreground/60 leading-tight min-h-[2rem] flex items-center justify-center">
+              <div className="text-xs font-bold uppercase text-center text-muted-foreground">IDT {step.ratio}</div>
+              <div className="text-xs text-center text-muted-foreground/60 leading-tight min-h-[2rem] flex items-center justify-center">
                 {step.concentration}
               </div>
               <Input
@@ -218,7 +218,7 @@ const DrugRow = React.memo(({
         {/* Legacy fallback: show 3 unlabelled IDT columns if old record with no protocol */}
         {idtSteps.length === 0 && !protocol && idtResults.length > 0 && idtResults.map((val, si) => (
           <div key={si} className="space-y-1">
-            <div className="text-[10px] font-bold uppercase text-center text-muted-foreground">IDT {si + 1}</div>
+            <div className="text-xs font-bold uppercase text-center text-muted-foreground">IDT {si + 1}</div>
             <div className="min-h-[2rem]" />
             <Input
               type="text"
