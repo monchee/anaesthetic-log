@@ -1,18 +1,36 @@
 [
   {
+    "version": "v0.53.0",
+    "codename": "Ephemeral",
+    "date": "6 June 2026",
+    "summary": "Privacy-first persistence — patient data auto-purged after 6 hours, plus 8 UX improvements",
+    "highlight": true,
+    "changes": [
+      "6-hour auto-purge for all patient data — every patient/clinical key in browser storage is now time-boxed and automatically deleted after 6 hours; stale data is also swept on app launch so nothing ever lingers on a shared workstation",
+      "Draft autosave — in-progress testing sessions are autosaved every 500 ms and silently restored after a reload, tab close, or service-worker update, so no clinical work is lost mid-session",
+      "Correct PWA update behaviour — the service-worker update toast now activates the new worker and reloads cleanly instead of looping",
+      "Confirm before clearing a report — the ‘Clear’ button on the active-report banner now asks for confirmation before discarding the saved record",
+      "Start New Log renamed — the primary action button in the report summary was renamed from ‘Exit’ to ‘Start New Log’ to better reflect what it does",
+      "Validation errors scroll into view — submitting the testing form with missing required fields now scrolls to and focuses the error summary so the clinician can see what needs fixing",
+      "Removed phantom save spinner — the ‘Saving…’ spinner on the Save button was never reachable (save is synchronous); removed to avoid confusion",
+      "Privacy Policy updated — the policy now accurately states that patient/clinical data may be cached only temporarily and is auto-deleted after 6 hours",
+      "Dead persistence code removed — unused PatientRepository, PatientService, and TestingService storage methods deleted; the only active patient-data storage paths are the new TTL-guarded ones"
+    ]
+  },
+  {
     "version": "v0.52.0",
     "codename": "Typeset",
     "date": "5 June 2026",
-    "summary": "Design & typography polish — 7 UX findings resolved",
+    "summary": "Design & typography polish \u2014 7 UX findings resolved",
     "highlight": true,
     "changes": [
-      "Quick Start modal persistence — \"Skip for now\" now correctly marks the version as seen so the modal no longer reopens on every home navigation",
-      "Footer touch targets — all footer nav and legal links now meet the 44px minimum touch target for mobile usability",
-      "Sub-12px text eliminated — all on-screen UI labels, table badges, filter chips, and section headings raised to 12px minimum; A4 print output unchanged",
-      "h4 heading hierarchy — h4 now renders at 16px bold (up from 14px regular) so it is visually distinct from body text",
-      "Heading text-wrap — headings now use text-wrap: balance to prevent single-word orphans on the last line",
-      "Transition performance — replaced transition-all with explicit property lists (transition-[width], transition-[color,background-color,border-color,box-shadow]) across 11 components, eliminating unnecessary layout-triggering animation",
-      "Research empty state CTA — the Research dashboard demo/unconfigured state now shows a \"Learn about research setup\" button linking to Technical Documentation"
+      "Quick Start modal persistence \u2014 \"Skip for now\" now correctly marks the version as seen so the modal no longer reopens on every home navigation",
+      "Footer touch targets \u2014 all footer nav and legal links now meet the 44px minimum touch target for mobile usability",
+      "Sub-12px text eliminated \u2014 all on-screen UI labels, table badges, filter chips, and section headings raised to 12px minimum; A4 print output unchanged",
+      "h4 heading hierarchy \u2014 h4 now renders at 16px bold (up from 14px regular) so it is visually distinct from body text",
+      "Heading text-wrap \u2014 headings now use text-wrap: balance to prevent single-word orphans on the last line",
+      "Transition performance \u2014 replaced transition-all with explicit property lists (transition-[width], transition-[color,background-color,border-color,box-shadow]) across 11 components, eliminating unnecessary layout-triggering animation",
+      "Research empty state CTA \u2014 the Research dashboard demo/unconfigured state now shows a \"Learn about research setup\" button linking to Technical Documentation"
     ]
   },
   {
