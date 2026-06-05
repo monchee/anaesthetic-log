@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { LogFormData } from '@/types';
-import { Calendar, Activity, Syringe, CheckCircle2, Check, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Loader2, Search, X, ChevronDown, ChevronUp, ClipboardList } from 'lucide-react';
+import { Calendar, Activity, Syringe, CheckCircle2, Check, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Search, X, ChevronDown, ChevronUp, ClipboardList } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 import { useTestingLogLogic } from '../hooks/useTestingLogLogic';
 import { TestingService } from '../services/TestingService';
@@ -45,10 +45,10 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     challengeOptions
   } = useTestingLogLogic({ formData, setFormData, drugCategories });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [drugFilter, setDrugFilter] = useState('');
   const [nurseNotesOpen, setNurseNotesOpen] = useState(false);
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
 
   const testingService = new TestingService();
 
@@ -56,12 +56,16 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     const { isValid, errors } = testingService.validateForm(formData);
     if (!isValid) {
       setValidationErrors(errors);
+      // Surface the errors where the user is — the Save button sits below a
+      // long form, so bring the summary into view and focus it.
+      requestAnimationFrame(() => {
+        errorSummaryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        errorSummaryRef.current?.focus();
+      });
       return;
     }
     setValidationErrors([]);
-    setIsSubmitting(true);
     onSubmit();
-    setIsSubmitting(false);
   };
 
   return (
@@ -727,18 +731,20 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* Save Action */}
       <div className="pt-4 pb-20 space-y-3">
         {validationErrors.length > 0 && (
-          <div role="alert" className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive space-y-1">
+          <div
+            ref={errorSummaryRef}
+            role="alert"
+            tabIndex={-1}
+            className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive space-y-1 outline-none focus-visible:ring-2 focus-visible:ring-destructive"
+          >
             <p className="font-semibold">Please fix the following before saving:</p>
             <ul className="list-disc list-inside space-y-0.5">
               {validationErrors.map((e, i) => <li key={i}>{e}</li>)}
             </ul>
           </div>
         )}
-        <Button onClick={handleSave} disabled={isSubmitting} size="lg" className="w-full h-14 text-lg shadow-lg hover:shadow-xl transition-[box-shadow,background-color] bg-primary hover:bg-primary font-semibold">
-          {isSubmitting
-            ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Saving...</>
-            : <><Save className="w-5 h-5 mr-2" /> Save Clinical Record</>
-          }
+        <Button onClick={handleSave} size="lg" className="w-full h-14 text-lg shadow-lg hover:shadow-xl transition-[box-shadow,background-color] bg-primary hover:bg-primary font-semibold">
+          <Save className="w-5 h-5 mr-2" /> Save Clinical Record
         </Button>
       </div>
 

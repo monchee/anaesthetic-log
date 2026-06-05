@@ -1,14 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { LogFormData, TestingPlanData } from '../types';
 import { DEFAULT_SELECTED_DRUGS } from '@shared/utils/constants';
-
-const ACTIVE_REPORT_KEY = 'dream:active_report';
-const ACTIVE_REPORT_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
-
-interface ActiveReportEntry {
-  record: LogFormData;
-  savedAt: number;
-}
+import {
+  ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS, TESTING_DRAFT_KEY,
+  setWithTTL, getIfFresh, getSavedAt, removeStored,
+} from '@shared/utils/ttlStorage';
+import { isTestingSessionDirty } from '../utils/isTestingSessionDirty';
 
 const INITIAL_FORM_STATE: LogFormData = {
   mrn: '',
@@ -46,22 +43,38 @@ export function useTestingState() {
   const [recentLogs, setRecentLogs] = useState<LogFormData[]>([]);
 
   useEffect(() => {
-    // Restore active report from localStorage if within TTL
-    try {
-      const raw = localStorage.getItem(ACTIVE_REPORT_KEY);
-      if (raw) {
-        const entry: ActiveReportEntry = JSON.parse(raw);
-        if (Date.now() - entry.savedAt < ACTIVE_REPORT_TTL_MS) {
-          setLastSavedRecord(entry.record);
-          setActiveReportSavedAt(entry.savedAt);
-        } else {
-          localStorage.removeItem(ACTIVE_REPORT_KEY);
-        }
-      }
-    } catch {
-      localStorage.removeItem(ACTIVE_REPORT_KEY);
+    // Restore active report from localStorage if written within the TTL window.
+    const record = getIfFresh<LogFormData>(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
+    const savedAt = getSavedAt(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
+    if (record && savedAt) {
+      setLastSavedRecord(record);
+      setActiveReportSavedAt(savedAt);
+    }
+
+    // Restore an in-progress testing draft if one was saved within the TTL
+    // window — resumes work after a reload, tab close, or SW auto-update.
+    // Only restore when the app loads directly on the testing screen (the real
+    // resume case). Restoring onto the home screen would risk injecting one
+    // patient's results into a different patient selected fresh this session.
+    if (window.location.pathname === '/testing') {
+      const draft = getIfFresh<LogFormData>(TESTING_DRAFT_KEY, ACTIVE_REPORT_TTL_MS);
+      if (draft) setFormData(draft);
     }
   }, []);
+
+  // Debounced autosave of the in-progress session. Only persists once the
+  // clinician has entered real data; the timestamped entry self-expires (6h).
+  const draftTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!isTestingSessionDirty(formData)) return;
+    if (draftTimer.current) clearTimeout(draftTimer.current);
+    draftTimer.current = setTimeout(() => {
+      setWithTTL(TESTING_DRAFT_KEY, formData);
+    }, 500);
+    return () => {
+      if (draftTimer.current) clearTimeout(draftTimer.current);
+    };
+  }, [formData]);
 
   useEffect(() => {
     import('@shared/data/mockTestingLogs').then(({ MOCK_TESTING_LOGS }) => {
@@ -134,12 +147,9 @@ export function useTestingState() {
       setLastSavedRecord(finalRecord);
       setActiveReportSavedAt(savedAt);
       setRecentLogs(prev => [finalRecord, ...prev]);
-      try {
-        const entry: ActiveReportEntry = { record: finalRecord, savedAt };
-        localStorage.setItem(ACTIVE_REPORT_KEY, JSON.stringify(entry));
-      } catch {
-        // localStorage may be unavailable — non-fatal
-      }
+      setWithTTL(ACTIVE_REPORT_KEY, finalRecord);
+      // The session is now committed to a report — drop the in-progress draft.
+      removeStored(TESTING_DRAFT_KEY);
 
       return finalRecord;
     } catch (error) {
@@ -150,13 +160,15 @@ export function useTestingState() {
 
   const resetForm = () => {
     setFormData(INITIAL_FORM_STATE);
+    removeStored(TESTING_DRAFT_KEY);
     // Does NOT clear lastSavedRecord — use clearActiveReport for that
   };
 
   const clearActiveReport = () => {
     setLastSavedRecord(null);
     setActiveReportSavedAt(null);
-    localStorage.removeItem(ACTIVE_REPORT_KEY);
+    removeStored(ACTIVE_REPORT_KEY);
+    removeStored(TESTING_DRAFT_KEY);
   };
 
   return {

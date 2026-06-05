@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { LayoutDashboard, Stethoscope, FileText, User, Printer, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2, LogOut, Info, Target, Shield, Users, EyeOff } from 'lucide-react';
+import { LayoutDashboard, Stethoscope, FileText, User, Printer, ArrowLeft, ChevronRight, TestTube2, ClipboardList, Pencil, ClipboardCopy, Copy, Mail, Database, CheckCircle2, Loader2, LogOut, Info, Target, Shield, Users, EyeOff, Plus, AlertTriangle } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, Toaster } from './components/ui';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
@@ -20,7 +20,7 @@ import PasswordGate from '@core/components/PasswordGate';
 import { Screen } from '@shared/types';
 import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS, APP_CONFIG } from '@shared/utils/constants';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
-import { showToast } from '@shared/utils';
+import { showToast, ACTIVE_REPORT_TTL_MS } from '@shared/utils';
 import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
 import { formatClinicalReportAsText, formatPatientHandoutAsText } from '@shared/utils/reportExporter';
 import { generateLetterText } from '@shared/utils/reportExporter';
@@ -33,7 +33,6 @@ const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
 const BACK_BTN = "h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none btn-press";
 const BACK_ICON = "w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity";
-const ACTIVE_REPORT_TTL_MS = 6 * 60 * 60 * 1000;
 
 
 function RedactToggle() {
@@ -72,6 +71,7 @@ function AnaestheticLogApp() {
 
   const [activeReportTab, setActiveReportTab] = React.useState<'report' | 'handout' | 'letter'>('report');
   const [csvUploadSheetOpen, setCsvUploadSheetOpen] = React.useState(false);
+  const [confirmClearOpen, setConfirmClearOpen] = React.useState(false);
   const research = useResearchSubmit();
 
   const handleProceedToTesting = () => {
@@ -239,7 +239,7 @@ function AnaestheticLogApp() {
           {/* Start New Log */}
           <div className="no-print border-t border-border pt-6 mt-4">
             <Button onClick={() => { research.reset(); resetForm(); setScreen(Screen.LOG); }} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
-              <LogOut className="w-5 h-5 mr-2" /> Exit
+              <Plus className="w-5 h-5 mr-2" /> Start New Log
             </Button>
           </div>
         </ScreenLayout>
@@ -307,10 +307,34 @@ function AnaestheticLogApp() {
             </div>
             <div className="flex gap-2 shrink-0">
               <Button size="sm" variant="outline" onClick={() => setScreen(Screen.SUMMARY)} className="rounded-none h-7 text-xs">Open Report</Button>
-              <Button size="sm" variant="ghost" onClick={clearActiveReport} className="rounded-none h-7 text-xs text-muted-foreground hover:text-destructive">Clear</Button>
+              <Button size="sm" variant="ghost" onClick={() => setConfirmClearOpen(true)} className="rounded-none h-7 text-xs text-muted-foreground hover:text-destructive">Clear</Button>
             </div>
           </div>
         )}
+
+        {/* Confirm clearing the active report — unrecoverable once cleared */}
+        <Dialog open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-destructive">
+                <AlertTriangle className="w-5 h-5" /> Clear active report?
+              </DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-muted-foreground py-2">
+              This permanently removes the current report{lastSavedRecord ? <> for <strong className="text-foreground">{lastSavedRecord.firstName} {lastSavedRecord.lastName}</strong></> : ''} and any in-progress testing draft from this device. This cannot be undone.
+            </p>
+            <DialogFooter className="gap-2 sm:gap-2">
+              <Button variant="outline" onClick={() => setConfirmClearOpen(false)} className="rounded-none">Cancel</Button>
+              <Button
+                onClick={() => { clearActiveReport(); setConfirmClearOpen(false); }}
+                className="rounded-none bg-destructive hover:bg-destructive/90 text-white"
+              >
+                Clear report
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         <Card className="shadow-sm rounded-none">
           <CardHeader className="pb-3 border-b border-border bg-card">
             <CardTitle className="flex items-center gap-2 text-lg">
@@ -398,8 +422,9 @@ function AnaestheticLogApp() {
                   <span className="font-semibold text-sm">Data Privacy</span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  All patient data is stored and processed on your own device. Nothing is sent to
-                  external servers. Your data stays with you.
+                  Patient data is processed on your own device and never sent to external servers.
+                  Anything held locally is automatically cleared after 6 hours, so nothing lingers
+                  on a shared workstation.
                 </p>
               </div>
             </div>

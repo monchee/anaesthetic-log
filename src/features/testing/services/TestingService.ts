@@ -5,9 +5,6 @@ import { LogFormData, DrugTestRow } from '../../../../types';
  * Handles form validation, submission, and analysis
  */
 export class TestingService {
-  private readonly STORAGE_KEY = 'recent_testing_logs';
-  private readonly MAX_RECENT_LOGS = 10;
-
   /**
    * Validate testing form data
    */
@@ -67,81 +64,6 @@ export class TestingService {
   }
 
   /**
-   * Submit testing record
-   */
-  submitTestingRecord(formData: LogFormData): { success: boolean; data?: LogFormData; error?: string } {
-    const validation = this.validateForm(formData);
-    
-    if (!validation.isValid) {
-      return {
-        success: false,
-        error: validation.errors.join(', ')
-      };
-    }
-
-    try {
-      // Add timestamp
-      const record: LogFormData = {
-        ...formData,
-        timestamp: new Date().toISOString()
-      };
-
-      // Save to recent logs
-      this.addToRecentLogs(record);
-
-      return {
-        success: true,
-        data: record
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Failed to submit record'
-      };
-    }
-  }
-
-  /**
-   * Get recent testing logs, migrating any legacy DrugTestRow records on read.
-   */
-  getRecentLogs(): LogFormData[] {
-    try {
-      const data = localStorage.getItem(this.STORAGE_KEY);
-      if (!data) return [];
-      const logs = JSON.parse(data) as LogFormData[];
-      return logs.map(log => ({
-        ...log,
-        testPanel: (log.testPanel || []).map(this.migrateRow),
-      }));
-    } catch (error) {
-      console.error('Error reading recent logs:', error);
-      return [];
-    }
-  }
-
-  private migrateRow(row: any): DrugTestRow {
-    if (Array.isArray(row.idtResults)) return row as DrugTestRow;
-    return {
-      ...row,
-      idtResults: [row.idt100 ?? '', row.idt10 ?? '', row.idtNeat ?? ''],
-      protocolIndex: 0,
-    };
-  }
-
-  /**
-   * Add to recent logs (keep only last N)
-   */
-  private addToRecentLogs(log: LogFormData): void {
-    const logs = this.getRecentLogs();
-    logs.unshift(log); // Add to beginning
-    
-    // Keep only the most recent logs
-    const trimmed = logs.slice(0, this.MAX_RECENT_LOGS);
-    
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(trimmed));
-  }
-
-  /**
    * Check if skin test is positive (≥3mm). Handles new idtResults array and legacy fields.
    */
   isSkinTestPositive(test: DrugTestRow): boolean {
@@ -174,13 +96,6 @@ export class TestingService {
         ? ((positive.length / testPanel.length) * 100).toFixed(1)
         : '0.0'
     };
-  }
-
-  /**
-   * Clear recent logs
-   */
-  clearRecentLogs(): void {
-    localStorage.removeItem(this.STORAGE_KEY);
   }
 }
 
