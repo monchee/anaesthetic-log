@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { registerSW } from 'virtual:pwa-register';
+import { purgeStale } from '@shared/utils/ttlStorage';
+
+// Sweep any expired patient/clinical data before the app mounts, so stale
+// data never lingers on a shared workstation even if the relevant screen is
+// never opened this session.
+purgeStale();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

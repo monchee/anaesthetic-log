@@ -154,7 +154,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <h4 className="font-semibold text-foreground mb-4">Cookies and Tracking</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>This application does not use tracking cookies or third-party analytics. Any browser storage (localStorage) is used solely for:</p>
+              <p>This application does not use tracking cookies or third-party analytics. Browser storage (localStorage) holds only non-identifying preferences:</p>
               <ul className="space-y-1 ml-4">
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>
@@ -169,6 +169,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
                   <span>PWA installation status</span>
                 </li>
               </ul>
+              <p>Patient and clinical data may be cached temporarily on this device to support an in-progress session (the current report and testing draft). This data is <strong>automatically deleted after 6 hours</strong>, is removed when you start a new log, and is never transmitted off the device.</p>
             </div>
           </div>
 
