@@ -193,7 +193,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                 <button
                                     key={drug}
                                     onClick={() => toggleDrug(drug)}
-                                    className={`text-xs px-2.5 py-1.5 rounded-none border transition-all duration-150 flex items-center gap-1.5 text-left ${category === 'Others' ? 'md:w-full' : ''} ${
+                                    className={`text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left ${category === 'Others' ? 'md:w-full' : ''} ${
                                     isSelected
                                     ? theme.btnSelected
                                     : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-muted ${theme.btnHover}`
@@ -208,7 +208,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                             {category === 'Others' && (
                                 <button
                                     onClick={addCustomDrug}
-                                    className={`md:w-full text-xs px-2.5 py-1.5 rounded-none border border-dashed border-border text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted transition-all duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
+                                    className={`md:w-full text-xs px-2.5 py-1.5 rounded-none border border-dashed border-border text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
                                 >
                                     <Plus className="w-3 h-3 shrink-0" />
                                     Other
@@ -304,7 +304,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                 role="switch"
                 aria-checked={formData.proceedToChallenge}
                 onClick={() => handleInputChange('proceedToChallenge', !formData.proceedToChallenge)}
-                className={`flex w-full items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-all duration-150 group ${
+                className={`flex w-full items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-[color,background-color,border-color,box-shadow] duration-150 group ${
                     formData.proceedToChallenge
                     ? 'border-primary bg-[white] dark:bg-card/10 shadow-sm'
                     : 'border-slate-100 hover:border-border dark:hover:border-border bg-background'
@@ -375,7 +375,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                              <button
                                 type="button"
                                 onClick={() => handleInputChange('outcome', 'SUCCESS')}
-                                className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
+                                className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-[color,background-color,border-color,box-shadow] duration-150 hover:shadow-md ${
                                     formData.outcome === 'SUCCESS'
                                     ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300'
                                     : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-green-800 dark:hover:bg-green-900/20'
@@ -397,7 +397,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                              <button
                                 type="button"
                                 onClick={() => handleInputChange('outcome', 'UNSUCCESS')}
-                                className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
+                                className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-[color,background-color,border-color,box-shadow] duration-150 hover:shadow-md ${
                                     formData.outcome === 'UNSUCCESS'
                                     ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300'
                                     : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-red-800 dark:hover:bg-red-900/20'
@@ -443,7 +443,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                         value={formData.reactionTime}
                                         onChange={(e) => handleInputChange('reactionTime', e.target.value)}
                                         placeholder="Minutes"
-                                        className="h-10 border-border focus:ring-primary/20 transition-all rounded-none bg-background"
+                                        className="h-10 border-border focus:ring-primary/20 transition-[box-shadow,border-color] rounded-none bg-background"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -488,7 +488,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                                             aria-checked={formData.symptoms.includes(sym)}
                                             aria-label={`${formData.symptoms.includes(sym) ? 'Remove' : 'Add'} ${sym}`}
                                             onClick={() => toggleSymptom(sym)}
-                                            className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-all duration-150 ${
+                                            className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-[color,background-color,border-color,box-shadow] duration-150 ${
                                                 formData.symptoms.includes(sym)
                                                 ? 'bg-red-600 text-white border-red-600 shadow-md transform scale-105'
                                                 : 'bg-white text-red-900 border-red-200 hover:bg-red-100 hover:border-red-300 dark:bg-background dark:text-red-200 dark:border-red-900/50 dark:hover:bg-red-900/20 dark:hover:border-red-800'
@@ -734,7 +734,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
             </ul>
           </div>
         )}
-        <Button onClick={handleSave} disabled={isSubmitting} size="lg" className="w-full h-14 text-lg shadow-lg hover:shadow-xl transition-all bg-primary hover:bg-primary font-semibold">
+        <Button onClick={handleSave} disabled={isSubmitting} size="lg" className="w-full h-14 text-lg shadow-lg hover:shadow-xl transition-[box-shadow,background-color] bg-primary hover:bg-primary font-semibold">
           {isSubmitting
             ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Saving...</>
             : <><Save className="w-5 h-5 mr-2" /> Save Clinical Record</>

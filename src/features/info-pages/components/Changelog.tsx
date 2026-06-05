@@ -57,7 +57,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                 </span>
               )}
               {isLatest && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 dark:bg-primary/20 md:mt-1">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 dark:bg-primary/20 md:mt-1">
                   <Sparkles className="w-2.5 h-2.5" /> Latest
                 </span>
               )}

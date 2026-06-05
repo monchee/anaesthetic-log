@@ -230,7 +230,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                     <td className="px-4 py-3 text-center">
                       <Badge
                         variant={getGradeVariant(p.history.grade || 'Ungraded')}
-                        className="whitespace-nowrap text-[10px] cursor-help w-20 justify-center"
+                        className="whitespace-nowrap text-xs cursor-help w-20 justify-center"
                         title={p.history.grade || 'Ungraded'}
                       >
                         {(p.history.grade || 'Ungraded').split(' -')[0]}
@@ -289,7 +289,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                       {formatDate(p.history.date)}
                     </div>
                   </div>
-                  <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-[10px] shrink-0 w-20 justify-center">
+                  <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-xs shrink-0 w-20 justify-center">
                     {(p.history.grade || 'Ungraded').split(' -')[0]}
                   </Badge>
                 </div>

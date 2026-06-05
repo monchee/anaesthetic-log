@@ -199,7 +199,7 @@ try { localStorage.setItem(LAST_SEEN_KEY, CURRENT_VERSION); } catch {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsOpen(false)}
+              onClick={() => { markSeen(); setIsOpen(false); }}
               className="text-slate-500 hover:text-muted-foreground dark:hover:text-white text-xs"
             >
               Skip for now

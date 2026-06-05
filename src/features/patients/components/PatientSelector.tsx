@@ -93,7 +93,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-labelledby="patient-selector-label"
-          className="flex min-h-10 h-auto w-full items-center justify-between rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white cursor-pointer hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 dark:bg-background dark:border-border dark:hover:bg-card dark:focus-visible:ring-primary/40 transition-all"
+          className="flex min-h-10 h-auto w-full items-center justify-between rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white cursor-pointer hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 dark:bg-background dark:border-border dark:hover:bg-card dark:focus-visible:ring-primary/40 transition-[color,background-color,border-color,box-shadow]"
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className={`mr-2 whitespace-normal text-left leading-tight ${selectedPatient || isManualSelection ? "text-foreground" : "text-muted-foreground"}`}>
@@ -137,7 +137,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                 </div>
                 <div className="flex flex-col">
                     <span className="font-semibold text-primary">New Patient (Manual Entry)</span>
-                    <span className="text-[10px] text-muted-foreground">Create a record without database ID</span>
+                    <span className="text-xs text-muted-foreground">Create a record without database ID</span>
                 </div>
                 {isManualSelection && (
                     <div className="ml-auto text-primary">

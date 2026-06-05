@@ -1,5 +1,21 @@
 [
   {
+    "version": "v0.52.0",
+    "codename": "Typeset",
+    "date": "5 June 2026",
+    "summary": "Design & typography polish — 7 UX findings resolved",
+    "highlight": true,
+    "changes": [
+      "Quick Start modal persistence — \"Skip for now\" now correctly marks the version as seen so the modal no longer reopens on every home navigation",
+      "Footer touch targets — all footer nav and legal links now meet the 44px minimum touch target for mobile usability",
+      "Sub-12px text eliminated — all on-screen UI labels, table badges, filter chips, and section headings raised to 12px minimum; A4 print output unchanged",
+      "h4 heading hierarchy — h4 now renders at 16px bold (up from 14px regular) so it is visually distinct from body text",
+      "Heading text-wrap — headings now use text-wrap: balance to prevent single-word orphans on the last line",
+      "Transition performance — replaced transition-all with explicit property lists (transition-[width], transition-[color,background-color,border-color,box-shadow]) across 11 components, eliminating unnecessary layout-triggering animation",
+      "Research empty state CTA — the Research dashboard demo/unconfigured state now shows a \"Learn about research setup\" button linking to Technical Documentation"
+    ]
+  },
+  {
     "version": "v0.51.1",
     "codename": "",
     "date": "4 June 2026",

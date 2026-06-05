@@ -45,7 +45,7 @@ export const AdvancedSearchFilters: React.FC<Pick<AdvancedSearchFiltersProps, 'a
       <Filter className="w-4 h-4 mr-2" />
       Filters
       {activeFilterCount > 0 && (
-        <Badge variant="default" className="ml-2 h-5 px-1.5 min-w-5 justify-center text-[10px] bg-primary text-primary-foreground">
+        <Badge variant="default" className="ml-2 h-5 px-1.5 min-w-5 justify-center text-xs bg-primary text-primary-foreground">
           {activeFilterCount}
         </Badge>
       )}
@@ -103,7 +103,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
   const hasAgents = filters.suspectedAgents.length > 0;
 
   const triggerClassName = (isActive: boolean) => `
-    h-8 text-xs rounded-none border-dashed transition-all
+    h-8 text-xs rounded-none border-dashed transition-[color,background-color,border-color,box-shadow]
     ${isActive 
       ? "border-primary/50 bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary" 
       : "border-border text-muted-foreground hover:bg-slate-50 dark:hover:bg-card hover:text-slate-900 dark:hover:text-foreground/90"
@@ -120,7 +120,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
               <Activity className="w-3.5 h-3.5 mr-2" />
               Severity
               {hasGrades && (
-                <Badge variant="secondary" className="ml-2 px-1 text-[10px] rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
+                <Badge variant="secondary" className="ml-2 px-1 text-xs rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
                   {filters.grades.length}
                 </Badge>
               )}
@@ -128,7 +128,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[280px] p-4 rounded-none border-border shadow-md" align="start">
-            <Label className="text-[10px] font-bold text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
+            <Label className="text-xs font-bold text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
               Reaction Severity
             </Label>
             <div className="grid grid-cols-3 gap-2 w-full">
@@ -142,7 +142,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                     aria-label={grade.label}
                     className={`
                       ${isUngraded ? 'col-span-2' : 'col-span-1'}
-                      h-9 rounded-none border text-[10px] font-bold transition-all flex items-center justify-center gap-1
+                      h-9 rounded-none border text-xs font-bold transition-[color,background-color,border-color,box-shadow] flex items-center justify-center gap-1
                       ${isSelected
                         ? `${grade.color} ring-1 ring-inset ring-current shadow-sm`
                         : 'bg-card text-muted-foreground border-border hover:border-slate-300 dark:hover:border-border'
@@ -166,7 +166,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[280px] p-4 rounded-none border-border shadow-md" align="start">
-            <Label className="text-[10px] font-bold text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
+            <Label className="text-xs font-bold text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
               Procedure Outcome
             </Label>
             <div className="flex bg-slate-100 dark:bg-card p-1 border border-border h-9">
@@ -175,7 +175,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                   key={outcome}
                   onClick={() => updateFilter('outcomeFilter', outcome)}
                   className={`
-                    flex-1 px-3 text-[10px] font-bold transition-all capitalize whitespace-nowrap flex items-center justify-center
+                    flex-1 px-3 text-xs font-bold transition-[color,background-color,border-color,box-shadow] capitalize whitespace-nowrap flex items-center justify-center
                     ${getOutcomeStyle(outcome, filters.outcomeFilter === outcome)}
                   `}
                 >
@@ -203,7 +203,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-4 rounded-none border-border shadow-md" align="start">
-            <Label className="text-[10px] font-bold text-foreground uppercase tracking-[0.1em] mb-3 opacity-70 flex items-center gap-1.5">
+            <Label className="text-xs font-bold text-foreground uppercase tracking-[0.1em] mb-3 opacity-70 flex items-center gap-1.5">
               Date Range
             </Label>
             <div className="flex items-center gap-2 h-9">
@@ -213,7 +213,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                 onChange={(e) => updateFilter('dateFrom', e.target.value)}
                 className="h-full flex-1 text-[11px] px-2 rounded-none border-border focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-card"
               />
-              <span className="text-[9px] text-slate-400 font-black uppercase shrink-0 px-0.5">To</span>
+              <span className="text-xs text-slate-400 font-black uppercase shrink-0 px-0.5">To</span>
               <Input
                 type="date"
                 value={filters.dateTo}
@@ -236,7 +236,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[280px] p-4 rounded-none border-border shadow-md" align="start">
-            <Label className="text-[10px] font-bold text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
+            <Label className="text-xs font-bold text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
               Hospital Location
             </Label>
             <div className="relative h-9">
@@ -267,7 +267,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
           <SearchIcon className="w-3.5 h-3.5 mr-2" />
           Agents
           {hasAgents && (
-            <Badge variant="secondary" className="ml-2 px-1 text-[10px] rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
+            <Badge variant="secondary" className="ml-2 px-1 text-xs rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
               {filters.suspectedAgents.length}
             </Badge>
           )}
@@ -280,7 +280,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             variant="ghost"
             size="sm"
             onClick={clearFilters}
-            className="h-8 px-2.5 text-[10px] font-bold uppercase tracking-[0.05em] text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 ml-auto transition-colors"
+            className="h-8 px-2.5 text-xs font-bold uppercase tracking-[0.05em] text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 ml-auto transition-colors"
           >
             <X className="w-3 h-3 mr-1" />
             Clear All
@@ -310,7 +310,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
               )}
             </div>
             
-            <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground opacity-70 flex items-center gap-2">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground opacity-70 flex items-center gap-2">
                {hasAgents && <span className="text-primary">{filters.suspectedAgents.length} Selected</span>}
                {!hasAgents && <span>0 Selected</span>}
             </div>
@@ -331,7 +331,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                         toggleAgent(drug);
                       }}
                       className={`
-                        px-3 py-1.5 text-[10px] font-bold transition-all relative overflow-hidden group
+                        px-3 py-1.5 text-xs font-bold transition-[color,background-color,border-color,box-shadow] relative overflow-hidden group
                         ${isSelected
                           ? `${theme.btnSelected} ring-1 ring-inset ring-black/5 dark:ring-white/5 shadow-sm scale-[1.02]`
                           : `bg-card text-muted-foreground border border-border hover:border-slate-400 dark:hover:border-border hover:bg-white dark:hover:bg-background`

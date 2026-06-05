@@ -31,35 +31,35 @@ export const GradeDistributionChart: React.FC<GradeDistributionChartProps> = ({
           {gradeCounts.I > 0 && (
             <div 
               style={{ width: animateCharts ? `${(gradeCounts.I / totalPatients) * 100}%` : '0%' }} 
-              className="bg-blue-400 dark:bg-blue-500 h-full transition-all duration-1000 ease-out" 
+              className="bg-blue-400 dark:bg-blue-500 h-full transition-[width] duration-1000 ease-out" 
               title={`Grade I: ${gradeCounts.I}`} 
             />
           )}
           {gradeCounts.II > 0 && (
             <div 
               style={{ width: animateCharts ? `${(gradeCounts.II / totalPatients) * 100}%` : '0%' }} 
-              className="bg-amber-400 dark:bg-amber-500 h-full transition-all duration-1000 ease-out delay-100" 
+              className="bg-amber-400 dark:bg-amber-500 h-full transition-[width] duration-1000 ease-out delay-100" 
               title={`Grade II: ${gradeCounts.II}`} 
             />
           )}
           {gradeCounts.III > 0 && (
             <div 
               style={{ width: animateCharts ? `${(gradeCounts.III / totalPatients) * 100}%` : '0%' }} 
-              className="bg-orange-500 dark:bg-orange-600 h-full transition-all duration-1000 ease-out delay-200" 
+              className="bg-orange-500 dark:bg-orange-600 h-full transition-[width] duration-1000 ease-out delay-200" 
               title={`Grade III: ${gradeCounts.III}`} 
             />
           )}
           {gradeCounts.IV > 0 && (
             <div 
               style={{ width: animateCharts ? `${(gradeCounts.IV / totalPatients) * 100}%` : '0%' }} 
-              className="bg-red-600 dark:bg-red-600 h-full transition-all duration-1000 ease-out delay-300" 
+              className="bg-red-600 dark:bg-red-600 h-full transition-[width] duration-1000 ease-out delay-300" 
               title={`Grade IV: ${gradeCounts.IV}`} 
             />
           )}
           {gradeCounts.Ungraded > 0 && (
             <div 
               style={{ width: animateCharts ? `${(gradeCounts.Ungraded / totalPatients) * 100}%` : '0%' }} 
-              className="bg-muted h-full transition-all duration-1000 ease-out delay-400" 
+              className="bg-muted h-full transition-[width] duration-1000 ease-out delay-400" 
               title={`Ungraded: ${gradeCounts.Ungraded}`} 
             />
           )}

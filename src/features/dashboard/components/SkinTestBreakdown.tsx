@@ -100,7 +100,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                     </tr>
                     {isExpanded && categoryGroup.stats.map((item, i) => (
                       <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-card/50 transition-colors border-b border-slate-50 dark:border-border animate-in fade-in slide-in-from-top-1">
-                        <td className="px-4 py-3 font-medium text-slate-700 dark:text-foreground/80 pl-10 border-l-4 border-l-primary hover:border-l-primary transition-all">{item.name}</td>
+                        <td className="px-4 py-3 font-medium text-slate-700 dark:text-foreground/80 pl-10 border-l-4 border-l-primary hover:border-l-primary transition-[color,background-color,border-color,box-shadow]">{item.name}</td>
                         <td className="px-4 py-3 text-center text-muted-foreground">{item.spt || '-'}</td>
                         <td className="px-4 py-3 text-center text-muted-foreground">{item.idt100 || '-'}</td>
                         <td className="px-4 py-3 text-center text-muted-foreground">{item.idt10 || '-'}</td>

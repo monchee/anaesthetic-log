@@ -48,7 +48,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
       {/* Main Toggle */}
       <div 
         onClick={onToggleChallenge}
-        className={`flex items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-all duration-150 group ${
+        className={`flex items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-[color,background-color,border-color,box-shadow] duration-150 group ${
           proceedToChallenge 
           ? 'border-primary bg-slate-50 dark:bg-card/10 shadow-sm' 
           : 'border-slate-100 hover:border-border dark:hover:border-border bg-background'
@@ -115,7 +115,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
               <button 
                 type="button" 
                 onClick={() => onChange('outcome', 'SUCCESS')}
-                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
+                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-[color,background-color,border-color,box-shadow] duration-150 hover:shadow-md ${
                   outcome === 'SUCCESS' 
                   ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300' 
                   : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-green-800 dark:hover:bg-green-900/20'
@@ -137,7 +137,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
               <button 
                 type="button" 
                 onClick={() => onChange('outcome', 'UNSUCCESS')}
-                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-all duration-150 hover:shadow-md ${
+                className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-[color,background-color,border-color,box-shadow] duration-150 hover:shadow-md ${
                   outcome === 'UNSUCCESS' 
                   ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300' 
                   : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-red-800 dark:hover:bg-red-900/20'
@@ -218,7 +218,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                       key={sym}
                       type="button"
                       onClick={() => onToggleSymptom(sym)}
-                      className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-all duration-150 ${
+                      className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-[color,background-color,border-color,box-shadow] duration-150 ${
                         symptoms.includes(sym)
                         ? 'bg-red-600 text-slate-50 border-red-600 shadow-md transform scale-105'
                         : 'bg-white text-red-900 border-red-200 hover:bg-red-100 hover:border-red-300 dark:bg-background dark:text-red-200 dark:border-red-900/50 dark:hover:bg-red-900/20 dark:hover:border-red-800'

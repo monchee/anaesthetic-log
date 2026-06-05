@@ -56,41 +56,41 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
         <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 print:bg-white print:border-slate-300">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 print:grid-cols-2 print:gap-2">
           <div>
-            <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Patient Name</p>
+            <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Patient Name</p>
             <p className="text-xl font-semibold tracking-tight text-primary print:text-base">{redact(fullName)}</p>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">MRN</p>
+            <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">MRN</p>
             <p className="text-lg font-mono font-medium text-slate-700 dark:text-foreground/80 print:text-xs">{redact(data.mrn)}</p>
           </div>
           {patient?.redcapId && patient.redcapId !== data.mrn && (
             <div>
-              <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">REDCap Record ID</p>
+              <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">REDCap Record ID</p>
               <p className="text-lg font-mono font-medium text-slate-700 dark:text-foreground/80 print:text-xs">{redact(patient.redcapId)}</p>
             </div>
           )}
           {patient && patient.id !== 'manual' && (
             <>
               <div>
-                <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Date of Reaction</p>
+                <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Date of Reaction</p>
                 <p className="text-slate-700 dark:text-foreground/80 font-medium print:text-xs">{formatDate(patient.history.date)}</p>
               </div>
               <div>
-                <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Hospital</p>
+                <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Hospital</p>
                 <p className="text-slate-700 dark:text-foreground/80 font-medium print:text-xs">{patient.history.hospital || 'Unknown'}</p>
               </div>
               <div>
-                <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Operation</p>
+                <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Operation</p>
                 <p className="text-slate-700 dark:text-foreground/80 font-medium print:text-xs">{patient.history.procedure}</p>
               </div>
               <div>
-                <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Procedure Outcome</p>
+                <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Procedure Outcome</p>
                 <p className="text-slate-700 dark:text-foreground/80 font-medium print:text-xs capitalize">{getOutcomeText(patient)}</p>
               </div>
             </>
           )}
           <div>
-            <p className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Testing Date</p>
+            <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Testing Date</p>
             <p className="text-slate-700 dark:text-foreground/80 font-medium print:text-xs">{testingDate}</p>
           </div>
           </div>
@@ -132,7 +132,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
           <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-foreground print:text-xs print:pb-0.5">Results</h3>
           {posResults.length > 0 && (
             <div className="space-y-2">
-              <p className="text-[10px] uppercase tracking-wider font-bold text-red-700 dark:text-red-400 print:text-[9px]">Positive</p>
+              <p className="text-xs uppercase tracking-wider font-bold text-red-700 dark:text-red-400 print:text-[9px]">Positive</p>
               {posResults.map((drug, i) => (
                 <div key={i} className="border-l-4 border-red-500 bg-card p-3 rounded-lg print:bg-white print:border-l-2 print:p-2">
                   <span className="font-bold text-red-700 dark:text-red-400 uppercase text-sm print:text-xs">{drug}</span>
@@ -151,7 +151,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
           )}
           {negResults.length > 0 && (
             <div>
-              <p className="text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-1 print:text-[9px]">Negative</p>
+              <p className="text-xs uppercase tracking-wider font-bold text-slate-500 mb-1 print:text-[9px]">Negative</p>
               <ul className="space-y-1">
                 {negResults.map((drug, i) => (
                   <li key={i} className="text-slate-700 dark:text-foreground/80 text-sm print:text-xs">{drug}: negative</li>
@@ -201,7 +201,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
 
         {/* Report Timestamp */}
         {activeReportSavedAt && (
-          <div className="text-[9px] text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
+          <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
             Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
           </div>
         )}
@@ -223,10 +223,10 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
         {/* Print signature lines */}
         <div className="hidden print:flex print:pt-4 justify-between gap-12">
           <div className="flex-1 border-t border-black pt-1">
-            <p className="text-[9px] uppercase font-semibold text-slate-500 tracking-wider">Clinician Signature</p>
+            <p className="text-xs uppercase font-semibold text-slate-500 tracking-wider">Clinician Signature</p>
           </div>
           <div className="w-32 border-t border-black pt-1">
-            <p className="text-[9px] uppercase font-semibold text-slate-500 tracking-wider">Date</p>
+            <p className="text-xs uppercase font-semibold text-slate-500 tracking-wider">Date</p>
           </div>
         </div>
       </CardContent>

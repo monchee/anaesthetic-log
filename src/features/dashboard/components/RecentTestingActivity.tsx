@@ -55,16 +55,16 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                     <td className="px-4 py-3 font-medium text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">{log.lastName}, {log.firstName}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1 items-center">
-                        {positives.map(p => <Badge key={p} variant="danger" className="text-[10px] px-1.5 py-0 h-5">{p}</Badge>)}
-                        {negatives.map(n => <span key={n} className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">{n}</span>)}
+                        {positives.map(p => <Badge key={p} variant="danger" className="text-xs px-1.5 py-0 h-5">{p}</Badge>)}
+                        {negatives.map(n => <span key={n} className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">{n}</span>)}
                         {positives.length === 0 && negatives.length === 0 && <span className="text-slate-400 italic text-xs">-</span>}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-xs">
                       {log.proceedToChallenge ? (
                         log.outcome === 'SUCCESS' 
-                        ? <Badge variant="success" className="text-[10px]">Negative Challenge</Badge> 
-                        : <Badge variant="danger" className="text-[10px]">Positive Challenge</Badge>
+                        ? <Badge variant="success" className="text-xs">Negative Challenge</Badge> 
+                        : <Badge variant="danger" className="text-xs">Positive Challenge</Badge>
                       ) : <span className="text-muted-foreground">No Challenge</span>}
                     </td>
                   </tr>

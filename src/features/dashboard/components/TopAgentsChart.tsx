@@ -37,7 +37,7 @@ export const TopAgentsChart: React.FC<TopAgentsChartProps> = ({
                 </div>
                 <div className="h-3 w-full bg-slate-100 dark:bg-card rounded-none overflow-hidden">
                   <div 
-                    className="h-full bg-primary dark:bg-primary rounded-none transition-all duration-1000 ease-out group-hover:bg-primary dark:group-hover:bg-primary" 
+                    className="h-full bg-primary dark:bg-primary rounded-none transition-[width,background-color] duration-1000 ease-out group-hover:bg-primary dark:group-hover:bg-primary"
                     style={{ 
                       width: animateCharts ? `${percentage}%` : '0%',
                       transitionDelay: `${idx * 100}ms`
