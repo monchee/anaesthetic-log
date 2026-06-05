@@ -3,6 +3,7 @@ import { Download, RefreshCw, AlertCircle, FlaskConical, ChevronDown, ChevronUp,
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Progress, Skeleton } from '../../../../components/ui';
 import { fetchAllResults, exportToCsv, deleteResult } from '../services/ResearchService';
 import { ResearchRecord } from '../types';
+import { Screen } from '@/types';
 import { toast } from 'sonner';
 
 function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDelete: () => void }) {
@@ -125,7 +126,7 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
   );
 }
 
-export default function ResearchDashboard() {
+export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: Screen) => void } = {}) {
   const [records, setRecords] = useState<ResearchRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -214,6 +215,16 @@ export default function ResearchDashboard() {
         </p>
         {!isUnconfigured && (
           <Button variant="outline" size="sm" onClick={load} className="rounded-none">Retry</Button>
+        )}
+        {isUnconfigured && setScreen && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setScreen(Screen.TECHNICAL_DOCUMENTATION)}
+            className="rounded-none"
+          >
+            Learn about research setup →
+          </Button>
         )}
       </div>
     );

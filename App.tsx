@@ -276,7 +276,7 @@ function AnaestheticLogApp() {
         <ScreenLayout title="Research Database" icon={<Database className="w-5 h-5" />} {...layoutProps}
           contentClassName="py-4"
         >
-          <ResearchDashboard />
+          <ResearchDashboard setScreen={setScreen} />
         </ScreenLayout>
       );
     }
