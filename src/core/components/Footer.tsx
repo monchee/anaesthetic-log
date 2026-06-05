@@ -40,7 +40,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, isCustomData =
               <button
                 key={link.screen}
                 onClick={() => setScreen(link.screen)}
-                className="text-muted-foreground hover:text-primary dark:hover:text-primary transition-colors"
+                className="min-h-[44px] px-2 inline-flex items-center justify-center text-muted-foreground hover:text-primary dark:hover:text-primary transition-colors"
               >
                 {link.label}
               </button>
@@ -53,7 +53,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, isCustomData =
               <button
                 key={link.screen}
                 onClick={() => setScreen(link.screen)}
-                className="text-muted-foreground hover:text-primary dark:hover:text-primary transition-colors"
+                className="min-h-[44px] px-2 inline-flex items-center justify-center text-muted-foreground hover:text-primary dark:hover:text-primary transition-colors"
               >
                 {link.label}
               </button>
