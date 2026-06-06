@@ -93,11 +93,11 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         <FlaskConical className="h-3.5 w-3.5 shrink-0" />
                         <span className="font-semibold uppercase tracking-wide text-xs">Tryptase:</span>
                         {history.tryptases?.length ? (
-                            <span>
-                                {history.tryptases.map((t, i) =>
-                                    `T${i + 1}${t.time ? ` (${t.time})` : ''}: ${t.result}`
-                                ).join(' · ')}
-                            </span>
+                            history.tryptases.length === 1 ? (
+                                <span>{`T1${history.tryptases[0].time ? ` (${history.tryptases[0].time})` : ''}: ${history.tryptases[0].result}`}</span>
+                            ) : (
+                                <span>{history.tryptases.length} samples</span>
+                            )
                         ) : (
                             <span>{history.tryptase}</span>
                         )}
@@ -123,7 +123,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
             </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             {/* LEFT COLUMN (Details) */}
             <div className="lg:col-span-7 flex flex-col gap-5">
@@ -133,9 +133,9 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     <div className="space-y-2">
                             <div className="flex items-center gap-2">
                             <AlertTriangle className="h-3.5 w-3.5 text-red-500 shrink-0" />
-                            <span className="text-[0.625rem] font-bold uppercase tracking-wider text-red-600 dark:text-red-400">Suspected Culprit Agents</span>
+                            <span className="text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400">Suspected Culprit Agents</span>
                         </div>
-                        <div className="bg-red-50 dark:bg-red-950/20 p-3 rounded-none border border-red-100 dark:border-red-900/30 flex flex-wrap gap-2 shadow-sm min-h-[44px] items-center">
+                        <div className="bg-red-50 dark:bg-red-950/20 p-3 rounded-none border border-red-100 dark:border-red-900/30 flex flex-wrap gap-2 min-h-[44px] items-center">
                             {history.suspectedAgents.map((agent, i) => (
                                 <Badge key={i} variant="danger" className="text-xs px-2.5 py-0.5">{agent}</Badge>
                             ))}
@@ -150,7 +150,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             <FileText className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Reaction Summary
                         </div>
-                        <div className="bg-background p-3 rounded-none border border-border text-slate-700 dark:text-foreground/80 leading-relaxed shadow-sm text-sm">
+                        <div className="bg-background p-3 rounded-none border border-border text-slate-700 dark:text-foreground/80 leading-relaxed text-sm">
                             {history.reactionSummary || "No summary provided."}
                         </div>
                     </div>
@@ -161,7 +161,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                 <MessageSquare className="h-3.5 w-3.5 text-muted-foreground" /> 
                                 Additional Comments
                             </div>
-                            <div className="bg-card p-3 rounded-none border border-border text-muted-foreground leading-relaxed shadow-sm text-xs italic">
+                            <div className="bg-card p-3 rounded-none border border-border text-muted-foreground leading-relaxed text-xs italic">
                                 {history.comments}
                             </div>
                         </div>
@@ -175,20 +175,20 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             <Activity className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Clinical Features
                         </div>
-                        <div className="bg-background p-3 rounded-none border border-border flex flex-col gap-3 shadow-sm flex-1">
+                        <div className="bg-background p-3 rounded-none border border-border flex flex-col gap-3 flex-1">
                             
                             {/* Key Symptom Highlights */}
                             {(history.firstSymptom || history.predominantSymptom) && (
                                 <div className="space-y-2 border-b border-border pb-3 mb-1">
                                     {history.firstSymptom && (
-                                        <div className="flex flex-col bg-card p-2 rounded-none border border-border border-l-2 border-l-amber-400 shadow-sm">
-                                            <span className="section-label mb-0.5">First Sign</span>
+                                        <div className="flex flex-col gap-0.5 border-l-2 border-amber-400 pl-2">
+                                            <span className="section-label text-amber-700 dark:text-amber-400">First Sign</span>
                                             <span className="text-foreground/90 font-semibold text-sm leading-tight">{history.firstSymptom}</span>
                                         </div>
                                     )}
                                     {history.predominantSymptom && (
-                                        <div className="flex flex-col bg-card p-2 rounded-none border border-border shadow-sm">
-                                            <span className="section-label mb-0.5">Predominant</span>
+                                        <div className="flex flex-col gap-0.5 border-l-2 border-border pl-2">
+                                            <span className="section-label">Predominant</span>
                                             <span className="text-foreground/90 font-semibold text-sm leading-tight">{history.predominantSymptom}</span>
                                         </div>
                                     )}
@@ -201,7 +201,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                         s.detail ? (
                                             <Popover key={i}>
                                                 <PopoverTrigger asChild>
-                                                    <div className="inline-flex items-center gap-1 rounded-none bg-muted border border-border px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-foreground/90 shadow-sm cursor-pointer hover:border-primary/50 hover:text-primary transition-colors">
+                                                    <div className="inline-flex items-center gap-1 rounded-none bg-muted border border-border px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:text-foreground/90 shadow-sm cursor-pointer hover:border-primary/50 hover:text-primary transition-colors">
                                                         {s.label}
                                                         <Info className="w-3 h-3 opacity-50 text-blue-500" />
                                                     </div>
@@ -211,7 +211,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                 </PopoverContent>
                                             </Popover>
                                         ) : (
-                                            <span key={i} className="inline-flex items-center rounded-none bg-muted border border-border px-2.5 py-0.5 text-[11px] font-semibold text-slate-700 dark:text-foreground/90 shadow-sm">
+                                            <span key={i} className="inline-flex items-center rounded-none bg-muted border border-border px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:text-foreground/90 shadow-sm">
                                                 {s.label}
                                             </span>
                                         )
@@ -226,7 +226,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             <Syringe className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Treatment
                         </div>
-                        <div className="bg-background p-3 rounded-none border border-border shadow-sm flex-1">
+                        <div className="bg-background p-3 rounded-none border border-border flex-1">
                             {history.treatment && history.treatment.length > 0 ? (
                                 <ul className="text-slate-700 dark:text-foreground/80 text-xs space-y-1.5">
                                     {history.treatment.map((t, i) => (
@@ -242,7 +242,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                 </div>
 
                 {/* 4. Context Bar */}
-                <div className="bg-background p-3 rounded-none border border-border flex flex-col sm:flex-row gap-4 shadow-sm">
+                <div className="bg-background p-3 rounded-none border border-border flex flex-col sm:flex-row gap-4">
                     <div className="space-y-1 flex-1 min-w-0">
                         <span className="section-label flex items-center gap-1.5">
                             <User className="h-3 w-3" /> Referring Doctor
@@ -250,7 +250,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         <div className="font-medium text-foreground text-sm break-words leading-snug">
                             {doctorName}
                         </div>
-                        <div className="text-[0.625rem] text-muted-foreground flex flex-wrap gap-2 mt-0.5">
+                        <div className="text-xs text-muted-foreground flex flex-wrap gap-2 mt-0.5">
                             {history.referringDoctorPosition && (
                                 <span className="font-medium text-muted-foreground">{history.referringDoctorPosition}</span>
                             )}
@@ -272,7 +272,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
             </div>
 
             {/* RIGHT COLUMN (Timeline) */}
-            <div className="lg:col-span-5 flex flex-col gap-2 h-full">
+            <div className="lg:col-span-5 flex flex-col gap-2">
                     <div className="section-label flex items-center gap-2">
                     <Clock className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                     Timeline & Medications
@@ -299,8 +299,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         </div>
                     </div>
 
-                    {/* Timeline Area - Removed max-height constraints to prevent scrolling and clipping */}
-                    <div className="p-4 flex-1">
+                    {/* Timeline Area */}
+                    <div className="p-4">
                         {sortedEvents.length > 0 ? (
                             <div className="relative border-l-2 border-border ml-1.5 space-y-4">
                                 {sortedEvents.map((event, idx) => (
@@ -358,7 +358,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     
                     {/* Untimed Agents Section */}
                     {untimedAdministered.length > 0 && (
-                        <div className="border-t border-border px-3 py-3 bg-white/50 dark:bg-card/50">
+                        <div className="border-t border-border px-3 py-3 bg-muted/30 dark:bg-card/50">
                             <p className="section-label mb-2">Agents with no listed time</p>
                             <div className="flex flex-wrap gap-1.5">
                                 {untimedAdministered.map((drug, idx) => (
