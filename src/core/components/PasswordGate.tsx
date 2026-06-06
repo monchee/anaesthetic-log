@@ -84,17 +84,17 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
   if (unlocked) return <div className="animate-screen-enter">{children}</div>;
 
   return (
-    <div className={`flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10 ${isExiting ? 'animate-gate-exit pointer-events-none' : ''}`}>
+    <main className={`flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10 ${isExiting ? 'animate-gate-exit pointer-events-none' : ''}`} aria-label="Screen lock">
       <div className="flex w-full max-w-sm flex-col gap-6 animate-content-enter">
         <div className="flex flex-col items-center gap-1.5 text-center">
           <h1 className="text-5xl font-bold tracking-widest text-primary">DREAM</h1>
-          <p className="text-xs tracking-wide text-muted-foreground/80">Drug Reaction Evaluation &amp; Anaesthetic Management</p>
+          <p className="text-xs tracking-wide text-slate-600 dark:text-slate-400">Drug Reaction Evaluation &amp; Anaesthetic Management</p>
         </div>
 
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-semibold tracking-tight">Screen Lock</CardTitle>
-            <CardDescription>Enter PIN to continue</CardDescription>
+            <CardDescription className="text-slate-600 dark:text-slate-400">Enter PIN to continue</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-4">
@@ -115,7 +115,7 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
                       onChange={e => handleDigitChange(i, e.target.value)}
                       onKeyDown={e => handleKeyDown(i, e)}
                       onPaste={i === 0 ? handlePaste : undefined}
-                      className="w-12 h-14 text-center text-xl border border-input bg-background
+                      className="w-12 h-14 text-center text-xl text-slate-900 dark:text-slate-100 border border-input bg-background
                                  focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring
                                  transition-colors"
                     />
@@ -124,19 +124,19 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
               </div>
               {error && <p className="text-destructive text-sm text-center">{error}</p>}
               <Button onClick={() => handleUnlock()} className="w-full">Unlock</Button>
-              <p className="text-[10px] text-muted-foreground/60 text-center leading-tight">
+              <p className="text-xs text-muted-foreground text-center leading-tight">
                 This is a screen lock to prevent shoulder-surfing on shared workstations. Patient data security is governed separately by the database access controls.
               </p>
             </div>
           </CardContent>
         </Card>
 
-        <div className="text-xs tracking-wide text-muted-foreground/60 text-center">
+        <div className="text-xs tracking-wide text-muted-foreground text-center">
           <span>RPAH Department of Clinical Immunology &amp; Allergy</span>
         </div>
       </div>
       <span className="fixed bottom-4 right-4 md:bottom-6 md:right-6 text-xs font-mono text-muted-foreground">v{APP_VERSION}</span>
-    </div>
+    </main>
   );
 };
 

@@ -128,7 +128,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                     <h1 className="text-xl font-semibold tracking-tight leading-none truncate m-0 text-white">
                                         {title}
                                     </h1>
-                                    {subtitle && <div className="text-xs text-white/80 truncate font-normal mt-1 opacity-90">{subtitle}</div>}
+                                    {subtitle && <div className="text-xs text-white/90 truncate font-normal mt-1">{subtitle}</div>}
                                 </div>
                             </div>
 

@@ -3,18 +3,18 @@
     "version": "v0.53.0",
     "codename": "Ephemeral",
     "date": "6 June 2026",
-    "summary": "Privacy-first persistence — patient data auto-purged after 6 hours, plus 8 UX improvements",
+    "summary": "Privacy-first persistence \u2014 patient data auto-purged after 6 hours, plus 8 UX improvements",
     "highlight": true,
     "changes": [
-      "6-hour auto-purge for all patient data — every patient/clinical key in browser storage is now time-boxed and automatically deleted after 6 hours; stale data is also swept on app launch so nothing ever lingers on a shared workstation",
-      "Draft autosave — in-progress testing sessions are autosaved every 500 ms and silently restored after a reload, tab close, or service-worker update, so no clinical work is lost mid-session",
-      "Correct PWA update behaviour — the service-worker update toast now activates the new worker and reloads cleanly instead of looping",
-      "Confirm before clearing a report — the ‘Clear’ button on the active-report banner now asks for confirmation before discarding the saved record",
-      "Start New Log renamed — the primary action button in the report summary was renamed from ‘Exit’ to ‘Start New Log’ to better reflect what it does",
-      "Validation errors scroll into view — submitting the testing form with missing required fields now scrolls to and focuses the error summary so the clinician can see what needs fixing",
-      "Removed phantom save spinner — the ‘Saving…’ spinner on the Save button was never reachable (save is synchronous); removed to avoid confusion",
-      "Privacy Policy updated — the policy now accurately states that patient/clinical data may be cached only temporarily and is auto-deleted after 6 hours",
-      "Dead persistence code removed — unused PatientRepository, PatientService, and TestingService storage methods deleted; the only active patient-data storage paths are the new TTL-guarded ones"
+      "6-hour auto-purge for all patient data \u2014 every patient/clinical key in browser storage is now time-boxed and automatically deleted after 6 hours; stale data is also swept on app launch so nothing ever lingers on a shared workstation",
+      "Draft autosave \u2014 in-progress testing sessions are autosaved every 500 ms and silently restored after a reload, tab close, or service-worker update, so no clinical work is lost mid-session",
+      "Correct PWA update behaviour \u2014 the service-worker update toast now activates the new worker and reloads cleanly instead of looping",
+      "Confirm before clearing a report \u2014 the \u2018Clear\u2019 button on the active-report banner now asks for confirmation before discarding the saved record",
+      "Start New Log renamed \u2014 the primary action button in the report summary was renamed from \u2018Exit\u2019 to \u2018Start New Log\u2019 to better reflect what it does",
+      "Validation errors scroll into view \u2014 submitting the testing form with missing required fields now scrolls to and focuses the error summary so the clinician can see what needs fixing",
+      "Removed phantom save spinner \u2014 the \u2018Saving\u2026\u2019 spinner on the Save button was never reachable (save is synchronous); removed to avoid confusion",
+      "Privacy Policy updated \u2014 the policy now accurately states that patient/clinical data may be cached only temporarily and is auto-deleted after 6 hours",
+      "Dead persistence code removed \u2014 unused PatientRepository, PatientService, and TestingService storage methods deleted; the only active patient-data storage paths are the new TTL-guarded ones"
     ]
   },
   {

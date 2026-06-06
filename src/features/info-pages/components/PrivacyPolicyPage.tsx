@@ -30,7 +30,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-3">
               <Lock className="w-5 h-5 text-green-600 dark:text-green-400 shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-green-900 dark:text-green-300 mb-2">Local-Only Processing</h3>
+                <p className="font-semibold text-green-900 dark:text-green-300 mb-2">Local-Only Processing</p>
                 <p className="text-sm text-green-800 dark:text-green-300">
                   All patient data is processed <strong>locally in your browser</strong>. No data is transmitted to external servers. The application uses your local REDCap export files and does not store or transmit any patient information outside of your local device.
                 </p>
@@ -42,7 +42,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Eye className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Information We Collect</h4>
+              <h2 className="font-semibold text-foreground text-base">Information We Collect</h2>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>The application may process the following types of information when you use REDCap data exports:</p>
@@ -67,7 +67,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">How We Use Your Information</h4>
+              <h2 className="font-semibold text-foreground text-base">How We Use Your Information</h2>
             </div>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>Your information is used solely for:</p>
@@ -96,7 +96,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Lock className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Data Storage and Security</h4>
+              <h2 className="font-semibold text-foreground text-base">Data Storage and Security</h2>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>We implement appropriate security measures to protect your information:</p>
@@ -125,7 +125,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Your Rights</h4>
+              <h2 className="font-semibold text-foreground text-base">Your Rights</h2>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>Under the <strong>Health Records and Information Privacy Act 2002 (NSW)</strong> and the <strong>Privacy Act 1988 (Cth)</strong>, you have the right to:</p>
@@ -152,7 +152,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
 
           {/* Cookies and Tracking */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">Cookies and Tracking</h4>
+            <h2 className="font-semibold text-foreground text-base mb-4">Cookies and Tracking</h2>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>This application does not use tracking cookies or third-party analytics. Browser storage (localStorage) holds only non-identifying preferences:</p>
               <ul className="space-y-1 ml-4">
@@ -178,7 +178,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-3">
               <Mail className="w-5 h-5 text-nsw-info dark:text-nsw-blue shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-nsw-info dark:text-nsw-blue mb-2">Privacy Contact</h4>
+                <h2 className="font-semibold text-nsw-info dark:text-nsw-blue text-base mb-2">Privacy Contact</h2>
                 <p className="text-sm text-slate-700 dark:text-foreground/80">
                   For privacy-related enquiries or complaints, please contact the RPAH Department of Clinical Immunology & Allergy or the Sydney Local Health District Privacy Officer.
                 </p>
