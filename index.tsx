@@ -29,19 +29,25 @@ function isUnlocked(): boolean {
   catch { return false; }
 }
 
+// Sends skipWaiting to the waiting SW, then reloads once it activates.
+// We avoid clientsClaim (which causes an infinite reload loop on first install)
+// and instead call window.location.reload() explicitly after a short pause
+// so the new SW has time to activate before we navigate away.
+const doSwUpdateAndReload = async (sw: ReturnType<typeof registerSW>) => {
+  await sw(false); // send SKIP_WAITING without setting up a controllerchange listener
+  setTimeout(() => window.location.reload(), 200);
+};
+
 // Register Service Worker with improved update flow
 const updateSW = registerSW({
   onNeedRefresh() {
     if (!isUnlocked()) {
       // Gate is showing — no work to lose, activate silently
-      updateSW(true);
+      doSwUpdateAndReload(updateSW);
     } else {
       // User is in the app — show persistent toast
-      // updateSW(true) calls skipWaiting on the waiting SW then reloads,
-      // preventing the toast from looping (plain reload() leaves the new SW
-      // waiting, so onNeedRefresh fires again on every reload).
       import('./src/shared/utils/toast-config').then(({ showToast }) => {
-        showToast.update(() => updateSW(true));
+        showToast.update(() => doSwUpdateAndReload(updateSW));
       });
     }
   },
