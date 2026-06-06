@@ -538,6 +538,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
               type="button"
               role="switch"
               aria-checked={formData.tryptase?.obtained ?? false}
+              aria-label="Tryptase samples obtained"
               onClick={() => setFormData(prev => ({
                 ...prev,
                 tryptase: {
@@ -562,6 +563,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                   type="button"
                   role="switch"
                   aria-checked={formData.tryptase.significantElevation}
+                  aria-label="Clinically significant dynamic elevation"
                   onClick={() => setFormData(prev => ({
                     ...prev,
                     tryptase: { ...prev.tryptase!, significantElevation: !prev.tryptase!.significantElevation }

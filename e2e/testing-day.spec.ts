@@ -1,15 +1,43 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
+
+/**
+ * Dismiss the HelpModal "Quick Start" dialog that auto-opens in demo mode.
+ */
+async function dismissHelpModal(page: any) {
+  await page.waitForTimeout(400);
+  const dialog = page.locator('[role="dialog"]');
+  const isDialogVisible = await dialog.isVisible().catch(() => false);
+  if (!isDialogVisible) return;
+  const skipBtn = dialog.locator('button', { hasText: /skip for now/i });
+  const gotItBtn = dialog.locator('button', { hasText: /got it/i });
+  for (const btn of [skipBtn, gotItBtn]) {
+    const count = await btn.count();
+    if (count > 0) {
+      try {
+        await btn.first().waitFor({ state: 'stable', timeout: 3000 });
+        await btn.first().click({ timeout: 5000 });
+        await dialog.waitFor({ state: 'hidden', timeout: 5000 });
+        return;
+      } catch { /* try next */ }
+    }
+  }
+  await page.keyboard.press('Escape');
+  await dialog.waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
+}
 
 test.describe('Testing Day Flow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    // Dismiss the auto-open HelpModal
+    await dismissHelpModal(page);
     // Clear persisted patient data so mock patients load fresh
     await page.evaluate(() => {
       localStorage.removeItem('anaesthetic_patients');
     });
     await page.reload();
     await page.waitForLoadState('networkidle');
+    await dismissHelpModal(page);
   });
 
   test('full testing day: patient selection → testing panel → save → report → dashboard activity', async ({ page }) => {
@@ -35,7 +63,7 @@ test.describe('Testing Day Flow', () => {
     await expect(page.getByText('Save Clinical Record')).toBeVisible({ timeout: 10000 });
 
     // ── Step 5: Fill histamine control ────────────────────────────────────
-    const histamineInput = page.locator('input').filter({ hasText: '' }).and(page.locator('[placeholder*="histamine" i], input[aria-label*="histamine" i]')).first();
+    // Input found by label text instead (the placeholder approach is less reliable)
     // Try by label text proximity
     const histamineField = page.getByLabel(/histamine/i).first();
     if (await histamineField.isVisible()) {

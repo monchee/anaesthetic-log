@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Download, RefreshCw, AlertCircle, FlaskConical, ChevronDown, ChevronUp, Trash2, Database, ClipboardList, TrendingUp, CheckCircle2, BarChart2, Trophy } from 'lucide-react';
+import { Download, RefreshCw, FlaskConical, ChevronDown, ChevronUp, Trash2, Database, ClipboardList, TrendingUp, CheckCircle2, BarChart2, Trophy } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Progress, Skeleton } from '../../../../components/ui';
 import { fetchAllResults, exportToCsv, deleteResult } from '../services/ResearchService';
 import { ResearchRecord } from '../types';

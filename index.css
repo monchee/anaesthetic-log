@@ -29,7 +29,7 @@
     --secondary: 210 40% 96.1%; /* slate-100 */
     --secondary-foreground: 222.2 47.4% 11.2%; /* slate-900 */
     --muted: 210 40% 96.1%; /* slate-100 */
-    --muted-foreground: 215.4 16.3% 46.9%; /* slate-500 */
+    --muted-foreground: 215.4 16.3% 44%; /* darkened from 46.9% to meet WCAG AA 4.5:1 on --background */
     --accent: 210 40% 96.1%; /* slate-100 */
     --accent-foreground: 222.2 47.4% 11.2%; /* slate-900 */
     --destructive: 0 84.2% 60.2%; /* red-500 */
