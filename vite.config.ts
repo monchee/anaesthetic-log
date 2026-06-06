@@ -50,6 +50,7 @@ export default defineConfig(() => {
         ]
       },
       workbox: {
+        clientsClaim: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
         runtimeCaching: [
           {
@@ -91,17 +92,6 @@ export default defineConfig(() => {
               }
             }
           },
-          {
-            urlPattern: /\.(?:js|css)$/,
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'static-resources',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
-              }
-            }
-          }
         ],
         navigateFallback: null,
         cleanupOutdatedCaches: true
