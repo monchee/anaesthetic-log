@@ -64,6 +64,12 @@ const PatientTable: React.FC<PatientTableProps> = ({
   isLoading = false,
 }) => {
   const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
+  const handleMobileCardKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, patient: Patient) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onSelectPatient(patient);
+    }
+  };
 
   return (
     <Card className="w-full shadow-sm animate-enter-subtle">
@@ -271,10 +277,14 @@ const PatientTable: React.FC<PatientTableProps> = ({
             const { events: timelineEvents } = parsePatientTimeline(p.history);
             return (
               <div
+                role="button"
+                tabIndex={0}
                 key={p.id}
                 style={{ '--row-index': Math.min(index, 9) } as React.CSSProperties}
-                className="p-2.5 hover:bg-slate-50 dark:hover:bg-card/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800 animate-row-enter"
+                className="block w-full p-2.5 text-left hover:bg-slate-50 dark:hover:bg-card/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800 animate-row-enter focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() => onSelectPatient(p)}
+                onKeyDown={(event) => handleMobileCardKeyDown(event, p)}
+                aria-label={`View details for patient: ${p.firstName} ${p.lastName}`}
               >
                 <div className="flex justify-between items-start mb-1 gap-2">
                   <div>

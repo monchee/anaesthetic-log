@@ -33,7 +33,7 @@ export const TopAgentsChart: React.FC<TopAgentsChartProps> = ({
               <div key={idx} className="space-y-1 group">
                 <div className="flex justify-between text-sm font-medium text-slate-700 dark:text-foreground/80">
                   <span>{agent.name}</span>
-                  <span>{agent.count}</span>
+                  <span className="tabular-nums">{agent.count}</span>
                 </div>
                 <div className="h-3 w-full bg-slate-100 dark:bg-card rounded-none overflow-hidden">
                   <div 

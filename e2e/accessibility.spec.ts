@@ -40,6 +40,21 @@ async function dismissHelpModal(page: any) {
   await dialog.waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
 }
 
+async function selectMockPatient(page: any) {
+  const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
+  await expect(patientSelector).toBeVisible({ timeout: 10000 });
+  await patientSelector.click();
+
+  const patientSearch = page.getByRole('textbox', { name: /Filter patients by ID or name/i });
+  await expect(patientSearch).toBeVisible({ timeout: 5000 });
+  await patientSearch.fill('Wei');
+  await page.waitForTimeout(300);
+
+  const weiOption = page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first();
+  await expect(weiOption).toBeVisible({ timeout: 5000 });
+  await weiOption.click();
+}
+
 test.describe('Accessibility Tests', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -398,6 +413,38 @@ test.describe('Automated Accessibility Scans', () => {
     // Log violations for debugging - these should be fixed
     if (violations.length > 0) {
       console.log('Accessibility Violations on home page:');
+      violations.forEach((v: any) => {
+        console.log(`- ${v.id}: ${v.description}`);
+        v.nodes.forEach((n: any) => {
+          console.log(`  Target: ${n.target.join(', ')}`);
+          console.log(`  HTML: ${n.html}`);
+        });
+      });
+    }
+
+    expect(violations.length).toBe(0);
+  });
+
+  test('axe-core scan on selected-patient testing plan builder', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForSelector('[role="banner"]', { timeout: 15000 });
+    await dismissHelpModal(page);
+    await selectMockPatient(page);
+    await expect(page.getByText('Testing Plan / Request Form')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Select Drugs for Testing')).toBeVisible({ timeout: 10000 });
+    await injectAxe(page);
+
+    const violations = await page.evaluate(([ctx, opts]) => {
+      return new Promise((resolve) => {
+        (window as any).axe.run(ctx, opts, (err: any, results: any) => {
+          if (err) resolve([]);
+          resolve(results.violations);
+        });
+      });
+    }, [{ include: [['[data-testid="testing-plan-builder"]']] }, AXE_RULES_NO_CONTRAST]) as any[];
+
+    if (violations.length > 0) {
+      console.log('Accessibility Violations on testing plan builder:');
       violations.forEach((v: any) => {
         console.log(`- ${v.id}: ${v.description}`);
         v.nodes.forEach((n: any) => {

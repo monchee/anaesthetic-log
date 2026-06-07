@@ -37,10 +37,11 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
   });
 
   const markSeen = () => {
-    
-try { localStorage.setItem(LAST_SEEN_KEY, CURRENT_VERSION); } catch {
-  // localStorage not available
-}
+    try {
+      localStorage.setItem(LAST_SEEN_KEY, CURRENT_VERSION);
+    } catch {
+      // localStorage not available
+    }
     setIsNewVersion(false);
   };
 
@@ -48,7 +49,6 @@ try { localStorage.setItem(LAST_SEEN_KEY, CURRENT_VERSION); } catch {
   useEffect(() => {
     if (!hasData || isNewVersion) {
       setIsOpen(true);
-      setScreen?.(Screen.LOG);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasData]);

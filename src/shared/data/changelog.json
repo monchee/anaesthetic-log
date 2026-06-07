@@ -1,5 +1,27 @@
 [
   {
+    "version": "v0.56.0",
+    "codename": "Composer",
+    "date": "8 June 2026",
+    "summary": "Testing plan: protocol selection",
+    "highlight": false,
+    "changes": [
+      "Testing plan: protocol selection \u2014 for drugs with more than one skin-test protocol/presentation, the builder now shows a \"Protocol Choices\" picker so the clinician chooses which protocol goes onto the request. Previously `selectedProtocols` was always empty, so the document, email export, and testing session silently used the first protocol with no way to choose.",
+      "Testing plan: draft autosave \u2014 the builder's selections (drugs, protocol choices, custom drugs, notes, urgency, documents) are now saved per patient and restored if you leave and return to the LOG screen, under the same 6-hour TTL purge as other patient data. Previously navigating away discarded the whole plan.",
+      "Testing plan: duplicate-drug guard \u2014 adding a custom drug that already exists in the master list (or in Additional Items) now selects the existing entry and explains why, instead of creating a confusing duplicate on the request.",
+      "HelpModal no longer hijacks navigation \u2014 opening the app directly on `/dashboard` or `/research` (or auto-opening Quick Start) no longer forces the user back to the Home/LOG screen.",
+      "`/research` direct route \u2014 loading `/research` now resolves to the Research screen (it was missing from the route map).",
+      "Grade III severity colour \u2014 dashboard charts now use the shared `status-grade3` token instead of raw red/orange, so severity colours are consistent and contrast-checked.",
+      "Patient Handout dark-mode contrast \u2014 \"AVOID\"/\"SAFE\" drug-name text now has explicit dark-mode colours so it stays legible.",
+      "Testing plan builder UX \u2014 opens by default when a patient is selected; shows a live \"N drugs selected\" count in the header; \"Clear All\" now asks for confirmation (and is disabled when empty).",
+      "Mobile navigation \u2014 the active section now shows its label (not icon-only) and nav controls keep a \u226544px touch target.",
+      "Research empty state \u2014 clearer \"not configured\" messaging with explicit status lines (research database / demo mode) and the setup link.",
+      "Drug toggle buttons expose `aria-pressed`; the custom-drug remove control is now a real, separately focusable button; the reaction-date field caps at today; Pin/History legend icons have tooltips.",
+      "Stronger, consistent `focus-visible` rings across buttons, inputs, and other primitives; closed dialogs no longer capture pointer events; mobile patient cards are keyboard-activatable.",
+      "New unit coverage for the testing plan builder and app navigation; new UX-remediation e2e spec."
+    ]
+  },
+  {
     "version": "v0.55.0",
     "codename": "Carbon",
     "date": "7 June 2026",

@@ -1,3 +1,31 @@
+## [0.56.0] — 2026-06-08 (Composer)
+
+### Added
+- **Testing plan: protocol selection** — for drugs with more than one skin-test protocol/presentation, the builder now shows a "Protocol Choices" picker so the clinician chooses which protocol goes onto the request. Previously `selectedProtocols` was always empty, so the document, email export, and testing session silently used the first protocol with no way to choose.
+- **Testing plan: draft autosave** — the builder's selections (drugs, protocol choices, custom drugs, notes, urgency, documents) are now saved per patient and restored if you leave and return to the LOG screen, under the same 6-hour TTL purge as other patient data. Previously navigating away discarded the whole plan.
+- **Testing plan: duplicate-drug guard** — adding a custom drug that already exists in the master list (or in Additional Items) now selects the existing entry and explains why, instead of creating a confusing duplicate on the request.
+
+### Fixed
+- **HelpModal no longer hijacks navigation** — opening the app directly on `/dashboard` or `/research` (or auto-opening Quick Start) no longer forces the user back to the Home/LOG screen.
+- **`/research` direct route** — loading `/research` now resolves to the Research screen (it was missing from the route map).
+- **Grade III severity colour** — dashboard charts now use the shared `status-grade3` token instead of raw red/orange, so severity colours are consistent and contrast-checked.
+- **Patient Handout dark-mode contrast** — "AVOID"/"SAFE" drug-name text now has explicit dark-mode colours so it stays legible.
+
+### Changed
+- **Testing plan builder UX** — opens by default when a patient is selected; shows a live "N drugs selected" count in the header; "Clear All" now asks for confirmation (and is disabled when empty).
+- **Mobile navigation** — the active section now shows its label (not icon-only) and nav controls keep a ≥44px touch target.
+- **Research empty state** — clearer "not configured" messaging with explicit status lines (research database / demo mode) and the setup link.
+
+### Accessibility
+- Drug toggle buttons expose `aria-pressed`; the custom-drug remove control is now a real, separately focusable button; the reaction-date field caps at today; Pin/History legend icons have tooltips.
+- Stronger, consistent `focus-visible` rings across buttons, inputs, and other primitives; closed dialogs no longer capture pointer events; mobile patient cards are keyboard-activatable.
+
+### Tests
+- New unit coverage for the testing plan builder and app navigation; new UX-remediation e2e spec.
+
+### Chore
+- Version bump to 0.56.0
+
 ## [0.55.0] — 2026-06-07 (Carbon)
 
 ### Added

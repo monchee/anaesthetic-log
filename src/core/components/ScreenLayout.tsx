@@ -146,14 +146,14 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                                 onClick={() => setScreen(screen)}
                                                 aria-current={isActive ? 'page' : undefined}
                                                 aria-label={label}
-                                                className={`h-11 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-[color,background-color,border-color,transform,box-shadow] duration-200 shadow-sm btn-press
+                                                className={`h-11 min-w-11 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-[color,background-color,border-color,transform,box-shadow] duration-200 shadow-sm btn-press
                                                     ${isActive
                                                         ? 'bg-white text-primary font-medium'
                                                         : 'bg-white/10 hover:bg-white/30 text-white'
                                                     }`}
                                             >
                                                 <Icon className="w-4 h-4" />
-                                                <span className="hidden sm:inline">{label}</span>
+                                                <span className={isActive ? 'inline sm:inline' : 'hidden sm:inline'}>{label}</span>
                                             </button>
                                         );
                                     })}

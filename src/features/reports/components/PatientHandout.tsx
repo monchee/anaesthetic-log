@@ -55,9 +55,9 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
                     {avoidList.map((drugName, idx) => (
                         <li key={idx} className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-700 p-4 rounded-none flex justify-between items-center print:bg-red-50 print:p-1.5 print:text-xs">
                            <div>
-                             <span className="font-semibold text-red-900 text-lg print:text-xs">{drugName}</span>
+                             <span className="font-semibold text-red-900 dark:text-red-200 text-lg print:text-xs">{drugName}</span>
                              {crossSensitized.includes(drugName) && (
-                               <p className="text-xs text-red-700/70 mt-0.5 print:text-[9px]">cross-sensitization risk</p>
+                               <p className="text-xs text-red-700/70 dark:text-red-200/80 mt-0.5 print:text-[9px]">cross-sensitization risk</p>
                              )}
                            </div>
                            <span className="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded print:px-1 print:py-0.5 print:text-[9px]">AVOID</span>
@@ -78,7 +78,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
                  <ul className="space-y-3 print:space-y-1">
                     {negResults.map((drugName, idx) => (
                         <li key={idx} className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-700 p-4 rounded-none flex justify-between items-center print:bg-green-50 print:p-1.5 print:text-xs">
-                           <span className="font-semibold text-green-900 text-lg print:text-xs">{drugName}</span>
+                           <span className="font-semibold text-green-900 dark:text-green-200 text-lg print:text-xs">{drugName}</span>
                            <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded print:px-1 print:py-0.5 print:text-[9px]">SAFE</span>
                         </li>
                     ))}

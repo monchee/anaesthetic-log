@@ -5,6 +5,7 @@ const SCREEN_URL_MAP: Record<string, Screen> = {
   '/': Screen.LOG,
   '/log': Screen.LOG, // Support both
   '/dashboard': Screen.DASHBOARD,
+  '/research': Screen.RESEARCH,
   '/summary': Screen.SUMMARY,
   '/patient-summary': Screen.PATIENT_SUMMARY,
   '/changelog': Screen.CHANGELOG,
@@ -72,6 +73,7 @@ export function useAppNavigation() {
 
   const navigateToLog = () => navigateTo(Screen.LOG);
   const navigateToDashboard = () => navigateTo(Screen.DASHBOARD);
+  const navigateToResearch = () => navigateTo(Screen.RESEARCH);
   const navigateToSummary = () => navigateTo(Screen.SUMMARY);
   const navigateToPatientSummary = () => navigateTo(Screen.PATIENT_SUMMARY);
   const navigateToTesting = () => navigateTo(Screen.TESTING);
@@ -84,6 +86,7 @@ export function useAppNavigation() {
     navigateTo,
     navigateToLog,
     navigateToDashboard,
+    navigateToResearch,
     navigateToSummary,
     navigateToPatientSummary,
     navigateToTesting,

@@ -51,7 +51,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                 <Users className="w-4 h-4 text-primary" />
                 <span className="section-label">Records</span>
               </div>
-              <div className="text-2xl font-bold text-foreground">{animatedTotalPatients}</div>
+              <div className="text-2xl font-bold tabular-nums text-foreground">{animatedTotalPatients}</div>
             </div>
 
             {/* Severe */}
@@ -61,8 +61,8 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                 <span className="section-label">Severe</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-foreground">{animatedSevereCount}</span>
-                <span className="text-xs font-medium text-red-500">{severeRate}%</span>
+                <span className="text-2xl font-bold tabular-nums text-foreground">{animatedSevereCount}</span>
+                <span className="text-xs font-medium tabular-nums text-red-500">{severeRate}%</span>
               </div>
             </div>
 
@@ -73,8 +73,8 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                 <span className="section-label">Abandoned</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-foreground">{animatedAbandonedCount}</span>
-                <span className="text-xs font-medium text-status-grade2">{abandonedRate}%</span>
+                <span className="text-2xl font-bold tabular-nums text-foreground">{animatedAbandonedCount}</span>
+                <span className="text-xs font-medium tabular-nums text-status-grade2">{abandonedRate}%</span>
               </div>
             </div>
 
@@ -85,7 +85,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                 <span className="section-label">Onset</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-foreground">{animatedAvgTime}</span>
+                <span className="text-2xl font-bold tabular-nums text-foreground">{animatedAvgTime}</span>
                 <span className="text-sm text-muted-foreground">min</span>
               </div>
             </div>
@@ -107,35 +107,45 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.I / totalPatients) * 100}%` : '0%' }} 
                 className="bg-status-grade1 h-full transition-[width] duration-500" 
+                aria-label={`Grade I: ${gradeCounts.I}`}
+                title={`Grade I: ${gradeCounts.I}`}
               />
             )}
             {gradeCounts.II > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.II / totalPatients) * 100}%` : '0%' }} 
                 className="bg-status-grade2 h-full transition-[width] duration-500 delay-75" 
+                aria-label={`Grade II: ${gradeCounts.II}`}
+                title={`Grade II: ${gradeCounts.II}`}
               />
             )}
             {gradeCounts.III > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.III / totalPatients) * 100}%` : '0%' }} 
-                className="bg-red-500 h-full transition-[width] duration-500 delay-75" 
+                className="bg-status-grade3 h-full transition-[width] duration-500 delay-75" 
+                aria-label={`Grade III: ${gradeCounts.III}`}
+                title={`Grade III: ${gradeCounts.III}`}
               />
             )}
             {gradeCounts.IV > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.IV / totalPatients) * 100}%` : '0%' }} 
                 className="bg-status-grade4 h-full transition-[width] duration-500 delay-100" 
+                aria-label={`Grade IV: ${gradeCounts.IV}`}
+                title={`Grade IV: ${gradeCounts.IV}`}
               />
             )}
             {gradeCounts.Ungraded > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.Ungraded / totalPatients) * 100}%` : '0%' }} 
                 className="bg-slate-300 dark:bg-muted/60 h-full transition-[width] duration-500 delay-100"
+                aria-label={`Ungraded: ${gradeCounts.Ungraded}`}
+                title={`Ungraded: ${gradeCounts.Ungraded}`}
               />
             )}
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs mt-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs tabular-nums mt-4">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-status-grade1"></span>
               <span className="text-muted-foreground">I: <b className="text-foreground">{gradeCounts.I}</b></span>
@@ -145,7 +155,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
               <span className="text-muted-foreground">II: <b className="text-foreground">{gradeCounts.II}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-status-grade3"></span>
               <span className="text-muted-foreground">III: <b className="text-foreground">{gradeCounts.III}</b></span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -176,7 +186,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                   <div key={idx} className="group">
                     <div className="flex justify-between text-xs mb-1">
                       <span className="font-medium text-slate-700 dark:text-foreground/80 truncate pr-2">{agent.name}</span>
-                      <span className="font-bold text-foreground shrink-0">{agent.count}</span>
+                      <span className="font-bold tabular-nums text-foreground shrink-0">{agent.count}</span>
                     </div>
                     <div className="h-2 w-full bg-slate-100 dark:bg-card rounded-none overflow-hidden">
                       <div 

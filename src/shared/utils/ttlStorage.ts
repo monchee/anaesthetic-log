@@ -13,7 +13,8 @@ export const ACTIVE_REPORT_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 /** Every localStorage key that may hold patient/clinical data. */
 export const ACTIVE_REPORT_KEY = 'dream:active_report';
 export const TESTING_DRAFT_KEY = 'dream:testing_draft';
-export const PATIENT_DATA_KEYS = [ACTIVE_REPORT_KEY, TESTING_DRAFT_KEY] as const;
+export const TESTING_PLAN_BUILDER_DRAFTS_KEY = 'dream:testing_plan_builder_drafts';
+export const PATIENT_DATA_KEYS = [ACTIVE_REPORT_KEY, TESTING_DRAFT_KEY, TESTING_PLAN_BUILDER_DRAFTS_KEY] as const;
 
 interface TTLEntry<T> {
   value: T;

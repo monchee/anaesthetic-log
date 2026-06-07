@@ -203,29 +203,47 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
   if (error) {
     const isUnconfigured = error.includes('not configured') || error.includes('Failed to fetch');
     return (
-      <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-        <Database className="w-8 h-8 text-muted-foreground" />
-        <p className="font-medium text-foreground">
-          {isUnconfigured ? 'Research database not available' : 'Could not load research data'}
+      <div className="flex min-h-[360px] flex-col items-center justify-center px-4 py-16 text-center">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center border border-border bg-card">
+          <Database className="w-7 h-7 text-muted-foreground" />
+        </div>
+        <p className="font-semibold text-foreground">
+          {isUnconfigured ? 'Research database is not configured' : 'Could not load research data'}
         </p>
-        <p className="text-sm text-muted-foreground max-w-sm">
+        <p className="mt-2 text-sm text-muted-foreground max-w-md">
           {isUnconfigured
-            ? 'This feature requires a Supabase research database. Demo mode uses local data only.'
+            ? 'The clinical dashboard can run from local demo or uploaded REDCap data, but the Research screen needs a connected Supabase research database.'
             : error}
         </p>
-        {!isUnconfigured && (
-          <Button variant="outline" size="sm" onClick={load} className="rounded-none">Retry</Button>
+
+        {isUnconfigured && (
+          <div className="mt-5 grid w-full max-w-md gap-2 text-left text-xs">
+            <div className="flex items-center justify-between gap-4 border border-border bg-card px-3 py-2">
+              <span className="font-medium text-muted-foreground">Research database</span>
+              <span className="font-semibold text-foreground">Not configured</span>
+            </div>
+            <div className="flex items-center justify-between gap-4 border border-border bg-card px-3 py-2">
+              <span className="font-medium text-muted-foreground">Demo mode</span>
+              <span className="font-semibold text-foreground">Local patient dataset only</span>
+            </div>
+          </div>
         )}
-        {isUnconfigured && setScreen && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setScreen(Screen.TECHNICAL_DOCUMENTATION)}
-            className="rounded-none"
-          >
-            Learn about research setup →
-          </Button>
-        )}
+
+        <div className="mt-5 flex flex-wrap justify-center gap-2">
+          {!isUnconfigured && (
+            <Button variant="outline" size="sm" onClick={load} className="rounded-none">Retry</Button>
+          )}
+          {isUnconfigured && setScreen && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setScreen(Screen.TECHNICAL_DOCUMENTATION)}
+              className="rounded-none"
+            >
+              Learn about research setup →
+            </Button>
+          )}
+        </div>
       </div>
     );
   }

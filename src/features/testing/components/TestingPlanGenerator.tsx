@@ -1,14 +1,42 @@
-import React, { useState, useMemo } from 'react';
-import { Card, CardContent, Button, Label, Switch, Checkbox, Input, Textarea } from '@/components/ui';
-import { Patient, TestingPlanData, CustomDrugEntry } from '@/types';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Card, CardContent, Button, Label, Switch, Checkbox, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { Patient, TestingPlanData, CustomDrugEntry, DocumentsToChase } from '@/types';
 import { Printer, Check, X, ClipboardList, ChevronDown, Plus, History, Pin, Search } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME, DEFAULT_SELECTED_DRUGS } from '@shared/utils/constants';
+import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
+import { getIfFresh, setWithTTL, TESTING_PLAN_BUILDER_DRAFTS_KEY } from '@shared/utils/ttlStorage';
 
 interface TestingPlanGeneratorProps {
   patient: Patient;
   drugCategories: Record<string, string[]>;
   onPreview: (data: TestingPlanData) => void;
 }
+
+interface TestingPlanBuilderDraft {
+  selectedDrugs: string[];
+  selectedProtocols: Record<string, number>;
+  customDrugs: CustomDrugEntry[];
+  notes: string;
+  urgent: boolean;
+  reactionDate: string;
+  documentsToChase: DocumentsToChase;
+}
+
+type TestingPlanBuilderDrafts = Record<string, TestingPlanBuilderDraft>;
+
+const getTodayDate = () => {
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  return now.toISOString().slice(0, 10);
+};
+
+const normalizeDrugName = (value: string) => value.trim().toLowerCase();
+
+const readDraftForPatient = (patientId: string): TestingPlanBuilderDraft | null => {
+  const drafts = getIfFresh<TestingPlanBuilderDrafts>(TESTING_PLAN_BUILDER_DRAFTS_KEY);
+  return drafts?.[patientId] ?? null;
+};
 
 const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, drugCategories, onPreview }) => {
   // Drugs matched from the patient's reaction history (used for UI badges)
@@ -34,29 +62,99 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient.id]);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedDrugs, setSelectedDrugs] = useState<string[]>(initialDrugs);
-  const [customDrugs, setCustomDrugs] = useState<CustomDrugEntry[]>([]);
-  const [notes, setNotes] = useState('');
+  const defaultDraft = useMemo<TestingPlanBuilderDraft>(() => ({
+    selectedDrugs: initialDrugs,
+    selectedProtocols: {},
+    customDrugs: [],
+    notes: '',
+    urgent: false,
+    reactionDate: patient.history.date ?? '',
+    documentsToChase: {
+      tryptases: patient.history.documentsToChase?.tryptases ?? false,
+      anaestheticChart: patient.history.documentsToChase?.anaestheticChart ?? false,
+      other: patient.history.documentsToChase?.other ?? false,
+      otherText: patient.history.documentsToChase?.otherText ?? '',
+    },
+  }), [
+    initialDrugs,
+    patient.history.date,
+    patient.history.documentsToChase?.anaestheticChart,
+    patient.history.documentsToChase?.other,
+    patient.history.documentsToChase?.otherText,
+    patient.history.documentsToChase?.tryptases,
+  ]);
+
+  const restoredDraft = readDraftForPatient(patient.id) ?? defaultDraft;
+
+  const [isOpen, setIsOpen] = useState(true);
+  const [selectedDrugs, setSelectedDrugs] = useState<string[]>(restoredDraft.selectedDrugs);
+  const [selectedProtocols, setSelectedProtocols] = useState<Record<string, number>>(restoredDraft.selectedProtocols);
+  const [customDrugs, setCustomDrugs] = useState<CustomDrugEntry[]>(restoredDraft.customDrugs);
+  const [notes, setNotes] = useState(restoredDraft.notes);
   const [drugFilter, setDrugFilter] = useState('');
   const [newCustomDrug, setNewCustomDrug] = useState('');
-  const [urgent, setUrgent] = useState(false);
-  const [reactionDate, setReactionDate] = useState(patient.history.date ?? '');
-  const [documentsToChase, setDocumentsToChase] = useState({
-    tryptases: patient.history.documentsToChase?.tryptases ?? false,
-    anaestheticChart: patient.history.documentsToChase?.anaestheticChart ?? false,
-    other: patient.history.documentsToChase?.other ?? false,
-    otherText: patient.history.documentsToChase?.otherText ?? '',
-  });
+  const [customDrugNotice, setCustomDrugNotice] = useState('');
+  const [urgent, setUrgent] = useState(restoredDraft.urgent);
+  const [reactionDate, setReactionDate] = useState(restoredDraft.reactionDate);
+  const [documentsToChase, setDocumentsToChase] = useState<DocumentsToChase>(restoredDraft.documentsToChase);
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
+  const [draftPatientId, setDraftPatientId] = useState(patient.id);
+  const today = useMemo(getTodayDate, []);
+  const allKnownDrugs = useMemo(
+    () => [...new Set(Object.values(drugCategories).flat())],
+    [drugCategories]
+  );
+
+  useEffect(() => {
+    const nextDraft = readDraftForPatient(patient.id) ?? defaultDraft;
+    setSelectedDrugs(nextDraft.selectedDrugs);
+    setSelectedProtocols(nextDraft.selectedProtocols);
+    setCustomDrugs(nextDraft.customDrugs);
+    setNotes(nextDraft.notes);
+    setUrgent(nextDraft.urgent);
+    setReactionDate(nextDraft.reactionDate);
+    setDocumentsToChase(nextDraft.documentsToChase);
+    setCustomDrugNotice('');
+    setDrugFilter('');
+    setNewCustomDrug('');
+    setIsOpen(true);
+    setDraftPatientId(patient.id);
+  }, [patient.id, defaultDraft]);
+
+  useEffect(() => {
+    if (draftPatientId !== patient.id) return;
+
+    const drafts = getIfFresh<TestingPlanBuilderDrafts>(TESTING_PLAN_BUILDER_DRAFTS_KEY) ?? {};
+    setWithTTL<TestingPlanBuilderDrafts>(TESTING_PLAN_BUILDER_DRAFTS_KEY, {
+      ...drafts,
+      [patient.id]: {
+        selectedDrugs,
+        selectedProtocols,
+        customDrugs,
+        notes,
+        urgent,
+        reactionDate,
+        documentsToChase,
+      },
+    });
+  }, [customDrugs, documentsToChase, draftPatientId, notes, patient.id, reactionDate, selectedDrugs, selectedProtocols, urgent]);
 
   const toggleDoc = (key: 'tryptases' | 'anaestheticChart' | 'other') => {
     setDocumentsToChase(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   const toggleDrug = (drug: string) => {
-    setSelectedDrugs(prev => 
-      prev.includes(drug) ? prev.filter(d => d !== drug) : [...prev, drug]
-    );
+    setSelectedDrugs(prev => {
+      if (prev.includes(drug)) {
+        setSelectedProtocols(protocols => {
+          const next = { ...protocols };
+          delete next[drug];
+          return next;
+        });
+        return prev.filter(d => d !== drug);
+      }
+      return [...prev, drug];
+    });
   };
 
   const toggleCategory = (categoryDrugs: string[]) => {
@@ -64,6 +162,11 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
     if (allSelected) {
       // Deselect all in category
       setSelectedDrugs(prev => prev.filter(d => !categoryDrugs.includes(d)));
+      setSelectedProtocols(prev => {
+        const next = { ...prev };
+        categoryDrugs.forEach(drug => delete next[drug]);
+        return next;
+      });
     } else {
       // Select all in category
       setSelectedDrugs(prev => [...new Set([...prev, ...categoryDrugs])]);
@@ -71,12 +174,31 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   };
 
   const addCustomDrug = () => {
-    if (newCustomDrug.trim()) {
-      const name = newCustomDrug.trim();
-      setCustomDrugs(prev => [...prev, { name, sptConcentration: '', idtSteps: [], includeInChallenge: false }]);
-      setSelectedDrugs(prev => [...prev, name]);
+    const name = newCustomDrug.trim();
+    if (!name) return;
+
+    const normalized = normalizeDrugName(name);
+    const knownDrug = allKnownDrugs.find(drug => normalizeDrugName(drug) === normalized);
+    if (knownDrug) {
+      setSelectedDrugs(prev => prev.includes(knownDrug) ? prev : [...prev, knownDrug]);
+      setDrugFilter(knownDrug);
+      setCustomDrugNotice(`${knownDrug} is already in the master list and has been selected from its category.`);
       setNewCustomDrug('');
+      return;
     }
+
+    const existingCustom = customDrugs.find(entry => normalizeDrugName(entry.name) === normalized);
+    if (existingCustom) {
+      setSelectedDrugs(prev => prev.includes(existingCustom.name) ? prev : [...prev, existingCustom.name]);
+      setCustomDrugNotice(`${existingCustom.name} is already in Additional Items and has been selected.`);
+      setNewCustomDrug('');
+      return;
+    }
+
+    setCustomDrugs(prev => [...prev, { name, sptConcentration: '', idtSteps: [], includeInChallenge: false }]);
+    setSelectedDrugs(prev => [...prev, name]);
+    setNewCustomDrug('');
+    setCustomDrugNotice('');
   };
 
   const removeCustomDrug = (name: string) => {
@@ -109,10 +231,31 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
     ));
   };
 
+  const updateSelectedProtocol = (drug: string, protocolIndex: number) => {
+    setSelectedProtocols(prev => ({ ...prev, [drug]: protocolIndex }));
+  };
+
+  const clearPlan = () => {
+    setSelectedDrugs([]);
+    setSelectedProtocols({});
+    setCustomDrugs([]);
+    setCustomDrugNotice('');
+  };
+
+  const protocolChoices = useMemo(() => (
+    selectedDrugs
+      .map(drug => ({ drug, protocols: getSkinProtocolsForDrug(drug) }))
+      .filter(({ protocols }) => protocols.length > 1)
+  ), [selectedDrugs]);
+
   const handlePreview = () => {
+    const selectedProtocolPayload = Object.fromEntries(
+      selectedDrugs.map(drug => [drug, selectedProtocols[drug] ?? 0])
+    );
+
     onPreview({
         selectedDrugs,
-        selectedProtocols: {},
+        selectedProtocols: selectedProtocolPayload,
         customDrugs,
         notes,
         urgent,
@@ -123,10 +266,11 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
   const customTheme = CATEGORY_THEMES['Others'] || DEFAULT_THEME;
   const hasCustomActive = customDrugs.some(e => selectedDrugs.includes(e.name));
+  const selectedSummary = `${selectedDrugs.length} drug${selectedDrugs.length === 1 ? '' : 's'} selected`;
 
   return (
     <>
-      <Card className="bg-card shadow-md overflow-hidden">
+      <Card className="bg-card shadow-md overflow-hidden" data-testid="testing-plan-builder">
         <div 
             className="p-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors"
             onClick={() => setIsOpen(!isOpen)}
@@ -136,11 +280,18 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     <ClipboardList className="w-5 h-5" />
                 </div>
                 <div>
-                    <h3 className="font-semibold text-primary dark:text-primary text-lg">Testing Plan / Request Form</h3>
-                    <p className="text-xs text-muted-foreground font-medium">Select drugs to generate a printable testing plan</p>
+                    <h2 className="font-semibold text-primary dark:text-primary text-lg">Testing Plan / Request Form</h2>
+                    <p className="text-xs text-muted-foreground font-medium">
+                      Select drugs to generate a printable testing plan
+                    </p>
                 </div>
              </div>
-             <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
+             <div className="flex items-center gap-3">
+                <span className="hidden sm:inline-flex border border-border bg-muted px-2 py-1 text-xs font-semibold text-muted-foreground tabular-nums">
+                  {selectedSummary}
+                </span>
+                <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
+             </div>
         </div>
 
         {isOpen && (
@@ -167,11 +318,12 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     id="reaction-date"
                                     type="date"
                                     value={reactionDate ? reactionDate.slice(0, 10) : ''}
+                                    max={today}
                                     onChange={e => setReactionDate(e.target.value)}
                                     className="h-8 w-auto"
                                 />
                             </div>
-                            <div className="flex items-center gap-2 cursor-pointer ml-auto" onClick={() => setUrgent(!urgent)}>
+                            <div className="flex items-center gap-2 ml-auto">
                                 <Switch id="urgent" checked={urgent} onCheckedChange={setUrgent} />
                                 <Label
                                     htmlFor="urgent"
@@ -221,9 +373,10 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => { setSelectedDrugs([]); setCustomDrugs([]); }}
+                              onClick={() => setConfirmClearOpen(true)}
                               className="text-xs text-muted-foreground hover:text-destructive h-6 px-2 rounded-none"
                               title="Clear all selected drugs"
+                              disabled={selectedDrugs.length === 0 && customDrugs.length === 0}
                             >
                               Clear All
                             </Button>
@@ -284,6 +437,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             <button
                                                 key={drug}
                                                 onClick={() => toggleDrug(drug)}
+                                                aria-pressed={selectedDrugs.includes(drug)}
                                                 className={`text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left ${category === 'Others' ? 'md:w-full' : ''} ${
                                                 selectedDrugs.includes(drug)
                                                 ? theme.btnSelected
@@ -293,10 +447,14 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                                 {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
                                                 {drug}
                                                 {isDefault && (
-                                                    <Pin className="w-3 h-3 shrink-0 opacity-70" aria-label="Standard pre-fill" />
+                                                    <span title="Pre-filled for all patients by default" className="inline-flex">
+                                                        <Pin className="w-3 h-3 shrink-0 opacity-70" aria-label="Standard pre-fill" />
+                                                    </span>
                                                 )}
                                                 {fromHistory && (
-                                                    <History className="w-3 h-3 shrink-0 opacity-70" aria-label="Given at time of reaction" />
+                                                    <span title="Auto-selected from patient history" className="inline-flex">
+                                                        <History className="w-3 h-3 shrink-0 opacity-70" aria-label="Given at time of reaction" />
+                                                    </span>
                                                 )}
                                             </button>
                                             );
@@ -311,6 +469,45 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                           <p className="text-xs text-muted-foreground col-span-full py-2">No drugs match &ldquo;{drugFilter}&rdquo;</p>
                         )}
 
+                        {protocolChoices.length > 0 && (
+                          <div className="col-span-full border border-border bg-muted/30 p-3 space-y-3">
+                            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                              <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Protocol Choices</h5>
+                              <span className="text-xs text-muted-foreground tabular-nums">
+                                {protocolChoices.length} drug{protocolChoices.length === 1 ? '' : 's'} with multiple protocols
+                              </span>
+                            </div>
+                            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                              {protocolChoices.map(({ drug, protocols }) => {
+                                const selectedProtocolIndex = Math.min(selectedProtocols[drug] ?? 0, protocols.length - 1);
+                                return (
+                                  <div key={drug} className="space-y-1">
+                                    <Label htmlFor={`protocol-${drug}`} className="text-xs font-medium text-foreground">
+                                      {drug}
+                                    </Label>
+                                    <Select
+                                      value={String(selectedProtocolIndex)}
+                                      onValueChange={(value) => updateSelectedProtocol(drug, Number(value))}
+                                    >
+                                      <SelectTrigger id={`protocol-${drug}`} className="h-8 text-xs">
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {protocols.map((protocol, index) => (
+                                          <SelectItem key={`${drug}-${index}`} value={String(index)} className="text-xs">
+                                            {protocol.protocolLabel || `Protocol ${index + 1}`}
+                                            {protocol.presentation ? ` - ${protocol.presentation}` : ''}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
                         {/* Custom Drugs Section */}
                         <div className={`col-span-full space-y-2 rounded-none p-3 transition-colors duration-150 ${hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-muted/50'}`}>
                             <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasCustomActive ? `${customTheme.headerBorder}` : 'border-border'}`}>
@@ -321,24 +518,30 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             </div>
                             <div className="flex flex-wrap gap-2 mb-2 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                                 {customDrugs.map(entry => (
-                                    <button
-                                        key={entry.name}
-                                        onClick={() => toggleDrug(entry.name)}
-                                        className={`md:w-full text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left group ${
-                                            selectedDrugs.includes(entry.name)
-                                            ? customTheme.btnSelected
-                                            : `bg-card text-muted-foreground border-border hover:bg-muted/50 ${customTheme.btnHover}`
-                                        }`}
-                                    >
-                                        {selectedDrugs.includes(entry.name) && <Check className="w-3 h-3 shrink-0" />}
-                                        {entry.name}
-                                        <span
-                                            onClick={(e) => { e.stopPropagation(); removeCustomDrug(entry.name); }}
-                                            className="ml-1 opacity-50 hover:opacity-100 hover:text-red-400 dark:hover:text-red-300 transition-[opacity,color]"
+                                    <div key={entry.name} className="md:w-full flex items-stretch">
+                                        <button
+                                            type="button"
+                                            onClick={() => toggleDrug(entry.name)}
+                                            aria-pressed={selectedDrugs.includes(entry.name)}
+                                            className={`min-w-0 flex-1 text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left ${
+                                                selectedDrugs.includes(entry.name)
+                                                ? customTheme.btnSelected
+                                                : `bg-card text-muted-foreground border-border hover:bg-muted/50 ${customTheme.btnHover}`
+                                            }`}
+                                        >
+                                            {selectedDrugs.includes(entry.name) && <Check className="w-3 h-3 shrink-0" />}
+                                            <span className="truncate">{entry.name}</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeCustomDrug(entry.name)}
+                                            className="border border-l-0 border-border px-2 text-muted-foreground hover:text-red-500 dark:hover:text-red-300 transition-colors"
+                                            aria-label={`Remove custom drug ${entry.name}`}
+                                            title={`Remove ${entry.name}`}
                                         >
                                             <X className="w-3 h-3" />
-                                        </span>
-                                    </button>
+                                        </button>
+                                    </div>
                                 ))}
                             </div>
                             {/* Inline protocol editing for selected custom drugs */}
@@ -382,11 +585,17 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     value={newCustomDrug}
                                     onChange={e => setNewCustomDrug(e.target.value)}
                                     onKeyDown={e => e.key === 'Enter' && addCustomDrug()}
+                                    aria-describedby={customDrugNotice ? 'custom-drug-notice' : undefined}
                                 />
-                                <Button size="sm" variant="outline" onClick={addCustomDrug} className="h-8 w-8 p-0">
+                                <Button size="sm" variant="outline" onClick={addCustomDrug} className="h-8 w-8 p-0" aria-label="Add custom drug">
                                     <Plus className="w-4 h-4" />
                                 </Button>
                             </div>
+                            {customDrugNotice && (
+                              <p id="custom-drug-notice" className="text-xs text-muted-foreground">
+                                {customDrugNotice}
+                              </p>
+                            )}
                         </div>
                     </div>
                     </div>
@@ -411,8 +620,9 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                     {/* Notes Section */}
                     <div className="space-y-2">
-                        <Label className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">Clinical Notes / Indication</Label>
+                        <Label htmlFor="testing-plan-notes" className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">Clinical Notes / Indication</Label>
                         <Textarea
+                            id="testing-plan-notes"
                             value={notes}
                             onChange={e => setNotes(e.target.value)}
                             className="min-h-[60px]"
@@ -428,6 +638,16 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
             </CardContent>
         )}
       </Card>
+      <ConfirmDialog
+        open={confirmClearOpen}
+        onOpenChange={setConfirmClearOpen}
+        title="Clear testing plan?"
+        message="This removes every selected drug and all custom drug protocol details for this patient. This cannot be undone."
+        confirmLabel="Clear plan"
+        cancelLabel="Keep plan"
+        variant="danger"
+        onConfirm={clearPlan}
+      />
     </>
   );
 };

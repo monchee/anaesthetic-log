@@ -45,7 +45,7 @@ export const GradeDistributionChart: React.FC<GradeDistributionChartProps> = ({
           {gradeCounts.III > 0 && (
             <div 
               style={{ width: animateCharts ? `${(gradeCounts.III / totalPatients) * 100}%` : '0%' }} 
-              className="bg-orange-500 dark:bg-orange-600 h-full transition-[width] duration-1000 ease-out delay-200" 
+              className="bg-status-grade3 h-full transition-[width] duration-1000 ease-out delay-200" 
               title={`Grade III: ${gradeCounts.III}`} 
             />
           )}
@@ -65,7 +65,7 @@ export const GradeDistributionChart: React.FC<GradeDistributionChartProps> = ({
           )}
         </div>
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm tabular-nums">
           <div className="flex items-center gap-2 group cursor-default">
             <span className="w-3 h-3 rounded-none bg-blue-400 dark:bg-blue-500 group-hover:scale-125 transition-transform"></span>
             <span className="text-muted-foreground">Grade I: <span className="font-bold text-foreground">{gradeCounts.I}</span></span>
@@ -75,7 +75,7 @@ export const GradeDistributionChart: React.FC<GradeDistributionChartProps> = ({
             <span className="text-muted-foreground">Grade II: <span className="font-bold text-foreground">{gradeCounts.II}</span></span>
           </div>
           <div className="flex items-center gap-2 group cursor-default">
-            <span className="w-3 h-3 rounded-none bg-orange-500 dark:bg-orange-600 group-hover:scale-125 transition-transform"></span>
+            <span className="w-3 h-3 rounded-none bg-status-grade3 group-hover:scale-125 transition-transform"></span>
             <span className="text-muted-foreground">Grade III: <span className="font-bold text-foreground">{gradeCounts.III}</span></span>
           </div>
           <div className="flex items-center gap-2 group cursor-default">
