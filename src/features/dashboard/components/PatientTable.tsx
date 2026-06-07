@@ -156,7 +156,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
 
       {/* Desktop View (Table) */}
       <div className="hidden md:block overflow-x-auto">
-        <table role="table" aria-label="Patient database" className="w-full text-sm text-left">
+        <table aria-label="Patient database" className="w-full text-sm text-left">
           <thead className="bg-card text-xs uppercase text-muted-foreground font-semibold">
             <tr>
               <th scope="col" className="px-4 py-3 w-28">Date</th>
@@ -183,27 +183,23 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 return (
                   <tr
                     key={p.id}
-                    role="button"
-                    tabIndex={0}
                     style={{ '--row-index': Math.min(index, 9) } as React.CSSProperties}
-                    className="hover:bg-slate-50/80 dark:hover:bg-card/50 transition-colors cursor-pointer group animate-row-enter"
-                    onClick={() => onSelectPatient(p)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        onSelectPatient(p);
-                      }
-                    }}
-                    aria-label={`View details for patient: ${p.firstName} ${p.lastName}`}
+                    className="hover:bg-slate-50/80 dark:hover:bg-card/50 transition-colors group animate-row-enter"
                     title="Click to view patient details"
                   >
                     <td className="px-4 py-3 whitespace-nowrap text-muted-foreground font-mono text-xs">
                       {formatDate(p.history.date)}
                     </td>
                     <td className="px-4 py-3 font-medium text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">
-                      <div className="truncate max-w-[180px]" title={`${p.lastName}, ${p.firstName}`}>
+                      <button
+                        type="button"
+                        onClick={() => onSelectPatient(p)}
+                        className="block max-w-[180px] truncate border-0 bg-transparent p-0 text-left font-medium text-foreground cursor-pointer group-hover:text-primary dark:group-hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        aria-label={`View details for patient: ${p.firstName} ${p.lastName}`}
+                        title={`${p.lastName}, ${p.firstName}`}
+                      >
                         {p.lastName}, {p.firstName}
-                      </div>
+                      </button>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">
                       <div className="line-clamp-1 max-w-xs" title={p.history.procedure}>

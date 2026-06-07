@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import { registerSW } from 'virtual:pwa-register';
 import { purgeStale } from '@shared/utils/ttlStorage';
+import { showToast } from './src/shared/utils/toast-config';
 
 // Sweep any expired patient/clinical data before the app mounts, so stale
 // data never lingers on a shared workstation even if the relevant screen is
@@ -46,9 +47,7 @@ const updateSW = registerSW({
       doSwUpdateAndReload(updateSW);
     } else {
       // User is in the app — show persistent toast
-      import('./src/shared/utils/toast-config').then(({ showToast }) => {
-        showToast.update(() => doSwUpdateAndReload(updateSW));
-      });
+      showToast.update(() => doSwUpdateAndReload(updateSW));
     }
   },
   onOfflineReady() {

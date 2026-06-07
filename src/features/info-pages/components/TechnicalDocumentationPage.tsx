@@ -20,7 +20,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
               <div>
                 <h3 className="font-semibold text-lg text-foreground mb-2">Technical Overview</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  The DREAM App is a Progressive Web App (PWA) built with modern web technologies. It is designed for local-first data processing, ensuring patient data never leaves the user's device during normal operation.
+                  The DREAM App is a Progressive Web App (PWA) built with modern web technologies. It is designed for local-first data processing, so patient data remains on the user's device during normal operation.
                 </p>
               </div>
             </div>
@@ -71,11 +71,11 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>
-                  <span><strong>Local-Only Processing:</strong> All patient data is processed in the browser; no backend servers receive patient information</span>
+                  <span><strong>Local-First Processing:</strong> During normal use, patient data is processed in the browser without backend server transmission</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>
-                  <span><strong>No Data Transmission:</strong> Patient data is never transmitted over the network during normal use</span>
+                  <span><strong>Research Submission Exception:</strong> If a clinician chooses to save to the research database, only the deidentified research payload is sent to the configured Supabase project</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>
@@ -107,7 +107,8 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
                 <li>Data is parsed and displayed within the application</li>
                 <li>Clinician interacts with data (viewing, testing, report generation)</li>
                 <li>Reports are generated locally and can be printed or saved as PDF</li>
-                <li><strong>No data leaves the browser at any point</strong></li>
+                <li><strong>No identifiable patient data leaves the browser during normal local-only use</strong></li>
+                <li>Optional research database submission sends only the deidentified research payload to the configured Supabase project</li>
               </ol>
             </div>
           </div>

@@ -128,11 +128,11 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
     <>
       <Card className="bg-card shadow-md overflow-hidden">
         <div 
-            className="p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-card transition-colors"
+            className="p-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors"
             onClick={() => setIsOpen(!isOpen)}
         >
              <div className="flex items-center gap-3">
-                <div className="bg-slate-100 dark:bg-card p-1.5 rounded-none text-muted-foreground">
+                <div className="bg-muted p-1.5 rounded-none text-muted-foreground">
                     <ClipboardList className="w-5 h-5" />
                 </div>
                 <div>
@@ -140,7 +140,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     <p className="text-xs text-muted-foreground font-medium">Select drugs to generate a printable testing plan</p>
                 </div>
              </div>
-             <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
+             <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} />
         </div>
 
         {isOpen && (
@@ -151,7 +151,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     <div className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${
                         urgent
                             ? 'bg-red-50 dark:bg-red-900/20 ring-1 ring-red-300 dark:ring-red-800'
-                            : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'
+                            : ''
                     }`}>
                         <div className={`flex items-center border-b border-dashed pb-1 mb-2 ${
                             urgent ? 'border-red-300 dark:border-red-800' : 'border-border'
@@ -186,7 +186,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     </div>
 
                     {/* Documents to Chase */}
-                    <div className="space-y-2 rounded-none p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors duration-150">
+                    <div className="space-y-2 rounded-none p-3 transition-colors duration-150">
                         <div className="flex items-center border-b border-dashed border-border pb-1 mb-2">
                             <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Documents to Chase</h4>
                         </div>
@@ -215,14 +215,14 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     </div>
 
                     {/* Drug Selection Grid */}
-                    <div className="space-y-2 rounded-none p-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors duration-150">
+                    <div className="space-y-2 rounded-none p-3 transition-colors duration-150">
                         <div className="flex items-center justify-between border-b border-dashed border-border pb-1 mb-2">
                             <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Drugs for Testing</h4>
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => { setSelectedDrugs([]); setCustomDrugs([]); }}
-                              className="text-xs text-slate-400 hover:text-destructive h-6 px-2 rounded-none"
+                              className="text-xs text-muted-foreground hover:text-destructive h-6 px-2 rounded-none"
                               title="Clear all selected drugs"
                             >
                               Clear All
@@ -262,7 +262,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             return (
                                 <div
                                     key={category}
-                                    className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${category === 'Others' ? 'col-span-full' : ''} ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}
+                                    className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${category === 'Others' ? 'col-span-full' : ''} ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-muted/50'}`}
                                 >
                                     <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-border'}`}>
                                         <h4 className={`text-xs font-semibold uppercase tracking-wider flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-muted-foreground'}`}>
@@ -271,7 +271,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         </h4>
                                         <button 
                                             onClick={(e) => { e.stopPropagation(); toggleCategory(categoryDrugs); }}
-                                            className={`text-xs hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-muted-foreground dark:hover:text-foreground/90'}`}
+                                            className={`text-xs hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-muted-foreground hover:text-foreground'}`}
                                         >
                                             {allCategorySelected ? 'Select None' : 'Select All'}
                                         </button>
@@ -287,7 +287,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                                 className={`text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left ${category === 'Others' ? 'md:w-full' : ''} ${
                                                 selectedDrugs.includes(drug)
                                                 ? theme.btnSelected
-                                                : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-card ${theme.btnHover}`
+                                                : `bg-card text-muted-foreground border-border hover:bg-muted/50 ${theme.btnHover}`
                                                 }`}
                                             >
                                                 {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
@@ -312,7 +312,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         )}
 
                         {/* Custom Drugs Section */}
-                        <div className={`col-span-full space-y-2 rounded-none p-3 transition-colors duration-150 ${hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
+                        <div className={`col-span-full space-y-2 rounded-none p-3 transition-colors duration-150 ${hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-muted/50'}`}>
                             <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasCustomActive ? `${customTheme.headerBorder}` : 'border-border'}`}>
                                 <h4 className={`text-xs font-semibold uppercase tracking-wider flex items-center gap-2 ${hasCustomActive ? customTheme.headerText : 'text-muted-foreground'}`}>
                                     Additional Items
@@ -327,7 +327,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         className={`md:w-full text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left group ${
                                             selectedDrugs.includes(entry.name)
                                             ? customTheme.btnSelected
-                                            : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-card ${customTheme.btnHover}`
+                                            : `bg-card text-muted-foreground border-border hover:bg-muted/50 ${customTheme.btnHover}`
                                         }`}
                                     >
                                         {selectedDrugs.includes(entry.name) && <Check className="w-3 h-3 shrink-0" />}
@@ -343,7 +343,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             </div>
                             {/* Inline protocol editing for selected custom drugs */}
                             {customDrugs.filter(e => selectedDrugs.includes(e.name)).map(entry => (
-                                <div key={`proto-${entry.name}`} className="border border-dashed border-border p-2 space-y-2 bg-slate-50/50 dark:bg-card/30 mb-2">
+                                <div key={`proto-${entry.name}`} className="border border-dashed border-border p-2 space-y-2 bg-muted/30 mb-2">
                                     <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{entry.name} — Protocol</div>
                                     <div className="flex items-center gap-2">
                                         <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground shrink-0 w-7">SPT</span>
@@ -360,7 +360,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             <div key={si} className="flex items-center gap-1.5">
                                                 <Input className="h-7 text-xs flex-1" placeholder="Ratio (e.g. 1:100)" value={step.ratio} onChange={ev => updateCustomEntryStep(entry.name, si, 'ratio', ev.target.value)} />
                                                 <Input className="h-7 text-xs flex-1" placeholder="Conc. (e.g. 0.1mg/mL)" value={step.concentration} onChange={ev => updateCustomEntryStep(entry.name, si, 'concentration', ev.target.value)} />
-                                                <button onClick={() => removeCustomEntryIdtStep(entry.name, si)} className="shrink-0 text-slate-300 hover:text-red-500 transition-colors" title="Remove step">
+                                                <button onClick={() => removeCustomEntryIdtStep(entry.name, si)} className="shrink-0 text-muted-foreground/50 hover:text-red-500 transition-colors" title="Remove step">
                                                     <X className="w-3.5 h-3.5" />
                                                 </button>
                                             </div>
@@ -370,8 +370,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         </button>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <input type="checkbox" id={`plan-challenge-${entry.name}`} checked={entry.includeInChallenge || false} onChange={ev => updateCustomEntry(entry.name, 'includeInChallenge', ev.target.checked)} className="w-3.5 h-3.5 accent-primary" />
-                                        <label htmlFor={`plan-challenge-${entry.name}`} className="text-xs text-muted-foreground cursor-pointer select-none">Include in drug challenge</label>
+                                        <Checkbox id={`plan-challenge-${entry.name}`} checked={entry.includeInChallenge || false} onCheckedChange={checked => updateCustomEntry(entry.name, 'includeInChallenge', checked === true)} />
+                                        <Label htmlFor={`plan-challenge-${entry.name}`} className="text-xs text-muted-foreground cursor-pointer select-none">Include in drug challenge</Label>
                                     </div>
                                 </div>
                             ))}
@@ -420,7 +420,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     </div>
 
                     <div className="flex justify-end pt-4 border-t border-border">
-                        <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-white shadow-md font-semibold">
+                        <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-white shadow-sm font-semibold">
                             <Printer className="w-4 h-4 mr-2" /> Preview & Print Plan
                         </Button>
                     </div>

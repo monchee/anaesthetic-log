@@ -30,9 +30,9 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-3">
               <Lock className="w-5 h-5 text-green-600 dark:text-green-400 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-green-900 dark:text-green-300 mb-2">Local-Only Processing</p>
+                <p className="font-semibold text-green-900 dark:text-green-300 mb-2">Local-First Processing</p>
                 <p className="text-sm text-green-800 dark:text-green-300">
-                  All patient data is processed <strong>locally in your browser</strong>. No data is transmitted to external servers. The application uses your local REDCap export files and does not store or transmit any patient information outside of your local device.
+                  During normal local-only use, patient data is processed <strong>on this device in your browser</strong>. The application uses your local REDCap export files and does not transmit identifiable patient information to external servers. If a clinician chooses to save to the research database, only the deidentified research submission payload is sent to the configured Supabase project.
                 </p>
               </div>
             </div>
@@ -103,7 +103,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>
-                  <span><strong>Local Processing:</strong> All data remains on your device; no server transmission</span>
+                  <span><strong>Local Processing:</strong> During normal use, patient data remains on your device without server transmission</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>
@@ -169,7 +169,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
                   <span>PWA installation status</span>
                 </li>
               </ul>
-              <p>Patient and clinical data may be cached temporarily on this device to support an in-progress session (the current report and testing draft). This data is <strong>automatically deleted after 6 hours</strong>, is removed when you start a new log, and is never transmitted off the device.</p>
+              <p>Patient and clinical data may be cached temporarily on this device to support an in-progress session (the current report and testing draft). This data is <strong>automatically deleted after 6 hours</strong> and is removed when you start a new log. Optional research database submission sends only the deidentified research payload to the configured Supabase project.</p>
             </div>
           </div>
 

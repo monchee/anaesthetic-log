@@ -67,7 +67,7 @@ A specialist web application for investigating and managing suspected anaestheti
    bun run dev
    ```
 
-4. **Open your browser** and navigate to `http://localhost:5173`
+4. **Open your browser** and navigate to `http://localhost:3000`
 
 ## Usage
 
@@ -81,7 +81,8 @@ A specialist web application for investigating and managing suspected anaestheti
 ### Data Management
 - The application includes demo patient data for testing
 - Upload a custom patient database using CSV (REDCap export format)
-- All testing logs are stored locally in the browser
+- During normal use, testing logs are stored locally in the browser
+- Optional research database submission sends only the deidentified research payload to configured Supabase
 
 ### Printing & Export
 - Clinical reports and patient handouts are optimised for printing

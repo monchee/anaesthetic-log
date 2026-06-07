@@ -42,14 +42,16 @@ test.describe('Testing Day Flow', () => {
 
   test('full testing day: patient selection → testing panel → save → report → dashboard activity', async ({ page }) => {
     // ── Step 1: Patient selector visible ──────────────────────────────────
-    const patientInput = page.getByRole('combobox').or(page.locator('input[placeholder*="patient" i]')).first();
-    await expect(patientInput).toBeVisible({ timeout: 10000 });
+    const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
+    await expect(patientSelector).toBeVisible({ timeout: 10000 });
 
     // ── Step 2: Select Wei Chen (first mock patient) ───────────────────────
-    await patientInput.click();
-    await patientInput.fill('Wei');
+    await patientSelector.click();
+    const patientSearch = page.getByRole('textbox', { name: /Filter patients by ID or name/i });
+    await expect(patientSearch).toBeVisible({ timeout: 5000 });
+    await patientSearch.fill('Wei');
     await page.waitForTimeout(300); // debounce
-    const weiOption = page.getByRole('option', { name: /Wei Chen/i }).or(page.locator('[role="option"]').filter({ hasText: 'Wei Chen' })).first();
+    const weiOption = page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first();
     await expect(weiOption).toBeVisible({ timeout: 5000 });
     await weiOption.click();
 
@@ -75,14 +77,16 @@ test.describe('Testing Day Flow', () => {
     await saveBtn.click();
 
     // ── Step 7: Report screen appears (SUMMARY) ────────────────────────────
-    await expect(page.getByText('Clinical Report').or(page.getByText('Patient Handout'))).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('button', { name: 'Clinical Report' })).toBeVisible({ timeout: 10000 });
 
     // ── Step 8: Print button is present ───────────────────────────────────
     const printBtn = page.getByRole('button', { name: /print/i }).first();
     await expect(printBtn).toBeVisible({ timeout: 5000 });
 
-    // ── Step 9: Navigate to Dashboard ─────────────────────────────────────
+    // ── Step 9: Navigate back to the log, then to Dashboard ────────────────
+    await page.getByRole('button', { name: /Start New Log/i }).click();
     const dashboardBtn = page.getByRole('button', { name: /dashboard/i }).first();
+    await expect(dashboardBtn).toBeVisible({ timeout: 5000 });
     await dashboardBtn.click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
 
