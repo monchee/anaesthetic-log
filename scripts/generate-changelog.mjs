@@ -2,13 +2,14 @@
 // Additive merge of CHANGELOG.md into src/shared/data/changelog.json (the file
 // the UI reads). CHANGELOG.md is the source of truth for recent releases, but it
 // does NOT hold the full history — changelog.json goes back further. So we only
-// ADD versions that are missing from the JSON; existing entries are never touched.
+// ADD versions that are missing from the JSON. Existing entries are left alone
+// except for explicit release metadata such as `Summary: ...`.
 //
 // Run manually with `npm run changelog:sync`; also runs automatically via the
 // `prebuild` npm hook before every `build`/`deploy`.
 
 import { readFileSync, writeFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -33,7 +34,12 @@ const normalize = (v) => v.replace(/^v/i, '');
 // Header: "## [0.49.0] — 2026-05-06 (Pancuronium)"
 const HEADER_RE = /^##\s*\[([^\]]+)\]\s*[—–-]\s*([0-9]{4}-[0-9]{2}-[0-9]{2})(?:\s*\(([^)]+)\))?/;
 
-function parseChangelogMd(md) {
+export function deriveSummaryFromChanges(changes) {
+  const first = changes[0] || '';
+  return first.split(/\s+[—–-]\s+/)[0].trim();
+}
+
+export function parseChangelogMd(md) {
   const lines = md.split(/\r?\n/);
   const entries = [];
   let current = null;
@@ -46,11 +52,18 @@ function parseChangelogMd(md) {
         version: `v${header[1].trim()}`,
         date: humanDate(header[2].trim()),
         codename: header[3] ? header[3].trim() : '',
+        summary: '',
         changes: [],
       };
       continue;
     }
     if (!current) continue;
+
+    const summary = /^(?:\*\*)?Summary:\s*(?:\*\*)?\s*(.*)$/.exec(line.trim());
+    if (summary) {
+      current.summary = summary[1].trim();
+      continue;
+    }
 
     const bullet = /^[-*]\s+(.*)$/.exec(line.trim());
     if (bullet) {
@@ -83,19 +96,24 @@ function escapeNonAscii(str) {
   );
 }
 
-function main() {
-  const existing = JSON.parse(readFileSync(JSON_PATH, 'utf8'));
+export function syncChangelog({ existing, parsed }) {
   const known = new Set(existing.map((e) => normalize(e.version)));
-
-  const parsed = parseChangelogMd(readFileSync(MD_PATH, 'utf8'));
+  const byVersion = new Map(existing.map((entry) => [normalize(entry.version), entry]));
 
   let added = 0;
+  let updated = 0;
   for (const entry of parsed) {
-    if (known.has(normalize(entry.version))) continue;
-    // summary = lead of the first change (text before the first em/en dash),
-    // a tidy teaser for the Quick Start "What's New" banner.
-    const first = entry.changes[0] || '';
-    const summary = first.split(/\s+[—–-]\s+/)[0].trim();
+    const key = normalize(entry.version);
+    if (known.has(key)) {
+      const existingEntry = byVersion.get(key);
+      if (entry.summary && existingEntry && existingEntry.summary !== entry.summary) {
+        existingEntry.summary = entry.summary;
+        updated++;
+      }
+      continue;
+    }
+
+    const summary = entry.summary || deriveSummaryFromChanges(entry.changes);
     existing.push({
       version: entry.version,
       codename: entry.codename,
@@ -104,20 +122,31 @@ function main() {
       highlight: false, // the UI keys "Latest" off array position, not this flag
       changes: entry.changes,
     });
-    known.add(normalize(entry.version));
+    known.add(key);
     added++;
   }
 
   existing.sort(semverDesc);
-
-  const out = escapeNonAscii(JSON.stringify(existing, null, 2)) + '\n';
-  writeFileSync(JSON_PATH, out);
-
-  console.log(
-    added > 0
-      ? `changelog.json: added ${added} version(s); ${existing.length} total.`
-      : `changelog.json: up to date; ${existing.length} total.`,
-  );
+  return { entries: existing, added, updated };
 }
 
-main();
+export function main() {
+  const existing = JSON.parse(readFileSync(JSON_PATH, 'utf8'));
+
+  const parsed = parseChangelogMd(readFileSync(MD_PATH, 'utf8'));
+  const { entries, added, updated } = syncChangelog({ existing, parsed });
+
+  const out = escapeNonAscii(JSON.stringify(entries, null, 2)) + '\n';
+  writeFileSync(JSON_PATH, out);
+
+  const changes = [
+    added > 0 ? `added ${added} version(s)` : '',
+    updated > 0 ? `updated ${updated} summary field(s)` : '',
+  ].filter(Boolean).join('; ');
+
+  console.log(changes ? `changelog.json: ${changes}; ${entries.length} total.` : `changelog.json: up to date; ${entries.length} total.`);
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main();
+}

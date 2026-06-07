@@ -1,4 +1,22 @@
+## [0.58.0] — 2026-06-08 (Headline)
+
+Summary: Quick Start release notes now use curated changelog summaries instead of the first bullet.
+
+### Added
+- **Curated Quick Start release summaries** — `CHANGELOG.md` now supports a `Summary:` line per release, and the generated `changelog.json` uses it for the Quick Start "What's New" modal instead of always taking the first changelog bullet.
+
+### Fixed
+- **Existing release summaries can be refreshed** — the changelog sync script still adds missing versions conservatively, but now updates an existing entry's `summary` when explicit `Summary:` metadata is added to the markdown source.
+
+### Tests
+- New `generateChangelog` unit coverage for plain and bold summary metadata, first-bullet fallback behavior, and existing-entry summary refreshes.
+
+### Chore
+- Version bump to 0.58.0
+
 ## [0.57.0] — 2026-06-08 (Legible)
+
+Summary: Safer B&W report printing, corrected handout contact details, and consistent report typography.
 
 ### Fixed
 - **Patient Handout clinic phone** — corrected the rendered/printed Patient Handout phone from (02) 9515 8814 to (02) 9515 7586. The text export was fixed in v0.51.0 but the on-screen/printed document was missed, so patients were given the wrong number.
