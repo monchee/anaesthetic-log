@@ -1,3 +1,24 @@
+## [0.57.0] — 2026-06-08 (Legible)
+
+### Fixed
+- **Patient Handout clinic phone** — corrected the rendered/printed Patient Handout phone from (02) 9515 8814 to (02) 9515 7586. The text export was fixed in v0.51.0 but the on-screen/printed document was missed, so patients were given the wrong number.
+- **Black & white print legibility of all three reports** (the clinic printer is B&W):
+  - **Clinical Report** drug-challenge outcome now prints as a **solid black** badge + thick black left rule for POSITIVE (Reaction) vs an **outlined** badge for NEGATIVE (Safe) — previously distinguished only by red/green, which is invisible in greyscale (a safe vs reaction confusion risk).
+  - **Patient Handout** "AVOID" now prints as a solid black badge with a thick black left rule, and "SAFE" as an outlined badge — previously red/green only, which rendered as near-identical grey.
+  - Patient name, section headings, and "AVOID" directives now print in solid black instead of greying out.
+- **Per-page patient identifier on every report** — a print-only running header (Name · MRN · DOB) and footer now repeat on every printed page so a physically separated page stays identifiable (new shared `ReportPrintIdentity` component).
+- **Powerchart Letter pagination** — tightened trailing spacing and kept the signature block together so the letter no longer spills a near-empty second page.
+
+### Changed
+- **Reports visual consistency** — replaced `rounded-lg` with the app's `rounded-none`, unified raw slate surfaces to theme tokens for dark-mode coherence, re-levelled headings (document title h1→h2 so it sits correctly under the page h1), raised the Contact Information heading off sub-12px, and bumped the 7px print timestamp to 9px.
+- **Back button touch target** raised to 44px.
+
+### Tests
+- New `ReportsPrintSafety` unit tests covering the corrected phone, per-page print identity + heading levels, the B&W challenge and AVOID/SAFE badges, and blank-SPT formatting.
+
+### Chore
+- Version bump to 0.57.0
+
 ## [0.56.0] — 2026-06-08 (Composer)
 
 ### Added

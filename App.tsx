@@ -31,8 +31,8 @@ import { useResearchSubmit } from '@features/research/hooks/useResearchSubmit';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
-const BACK_BTN = "h-9 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-all duration-200 group rounded-none btn-press";
-const BACK_ICON = "w-4 h-4 mr-1 opacity-90 group-hover:opacity-100 transition-opacity";
+const BACK_BTN = "h-11 min-w-11 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-[color,background-color,border-color,transform,box-shadow] duration-200 group rounded-none btn-press";
+const BACK_ICON = "w-4 h-4 opacity-90 group-hover:opacity-100 transition-opacity";
 
 
 function RedactToggle() {

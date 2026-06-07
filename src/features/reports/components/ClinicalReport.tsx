@@ -7,6 +7,7 @@ import { formatDate } from '@shared/utils';
 import { getPositiveResults } from '@shared/utils/testingUtils';
 import { getCrossSensitizationNotes, buildRecommendations } from '@shared/utils/testingUtils';
 import { FileText, Activity, History, ClipboardList, ShieldAlert } from 'lucide-react';
+import { ReportPrintIdentity } from './ReportPrintIdentity';
 
 interface ClinicalReportProps {
   data: LogFormData;
@@ -21,6 +22,9 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
     n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium'
   ).filter((v, i, a) => a.indexOf(v) === i);
   const { avoidList, bullets, noAllergyMessage } = buildRecommendations(posResults, crossSensitized);
+  const patientName = redact(`${data.firstName} ${data.lastName}`);
+  const reportDate = activeReportSavedAt ? new Date(activeReportSavedAt).toISOString() : new Date().toISOString();
+  const formatSptResult = (value?: string) => value ? `${value} mm` : '-';
 
   const formatSymptoms = (data: LogFormData) => {
     return data.symptoms.map(s => {
@@ -36,12 +40,18 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
 
   return (
     <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none">
+      <ReportPrintIdentity
+        patientName={patientName}
+        mrn={redact(data.mrn)}
+        reportTitle="Anaesthetic Testing Report"
+        requestDate={reportDate}
+      />
 
       {/* Minimal Accent Header */}
-      <div className="border-l-4 border-primary bg-slate-50 dark:bg-card/30 p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">
+      <div className="border-l-4 border-primary bg-muted p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h1 className="text-xl md:text-2xl font-bold text-foreground">Anaesthetic Testing Report</h1>
+            <h2 className="text-xl md:text-2xl font-bold text-foreground print:text-black">Anaesthetic Testing Report</h2>
             <p className="text-sm text-muted-foreground mt-1">Clinical Immunology & Allergy · Royal Prince Alfred Hospital</p>
           </div>
           <div className="text-right">
@@ -54,11 +64,11 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
       <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-3 print:space-y-3">
          
          {/* Patient Details */}
-         <div className="section-card bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 print:bg-white print:border-slate-300">
+         <div className="section-card bg-muted border border-border rounded-none p-4 print:bg-white print:border-slate-300">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 print:grid-cols-2 print:gap-2">
             <div>
                <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">Patient Name</label>
-               <p className="text-xl md:text-2xl font-semibold tracking-tight text-primary print:text-base">{redact(`${data.firstName} ${data.lastName}`)}</p>
+               <p className="text-xl md:text-2xl font-semibold tracking-tight text-primary print:text-base print:text-black">{patientName}</p>
             </div>
             <div>
                <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">MRN</label>
@@ -78,7 +88,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
             </h3>
             
             {/* Controls */}
-            <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-3 text-sm mb-4 print:bg-white print:border-slate-300 print:p-2 print:mb-2 print:text-xs">
+            <div className="bg-muted border border-border rounded-none p-3 text-sm mb-4 print:bg-white print:border-slate-300 print:p-2 print:mb-2 print:text-xs">
                <div className="font-semibold mb-2 block md:inline md:mr-2">Controls (mm):</div>
                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:inline-flex md:gap-4">
                    <span>Histamine SPT: <strong>{data.controls?.histamineSpt || '-'}</strong></span>
@@ -109,7 +119,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
                              <td className="py-2 font-medium print:py-1 print:text-xs">
                                {row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName}
                              </td>
-                             <td className="py-2 print:py-1 print:text-xs">{row.sptWheal || '-'} mm</td>
+                             <td className="py-2 print:py-1 print:text-xs">{formatSptResult(row.sptWheal)}</td>
                              <td className="py-2 print:py-1 print:text-xs">
                                {row.idtResults?.length
                                  ? row.idtResults.filter(Boolean).map((v, i) => `IDT ${i + 1}: ${v}mm`).join(' / ') || '-'
@@ -125,14 +135,14 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
                 {/* Mobile Card View */}
                 <div className="md:hidden print:hidden space-y-3">
                    {data.testPanel.map((row, i) => (
-                      <div key={i} className="bg-slate-50 dark:bg-card/50 border border-border rounded-none p-4">
+                      <div key={i} className="bg-muted border border-border rounded-none p-4">
                           <div className="font-bold text-foreground mb-3 border-b border-border pb-2">
                              {row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName}
                           </div>
                           <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
                               <div>
                                  <span className="text-xs text-muted-foreground uppercase font-bold block">SPT</span>
-                                 <span className="font-medium">{row.sptWheal || '-'} mm</span>
+                                 <span className="font-medium">{formatSptResult(row.sptWheal)}</span>
                               </div>
                               <div>
                                  <span className="text-xs text-muted-foreground uppercase font-bold block">IDT Results</span>
@@ -161,12 +171,16 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
               <History className="w-5 h-5 print:w-4 print:h-4" /> Drug Challenge Details
             </h3>
             {data.proceedToChallenge ? (
-               <div className={`border-l-4 p-4 rounded-lg bg-card ${data.outcome === 'SUCCESS' ? 'border-green-500' : 'border-red-500'} print:bg-white print:border-l-2 print:p-2`}>
+               <div className={`border-l-4 p-4 rounded-none bg-card ${data.outcome === 'SUCCESS' ? 'border-green-500 print:border-black' : 'border-red-500 print:border-black print:border-l-8'} print:bg-white print:p-2`}>
                   <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2 gap-2 print:mb-1">
                      <span className="font-bold text-lg print:text-sm">
                         {data.challengeDrug === 'Other' ? (data.challengeDrugCustom || 'Other') : data.challengeDrug}
                      </span>
-                     <div className={`px-2 py-1 rounded text-xs font-bold text-white self-start md:self-auto ${data.outcome === 'SUCCESS' ? 'bg-green-600' : 'bg-red-600'} print:px-1 print:py-0.5 print:text-[10px]`}>
+                     <div className={`px-2 py-1 rounded-none text-xs font-bold self-start md:self-auto ${
+                       data.outcome === 'SUCCESS'
+                         ? 'border border-green-700 text-green-800 bg-transparent dark:text-green-300 dark:border-green-500 print:border-black print:text-black print:bg-white'
+                         : 'bg-red-600 text-white print:bg-black print:text-white print:border print:border-black'
+                     } print:px-1.5 print:py-0.5 print:text-[10px]`}>
                         {data.outcome === 'SUCCESS' ? 'NEGATIVE (Safe)' : 'POSITIVE (Reaction)'}
                      </div>
                   </div>
@@ -199,15 +213,15 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
              <ShieldAlert className="w-5 h-5 print:w-4 print:h-4" /> Recommendations
            </h3>
            {noAllergyMessage ? (
-             <p className="text-sm text-slate-700 dark:text-foreground/80 print:text-xs">{noAllergyMessage}</p>
+             <p className="text-sm text-foreground/80 print:text-xs">{noAllergyMessage}</p>
            ) : (
              <div className="space-y-3 print:space-y-1">
                <div className="space-y-2">
                  {avoidList.map(drug => (
-                   <p key={drug} className="font-bold text-red-700 dark:text-red-400 text-sm uppercase print:text-xs">AVOID {drug}</p>
+                   <p key={drug} className="font-bold text-red-700 dark:text-red-400 text-sm uppercase print:text-xs print:text-black">AVOID {drug}</p>
                  ))}
                </div>
-               <ul className="list-disc list-inside space-y-1 text-sm text-slate-700 dark:text-foreground/80 print:text-xs">
+               <ul className="list-disc list-inside space-y-1 text-sm text-foreground/80 print:text-xs">
                  {bullets.map(b => <li key={b}>{b}</li>)}
                </ul>
              </div>
@@ -223,19 +237,19 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
              </h3>
              <div className="space-y-3 print:space-y-2">
                {data.nurseNotes.preTesting && (
-                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-3 print:bg-white print:border-blue-200 print:p-2">
+                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-none p-3 print:bg-white print:border-blue-200 print:p-2">
                    <p className="text-xs uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">Pre-Testing</p>
                    <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.preTesting}</p>
                  </div>
                )}
                {data.nurseNotes.duringTesting && (
-                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-3 print:bg-white print:border-blue-200 print:p-2">
+                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-none p-3 print:bg-white print:border-blue-200 print:p-2">
                    <p className="text-xs uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">During Testing</p>
                    <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.duringTesting}</p>
                  </div>
                )}
                {data.nurseNotes.postTesting && (
-                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-lg p-3 print:bg-white print:border-blue-200 print:p-2">
+                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-none p-3 print:bg-white print:border-blue-200 print:p-2">
                    <p className="text-xs uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">Post-Testing / Discharge</p>
                    <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.postTesting}</p>
                  </div>
@@ -253,14 +267,14 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
             <h3 className="tracking-tight text-lg mb-2 flex items-center gap-2 text-foreground print:text-sm print:mb-1">
               <FileText className="w-5 h-5 print:w-4 print:h-4" /> Assessment & Plan
             </h3>
-            <div className="bg-slate-50 dark:bg-card/30 border border-border rounded-lg p-4 whitespace-pre-wrap text-sm md:text-base print:bg-white print:border-slate-300 print:p-2 print:text-xs">
+            <div className="bg-muted border border-border rounded-none p-4 whitespace-pre-wrap text-sm md:text-base print:bg-white print:border-slate-300 print:p-2 print:text-xs">
                {data.plan || 'No comments recorded.'}
             </div>
          </div>
 
          {/* Report Timestamp */}
          {activeReportSavedAt && (
-           <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[7px] print:pt-2 print:mt-2">
+           <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[9px] print:pt-2 print:mt-2">
              Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
            </div>
          )}

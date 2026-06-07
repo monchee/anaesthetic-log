@@ -1,5 +1,24 @@
 [
   {
+    "version": "v0.57.0",
+    "codename": "Legible",
+    "date": "8 June 2026",
+    "summary": "Patient Handout clinic phone",
+    "highlight": false,
+    "changes": [
+      "Patient Handout clinic phone \u2014 corrected the rendered/printed Patient Handout phone from (02) 9515 8814 to (02) 9515 7586. The text export was fixed in v0.51.0 but the on-screen/printed document was missed, so patients were given the wrong number.",
+      "Black & white print legibility of all three reports (the clinic printer is B&W):",
+      "Clinical Report drug-challenge outcome now prints as a solid black badge + thick black left rule for POSITIVE (Reaction) vs an outlined badge for NEGATIVE (Safe) \u2014 previously distinguished only by red/green, which is invisible in greyscale (a safe vs reaction confusion risk).",
+      "Patient Handout \"AVOID\" now prints as a solid black badge with a thick black left rule, and \"SAFE\" as an outlined badge \u2014 previously red/green only, which rendered as near-identical grey.",
+      "Patient name, section headings, and \"AVOID\" directives now print in solid black instead of greying out.",
+      "Per-page patient identifier on every report \u2014 a print-only running header (Name \u00b7 MRN \u00b7 DOB) and footer now repeat on every printed page so a physically separated page stays identifiable (new shared `ReportPrintIdentity` component).",
+      "Powerchart Letter pagination \u2014 tightened trailing spacing and kept the signature block together so the letter no longer spills a near-empty second page.",
+      "Reports visual consistency \u2014 replaced `rounded-lg` with the app's `rounded-none`, unified raw slate surfaces to theme tokens for dark-mode coherence, re-levelled headings (document title h1\u2192h2 so it sits correctly under the page h1), raised the Contact Information heading off sub-12px, and bumped the 7px print timestamp to 9px.",
+      "Back button touch target raised to 44px.",
+      "New `ReportsPrintSafety` unit tests covering the corrected phone, per-page print identity + heading levels, the B&W challenge and AVOID/SAFE badges, and blank-SPT formatting."
+    ]
+  },
+  {
     "version": "v0.56.0",
     "codename": "Composer",
     "date": "8 June 2026",
