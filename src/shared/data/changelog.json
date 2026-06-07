@@ -1,5 +1,36 @@
 [
   {
+    "version": "v0.55.0",
+    "codename": "Carbon",
+    "date": "7 June 2026",
+    "summary": "Per-page patient identifier on the printed Testing Plan",
+    "highlight": false,
+    "changes": [
+      "Per-page patient identifier on the printed Testing Plan \u2014 the testing plan document now repeats a running header (Name \u00b7 MRN \u00b7 DOB) and footer (Name \u00b7 MRN \u00b7 date of request) on every printed page, so a page that becomes physically separated is still identifiable. Closes a patient-safety gap where page 2 onward carried no patient details.",
+      "Black & white printer legibility of the Testing Plan document \u2014 the clinic printer is B&W, so elements that relied on colour now survive greyscale: the URGENT banner prints as a solid black bar, \"Documents to Chase\" badges print as black-outlined chips, the patient name and section/category headings print in black, and all fill-in-the-blank result lines print in solid black instead of faint grey",
+      "Testing Plan document heading order \u2014 re-levelled headings (h2 \u2192 h3 \u2192 h4) so the page no longer skips levels or emits a second h1; added `scope=\"col\"` to the skin-test and challenge tables (WCAG)",
+      "Sub-12px on-screen text \u2014 the protocol-variant label in the skin-test table was 8px on screen; raised to 12px (A4 print density unchanged)",
+      "Testing Plan document visual consistency \u2014 replaced `rounded-lg` corners with the app's sharp `rounded-none`, unified raw slate surfaces to theme tokens for dark-mode coherence, and switched the \"Print Now\" button to the standard primary variant"
+    ]
+  },
+  {
+    "version": "v0.54.0",
+    "codename": "",
+    "date": "7 June 2026",
+    "summary": "Visual polish: Testing Plan / Request Form card",
+    "highlight": false,
+    "changes": [
+      "Visual polish: Testing Plan / Request Form card \u2014 unified raw slate surface tokens to theme tokens (`bg-muted`, `bg-muted/30`) for dark-mode coherence; removed phantom hover background from non-interactive section wrappers; replaced native `<input type=\"checkbox\">` with shadcn `Checkbox` for \"Include in drug challenge\"; lightened CTA button shadow",
+      "Visual polish: Reaction History card \u2014 fixed timeline dead space, de-noised nested panels, flattened Clinical Features highlights to label/value rows with left-border accent, fixed sub-12px text on symptom chips and metadata, unified surface tokens for dark mode",
+      "PWA update loop resolved \u2014 removed `clientsClaim` from the workbox service-worker config, which caused an infinite reload cycle on live deployments after a worker update; the Reload Now toast now applies the update cleanly without looping",
+      "Service-worker update toast \u2014 converted the `showToast.update` call in `index.tsx` to a static import to eliminate the dynamic-import overhead that could delay the update notification",
+      "PatientTable keyboard navigation \u2014 removed misused `role=\"button\"` from `<tr>` elements; patient rows now use a semantic `<button>` inside the name cell, restoring correct tab order and keyboard activation",
+      "Privacy Policy and Technical Docs \u2014 updated \"local-only\" framing to \"local-first\" to accurately reflect that optional research database submissions send only the deidentified research payload to the configured Supabase project; no identifiable patient data is transmitted",
+      "E2E test selectors updated for patient combobox UI",
+      "README dev-server port and storage description updated"
+    ]
+  },
+  {
     "version": "v0.53.1",
     "codename": "Accessible",
     "date": "6 June 2026",

@@ -208,7 +208,7 @@
     print-color-adjust: exact;
     font-size: 10px;
     line-height: 1.3;
-    padding: 12mm 15mm;
+    padding: 20mm 15mm 16mm;
   }
   .no-print { display: none !important; }
   .print-break-inside-avoid { break-inside: avoid; }

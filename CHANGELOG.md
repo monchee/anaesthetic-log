@@ -1,3 +1,19 @@
+## [0.55.0] — 2026-06-07 (Carbon)
+
+### Added
+- **Per-page patient identifier on the printed Testing Plan** — the testing plan document now repeats a running header (Name · MRN · DOB) and footer (Name · MRN · date of request) on every printed page, so a page that becomes physically separated is still identifiable. Closes a patient-safety gap where page 2 onward carried no patient details.
+
+### Fixed
+- **Black & white printer legibility of the Testing Plan document** — the clinic printer is B&W, so elements that relied on colour now survive greyscale: the URGENT banner prints as a solid black bar, "Documents to Chase" badges print as black-outlined chips, the patient name and section/category headings print in black, and all fill-in-the-blank result lines print in solid black instead of faint grey
+- **Testing Plan document heading order** — re-levelled headings (h2 → h3 → h4) so the page no longer skips levels or emits a second h1; added `scope="col"` to the skin-test and challenge tables (WCAG)
+- **Sub-12px on-screen text** — the protocol-variant label in the skin-test table was 8px on screen; raised to 12px (A4 print density unchanged)
+
+### Style
+- **Testing Plan document visual consistency** — replaced `rounded-lg` corners with the app's sharp `rounded-none`, unified raw slate surfaces to theme tokens for dark-mode coherence, and switched the "Print Now" button to the standard primary variant
+
+### Chore
+- Version bump to 0.55.0
+
 ## [0.54.0] — 2026-06-07
 
 ### Style
