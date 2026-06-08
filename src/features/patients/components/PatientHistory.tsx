@@ -227,7 +227,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     </div>
                 )}
 
-                {/* 3. Clinical Features & Treatment (Grid 1x2) */}
+                {/* 4. Clinical Features & Treatment (Grid 1x2) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2 h-full">
                         <div className="section-label flex items-center gap-2">
@@ -300,7 +300,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     </div>
                 </div>
 
-                {/* 4. Context Bar */}
+                {/* 5. Context Bar */}
                 <div className="bg-background p-3 rounded-none border border-border flex flex-col sm:flex-row gap-4">
                     <div className="space-y-1 flex-1 min-w-0">
                         <span className="section-label flex items-center gap-1.5">
