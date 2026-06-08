@@ -9,6 +9,21 @@ interface PatientHistoryProps {
   patient: Patient;
 }
 
+type TryptaseSample = NonNullable<Patient['history']['tryptases']>[number];
+
+function getTryptasePeak(samples?: TryptaseSample[]): { index: number; value: number; display: string } | null {
+  if (!samples?.length) return null;
+
+  return samples.reduce<{ index: number; value: number; display: string } | null>((peak, sample, index) => {
+    const value = parseFloat(sample.result);
+    if (Number.isNaN(value)) return peak;
+    if (!peak || value > peak.value) {
+      return { index, value, display: String(value) };
+    }
+    return peak;
+  }, null);
+}
+
 const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
   const { history } = patient;
 
@@ -63,6 +78,14 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
   const elapsedLabel = elapsedMinutes !== null
     ? (elapsedMinutes < 60 ? `+${elapsedMinutes}m` : `+${Math.floor(elapsedMinutes / 60)}h ${elapsedMinutes % 60}m`)
     : null;
+  const tryptasePeak = getTryptasePeak(history.tryptases);
+  const tryptaseChipText = history.tryptases?.length
+    ? history.tryptases.length === 1
+      ? `T1${history.tryptases[0].time ? ` (${history.tryptases[0].time})` : ''}: ${history.tryptases[0].result}`
+      : tryptasePeak
+        ? `peak ${tryptasePeak.display} μg/L`
+        : `${history.tryptases.length} samples`
+    : history.tryptase;
 
   return (
     <Card className="shadow-md bg-card">
@@ -92,15 +115,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                     <div className="flex items-center gap-1.5 text-xs font-medium text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-800 px-2.5 py-1 rounded-none">
                         <FlaskConical className="h-3.5 w-3.5 shrink-0" />
                         <span className="font-semibold uppercase tracking-wide text-xs">Tryptase:</span>
-                        {history.tryptases?.length ? (
-                            history.tryptases.length === 1 ? (
-                                <span>{`T1${history.tryptases[0].time ? ` (${history.tryptases[0].time})` : ''}: ${history.tryptases[0].result}`}</span>
-                            ) : (
-                                <span>{history.tryptases.length} samples</span>
-                            )
-                        ) : (
-                            <span>{history.tryptase}</span>
-                        )}
+                        <span>{tryptaseChipText}</span>
                     </div>
                 )}
                 {gradeDesc && gradeDesc !== gradeLabel ? (
@@ -167,6 +182,50 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                         </div>
                     )}
                 </div>
+
+                {/* 3. Serum Tryptase */}
+                {history.tryptases && history.tryptases.length > 0 && (
+                    <div className="space-y-2">
+                        <div className="section-label flex items-center gap-2">
+                            <FlaskConical className="h-3.5 w-3.5 text-primary dark:text-primary" />
+                            Serum Tryptase
+                        </div>
+                        <div className="bg-background rounded-none border border-border overflow-hidden">
+                            <table className="w-full text-left text-xs" aria-label="Serum Tryptase samples">
+                                <thead className="bg-muted/60 border-b border-border">
+                                    <tr className="text-muted-foreground">
+                                        <th scope="col" className="px-3 py-2 font-semibold uppercase tracking-wider">Sample</th>
+                                        <th scope="col" className="px-3 py-2 font-semibold uppercase tracking-wider">Time</th>
+                                        <th scope="col" className="px-3 py-2 font-semibold uppercase tracking-wider">Result (μg/L)</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-border">
+                                    {history.tryptases.map((sample, index) => {
+                                        const isPeak = history.tryptases!.length >= 2 && tryptasePeak?.index === index;
+                                        return (
+                                            <tr key={`${sample.time ?? 'no-time'}-${sample.result}-${index}`} className={isPeak ? 'bg-violet-50/70 dark:bg-violet-950/20 font-semibold' : undefined}>
+                                                <th scope="row" className="px-3 py-2 font-semibold text-foreground">
+                                                    T{index + 1}
+                                                </th>
+                                                <td className="px-3 py-2 font-mono tabular-nums text-foreground/80">
+                                                    {formatTime(sample.time)}
+                                                </td>
+                                                <td className="px-3 py-2 tabular-nums text-foreground">
+                                                    <span>{sample.result}</span>
+                                                    {isPeak && (
+                                                        <span className="ml-2 inline-flex items-center border border-violet-300 dark:border-violet-700 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300">
+                                                            Peak
+                                                        </span>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
 
                 {/* 3. Clinical Features & Treatment (Grid 1x2) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -1,5 +1,16 @@
 [
   {
+    "version": "v0.60.0",
+    "codename": "Trend",
+    "date": "8 June 2026",
+    "summary": "The Reaction History card now shows every serum tryptase sample with its time and value, peak highlighted, instead of \"N samples\".",
+    "highlight": false,
+    "changes": [
+      "Full serum tryptase results in Reaction History \u2014 when more than one sample was taken, the card previously collapsed them to \"3 samples\" / \"4 samples\", hiding the clinically important trend. It now renders a dedicated Serum Tryptase table (Sample \u00b7 Time \u00b7 Result \u03bcg/L) listing every timed sample in order, with the peak value highlighted (bold + a \"Peak\" tag, legible in black & white). The header chip is reduced to a short \"Tryptase: peak X \u03bcg/L\" summary.",
+      "New `PatientHistory.test.tsx` covering multi-sample ordering, peak highlighting + chip summary, single-sample, non-numeric results, legacy free-text, and the no-data case."
+    ]
+  },
+  {
     "version": "v0.59.0",
     "codename": "Guarded",
     "date": "8 June 2026",
