@@ -49,8 +49,9 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
                 <h4 className="font-semibold">Data Privacy</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                All patient data is stored and processed on your own device. Nothing is sent to
-                external servers. Your data stays with you.
+                During normal clinical use, patient data is processed in your browser from local
+                REDCap exports. Optional research submission sends only the deidentified research
+                payload to the configured Supabase project.
               </p>
             </div>
           </div>

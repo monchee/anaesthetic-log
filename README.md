@@ -6,134 +6,159 @@
 *Safe sleep, clear answers*
 </div>
 
-**DREAM** — Drug Reaction Evaluation & Anaesthetic Management. *Safe sleep, clear answers.*
+**DREAM** — Drug Reaction Evaluation & Anaesthetic Management.
 
-A specialist web application for investigating and managing suspected anaesthetic drug reactions at the RPAH Department of Clinical Immunology & Allergy.
+A private clinical Progressive Web App for the Royal Prince Alfred Hospital Department of Clinical Immunology & Allergy. DREAM supports anaesthetic allergy workups from REDCap patient import through testing plans, clinical test logging, patient-facing handouts, and eMR-ready reports.
+
+## Project Status
+
+- **Current version:** v0.58.0
+- **Live app:** [allergy.yuson.au](https://allergy.yuson.au)
+- **Repository:** private/internal clinical tooling
+- **Production host:** Cloudflare Pages
+- **Release notes:** [GitHub Releases](https://github.com/monchee/anaesthetic-log/releases)
+- **Data model:** local-first browser processing, with optional deidentified Supabase research submission
 
 ## Features
 
-### Patient Management
-- **Patient Selection**: Choose from existing patient database or create new patient entries
-- **Patient History**: View detailed clinical history for existing patients
-- **Manual Entry**: Add new patients with complete demographic information
+### Patient Workflow
+- Import patient records from REDCap CSV exports.
+- Search, filter, and review patient reaction histories.
+- Create manual patient entries when a record is not in the imported database.
+- Keep in-progress testing data browser-local with time-limited persistence.
 
-### Testing & Assessment
-- **Testing Plan Generator**: Create customised testing panels based on patient history and drug categories
-- **Clinical Testing Logs**: Record skin prick tests (SPT), intradermal tests (IDT), and challenge procedures
-- **Symptom Tracking**: Document reactions, interventions, and treatment outcomes
+### Testing Plans
+- Generate personalised testing plans from patient history and drug categories.
+- Select protocol variants when a drug has more than one testing protocol or presentation.
+- Autosave testing-plan builder drafts per patient under the same 6-hour TTL as other active clinical data.
+- Print nursing request forms with B&W-safe styling and per-page patient identifiers.
 
-### Reporting & Documentation
-- **Clinical Reports**: Generate comprehensive clinical reports with test results and outcomes
-- **Patient Handouts**: Create printable patient information summaries
-- **Testing Plan Print Views**: Preview and print testing protocols
+### Testing and Reporting
+- Record skin prick testing, intradermal testing, and IV challenge outcomes.
+- Generate Clinical Report, Patient Handout, and Powerchart Letter views.
+- Print reports with black-and-white safe AVOID/SAFE and positive/negative styling.
+- Repeat patient identity in print headers/footers so separated pages remain identifiable.
+- Copy eMR-ready text from reports where appropriate.
 
-### Dashboard & Analytics
-- **Clinical Dashboard**: Overview of recent logs, patient statistics, and testing patterns
-- **Research Database**: Browse and filter the full patient dataset
-- **Data Management**: Upload custom patient databases via CSV
-- **Changelog**: Track application updates and database changes
+### Research and Review
+- View dashboard summaries of recent clinical activity and imported patient data.
+- Optionally submit only deidentified research payloads to a configured Supabase project.
+- Track app changes through the in-app changelog and Quick Start "What's New" modal.
+- Curate short changelog summaries with `Summary:` lines in `CHANGELOG.md`.
 
-### User Experience
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **Dark/Light Theme**: Toggle between themes for different lighting conditions
-- **Font Size Controls**: Adjustable text sizes for accessibility
-- **Print-Optimised**: All reports and handouts are print-ready
-- **PWA**: Installable as a Progressive Web App on any device
+## Privacy and Clinical Use
+
+DREAM is designed as local-first clinical support tooling. During normal clinical use, identifiable patient data is processed in the browser from local REDCap exports and is not transmitted to an application backend.
+
+The research submission path is the explicit exception: when configured and selected by the clinician, only the deidentified research payload is sent to the configured Supabase project. Do not commit real patient data, REDCap exports, screenshots containing identifiers, or generated clinical documents to this repository.
+
+The screen lock is a shoulder-surfing control only. It is not a substitute for device, network, REDCap, or institutional access controls.
 
 ## Technology Stack
 
-- **Frontend**: React 19 with TypeScript
-- **Styling**: Tailwind CSS with shadcn/ui components
-- **Icons**: Lucide React
-- **Build Tool**: Vite
-- **State Management**: React hooks
-- **Data Storage**: Local storage with CSV import capability
+- **Frontend:** React 19 with TypeScript
+- **Build tool:** Vite
+- **Styling:** Tailwind CSS with shadcn/ui components
+- **Icons:** Lucide React
+- **Testing:** Vitest, Testing Library, Playwright, axe-core
+- **PWA:** vite-plugin-pwa and Workbox
+- **Optional research storage:** Supabase
+- **Hosting:** Cloudflare Pages via Wrangler
 
-## Installation & Setup
+## Local Development
 
-1. **Clone the repository**:
+1. **Clone the repository**
    ```bash
    git clone https://github.com/monchee/anaesthetic-log.git
    cd anaesthetic-log
    ```
 
-2. **Install dependencies**:
+2. **Install dependencies**
    ```bash
-   bun install
+   npm ci
    ```
 
-3. **Start the development server**:
+3. **Start the development server**
    ```bash
-   bun run dev
+   npm run dev
    ```
 
-4. **Open your browser** and navigate to `http://localhost:3000`
+4. **Open the app**
+   ```text
+   http://localhost:3000
+   ```
 
-## Usage
+If port 3000 is already in use, Vite may choose the next available port. Check the terminal output before testing browser flows.
 
-### Getting Started
-1. Select a patient from the database or create a new manual entry
-2. Review patient history (for existing patients)
-3. Generate a testing plan based on clinical requirements
-4. Proceed to the testing session to record procedures
-5. Generate clinical reports and patient handouts
+## Common Commands
 
-### Data Management
-- The application includes demo patient data for testing
-- Upload a custom patient database using CSV (REDCap export format)
-- During normal use, testing logs are stored locally in the browser
-- Optional research database submission sends only the deidentified research payload to configured Supabase
+- `npm run dev` — start the Vite dev server
+- `npx tsc --noEmit` — type-check the app
+- `npm run lint` — run ESLint
+- `npm run test:unit` — run unit/component tests
+- `npm run test:e2e` — run Playwright tests
+- `npm run test:coverage` — generate local coverage reports
+- `npm run build` — sync changelog data and build production assets
+- `npm run preview` — preview the production build locally
+- `npm run changelog:sync` — regenerate `src/shared/data/changelog.json` from `CHANGELOG.md`
+- `npm run deploy` — build and publish `dist/` to Cloudflare Pages via Wrangler
 
-### Printing & Export
-- Clinical reports and patient handouts are optimised for printing
-- Use your browser's print function (Ctrl/Cmd + P) for best results
+## Release Process
 
-## Project Structure
-
-```
-src/
-├── features/            # Feature modules
-│   ├── patients/        # Patient selection & management
-│   ├── testing/         # Testing session & forms
-│   ├── reports/         # Clinical reports & handouts
-│   ├── dashboard/       # Clinical dashboard & CSV upload
-│   ├── research/        # Research database
-│   └── info-pages/      # About, FAQ, Contact, Legal pages
-├── core/                # App shell
-│   ├── components/      # ScreenLayout, Footer, HelpModal, etc.
-│   └── routes/          # Screen routing logic
-├── shared/              # Cross-feature utilities
-│   ├── hooks/
-│   ├── types/
-│   ├── utils/
-│   └── data/
-└── App.tsx              # Main application component
-```
-
-## Development
-
-### Available Scripts
-
-- `bun run dev` — Start development server
-- `bun run build` — Build for production
-- `bun run preview` — Preview production build
-- `bun run lint` — Run ESLint
-
-### Code Style
-
-- TypeScript for type safety
-- ESLint for code linting
-- Tailwind CSS for styling
-- Conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`)
+1. Update `package.json` version.
+2. Add a top entry to `CHANGELOG.md`.
+3. Include a short `Summary:` line for the Quick Start "What's New" modal.
+4. Run `npm run changelog:sync`.
+5. Validate with:
+   ```bash
+   npx tsc --noEmit
+   npm run lint
+   npm run test:unit
+   npm run build
+   ```
+6. Commit, tag, push, and create a GitHub release.
+7. Publish production with:
+   ```bash
+   npm run deploy
+   ```
 
 ## Deployment
 
-Hosted on Cloudflare Pages at [allergy.yuson.au](https://allergy.yuson.au).
+Production is hosted on Cloudflare Pages at [allergy.yuson.au](https://allergy.yuson.au). GitHub Pages is intentionally not used for this project.
 
-## License
+The deploy script runs a production build and then publishes with:
 
-For use within the RPAH Department of Clinical Immunology & Allergy. Contact the development team for licensing inquiries.
+```bash
+wrangler pages deploy dist --project-name dream --commit-dirty=true --branch main
+```
 
-## Contact
+## Project Structure
 
-For technical support or feature requests, contact the development team at the Royal Prince Alfred Hospital Department of Clinical Immunology & Allergy.
+```text
+src/
+├── features/            # Feature modules
+│   ├── patients/        # Patient selection and history
+│   ├── testing/         # Testing plans and clinical test logging
+│   ├── reports/         # Clinical reports, handouts, and letters
+│   ├── dashboard/       # Clinical dashboard and CSV upload
+│   ├── research/        # Optional deidentified research submission/review
+│   └── info-pages/      # About, FAQ, contact, legal, and changelog pages
+├── core/                # App shell, routing, layout, and help modal
+├── shared/              # Cross-feature hooks, types, utilities, and data
+└── test/                # Test setup and factories
+```
+
+## Known Operational Notes
+
+- GitHub Actions validate pushes and pull requests to `main`.
+- Branch protection is not configured because GitHub reports it is unavailable for this private repository without GitHub Pro.
+- The production Vite build currently emits a large chunk warning; the build still completes successfully.
+- `/manifest.webmanifest` is generated from the Vite PWA configuration. The Vite config is the manifest source of truth.
+
+## Internal Use and Licensing
+
+This repository is private clinical tooling for use within the RPAH Department of Clinical Immunology & Allergy workflow. No open-source license is granted. Contact the development team for reuse, access, or licensing questions.
+
+## Support
+
+For technical support, feature requests, or clinical workflow questions, contact the DREAM development team through the Royal Prince Alfred Hospital Department of Clinical Immunology & Allergy.

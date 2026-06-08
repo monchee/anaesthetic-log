@@ -14,7 +14,7 @@ export default defineConfig(() => {
       manifest: {
         name: 'The DREAM App',
         short_name: 'DREAM',
-        description: 'Drug Reaction Evaluation & Anaesthetic Management — Safe sleep, clear answers',
+        description: 'The DREAM App: local-first anaesthetic allergy testing, reporting, and REDCap workflow support for RPAH.',
         theme_color: '#441170',
         background_color: '#ffffff',
         display: 'standalone',

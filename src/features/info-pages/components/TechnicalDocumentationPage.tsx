@@ -207,7 +207,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex justify-between py-2 border-b border-border">
                 <span>Current Version</span>
-                <span className="font-mono">v0.34.0 (Suxamethonium)</span>
+                <span className="font-mono">v0.58.0 (Headline)</span>
               </div>
               <p className="text-xs mt-2">
                 For detailed changelog information, see the <button onClick={() => setScreen(Screen.CHANGELOG)} className="text-primary hover:underline">Changelog page</button>.
