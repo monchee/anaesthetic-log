@@ -1,3 +1,29 @@
+## [0.61.0] — 2026-06-09 (Lucid)
+
+Summary: Dashboard accessibility, consistency, and clarity pass — semantic headings, keyboard-operable tables, reduced-motion support, and clearer record stats.
+
+### Added
+- **Reduced-motion support** — the dashboard count-up numbers and chart/section animations now respect the OS "reduce motion" setting (`useCountUp` short-circuits to the final value; chart width transitions and section reveals are disabled).
+- **Timeline legend** — the Record Database table now shows an induction / reaction / medication legend, and each timeline dot carries an accessible label.
+
+### Changed
+- **Records overview shows REDCap records and session logs separately** — the "Records" figure now reports the REDCap database count (matching the table below it) with current-session logs shown as a separate "+N this session" line, instead of silently summing the two.
+- **Consistent headline rates** — severe and abandoned percentages now share one denominator (REDCap record count) so each count and its percentage line up.
+- **Dashboard accessibility** — every dashboard card title is now a real `<h2>`; the Recent Testing Activity rows and Skin Test Breakdown category toggles are keyboard-operable (`aria-expanded`, focus rings); remaining tables gained `scope="col"` headers.
+- **Polish** — "Onset" relabelled "Avg Onset" with an explanatory tooltip; normalized chip/header styling to the app's `rounded-none` language; the Skin Test Breakdown table scrolls cleanly on mobile.
+
+### Removed
+- **Dead code** — deleted the unused `GradeDistributionChart`, `TopAgentsChart`, and the entire dashboard `services/AnalyticsService` (~360 lines reimplemented inline).
+
+### Tests
+- New `useCountUp` reduced-motion test and updated Dashboard tests for the separated record/session figures (175 unit tests).
+
+### Notes
+- The session-log severity inference on the dashboard remains a heuristic, flagged in-code for clinician review (no behaviour change).
+
+### Chore
+- Version bump to 0.61.0
+
 ## [0.60.0] — 2026-06-08 (Trend)
 
 Summary: The Reaction History card now shows every serum tryptase sample with its time and value, peak highlighted, instead of "N samples".

@@ -13,10 +13,17 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
   recentLogs,
   onViewLog
 }) => {
+  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>, log: LogFormData) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onViewLog(log);
+    }
+  };
+
   return (
     <Card className="w-full shadow-sm border-t-4 border-t-green-500 animate-enter-subtle">
-      <CardHeader className="py-4 border-b border-border bg-slate-50 dark:bg-card/10">
-        <CardTitle className="text-lg text-slate-800 dark:text-primary flex items-center gap-2">
+      <CardHeader className="py-4 border-b border-border bg-card">
+        <CardTitle as="h2" className="text-lg text-slate-800 dark:text-primary flex items-center gap-2">
           <Clock className="w-5 h-5 text-primary dark:text-primary" /> Recent Skin Testing Activity
         </CardTitle>
       </CardHeader>
@@ -24,10 +31,10 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
         <table className="w-full text-sm text-left">
           <thead className="bg-card text-xs uppercase text-muted-foreground font-semibold">
             <tr>
-              <th className="px-4 py-3">Date</th>
-              <th className="px-4 py-3">Patient</th>
-              <th className="px-4 py-3">Results (SPT/IDT)</th>
-              <th className="px-4 py-3">Challenge Outcome</th>
+              <th scope="col" className="px-4 py-3">Date</th>
+              <th scope="col" className="px-4 py-3">Patient</th>
+              <th scope="col" className="px-4 py-3">Results (SPT/IDT)</th>
+              <th scope="col" className="px-4 py-3">Challenge Outcome</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border bg-background">
@@ -47,16 +54,20 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                 return (
                   <tr
                     key={idx}
+                    role="button"
+                    tabIndex={0}
                     style={{ '--row-index': Math.min(idx, 9) } as React.CSSProperties}
-                    className="hover:bg-slate-50 dark:hover:bg-card/50 cursor-pointer transition-colors group animate-row-enter"
+                    className="hover:bg-slate-50 dark:hover:bg-card/50 cursor-pointer transition-colors group animate-row-enter focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
                     onClick={() => onViewLog(log)}
+                    onKeyDown={(event) => handleRowKeyDown(event, log)}
+                    aria-label={`View testing log for ${log.firstName} ${log.lastName}`}
                   >
                     <td className="px-4 py-3 font-mono text-xs text-muted-foreground group-hover:text-slate-700 dark:group-hover:text-foreground/80 transition-colors">{formatDate(log.visitDate)}</td>
                     <td className="px-4 py-3 font-medium text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">{log.lastName}, {log.firstName}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1 items-center">
                         {positives.map(p => <Badge key={p} variant="danger" className="text-xs px-1.5 py-0 h-5">{p}</Badge>)}
-                        {negatives.map(n => <span key={n} className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border">{n}</span>)}
+                        {negatives.map(n => <span key={n} className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded-none border border-border">{n}</span>)}
                         {positives.length === 0 && negatives.length === 0 && <span className="text-slate-400 italic text-xs">-</span>}
                       </div>
                     </td>

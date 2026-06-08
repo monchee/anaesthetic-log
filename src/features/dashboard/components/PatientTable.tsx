@@ -73,16 +73,21 @@ const PatientTable: React.FC<PatientTableProps> = ({
 
   return (
     <Card className="w-full shadow-sm animate-enter-subtle">
-      <CardHeader className="py-2.5 sm:py-4 border-b border-border bg-slate-50/50 dark:bg-muted/20">
+      <CardHeader className="py-2.5 sm:py-4 border-b border-border bg-card">
         <div className="flex flex-col gap-3 sm:gap-4">
           {/* Header Top Row: Title + Update Button */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
             <div className="space-y-1">
-              <CardTitle className="text-lg flex items-center gap-2 text-foreground">
+              <CardTitle as="h2" className="text-lg flex items-center gap-2 text-foreground">
                 <FileText className="w-5 h-5 text-primary" /> REDCap Record Database
               </CardTitle>
-              <div className="text-xs text-muted-foreground flex items-center gap-2">
+              <div className="text-xs text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1">
                 <span>{isCustomData ? `Updated ${databaseDate}` : 'Demo data'}</span>
+                <span className="flex items-center gap-2" aria-label="Timeline legend">
+                  <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />Induction</span>
+                  <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-red-500" aria-hidden="true" />Reaction</span>
+                  <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-muted/60" aria-hidden="true" />Medication</span>
+                </span>
               </div>
             </div>
 
@@ -217,6 +222,8 @@ const PatientTable: React.FC<PatientTableProps> = ({
                         {timelineEvents.map((e, idx) => (
                           <div
                             key={idx}
+                            role="img"
+                            aria-label={`${e.type} event: ${e.time} - ${e.label}`}
                             className={`
                               h-2.5 w-2.5 rounded-full cursor-help inline-block
                               ${e.type === 'reaction' ? 'bg-red-500' : ''}
@@ -308,6 +315,8 @@ const PatientTable: React.FC<PatientTableProps> = ({
                   {timelineEvents.map((e, idx) => (
                     <div
                       key={idx}
+                      role="img"
+                      aria-label={`${e.type} event: ${e.time} - ${e.label}`}
                       className={`
                         h-2 w-2 rounded-full
                         ${e.type === 'reaction' ? 'bg-red-500' : ''}

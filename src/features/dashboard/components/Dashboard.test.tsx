@@ -119,6 +119,21 @@ describe('Dashboard', () => {
   });
 
   describe('Rendering', () => {
+    it('exposes dashboard sections as level-two headings', () => {
+      render(<Dashboard {...mockProps} />);
+
+      [
+        'Overview',
+        'Severity Distribution',
+        'Top Suspected Agents',
+        'REDCap Record Database',
+        'Recent Skin Testing Activity',
+        'Positive Skin Test Breakdown',
+      ].forEach((name) => {
+        expect(screen.getByRole('heading', { level: 2, name })).toBeInTheDocument();
+      });
+    });
+
     it('renders dashboard with patient statistics', () => {
       render(<Dashboard {...mockProps} />);
 
@@ -131,11 +146,14 @@ describe('Dashboard', () => {
       expect(screen.getByText('Severe').parentElement?.parentElement?.querySelector('.text-2xl')).toHaveTextContent('0');
     });
 
-    it('displays correct patient count', () => {
+    it('shows REDCap records and session logs as separate figures', () => {
       render(<Dashboard {...mockProps} />);
 
-      const countElements = screen.getAllByText('3');
-      expect(countElements.length).toBeGreaterThan(0);
+      // Records KPI shows the REDCap record count (2 mock patients), matching the table below
+      const recordsValue = screen.getByText('Records').parentElement?.parentElement?.querySelector('.text-2xl');
+      expect(recordsValue).toHaveTextContent('2');
+      // Session logs (1 mock log) are shown separately, not summed into the headline
+      expect(screen.getByText('+1 this session')).toBeInTheDocument();
     });
 
     it('has proper ARIA labels on buttons', () => {
@@ -404,6 +422,17 @@ describe('Dashboard', () => {
         expect(mockProps.onViewLog).toHaveBeenCalledWith(mockLogs[0]);
       });
     });
+
+    it('calls onViewLog when recent log row is activated by keyboard', async () => {
+      render(<Dashboard {...mockProps} recentLogs={mockLogs} />);
+
+      const logRow = screen.getByRole('button', { name: /View testing log for John Doe/i });
+      fireEvent.keyDown(logRow, { key: 'Enter', code: 'Enter' });
+
+      await waitFor(() => {
+        expect(mockProps.onViewLog).toHaveBeenCalledWith(mockLogs[0]);
+      });
+    });
   });
 
   describe('Advanced Filters', () => {
@@ -483,6 +512,57 @@ describe('Dashboard', () => {
 
       // Tab to patient
       fireEvent.keyDown(searchInput, { key: 'Tab', code: 'Tab' });
+    });
+
+    it('exposes skin test category expansion state', () => {
+      render(<Dashboard {...mockProps} />);
+
+      const categoryButton = screen.getByRole('button', {
+        name: /Expand Muscle Relaxants skin test results/i,
+      });
+      expect(categoryButton).toHaveAttribute('aria-expanded', 'false');
+
+      fireEvent.click(categoryButton);
+      expect(categoryButton).toHaveAttribute('aria-expanded', 'true');
+    });
+  });
+
+  describe('Analytics definitions', () => {
+    it('uses the REDCap record denominator for headline severe and abandoned rates', () => {
+      const patients: Patient[] = [
+        {
+          ...mockPatients[0],
+          history: {
+            ...mockPatients[0].history,
+            grade: 'Grade III',
+            procedureOutcome: '',
+          },
+        },
+        {
+          ...mockPatients[1],
+          history: {
+            ...mockPatients[1].history,
+            procedureOutcome: 'Abandoned',
+          },
+        },
+      ];
+      const severeSessionLog: LogFormData = {
+        ...mockLogs[0],
+        outcome: 'UNSUCCESS',
+        interventionType: 'Adrenaline',
+      };
+
+      render(<Dashboard {...mockProps} existingPatients={patients} recentLogs={[severeSessionLog]} />);
+
+      const severeLabel = screen.getByText('Severe');
+      const severeCard = severeLabel.closest('.border') as HTMLElement;
+      expect(within(severeCard).getByText('1')).toBeInTheDocument();
+      expect(within(severeCard).getByText('50.0%')).toBeInTheDocument();
+
+      const abandonedLabel = screen.getByText('Abandoned');
+      const abandonedCard = abandonedLabel.closest('.border') as HTMLElement;
+      expect(within(abandonedCard).getByText('1')).toBeInTheDocument();
+      expect(within(abandonedCard).getByText('50.0%')).toBeInTheDocument();
     });
   });
 });

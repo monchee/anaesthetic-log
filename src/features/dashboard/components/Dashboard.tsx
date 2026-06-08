@@ -30,6 +30,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [animateCharts, setAnimateCharts] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,13 +40,27 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
   const ITEMS_PER_PAGE = 10;
 
-  // Trigger chart animations on mount
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setAnimateCharts(true));
-    return () => cancelAnimationFrame(raf);
+    const mediaQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    if (!mediaQuery) return;
+
+    const updateMotionPreference = () => setPrefersReducedMotion(mediaQuery.matches);
+    updateMotionPreference();
+    mediaQuery.addEventListener('change', updateMotionPreference);
+    return () => mediaQuery.removeEventListener('change', updateMotionPreference);
   }, []);
 
-  // --- Analytics Calculation ---
+  // Trigger chart animations on mount
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setAnimateCharts(true);
+      return;
+    }
+
+    const raf = requestAnimationFrame(() => setAnimateCharts(true));
+    return () => cancelAnimationFrame(raf);
+  }, [prefersReducedMotion]);
+
   // --- Analytics Calculation ---
   const analytics = useDashboardAnalytics({
     existingPatients,
@@ -56,18 +71,19 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
   // Animated numbers
   const animatedTotalPatients = useCountUp(analytics.totalPatients);
-  const animatedSevereCount = useCountUp(analytics.grade3PlusCount);
+  const animatedRedcapCount = useCountUp(analytics.redcapRecordCount);
+  const animatedSevereCount = useCountUp(analytics.redcapGrade3PlusCount);
   const animatedAbandonedCount = useCountUp(analytics.abandonedCount);
   const animatedAvgTime = useCountUp(analytics.avgReactionTime);
 
-  // Rate of severe reactions
-  const severeRate = analytics.totalPatients > 0 
-    ? ((analytics.grade3PlusCount / analytics.totalPatients) * 100).toFixed(1) 
+  // Headline severe/abandoned rates are REDCap-record rates so the displayed count and percentage share the same denominator.
+  // The Overview shows REDCap records and current-session logs as separate figures (no longer summed into one "Records" number).
+  const severeRate = analytics.redcapRecordCount > 0
+    ? ((analytics.redcapGrade3PlusCount / analytics.redcapRecordCount) * 100).toFixed(1) 
     : "0";
 
-  // Rate of abandoned procedures
-  const abandonedRate = existingPatients.length > 0 
-    ? ((analytics.abandonedCount / existingPatients.length) * 100).toFixed(1)
+  const abandonedRate = analytics.redcapRecordCount > 0 
+    ? ((analytics.abandonedCount / analytics.redcapRecordCount) * 100).toFixed(1)
     : "0";
 
   // --- Handle File Upload ---
@@ -170,13 +186,17 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
     }
   };
 
+  const sectionRevealClass = prefersReducedMotion ? '' : 'animate-section-reveal';
+
   return (
     <div className="space-y-8">
 
         {/* Modern Stats Grid */}
-        <div style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
+        <div style={{ '--section-index': 0 } as React.CSSProperties} className={sectionRevealClass}>
           <AnalyticsPanel
             animatedTotalPatients={animatedTotalPatients}
+            animatedRedcapCount={animatedRedcapCount}
+            sessionLogCount={analytics.sessionLogCount}
             animatedSevereCount={animatedSevereCount}
             severeRate={severeRate}
             animatedAbandonedCount={animatedAbandonedCount}
@@ -185,6 +205,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
             gradeCounts={analytics.gradeCounts}
             topAgents={analytics.topAgentsByCount}
             animateCharts={animateCharts}
+            reduceMotion={prefersReducedMotion}
           />
         </div>
 
@@ -194,7 +215,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
         </div>
 
         {/* Patient Database Table (Full Width) - Paginated */}
-        <div style={{ '--section-index': 1 } as React.CSSProperties} className="animate-section-reveal">
+        <div style={{ '--section-index': 1 } as React.CSSProperties} className={sectionRevealClass}>
           <PatientTable
             paginatedPatients={paginatedPatients}
             filteredPatients={filteredPatients}
@@ -223,7 +244,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
         </div>
 
         {/* Recent Skin Testing Activity Card */}
-        <div style={{ '--section-index': 2 } as React.CSSProperties} className="animate-section-reveal">
+        <div style={{ '--section-index': 2 } as React.CSSProperties} className={sectionRevealClass}>
           <RecentTestingActivity
             recentLogs={recentLogs}
             onViewLog={onViewLog}
@@ -231,7 +252,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
         </div>
 
         {/* Positive Skin Test Breakdown */}
-        <div style={{ '--section-index': 3 } as React.CSSProperties} className="animate-section-reveal">
+        <div style={{ '--section-index': 3 } as React.CSSProperties} className={sectionRevealClass}>
           <SkinTestBreakdown
             statsByCategory={analytics.statsByCategory}
             expandedCategories={expandedCategories}

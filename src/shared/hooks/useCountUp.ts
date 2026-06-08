@@ -1,10 +1,20 @@
 import { useState, useEffect } from 'react';
 
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 // Hook for counting up numbers with cleanup - reduced duration for less aggressive animation
 export const useCountUp = (end: number, duration = 800) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    if (duration <= 0 || prefersReducedMotion()) {
+      setCount(end);
+      return;
+    }
+
     let startTime: number | null = null;
     let animationFrameId: number;
 

@@ -4,6 +4,8 @@ import { Users, AlertTriangle, Ban, Timer, PieChart, BarChart3 } from 'lucide-re
 
 interface StatsPanelProps {
   animatedTotalPatients: number;
+  animatedRedcapCount: number;
+  sessionLogCount: number;
   animatedSevereCount: number;
   severeRate: string;
   animatedAbandonedCount: number;
@@ -18,10 +20,13 @@ interface StatsPanelProps {
   };
   topAgents: { name: string; count: number }[];
   animateCharts: boolean;
+  reduceMotion?: boolean;
 }
 
 const AnalyticsPanel: React.FC<StatsPanelProps> = ({
   animatedTotalPatients,
+  animatedRedcapCount,
+  sessionLogCount,
   animatedSevereCount,
   severeRate,
   animatedAbandonedCount,
@@ -29,29 +34,34 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
   animatedAvgTime,
   gradeCounts,
   topAgents,
-  animateCharts
+  animateCharts,
+  reduceMotion = false
 }) => {
   const totalPatients = animatedTotalPatients || 1;
   const max = topAgents[0]?.count || 1;
+  const widthTransitionClass = reduceMotion ? '' : 'transition-[width] duration-500';
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {/* Left Column - Key Stats */}
       <Card className="lg:col-span-1 shadow-sm">
         <CardHeader className="pb-3 border-b border-border bg-card">
-          <CardTitle className="text-base text-foreground flex items-center gap-2">
+          <CardTitle as="h2" className="text-base text-foreground flex items-center gap-2">
             <Users className="w-4 h-4 text-primary dark:text-primary" /> Overview
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 pt-6">
           <div className="grid grid-cols-2 gap-3">
-            {/* Total */}
+            {/* Records — REDCap records and session logs shown separately */}
             <div className="bg-card rounded-none p-3 border border-border border-l-4 border-l-primary">
               <div className="flex items-center gap-2 mb-1">
                 <Users className="w-4 h-4 text-primary" />
                 <span className="section-label">Records</span>
               </div>
-              <div className="text-2xl font-bold tabular-nums text-foreground">{animatedTotalPatients}</div>
+              <div className="text-2xl font-bold tabular-nums text-foreground">{animatedRedcapCount}</div>
+              <div className="text-xs text-muted-foreground tabular-nums mt-0.5">
+                {sessionLogCount > 0 ? `+${sessionLogCount} this session` : 'REDCap database'}
+              </div>
             </div>
 
             {/* Severe */}
@@ -82,7 +92,12 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             <div className="bg-card rounded-none p-3 border border-border border-l-4 border-l-nsw-blue">
               <div className="flex items-center gap-2 mb-1">
                 <Timer className="w-4 h-4 text-nsw-blue" />
-                <span className="section-label">Onset</span>
+                <span
+                  className="section-label"
+                  title="Average induction-to-reaction time in minutes, excluding values outside 0-240 minutes."
+                >
+                  Avg Onset
+                </span>
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold tabular-nums text-foreground">{animatedAvgTime}</span>
@@ -96,7 +111,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
       {/* Middle Column - Grade Distribution */}
       <Card className="shadow-sm">
         <CardHeader className="pb-3 border-b border-border bg-card">
-          <CardTitle className="text-base text-foreground flex items-center gap-2">
+          <CardTitle as="h2" className="text-base text-foreground flex items-center gap-2">
             <PieChart className="w-4 h-4 text-primary dark:text-primary" /> Severity Distribution
           </CardTitle>
         </CardHeader>
@@ -106,7 +121,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {gradeCounts.I > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.I / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade1 h-full transition-[width] duration-500" 
+                className={`bg-status-grade1 h-full ${widthTransitionClass}`} 
                 aria-label={`Grade I: ${gradeCounts.I}`}
                 title={`Grade I: ${gradeCounts.I}`}
               />
@@ -114,7 +129,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {gradeCounts.II > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.II / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade2 h-full transition-[width] duration-500 delay-75" 
+                className={`bg-status-grade2 h-full ${widthTransitionClass} ${reduceMotion ? '' : 'delay-75'}`} 
                 aria-label={`Grade II: ${gradeCounts.II}`}
                 title={`Grade II: ${gradeCounts.II}`}
               />
@@ -122,7 +137,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {gradeCounts.III > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.III / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade3 h-full transition-[width] duration-500 delay-75" 
+                className={`bg-status-grade3 h-full ${widthTransitionClass} ${reduceMotion ? '' : 'delay-75'}`} 
                 aria-label={`Grade III: ${gradeCounts.III}`}
                 title={`Grade III: ${gradeCounts.III}`}
               />
@@ -130,7 +145,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {gradeCounts.IV > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.IV / totalPatients) * 100}%` : '0%' }} 
-                className="bg-status-grade4 h-full transition-[width] duration-500 delay-100" 
+                className={`bg-status-grade4 h-full ${widthTransitionClass} ${reduceMotion ? '' : 'delay-100'}`} 
                 aria-label={`Grade IV: ${gradeCounts.IV}`}
                 title={`Grade IV: ${gradeCounts.IV}`}
               />
@@ -138,7 +153,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {gradeCounts.Ungraded > 0 && (
               <div 
                 style={{ width: animateCharts ? `${(gradeCounts.Ungraded / totalPatients) * 100}%` : '0%' }} 
-                className="bg-slate-300 dark:bg-muted/60 h-full transition-[width] duration-500 delay-100"
+                className={`bg-slate-300 dark:bg-muted/60 h-full ${widthTransitionClass} ${reduceMotion ? '' : 'delay-100'}`}
                 aria-label={`Ungraded: ${gradeCounts.Ungraded}`}
                 title={`Ungraded: ${gradeCounts.Ungraded}`}
               />
@@ -173,7 +188,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
       {/* Right Column - Top Agents */}
       <Card className="shadow-sm">
         <CardHeader className="pb-3 border-b border-border bg-card">
-          <CardTitle className="text-base text-foreground flex items-center gap-2">
+          <CardTitle as="h2" className="text-base text-foreground flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-primary dark:text-primary" /> Top Suspected Agents
           </CardTitle>
         </CardHeader>
@@ -190,10 +205,10 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                     </div>
                     <div className="h-2 w-full bg-slate-100 dark:bg-card rounded-none overflow-hidden">
                       <div 
-                        className="h-full bg-primary rounded-none transition-[width] duration-500" 
+                        className={`h-full bg-primary rounded-none ${widthTransitionClass}`} 
                         style={{ 
                           width: animateCharts ? `${percentage}%` : '0%',
-                          transitionDelay: `${idx * 50}ms`
+                          transitionDelay: reduceMotion ? undefined : `${idx * 50}ms`
                         }}
                       />
                     </div>

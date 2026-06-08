@@ -18,7 +18,10 @@ export const useDashboardAnalytics = ({
 }: UseDashboardAnalyticsProps) => {
   return useMemo(() => {
     const totalPatients = existingPatients.length + recentLogs.length;
+    const redcapRecordCount = existingPatients.length;
+    const sessionLogCount = recentLogs.length;
     let grade3PlusCount = 0;
+    let redcapGrade3PlusCount = 0;
     let abandonedCount = 0;
     
     // Time Analytics
@@ -53,6 +56,7 @@ export const useDashboardAnalytics = ({
       const grade = p.history.grade || 'Ungraded';
       if (grade.includes("III") || grade.includes("IV") || grade.includes("Cardiac Arrest")) {
         grade3PlusCount++;
+        redcapGrade3PlusCount++;
       }
       
       // Robust check for abandoned procedures
@@ -102,6 +106,10 @@ export const useDashboardAnalytics = ({
     });
 
     // 2. Process Newly Added Logs
+    // NOTE (C3 — clinician review only): session-log severity is inferred
+    // heuristically (UNSUCCESS + Adrenaline -> Grade III, else Grade I). This is an
+    // approximation flagged for clinician sign-off; do not refine the grading rule
+    // without review. See plans/2026-06-09-dashboard-review-improvements.md (C3).
     recentLogs.forEach(log => {
         if (log.outcome === 'UNSUCCESS') {
              if (log.interventionType === 'Adrenaline') {
@@ -114,8 +122,9 @@ export const useDashboardAnalytics = ({
             gradeCounts.Ungraded++;
         }
 
-        if (log.reactionTime && !isNaN(parseInt(log.reactionTime))) {
-             totalReactionTime += parseInt(log.reactionTime);
+        const logReactionTime = log.reactionTime ? parseInt(log.reactionTime) : NaN;
+        if (!isNaN(logReactionTime) && logReactionTime >= 0 && logReactionTime <= 240) {
+             totalReactionTime += logReactionTime;
              reactionTimeCount++;
         }
 
@@ -181,7 +190,10 @@ export const useDashboardAnalytics = ({
 
     return {
       totalPatients,
+      redcapRecordCount,
+      sessionLogCount,
       grade3PlusCount,
+      redcapGrade3PlusCount,
       abandonedCount,
       avgReactionTime,
       mostCommonAgent: mostCommonAgentEntry?.[1].total > 0 ? mostCommonAgentEntry?.[0] : 'N/A',

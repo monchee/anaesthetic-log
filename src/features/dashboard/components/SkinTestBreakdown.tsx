@@ -35,10 +35,10 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
 
   return (
     <Card className="w-full shadow-sm animate-enter-subtle">
-      <CardHeader className="py-4 border-b border-border bg-slate-50/50 dark:bg-muted/20">
+      <CardHeader className="py-4 border-b border-border bg-card">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <CardTitle className="text-lg flex items-center gap-2 text-foreground">
+            <CardTitle as="h2" className="text-lg flex items-center gap-2 text-foreground">
               <Thermometer className="w-5 h-5 text-primary" /> Positive Skin Test Breakdown
             </CardTitle>
             <p className="text-sm text-muted-foreground">Number of positive patient reactions by drug (SPT/IDT &gt; 3mm or Positive Challenge).</p>
@@ -57,16 +57,16 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
         </div>
       </CardHeader>
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm relative border-collapse">
+        <table className="min-w-[760px] md:min-w-full text-sm relative border-collapse">
           <thead className="bg-card text-xs uppercase text-muted-foreground font-semibold sticky top-0 z-10 shadow-sm">
             <tr>
-              <th className="px-4 py-3 text-left bg-card w-1/3">Drug</th>
-              <th className="px-4 py-3 text-center bg-card">SPT</th>
-              <th className="px-4 py-3 text-center bg-card">IDT 1:100</th>
-              <th className="px-4 py-3 text-center bg-card">IDT 1:10</th>
-              <th className="px-4 py-3 text-center bg-card">IDT Neat</th>
-              <th className="px-4 py-3 text-center bg-card">Challenge Pos</th>
-              <th className="px-4 py-3 text-center bg-slate-100/50 dark:bg-muted/50 border-l border-border">Total Cases</th>
+              <th scope="col" className="px-4 py-3 text-left bg-card w-1/3">Drug</th>
+              <th scope="col" className="px-4 py-3 text-center bg-card">SPT</th>
+              <th scope="col" className="px-4 py-3 text-center bg-card">IDT 1:100</th>
+              <th scope="col" className="px-4 py-3 text-center bg-card">IDT 1:10</th>
+              <th scope="col" className="px-4 py-3 text-center bg-card">IDT Neat</th>
+              <th scope="col" className="px-4 py-3 text-center bg-card">Challenge Pos</th>
+              <th scope="col" className="px-4 py-3 text-center bg-slate-100/50 dark:bg-muted/50 border-l border-border">Total Cases</th>
             </tr>
           </thead>
           <tbody className="bg-background">
@@ -79,14 +79,19 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                   <React.Fragment key={cIdx}>
                     <tr
                       style={{ '--row-index': Math.min(cIdx, 9) } as React.CSSProperties}
-                      className="bg-card hover:bg-slate-100/80 dark:hover:bg-muted/80 border-b border-border cursor-pointer transition-colors animate-row-enter"
-                      onClick={() => toggleCategory(categoryGroup.category)}
+                      className="bg-card hover:bg-slate-100/80 dark:hover:bg-muted/80 border-b border-border transition-colors animate-row-enter"
                     >
                       <td colSpan={6} className="px-4 py-2.5">
-                        <div className="flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-wide">
+                        <button
+                          type="button"
+                          className="flex w-full items-center gap-2 text-left text-xs font-bold text-foreground uppercase tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                          onClick={() => toggleCategory(categoryGroup.category)}
+                          aria-expanded={isExpanded}
+                          aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${categoryGroup.category} skin test results`}
+                        >
                           {isExpanded ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
                           {categoryGroup.category}
-                        </div>
+                        </button>
                       </td>
                       <td className="px-4 py-2.5 text-center border-l border-border">
                         {totalCategoryPositives > 0 ? (
