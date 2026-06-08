@@ -1,6 +1,6 @@
 import { LogFormData, TryptaseData } from '@features/testing/types';
 import { Patient } from '@/types';
-import { isSkinTestPositive, getPositiveResults, getNegativeResults, getCrossSensitizationNotes, buildRecommendations } from './testingUtils';
+import { isSkinTestPositive, getPositiveResults, getNegativeResults, getCrossSensitizationNotes, getCrossSensitizedDrugs, buildRecommendations } from './testingUtils';
 import { formatDate } from './dateUtils';
 
 export function formatTryptaseSentence(tryptase: TryptaseData): string {
@@ -78,9 +78,7 @@ export function formatClinicalReportAsText(data: LogFormData, redact?: (value: s
   // Cross-sensitization (3C)
   const posResults = getPositiveResults(data);
   const crossNotes = getCrossSensitizationNotes(posResults);
-  const crossSensitized = crossNotes.map(n =>
-    n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium'
-  ).filter((v, i, a) => a.indexOf(v) === i);
+  const crossSensitized = getCrossSensitizedDrugs(posResults);
   if (crossNotes.length > 0) {
     crossNotes.forEach(n => lines.push(n));
     lines.push('');
@@ -204,7 +202,7 @@ export function generateLetterText(data: LogFormData, patient: Patient | null, r
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
   const crossNotes = getCrossSensitizationNotes(posResults);
-  const crossSensitized = crossNotes.map(n => n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium').filter((v, i, a) => a.indexOf(v) === i);
+  const crossSensitized = getCrossSensitizedDrugs(posResults);
   const { avoidList, bullets, noAllergyMessage } = buildRecommendations(posResults, crossSensitized);
   const lines: string[] = [];
 

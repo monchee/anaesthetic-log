@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui';
 import { LogFormData } from '@/types';
 import { formatDate } from '@shared/utils';
 import { getPositiveResults } from '@shared/utils/testingUtils';
-import { getCrossSensitizationNotes, buildRecommendations } from '@shared/utils/testingUtils';
+import { getCrossSensitizationNotes, getCrossSensitizedDrugs, buildRecommendations } from '@shared/utils/testingUtils';
 import { FileText, Activity, History, ClipboardList, ShieldAlert } from 'lucide-react';
 import { ReportPrintIdentity } from './ReportPrintIdentity';
 
@@ -18,9 +18,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
   const { redact } = useRedact();
   const posResults = getPositiveResults(data);
   const crossNotes = getCrossSensitizationNotes(posResults);
-  const crossSensitized = crossNotes.map(n =>
-    n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium'
-  ).filter((v, i, a) => a.indexOf(v) === i);
+  const crossSensitized = getCrossSensitizedDrugs(posResults);
   const { avoidList, bullets, noAllergyMessage } = buildRecommendations(posResults, crossSensitized);
   const patientName = redact(`${data.firstName} ${data.lastName}`);
   const reportDate = activeReportSavedAt ? new Date(activeReportSavedAt).toISOString() : new Date().toISOString();

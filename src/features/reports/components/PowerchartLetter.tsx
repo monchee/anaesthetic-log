@@ -3,7 +3,7 @@ import { useRedact } from '../hooks/useRedact';
 import { Card, CardContent } from '@/components/ui';
 import { LogFormData, Patient } from '@/types';
 import { formatDate, getPositiveResults, getNegativeResults } from '@shared/utils';
-import { getCrossSensitizationNotes, buildRecommendations } from '@shared/utils/testingUtils';
+import { getCrossSensitizationNotes, getCrossSensitizedDrugs, buildRecommendations } from '@shared/utils/testingUtils';
 import {
   calculateMinutesAfterInduction,
   formatSymptomsList,
@@ -27,9 +27,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
   const crossNotes = getCrossSensitizationNotes(posResults);
-  const crossSensitized = crossNotes.map(n =>
-    n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium'
-  ).filter((v, i, a) => a.indexOf(v) === i);
+  const crossSensitized = getCrossSensitizedDrugs(posResults);
   const { avoidList, bullets, noAllergyMessage } = buildRecommendations(posResults, crossSensitized);
 
   const fullName = `${data.firstName} ${data.lastName}`;

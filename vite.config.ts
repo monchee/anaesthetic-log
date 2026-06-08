@@ -124,12 +124,18 @@ export default defineConfig(() => {
       headers: {
         'Content-Security-Policy': [
           "default-src 'self'",
+          "connect-src 'self' ws: https://*.supabase.co wss://*.supabase.co https://*.ingest.sentry.io https://*.ingest.us.sentry.io",
+          // Dev server only: Vite injects an inline React Refresh preamble and uses
+          // eval for HMR, so 'unsafe-inline'/'unsafe-eval' are required here. Production
+          // CSP (public/_headers) stays strict — script-src 'self'.
           "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-          "style-src 'self' 'unsafe-inline'",
-          "img-src 'self' data: blob:",
-          "font-src 'self' data:",
-          "connect-src 'self' https://sentry.io",
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+          "img-src 'self' data:",
+          "font-src 'self' https://fonts.gstatic.com",
+          "base-uri 'self'",
+          "form-action 'self'",
           "frame-ancestors 'none'",
+          "object-src 'none'",
         ].join('; '),
         'X-Content-Type-Options': 'nosniff',
         'X-Frame-Options': 'DENY',

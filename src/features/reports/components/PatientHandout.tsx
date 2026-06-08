@@ -3,7 +3,7 @@ import { useRedact } from '../hooks/useRedact';
 import { Card, CardContent } from '@/components/ui';
 import { LogFormData } from '@/types';
 import { formatDate, getPositiveResults, getNegativeResults } from '@shared/utils';
-import { getCrossSensitizationNotes, buildRecommendations } from '@shared/utils/testingUtils';
+import { getCrossSensitizedDrugs, buildRecommendations } from '@shared/utils/testingUtils';
 import { Ban, ShieldCheck } from 'lucide-react';
 import { ReportPrintIdentity } from './ReportPrintIdentity';
 
@@ -18,10 +18,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
   const reportDate = activeReportSavedAt ? new Date(activeReportSavedAt).toISOString() : new Date().toISOString();
   const posResults = getPositiveResults(data);
   const negResults = getNegativeResults(data);
-  const crossNotes = getCrossSensitizationNotes(posResults);
-  const crossSensitized: string[] = crossNotes.map(n =>
-    n.includes('Vecuronium') && !posResults.includes('Vecuronium') ? 'Vecuronium' : 'Rocuronium'
-  ).filter((v, i, a) => a.indexOf(v) === i);
+  const crossSensitized = getCrossSensitizedDrugs(posResults);
   const { avoidList } = buildRecommendations(posResults, crossSensitized);
 
   return (

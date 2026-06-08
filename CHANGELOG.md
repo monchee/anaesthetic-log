@@ -1,3 +1,26 @@
+## [0.59.0] — 2026-06-08 (Guarded)
+
+Summary: Hardened the clinical record logic with tests, removed a duplicated cross-sensitization rule, and added a Content-Security-Policy.
+
+### Added
+- **Content-Security-Policy (report-only)** — `public/_headers` now ships a `Content-Security-Policy-Report-Only` allowlisting only the origins the app uses (Supabase REST/realtime, Sentry, Google Fonts). Shipped report-only first so any missed origin surfaces in the console before the policy is enforced in a follow-up.
+- **`getCrossSensitizedDrugs` helper** — a single tested source of truth in `testingUtils.ts` for the Rocuronium↔Vecuronium cross-sensitization drug list.
+
+### Changed
+- **Removed duplicated cross-sensitization logic** — the three report components and the two text exporters re-derived the cross-sensitized drug list by string-matching note text; they now all call `getCrossSensitizedDrugs`. Behaviour is unchanged (same Roc-only→Vecuronium, Vec-only→Rocuronium output).
+- **Dev-server CSP tightened** — the Vite dev server CSP now matches production for connect/style/img/font/object directives (`script-src` keeps `'unsafe-inline'`/`'unsafe-eval'` as Vite requires in dev).
+
+### Fixed
+- **Cleared all npm audit vulnerabilities** — `npm audit` now reports 0 (bumped the `serialize-javascript` override).
+
+### Tests
+- New `reportExporter.test.ts` covering the eMR/handout/letter generators (tryptase sentences, positives/negatives/challenge, cross-sensitization, the redact path, manual-entry letters, and edge inputs).
+- New `csvUtils.test.ts` covering REDCap import (valid export, missing required columns, quoted/escaped fields, `(choice=…)` parsing, time formats, empty/header-only files).
+- New `getCrossSensitizedDrugs` cases in `testingUtils.test.ts`.
+
+### Chore
+- Version bump to 0.59.0
+
 ## [0.58.0] — 2026-06-08 (Headline)
 
 Summary: Quick Start release notes now use curated changelog summaries instead of the first bullet.

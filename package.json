@@ -1,7 +1,7 @@
 {
   "name": "dream-allergy-management",
   "private": true,
-  "version": "0.58.0",
+  "version": "0.59.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -82,6 +82,6 @@
     "zod": "^4.3.4"
   },
   "overrides": {
-    "serialize-javascript": "7.0.4"
+    "serialize-javascript": "7.0.5"
   }
 }

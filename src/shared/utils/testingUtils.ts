@@ -63,6 +63,21 @@ export function getCrossSensitizationNotes(positives: string[]): string[] {
   return notes;
 }
 
+export function getCrossSensitizedDrugs(positives: string[]): string[] {
+  const hasRoc = positives.includes('Rocuronium');
+  const hasVec = positives.includes('Vecuronium');
+  const crossSensitized: string[] = [];
+
+  if (hasRoc && !hasVec && MUSCLE_RELAXANTS.includes('Vecuronium')) {
+    crossSensitized.push('Vecuronium');
+  }
+  if (hasVec && !hasRoc && MUSCLE_RELAXANTS.includes('Rocuronium')) {
+    crossSensitized.push('Rocuronium');
+  }
+
+  return crossSensitized;
+}
+
 export function buildRecommendations(
   positives: string[],
   crossSensitized: string[],

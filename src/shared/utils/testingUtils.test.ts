@@ -4,6 +4,7 @@ import {
   getPositiveResults,
   getNegativeResults,
   getCrossSensitizationNotes,
+  getCrossSensitizedDrugs,
   buildRecommendations,
 } from './testingUtils';
 import { DrugTestRow, LogFormData } from '@features/testing/types';
@@ -172,6 +173,25 @@ describe('getCrossSensitizationNotes', () => {
   it('returns empty when neither is positive', () => {
     expect(getCrossSensitizationNotes(['Cefazolin'])).toEqual([]);
     expect(getCrossSensitizationNotes([])).toEqual([]);
+  });
+});
+
+describe('getCrossSensitizedDrugs', () => {
+  it('adds Vecuronium when Rocuronium is positive only', () => {
+    expect(getCrossSensitizedDrugs(['Rocuronium'])).toEqual(['Vecuronium']);
+  });
+
+  it('adds Rocuronium when Vecuronium is positive only', () => {
+    expect(getCrossSensitizedDrugs(['Vecuronium'])).toEqual(['Rocuronium']);
+  });
+
+  it('returns empty when both are positive', () => {
+    expect(getCrossSensitizedDrugs(['Rocuronium', 'Vecuronium'])).toEqual([]);
+  });
+
+  it('returns empty when neither Rocuronium nor Vecuronium is positive', () => {
+    expect(getCrossSensitizedDrugs(['Cefazolin'])).toEqual([]);
+    expect(getCrossSensitizedDrugs([])).toEqual([]);
   });
 });
 
