@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Patient } from '@features/patients/types';
 import { LogFormData } from '@features/testing/types';
 import { isSkinTestPositive, calculateTimeDifference } from '@shared/utils';
+import { SKIN_TEST_POSITIVE_THRESHOLD } from '@shared/utils/constants';
 
 interface UseDashboardAnalyticsProps {
   existingPatients: Patient[];
@@ -144,12 +145,12 @@ export const useDashboardAnalytics = ({
                 const key = normalizeAgent(drugName);
                 if (key) {
                     drugStats[key].total += 1; 
-                    if (test.sptWheal && parseInt(test.sptWheal) >= 3) drugStats[key].spt++;
+                    if (test.sptWheal && parseInt(test.sptWheal, 10) >= SKIN_TEST_POSITIVE_THRESHOLD) drugStats[key].spt++;
                     // New format: idtResults array; legacy: idt100/idt10/idtNeat
                     const r = test.idtResults?.length ? test.idtResults : [test.idt100, test.idt10, test.idtNeat];
-                    if (r[0] && parseInt(r[0]) >= 3) drugStats[key].idt100++;
-                    if (r[1] && parseInt(r[1]) >= 3) drugStats[key].idt10++;
-                    if (r[2] && parseInt(r[2]) >= 3) drugStats[key].idtNeat++;
+                    if (r[0] && parseInt(r[0], 10) >= SKIN_TEST_POSITIVE_THRESHOLD) drugStats[key].idt100++;
+                    if (r[1] && parseInt(r[1], 10) >= SKIN_TEST_POSITIVE_THRESHOLD) drugStats[key].idt10++;
+                    if (r[2] && parseInt(r[2], 10) >= SKIN_TEST_POSITIVE_THRESHOLD) drugStats[key].idtNeat++;
                 }
             }
         });

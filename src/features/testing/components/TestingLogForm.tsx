@@ -20,6 +20,12 @@ const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
   if (['-', 'e', 'E', '+'].includes(e.key)) e.preventDefault();
 };
 
+const EMPTY_TRYPTASE: NonNullable<LogFormData['tryptase']> = {
+  obtained: false,
+  significantElevation: false,
+  values: [],
+};
+
 const TestingLogForm: React.FC<TestingLogFormProps> = ({ 
   formData, 
   setFormData, 
@@ -566,7 +572,10 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                   aria-label="Clinically significant dynamic elevation"
                   onClick={() => setFormData(prev => ({
                     ...prev,
-                    tryptase: { ...prev.tryptase!, significantElevation: !prev.tryptase!.significantElevation }
+                    tryptase: {
+                      ...(prev.tryptase ?? EMPTY_TRYPTASE),
+                      significantElevation: !(prev.tryptase ?? EMPTY_TRYPTASE).significantElevation,
+                    }
                   }))}
                   className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
                     formData.tryptase.significantElevation ? 'bg-red-500' : 'bg-slate-200 dark:bg-slate-700'
@@ -593,7 +602,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                           const vals = [...(formData.tryptase?.values ?? [])];
                           while (vals.length <= idx) vals.push({ time: '', result: '' });
                           vals[idx] = { ...vals[idx], time: e.target.value };
-                          setFormData(prev => ({ ...prev, tryptase: { ...prev.tryptase!, values: vals } }));
+                          setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals } }));
                         }}
                       />
                       <Input
@@ -604,7 +613,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                           const vals = [...(formData.tryptase?.values ?? [])];
                           while (vals.length <= idx) vals.push({ time: '', result: '' });
                           vals[idx] = { ...vals[idx], result: e.target.value };
-                          setFormData(prev => ({ ...prev, tryptase: { ...prev.tryptase!, values: vals } }));
+                          setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals } }));
                         }}
                       />
                     </div>
@@ -612,8 +621,8 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                       <button
                         type="button"
                         onClick={() => {
-                          const vals = formData.tryptase!.values.filter((_, i) => i !== idx);
-                          setFormData(prev => ({ ...prev, tryptase: { ...prev.tryptase!, values: vals } }));
+                          const vals = (formData.tryptase?.values ?? []).filter((_, i) => i !== idx);
+                          setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals } }));
                         }}
                         className="text-muted-foreground hover:text-destructive p-1"
                       >
@@ -630,7 +639,10 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
                     className="text-xs h-7 px-2 rounded-none"
                     onClick={() => setFormData(prev => ({
                       ...prev,
-                      tryptase: { ...prev.tryptase!, values: [...prev.tryptase!.values, { time: '', result: '' }] }
+                      tryptase: {
+                        ...(prev.tryptase ?? EMPTY_TRYPTASE),
+                        values: [...(prev.tryptase ?? EMPTY_TRYPTASE).values, { time: '', result: '' }],
+                      }
                     }))}
                   >
                     <Plus className="w-3.5 h-3.5 mr-1" /> Add sample

@@ -26,6 +26,7 @@ import { formatClinicalReportAsText, formatPatientHandoutAsText } from '@shared/
 import { generateLetterText } from '@shared/utils/reportExporter';
 import { RedactProvider, useRedact } from '@features/reports/hooks/useRedact';
 import { reportWebVitals } from './src/lib/analytics';
+import { initSentry } from './src/lib/sentry';
 import { findInfoPageRoute } from '@core/routes/infoPageConfig';
 import { useResearchSubmit } from '@features/research/hooks/useResearchSubmit';
 
@@ -56,7 +57,22 @@ function RedactToggle() {
 }
 
 function AnaestheticLogApp() {
-  useEffect(() => { reportWebVitals(); }, []);
+  useEffect(() => {
+    const runPostPaintSetup = () => {
+      void initSentry();
+      reportWebVitals();
+    };
+
+    let timeoutId: number | undefined;
+    const frameId = window.requestAnimationFrame(() => {
+      timeoutId = window.setTimeout(runPostPaintSetup, 0);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+    };
+  }, []);
 
   const {
     screen, setScreen, formData, setFormData,

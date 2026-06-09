@@ -8,7 +8,7 @@ import {
 } from '../../../../components/ui';
 import { X, Plus, Check, ChevronDown } from 'lucide-react';
 import { DrugTestRow, DrugProtocol } from '../../../../types';
-import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
+import { CATEGORY_THEMES, DEFAULT_THEME, SKIN_TEST_POSITIVE_THRESHOLD } from '@shared/utils/constants';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 
 interface DrugTestGridProps {
@@ -25,7 +25,7 @@ const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
   if (['-', 'e', 'E', '+'].includes(e.key)) e.preventDefault();
 };
 
-const isPositive = (v: string) => (parseInt(v) || 0) >= 3;
+const isPositive = (v: string) => (parseInt(v, 10) || 0) >= SKIN_TEST_POSITIVE_THRESHOLD;
 
 interface DrugRowProps {
   row: DrugTestRow;

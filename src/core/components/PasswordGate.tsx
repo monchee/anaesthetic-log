@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
 
-// @ts-expect-error - __APP_VERSION__ is injected by Vite during build
 const APP_VERSION = __APP_VERSION__;
 
 const HARDCODED_PIN = '2050';

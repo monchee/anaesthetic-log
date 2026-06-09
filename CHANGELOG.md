@@ -1,3 +1,26 @@
+## [0.65.0] — 2026-06-09 (Tidy)
+
+Summary: Project cleanup pass covering generated-file hygiene, dead dependency removal, safer tryptase restore handling, shared skin-test threshold logic, and leaner startup bundling.
+
+### Changed
+- **Generated test artifacts untracked** — Playwright reports and Vitest result JSON files are now ignored instead of living in source control.
+- **Shared skin-test positivity threshold** — the 3 mm threshold now lives in one constant used by clinical result utilities, dashboard analytics, testing services, and research deidentification.
+- **Safer tryptase state handling** — restored tryptase samples are normalized before re-entering React state, and tryptase form updates no longer rely on non-null assertions.
+- **Lazy Sentry loading** — Sentry initializes after first paint and is dynamically imported only when configured, while web-vital and error-boundary capture still route through Sentry helpers.
+
+### Removed
+- **Unused hot-toast compatibility layer** — removed the dead `LegacyToaster` export and dropped the unused `react-hot-toast` package.
+- **Stray backup file** — removed `components/ui/index.tsx.backup`.
+- **Empty React vendor chunk** — removed the manual chunk entry that produced an empty `react-vendor` build artifact.
+
+### Notes
+- CSP enforcement remains out of scope for this pass.
+- `next-themes` stays because it is used by the active sonner toast component.
+- The drug masterlist remains eagerly loaded; deferring it would require async refactors across synchronous consumers for a small gzip gain.
+
+### Chore
+- Version bump to 0.65.0
+
 ## [0.64.0] — 2026-06-09 (Measured)
 
 Summary: Diluent text now includes sourced reconstitution volumes for the skin-test request entries that need bedside preparation, while RTU saline entries stay plain.

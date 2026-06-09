@@ -1,12 +1,12 @@
 import { onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals';
-import { Sentry } from './sentry';
+import { captureMessage } from './sentry';
 import { env } from './env';
 
 export function reportWebVitals() {
   if (env.VITE_ENVIRONMENT === 'test') return;
 
   const sendToSentry = (name: string, value: number) => {
-    Sentry.captureMessage(`Web Vitals: ${name}`, {
+    void captureMessage(`Web Vitals: ${name}`, {
       level: 'info',
       extra: {
         value,

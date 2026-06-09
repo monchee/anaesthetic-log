@@ -157,8 +157,6 @@ export default defineConfig(() => {
       rollupOptions: {
         output: {
           manualChunks: {
-            // React core - separate for better caching
-            'react-vendor': ['react', 'react-dom'],
             // Radix UI components - frequently updated, separate chunk
             'radix-vendor': [
               '@radix-ui/react-dialog',

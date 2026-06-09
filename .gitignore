@@ -27,6 +27,8 @@ dist-ssr
 *.sln
 *.sw?
 .gstack/
--e 
 .wrangler/
 coverage/
+test-results/
+test-results*.json
+playwright-report/

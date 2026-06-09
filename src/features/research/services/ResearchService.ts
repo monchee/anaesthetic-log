@@ -1,14 +1,14 @@
 import { supabase } from '../../../lib/supabase';
 import { LogFormData, DrugTestRow } from '../../../../types';
 import { ResearchSubmission, ResearchRecord } from '../types';
+import { SKIN_TEST_POSITIVE_THRESHOLD } from '@shared/utils/constants';
 
-// @ts-expect-error - __APP_VERSION__ is injected by Vite during build
 const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'unknown';
 
 const TABLE = 'research_submissions';
 
 function isSkinTestPositive(test: DrugTestRow): boolean {
-  const check = (v: string | undefined) => (parseInt(v ?? '0') || 0) >= 3;
+  const check = (v: string | undefined) => (parseInt(v ?? '0', 10) || 0) >= SKIN_TEST_POSITIVE_THRESHOLD;
   if (check(test.sptWheal)) return true;
   if (test.idtResults?.some(v => check(v))) return true;
   return check(test.idt100) || check(test.idt10) || check(test.idtNeat);

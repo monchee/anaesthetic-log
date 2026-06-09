@@ -35,6 +35,30 @@ const INITIAL_FORM_STATE: LogFormData = {
   plan: ''
 };
 
+const sanitizeTryptase = (tryptase: unknown): LogFormData['tryptase'] => {
+  if (!tryptase || typeof tryptase !== 'object') return undefined;
+  const source = tryptase as {
+    obtained?: unknown;
+    significantElevation?: unknown;
+    values?: unknown;
+  };
+  return {
+    obtained: Boolean(source.obtained),
+    significantElevation: Boolean(source.significantElevation),
+    values: Array.isArray(source.values)
+      ? source.values.map((v) => {
+          const sample = v && typeof v === 'object'
+            ? v as { time?: unknown; result?: unknown }
+            : {};
+          return {
+            time: String(sample.time || ''),
+            result: String(sample.result || ''),
+          };
+        })
+      : [],
+  };
+};
+
 export function useTestingState() {
   const [formData, setFormData] = useState<LogFormData>(INITIAL_FORM_STATE);
   const [lastSavedRecord, setLastSavedRecord] = useState<LogFormData | null>(null);
@@ -47,7 +71,7 @@ export function useTestingState() {
     const record = getIfFresh<LogFormData>(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
     const savedAt = getSavedAt(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
     if (record && savedAt) {
-      setLastSavedRecord(record);
+      setLastSavedRecord({ ...record, tryptase: sanitizeTryptase(record.tryptase) });
       setActiveReportSavedAt(savedAt);
     }
 
@@ -58,7 +82,7 @@ export function useTestingState() {
     // patient's results into a different patient selected fresh this session.
     if (window.location.pathname === '/testing') {
       const draft = getIfFresh<LogFormData>(TESTING_DRAFT_KEY, ACTIVE_REPORT_TTL_MS);
-      if (draft) setFormData(draft);
+      if (draft) setFormData({ ...draft, tryptase: sanitizeTryptase(draft.tryptase) });
     }
   }, []);
 
@@ -128,13 +152,7 @@ export function useTestingState() {
           postTesting: parsed.nurseNotes.postTesting ? String(parsed.nurseNotes.postTesting) : undefined,
           signedBy: parsed.nurseNotes.signedBy ? String(parsed.nurseNotes.signedBy) : undefined,
         } : undefined,
-        tryptase: parsed.tryptase ? {
-          obtained: Boolean(parsed.tryptase.obtained),
-          significantElevation: Boolean(parsed.tryptase.significantElevation),
-          values: Array.isArray(parsed.tryptase.values)
-            ? parsed.tryptase.values.map((v: any) => ({ time: String(v.time || ''), result: String(v.result || '') }))
-            : [],
-        } : undefined,
+        tryptase: sanitizeTryptase(parsed.tryptase),
       };
       
       if (recordToSave.outcome !== null && recordToSave.outcome !== 'SUCCESS' && recordToSave.outcome !== 'UNSUCCESS') {

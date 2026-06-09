@@ -1,9 +1,10 @@
 import { DrugTestRow, LogFormData } from '@features/testing/types';
+import { SKIN_TEST_POSITIVE_THRESHOLD } from './constants';
 
 // Testing utility functions
 
 export const isSkinTestPositive = (row: DrugTestRow): boolean => {
-    const check = (v: string | undefined) => (parseInt(v ?? '0', 10) || 0) >= 3;
+    const check = (v: string | undefined) => (parseInt(v ?? '0', 10) || 0) >= SKIN_TEST_POSITIVE_THRESHOLD;
     if (check(row.sptWheal)) return true;
     if (row.idtResults?.some(v => check(v))) return true;
     // Legacy fallback

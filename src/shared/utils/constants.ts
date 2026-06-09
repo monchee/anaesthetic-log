@@ -3,6 +3,8 @@ import { getDrugsByCategory } from '../data/drugMasterlist';
 
 // Shared Constants and Configuration
 
+export const SKIN_TEST_POSITIVE_THRESHOLD = 3;
+
 export const CATEGORY_THEMES: Record<string, CategoryTheme> = {
   "Muscle Relaxants": {
     activeBg: "bg-red-50 dark:bg-red-900/20",

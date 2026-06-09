@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui';
+import { captureException } from '@/src/lib/sentry';
 
 interface Props {
   children: ReactNode;
@@ -36,6 +37,11 @@ class ErrorBoundary extends Component<Props, State> {
     console.error('Error stack:', error.stack);
     console.error('Error info:', errorInfo);
     console.error('Component stack:', errorInfo.componentStack);
+    void captureException(error, {
+      extra: {
+        componentStack: errorInfo.componentStack,
+      },
+    });
   }
 
   private handleReset = () => {

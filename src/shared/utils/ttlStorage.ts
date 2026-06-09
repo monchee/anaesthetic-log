@@ -26,7 +26,10 @@ export function setWithTTL<T>(key: string, value: T): void {
   try {
     const entry: TTLEntry<T> = { value, savedAt: Date.now() };
     localStorage.setItem(key, JSON.stringify(entry));
-  } catch {
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+      console.warn(`Unable to save local clinical data for "${key}": browser storage quota exceeded.`);
+    }
     // localStorage may be unavailable (private mode / quota) — non-fatal
   }
 }
