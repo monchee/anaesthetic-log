@@ -5,6 +5,7 @@ import { createMockPatient } from '@/src/test/factories/patientFactory';
 import { TESTING_PLAN_BUILDER_DRAFTS_KEY } from '@shared/utils/ttlStorage';
 
 const drugCategories = {
+  'Muscle Relaxants': ['Cis-atracurium'],
   Hypnotics: ['Ketamine'],
   Others: ['Chlorhexidine', 'Latex'],
 };
@@ -19,10 +20,10 @@ const patient = createMockPatient({
   },
 });
 
-function renderGenerator(onPreview = vi.fn()) {
+function renderGenerator(onPreview = vi.fn(), targetPatient = patient) {
   render(
     <TestingPlanGenerator
-      patient={patient}
+      patient={targetPatient}
       drugCategories={drugCategories}
       onPreview={onPreview}
     />
@@ -120,5 +121,45 @@ describe('TestingPlanGenerator', () => {
     expect(screen.getByText('Ketamine is already in the master list and has been selected from its category.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Ketamine' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.queryByRole('button', { name: 'Remove custom drug ketamine' })).not.toBeInTheDocument();
+  });
+
+  it('preselects Cis-atracurium when reaction history uses the unhyphenated REDCap spelling', () => {
+    // REDCap's reaction form stores "Cisatracurium" (no hyphen) while the
+    // masterlist canonical name is "Cis-atracurium" — the matcher must bridge them.
+    const patientWithReactionDrug = createMockPatient({
+      id: 'PLAN-CISATRA',
+      history: {
+        ...patient.history,
+        testingPlan: [],
+        medications: ['Cisatracurium'],
+      },
+    });
+
+    renderGenerator(vi.fn(), patientWithReactionDrug);
+
+    expect(screen.getByRole('button', { name: /Cis-atracurium/i })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('surfaces REDCap Others text and adds it as a selected custom item', async () => {
+    const patientWithRedcapOther = createMockPatient({
+      id: 'PLAN-REDCAP-OTHER',
+      history: {
+        ...patient.history,
+        testingPlanCustom: 'Sodium citrate flush',
+      },
+    });
+
+    renderGenerator(vi.fn(), patientWithRedcapOther);
+
+    expect(screen.getByText('From REDCap — Others (not listed)')).toBeInTheDocument();
+    expect(screen.getByText('Sodium citrate flush')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Add as custom item/i }));
+
+    await waitFor(() => {
+      expect(screen.queryByText('From REDCap — Others (not listed)')).not.toBeInTheDocument();
+    });
+    expect(screen.getByRole('button', { name: 'Sodium citrate flush' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Remove custom drug Sodium citrate flush' })).toBeInTheDocument();
   });
 });

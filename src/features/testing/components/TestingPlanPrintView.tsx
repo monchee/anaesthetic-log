@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, Card, CardContent, Badge } from '@/components/ui';
 import { Patient, TestingPlanData } from '@/types';
 import { formatDate } from '@shared/utils';
-import { Printer, FileText, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText, FlaskConical } from 'lucide-react';
+import { Printer, FileText, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText } from 'lucide-react';
 import { formatTestingPlanAsText } from '@shared/utils/testingPlanFormatter';
-import { getSkinProtocolsForDrug, getProtocolsForDrug } from '@shared/data/drugMasterlist';
+import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 
 interface TestingPlanPrintViewProps {
   patient: Patient;
@@ -206,6 +206,9 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                                         <div className="text-muted-foreground">
                                                             <span className="font-medium text-foreground/80">SPT prep:</span> {protocol?.sptNeatConcentration || '—'}
                                                         </div>
+                                                        <div className="text-muted-foreground">
+                                                            <span className="font-medium text-foreground/80">Diluent:</span> {protocol?.diluent || '—'}
+                                                        </div>
                                                         <div className="flex items-center gap-1">
                                                             <span className="font-medium text-foreground/80">SPT:</span>
                                                             <span className="border-b border-gray-400 inline-block min-w-[2.5rem]" />
@@ -233,9 +236,10 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                     <table className="hidden md:table print:table w-full text-xs print:text-[9px]">
                                         <thead>
                                             <tr className="border-b border-border text-muted-foreground uppercase text-xs tracking-wide print:border-slate-300">
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-1/5">Drug</th>
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-1/5">Presentation</th>
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-1/5">SPT Preparation</th>
+                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[18%]">Drug</th>
+                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[16%]">Presentation</th>
+                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[16%]">SPT Preparation</th>
+                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[18%]">Diluent</th>
                                                 <th scope="col" className="text-center px-3 py-1.5 font-semibold w-[70px]">SPT Result</th>
                                                 <th scope="col" className="text-left px-3 py-1.5 font-semibold">IDT Protocol / Result</th>
                                             </tr>
@@ -255,6 +259,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                                         </td>
                                                         <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.presentation || '—'}</td>
                                                         <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.sptNeatConcentration || '—'}</td>
+                                                        <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.diluent || '—'}</td>
                                                         <td className="px-3 py-2 text-center">
                                                             <span className="flex items-end justify-center print:h-6">
                                                                 <span className="border-b border-gray-400 print:border-black inline-block min-w-[3rem] print:h-5" />
@@ -315,83 +320,6 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                 )}
             </div>
 
-            {/* Challenge Protocols section */}
-            {(() => {
-                const challengeDrugs = selectedDrugs.filter(d => {
-                    const protos = getProtocolsForDrug(d);
-                    return protos.some(p => p.testType === 'challenge' && p.challengeSteps.length > 0);
-                });
-                if (challengeDrugs.length === 0) return null;
-                return (
-                    <div className="mt-6 print:mt-2">
-                        <h3 className="font-semibold text-xs uppercase tracking-widest border-b-2 border-foreground mb-3 pb-1 print:text-[10px] print:mb-1.5 print:pb-0.5 print:border-b flex items-center gap-1.5 print:text-black">
-                            <span className="inline-block w-0.5 h-3 bg-primary print:bg-black shrink-0" />
-                            <FlaskConical className="w-4 h-4 print:w-3 print:h-3" /> Challenge / Desensitisation Protocols
-                        </h3>
-                        <div className="space-y-4 print:space-y-2">
-                            {challengeDrugs.map(d => {
-                                const challengeProtos = getProtocolsForDrug(d).filter(p => p.testType === 'challenge' && p.challengeSteps.length > 0);
-                                return challengeProtos.map((proto, pi) => (
-                                    <div key={`${d}-${pi}`} className="break-inside-avoid bg-muted border border-border rounded-none overflow-hidden print:bg-white print:border-slate-300">
-                                        <div className="px-3 py-1.5 bg-card border-b border-border rounded-none print:bg-white">
-                                            <h4 className="font-bold text-xs uppercase tracking-wider text-primary print:text-[9px] print:text-black">
-                                                {d} — {proto.protocolLabel} {proto.presentation ? `(${proto.presentation})` : ''}
-                                            </h4>
-                                        </div>
-
-                                        {/* Mobile card list — hidden on md+ and print */}
-                                        <ul className="divide-y divide-border/50 md:hidden print:hidden">
-                                            {proto.challengeSteps.map(step => (
-                                                <li key={step.step} className="px-3 py-2 text-xs space-y-1">
-                                                    <div className="flex items-baseline gap-2">
-                                                        <span className="font-mono text-muted-foreground w-10 shrink-0">Step {step.step}</span>
-                                                        <span className="font-medium text-foreground/90">{step.dose}</span>
-                                                    </div>
-                                                    <div className="grid grid-cols-2 gap-x-4 text-muted-foreground pl-12">
-                                                        {step.volume && <div>Vol: {step.volume}</div>}
-                                                        {step.cumulative && <div>Cumul: {step.cumulative}</div>}
-                                                    </div>
-                                                    <div className="flex items-center gap-2 pl-12">
-                                                        <span className="text-muted-foreground">Result:</span>
-                                                        <span className="border-b border-gray-400 inline-block min-w-[6rem]" />
-                                                    </div>
-                                                </li>
-                                            ))}
-                                        </ul>
-
-                                        {/* Desktop/print table — hidden on mobile */}
-                                        <table className="hidden md:table print:table w-full text-xs print:text-[9px]">
-                                            <thead>
-                                                <tr className="border-b border-border text-muted-foreground uppercase text-xs tracking-wide print:border-slate-300">
-                                                    <th scope="col" className="text-left px-3 py-1.5 font-semibold w-12">Step</th>
-                                                    <th scope="col" className="text-left px-3 py-1.5 font-semibold">Dose</th>
-                                                    <th scope="col" className="text-left px-3 py-1.5 font-semibold">Volume</th>
-                                                    <th scope="col" className="text-left px-3 py-1.5 font-semibold">Cumulative</th>
-                                                    <th scope="col" className="text-left px-3 py-1.5 font-semibold">Result / Observations</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {proto.challengeSteps.map(step => (
-                                                    <tr key={step.step} className="border-b border-border/50 last:border-0 print:border-slate-200">
-                                                        <td className="px-3 py-2 font-mono text-muted-foreground">{step.step}</td>
-                                                        <td className="px-3 py-2 font-medium text-foreground/90 print:text-slate-800">{step.dose}</td>
-                                                        <td className="px-3 py-2 text-muted-foreground">{step.volume || '—'}</td>
-                                                        <td className="px-3 py-2 text-muted-foreground">{step.cumulative || '—'}</td>
-                                                        <td className="px-3 py-2">
-                                                            <span className="border-b border-gray-400 print:border-black inline-block min-w-[6rem] print:h-5" />
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                ));
-                            })}
-                        </div>
-                    </div>
-                );
-            })()}
-            
             {/* Nurse / Time / Date sign-off */}
             <div className="flex flex-wrap items-center gap-x-8 gap-y-1 text-xs print:text-[10px] pt-4 print:pt-2">
                 {[

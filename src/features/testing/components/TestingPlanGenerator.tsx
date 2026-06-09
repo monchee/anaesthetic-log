@@ -33,22 +33,30 @@ const getTodayDate = () => {
 
 const normalizeDrugName = (value: string) => value.trim().toLowerCase();
 
+// Loose key for matching drug names across REDCap's inconsistent spellings
+// (strips hyphens, spaces, and case — e.g. "Cisatracurium" ≡ "Cis-atracurium").
+const stripForMatch = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
+
 const readDraftForPatient = (patientId: string): TestingPlanBuilderDraft | null => {
   const drafts = getIfFresh<TestingPlanBuilderDrafts>(TESTING_PLAN_BUILDER_DRAFTS_KEY);
   return drafts?.[patientId] ?? null;
 };
 
 const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, drugCategories, onPreview }) => {
-  // Drugs matched from the patient's reaction history (used for UI badges)
+  // Drugs matched from the patient's reaction history (used for UI badges).
+  // Match is hyphen/space/case-insensitive: REDCap's reaction form spells some
+  // drugs differently from the masterlist (e.g. reaction "Cisatracurium" vs
+  // masterlist "Cis-atracurium"), so we strip non-alphanumerics before comparing.
   const historyDrugs = useMemo(() => {
     const patientDrugs = [
       ...(patient.history.preInductionDrugs ?? []),
       ...(patient.history.postInductionDrugs ?? []),
       ...(patient.history.medications ?? []),
-    ].map(d => d.toLowerCase());
-    return Object.values(drugCategories).flat().filter(drug =>
-      patientDrugs.some(pd => pd.includes(drug.toLowerCase()) || drug.toLowerCase().includes(pd))
-    );
+    ].map(stripForMatch).filter(Boolean);
+    return Object.values(drugCategories).flat().filter(drug => {
+      const normDrug = stripForMatch(drug);
+      return normDrug.length > 0 && patientDrugs.some(pd => pd.includes(normDrug) || normDrug.includes(pd));
+    });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient.id]);
 
@@ -104,6 +112,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
     () => [...new Set(Object.values(drugCategories).flat())],
     [drugCategories]
   );
+  const redcapOtherText = patient.history.testingPlanCustom?.trim() ?? '';
 
   useEffect(() => {
     const nextDraft = readDraftForPatient(patient.id) ?? defaultDraft;
@@ -173,8 +182,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
     }
   };
 
-  const addCustomDrug = () => {
-    const name = newCustomDrug.trim();
+  const addCustomDrugByName = (rawName: string) => {
+    const name = rawName.trim();
     if (!name) return;
 
     const normalized = normalizeDrugName(name);
@@ -199,6 +208,12 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
     setSelectedDrugs(prev => [...prev, name]);
     setNewCustomDrug('');
     setCustomDrugNotice('');
+  };
+
+  const addCustomDrug = () => addCustomDrugByName(newCustomDrug);
+
+  const addRedcapOtherAsCustomDrug = () => {
+    addCustomDrugByName(redcapOtherText);
   };
 
   const removeCustomDrug = (name: string) => {
@@ -267,6 +282,10 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   const customTheme = CATEGORY_THEMES['Others'] || DEFAULT_THEME;
   const hasCustomActive = customDrugs.some(e => selectedDrugs.includes(e.name));
   const selectedSummary = `${selectedDrugs.length} drug${selectedDrugs.length === 1 ? '' : 's'} selected`;
+  const redcapOtherAlreadyAdded = redcapOtherText
+    ? selectedDrugs.some(drug => normalizeDrugName(drug) === normalizeDrugName(redcapOtherText))
+      || customDrugs.some(entry => normalizeDrugName(entry.name) === normalizeDrugName(redcapOtherText))
+    : false;
 
   return (
     <>
@@ -516,6 +535,28 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     {hasCustomActive && <span className={`flex h-1.5 w-1.5 rounded-none ${customTheme.pulse} animate-pulse`}></span>}
                                 </h4>
                             </div>
+                            {redcapOtherText && !redcapOtherAlreadyAdded && (
+                              <div className="mb-3 border border-dashed border-border bg-muted p-3 rounded-none">
+                                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                                  <div className="space-y-1">
+                                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                                      From REDCap — Others (not listed)
+                                    </p>
+                                    <p className="text-sm text-foreground whitespace-pre-wrap">{redcapOtherText}</p>
+                                  </div>
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={addRedcapOtherAsCustomDrug}
+                                    className="h-8 shrink-0"
+                                  >
+                                    <Plus className="w-3.5 h-3.5 mr-1.5" />
+                                    Add as custom item
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
                             <div className="flex flex-wrap gap-2 mb-2 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                                 {customDrugs.map(entry => (
                                     <div key={entry.name} className="md:w-full flex items-stretch">

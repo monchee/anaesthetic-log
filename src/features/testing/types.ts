@@ -16,6 +16,7 @@ export interface DrugProtocol {
   testType: 'skin' | 'challenge' | 'control' | 'experimental';
   presentation: string;
   sptNeatConcentration: string;
+  diluent: string;
   idtSteps: IDTStep[];
   challengeSteps: ChallengeStep[];
   protocolLabel: string;

@@ -48,7 +48,9 @@ export const getNegativeResults = (record: LogFormData) => {
   return [...new Set(drugs)];
 };
 
-export const MUSCLE_RELAXANTS = ['Rocuronium', 'Vecuronium', 'Suxamethonium', 'Cisatracurium', 'Pancuronium', 'Atracurium', 'Mivacurium'];
+// Canonical masterlist spelling is 'Cis-atracurium' (hyphenated) — positives
+// carry that form, so this list must match it to recognise it as a relaxant.
+export const MUSCLE_RELAXANTS = ['Rocuronium', 'Vecuronium', 'Suxamethonium', 'Cis-atracurium', 'Pancuronium', 'Atracurium', 'Mivacurium'];
 
 export function getCrossSensitizationNotes(positives: string[]): string[] {
   const notes: string[] = [];

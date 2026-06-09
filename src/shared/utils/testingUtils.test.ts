@@ -217,6 +217,13 @@ describe('buildRecommendations', () => {
     expect(nonMrResult.bullets.some(b => b.includes('MedicAlert'))).toBe(false);
   });
 
+  it('recognises canonical Cis-atracurium (hyphenated) as a muscle relaxant', () => {
+    // Regression: MUSCLE_RELAXANTS previously held the unhyphenated spelling,
+    // so a positive Cis-atracurium was not treated as a relaxant.
+    const result = buildRecommendations(['Cis-atracurium'], []);
+    expect(result.bullets.some(b => b.includes('MedicAlert'))).toBe(true);
+  });
+
   it('includes standard bullets in recommendations', () => {
     const result = buildRecommendations(['Rocuronium'], []);
     expect(result.bullets.some(b => b.includes('eMR'))).toBe(true);

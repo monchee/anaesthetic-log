@@ -1,3 +1,28 @@
+## [0.62.0] — 2026-06-09 (Solvent)
+
+Summary: Testing request forms now omit challenge protocols, show per-drug diluents, and preserve REDCap "Others (not listed)" requests as addable custom items.
+
+### Added
+- **Diluent column on testing requests** — the printed skin-test request table now includes a per-drug Diluent column beside SPT Preparation, and the mobile request preview shows the same information.
+- **Per-drug diluent dataset** — skin/control/experimental protocols now carry sourced diluent values mined from `/Users/monchee/Projects/scratch/docs/drugs/*.md`; challenge-only protocols keep a blank diluent because the printed challenge section has been removed.
+- **REDCap "Others (not listed)" callout** — the testing-plan builder now surfaces imported `testingPlanCustom` text as a read-only callout with one-click "Add as custom item" handling.
+
+### Changed
+- **Printed testing request simplified** — removed the "Challenge / Desensitisation Protocols" section from the printed request while leaving the challenge protocol data and live challenge workflow untouched.
+
+### Fixed
+- **Cis-atracurium auto-selection** — the testing-plan builder now matches reaction-history drugs tolerant of hyphen/space/case, so a reaction recorded as REDCap's "Cisatracurium" correctly preselects the canonical "Cis-atracurium" (previously it silently dropped on the reaction-history path).
+- **Muscle-relaxant recognition** — `MUSCLE_RELAXANTS` aligned to the canonical "Cis-atracurium" spelling so a positive result is correctly treated as a muscle relaxant (MedicAlert / cross-sensitization logic).
+
+### Notes
+- Diluent values require clinician sign-off before release. Residual confirm items: Levofloxacin tablet preparation; Methoxybenzylpenicillin, Cefuroxime Suspension, Methylene Blue, IV Contrast, and Atropine diluent values.
+
+### Tests
+- Added coverage for REDCap Others callout/add flow, print-view Diluent column plus removed challenge section, representative masterlist diluent values, and regression tests for the Cis-atracurium spelling-tolerant matching and muscle-relaxant recognition.
+
+### Chore
+- Version bump to 0.62.0
+
 ## [0.61.0] — 2026-06-09 (Lucid)
 
 Summary: Dashboard accessibility, consistency, and clarity pass — semantic headings, keyboard-operable tables, reduced-motion support, and clearer record stats.

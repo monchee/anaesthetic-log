@@ -1,5 +1,20 @@
 [
   {
+    "version": "v0.62.0",
+    "codename": "Solvent",
+    "date": "9 June 2026",
+    "summary": "Testing request forms now omit challenge protocols, show per-drug diluents, and preserve REDCap \"Others (not listed)\" requests as addable custom items.",
+    "highlight": false,
+    "changes": [
+      "Diluent column on testing requests \u2014 the printed skin-test request table now includes a per-drug Diluent column beside SPT Preparation, and the mobile request preview shows the same information.",
+      "Per-drug diluent dataset \u2014 skin/control/experimental protocols now carry sourced diluent values mined from `/Users/monchee/Projects/scratch/docs/drugs/*.md`; challenge-only protocols keep a blank diluent because the printed challenge section has been removed.",
+      "REDCap \"Others (not listed)\" callout \u2014 the testing-plan builder now surfaces imported `testingPlanCustom` text as a read-only callout with one-click \"Add as custom item\" handling.",
+      "Printed testing request simplified \u2014 removed the \"Challenge / Desensitisation Protocols\" section from the printed request while leaving the challenge protocol data and live challenge workflow untouched.",
+      "Diluent values require clinician sign-off before release. Residual confirm items: Levofloxacin tablet preparation; Methoxybenzylpenicillin, Cefuroxime Suspension, Methylene Blue, IV Contrast, and Atropine diluent values.",
+      "Added coverage for REDCap Others callout/add flow, print-view Diluent column plus removed challenge section, and representative masterlist diluent values."
+    ]
+  },
+  {
     "version": "v0.61.0",
     "codename": "Lucid",
     "date": "9 June 2026",
