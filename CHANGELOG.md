@@ -1,3 +1,21 @@
+## [0.63.0] — 2026-06-09 (Stacked)
+
+Summary: Testing request print tables fit again by stacking diluent under SPT preparation, while REDCap "not listed" items stay visibly marked through builder and print.
+
+### Changed
+- **Stacked SPT preparation/diluent cell** — the printed skin-test table is back to five columns; diluent now appears as a smaller sub-line under the neat/SPT preparation value so long requests do not overflow the page width.
+- **Mobile request preview matches print** — mobile cards now show the same stacked SPT preparation and diluent text instead of a separate Diluent field.
+
+### Added
+- **Persistent REDCap provenance marker** — custom items added from REDCap "Others (not listed)" now keep an amber-accented "(not listed)" marker in the builder after the pending callout disappears.
+- **Print-safe not-listed tag** — REDCap-origin custom items print with a bordered `not listed` tag beside the item name so the source remains visible on black-and-white clinic printers.
+
+### Tests
+- Extended testing-plan builder and print-view coverage for REDCap provenance markers and stacked diluent rendering.
+
+### Chore
+- Version bump to 0.63.0
+
 ## [0.62.0] — 2026-06-09 (Solvent)
 
 Summary: Testing request forms now omit challenge protocols, show per-drug diluents, and preserve REDCap "Others (not listed)" requests as addable custom items.

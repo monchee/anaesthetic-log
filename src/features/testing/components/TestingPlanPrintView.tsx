@@ -17,6 +17,14 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
   const { selectedDrugs, customDrugs, notes, urgent, reactionDate, documentsToChase } = data;
   const patientName = `${patient.firstName} ${patient.lastName}`;
   const patientIdentifier = `${patientName} · MRN ${patient.mrn}${patient.dob ? ` · DOB ${formatDate(patient.dob)}` : ''}`;
+  const renderDiluentSubline = (diluent?: string) => {
+    if (!diluent) return null;
+    return (
+      <div className="mt-0.5 text-[10px] print:text-[8px] leading-tight text-muted-foreground/80 print:text-slate-500">
+        {diluent.startsWith('Neat') ? diluent : `in ${diluent}`}
+      </div>
+    );
+  };
 
   const handlePrint = () => {
     window.print();
@@ -205,9 +213,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                                     <div className="grid grid-cols-2 gap-x-4 gap-y-1">
                                                         <div className="text-muted-foreground">
                                                             <span className="font-medium text-foreground/80">SPT prep:</span> {protocol?.sptNeatConcentration || '—'}
-                                                        </div>
-                                                        <div className="text-muted-foreground">
-                                                            <span className="font-medium text-foreground/80">Diluent:</span> {protocol?.diluent || '—'}
+                                                            {renderDiluentSubline(protocol?.diluent)}
                                                         </div>
                                                         <div className="flex items-center gap-1">
                                                             <span className="font-medium text-foreground/80">SPT:</span>
@@ -236,10 +242,9 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                     <table className="hidden md:table print:table w-full text-xs print:text-[9px]">
                                         <thead>
                                             <tr className="border-b border-border text-muted-foreground uppercase text-xs tracking-wide print:border-slate-300">
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[18%]">Drug</th>
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[16%]">Presentation</th>
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[16%]">SPT Preparation</th>
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[18%]">Diluent</th>
+                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[20%]">Drug</th>
+                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[18%]">Presentation</th>
+                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[26%]">SPT Preparation</th>
                                                 <th scope="col" className="text-center px-3 py-1.5 font-semibold w-[70px]">SPT Result</th>
                                                 <th scope="col" className="text-left px-3 py-1.5 font-semibold">IDT Protocol / Result</th>
                                             </tr>
@@ -258,8 +263,10 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                                             )}
                                                         </td>
                                                         <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.presentation || '—'}</td>
-                                                        <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.sptNeatConcentration || '—'}</td>
-                                                        <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.diluent || '—'}</td>
+                                                        <td className="px-3 py-2 text-muted-foreground print:text-slate-600">
+                                                            <div>{protocol?.sptNeatConcentration || '—'}</div>
+                                                            {renderDiluentSubline(protocol?.diluent)}
+                                                        </td>
                                                         <td className="px-3 py-2 text-center">
                                                             <span className="flex items-end justify-center print:h-6">
                                                                 <span className="border-b border-gray-400 print:border-black inline-block min-w-[3rem] print:h-5" />
@@ -297,7 +304,14 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                 <ul className="divide-y divide-border/50 print:divide-slate-200">
                                     {customDrugs.filter(e => selectedDrugs.includes(e.name)).map(entry => (
                                         <li key={entry.name} className="px-3 py-2 print:text-xs">
-                                            <div className="font-medium text-sm text-foreground/80 print:text-xs">{entry.name}</div>
+                                            <div className="flex flex-wrap items-center gap-1.5 font-medium text-sm text-foreground/80 print:text-xs">
+                                                <span>{entry.name}</span>
+                                                {entry.fromRedcapOther && (
+                                                    <span className="border border-foreground print:border-black rounded-none px-1 text-[9px] uppercase tracking-wide text-foreground print:text-black">
+                                                        not listed
+                                                    </span>
+                                                )}
+                                            </div>
                                             {(entry.sptConcentration || (entry.idtSteps && entry.idtSteps.length > 0)) ? (
                                                 <div className="mt-0.5 text-xs text-muted-foreground space-y-0.5 print:text-[10px]">
                                                     {entry.sptConcentration && <div>SPT: {entry.sptConcentration}</div>}

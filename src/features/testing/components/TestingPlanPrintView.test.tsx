@@ -31,7 +31,7 @@ const baseData: TestingPlanData = {
 };
 
 describe('TestingPlanPrintView', () => {
-  it('prints a diluent column and omits challenge protocols', () => {
+  it('prints stacked diluent text in the SPT preparation column and omits challenge protocols', () => {
     render(
       <TestingPlanPrintView
         patient={patient}
@@ -41,8 +41,33 @@ describe('TestingPlanPrintView', () => {
       />
     );
 
-    expect(screen.getByRole('columnheader', { name: 'Diluent' })).toBeInTheDocument();
-    expect(screen.getAllByText('0.9% sodium chloride (reconstitute with WFI)')).toHaveLength(2);
+    expect(screen.getByRole('columnheader', { name: 'SPT Preparation' })).toBeInTheDocument();
+    expect(screen.queryByRole('columnheader', { name: 'Diluent' })).not.toBeInTheDocument();
+    expect(screen.getAllByText('in 0.9% sodium chloride (reconstitute with WFI)')).toHaveLength(2);
     expect(screen.queryByText(/Challenge \/ Desensitisation Protocols/i)).not.toBeInTheDocument();
+  });
+
+  it('prints a bordered not-listed tag for REDCap Others custom entries', () => {
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={{
+          ...baseData,
+          selectedDrugs: ['Cefazolin', 'Sodium citrate flush'],
+          customDrugs: [{
+            name: 'Sodium citrate flush',
+            sptConcentration: '',
+            idtSteps: [],
+            includeInChallenge: false,
+            fromRedcapOther: true,
+          }],
+        }}
+        drugCategories={{ Cephalosporins: ['Cefazolin'] }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText('Sodium citrate flush')).toBeInTheDocument();
+    expect(screen.getByText('not listed')).toHaveClass('border');
   });
 });

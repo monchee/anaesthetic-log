@@ -105,6 +105,7 @@ describe('TestingPlanGenerator', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Add custom drug' }));
 
     expect(screen.getByRole('button', { name: 'Test Custom' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.queryByText('(not listed)')).not.toBeInTheDocument();
     const removeButton = screen.getByRole('button', { name: 'Remove custom drug Test Custom' });
     expect(removeButton).toBeInTheDocument();
 
@@ -159,7 +160,8 @@ describe('TestingPlanGenerator', () => {
     await waitFor(() => {
       expect(screen.queryByText('From REDCap — Others (not listed)')).not.toBeInTheDocument();
     });
-    expect(screen.getByRole('button', { name: 'Sodium citrate flush' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: /Sodium citrate flush.*not listed/i })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText('(not listed)')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Remove custom drug Sodium citrate flush' })).toBeInTheDocument();
   });
 });

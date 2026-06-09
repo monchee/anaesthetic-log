@@ -27,6 +27,7 @@ export interface CustomDrugEntry {
   sptConcentration?: string;
   idtSteps?: IDTStep[];
   includeInChallenge?: boolean;
+  fromRedcapOther?: boolean;
 }
 
 export interface DrugTestRow {

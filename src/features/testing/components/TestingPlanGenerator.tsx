@@ -182,7 +182,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
     }
   };
 
-  const addCustomDrugByName = (rawName: string) => {
+  const addCustomDrugByName = (rawName: string, options?: { fromRedcapOther?: boolean }) => {
     const name = rawName.trim();
     if (!name) return;
 
@@ -198,13 +198,24 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
     const existingCustom = customDrugs.find(entry => normalizeDrugName(entry.name) === normalized);
     if (existingCustom) {
+      if (options?.fromRedcapOther && !existingCustom.fromRedcapOther) {
+        setCustomDrugs(prev => prev.map(entry =>
+          normalizeDrugName(entry.name) === normalized ? { ...entry, fromRedcapOther: true } : entry
+        ));
+      }
       setSelectedDrugs(prev => prev.includes(existingCustom.name) ? prev : [...prev, existingCustom.name]);
       setCustomDrugNotice(`${existingCustom.name} is already in Additional Items and has been selected.`);
       setNewCustomDrug('');
       return;
     }
 
-    setCustomDrugs(prev => [...prev, { name, sptConcentration: '', idtSteps: [], includeInChallenge: false }]);
+    setCustomDrugs(prev => [...prev, {
+      name,
+      sptConcentration: '',
+      idtSteps: [],
+      includeInChallenge: false,
+      fromRedcapOther: options?.fromRedcapOther,
+    }]);
     setSelectedDrugs(prev => [...prev, name]);
     setNewCustomDrug('');
     setCustomDrugNotice('');
@@ -213,7 +224,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   const addCustomDrug = () => addCustomDrugByName(newCustomDrug);
 
   const addRedcapOtherAsCustomDrug = () => {
-    addCustomDrugByName(redcapOtherText);
+    addCustomDrugByName(redcapOtherText, { fromRedcapOther: true });
   };
 
   const removeCustomDrug = (name: string) => {
@@ -286,6 +297,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
     ? selectedDrugs.some(drug => normalizeDrugName(drug) === normalizeDrugName(redcapOtherText))
       || customDrugs.some(entry => normalizeDrugName(entry.name) === normalizeDrugName(redcapOtherText))
     : false;
+  // A REDCap "(not listed)" item is awaiting action — emphasize Additional Items.
+  const hasPendingRedcapOther = Boolean(redcapOtherText) && !redcapOtherAlreadyAdded;
 
   return (
     <>
@@ -528,18 +541,28 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         )}
 
                         {/* Custom Drugs Section */}
-                        <div className={`col-span-full space-y-2 rounded-none p-3 transition-colors duration-150 ${hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-muted/50'}`}>
-                            <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasCustomActive ? `${customTheme.headerBorder}` : 'border-border'}`}>
-                                <h4 className={`text-xs font-semibold uppercase tracking-wider flex items-center gap-2 ${hasCustomActive ? customTheme.headerText : 'text-muted-foreground'}`}>
+                        <div className={`col-span-full space-y-2 rounded-none p-3 transition-colors duration-150 ${
+                            hasPendingRedcapOther
+                              ? 'bg-amber-50 dark:bg-amber-950/30 ring-1 ring-amber-300 dark:ring-amber-700'
+                              : hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-muted/50'
+                          }`}>
+                            <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${
+                                hasPendingRedcapOther ? 'border-amber-300 dark:border-amber-700' : hasCustomActive ? `${customTheme.headerBorder}` : 'border-border'
+                              }`}>
+                                <h4 className={`text-xs font-semibold uppercase tracking-wider flex items-center gap-2 ${
+                                    hasPendingRedcapOther ? 'text-amber-700 dark:text-amber-400' : hasCustomActive ? customTheme.headerText : 'text-muted-foreground'
+                                  }`}>
                                     Additional Items
-                                    {hasCustomActive && <span className={`flex h-1.5 w-1.5 rounded-none ${customTheme.pulse} animate-pulse`}></span>}
+                                    {hasPendingRedcapOther
+                                      ? <span className="flex h-1.5 w-1.5 rounded-none bg-amber-500 animate-pulse"></span>
+                                      : hasCustomActive && <span className={`flex h-1.5 w-1.5 rounded-none ${customTheme.pulse} animate-pulse`}></span>}
                                 </h4>
                             </div>
-                            {redcapOtherText && !redcapOtherAlreadyAdded && (
-                              <div className="mb-3 border border-dashed border-border bg-muted p-3 rounded-none">
+                            {hasPendingRedcapOther && (
+                              <div className="mb-3 border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30 p-3 rounded-none">
                                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                   <div className="space-y-1">
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                                    <p className="text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
                                       From REDCap — Others (not listed)
                                     </p>
                                     <p className="text-sm text-foreground whitespace-pre-wrap">{redcapOtherText}</p>
@@ -549,7 +572,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     size="sm"
                                     variant="outline"
                                     onClick={addRedcapOtherAsCustomDrug}
-                                    className="h-8 shrink-0"
+                                    className="h-8 shrink-0 border-amber-400 text-amber-700 hover:bg-amber-100 dark:border-amber-600 dark:text-amber-300 dark:hover:bg-amber-900/40"
                                   >
                                     <Plus className="w-3.5 h-3.5 mr-1.5" />
                                     Add as custom item
@@ -565,13 +588,22 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             onClick={() => toggleDrug(entry.name)}
                                             aria-pressed={selectedDrugs.includes(entry.name)}
                                             className={`min-w-0 flex-1 text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left ${
-                                                selectedDrugs.includes(entry.name)
-                                                ? customTheme.btnSelected
-                                                : `bg-card text-muted-foreground border-border hover:bg-muted/50 ${customTheme.btnHover}`
+                                                entry.fromRedcapOther
+                                                ? selectedDrugs.includes(entry.name)
+                                                  ? 'bg-slate-700 border-amber-400 text-white shadow-sm ring-1 ring-amber-200 dark:ring-amber-900'
+                                                  : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-700 dark:hover:bg-amber-900/40'
+                                                : selectedDrugs.includes(entry.name)
+                                                  ? customTheme.btnSelected
+                                                  : `bg-card text-muted-foreground border-border hover:bg-muted/50 ${customTheme.btnHover}`
                                             }`}
                                         >
                                             {selectedDrugs.includes(entry.name) && <Check className="w-3 h-3 shrink-0" />}
                                             <span className="truncate">{entry.name}</span>
+                                            {entry.fromRedcapOther && (
+                                              <span className="shrink-0 text-[10px] uppercase tracking-wide opacity-90">
+                                                (not listed)
+                                              </span>
+                                            )}
                                         </button>
                                         <button
                                             type="button"
