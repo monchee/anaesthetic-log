@@ -6,8 +6,10 @@ describe('drugMasterlist diluents', () => {
     expect(DRUG_MASTERLIST.every(protocol => typeof protocol.diluent === 'string')).toBe(true);
   });
 
-  it('uses sourced diluent values for representative saline and WFI drugs', () => {
+  it('uses sourced diluent values for representative RTU and reconstitution-volume drugs', () => {
     expect(getSkinProtocolsForDrug('Rocuronium')[0].diluent).toBe('0.9% sodium chloride');
-    expect(getSkinProtocolsForDrug('Cefazolin')[0].diluent).toBe('0.9% sodium chloride (reconstitute with WFI)');
+    expect(getSkinProtocolsForDrug('Cefazolin')[0].diluent).toBe('0.9% sodium chloride (reconstitute with 10 mL WFI)');
+    expect(getSkinProtocolsForDrug('Pantoprazole')[0].diluent).toBe('0.9% sodium chloride (reconstitute with 10 mL)');
+    expect(getSkinProtocolsForDrug('Penicillin Major')[0].diluent).toBe('Phosphate-buffered saline (1 mL supplied diluent — not plain saline)');
   });
 });

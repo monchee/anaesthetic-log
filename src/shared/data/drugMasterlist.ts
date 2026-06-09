@@ -5,7 +5,7 @@ const s = (ratio: string, concentration: string): IDTStep => ({ ratio, concentra
 const c = (step: number, dose: string, volume: string, cumulative: string): ChallengeStep => ({ step, dose, volume, cumulative });
 
 // Diluent dataset mined from /Users/monchee/Projects/scratch/docs/drugs/*.md.
-// Confirm before release: Levofloxacin tablet prep; Methoxybenzylpenicillin, Cefuroxime Suspension, Methylene Blue, IV Contrast, and Atropine need clinician-filled diluent values.
+// Confirm before release: Cephalexin, Levofloxacin, Levonorgestrel, and insulin SPT preparation volumes remain unresolved; Methoxybenzylpenicillin, Cefuroxime Suspension, Methylene Blue, IV Contrast, and Atropine need clinician-filled diluent values.
 export const DRUG_MASTERLIST: DrugProtocol[] = [
   // ── MUSCLE RELAXANTS ──────────────────────────────────────────────────────
   {
@@ -28,7 +28,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Vecuronium', category: 'Muscle Relaxants', testType: 'skin',
-    presentation: '10mg', sptNeatConcentration: 'Neat (4mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '10mg', sptNeatConcentration: 'Neat (4mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 2.5 mL WFI)',
     idtSteps: [s('1:1,000', '0.004mg/mL'), s('1:100', '0.04mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
@@ -56,73 +56,73 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // ── PENICILLINS ───────────────────────────────────────────────────────────
   {
     drugName: 'Penicillin Major', category: 'Penicillins', testType: 'skin',
-    presentation: 'PPL', sptNeatConcentration: 'Neat (0.04mg/20.00mg/mL)', diluent: 'Phosphate-buffered saline (supplied — not plain saline)',
+    presentation: 'PPL', sptNeatConcentration: 'Neat (0.04mg/20.00mg/mL)', diluent: 'Phosphate-buffered saline (1 mL supplied diluent — not plain saline)',
     idtSteps: [s('1:10', '0.004mg/2mg'), s('Neat', '0.04mg/20.00mg')],
     challengeSteps: [], protocolLabel: 'PPL',
   },
   {
     drugName: 'Penicillin Minor', category: 'Penicillins', testType: 'skin',
-    presentation: 'MD (Sodium Benzylpenilloate/Mannitol)', sptNeatConcentration: 'Neat (0.50mg/20.00mg/mL)', diluent: 'Phosphate-buffered saline (supplied — not plain saline)',
+    presentation: 'MD (Sodium Benzylpenilloate/Mannitol)', sptNeatConcentration: 'Neat (0.50mg/20.00mg/mL)', diluent: 'Phosphate-buffered saline (1 mL supplied diluent — not plain saline)',
     idtSteps: [s('1:10', '0.05mg/2.00mg'), s('Neat', '0.50mg/20.00mg')],
     challengeSteps: [], protocolLabel: 'MD',
   },
   {
     drugName: 'Ampicillin', category: 'Penicillins', testType: 'skin',
-    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 5 mL WFI)',
     idtSteps: [s('1:100', '1mg/mL'), s('1:10', '10mg/mL'), s('1:50', '2mg/0.2mg/mL')],
     challengeSteps: [], protocolLabel: 'Neat SPT',
   },
   {
     drugName: 'Ampicillin', category: 'Penicillins', testType: 'skin',
-    presentation: '1g', sptNeatConcentration: '1:5 (20mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1g', sptNeatConcentration: '1:5 (20mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 5 mL WFI)',
     idtSteps: [s('1:10', '10mg/mL'), s('1:5', '20mg/mL'), s('1:100', '0.06mg/mL')],
     challengeSteps: [], protocolLabel: '1:5 SPT',
   },
   {
     drugName: 'Ampicillin', category: 'Penicillins', testType: 'control',
-    presentation: '1g', sptNeatConcentration: '1:5 (20mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1g', sptNeatConcentration: '1:5 (20mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 5 mL WFI)',
     idtSteps: [s('1:10', '10mg/mL'), s('1:5', '20mg/mL'), s('1:100', '0.02mg/mL')],
     challengeSteps: [], protocolLabel: 'Control',
   },
   {
     drugName: 'Amoxycillin', category: 'Penicillins', testType: 'skin',
-    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 5 mL WFI)',
     idtSteps: [s('1:100', '1mg/mL'), s('1:10', '10mg/mL')],
     challengeSteps: [], protocolLabel: 'Neat SPT',
   },
   {
     drugName: 'Amoxycillin', category: 'Penicillins', testType: 'skin',
-    presentation: '1g', sptNeatConcentration: '1:5 (20mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1g', sptNeatConcentration: '1:5 (20mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 5 mL WFI)',
     idtSteps: [s('1:10', '10mg/mL'), s('1:5', '20mg/mL')],
     challengeSteps: [], protocolLabel: '1:5 SPT',
   },
   {
     drugName: 'Benzylpenicillin', category: 'Penicillins', testType: 'skin',
-    presentation: '600mg', sptNeatConcentration: 'Neat (6mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '600mg', sptNeatConcentration: 'Neat (6mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 1.6 mL)',
     idtSteps: [s('1:100', '0.06mg/mL'), s('1:10', '0.6mg/mL')],
     challengeSteps: [], protocolLabel: '1:1,000 start',
   },
   {
     drugName: 'Benzylpenicillin', category: 'Penicillins', testType: 'skin',
-    presentation: '600mg', sptNeatConcentration: 'Neat (6mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '600mg', sptNeatConcentration: 'Neat (6mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 1.6 mL)',
     idtSteps: [s('1:100', '0.06mg/mL'), s('1:10', '0.6mg/mL'), s('1:50', '2mg/0.2mg/mL')],
     challengeSteps: [], protocolLabel: '1:100 start',
   },
   {
     drugName: 'Benzylpenicillin', category: 'Penicillins', testType: 'control',
-    presentation: '600mg', sptNeatConcentration: 'Neat (6mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '600mg', sptNeatConcentration: 'Neat (6mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 1.6 mL)',
     idtSteps: [s('1:100', '0.06mg/mL'), s('1:10', '0.6mg/mL')],
     challengeSteps: [], protocolLabel: 'Control',
   },
   {
     drugName: 'Augmentin', category: 'Penicillins', testType: 'skin',
-    presentation: '2000mg/200mg', sptNeatConcentration: '1:5 (20mg/2mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '2000mg/200mg', sptNeatConcentration: '1:5 (20mg/2mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 50 mL WFI)',
     idtSteps: [s('1:50', '2mg/0.2mg/mL'), s('1:5', '20mg/2mg/mL'), s('1:100', '0.06mg/mL')],
     challengeSteps: [], protocolLabel: '1:1,000 start',
   },
   {
     drugName: 'Augmentin', category: 'Penicillins', testType: 'skin',
-    presentation: '2000mg/200mg', sptNeatConcentration: '1:5 (20mg/2mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '2000mg/200mg', sptNeatConcentration: '1:5 (20mg/2mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 50 mL WFI)',
     idtSteps: [s('1:50', '2mg/0.2mg/mL'), s('1:5', '20mg/2mg/mL'), s('1:100', '0.2mg/mL')],
     challengeSteps: [], protocolLabel: '1:100 start',
   },
@@ -134,7 +134,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Tazocin', category: 'Penicillins', testType: 'skin',
-    presentation: '4g/500mg', sptNeatConcentration: '1:10 (20/2mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '4g/500mg', sptNeatConcentration: '1:10 (20/2mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 20 mL)',
     idtSteps: [s('1:100', '2/0.2mg/mL'), s('1:10', '20/2mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
@@ -148,37 +148,37 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // ── CEPHALOSPORINS ────────────────────────────────────────────────────────
   {
     drugName: 'Cefazolin', category: 'Cephalosporins', testType: 'skin',
-    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 10 mL WFI)',
     idtSteps: [s('1:100', '1mg/mL'), s('1:10', '10mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
   {
     drugName: 'Cefepime', category: 'Cephalosporins', testType: 'skin',
-    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 10 mL WFI)',
     idtSteps: [s('1:100', '1mg/mL'), s('1:10', '10mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
   {
     drugName: 'Cefotaxime', category: 'Cephalosporins', testType: 'skin',
-    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 10 mL WFI)',
     idtSteps: [s('1:100', '1mg/mL'), s('1:10', '10mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
   {
     drugName: 'Ceftazidime', category: 'Cephalosporins', testType: 'skin',
-    presentation: '2g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '2g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 20 mL WFI)',
     idtSteps: [s('1:100', '1mg/mL'), s('1:10', '10mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
   {
     drugName: 'Ceftriaxone', category: 'Cephalosporins', testType: 'skin',
-    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 10 mL WFI)',
     idtSteps: [s('1:100', '1mg/mL'), s('1:10', '10mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
   {
     drugName: 'Cefuroxime', category: 'Cephalosporins', testType: 'skin',
-    presentation: '750mg', sptNeatConcentration: 'Neat (29mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '750mg', sptNeatConcentration: 'Neat (29mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 30 mL)',
     idtSteps: [s('1:100', '0.29mg/mL'), s('1:10', '2.9mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
@@ -210,13 +210,13 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Thiopental', category: 'Hypnotics', testType: 'skin',
-    presentation: '25mg/mL', sptNeatConcentration: 'Neat (25mg/mL)', diluent: '0.9% sodium chloride (WFI or saline to reconstitute)',
+    presentation: '25mg/mL', sptNeatConcentration: 'Neat (25mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 20 mL WFI or saline)',
     idtSteps: [s('1:1,000', '0.025mg/mL'), s('1:100', '0.25mg/mL'), s('1:10', '2.5mg/mL')],
     challengeSteps: [], protocolLabel: '1:1,000 start',
   },
   {
     drugName: 'Thiopental', category: 'Hypnotics', testType: 'skin',
-    presentation: '25mg/mL', sptNeatConcentration: 'Neat (25mg/mL)', diluent: '0.9% sodium chloride (WFI or saline to reconstitute)',
+    presentation: '25mg/mL', sptNeatConcentration: 'Neat (25mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 20 mL WFI or saline)',
     idtSteps: [s('1:1,000', '0.025mg/mL'), s('1:100', '0.25mg/mL'), s('1:10', '2.5mg/mL')],
     challengeSteps: [], protocolLabel: '1:100 start',
   },
@@ -230,7 +230,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Mepivacaine', category: 'Local Anaesthetics', testType: 'skin',
-    presentation: '66mg/2.2mL', sptNeatConcentration: 'Neat (10mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '66mg/2.2mL', sptNeatConcentration: 'Neat (10mg/mL)', diluent: '0.9% sodium chloride (dilute 3% stock with 4.4 mL WFI)',
     idtSteps: [s('1:1,000', '0.01mg/mL'), s('1:100', '0.1mg/mL'), s('1:10', '1mg/mL'), s('Neat', '10mg/mL')],
     challengeSteps: [], protocolLabel: 'Epidural',
   },
@@ -280,13 +280,13 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Remifentanil', category: 'Opioids', testType: 'skin',
-    presentation: '1mg', sptNeatConcentration: 'Neat (0.05mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1mg', sptNeatConcentration: 'Neat (0.05mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 20 mL WFI)',
     idtSteps: [s('1:100', '0.0005mg/mL'), s('1:10', '0.005mg/mL')],
     challengeSteps: [], protocolLabel: '1:1,000 start',
   },
   {
     drugName: 'Remifentanil', category: 'Opioids', testType: 'skin',
-    presentation: '1mg', sptNeatConcentration: 'Neat (0.05mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '1mg', sptNeatConcentration: 'Neat (0.05mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 20 mL WFI)',
     idtSteps: [s('1:100', '0.0005mg/mL'), s('1:10', '0.005mg/mL'), s('1:1,000', '0.01mg/mL')],
     challengeSteps: [], protocolLabel: '1:100 start',
   },
@@ -320,31 +320,31 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // ── PROTON PUMP INHIBITORS ────────────────────────────────────────────────
   {
     drugName: 'Esomeprazole', category: 'Proton Pump Inhibitors', testType: 'skin',
-    presentation: '20mg', sptNeatConcentration: 'Neat (20mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '20mg', sptNeatConcentration: 'Neat (20mg/mL)', diluent: '0.9% sodium chloride (dissolve in 1 mL)',
     idtSteps: [],
     challengeSteps: [], protocolLabel: '',
   },
   {
     drugName: 'Lansoprazole', category: 'Proton Pump Inhibitors', testType: 'skin',
-    presentation: '30mg', sptNeatConcentration: 'Neat (30mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '30mg', sptNeatConcentration: 'Neat (30mg/mL)', diluent: '0.9% sodium chloride (dissolve in 1 mL)',
     idtSteps: [],
     challengeSteps: [], protocolLabel: '',
   },
   {
     drugName: 'Omeprazole', category: 'Proton Pump Inhibitors', testType: 'skin',
-    presentation: '20mg', sptNeatConcentration: 'Neat (20mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '20mg', sptNeatConcentration: 'Neat (20mg/mL)', diluent: '0.9% sodium chloride (dissolve in 1 mL)',
     idtSteps: [],
     challengeSteps: [], protocolLabel: '',
   },
   {
     drugName: 'Pantoprazole', category: 'Proton Pump Inhibitors', testType: 'skin',
-    presentation: '40mg', sptNeatConcentration: 'Neat (40mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '40mg', sptNeatConcentration: 'Neat (40mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 10 mL)',
     idtSteps: [s('1:1,000', '0.04mg/mL'), s('1:100', '0.4mg/mL'), s('1:10', '4mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
   {
     drugName: 'Rabeprazole', category: 'Proton Pump Inhibitors', testType: 'skin',
-    presentation: '40mg', sptNeatConcentration: 'Neat (40mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '40mg', sptNeatConcentration: 'Neat (40mg/mL)', diluent: '0.9% sodium chloride (dissolve in 1 mL)',
     idtSteps: [],
     challengeSteps: [], protocolLabel: '',
   },
@@ -358,7 +358,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Azithromycin', category: 'Others', testType: 'skin',
-    presentation: '500mg', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with WFI)',
+    presentation: '500mg', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 4.8 mL WFI)',
     idtSteps: [s('1:10,000', '0.01mg/mL'), s('1:1,000', '0.1mg/mL'), s('1:10', '15mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
@@ -400,13 +400,13 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Doxycycline', category: 'Others', testType: 'skin',
-    presentation: '100mg', sptNeatConcentration: 'Neat (10mg/mL)', diluent: '0.9% sodium chloride (WFI or saline to reconstitute)',
+    presentation: '100mg', sptNeatConcentration: 'Neat (10mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 10 mL WFI or saline)',
     idtSteps: [s('1:10,000', '0.001mg/mL'), s('1:1,000', '0.01mg/mL'), s('1:100', '0.05mg/mL')],
     challengeSteps: [], protocolLabel: '1:1,000 start',
   },
   {
     drugName: 'Doxycycline', category: 'Others', testType: 'skin',
-    presentation: '100mg', sptNeatConcentration: 'Neat (10mg/mL)', diluent: '0.9% sodium chloride (WFI or saline to reconstitute)',
+    presentation: '100mg', sptNeatConcentration: 'Neat (10mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 10 mL WFI or saline)',
     idtSteps: [s('1:10,000', '0.001mg/mL'), s('1:1,000', '0.01mg/mL'), s('1:100', '0.02mg/mL')],
     challengeSteps: [], protocolLabel: '1:100 start',
   },
@@ -460,7 +460,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Hydrocortisone', category: 'Others', testType: 'experimental',
-    presentation: '50mg/mL', sptNeatConcentration: 'Neat (50mg/mL)', diluent: '0.9% sodium chloride (WFI or saline to reconstitute)',
+    presentation: '50mg/mL', sptNeatConcentration: 'Neat (50mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 2 mL WFI or saline)',
     idtSteps: [s('1:100', '0.50mg/mL'), s('1:10', '5mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
@@ -502,7 +502,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Methylprednisolone', category: 'Others', testType: 'experimental',
-    presentation: '1g', sptNeatConcentration: 'Neat (20mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '1g', sptNeatConcentration: 'Neat (20mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 5 mL)',
     idtSteps: [s('1:100', '0.2mg/mL'), s('1:10', '2mg/mL'), s('1:1,000', '0.04mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
@@ -556,7 +556,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Parecoxib', category: 'Others', testType: 'skin',
-    presentation: '40mg', sptNeatConcentration: 'Neat (8mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '40mg', sptNeatConcentration: 'Neat (8mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 5 mL)',
     idtSteps: [s('1:100', '0.08mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },
@@ -616,7 +616,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Vancomycin', category: 'Others', testType: 'skin',
-    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride',
+    presentation: '1g', sptNeatConcentration: 'Neat (100mg/mL)', diluent: '0.9% sodium chloride (reconstitute with 5 mL [500 mg] / 10 mL [1 g])',
     idtSteps: [s('1:1,000,000', '0.0001mg/mL'), s('1:100', '0.4mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
   },

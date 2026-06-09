@@ -1,3 +1,20 @@
+## [0.64.0] — 2026-06-09 (Measured)
+
+Summary: Diluent text now includes sourced reconstitution volumes for the skin-test request entries that need bedside preparation, while RTU saline entries stay plain.
+
+### Changed
+- **Reconstitution volumes in diluent text** — skin/control/experimental protocols for penicillins, cephalosporins, selected anaesthetic agents, PPIs, steroids, vancomycin, and related "Others" entries now include the specific preparation volume in the stacked SPT preparation sub-line.
+- **Special preparations preserved explicitly** — penicillin determinant entries now name the 1 mL supplied phosphate-buffered diluent, oral PPI tablet entries say "dissolve in 1 mL", and mepivacaine records the 3% stock dilution volume.
+
+### Notes
+- Diluent values still require clinician sign-off before release. Residual confirm items: Cephalexin, Levofloxacin, Levonorgestrel, and insulin SPT preparation volumes; Methoxybenzylpenicillin, Cefuroxime Suspension, Methylene Blue, IV Contrast, and Atropine diluent values.
+
+### Tests
+- Updated masterlist diluent coverage for RTU saline, WFI reconstitution volume, saline reconstitution volume, and supplied-buffer preparations.
+
+### Chore
+- Version bump to 0.64.0
+
 ## [0.63.0] — 2026-06-09 (Stacked)
 
 Summary: Testing request print tables fit again by stacking diluent under SPT preparation, while REDCap "not listed" items stay visibly marked through builder and print.

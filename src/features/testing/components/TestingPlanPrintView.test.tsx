@@ -43,7 +43,7 @@ describe('TestingPlanPrintView', () => {
 
     expect(screen.getByRole('columnheader', { name: 'SPT Preparation' })).toBeInTheDocument();
     expect(screen.queryByRole('columnheader', { name: 'Diluent' })).not.toBeInTheDocument();
-    expect(screen.getAllByText('in 0.9% sodium chloride (reconstitute with WFI)')).toHaveLength(2);
+    expect(screen.getAllByText('in 0.9% sodium chloride (reconstitute with 10 mL WFI)')).toHaveLength(2);
     expect(screen.queryByText(/Challenge \/ Desensitisation Protocols/i)).not.toBeInTheDocument();
   });
 
