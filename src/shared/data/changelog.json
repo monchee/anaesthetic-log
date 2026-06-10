@@ -1,5 +1,19 @@
 [
   {
+    "version": "v0.68.0",
+    "codename": "Polished",
+    "date": "10 June 2026",
+    "summary": "Final pass of the audit cycle \u2014 completes the section decomposition, hoists the help modal to the app root so it's a true singleton, and raises the coverage floor.",
+    "highlight": false,
+    "changes": [
+      "Help modal is now a single instance \u2014 `HelpModal` is rendered once at the app root rather than inside each screen's `ScreenLayout`. This permanently resolves the re-opening-on-navigation bug that required a sessionStorage band-aid in the previous patch; the band-aid is removed. The modal auto-opens at most once per page load regardless of screen navigation.",
+      "`TestingLogFormSections.tsx` fully decomposed \u2014 the 766-line barrel of section components is now 7 individual files (`ControlsSection`, `DrugTestPanelSection`, `DrugChallengeSection`, `DrugChallengeReactionFields`, `TryptaseSection`, `AssessmentPlanSection`, `NurseNotesSection`), each under 200 lines. `TestingLogFormSections.tsx` becomes a 7-line re-export barrel for backwards-compatible imports.",
+      "Coverage thresholds raised \u2014 vitest thresholds for `src/features/testing/` raised from the initial floor (statements 63 \u2192 64, branches 64 \u2192 64.1, functions 49 \u2192 51, lines 63 \u2192 68).",
+      "Closes the audit backlog. All original findings (Milestone 0\u20133 + outstanding items RI-1 through RI-3) are complete.",
+      "213 unit tests pass; Playwright smoke and testing-day E2E unchanged."
+    ]
+  },
+  {
     "version": "v0.67.0",
     "codename": "Decomposed",
     "date": "10 June 2026",

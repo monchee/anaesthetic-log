@@ -20,7 +20,6 @@ const CURRENT_CODENAME = DISPLAY_ENTRY.codename;
 const CURRENT_DATE = DISPLAY_ENTRY.date ?? '';
 const CURRENT_SUMMARY = DISPLAY_ENTRY.summary ?? '';
 const LAST_SEEN_KEY = 'dream:last_seen_version';
-const SESSION_SHOWN_KEY = 'dream:help_shown_session';
 
 interface HelpModalProps {
   onUploadPatients?: (patients: Patient[]) => void;
@@ -40,7 +39,6 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
   const markSeen = () => {
     try {
       localStorage.setItem(LAST_SEEN_KEY, CURRENT_VERSION);
-      sessionStorage.setItem(SESSION_SHOWN_KEY, '1');
     } catch {
       // storage not available
     }
@@ -48,12 +46,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
   };
 
   // Auto-open when no CSV loaded, or when a new version hasn't been acknowledged.
-  // Guard with sessionStorage so screen-level remounts (from the routing
-  // decomposition) don't re-trigger the modal within the same browser session.
   useEffect(() => {
-    try {
-      if (sessionStorage.getItem(SESSION_SHOWN_KEY)) return;
-    } catch { /* storage blocked */ }
     if (!hasData || isNewVersion) {
       setIsOpen(true);
     }

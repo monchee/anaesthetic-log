@@ -5,7 +5,6 @@ import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
 import { useTheme } from './ThemeProvider';
 import { Screen, Patient } from '@/types';
-import { HelpModal } from './HelpModal';
 import { CSVUploadInstructions } from '@features/dashboard/components/CSVUploadInstructions';
 import { parseRedcapCSV } from '@shared/utils';
 import { toast } from 'sonner';
@@ -240,9 +239,6 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                     </React.Suspense>
                 </div>
             </main>
-
-            {/* Hidden HelpModal - triggered from dropdown menu */}
-            <HelpModal onUploadPatients={onUploadPatients} hideTrigger={true} hasData={isCustomData} setScreen={setScreen} />
 
             {/* Hidden file input for CSV upload */}
             <input

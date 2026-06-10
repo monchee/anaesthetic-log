@@ -7,6 +7,7 @@ import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
 import { reportWebVitals } from './src/lib/analytics';
 import { initSentry } from './src/lib/sentry';
 import { findInfoPageRoute } from '@core/routes/infoPageConfig';
+import { HelpModal } from '@core/components/HelpModal';
 import { useResearchSubmit } from '@features/research/hooks/useResearchSubmit';
 import { DashboardScreen } from '@core/screens/DashboardScreen';
 import { InfoPageScreen } from '@core/screens/InfoPageScreen';
@@ -184,6 +185,12 @@ function AnaestheticLogApp() {
   return (
     <React.Suspense fallback={<div className="min-h-svh bg-background" />}>
       {renderScreenContent()}
+      <HelpModal
+        onUploadPatients={handleUploadPatients}
+        hideTrigger={true}
+        hasData={hasUploadedData}
+        setScreen={setScreen}
+      />
     </React.Suspense>
   );
 }

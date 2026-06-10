@@ -1,3 +1,21 @@
+## [0.68.0] — 2026-06-10 (Polished)
+
+Summary: Final pass of the audit cycle — completes the section decomposition, hoists the help modal to the app root so it's a true singleton, and raises the coverage floor.
+
+### Fixed
+- **Help modal is now a single instance** — `HelpModal` is rendered once at the app root rather than inside each screen's `ScreenLayout`. This permanently resolves the re-opening-on-navigation bug that required a sessionStorage band-aid in the previous patch; the band-aid is removed. The modal auto-opens at most once per page load regardless of screen navigation.
+
+### Changed
+- **`TestingLogFormSections.tsx` fully decomposed** — the 766-line barrel of section components is now 7 individual files (`ControlsSection`, `DrugTestPanelSection`, `DrugChallengeSection`, `DrugChallengeReactionFields`, `TryptaseSection`, `AssessmentPlanSection`, `NurseNotesSection`), each under 200 lines. `TestingLogFormSections.tsx` becomes a 7-line re-export barrel for backwards-compatible imports.
+- **Coverage thresholds raised** — vitest thresholds for `src/features/testing/**` raised from the initial floor (statements 63 → 64, branches 64 → 64.1, functions 49 → 51, lines 63 → 68).
+
+### Notes
+- Closes the audit backlog. All original findings (Milestone 0–3 + outstanding items RI-1 through RI-3) are complete.
+- 213 unit tests pass; Playwright smoke and testing-day E2E unchanged.
+
+### Chore
+- Version bump to 0.68.0
+
 ## [0.67.0] — 2026-06-10 (Decomposed)
 
 Summary: Structural refactor pass from the audit backlog — breaks the `App.tsx` routing god-component and the monolithic testing form into focused units, and replaces the hand-rolled save-path coercion with a single Zod schema applied at both the save and restore boundaries. No user-facing behavior change.

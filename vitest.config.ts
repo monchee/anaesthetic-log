@@ -20,10 +20,10 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       thresholds: {
         'src/features/testing/**/*.{ts,tsx}': {
-          statements: 63,
-          branches: 64,
-          functions: 49,
-          lines: 63,
+          statements: 64,
+          branches: 64.1,
+          functions: 51,
+          lines: 68,
         },
       },
       exclude: [
