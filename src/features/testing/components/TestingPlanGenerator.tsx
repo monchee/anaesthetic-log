@@ -674,18 +674,18 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     </div>
 
                     {/* Legend callout */}
-                    <div className="flex flex-col gap-1.5 p-3 border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 rounded-none">
+                    <div className="flex flex-col gap-1.5 p-3 border border-border bg-muted/40 rounded-none">
                         <div className="flex items-start gap-2.5">
-                            <Pin className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
-                            <p className="text-xs text-amber-700 dark:text-amber-400 leading-snug">
-                                <Pin className="inline w-3 h-3 mx-0.5 opacity-80" /> <span className="font-semibold">Pre-filled</span> for all patients by default.
+                            <Pin className="w-3.5 h-3.5 shrink-0 mt-0.5 text-muted-foreground" />
+                            <p className="text-xs text-muted-foreground leading-snug">
+                                <span className="font-semibold">Pre-filled</span> for all patients by default.
                             </p>
                         </div>
                         {historyDrugs.length > 0 && (
                             <div className="flex items-start gap-2.5">
-                                <History className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
-                                <p className="text-xs text-amber-700 dark:text-amber-400 leading-snug">
-                                    <History className="inline w-3 h-3 mx-0.5 opacity-80" /> <span className="font-semibold">Auto-selected</span> from patient history — given at time of reaction.
+                                <History className="w-3.5 h-3.5 shrink-0 mt-0.5 text-muted-foreground" />
+                                <p className="text-xs text-muted-foreground leading-snug">
+                                    <span className="font-semibold">Auto-selected</span> from patient history — given at time of reaction.
                                 </p>
                             </div>
                         )}
