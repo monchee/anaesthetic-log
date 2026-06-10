@@ -14,7 +14,7 @@ interface PatientTableProps {
   currentPage: number;
   ITEMS_PER_PAGE: number;
   filters: SearchFilters;
-  updateFilter: (key: keyof SearchFilters, value: any) => void;
+  updateFilter: <K extends keyof SearchFilters>(key: K, value: SearchFilters[K]) => void;
   clearFilters: () => void;
   activeFilterCount: number;
   suggestions: {

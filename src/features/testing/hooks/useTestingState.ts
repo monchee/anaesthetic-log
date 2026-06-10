@@ -75,15 +75,10 @@ export function useTestingState() {
       setActiveReportSavedAt(savedAt);
     }
 
-    // Restore an in-progress testing draft if one was saved within the TTL
-    // window — resumes work after a reload, tab close, or SW auto-update.
-    // Only restore when the app loads directly on the testing screen (the real
-    // resume case). Restoring onto the home screen would risk injecting one
-    // patient's results into a different patient selected fresh this session.
-    if (window.location.pathname === '/testing') {
-      const draft = getIfFresh<LogFormData>(TESTING_DRAFT_KEY, ACTIVE_REPORT_TTL_MS);
-      if (draft) setFormData({ ...draft, tryptase: sanitizeTryptase(draft.tryptase) });
-    }
+    // Restore any fresh in-progress testing draft. Submitted records and manual
+    // resets clear this key, so the TTL entry only represents uncommitted work.
+    const draft = getIfFresh<LogFormData>(TESTING_DRAFT_KEY, ACTIVE_REPORT_TTL_MS);
+    if (draft) setFormData({ ...draft, tryptase: sanitizeTryptase(draft.tryptase) });
   }, []);
 
   // Debounced autosave of the in-progress session. Only persists once the
@@ -103,8 +98,9 @@ export function useTestingState() {
   useEffect(() => {
     import('@shared/data/mockTestingLogs').then(({ MOCK_TESTING_LOGS }) => {
       setRecentLogs(prev => prev.length === 0 ? MOCK_TESTING_LOGS : prev);
-    }).catch(() => {
-      // silent fallback — dashboard shows empty state
+    }).catch((error) => {
+      console.warn('Unable to load mock testing logs:', error);
+      // Non-fatal fallback — dashboard shows empty state.
     });
   }, []);
 
@@ -154,10 +150,6 @@ export function useTestingState() {
         } : undefined,
         tryptase: sanitizeTryptase(parsed.tryptase),
       };
-      
-      if (recordToSave.outcome !== null && recordToSave.outcome !== 'SUCCESS' && recordToSave.outcome !== 'UNSUCCESS') {
-        recordToSave.outcome = null;
-      }
       
       const finalRecord: LogFormData = { ...recordToSave };
       

@@ -10,27 +10,28 @@ import { LogFormData } from '../types';
  */
 export function isTestingSessionDirty(formData: LogFormData): boolean {
   const { controls, testPanel, nurseNotes, tryptase } = formData;
+  const hasText = (value: unknown) => String(value ?? '').trim() !== '';
 
   // Any skin-test result entered
   const panelDirty = testPanel.some(
-    row => row.sptWheal.trim() !== '' || row.idtResults.some(v => v.trim() !== '') || !!row.notes?.trim(),
+    row => hasText(row.sptWheal) || (Array.isArray(row.idtResults) && row.idtResults.some(hasText)) || hasText(row.notes),
   );
   if (panelDirty) return true;
 
   // Any control reading
-  if (controls.histamineSpt.trim() || controls.salineSpt.trim() || controls.salineIdt.trim()) return true;
+  if (hasText(controls.histamineSpt) || hasText(controls.salineSpt) || hasText(controls.salineIdt)) return true;
 
   // Any challenge data
   if (
     formData.proceedToChallenge ||
-    formData.challengeDrug.trim() ||
+    hasText(formData.challengeDrug) ||
     formData.outcome !== null ||
-    formData.reactionTime.trim() ||
+    hasText(formData.reactionTime) ||
     formData.symptoms.length > 0 ||
-    formData.symptomsOther.trim() ||
-    formData.interventionType.trim() ||
-    formData.interventionOther.trim() ||
-    formData.plan.trim()
+    hasText(formData.symptomsOther) ||
+    hasText(formData.interventionType) ||
+    hasText(formData.interventionOther) ||
+    hasText(formData.plan)
   ) {
     return true;
   }
@@ -38,16 +39,19 @@ export function isTestingSessionDirty(formData: LogFormData): boolean {
   // Any nurse notes
   if (
     nurseNotes &&
-    (nurseNotes.preTesting?.trim() ||
-      nurseNotes.duringTesting?.trim() ||
-      nurseNotes.postTesting?.trim() ||
-      nurseNotes.signedBy?.trim())
+    (hasText(nurseNotes.preTesting) ||
+      hasText(nurseNotes.duringTesting) ||
+      hasText(nurseNotes.postTesting) ||
+      hasText(nurseNotes.signedBy))
   ) {
     return true;
   }
 
   // Any tryptase data
-  if (tryptase && (tryptase.obtained || tryptase.values.some(v => v.time.trim() || v.result.trim()))) {
+  if (
+    tryptase &&
+    (tryptase.obtained || (Array.isArray(tryptase.values) && tryptase.values.some(v => hasText(v.time) || hasText(v.result))))
+  ) {
     return true;
   }
 

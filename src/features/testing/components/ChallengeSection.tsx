@@ -1,6 +1,18 @@
 import React from 'react';
 import { Label, Input } from '../../../../components/ui';
 import { Activity, Syringe, ThumbsUp, ThumbsDown, CheckCircle2, AlertOctagon, Clock, Stethoscope } from 'lucide-react';
+import { LogFormData } from '../types';
+
+type ChallengeFields = Pick<
+  LogFormData,
+  | 'challengeDrug'
+  | 'challengeDrugCustom'
+  | 'outcome'
+  | 'reactionTime'
+  | 'symptomsOther'
+  | 'interventionType'
+  | 'interventionOther'
+>;
 
 interface ChallengeSectionProps {
   proceedToChallenge: boolean;
@@ -16,7 +28,7 @@ interface ChallengeSectionProps {
   symptomOptions: readonly string[] | string[];
   interventionOptions: readonly string[] | string[];
   onToggleChallenge: () => void;
-  onChange: (field: string, value: any) => void;
+  onChange: <K extends keyof ChallengeFields>(field: K, value: ChallengeFields[K]) => void;
   onToggleSymptom: (symptom: string) => void;
 }
 

@@ -1,3 +1,29 @@
+## [0.66.0] — 2026-06-10 (Hardened)
+
+Summary: Safety-net pass from the repo audit — fixes a silent draft-restore data-loss bug, adds focused tests around the clinical record save path, tightens type safety in form handlers, and enforces test coverage in CI.
+
+### Fixed
+- **In-progress testing drafts now restore after a reload** — the restore guard checked `window.location.pathname === '/testing'`, which never matches in this single-path SPA, so autosaved drafts were written but never restored. Clinicians who reloaded or were auto-updated mid-session silently lost uncommitted work. The TTL window, plus draft-clearing on submit and reset, already guarantees a stored draft only represents live uncommitted work.
+
+### Added
+- **Unit tests for the clinical save path** — `useTestingState` (draft restore, debounced autosave, `handleSubmit` field sanitization, reset/clear) and `TestingService` (validation edge cases, skin-test positivity thresholds) are now covered to 100% statements.
+- **Unit tests for `isTestingSessionDirty`** — the autosave gate is now fully covered, including malformed-input guards.
+- **End-to-end draft-restore test** — a Playwright spec enters a control reading, reloads, and asserts the form state and patient are preserved.
+
+### Changed
+- **Stronger types in form handlers** — replaced `field as any` / `value: any` in `handleManualDetailChange`, `ChallengeSection.onChange`, and `PatientTable.updateFilter` with keyed union types derived from the domain models.
+- **Hardened `isTestingSessionDirty`** — dirty-checks now coerce values defensively and guard array fields, so a malformed restored draft cannot throw.
+- **CI runs tests with coverage** — the unit-test step now runs `test:coverage`, and `vitest.config.ts` enforces minimum coverage thresholds on `src/features/testing/**` so the save-path safety net cannot silently regress.
+
+### Removed
+- **Redundant outcome re-check in `handleSubmit`** — the saved `outcome` is already coerced to `SUCCESS | UNSUCCESS | null` during sanitization, so the follow-up guard was dead code.
+
+### Notes
+- Larger audit items (decomposing `App.tsx` routing, replacing the `handleSubmit` JSON round-trip with a Zod schema parse, splitting `TestingLogForm.tsx`) remain deferred to a later pass.
+
+### Chore
+- Version bump to 0.66.0
+
 ## [0.65.0] — 2026-06-09 (Tidy)
 
 Summary: Project cleanup pass covering generated-file hygiene, dead dependency removal, safer tryptase restore handling, shared skin-test threshold logic, and leaner startup bundling.

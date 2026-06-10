@@ -1,5 +1,23 @@
 [
   {
+    "version": "v0.66.0",
+    "codename": "Hardened",
+    "date": "10 June 2026",
+    "summary": "Safety-net pass from the repo audit \u2014 fixes a silent draft-restore data-loss bug, adds focused tests around the clinical record save path, tightens type safety in form handlers, and enforces test coverage in CI.",
+    "highlight": false,
+    "changes": [
+      "In-progress testing drafts now restore after a reload \u2014 the restore guard checked `window.location.pathname === '/testing'`, which never matches in this single-path SPA, so autosaved drafts were written but never restored. Clinicians who reloaded or were auto-updated mid-session silently lost uncommitted work. The TTL window, plus draft-clearing on submit and reset, already guarantees a stored draft only represents live uncommitted work.",
+      "Unit tests for the clinical save path \u2014 `useTestingState` (draft restore, debounced autosave, `handleSubmit` field sanitization, reset/clear) and `TestingService` (validation edge cases, skin-test positivity thresholds) are now covered to 100% statements.",
+      "Unit tests for `isTestingSessionDirty` \u2014 the autosave gate is now fully covered, including malformed-input guards.",
+      "End-to-end draft-restore test \u2014 a Playwright spec enters a control reading, reloads, and asserts the form state and patient are preserved.",
+      "Stronger types in form handlers \u2014 replaced `field as any` / `value: any` in `handleManualDetailChange`, `ChallengeSection.onChange`, and `PatientTable.updateFilter` with keyed union types derived from the domain models.",
+      "Hardened `isTestingSessionDirty` \u2014 dirty-checks now coerce values defensively and guard array fields, so a malformed restored draft cannot throw.",
+      "CI runs tests with coverage \u2014 the unit-test step now runs `test:coverage`, and `vitest.config.ts` enforces minimum coverage thresholds on `src/features/testing/` so the save-path safety net cannot silently regress.",
+      "Redundant outcome re-check in `handleSubmit` \u2014 the saved `outcome` is already coerced to `SUCCESS | UNSUCCESS | null` during sanitization, so the follow-up guard was dead code.",
+      "Larger audit items (decomposing `App.tsx` routing, replacing the `handleSubmit` JSON round-trip with a Zod schema parse, splitting `TestingLogForm.tsx`) remain deferred to a later pass."
+    ]
+  },
+  {
     "version": "v0.65.0",
     "codename": "Tidy",
     "date": "9 June 2026",

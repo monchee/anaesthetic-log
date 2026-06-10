@@ -32,8 +32,8 @@ export function useAnaestheticApp() {
     }
   }, [selectedPatient, setFormData]);
 
-  const handleManualDetailChange = (field: string, value: string) => {
-    originalHandleManualDetailChange(field as any, value);
+  const handleManualDetailChange = (field: keyof Patient, value: string) => {
+    originalHandleManualDetailChange(field, value);
     if (field === 'firstName' || field === 'lastName' || field === 'mrn') {
       setFormData(prev => ({
         ...prev,

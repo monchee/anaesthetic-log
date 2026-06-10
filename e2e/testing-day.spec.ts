@@ -94,4 +94,35 @@ test.describe('Testing Day Flow', () => {
     // Mock logs are seeded — the dashboard should show at least one recent session
     await expect(page.getByText(/Recent Testing Activity/i).or(page.getByText(/recent/i))).toBeVisible({ timeout: 5000 });
   });
+
+  test('restores in-progress testing draft after reload', async ({ page }) => {
+    const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
+    await expect(patientSelector).toBeVisible({ timeout: 10000 });
+
+    await patientSelector.click();
+    const patientSearch = page.getByRole('textbox', { name: /Filter patients by ID or name/i });
+    await expect(patientSearch).toBeVisible({ timeout: 5000 });
+    await patientSearch.fill('Wei');
+    await page.waitForTimeout(300);
+    await page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first().click();
+
+    const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
+    await expect(proceedBtn).toBeVisible({ timeout: 5000 });
+    await proceedBtn.click();
+    await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
+
+    const histamineField = page.getByLabel(/histamine/i).first();
+    await expect(histamineField).toBeVisible({ timeout: 5000 });
+    await histamineField.fill('5');
+
+    // Draft autosave is debounced by 500ms.
+    await page.waitForTimeout(700);
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await dismissHelpModal(page);
+
+    await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByLabel(/histamine/i).first()).toHaveValue('5');
+    await expect(page.getByText(/Chen, Wei|Wei Chen/)).toBeVisible({ timeout: 5000 });
+  });
 });
