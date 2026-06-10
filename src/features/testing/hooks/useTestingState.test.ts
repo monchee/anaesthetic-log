@@ -373,14 +373,18 @@ describe('useTestingState', () => {
     });
   });
 
-  it('logs and rethrows submit serialization failures', () => {
-    const circular = baseForm() as LogFormData & { self?: unknown };
-    circular.self = circular;
+  it('logs and rethrows submit parser failures', () => {
+    const invalidForm = { ...baseForm() };
+    Object.defineProperty(invalidForm, 'mrn', {
+      get() {
+        throw new TypeError('Unreadable MRN');
+      },
+    });
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const { result } = renderHook(() => useTestingState());
 
     act(() => {
-      result.current.setFormData(circular);
+      result.current.setFormData(invalidForm);
     });
 
     expect(() => result.current.handleSubmit()).toThrow(TypeError);

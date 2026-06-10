@@ -1,11 +1,16 @@
-import React, { useState, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Label, Input, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
+import React, { useRef, useState } from 'react';
 import { LogFormData } from '@/types';
-import { Calendar, Activity, Syringe, CheckCircle2, Check, Save, Stethoscope, Plus, Clock, AlertOctagon, ThumbsUp, ThumbsDown, Search, X, ChevronDown, ChevronUp, ClipboardList } from 'lucide-react';
-import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 import { useTestingLogLogic } from '../hooks/useTestingLogLogic';
 import { TestingService } from '../services/TestingService';
-import { DrugTestGrid } from './DrugTestGrid';
+import {
+  AssessmentPlanSection,
+  DrugChallengeSection,
+  DrugTestPanelSection,
+  NurseNotesSection,
+  SaveActionSection,
+  TryptaseSection,
+  VisitDetailsSection,
+} from './TestingLogFormSections';
 
 interface TestingLogFormProps {
   formData: LogFormData;
@@ -16,25 +21,14 @@ interface TestingLogFormProps {
   interventionOptions: readonly string[] | string[];
 }
 
-const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  if (['-', 'e', 'E', '+'].includes(e.key)) e.preventDefault();
-};
-
-const EMPTY_TRYPTASE: NonNullable<LogFormData['tryptase']> = {
-  obtained: false,
-  significantElevation: false,
-  values: [],
-};
-
-const TestingLogForm: React.FC<TestingLogFormProps> = ({ 
-  formData, 
-  setFormData, 
-  onSubmit, 
-  drugCategories, 
-  symptomOptions, 
-  interventionOptions 
+const TestingLogForm: React.FC<TestingLogFormProps> = ({
+  formData,
+  setFormData,
+  onSubmit,
+  drugCategories,
+  symptomOptions,
+  interventionOptions,
 }) => {
-
   const {
     drugToCategoryMap,
     handleInputChange,
@@ -48,7 +42,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     removeRow,
     updateDrugData,
     toggleSymptom,
-    challengeOptions
+    challengeOptions,
   } = useTestingLogLogic({ formData, setFormData, drugCategories });
 
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -62,8 +56,6 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     const { isValid, errors } = testingService.validateForm(formData);
     if (!isValid) {
       setValidationErrors(errors);
-      // Surface the errors where the user is — the Save button sits below a
-      // long form, so bring the summary into view and focus it.
       requestAnimationFrame(() => {
         errorSummaryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         errorSummaryRef.current?.focus();
@@ -76,692 +68,45 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
   return (
     <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-4 sm:mt-6 md:mt-8">
-      
-{/* 1. Visit Details & Patient Info */}
-      <Card style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
-        <CardContent className="pt-4 sm:pt-5 md:pt-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-6">
-                <div className="flex items-center gap-4">
-                    <div className="bg-muted p-2 rounded-none">
-                        <Activity className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                        <div className="section-label">Patient Name</div>
-                        <div className="text-lg font-bold text-slate-900 dark:text-primary">
-                            {formData.lastName}, {formData.firstName}
-                        </div>
-                    </div>
-                    <div className="border-l pl-4 border-border">
-                        <div className="section-label">MRN</div>
-                        <div className="text-lg font-bold text-slate-900 dark:text-primary font-mono lowercase">
-                            {formData.mrn}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-2 md:gap-4 border-t md:border-t-0 pt-3 md:pt-0">
-                    <Label htmlFor="visit-date" className="whitespace-nowrap text-base font-semibold text-slate-900 dark:text-primary flex items-center gap-2">
-                        <Calendar className="w-5 h-5" aria-hidden="true" /> Visit Date:<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
-                    </Label>
-                    <Input
-                        id="visit-date"
-                        type="date"
-                        aria-describedby="visit-date-hint"
-                        className="w-full md:max-w-[200px] font-mono"
-                        value={formData.visitDate}
-                        onChange={(e) => handleInputChange('visitDate', e.target.value)}
-                    />
-                    <span id="visit-date-hint" className="sr-only">
-                        Enter the date when the patient visited for testing
-                    </span>
-                </div>
-            </div>
-        </CardContent>
-      </Card>
-
-      {/* 2. Skin Testing Panel */}
-        <Card style={{ '--section-index': 1 } as React.CSSProperties} className="animate-section-reveal">
-          <CardHeader className="pb-3 border-b border-border">
-            <CardTitle className="flex items-center gap-2 text-base text-foreground">
-              <div className="bg-slate-100 dark:bg-card/40 p-1.5 rounded-none">
-                 <Activity className="w-4 h-4 text-primary dark:text-primary" />
-              </div>
-              SPT &amp; IDT Panel
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-3 sm:pt-4 md:pt-4 space-y-4 sm:space-y-5 md:space-y-6">
-
-            {/* Selection Area: Categories */}
-            <div className="space-y-4 mb-6">
-               <div className="flex justify-between items-center border-b border-border pb-2">
-                   <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">Select Drugs to Test:<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>
-                   <Button
-                     variant="ghost"
-                     size="sm"
-                     onClick={() => setFormData(prev => ({ ...prev, testPanel: [] }))}
-                     className="text-xs text-muted-foreground hover:text-destructive h-6 px-2 rounded-none font-normal"
-                     title="Clear all selected drugs"
-                   >
-                     Clear All
-                   </Button>
-               </div>
-
-               <div className="relative">
-                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-                 <Input
-                   value={drugFilter}
-                   onChange={e => setDrugFilter(e.target.value)}
-                   placeholder="Filter drugs..."
-                   className="h-8 pl-8 pr-8 text-xs rounded-none"
-                 />
-                 {drugFilter && (
-                   <button
-                     onClick={() => setDrugFilter('')}
-                     className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                   >
-                     <X className="w-3.5 h-3.5" />
-                   </button>
-                 )}
-               </div>
-
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                  {Object.entries(drugCategories).map(([category, drugs]) => {
-                    const categoryDrugs = drugs as string[];
-                    const filteredDrugs = drugFilter
-                      ? categoryDrugs.filter(d => d.toLowerCase().includes(drugFilter.toLowerCase()))
-                      : categoryDrugs;
-
-                    if (drugFilter && filteredDrugs.length === 0) return null;
-
-                    const hasActiveSelection = categoryDrugs.some(drug =>
-                        formData.testPanel.some(r => r.drugName === drug && !r.id)
-                    );
-                    const allCategorySelected = categoryDrugs.every(drug =>
-                        formData.testPanel.some(r => r.drugName === drug && !r.id)
-                    );
-
-                    const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
-
-                    return (
-                    <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${category === 'Others' ? 'col-span-full' : ''} ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-card/50'}`}>
-                        <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-border'}`}>
-                            <p className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-muted-foreground'}`}>
-                                {category}
-                                {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-full ${theme.pulse} animate-pulse`}></span>}
-                            </p>
-                            <button
-                                onClick={(e) => { e.preventDefault(); toggleCategory(categoryDrugs); }}
-                                className={`text-xs hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-muted-foreground dark:hover:text-foreground/90'}`}
-                            >
-                                {allCategorySelected ? 'Select None' : 'Select All'}
-                            </button>
-                        </div>
-                        <div className={category === 'Others' ? 'flex flex-wrap gap-2 md:grid md:grid-cols-3 lg:grid-cols-4' : 'flex flex-wrap gap-2'}>
-                            {filteredDrugs.map(drug => {
-                                const isSelected = formData.testPanel.some(r => r.drugName === drug && !r.id);
-                                return (
-                                <button
-                                    key={drug}
-                                    onClick={() => toggleDrug(drug)}
-                                    className={`text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left ${category === 'Others' ? 'md:w-full' : ''} ${
-                                    isSelected
-                                    ? theme.btnSelected
-                                    : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-muted ${theme.btnHover}`
-                                    }`}
-                                >
-                                    {isSelected && <Check className="w-3 h-3 shrink-0" />}
-                                    {drug}
-                                </button>
-                                );
-                            })}
-
-                            {category === 'Others' && (
-                                <button
-                                    onClick={addCustomDrug}
-                                    className={`md:w-full text-xs px-2.5 py-1.5 rounded-none border border-dashed border-border text-muted-foreground hover:bg-slate-50 dark:hover:bg-muted transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
-                                >
-                                    <Plus className="w-3 h-3 shrink-0" />
-                                    Other
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                  )})}
-                  {drugFilter && Object.values(drugCategories).every(
-                    drugs => !(drugs as string[]).some(d => d.toLowerCase().includes(drugFilter.toLowerCase()))
-                  ) && (
-                    <p className="text-xs text-muted-foreground col-span-full py-2">No drugs match &ldquo;{drugFilter}&rdquo;</p>
-                  )}
-               </div>
-            </div>
-
-            {/* Reference Controls */}
-            <div className="bg-card px-4 py-4 rounded-none border border-border flex flex-col gap-4">
-              <div className="section-label">
-                Reference Controls (mm):
-              </div>
-              <div className="grid grid-cols-3 gap-2 md:flex md:flex-wrap md:items-center md:gap-x-8 md:gap-y-4">
-                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
-                  <Label htmlFor="histamine-spt" className="text-xs font-medium text-slate-700 dark:text-foreground/80">Histamine (SPT)</Label>
-                  <Input
-                    id="histamine-spt"
-                    type="number"
-                    min="0"
-                    onKeyDown={preventNegativeInput}
-                    placeholder="0"
-                    className="bg-background h-9 w-full md:w-20 text-center text-sm font-mono"
-                    value={formData.controls.histamineSpt}
-                    onChange={(e) => handleControlChange('histamineSpt', e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
-                  <Label htmlFor="saline-spt" className="text-xs font-medium text-slate-700 dark:text-foreground/80">Saline (SPT)</Label>
-                  <Input
-                    id="saline-spt"
-                    type="number"
-                    min="0"
-                    onKeyDown={preventNegativeInput}
-                    placeholder="0"
-                    className="bg-background h-9 w-full md:w-20 text-center text-sm font-mono"
-                    value={formData.controls.salineSpt}
-                    onChange={(e) => handleControlChange('salineSpt', e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-3">
-                  <Label htmlFor="saline-idt" className="text-xs font-medium text-slate-700 dark:text-foreground/80">Saline (IDT)</Label>
-                  <Input
-                    id="saline-idt"
-                    type="number"
-                    min="0"
-                    onKeyDown={preventNegativeInput}
-                    placeholder="0"
-                    className="bg-background h-9 w-full md:w-20 text-center text-sm font-mono"
-                    value={formData.controls.salineIdt}
-                    onChange={(e) => handleControlChange('salineIdt', e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Data Entry Grid */}
-            <DrugTestGrid
-              testPanel={formData.testPanel}
-              drugToCategoryMap={drugToCategoryMap}
-              onUpdate={updateDrugData}
-              onSelectProtocol={selectProtocol}
-              onRemove={removeRow}
-              onAddCustomIdtStep={addCustomIdtStep}
-              onRemoveCustomIdtStep={removeCustomIdtStep}
-            />
-          </CardContent>
-        </Card>
-
-      {/* 3. Drug Challenge */}
-      <Card style={{ '--section-index': 2 } as React.CSSProperties} className="animate-section-reveal">
-        <CardHeader className="pb-3 border-b border-border">
-          <CardTitle className="flex items-center gap-2 text-base text-foreground">
-             <div className="bg-primary/10 dark:bg-card/40 p-1.5 rounded-none">
-                 <Syringe className="w-4 h-4 text-primary dark:text-primary" />
-             </div>
-             Drug Challenge
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6 space-y-6">
-
-            {/* Main Toggle */}
-            <button
-                type="button"
-                role="switch"
-                aria-checked={formData.proceedToChallenge}
-                onClick={() => handleInputChange('proceedToChallenge', !formData.proceedToChallenge)}
-                className={`flex w-full items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-[color,background-color,border-color,box-shadow] duration-150 group ${
-                    formData.proceedToChallenge
-                    ? 'border-primary bg-[white] dark:bg-card/10 shadow-sm'
-                    : 'border-slate-100 hover:border-border dark:hover:border-border bg-background'
-                }`}
-            >
-                <div className="flex items-center gap-4">
-                    <div className={`p-2.5 rounded-none transition-colors ${
-                        formData.proceedToChallenge
-                        ? 'bg-primary text-white'
-                        : 'bg-slate-100 text-slate-400 dark:bg-muted dark:text-muted-foreground group-hover:text-slate-600 dark:group-hover:text-foreground/80'
-                    }`}>
-                        <Activity className="w-5 h-5" />
-                    </div>
-                    <div className="text-left">
-                        <span className={`font-semibold tracking-tight transition-colors ${formData.proceedToChallenge ? 'text-slate-900 dark:text-primary' : 'text-slate-700 dark:text-foreground/80'}`}>
-                            Drug Challenge
-                        </span>
-                        <p className="text-xs text-muted-foreground">Proceed with live drug challenge</p>
-                    </div>
-                </div>
-
-                {/* Visual Switch */}
-                <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-150 ease-in-out ${formData.proceedToChallenge ? 'bg-primary' : 'bg-muted'}`}>
-                    <div className={`w-5 h-5 bg-background rounded-none shadow-sm transform transition-transform duration-150 ease-in-out ${formData.proceedToChallenge ? 'translate-x-5' : 'translate-x-0'}`} />
-                </div>
-            </button>
-
-            {formData.proceedToChallenge && (
-                <div className="space-y-8 pl-1 sm:pl-2 animate-in slide-in-from-top-2 fade-in duration-150">
-
-                    {/* Drug Selection */}
-                    <div className="space-y-3">
-                         <Label className="text-sm font-semibold text-slate-700 dark:text-foreground/80 flex items-center gap-2">
-                            Select Challenge Drug
-                         </Label>
-                         <div className="flex flex-col sm:flex-row gap-3">
-                            <div className="relative flex-1 group">
-                               <Syringe className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors pointer-events-none" />
-                               <Select
-                                    value={formData.challengeDrug}
-                                    onValueChange={(value) => handleInputChange('challengeDrug', value)}
-                                >
-                                    <SelectTrigger className="pl-10 h-11 border-border focus:border-primary focus:ring-primary" aria-label="Select challenge drug">
-                                        <SelectValue placeholder="Choose drug from list..." />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {challengeOptions.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            {formData.challengeDrug === 'Other' && (
-                                <Input
-                                    className="flex-1 h-11"
-                                    placeholder="Specify custom drug name..."
-                                    aria-label="Custom challenge drug name"
-                                    value={formData.challengeDrugCustom || ''}
-                                    onChange={(e) => handleInputChange('challengeDrugCustom', e.target.value)}
-                                    autoFocus
-                                />
-                            )}
-                         </div>
-                    </div>
-
-                    {/* Outcome Selection */}
-                    <div className="space-y-3">
-                         <Label className="text-sm font-semibold text-slate-700 dark:text-foreground/80">Observation Outcome</Label>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                             <button
-                                type="button"
-                                onClick={() => handleInputChange('outcome', 'SUCCESS')}
-                                className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-[color,background-color,border-color,box-shadow] duration-150 hover:shadow-md ${
-                                    formData.outcome === 'SUCCESS'
-                                    ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                                    : 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-green-800 dark:hover:bg-green-900/20'
-                                }`}
-                             >
-                                 <div className={`p-3 rounded-none ${
-                                     formData.outcome === 'SUCCESS' ? 'bg-green-100 text-green-600 dark:bg-green-900/50' : 'bg-slate-100 text-slate-400 dark:bg-card'
-                                 }`}>
-                                     <ThumbsUp className="w-6 h-6" />
-                                 </div>
-                                 <span className="font-bold text-sm">Tolerated (Safe)</span>
-                                 {formData.outcome === 'SUCCESS' && (
-                                     <div className="absolute top-3 right-3 text-green-600 dark:text-green-400">
-                                         <CheckCircle2 className="w-5 h-5" />
-                                     </div>
-                                 )}
-                             </button>
-
-                             <button
-                                type="button"
-                                onClick={() => handleInputChange('outcome', 'UNSUCCESS')}
-                                className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-[color,background-color,border-color,box-shadow] duration-150 hover:shadow-md ${
-                                    formData.outcome === 'UNSUCCESS'
-                                    ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300'
-                                    : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-red-800 dark:hover:bg-red-900/20'
-                                }`}
-                             >
-                                 <div className={`p-3 rounded-none ${
-                                     formData.outcome === 'UNSUCCESS' ? 'bg-red-100 text-red-600 dark:bg-red-900/50' : 'bg-slate-100 text-slate-400 dark:bg-card'
-                                 }`}>
-                                     <ThumbsDown className="w-6 h-6" />
-                                 </div>
-                                 <span className="font-bold text-sm">Reaction Occurred</span>
-                                 {formData.outcome === 'UNSUCCESS' && (
-                                     <div className="absolute top-3 right-3 text-red-600 dark:text-red-400">
-                                         <AlertOctagon className="w-5 h-5" />
-                                     </div>
-                                 )}
-                             </button>
-                         </div>
-                    </div>
-
-                    {/* Conditional Reaction Details */}
-                    {formData.outcome === 'UNSUCCESS' && (
-                        <div className="bg-red-50 dark:bg-red-900/10 p-5 rounded-none border border-red-200 dark:border-red-900/30 space-y-6 animate-in fade-in slide-in-from-top-1 shadow-sm">
-                            <div className="flex items-center gap-2 pb-2 border-b border-red-200 dark:border-red-900/30">
-                                <Activity className="w-5 h-5 text-red-600" />
-                                <h4 className="font-bold text-red-800 dark:text-red-300 text-sm uppercase tracking-wide">
-                                    Reaction Documentation
-                                </h4>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="reaction-time" className="text-red-900 dark:text-red-200 font-semibold flex items-center gap-2">
-                                        <Clock className="w-4 h-4" aria-hidden="true" /> Time to Reaction (min)
-                                    </Label>
-                                    <Input
-                                        id="reaction-time"
-                                        type="number"
-                                        inputMode="numeric"
-                                        pattern="[0-9]*"
-                                        min="0"
-                                        onKeyDown={preventNegativeInput}
-                                        value={formData.reactionTime}
-                                        onChange={(e) => handleInputChange('reactionTime', e.target.value)}
-                                        placeholder="Minutes"
-                                        className="h-10 border-border focus:ring-primary/20 transition-[box-shadow,border-color] rounded-none bg-background"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label className="text-red-900 dark:text-red-200 font-semibold flex items-center gap-2">
-                                        <Stethoscope className="w-4 h-4" aria-hidden="true" /> Treatment Required
-                                    </Label>
-                                    <Select
-                                        value={formData.interventionType}
-                                        onValueChange={(value) => handleInputChange('interventionType', value)}
-                                    >
-                                        <SelectTrigger className="h-10 bg-background border-red-200 dark:border-red-900/30 focus:border-red-400 focus:ring-red-400" aria-label="Select treatment intervention">
-                                            <SelectValue placeholder="Select intervention..." />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {interventionOptions.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-                            
-                            {formData.interventionType === 'Other' && (
-                                <div className="space-y-2 animate-in fade-in">
-                                    <Label htmlFor="intervention-other" className="text-red-900 dark:text-red-200">Specify Treatment Details</Label>
-                                    <Input
-                                        id="intervention-other"
-                                        value={formData.interventionOther}
-                                        onChange={(e) => handleInputChange('interventionOther', e.target.value)}
-                                        className="bg-background border-red-200 dark:border-red-900/30"
-                                        placeholder="Describe intervention..."
-                                    />
-                                </div>
-                            )}
-
-                            <div className="space-y-3">
-                                <Label className="text-red-900 dark:text-red-200 font-semibold">Observed Symptoms</Label>
-                                <div role="group" aria-label="Select observed symptoms" className="flex flex-wrap gap-2">
-                                    {symptomOptions.map(sym => (
-                                        <button
-                                            key={sym}
-                                            type="button"
-                                            role="checkbox"
-                                            aria-checked={formData.symptoms.includes(sym)}
-                                            aria-label={`${formData.symptoms.includes(sym) ? 'Remove' : 'Add'} ${sym}`}
-                                            onClick={() => toggleSymptom(sym)}
-                                            className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-[color,background-color,border-color,box-shadow] duration-150 ${
-                                                formData.symptoms.includes(sym)
-                                                ? 'bg-red-600 text-white border-red-600 shadow-md transform scale-105'
-                                                : 'bg-white text-red-900 border-red-200 hover:bg-red-100 hover:border-red-300 dark:bg-background dark:text-red-200 dark:border-red-900/50 dark:hover:bg-red-900/20 dark:hover:border-red-800'
-                                            }`}
-                                        >
-                                            {sym}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                             {formData.symptoms.includes('Other') && (
-                                <div className="space-y-2 animate-in fade-in">
-                                    <Label htmlFor="symptoms-other" className="text-red-900 dark:text-red-200">Specify Other Symptoms</Label>
-                                    <Input
-                                        id="symptoms-other"
-                                        value={formData.symptomsOther}
-                                        onChange={(e) => handleInputChange('symptomsOther', e.target.value)}
-                                        className="bg-background border-red-200 dark:border-red-900/30"
-                                        placeholder="Describe symptoms..."
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-            )}
-        </CardContent>
-      </Card>
-
-      {/* 4. Tryptase */}
-      <Card style={{ '--section-index': 3 } as React.CSSProperties} className="animate-section-reveal">
-        <CardHeader className="pb-3 border-b border-border">
-          <CardTitle className="flex items-center gap-2 text-base text-foreground">
-            <div className="bg-slate-100 dark:bg-card/40 p-1.5 rounded-none">
-              <Activity className="w-4 h-4 text-primary" />
-            </div>
-            Serial Serum Tryptase
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6 space-y-5">
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              role="switch"
-              aria-checked={formData.tryptase?.obtained ?? false}
-              aria-label="Tryptase samples obtained"
-              onClick={() => setFormData(prev => ({
-                ...prev,
-                tryptase: {
-                  obtained: !(prev.tryptase?.obtained ?? false),
-                  significantElevation: prev.tryptase?.significantElevation ?? false,
-                  values: prev.tryptase?.values ?? [],
-                }
-              }))}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
-                formData.tryptase?.obtained ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'
-              }`}
-            >
-              <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform ${formData.tryptase?.obtained ? 'translate-x-5' : 'translate-x-0'}`} />
-            </button>
-            <Label>Tryptase samples obtained</Label>
-          </div>
-
-          {formData.tryptase?.obtained && (
-            <div className="space-y-5 animate-in fade-in">
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={formData.tryptase.significantElevation}
-                  aria-label="Clinically significant dynamic elevation"
-                  onClick={() => setFormData(prev => ({
-                    ...prev,
-                    tryptase: {
-                      ...(prev.tryptase ?? EMPTY_TRYPTASE),
-                      significantElevation: !(prev.tryptase ?? EMPTY_TRYPTASE).significantElevation,
-                    }
-                  }))}
-                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
-                    formData.tryptase.significantElevation ? 'bg-red-500' : 'bg-slate-200 dark:bg-slate-700'
-                  }`}
-                >
-                  <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform ${formData.tryptase.significantElevation ? 'translate-x-5' : 'translate-x-0'}`} />
-                </button>
-                <Label className={formData.tryptase.significantElevation ? 'text-red-600 font-semibold' : ''}>
-                  Clinically significant dynamic elevation
-                </Label>
-              </div>
-
-              <div className="space-y-3">
-                <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">Sample Values (μg/L)</Label>
-                {(formData.tryptase.values.length === 0 ? [{ time: '', result: '' }] : formData.tryptase.values).map((val, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <div className="flex-1 flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground w-4 shrink-0">T{idx + 1}</span>
-                      <Input
-                        placeholder="Time (e.g. 15:30)"
-                        className="h-9 rounded-none text-sm"
-                        value={formData.tryptase.values[idx]?.time ?? ''}
-                        onChange={e => {
-                          const vals = [...(formData.tryptase?.values ?? [])];
-                          while (vals.length <= idx) vals.push({ time: '', result: '' });
-                          vals[idx] = { ...vals[idx], time: e.target.value };
-                          setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals } }));
-                        }}
-                      />
-                      <Input
-                        placeholder="Result"
-                        className="h-9 rounded-none text-sm w-28"
-                        value={formData.tryptase.values[idx]?.result ?? ''}
-                        onChange={e => {
-                          const vals = [...(formData.tryptase?.values ?? [])];
-                          while (vals.length <= idx) vals.push({ time: '', result: '' });
-                          vals[idx] = { ...vals[idx], result: e.target.value };
-                          setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals } }));
-                        }}
-                      />
-                    </div>
-                    {idx > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const vals = (formData.tryptase?.values ?? []).filter((_, i) => i !== idx);
-                          setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals } }));
-                        }}
-                        className="text-muted-foreground hover:text-destructive p-1"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-                {(formData.tryptase.values.length < 4) && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="text-xs h-7 px-2 rounded-none"
-                    onClick={() => setFormData(prev => ({
-                      ...prev,
-                      tryptase: {
-                        ...(prev.tryptase ?? EMPTY_TRYPTASE),
-                        values: [...(prev.tryptase ?? EMPTY_TRYPTASE).values, { time: '', result: '' }],
-                      }
-                    }))}
-                  >
-                    <Plus className="w-3.5 h-3.5 mr-1" /> Add sample
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* 5. Plan & Assessment */}
-      <Card style={{ '--section-index': 4 } as React.CSSProperties} className="animate-section-reveal">
-        <CardHeader className="pb-3 border-b border-border">
-           <CardTitle className="flex items-center gap-2 text-base text-foreground">
-             <div className="bg-emerald-100 dark:bg-emerald-900/40 p-1.5 rounded-none">
-                 <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-             </div>
-             Assessment & Plan
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-            <div className="space-y-2">
-                <Label htmlFor="clinical-plan">Comments / Plan</Label>
-                <textarea
-                    id="clinical-plan"
-                    className="flex min-h-[120px] w-full rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-border dark:bg-background dark:ring-offset-background dark:placeholder:text-muted-foreground dark:focus-visible:ring-primary/40"
-                    placeholder=""
-                    value={formData.plan}
-                    onChange={(e) => handleInputChange('plan', e.target.value)}
-                />
-            </div>
-        </CardContent>
-      </Card>
-
-      {/* 6. Nursing Notes */}
-      <Card style={{ '--section-index': 5 } as React.CSSProperties} className="animate-section-reveal border-blue-200 dark:border-blue-900/40">
-        <CardHeader className="pb-3 border-b border-blue-100 dark:border-blue-900/30">
-          <button
-            type="button"
-            className="flex items-center justify-between w-full text-left"
-            onClick={() => setNurseNotesOpen(o => !o)}
-          >
-            <CardTitle className="flex items-center gap-2 text-base text-blue-700 dark:text-blue-400">
-              <div className="bg-blue-100 dark:bg-blue-900/40 p-1.5 rounded-none">
-                <ClipboardList className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              </div>
-              Nursing Notes
-              <span className="text-xs font-normal text-muted-foreground ml-1">(nursing team only)</span>
-            </CardTitle>
-            {nurseNotesOpen ? <ChevronUp className="w-4 h-4 text-blue-500" /> : <ChevronDown className="w-4 h-4 text-blue-500" />}
-          </button>
-        </CardHeader>
-        {nurseNotesOpen && (
-          <CardContent className="pt-6 space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="nurse-pre" className="text-blue-800 dark:text-blue-300 font-medium">Pre-Testing Observations</Label>
-              <textarea
-                id="nurse-pre"
-                className="flex min-h-[80px] w-full rounded-none border border-blue-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:border-blue-900/40 dark:bg-background dark:placeholder:text-muted-foreground"
-                placeholder="e.g. consent obtained, vitals stable, IV access established..."
-                value={formData.nurseNotes?.preTesting || ''}
-                onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, preTesting: e.target.value } }))}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="nurse-during" className="text-blue-800 dark:text-blue-300 font-medium">During Testing</Label>
-              <textarea
-                id="nurse-during"
-                className="flex min-h-[80px] w-full rounded-none border border-blue-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:border-blue-900/40 dark:bg-background dark:placeholder:text-muted-foreground"
-                placeholder="e.g. patient tolerated well, no adverse events observed..."
-                value={formData.nurseNotes?.duringTesting || ''}
-                onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, duringTesting: e.target.value } }))}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="nurse-post" className="text-blue-800 dark:text-blue-300 font-medium">Post-Testing / Discharge</Label>
-              <textarea
-                id="nurse-post"
-                className="flex min-h-[80px] w-full rounded-none border border-blue-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:border-blue-900/40 dark:bg-background dark:placeholder:text-muted-foreground"
-                placeholder="e.g. patient discharged in stable condition, instructions given..."
-                value={formData.nurseNotes?.postTesting || ''}
-                onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, postTesting: e.target.value } }))}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="nurse-signed" className="text-blue-800 dark:text-blue-300 font-medium">Signed by (RN)</Label>
-              <Input
-                id="nurse-signed"
-                className="border-blue-200 dark:border-blue-900/40 focus:ring-blue-400"
-                placeholder="Nurse name..."
-                value={formData.nurseNotes?.signedBy || ''}
-                onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, signedBy: e.target.value } }))}
-              />
-            </div>
-          </CardContent>
-        )}
-      </Card>
-
-      {/* Save Action */}
-      <div className="pt-4 pb-20 space-y-3">
-        {validationErrors.length > 0 && (
-          <div
-            ref={errorSummaryRef}
-            role="alert"
-            tabIndex={-1}
-            className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive space-y-1 outline-none focus-visible:ring-2 focus-visible:ring-destructive"
-          >
-            <p className="font-semibold">Please fix the following before saving:</p>
-            <ul className="list-disc list-inside space-y-0.5">
-              {validationErrors.map((e, i) => <li key={i}>{e}</li>)}
-            </ul>
-          </div>
-        )}
-        <Button onClick={handleSave} size="lg" className="w-full h-14 text-lg shadow-lg hover:shadow-xl transition-[box-shadow,background-color] bg-primary hover:bg-primary font-semibold">
-          <Save className="w-5 h-5 mr-2" /> Save Clinical Record
-        </Button>
-      </div>
-
+      <VisitDetailsSection formData={formData} onInputChange={handleInputChange} />
+      <DrugTestPanelSection
+        formData={formData}
+        setFormData={setFormData}
+        drugCategories={drugCategories}
+        drugFilter={drugFilter}
+        setDrugFilter={setDrugFilter}
+        drugToCategoryMap={drugToCategoryMap}
+        onToggleDrug={toggleDrug}
+        onToggleCategory={toggleCategory}
+        onAddCustomDrug={addCustomDrug}
+        onControlChange={handleControlChange}
+        onUpdateDrugData={updateDrugData}
+        onSelectProtocol={selectProtocol}
+        onRemoveRow={removeRow}
+        onAddCustomIdtStep={addCustomIdtStep}
+        onRemoveCustomIdtStep={removeCustomIdtStep}
+      />
+      <DrugChallengeSection
+        formData={formData}
+        challengeOptions={challengeOptions}
+        symptomOptions={symptomOptions}
+        interventionOptions={interventionOptions}
+        onInputChange={handleInputChange}
+        onToggleSymptom={toggleSymptom}
+      />
+      <TryptaseSection formData={formData} setFormData={setFormData} />
+      <AssessmentPlanSection plan={formData.plan} onInputChange={handleInputChange} />
+      <NurseNotesSection
+        formData={formData}
+        setFormData={setFormData}
+        isOpen={nurseNotesOpen}
+        setIsOpen={setNurseNotesOpen}
+      />
+      <SaveActionSection
+        validationErrors={validationErrors}
+        errorSummaryRef={errorSummaryRef}
+        onSave={handleSave}
+      />
     </div>
   );
 };

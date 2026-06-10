@@ -1,3 +1,22 @@
+## [0.67.0] — 2026-06-10 (Decomposed)
+
+Summary: Structural refactor pass from the audit backlog — breaks the `App.tsx` routing god-component and the monolithic testing form into focused units, and replaces the hand-rolled save-path coercion with a single Zod schema applied at both the save and restore boundaries. No user-facing behavior change.
+
+### Changed
+- **`App.tsx` decomposed into screen components** — the 572-line routing god-component is now a ~200-line switcher that delegates each screen to a named component under `src/core/screens/` (Log, Testing, Summary, Dashboard, Research, InfoPage). Provider wiring moved to `AppProviders`.
+- **`TestingLogForm` split** — the 769-line form shell is now ~115 lines; its section markup lives in `TestingLogFormSections`, keeping the form container thin.
+- **Single Zod schema for clinical record sanitization** — the ~50-line manual field-by-field coercion in `handleSubmit` is replaced by `parseLogFormData`/`safeParseLogFormData` in `logFormSchema.ts`. The same schema now sanitizes records on **both** save and localStorage restore, so a malformed stored draft or report is normalized identically wherever it re-enters React state. Legacy IDT field fallback and tryptase/nurse-note handling are preserved.
+
+### Added
+- **Schema unit tests** — `logFormSchema.test.ts` covers field coercion, legacy IDT fallback, malformed-input guards, and the safe-parse path.
+
+### Notes
+- This is a pure structural pass: the 213-test unit suite and the Chromium E2E flow (patient → panel → save → report, plus draft restore) pass unchanged as the regression guard.
+- `.gitignore` PII rule narrowed from `data/` to `/data/` so it no longer shadows tracked source under `src/shared/data/`.
+
+### Chore
+- Version bump to 0.67.0
+
 ## [0.66.0] — 2026-06-10 (Hardened)
 
 Summary: Safety-net pass from the repo audit — fixes a silent draft-restore data-loss bug, adds focused tests around the clinical record save path, tightens type safety in form handlers, and enforces test coverage in CI.

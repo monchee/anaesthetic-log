@@ -6,6 +6,7 @@ import {
   setWithTTL, getIfFresh, getSavedAt, removeStored,
 } from '@shared/utils/ttlStorage';
 import { isTestingSessionDirty } from '../utils/isTestingSessionDirty';
+import { parseLogFormData, safeParseLogFormData } from '../utils/logFormSchema';
 
 const INITIAL_FORM_STATE: LogFormData = {
   mrn: '',
@@ -35,30 +36,6 @@ const INITIAL_FORM_STATE: LogFormData = {
   plan: ''
 };
 
-const sanitizeTryptase = (tryptase: unknown): LogFormData['tryptase'] => {
-  if (!tryptase || typeof tryptase !== 'object') return undefined;
-  const source = tryptase as {
-    obtained?: unknown;
-    significantElevation?: unknown;
-    values?: unknown;
-  };
-  return {
-    obtained: Boolean(source.obtained),
-    significantElevation: Boolean(source.significantElevation),
-    values: Array.isArray(source.values)
-      ? source.values.map((v) => {
-          const sample = v && typeof v === 'object'
-            ? v as { time?: unknown; result?: unknown }
-            : {};
-          return {
-            time: String(sample.time || ''),
-            result: String(sample.result || ''),
-          };
-        })
-      : [],
-  };
-};
-
 export function useTestingState() {
   const [formData, setFormData] = useState<LogFormData>(INITIAL_FORM_STATE);
   const [lastSavedRecord, setLastSavedRecord] = useState<LogFormData | null>(null);
@@ -70,15 +47,17 @@ export function useTestingState() {
     // Restore active report from localStorage if written within the TTL window.
     const record = getIfFresh<LogFormData>(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
     const savedAt = getSavedAt(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
-    if (record && savedAt) {
-      setLastSavedRecord({ ...record, tryptase: sanitizeTryptase(record.tryptase) });
+    const parsedRecord = record ? safeParseLogFormData(record) : null;
+    if (parsedRecord && savedAt) {
+      setLastSavedRecord(parsedRecord);
       setActiveReportSavedAt(savedAt);
     }
 
     // Restore any fresh in-progress testing draft. Submitted records and manual
     // resets clear this key, so the TTL entry only represents uncommitted work.
     const draft = getIfFresh<LogFormData>(TESTING_DRAFT_KEY, ACTIVE_REPORT_TTL_MS);
-    if (draft) setFormData({ ...draft, tryptase: sanitizeTryptase(draft.tryptase) });
+    const parsedDraft = draft ? safeParseLogFormData(draft) : null;
+    if (parsedDraft) setFormData(parsedDraft);
   }, []);
 
   // Debounced autosave of the in-progress session. Only persists once the
@@ -106,52 +85,7 @@ export function useTestingState() {
 
   const handleSubmit = () => {
     try {
-      const serialized = JSON.stringify(formData);
-      const parsed = JSON.parse(serialized) as LogFormData;
-      
-      const recordToSave: LogFormData = {
-        id: parsed.id ? String(parsed.id) : undefined,
-        timestamp: parsed.timestamp ? String(parsed.timestamp) : undefined,
-        mrn: String(parsed.mrn || ''),
-        firstName: String(parsed.firstName || ''),
-        lastName: String(parsed.lastName || ''),
-        visitDate: String(parsed.visitDate || ''),
-        controls: {
-          histamineSpt: String(parsed.controls?.histamineSpt || ''),
-          salineSpt: String(parsed.controls?.salineSpt || ''),
-          salineIdt: String(parsed.controls?.salineIdt || ''),
-        },
-        testPanel: (parsed.testPanel || []).map(row => ({
-          id: row.id ? String(row.id) : undefined,
-          drugName: String(row.drugName || ''),
-          sptWheal: String(row.sptWheal || ''),
-          idtResults: Array.isArray(row.idtResults)
-            ? row.idtResults.map((v: unknown) => String(v ?? ''))
-            : [String(row.idt100 || ''), String(row.idt10 || ''), String(row.idtNeat || '')].filter((_, i, a) => a.slice(i).some(v => v !== '') || i === 0),
-          protocolIndex: typeof row.protocolIndex === 'number' ? row.protocolIndex : 0,
-          customName: row.customName ? String(row.customName) : undefined,
-          notes: row.notes ? String(row.notes) : undefined,
-        })),
-        proceedToChallenge: Boolean(parsed.proceedToChallenge),
-        challengeDrug: String(parsed.challengeDrug || ''),
-        challengeDrugCustom: parsed.challengeDrugCustom ? String(parsed.challengeDrugCustom) : undefined,
-        outcome: (parsed.outcome === 'SUCCESS' || parsed.outcome === 'UNSUCCESS') ? parsed.outcome : null,
-        reactionTime: String(parsed.reactionTime || ''),
-        symptoms: (parsed.symptoms || []).map(s => String(s)),
-        symptomsOther: String(parsed.symptomsOther || ''),
-        interventionType: String(parsed.interventionType || ''),
-        interventionOther: String(parsed.interventionOther || ''),
-        plan: String(parsed.plan || ''),
-        nurseNotes: parsed.nurseNotes ? {
-          preTesting: parsed.nurseNotes.preTesting ? String(parsed.nurseNotes.preTesting) : undefined,
-          duringTesting: parsed.nurseNotes.duringTesting ? String(parsed.nurseNotes.duringTesting) : undefined,
-          postTesting: parsed.nurseNotes.postTesting ? String(parsed.nurseNotes.postTesting) : undefined,
-          signedBy: parsed.nurseNotes.signedBy ? String(parsed.nurseNotes.signedBy) : undefined,
-        } : undefined,
-        tryptase: sanitizeTryptase(parsed.tryptase),
-      };
-      
-      const finalRecord: LogFormData = { ...recordToSave };
+      const finalRecord = parseLogFormData(formData);
       
       const savedAt = Date.now();
       setLastSavedRecord(finalRecord);

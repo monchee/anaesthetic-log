@@ -60,6 +60,7 @@ test.describe('Testing Day Flow', () => {
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
     await page.waitForLoadState('networkidle');
+    await dismissHelpModal(page);
 
     // ── Step 4: Testing form loaded ────────────────────────────────────────
     await expect(page.getByText('Save Clinical Record')).toBeVisible({ timeout: 10000 });
@@ -75,6 +76,7 @@ test.describe('Testing Day Flow', () => {
     // ── Step 6: Save clinical record ──────────────────────────────────────
     const saveBtn = page.getByRole('button', { name: /Save Clinical Record/i });
     await saveBtn.click();
+    await dismissHelpModal(page);
 
     // ── Step 7: Report screen appears (SUMMARY) ────────────────────────────
     await expect(page.getByRole('button', { name: 'Clinical Report' })).toBeVisible({ timeout: 10000 });
@@ -85,6 +87,7 @@ test.describe('Testing Day Flow', () => {
 
     // ── Step 9: Navigate back to the log, then to Dashboard ────────────────
     await page.getByRole('button', { name: /Start New Log/i }).click();
+    await dismissHelpModal(page);
     const dashboardBtn = page.getByRole('button', { name: /dashboard/i }).first();
     await expect(dashboardBtn).toBeVisible({ timeout: 5000 });
     await dashboardBtn.click();
@@ -109,6 +112,7 @@ test.describe('Testing Day Flow', () => {
     const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
+    await dismissHelpModal(page);
     await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
 
     const histamineField = page.getByLabel(/histamine/i).first();
