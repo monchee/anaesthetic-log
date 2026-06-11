@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Card, CardContent, Badge } from '@/components/ui';
 import { Patient, TestingPlanData } from '@/types';
 import { formatDate } from '@shared/utils';
-import { Printer, FileText, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText } from 'lucide-react';
+import { Printer, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText } from 'lucide-react';
 import { formatTestingPlanAsText } from '@shared/utils/testingPlanFormatter';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 
@@ -13,22 +13,59 @@ interface TestingPlanPrintViewProps {
   onProceed: () => void;
 }
 
+interface TestRow {
+  drugName: string;
+  protocolLabel?: string;
+  category: string;
+  type: 'SPT' | 'IDT';
+  concentration: string;
+  diluent?: string;
+  isFirstForDrug: boolean;
+  isCustomNotListed?: boolean;
+}
+
 const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: TestingPlanPrintViewProps) => {
   const { selectedDrugs, customDrugs, notes, urgent, reactionDate, documentsToChase } = data;
-  const patientName = `${patient.firstName} ${patient.lastName}`;
-  const patientIdentifier = `${patientName} · MRN ${patient.mrn}${patient.dob ? ` · DOB ${formatDate(patient.dob)}` : ''}`;
-  const renderDiluentSubline = (diluent?: string) => {
-    if (!diluent) return null;
-    return (
-      <div className="mt-0.5 text-[10px] print:text-[8px] leading-tight text-muted-foreground/80 print:text-slate-500">
-        {diluent.startsWith('Neat') ? diluent : `in ${diluent}`}
-      </div>
-    );
-  };
 
-  const handlePrint = () => {
-    window.print();
-  };
+  // Build flat rows: 1 SPT row + N IDT rows per drug
+  const testRows: TestRow[] = [];
+
+  Object.entries(drugCategories).forEach(([category, drugs]) => {
+    (drugs as string[]).filter(d => selectedDrugs.includes(d)).forEach(d => {
+      const protocols = getSkinProtocolsForDrug(d);
+      const protocolIdx = data.selectedProtocols?.[d] ?? 0;
+      const protocol = protocols[protocolIdx] ?? protocols[0];
+      const protocolLabel = protocols.length > 1 && protocol ? protocol.protocolLabel : undefined;
+
+      let isFirst = true;
+      if (protocol?.sptNeatConcentration) {
+        testRows.push({ drugName: d, protocolLabel, category, type: 'SPT', concentration: protocol.sptNeatConcentration, diluent: protocol.diluent, isFirstForDrug: isFirst });
+        isFirst = false;
+      }
+      protocol?.idtSteps?.forEach(step => {
+        testRows.push({ drugName: d, protocolLabel, category, type: 'IDT', concentration: step.ratio + (step.concentration ? ` (${step.concentration})` : ''), isFirstForDrug: isFirst });
+        isFirst = false;
+      });
+    });
+  });
+
+  customDrugs.filter(e => selectedDrugs.includes(e.name)).forEach(entry => {
+    const notListed = entry.fromRedcapOther === true;
+    let isFirst = true;
+    if (entry.sptConcentration) {
+      testRows.push({ drugName: entry.name, category: 'Additional', type: 'SPT', concentration: entry.sptConcentration, isFirstForDrug: isFirst, isCustomNotListed: notListed });
+      isFirst = false;
+    }
+    entry.idtSteps?.forEach(step => {
+      testRows.push({ drugName: entry.name, category: 'Additional', type: 'IDT', concentration: step.ratio + (step.concentration ? ` (${step.concentration})` : ''), isFirstForDrug: isFirst, isCustomNotListed: notListed && isFirst });
+      isFirst = false;
+    });
+    if (isFirst) {
+      testRows.push({ drugName: entry.name, category: 'Additional', type: 'SPT', concentration: '—', isFirstForDrug: true, isCustomNotListed: notListed });
+    }
+  });
+
+  const handlePrint = () => window.print();
 
   const handleEmail = () => {
     const body = formatTestingPlanAsText(patient, data, drugCategories);
@@ -36,339 +73,303 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
     window.location.href = `mailto:SLHD-RPA-allergynurses@health.nsw.gov.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
+  const genderLower = patient.gender?.toLowerCase() ?? '';
+  const isMale = genderLower.startsWith('m');
+  const isFemale = genderLower.startsWith('f');
+
+  const Checkbox = ({ checked }: { checked: boolean }) => (
+    <span className="inline-flex items-center justify-center w-3.5 h-3.5 border border-current print:border-black text-[8px] shrink-0">
+      {checked ? '✓' : ''}
+    </span>
+  );
+
   return (
     <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
-        {/* Print-only running identity */}
-        <div className="hidden print:flex print:items-center print:justify-between print:border-b print:border-black print:bg-white print:pb-[3mm] print:text-[10px] print:font-semibold print:text-black">
-            <span>{patientIdentifier}</span>
-            <span>Anaesthetic Allergy Testing Request</span>
+
+      {/* Screen-only Controls */}
+      <div className="p-4 border-b border-border bg-muted flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">
+        <p className="text-lg font-semibold tracking-tight text-foreground">Testing Plan Document</p>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button size="sm" variant="outline" onClick={handleEmail}>
+            <Mail className="w-4 h-4 mr-2" /> Email to Allergy Nurse
+          </Button>
+          <Button size="sm" onClick={handlePrint}>
+            <Printer className="w-4 h-4 mr-2" /> Print Now
+          </Button>
         </div>
-        <div className="hidden print:flex print:items-center print:justify-between print:border-t print:border-black print:bg-white print:pt-[3mm] print:text-[10px] print:font-semibold print:text-black">
-            <span>{patient.lastName}, {patient.firstName} · MRN {patient.mrn}</span>
-            <span>Date of request: {formatDate(new Date().toISOString())}</span>
-        </div>
+      </div>
 
-        {/* Screen-only Controls */}
-        <div className="p-4 border-b border-border bg-muted flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">
-            <p className="text-lg font-semibold tracking-tight text-foreground">Testing Plan Document</p>
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-                <Button size="sm" variant="outline" onClick={handleEmail}>
-                    <Mail className="w-4 h-4 mr-2" /> Email to Allergy Nurse
-                </Button>
-                <Button size="sm" onClick={handlePrint}>
-                    <Printer className="w-4 h-4 mr-2" /> Print Now
-                </Button>
-            </div>
-        </div>
+      <CardContent className="p-4 md:p-6 print:p-4 space-y-4 print:space-y-3">
 
-        {/* Minimal Accent Header */}
-        <div className="border-l-4 border-primary bg-muted p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">
-            <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                    <h2 className="text-xl md:text-2xl font-bold text-foreground print:text-black">Anaesthetic Allergy Testing Request</h2>
-                    <p className="text-sm text-muted-foreground mt-1">Department of Clinical Immunology & Allergy · Royal Prince Alfred Hospital</p>
-                </div>
-                <div className="text-right">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground">Date of Request</p>
-                    <p className="text-sm font-semibold text-foreground">{formatDate(new Date().toISOString())}</p>
-                </div>
-            </div>
-        </div>
+        {/* === MEDICATION CHART HEADER === */}
+        <div className="flex border border-border print:border-black">
 
-        <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-4 print:space-y-3">
-             {/* Urgent Banner */}
-             {urgent && (
-                 <div className="mb-4 print:mb-2 flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-2 print:py-1 font-bold uppercase tracking-wider text-sm print:text-sm print:bg-black print:border-2 print:border-black">
-                     <AlertTriangle className="w-5 h-5 print:w-4 print:h-4 shrink-0" />
-                     URGENT — Priority Testing Required
-                 </div>
-             )}
-
-            {/* Patient Banner */}
-            <div className="bg-muted border border-border rounded-none p-4 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 print:grid-cols-3 print:bg-white print:border-slate-300 print:p-2 print:gap-2">
-                <div>
-                    <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Patient Name</p>
-                    <p className="text-xl font-semibold tracking-tight text-primary print:text-base print:text-black">{patientName}</p>
-                </div>
-                <div>
-                    <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">MRN</p>
-                    <p className="text-lg font-mono font-medium text-foreground/80 print:text-xs">{patient.mrn}</p>
-                </div>
-                {patient.redcapId && patient.redcapId !== patient.mrn && (
-                <div>
-                    <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">REDCap Record ID</p>
-                    <p className="text-lg font-mono font-medium text-foreground/80 print:text-xs">{patient.redcapId}</p>
-                </div>
-                )}
-                <div>
-                    <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">DOB</p>
-                    <p className="text-foreground/80 font-medium print:text-xs">{formatDate(patient.dob)}</p>
-                </div>
-                <div>
-                    <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Gender</p>
-                    <p className="text-foreground/80 font-medium print:text-xs">{patient.gender}</p>
-                </div>
-                {reactionDate && (
-                    <div className="col-span-2 sm:col-span-1 print:col-span-1">
-                        <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">Date of Reaction</p>
-                        <p className="text-foreground/80 font-medium print:text-xs">{formatDate(reactionDate)}</p>
-                    </div>
-                )}
-            </div>
-
-            {/* Documents to Chase */}
-            {documentsToChase && (documentsToChase.tryptases || documentsToChase.anaestheticChart || documentsToChase.other) && (
-                <div className="mt-5 print:mt-1.5">
-                    <h3 className="font-semibold text-xs uppercase tracking-widest border-b border-border mb-2 pb-1 print:text-[10px] print:mb-1 print:pb-0.5 flex items-center gap-1.5 print:text-black">
-                        <span className="inline-block w-0.5 h-3 bg-primary print:bg-black shrink-0" />
-                        <FolderSearch className="w-3.5 h-3.5 print:w-3 print:h-3" />
-                        Documents to Chase
-                    </h3>
-                    <div className="flex flex-wrap gap-2 mt-1 print:gap-1">
-                        {documentsToChase.tryptases && (
-                            <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black">
-                                <span className="w-1.5 h-1.5 bg-amber-500 print:bg-black inline-block shrink-0" />
-                                Tryptases
-                            </Badge>
-                        )}
-                        {documentsToChase.anaestheticChart && (
-                            <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black">
-                                <span className="w-1.5 h-1.5 bg-amber-500 print:bg-black inline-block shrink-0" />
-                                Anaesthetic Chart
-                            </Badge>
-                        )}
-                        {documentsToChase.other && (
-                            <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black">
-                                <span className="w-1.5 h-1.5 bg-amber-500 print:bg-black inline-block shrink-0" />
-                                Other{documentsToChase.otherText ? `: ${documentsToChase.otherText}` : ''}
-                            </Badge>
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {/* Notes */}
-            {notes && (
-                <div className="mt-6 print:mt-1.5">
-                    <h3 className="font-semibold text-xs uppercase tracking-widest border-b border-border mb-2 pb-1 print:text-[10px] print:mb-1 print:pb-0.5 flex items-center gap-1.5 print:text-black">
-                        <span className="inline-block w-0.5 h-3 bg-primary print:bg-black shrink-0" />
-                        <NotebookText className="w-3.5 h-3.5 print:w-3 print:h-3" />
-                        Clinical Notes
-                    </h3>
-                    <p className="text-foreground/80 whitespace-pre-wrap text-sm print:text-xs">{notes}</p>
-                </div>
-            )}
-
-            {/* Requested Panel — Protocol Table */}
-            <div className="mt-6 print:mt-1.5">
-                <h3 className="font-semibold text-xs uppercase tracking-widest border-b-2 border-foreground mb-3 pb-1 print:text-[10px] print:mb-1.5 print:pb-0.5 print:border-b flex items-center gap-1.5 print:text-black">
-                    <span className="inline-block w-0.5 h-3 bg-primary print:bg-black shrink-0" />
-                    <FileText className="w-4 h-4 print:w-3 print:h-3" /> Requested Skin Testing Panel
-                </h3>
-
-                {/* Reference Controls */}
-                <div className="mb-3 print:mb-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-xs print:text-[10px]">
-                    <span className="section-label print:text-[9px]">Reference Controls:</span>
-                    {[
-                        { label: 'Histamine (SPT)', unit: 'mm' },
-                        { label: 'Saline (SPT)', unit: 'mm' },
-                        { label: 'Saline (IDT)', unit: 'mm' },
-                    ].map(({ label, unit }) => (
-                        <span key={label} className="flex items-end gap-1">
-                            <span className="text-foreground/80 print:text-slate-700">{label}</span>
-                            <span className="border-b border-gray-400 dark:border-gray-500 print:border-black inline-block min-w-[3rem] print:h-5" />
-                            <span className="text-muted-foreground text-xs">{unit}</span>
+          {/* Left: Patient identification label box */}
+          <div className="flex-1 border-r border-border print:border-black p-2 print:p-1.5 min-w-0">
+            <p className="text-[10px] print:text-[9px] font-semibold text-center text-muted-foreground print:text-slate-600 mb-1.5 print:mb-1">
+              Affix patient identification label here
+            </p>
+            <table className="w-full text-xs print:text-[9px] border-collapse">
+              <tbody>
+                <tr className="border-t border-border print:border-black">
+                  <td className="py-0.5 pr-2 font-semibold text-muted-foreground print:text-slate-700 whitespace-nowrap w-24 print:w-20 align-top">URN:</td>
+                  <td className="py-0.5 font-mono text-foreground print:text-black">{patient.mrn}</td>
+                </tr>
+                <tr className="border-t border-border print:border-black">
+                  <td className="py-0.5 pr-2 font-semibold text-muted-foreground print:text-slate-700 whitespace-nowrap align-top">Family name:</td>
+                  <td className="py-0.5 font-semibold text-foreground print:text-black uppercase">{patient.lastName}</td>
+                </tr>
+                <tr className="border-t border-border print:border-black">
+                  <td className="py-0.5 pr-2 font-semibold text-muted-foreground print:text-slate-700 whitespace-nowrap align-top">Given names:</td>
+                  <td className="py-0.5 text-foreground print:text-black">{patient.firstName}</td>
+                </tr>
+                <tr className="border-t border-border print:border-black">
+                  <td className="py-0.5 pr-2 font-semibold text-muted-foreground print:text-slate-700 whitespace-nowrap align-top">Address:</td>
+                  <td className="py-0.5 text-muted-foreground print:text-slate-400 italic text-[10px] print:text-[8px] text-center">
+                    Not a valid<br />prescription unless<br />identifiers present
+                  </td>
+                </tr>
+                <tr className="border-t border-border print:border-black">
+                  <td className="py-0.5 pr-2 font-semibold text-muted-foreground print:text-slate-700 whitespace-nowrap align-middle">Date of birth:</td>
+                  <td className="py-0.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-foreground print:text-black">{patient.dob ? formatDate(patient.dob) : ''}</span>
+                      <span className="flex items-center gap-1.5 shrink-0">
+                        <span className="font-semibold text-muted-foreground print:text-slate-700">Sex:</span>
+                        <span className="flex items-center gap-0.5">
+                          <Checkbox checked={isMale} />
+                          <span className="text-foreground print:text-black">M</span>
                         </span>
-                    ))}
-                </div>
-
-                {selectedDrugs.length > 0 ? (
-                    <div className="space-y-4 print:space-y-2">
-                        {Object.entries(drugCategories).map(([category, drugs]) => {
-                            const activeInCat = (drugs as string[]).filter(d => selectedDrugs.includes(d));
-                            if (activeInCat.length === 0) return null;
-                            return (
-                                <div key={category} className="break-inside-avoid bg-muted border border-border rounded-none overflow-hidden print:bg-white print:border-slate-300">
-                                    <div className="px-3 py-1.5 bg-card border-b border-border rounded-none print:bg-white print:border-slate-300">
-                                        <h4 className="font-bold text-xs uppercase tracking-wider text-primary print:text-[9px] print:text-black">{category}</h4>
-                                    </div>
-
-                                    {/* Mobile card list — hidden on md+ and print */}
-                                    <ul className="divide-y divide-border/50 md:hidden print:hidden">
-                                        {activeInCat.map(d => {
-                                            const protocols = getSkinProtocolsForDrug(d);
-                                            const protocolIdx = data.selectedProtocols?.[d] ?? 0;
-                                            const protocol = protocols[protocolIdx] ?? protocols[0];
-                                            return (
-                                                <li key={d} className="px-3 py-2 space-y-1.5 text-xs">
-                                                    <div className="font-medium text-foreground/90">
-                                                        {d}
-                                                        {protocols.length > 1 && protocol && (
-                                                            <span className="ml-1 text-xs text-muted-foreground">({protocol.protocolLabel})</span>
-                                                        )}
-                                                    </div>
-                                                    {protocol?.presentation && (
-                                                        <div className="text-muted-foreground">{protocol.presentation}</div>
-                                                    )}
-                                                    <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                                                        <div className="text-muted-foreground">
-                                                            <span className="font-medium text-foreground/80">SPT prep:</span> {protocol?.sptNeatConcentration || '—'}
-                                                            {renderDiluentSubline(protocol?.diluent)}
-                                                        </div>
-                                                        <div className="flex items-center gap-1">
-                                                            <span className="font-medium text-foreground/80">SPT:</span>
-                                                            <span className="border-b border-gray-400 dark:border-gray-500 inline-block min-w-[2.5rem]" />
-                                                            <span className="text-muted-foreground text-xs">mm</span>
-                                                        </div>
-                                                    </div>
-                                                    {protocol?.idtSteps && protocol.idtSteps.length > 0 && (
-                                                        <div className="space-y-1">
-                                                            <span className="font-medium text-foreground/80">IDT:</span>
-                                                            {protocol.idtSteps.map((s, i) => (
-                                                                <div key={i} className="flex items-center gap-2 font-mono pl-2">
-                                                                    <span className="text-muted-foreground">{s.ratio}{s.concentration ? ` (${s.concentration})` : ''}</span>
-                                                                    <span className="border-b border-gray-400 dark:border-gray-500 inline-block min-w-[2.5rem]" />
-                                                                    <span className="text-muted-foreground text-xs">mm</span>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    )}
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-
-                                    {/* Desktop/print table — hidden on mobile */}
-                                    <table className="hidden md:table print:table w-full text-xs print:text-[9px]">
-                                        <thead>
-                                            <tr className="border-b border-border text-muted-foreground uppercase text-xs tracking-wider print:border-slate-300">
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[20%]">Drug</th>
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[18%]">Presentation</th>
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[26%]">SPT Preparation</th>
-                                                <th scope="col" className="text-center px-3 py-1.5 font-semibold w-[70px]">SPT Result</th>
-                                                <th scope="col" className="text-left px-3 py-1.5 font-semibold">IDT Protocol / Result</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {activeInCat.map(d => {
-                                                const protocols = getSkinProtocolsForDrug(d);
-                                                const protocolIdx = data.selectedProtocols?.[d] ?? 0;
-                                                const protocol = protocols[protocolIdx] ?? protocols[0];
-                                                return (
-                                                    <tr key={d} className="border-b border-border/50 last:border-0 print:border-slate-200">
-                                                        <td className="px-3 py-2 font-medium text-foreground/90 print:text-slate-800">
-                                                            {d}
-                                                            {protocols.length > 1 && protocol && (
-                                                                <span className="ml-1 text-xs print:text-[9px] text-muted-foreground">({protocol.protocolLabel})</span>
-                                                            )}
-                                                        </td>
-                                                        <td className="px-3 py-2 text-muted-foreground print:text-slate-600">{protocol?.presentation || '—'}</td>
-                                                        <td className="px-3 py-2 text-muted-foreground print:text-slate-600">
-                                                            <div>{protocol?.sptNeatConcentration || '—'}</div>
-                                                            {renderDiluentSubline(protocol?.diluent)}
-                                                        </td>
-                                                        <td className="px-3 py-2 text-center">
-                                                            <span className="flex items-end justify-center print:h-6">
-                                                                <span className="border-b border-gray-400 dark:border-gray-500 print:border-black inline-block min-w-[3rem] print:h-5" />
-                                                                <span className="text-muted-foreground text-xs ml-0.5">mm</span>
-                                                            </span>
-                                                        </td>
-                                                        <td className="px-3 py-2 text-muted-foreground font-mono print:text-slate-600">
-                                                            {protocol?.idtSteps && protocol.idtSteps.length > 0 ? (
-                                                                <div className="space-y-1">
-                                                                    {protocol.idtSteps.map((s, i) => (
-                                                                        <div key={i} className="flex items-end gap-2">
-                                                                            <span>{s.ratio}{s.concentration ? ` (${s.concentration})` : ''}</span>
-                                                                            <span className="border-b border-gray-400 dark:border-gray-500 print:border-black inline-block min-w-[3rem] print:h-5" />
-                                                                            <span className="text-muted-foreground text-xs">mm</span>
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                            ) : '—'}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            );
-                        })}
-
-                        {/* Custom Drugs */}
-                        {customDrugs.filter(e => selectedDrugs.includes(e.name)).length > 0 && (
-                            <div className="break-inside-avoid bg-muted border border-border rounded-none overflow-hidden print:bg-white print:border-slate-300">
-                                <div className="px-3 py-1.5 bg-card border-b border-border print:bg-white">
-                                    <h4 className="font-bold text-xs uppercase tracking-wider text-primary print:text-[9px] print:text-black">Additional</h4>
-                                </div>
-                                <ul className="divide-y divide-border/50 print:divide-slate-200">
-                                    {customDrugs.filter(e => selectedDrugs.includes(e.name)).map(entry => (
-                                        <li key={entry.name} className="px-3 py-2 print:text-xs">
-                                            <div className="flex flex-wrap items-center gap-1.5 font-medium text-sm text-foreground/80 print:text-xs">
-                                                <span>{entry.name}</span>
-                                                {entry.fromRedcapOther && (
-                                                    <span className="border border-foreground print:border-black rounded-none px-1 text-[9px] uppercase tracking-wide text-foreground print:text-black">
-                                                        not listed
-                                                    </span>
-                                                )}
-                                            </div>
-                                            {(entry.sptConcentration || (entry.idtSteps && entry.idtSteps.length > 0)) ? (
-                                                <div className="mt-0.5 text-xs text-muted-foreground space-y-0.5 print:text-[10px]">
-                                                    {entry.sptConcentration && <div>SPT: {entry.sptConcentration}</div>}
-                                                    {entry.idtSteps?.map((step, i) => (
-                                                        <div key={i}>IDT {i + 1}: {step.ratio}{step.concentration ? ` — ${step.concentration}` : ''}</div>
-                                                    ))}
-                                                    {entry.includeInChallenge && <div>Drug Challenge: Yes</div>}
-                                                </div>
-                                            ) : (
-                                                <span className="text-muted-foreground italic text-xs">protocol not in library</span>
-                                            )}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
+                        <span className="flex items-center gap-0.5">
+                          <Checkbox checked={isFemale} />
+                          <span className="text-foreground print:text-black">F</span>
+                        </span>
+                      </span>
                     </div>
-                ) : (
-                    <p className="text-muted-foreground italic print:text-xs">No drugs selected.</p>
-                )}
-            </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="mt-1 text-[9px] print:text-[8px] font-semibold text-red-600 print:text-red-700">
+              First prescriber to print patient name and check label correct:
+            </p>
+          </div>
 
-            {/* Nurse / Time / Date sign-off */}
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-1 text-xs print:text-[10px] pt-4 print:pt-2">
-                {[
-                    { label: 'Date of testing', width: 'min-w-[6rem]' },
-                    { label: 'Time', width: 'min-w-[4rem]' },
-                    { label: 'Nurse', width: 'min-w-[10rem]' },
-                ].map(({ label, width }) => (
-                    <span key={label} className="flex items-end gap-1.5">
-                        <span className="font-semibold text-foreground/80 print:text-slate-700">{label}:</span>
-                        <span className={`border-b border-gray-400 dark:border-gray-500 print:border-black inline-block print:h-6 ${width}`} />
-                    </span>
-                ))}
+          {/* Right: ADR sticker + form title */}
+          <div className="flex flex-col min-w-[180px] print:min-w-[160px]">
+            <div className="border-b border-border print:border-black p-2 print:p-1.5 text-center">
+              <p className="text-xs print:text-[10px] font-bold text-red-600 print:text-red-700 border border-red-500 print:border-red-700 px-2 py-0.5 inline-block">
+                Attach ADR sticker
+              </p>
+              <p className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-600 mt-0.5">See front page for details</p>
             </div>
+            <div className="flex-1 p-3 print:p-2 flex flex-col items-center justify-center gap-1">
+              <p className="text-base print:text-sm font-bold text-foreground print:text-black leading-tight text-center">
+                Anaesthetic Allergy<br />Skin Testing<br />Request
+              </p>
+              {reactionDate && (
+                <p className="text-[10px] print:text-[9px] text-center text-muted-foreground print:text-slate-600">
+                  Reaction: {formatDate(reactionDate)}
+                </p>
+              )}
+              <p className="text-xs print:text-[10px] text-center text-muted-foreground print:text-slate-600">
+                Year: 20{new Date().getFullYear().toString().slice(2)}
+              </p>
+            </div>
+          </div>
+        </div>
 
-            {/* Signature Area */}
-            <div className="pt-6 border-t border-border print:pt-4">
-                <div className="flex justify-between gap-12 print:gap-6">
-                    <div className="flex-1">
-                        <div className="border-b-2 border-foreground print:border-black print:border-b-2 h-8 print:h-12" />
-                        <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px] mt-1">Requested By (Name & Signature)</p>
+        {/* Urgent Banner */}
+        {urgent && (
+          <div className="flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-2 print:py-1 font-bold uppercase tracking-wider text-sm print:bg-black print:border-2 print:border-black">
+            <AlertTriangle className="w-5 h-5 print:w-4 print:h-4 shrink-0" />
+            URGENT — Priority Testing Required
+          </div>
+        )}
+
+        {/* Department line */}
+        <p className="text-xs text-muted-foreground print:text-[9px] print:text-slate-600">
+          Department of Clinical Immunology &amp; Allergy · Royal Prince Alfred Hospital · Date of request: {formatDate(new Date().toISOString())}
+        </p>
+
+        {/* Documents to Chase */}
+        {documentsToChase && (documentsToChase.tryptases || documentsToChase.anaestheticChart || documentsToChase.other) && (
+          <div>
+            <h3 className="font-semibold text-xs uppercase tracking-widest border-b border-border mb-2 pb-1 print:text-[10px] print:mb-1 print:pb-0.5 flex items-center gap-1.5 print:text-black">
+              <FolderSearch className="w-3.5 h-3.5 print:w-3 print:h-3" />
+              Documents to Chase
+            </h3>
+            <div className="flex flex-wrap gap-2 print:gap-1">
+              {documentsToChase.tryptases && (
+                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black">
+                  Tryptases
+                </Badge>
+              )}
+              {documentsToChase.anaestheticChart && (
+                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black">
+                  Anaesthetic Chart
+                </Badge>
+              )}
+              {documentsToChase.other && (
+                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black">
+                  Other{documentsToChase.otherText ? `: ${documentsToChase.otherText}` : ''}
+                </Badge>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Clinical Notes */}
+        {notes && (
+          <div>
+            <h3 className="font-semibold text-xs uppercase tracking-widest border-b border-border mb-2 pb-1 print:text-[10px] print:mb-1 print:pb-0.5 flex items-center gap-1.5 print:text-black">
+              <NotebookText className="w-3.5 h-3.5 print:w-3 print:h-3" />
+              Clinical Notes
+            </h3>
+            <p className="text-foreground/80 whitespace-pre-wrap text-sm print:text-xs">{notes}</p>
+          </div>
+        )}
+
+        {/* === SPT / IDT PROTOCOL TABLE === */}
+        <div>
+          {/* Reference Controls */}
+          <div className="mb-2 print:mb-1.5 flex flex-wrap items-center gap-x-6 gap-y-1 border border-border print:border-black p-2 print:p-1.5 bg-muted print:bg-white text-xs print:text-[9px]">
+            <span className="font-semibold text-muted-foreground print:text-slate-700 uppercase tracking-wide text-[10px] print:text-[8px]">
+              Reference Controls:
+            </span>
+            {[
+              { label: 'Histamine (SPT)', unit: 'mm' },
+              { label: 'Saline (SPT)', unit: 'mm' },
+              { label: 'Saline (IDT)', unit: 'mm' },
+            ].map(({ label, unit }) => (
+              <span key={label} className="flex items-end gap-1">
+                <span className="text-foreground/80 print:text-slate-700">{label}</span>
+                <span className="border-b border-gray-400 print:border-black inline-block min-w-[3rem] print:h-5" />
+                <span className="text-muted-foreground">{unit}</span>
+              </span>
+            ))}
+          </div>
+
+          <table className="w-full border-collapse border border-border print:border-black text-xs print:text-[9px]">
+            <thead>
+              <tr>
+                <th
+                  colSpan={10}
+                  className="border border-border print:border-black bg-muted print:bg-white px-3 py-2 print:py-1.5 text-left font-bold text-sm print:text-[10px] text-foreground print:text-black"
+                >
+                  Skin Prick Test (SPT) and Intradermal Test (IDT) Protocol
+                </th>
+              </tr>
+              <tr className="bg-muted/50 print:bg-white text-muted-foreground print:text-slate-700 uppercase text-[10px] print:text-[8px] tracking-wide">
+                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left w-14 print:w-12">Date</th>
+                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left">Drug (generic name)</th>
+                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-12 print:w-10">Type</th>
+                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left w-[22%]">Concentration</th>
+                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-14 print:w-12">Date</th>
+                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-12 print:w-10">Time</th>
+                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-20 print:w-16">Signature</th>
+                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-20 print:w-16">Print name</th>
+                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-16 print:w-14">Wheal (mm)</th>
+                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-12 print:w-10">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {testRows.length > 0 ? testRows.map((row, i) => (
+                <tr key={i} className={row.isFirstForDrug ? 'bg-slate-50 dark:bg-slate-800/30 print:bg-gray-50' : 'bg-white dark:bg-transparent print:bg-white'}>
+                  <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5 print:h-7" />
+                  <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5">
+                    <div className="font-semibold text-foreground print:text-black leading-tight flex flex-wrap items-center gap-1">
+                      {row.drugName}
+                      {row.protocolLabel && (
+                        <span className="font-normal text-muted-foreground print:text-slate-600">({row.protocolLabel})</span>
+                      )}
+                      {row.isCustomNotListed && (
+                        <span className="border border-foreground print:border-black rounded-none px-1 text-[9px] uppercase tracking-wide text-foreground print:text-black font-semibold">
+                          not listed
+                        </span>
+                      )}
                     </div>
-                    <div className="w-40 print:w-32">
-                        <div className="border-b-2 border-foreground print:border-black print:border-b-2 h-8 print:h-12" />
-                        <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px] mt-1">Date</p>
-                    </div>
-                </div>
-            </div>
+                    {row.isFirstForDrug && (
+                      <div className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-500 uppercase tracking-wide mt-0.5">
+                        {row.category}
+                      </div>
+                    )}
+                  </td>
+                  <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5 text-center font-bold text-foreground print:text-black">
+                    {row.type}
+                  </td>
+                  <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5 font-mono text-muted-foreground print:text-slate-700 leading-tight">
+                    <div>{row.concentration}</div>
+                    {row.diluent && (
+                      <div className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-500 mt-0.5">
+                        {row.diluent.startsWith('Neat') ? row.diluent : `in ${row.diluent}`}
+                      </div>
+                    )}
+                  </td>
+                  <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5" />
+                  <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5" />
+                  <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5" />
+                  <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5" />
+                  <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5 text-center">
+                    <span className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-400">mm</span>
+                  </td>
+                  <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5" />
+                </tr>
+              )) : (
+                <tr>
+                  <td colSpan={10} className="border border-border print:border-black px-3 py-4 text-center text-muted-foreground italic text-sm print:text-xs">
+                    No drugs selected.
+                  </td>
+                </tr>
+              )}
+              {/* Blank rows for handwritten additions */}
+              {Array.from({ length: 3 }).map((_, i) => (
+                <tr key={`blank-${i}`}>
+                  {Array.from({ length: 10 }).map((_, j) => (
+                    <td key={j} className="border border-border print:border-black px-1.5 py-2 print:py-1.5 print:h-7" />
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-            {/* Proceed Action (Hidden on Print) */}
-            <div className="mt-8 pt-4 border-t border-border print:hidden flex justify-end">
-                <Button size="lg" onClick={onProceed} className="shadow-lg shadow-border">
-                    Proceed to Testing Panel <ChevronRight className="ml-2 w-4 h-4" />
-                </Button>
+        {/* Nurse / Time / Date sign-off */}
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-1 text-xs print:text-[10px] pt-4 print:pt-2">
+          {[
+            { label: 'Date of testing', width: 'min-w-[6rem]' },
+            { label: 'Time', width: 'min-w-[4rem]' },
+            { label: 'Nurse', width: 'min-w-[10rem]' },
+          ].map(({ label, width }) => (
+            <span key={label} className="flex items-end gap-1.5">
+              <span className="font-semibold text-foreground/80 print:text-slate-700">{label}:</span>
+              <span className={`border-b border-gray-400 print:border-black inline-block print:h-6 ${width}`} />
+            </span>
+          ))}
+        </div>
+
+        {/* Signature Area */}
+        <div className="pt-6 border-t border-border print:pt-4">
+          <div className="flex justify-between gap-12 print:gap-6">
+            <div className="flex-1">
+              <div className="border-b-2 border-foreground print:border-black h-8 print:h-12" />
+              <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px] mt-1">Requested By (Name &amp; Signature)</p>
             </div>
-        </CardContent>
+            <div className="w-40 print:w-32">
+              <div className="border-b-2 border-foreground print:border-black h-8 print:h-12" />
+              <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px] mt-1">Date</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Proceed Action (Hidden on Print) */}
+        <div className="mt-8 pt-4 border-t border-border print:hidden flex justify-end">
+          <Button size="lg" onClick={onProceed} className="shadow-lg shadow-border">
+            Proceed to Testing Panel <ChevronRight className="ml-2 w-4 h-4" />
+          </Button>
+        </div>
+
+      </CardContent>
     </Card>
   );
 };

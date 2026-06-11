@@ -1,3 +1,14 @@
+## [0.70.0] — 2026-06-11 (Medication Chart)
+
+Summary: Redesigns the testing plan request form to match the standard national medication chart (NIMC) template — patient ID label box header, one row per SPT/IDT step in a flat administration table — so the printed document is clinically familiar and audit-compliant.
+
+### Changed
+- **Testing plan print view now matches NIMC medication chart format** — replaces the accent-border / patient-banner layout with the standard two-column header: a bordered "Affix patient identification label here" box (pre-filled URN, family name, given names, address watermark, DOB, M/F checkboxes, red "First prescriber" warning) and a right column with the red "Attach ADR sticker" box and form title.
+- **Flat per-step table replaces grouped drug table** — each drug now produces one row per test step (1 SPT row + 1 row per IDT dilution) instead of stacking all IDT concentrations in a single cell; columns match the NIMC "Once only and nurse initiated medicines" format: Date | Drug | Type | Concentration | Date | Time | Signature | Print name | Wheal (mm) | Time.
+- **Reference controls moved to a bordered strip above the table** — Histamine SPT / Saline SPT / Saline IDT fill-in lines now sit in a clearly delineated section immediately above the protocol table.
+- **Three blank rows added at table bottom** for handwritten additions at time of testing.
+- **"not listed" badge preserved for REDCap-sourced custom drugs** — shown inline next to the drug name in the Type column.
+
 ## [0.69.0] — 2026-06-11 (Legible)
 
 Summary: Design-audit remediation pass — closes the UI/UX and typography findings from the formal accessibility audit, prioritising the patient-safety items: legible wheal measurements, dark-mode-safe clinical notes, B&W-survivable printed reports, and colourblind-safe severity indicators.

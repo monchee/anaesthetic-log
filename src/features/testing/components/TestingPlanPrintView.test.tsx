@@ -31,7 +31,7 @@ const baseData: TestingPlanData = {
 };
 
 describe('TestingPlanPrintView', () => {
-  it('prints stacked diluent text in the SPT preparation column and omits challenge protocols', () => {
+  it('renders flat SPT/IDT rows with Concentration column and omits challenge protocols', () => {
     render(
       <TestingPlanPrintView
         patient={patient}
@@ -41,9 +41,9 @@ describe('TestingPlanPrintView', () => {
       />
     );
 
-    expect(screen.getByRole('columnheader', { name: 'SPT Preparation' })).toBeInTheDocument();
-    expect(screen.queryByRole('columnheader', { name: 'Diluent' })).not.toBeInTheDocument();
-    expect(screen.getAllByText('in 0.9% sodium chloride (reconstitute with 10 mL WFI)')).toHaveLength(2);
+    expect(screen.getByRole('columnheader', { name: 'Concentration' })).toBeInTheDocument();
+    expect(screen.queryByRole('columnheader', { name: 'SPT Preparation' })).not.toBeInTheDocument();
+    expect(screen.getByText('in 0.9% sodium chloride (reconstitute with 10 mL WFI)')).toBeInTheDocument();
     expect(screen.queryByText(/Challenge \/ Desensitisation Protocols/i)).not.toBeInTheDocument();
   });
 
