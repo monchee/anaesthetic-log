@@ -105,8 +105,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
             <span className="font-semibold text-foreground text-lg tracking-tight">
                 {formatDate(history.date)}
             </span>
-            <span className="text-slate-200 dark:text-foreground/70 text-xl font-light hidden sm:inline">|</span>
-            <span className="text-base text-primary dark:text-primary font-semibold uppercase tracking-wide leading-tight break-words">
+            <span className="text-muted-foreground/30 text-xl font-normal hidden sm:inline">|</span>
+            <span className="text-base text-primary dark:text-primary font-semibold uppercase tracking-wider leading-tight break-words">
                 {history.procedure}
             </span>
             </div>
@@ -165,7 +165,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             <FileText className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Reaction Summary
                         </div>
-                        <div className="bg-background p-3 rounded-none border border-border text-slate-700 dark:text-foreground/80 leading-relaxed text-sm">
+                        <div className="bg-background p-3 rounded-none border border-border text-slate-700 dark:text-foreground/80 leading-relaxed text-sm max-w-prose">
                             {history.reactionSummary || "No summary provided."}
                         </div>
                     </div>
@@ -213,7 +213,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                 <td className="px-3 py-2 tabular-nums text-foreground">
                                                     <span>{sample.result}</span>
                                                     {isPeak && (
-                                                        <span className="ml-2 inline-flex items-center border border-violet-300 dark:border-violet-700 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300">
+                                                        <span className="ml-2 inline-flex items-center border border-violet-300 dark:border-violet-700 px-1.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300">
                                                             Peak
                                                         </span>
                                                     )}

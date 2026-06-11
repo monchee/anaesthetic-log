@@ -86,8 +86,8 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
     <main className={`flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10 ${isExiting ? 'animate-gate-exit pointer-events-none' : ''}`} aria-label="Screen lock">
       <div className="flex w-full max-w-sm flex-col gap-6 animate-content-enter">
         <div className="flex flex-col items-center gap-1.5 text-center">
-          <h1 className="text-5xl font-bold tracking-widest text-primary">DREAM</h1>
-          <p className="text-xs tracking-wide text-slate-600 dark:text-slate-400">Drug Reaction Evaluation &amp; Anaesthetic Management</p>
+          <h1 className="app-wordmark text-5xl font-bold text-primary">DREAM</h1>
+          <p className="text-xs tracking-wider text-muted-foreground">Drug Reaction Evaluation &amp; Anaesthetic Management</p>
         </div>
 
         <Card>

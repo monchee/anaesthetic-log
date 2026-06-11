@@ -69,6 +69,11 @@ export function LogScreen({
   onProceedToTesting,
   onClearActiveReport,
 }: LogScreenProps) {
+  const [manualPatientErrors, setManualPatientErrors] = React.useState<Record<'firstName' | 'lastName' | 'mrn', string>>({
+    firstName: '',
+    lastName: '',
+    mrn: '',
+  });
   const activeReportExpiresIn = activeReportSavedAt
     ? (() => {
         const msLeft = ACTIVE_REPORT_TTL_MS - (Date.now() - activeReportSavedAt);
@@ -78,6 +83,21 @@ export function LogScreen({
         return h > 0 ? `${h}h ${m}m` : `${m}m`;
       })()
     : null;
+  const activeReportInitials = lastSavedRecord
+    ? `${lastSavedRecord.firstName?.[0] ? `${lastSavedRecord.firstName[0]}. ` : ''}${lastSavedRecord.lastName || 'Active patient'}`
+    : '';
+
+  const handleManualPatientSave = () => {
+    if (!selectedPatient) return;
+    const errors = {
+      firstName: selectedPatient.firstName.trim() ? '' : 'First name is required.',
+      lastName: selectedPatient.lastName.trim() ? '' : 'Last name is required.',
+      mrn: selectedPatient.mrn.trim() ? '' : 'MRN is required.',
+    };
+    setManualPatientErrors(errors);
+    if (Object.values(errors).some(Boolean)) return;
+    setIsPatientDialogOpen(false);
+  };
 
   return (
     <ScreenLayout title="DREAM" subtitle={appSubtitle} icon={<Stethoscope className="w-5 h-5" />} {...layoutProps}
@@ -88,13 +108,13 @@ export function LogScreen({
           <div className="flex items-center gap-2 text-sm min-w-0">
             <FileText className="w-4 h-4 text-primary shrink-0" />
             <span className="truncate">
-              Active report: <strong>{lastSavedRecord.firstName} {lastSavedRecord.lastName}</strong>
+              Active report: <strong>{activeReportInitials}</strong>
               <span className="text-muted-foreground text-xs ml-2">· expires in {activeReportExpiresIn}</span>
             </span>
           </div>
           <div className="flex gap-2 shrink-0">
-            <Button size="sm" variant="outline" onClick={() => layoutProps.setScreen(Screen.SUMMARY)} className="rounded-none h-7 text-xs">Open Report</Button>
-            <Button size="sm" variant="ghost" onClick={() => setConfirmClearOpen(true)} className="rounded-none h-7 text-xs text-muted-foreground hover:text-destructive">Clear</Button>
+            <Button size="sm" variant="outline" onClick={() => layoutProps.setScreen(Screen.SUMMARY)} className="rounded-none h-9 text-xs">Open Report</Button>
+            <Button size="sm" variant="ghost" onClick={() => setConfirmClearOpen(true)} className="rounded-none h-9 text-xs text-muted-foreground hover:text-destructive">Clear</Button>
           </div>
         </div>
       )}
@@ -245,40 +265,43 @@ export function LogScreen({
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs uppercase mb-1.5 block text-muted-foreground">First Name</Label>
-                  <Input value={selectedPatient.firstName} onChange={(e) => onManualDetailChange('firstName', e.target.value)} placeholder="Enter first name" />
+                  <Label htmlFor="manual-first-name" className="section-label mb-1.5 block">First Name</Label>
+                  <Input id="manual-first-name" value={selectedPatient.firstName} onChange={(e) => { onManualDetailChange('firstName', e.target.value); setManualPatientErrors(prev => ({ ...prev, firstName: '' })); }} placeholder="Enter first name" aria-invalid={!!manualPatientErrors.firstName} aria-describedby={manualPatientErrors.firstName ? 'manual-first-name-error' : undefined} />
+                  {manualPatientErrors.firstName && <p id="manual-first-name-error" className="text-destructive text-xs mt-1">{manualPatientErrors.firstName}</p>}
                 </div>
                 <div>
-                  <Label className="text-xs uppercase mb-1.5 block text-muted-foreground">Last Name</Label>
-                  <Input value={selectedPatient.lastName} onChange={(e) => onManualDetailChange('lastName', e.target.value)} placeholder="Enter last name" />
+                  <Label htmlFor="manual-last-name" className="section-label mb-1.5 block">Last Name</Label>
+                  <Input id="manual-last-name" value={selectedPatient.lastName} onChange={(e) => { onManualDetailChange('lastName', e.target.value); setManualPatientErrors(prev => ({ ...prev, lastName: '' })); }} placeholder="Enter last name" aria-invalid={!!manualPatientErrors.lastName} aria-describedby={manualPatientErrors.lastName ? 'manual-last-name-error' : undefined} />
+                  {manualPatientErrors.lastName && <p id="manual-last-name-error" className="text-destructive text-xs mt-1">{manualPatientErrors.lastName}</p>}
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs uppercase mb-1.5 block text-muted-foreground">MRN</Label>
-                  <Input value={selectedPatient.mrn} onChange={(e) => onManualDetailChange('mrn', e.target.value)} placeholder="Medical Record Number..." />
+                  <Label htmlFor="manual-mrn" className="section-label mb-1.5 block">MRN</Label>
+                  <Input id="manual-mrn" value={selectedPatient.mrn} onChange={(e) => { onManualDetailChange('mrn', e.target.value); setManualPatientErrors(prev => ({ ...prev, mrn: '' })); }} placeholder="Medical Record Number..." aria-invalid={!!manualPatientErrors.mrn} aria-describedby={manualPatientErrors.mrn ? 'manual-mrn-error' : undefined} />
+                  {manualPatientErrors.mrn && <p id="manual-mrn-error" className="text-destructive text-xs mt-1">{manualPatientErrors.mrn}</p>}
                 </div>
                 <div>
-                  <Label className="text-xs uppercase mb-1.5 block text-muted-foreground">REDCap Record ID</Label>
-                  <Input value={selectedPatient.redcapId || ''} onChange={(e) => onManualDetailChange('redcapId', e.target.value)} placeholder="REDCap ID..." />
+                  <Label htmlFor="manual-redcap-id" className="section-label mb-1.5 block">REDCap Record ID</Label>
+                  <Input id="manual-redcap-id" value={selectedPatient.redcapId || ''} onChange={(e) => onManualDetailChange('redcapId', e.target.value)} placeholder="REDCap ID..." />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <Label className="text-xs uppercase mb-1.5 block text-muted-foreground">Date of Birth</Label>
-                  <Input type="date" value={selectedPatient.dob} onChange={(e) => onManualDetailChange('dob', e.target.value)} />
+                  <Label htmlFor="manual-dob" className="section-label mb-1.5 block">Date of Birth</Label>
+                  <Input id="manual-dob" type="date" value={selectedPatient.dob} onChange={(e) => onManualDetailChange('dob', e.target.value)} />
                 </div>
                 <div>
-                  <Label className="text-xs uppercase mb-1.5 block text-muted-foreground">Gender</Label>
-                  <Input value={selectedPatient.gender} onChange={(e) => onManualDetailChange('gender', e.target.value)} placeholder="Gender..." />
+                  <Label htmlFor="manual-gender" className="section-label mb-1.5 block">Gender</Label>
+                  <Input id="manual-gender" value={selectedPatient.gender} onChange={(e) => onManualDetailChange('gender', e.target.value)} placeholder="Gender..." />
                 </div>
                 <div>
-                  <Label className="text-xs uppercase mb-1.5 block text-muted-foreground">City / Suburb</Label>
-                  <Input value={selectedPatient.city} onChange={(e) => onManualDetailChange('city', e.target.value)} placeholder="City..." />
+                  <Label htmlFor="manual-city" className="section-label mb-1.5 block">City / Suburb</Label>
+                  <Input id="manual-city" value={selectedPatient.city} onChange={(e) => onManualDetailChange('city', e.target.value)} placeholder="City..." />
                 </div>
               </div>
             </div>
-            <DialogFooter><Button onClick={() => setIsPatientDialogOpen(false)}>Save & Close</Button></DialogFooter>
+            <DialogFooter><Button onClick={handleManualPatientSave}>Save & Close</Button></DialogFooter>
           </DialogContent>
         </Dialog>
       )}

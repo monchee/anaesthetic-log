@@ -21,9 +21,9 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
   };
 
   return (
-    <Card className="w-full shadow-sm border-t-4 border-t-green-500 animate-enter-subtle">
+    <Card className="w-full shadow-sm border-t-4 border-t-status-grade1 animate-enter-subtle">
       <CardHeader className="py-4 border-b border-border bg-card">
-        <CardTitle as="h2" className="text-lg text-slate-800 dark:text-primary flex items-center gap-2">
+        <CardTitle as="h2" className="text-lg text-foreground dark:text-primary flex items-center gap-2">
           <Clock className="w-5 h-5 text-primary dark:text-primary" /> Recent Skin Testing Activity
         </CardTitle>
       </CardHeader>

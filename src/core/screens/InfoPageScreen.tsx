@@ -29,7 +29,9 @@ export function InfoPageScreen({ route, layoutProps, onBack }: InfoPageScreenPro
         </Button>
       }
     >
-      <PageComponent setScreen={layoutProps.setScreen as (screen: Screen) => void} />
+      <article aria-label={route.title}>
+        <PageComponent setScreen={layoutProps.setScreen as (screen: Screen) => void} />
+      </article>
     </ScreenLayout>
   );
 }

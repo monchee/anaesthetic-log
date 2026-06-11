@@ -39,11 +39,11 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
   return (
     <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
         {/* Print-only running identity */}
-        <div className="hidden print:flex print:fixed print:top-0 print:left-0 print:right-0 print:z-50 print:items-center print:justify-between print:border-b print:border-black print:bg-white print:px-[15mm] print:py-[3mm] print:text-[9px] print:font-semibold print:text-black">
+        <div className="hidden print:flex print:items-center print:justify-between print:border-b print:border-black print:bg-white print:pb-[3mm] print:text-[10px] print:font-semibold print:text-black">
             <span>{patientIdentifier}</span>
             <span>Anaesthetic Allergy Testing Request</span>
         </div>
-        <div className="hidden print:flex print:fixed print:bottom-0 print:left-0 print:right-0 print:z-50 print:items-center print:justify-between print:border-t print:border-black print:bg-white print:px-[15mm] print:py-[3mm] print:text-[9px] print:font-semibold print:text-black">
+        <div className="hidden print:flex print:items-center print:justify-between print:border-t print:border-black print:bg-white print:pt-[3mm] print:text-[10px] print:font-semibold print:text-black">
             <span>{patient.lastName}, {patient.firstName} · MRN {patient.mrn}</span>
             <span>Date of request: {formatDate(new Date().toISOString())}</span>
         </div>
@@ -78,7 +78,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
         <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-4 print:space-y-3">
              {/* Urgent Banner */}
              {urgent && (
-                 <div className="mb-4 print:mb-2 flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-2 print:py-1 font-bold uppercase tracking-widest text-sm print:text-xs print:bg-black print:border-2 print:border-black">
+                 <div className="mb-4 print:mb-2 flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-2 print:py-1 font-bold uppercase tracking-wider text-sm print:text-sm print:bg-black print:border-2 print:border-black">
                      <AlertTriangle className="w-5 h-5 print:w-4 print:h-4 shrink-0" />
                      URGENT — Priority Testing Required
                  </div>
@@ -168,7 +168,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
                 {/* Reference Controls */}
                 <div className="mb-3 print:mb-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-xs print:text-[10px]">
-                    <span className="font-semibold text-muted-foreground uppercase tracking-wide text-xs print:text-[9px]">Reference Controls:</span>
+                    <span className="section-label print:text-[9px]">Reference Controls:</span>
                     {[
                         { label: 'Histamine (SPT)', unit: 'mm' },
                         { label: 'Saline (SPT)', unit: 'mm' },
@@ -176,7 +176,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                     ].map(({ label, unit }) => (
                         <span key={label} className="flex items-end gap-1">
                             <span className="text-foreground/80 print:text-slate-700">{label}</span>
-                            <span className="border-b border-gray-400 print:border-black inline-block min-w-[3rem] print:h-5" />
+                            <span className="border-b border-gray-400 dark:border-gray-500 print:border-black inline-block min-w-[3rem] print:h-5" />
                             <span className="text-muted-foreground text-xs">{unit}</span>
                         </span>
                     ))}
@@ -217,7 +217,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                                         </div>
                                                         <div className="flex items-center gap-1">
                                                             <span className="font-medium text-foreground/80">SPT:</span>
-                                                            <span className="border-b border-gray-400 inline-block min-w-[2.5rem]" />
+                                                            <span className="border-b border-gray-400 dark:border-gray-500 inline-block min-w-[2.5rem]" />
                                                             <span className="text-muted-foreground text-xs">mm</span>
                                                         </div>
                                                     </div>
@@ -227,7 +227,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                                             {protocol.idtSteps.map((s, i) => (
                                                                 <div key={i} className="flex items-center gap-2 font-mono pl-2">
                                                                     <span className="text-muted-foreground">{s.ratio}{s.concentration ? ` (${s.concentration})` : ''}</span>
-                                                                    <span className="border-b border-gray-400 inline-block min-w-[2.5rem]" />
+                                                                    <span className="border-b border-gray-400 dark:border-gray-500 inline-block min-w-[2.5rem]" />
                                                                     <span className="text-muted-foreground text-xs">mm</span>
                                                                 </div>
                                                             ))}
@@ -241,7 +241,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                     {/* Desktop/print table — hidden on mobile */}
                                     <table className="hidden md:table print:table w-full text-xs print:text-[9px]">
                                         <thead>
-                                            <tr className="border-b border-border text-muted-foreground uppercase text-xs tracking-wide print:border-slate-300">
+                                            <tr className="border-b border-border text-muted-foreground uppercase text-xs tracking-wider print:border-slate-300">
                                                 <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[20%]">Drug</th>
                                                 <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[18%]">Presentation</th>
                                                 <th scope="col" className="text-left px-3 py-1.5 font-semibold w-[26%]">SPT Preparation</th>
@@ -269,7 +269,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                                         </td>
                                                         <td className="px-3 py-2 text-center">
                                                             <span className="flex items-end justify-center print:h-6">
-                                                                <span className="border-b border-gray-400 print:border-black inline-block min-w-[3rem] print:h-5" />
+                                                                <span className="border-b border-gray-400 dark:border-gray-500 print:border-black inline-block min-w-[3rem] print:h-5" />
                                                                 <span className="text-muted-foreground text-xs ml-0.5">mm</span>
                                                             </span>
                                                         </td>
@@ -279,7 +279,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                                                                     {protocol.idtSteps.map((s, i) => (
                                                                         <div key={i} className="flex items-end gap-2">
                                                                             <span>{s.ratio}{s.concentration ? ` (${s.concentration})` : ''}</span>
-                                                                            <span className="border-b border-gray-400 print:border-black inline-block min-w-[3rem] print:h-5" />
+                                                                            <span className="border-b border-gray-400 dark:border-gray-500 print:border-black inline-block min-w-[3rem] print:h-5" />
                                                                             <span className="text-muted-foreground text-xs">mm</span>
                                                                         </div>
                                                                     ))}
@@ -343,7 +343,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                 ].map(({ label, width }) => (
                     <span key={label} className="flex items-end gap-1.5">
                         <span className="font-semibold text-foreground/80 print:text-slate-700">{label}:</span>
-                        <span className={`border-b border-gray-400 print:border-black inline-block print:h-6 ${width}`} />
+                        <span className={`border-b border-gray-400 dark:border-gray-500 print:border-black inline-block print:h-6 ${width}`} />
                     </span>
                 ))}
             </div>
@@ -352,11 +352,11 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             <div className="pt-6 border-t border-border print:pt-4">
                 <div className="flex justify-between gap-12 print:gap-6">
                     <div className="flex-1">
-                        <div className="border-b border-foreground print:border-black h-8 print:h-12" />
+                        <div className="border-b-2 border-foreground print:border-black print:border-b-2 h-8 print:h-12" />
                         <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px] mt-1">Requested By (Name & Signature)</p>
                     </div>
                     <div className="w-40 print:w-32">
-                        <div className="border-b border-foreground print:border-black h-8 print:h-12" />
+                        <div className="border-b-2 border-foreground print:border-black print:border-b-2 h-8 print:h-12" />
                         <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px] mt-1">Date</p>
                     </div>
                 </div>

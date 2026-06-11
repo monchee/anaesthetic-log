@@ -62,7 +62,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
                     {avoidList.map((drugName, idx) => (
                         <li key={idx} className="avoid-entry bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-700 p-4 rounded-none flex justify-between items-center print:bg-white print:border-black print:border-l-8 print:p-1.5 print:text-xs">
                            <div>
-                             <span className="font-semibold text-red-900 dark:text-red-200 text-lg print:text-xs print:text-black">{drugName}</span>
+                             <span className="font-semibold text-red-900 dark:text-red-200 text-lg print:text-xs print:text-black print:font-bold">{drugName}</span>
                              {crossSensitized.includes(drugName) && (
                                <p className="text-xs text-red-700/70 dark:text-red-200/80 mt-0.5 print:text-[9px] print:text-black">cross-sensitization risk</p>
                              )}
@@ -103,7 +103,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
               <p className="dark:text-foreground/80 print:text-xs">Clinic location: Level 5, Gloucester House</p>
               <p className="dark:text-foreground/80 print:text-xs">Phone: (02) 9515 7586</p>
               <p className="dark:text-foreground/80 print:text-xs">Email: SLHD-RPA-ClinicalImmunology@health.nsw.gov.au</p>
-              <p className="pt-2 text-muted-foreground italic print:pt-1 print:text-xs">If you have any questions about these results, please contact the clinic.</p>
+              <p className="pt-2 text-muted-foreground italic print:pt-1 print:text-xs max-w-prose">If you have any questions about these results, please contact the clinic.</p>
            </div>
 
            <div className="section-card bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-none p-4 text-center text-sm print:bg-white print:border-slate-300 print:text-xs">

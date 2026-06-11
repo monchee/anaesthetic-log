@@ -84,7 +84,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                       <td colSpan={6} className="px-4 py-2.5">
                         <button
                           type="button"
-                          className="flex w-full items-center gap-2 text-left text-xs font-bold text-foreground uppercase tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                          className="flex w-full items-center gap-2 text-left section-label text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                           onClick={() => toggleCategory(categoryGroup.category)}
                           aria-expanded={isExpanded}
                           aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${categoryGroup.category} skin test results`}
@@ -96,7 +96,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                       <td className="px-4 py-2.5 text-center border-l border-border">
                         {totalCategoryPositives > 0 ? (
                           <span className="inline-flex items-center px-2 py-0.5 rounded-none text-xs font-medium bg-slate-100 dark:bg-card/50 text-slate-800 dark:text-primary">
-                            {totalCategoryPositives}
+                            <span className="tabular-nums">{totalCategoryPositives}</span>
                           </span>
                         ) : (
                           <span className="text-muted-foreground text-xs">-</span>
@@ -106,12 +106,12 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                     {isExpanded && categoryGroup.stats.map((item, i) => (
                       <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-card/50 transition-colors border-b border-slate-50 dark:border-border animate-in fade-in slide-in-from-top-1">
                         <td className="px-4 py-3 font-medium text-slate-700 dark:text-foreground/80 pl-10 border-l-4 border-l-primary hover:border-l-primary transition-[color,background-color,border-color,box-shadow]">{item.name}</td>
-                        <td className="px-4 py-3 text-center text-muted-foreground">{item.spt || '-'}</td>
-                        <td className="px-4 py-3 text-center text-muted-foreground">{item.idt100 || '-'}</td>
-                        <td className="px-4 py-3 text-center text-muted-foreground">{item.idt10 || '-'}</td>
-                        <td className="px-4 py-3 text-center text-muted-foreground">{item.idtNeat || '-'}</td>
-                        <td className="px-4 py-3 text-center text-muted-foreground">{item.challenge || '-'}</td>
-                        <td className="px-4 py-3 text-center font-bold text-foreground bg-slate-50/30 dark:bg-card/30 border-l border-border">
+                        <td className="px-4 py-3 text-center text-muted-foreground tabular-nums">{item.spt || '-'}</td>
+                        <td className="px-4 py-3 text-center text-muted-foreground tabular-nums">{item.idt100 || '-'}</td>
+                        <td className="px-4 py-3 text-center text-muted-foreground tabular-nums">{item.idt10 || '-'}</td>
+                        <td className="px-4 py-3 text-center text-muted-foreground tabular-nums">{item.idtNeat || '-'}</td>
+                        <td className="px-4 py-3 text-center text-muted-foreground tabular-nums">{item.challenge || '-'}</td>
+                        <td className="px-4 py-3 text-center font-bold text-foreground bg-slate-50/30 dark:bg-card/30 border-l border-border tabular-nums">
                           {item.total || <span className="text-muted-foreground font-normal">-</span>}
                         </td>
                       </tr>

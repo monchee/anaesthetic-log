@@ -164,8 +164,8 @@ describe('Dashboard', () => {
     it('displays analytics cards', () => {
       render(<Dashboard {...mockProps} />);
 
-      expect(screen.getByText(/Severe/i)).toBeInTheDocument();
-      expect(screen.getByText(/Abandoned/i)).toBeInTheDocument();
+      expect(screen.getAllByText('Severe').length).toBeGreaterThan(0);
+      expect(screen.getByText('Abandoned')).toBeInTheDocument();
     });
 
     it('renders patient table', () => {

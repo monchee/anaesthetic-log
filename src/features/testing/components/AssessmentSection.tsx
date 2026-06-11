@@ -14,7 +14,7 @@ export const AssessmentSection: React.FC<AssessmentSectionProps> = ({
     <div className="space-y-2">
       <Label>Comments / Plan</Label>
       <textarea 
-        className="flex min-h-[120px] w-full rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-border dark:bg-background dark:ring-offset-background dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
+        className="flex min-h-[120px] w-full rounded-none border border-border bg-background px-3 py-2 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         placeholder="Enter clinical notes, interpretation of results, and future recommendations..."
         value={plan}
         onChange={(e) => onChange(e.target.value)}

@@ -35,7 +35,7 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                 values: prev.tryptase?.values ?? [],
               },
             }))}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-none border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
               formData.tryptase?.obtained ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'
             }`}
           >
@@ -59,7 +59,7 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                     significantElevation: !(prev.tryptase ?? EMPTY_TRYPTASE).significantElevation,
                   },
                 }))}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-none border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
                   formData.tryptase.significantElevation ? 'bg-red-500' : 'bg-slate-200 dark:bg-slate-700'
                 }`}
               >

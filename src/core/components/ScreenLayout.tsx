@@ -152,7 +152,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                                     }`}
                                             >
                                                 <Icon className="w-4 h-4" />
-                                                <span className={isActive ? 'inline sm:inline' : 'hidden sm:inline'}>{label}</span>
+                                                <span className={isActive ? 'inline' : 'hidden sm:inline'}>{label}</span>
                                             </button>
                                         );
                                     })}
@@ -166,13 +166,16 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
                                 {/* Hamburger Menu */}
                                 {showNav && <DropdownMenu>
-                                    <DropdownMenuTrigger
-                                        className="h-11 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-[color,background-color,border-color,transform,box-shadow] duration-200 shadow-sm group btn-press"
-                                        title="Open Navigation Menu"
-                                        aria-label="Menu"
-                                    >
-                                        <Menu className="w-4 h-4 text-white opacity-90 group-hover:opacity-100 transition-opacity" />
-                                        <span className="text-sm hidden sm:inline">Menu</span>
+                                    <DropdownMenuTrigger asChild>
+                                        <button
+                                            type="button"
+                                            className="h-11 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-[color,background-color,border-color,transform,box-shadow] duration-200 shadow-sm group btn-press"
+                                            title="Open Navigation Menu"
+                                            aria-label="Menu"
+                                        >
+                                            <Menu className="w-4 h-4 text-white opacity-90 group-hover:opacity-100 transition-opacity" />
+                                            <span className="text-sm hidden sm:inline">Menu</span>
+                                        </button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="w-56">
                                         <DropdownMenuItem onClick={() => setIsCSVUploadSheetOpen(true)}>

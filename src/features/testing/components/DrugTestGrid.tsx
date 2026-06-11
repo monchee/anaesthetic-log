@@ -109,7 +109,7 @@ const DrugRow = React.memo(({
       {row.drugName === 'Other' && (
         <div className="border border-dashed border-border p-2 space-y-2 bg-slate-50/50 dark:bg-card/30">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground shrink-0 w-7">SPT</span>
+            <span className="section-label shrink-0 w-7">SPT</span>
             <Input
               className="h-7 text-xs flex-1"
               placeholder="Neat concentration (e.g. 10mg/mL)..."
@@ -118,7 +118,7 @@ const DrugRow = React.memo(({
             />
           </div>
           <div className="space-y-1.5">
-            <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">IDT Dilutions</div>
+            <div className="section-label">IDT Dilutions</div>
             {(row.customIdtSteps ?? []).map((step, si) => (
               <div key={si} className="flex items-center gap-1.5">
                 <Input
@@ -167,7 +167,7 @@ const DrugRow = React.memo(({
       {/* SPT concentration reference */}
       {protocol?.sptNeatConcentration && (
         <div className="text-xs text-muted-foreground">
-          <span className="font-semibold uppercase tracking-wide">SPT Preparation: </span>
+          <span className="section-label">SPT Preparation: </span>
           {protocol.sptNeatConcentration}
         </div>
       )}
@@ -176,7 +176,7 @@ const DrugRow = React.memo(({
       <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${1 + idtSteps.length}, minmax(0, 1fr))` }}>
         {/* SPT */}
         <div className="space-y-1">
-          <div className="text-xs font-bold uppercase text-center text-muted-foreground">SPT</div>
+          <div className="section-label text-center">SPT</div>
           <div className="text-xs text-center text-muted-foreground/60 leading-tight min-h-[2rem] flex items-center justify-center">
             {row.drugName === 'Other' ? (row.customSptConcentration || '') : (protocol?.sptNeatConcentration ? 'Neat' : '')}
           </div>
@@ -185,7 +185,7 @@ const DrugRow = React.memo(({
             inputMode="decimal"
             pattern="[0-9]*"
             onKeyDown={preventNegativeInput}
-            className={`h-9 text-center font-mono ${isPositive(row.sptWheal) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
+            className={`h-9 text-center font-mono tabular-nums ${isPositive(row.sptWheal) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
             placeholder="-"
             value={row.sptWheal}
             onChange={(e) => onUpdate(index, 'sptWheal', e.target.value)}
@@ -197,7 +197,7 @@ const DrugRow = React.memo(({
           const val = idtResults[si] ?? '';
           return (
             <div key={si} className="space-y-1">
-              <div className="text-xs font-bold uppercase text-center text-muted-foreground">IDT {step.ratio}</div>
+              <div className="section-label text-center">IDT {step.ratio}</div>
               <div className="text-xs text-center text-muted-foreground/60 leading-tight min-h-[2rem] flex items-center justify-center">
                 {step.concentration}
               </div>
@@ -206,7 +206,7 @@ const DrugRow = React.memo(({
                 inputMode="decimal"
                 pattern="[0-9]*"
                 onKeyDown={preventNegativeInput}
-                className={`h-9 text-center font-mono ${isPositive(val) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
+                className={`h-9 text-center font-mono tabular-nums ${isPositive(val) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
                 placeholder="-"
                 value={val}
                 onChange={(e) => onUpdate(index, `idt_${si}`, e.target.value)}
@@ -218,14 +218,14 @@ const DrugRow = React.memo(({
         {/* Legacy fallback: show 3 unlabelled IDT columns if old record with no protocol */}
         {idtSteps.length === 0 && !protocol && idtResults.length > 0 && idtResults.map((val, si) => (
           <div key={si} className="space-y-1">
-            <div className="text-xs font-bold uppercase text-center text-muted-foreground">IDT {si + 1}</div>
+            <div className="section-label text-center">IDT {si + 1}</div>
             <div className="min-h-[2rem]" />
             <Input
               type="text"
               inputMode="decimal"
               pattern="[0-9]*"
               onKeyDown={preventNegativeInput}
-              className={`h-9 text-center font-mono ${isPositive(val) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
+              className={`h-9 text-center font-mono tabular-nums ${isPositive(val) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
               placeholder="-"
               value={val}
               onChange={(e) => onUpdate(index, `idt_${si}`, e.target.value)}

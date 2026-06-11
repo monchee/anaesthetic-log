@@ -12,6 +12,7 @@ interface PatientSelectorProps {
 const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, selectedPatientId, patients }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeIndex, setActiveIndex] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Memoize sorted patients to avoid recalculating on every render
@@ -38,6 +39,9 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
 
   const selectedPatient = sortedPatients.find(p => p.id === selectedPatientId);
   const isManualSelection = selectedPatientId === 'manual';
+  const activeOptionId = activeIndex === 0
+    ? 'patient-option-manual'
+    : `patient-option-${filteredPatients[activeIndex - 1]?.id}`;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -54,6 +58,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
     onSelectPatient(patient);
     setIsOpen(false);
     setSearchTerm("");
+    setActiveIndex(0);
   };
 
   const handleManualEntry = () => {
@@ -81,6 +86,28 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
     handleSelect(manualPatient);
   };
 
+  const handleOptionKeyDown = (event: React.KeyboardEvent) => {
+    const optionCount = filteredPatients.length + 1;
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setActiveIndex(index => (index + 1) % optionCount);
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setActiveIndex(index => (index - 1 + optionCount) % optionCount);
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      if (activeIndex === 0) {
+        handleManualEntry();
+      } else {
+        const patient = filteredPatients[activeIndex - 1];
+        if (patient) handleSelect(patient);
+      }
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      setIsOpen(false);
+    }
+  };
+
   return (
     <div className="w-full" ref={dropdownRef}>
       <span className="text-sm font-medium text-slate-700 dark:text-foreground/80 mb-1 block" id="patient-selector-label">
@@ -95,6 +122,12 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
           aria-labelledby="patient-selector-label"
           className="flex min-h-10 h-auto w-full items-center justify-between rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white cursor-pointer hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 dark:bg-background dark:border-border dark:hover:bg-card dark:focus-visible:ring-primary/40 transition-[color,background-color,border-color,box-shadow]"
           onClick={() => setIsOpen(!isOpen)}
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              setIsOpen(true);
+            }
+          }}
         >
           <span className={`mr-2 whitespace-normal text-left leading-tight ${selectedPatient || isManualSelection ? "text-foreground" : "text-muted-foreground"}`}>
             {isManualSelection
@@ -108,7 +141,13 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
         </button>
 
         {isOpen && (
-          <div role="listbox" aria-label="Patient list" className="absolute z-50 mt-1 max-h-[50vh] sm:max-h-80 w-full overflow-auto rounded-none border border-slate-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm animate-in fade-in zoom-in-95 duration-100 dark:bg-card dark:border-border dark:shadow-xl">
+          <div
+            id="patient-selector-listbox"
+            role="listbox"
+            aria-label="Patient list"
+            aria-activedescendant={activeOptionId}
+            className="absolute z-50 mt-1 max-h-[50vh] sm:max-h-80 w-full overflow-auto rounded-none border border-slate-200 bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm animate-in fade-in zoom-in-95 duration-100 dark:bg-card dark:border-border dark:shadow-xl"
+          >
             {/* Sticky Search Header */}
             <div className="sticky top-0 z-10 bg-card border-b border-border px-2 py-1.5">
                 <div className="relative">
@@ -116,10 +155,13 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                     <input
                         type="text"
                         aria-label="Filter patients by ID or name"
+                        aria-controls="patient-selector-listbox"
+                        aria-activedescendant={activeOptionId}
                         className="w-full rounded-none border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-2 text-xs focus:outline-none focus:ring-1 focus:ring-slate-400 dark:bg-muted dark:border-border dark:text-foreground dark:focus:ring-slate-500"
                         placeholder="Filter by ID or Name..."
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={(e) => { setSearchTerm(e.target.value); setActiveIndex(0); }}
+                        onKeyDown={handleOptionKeyDown}
                         autoFocus
                     />
                 </div>
@@ -127,9 +169,10 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
 
             {/* Manual Entry Option - Static List Item */}
             <div
+                id="patient-option-manual"
                 role="option"
                 aria-selected={isManualSelection}
-                className="cursor-pointer select-none py-2 px-3 border-b border-border hover:bg-slate-50 dark:hover:bg-muted/50 flex items-center gap-3 text-sm text-slate-700 dark:text-foreground/80 transition-colors"
+                className={`cursor-pointer select-none py-2 px-3 border-b border-border hover:bg-slate-50 dark:hover:bg-muted/50 flex items-center gap-3 text-sm text-slate-700 dark:text-foreground/80 transition-colors ${activeIndex === 0 ? 'bg-slate-50 dark:bg-muted/50' : ''}`}
                 onClick={handleManualEntry}
             >
                 <div className="bg-muted p-1.5 rounded-none text-muted-foreground">
@@ -151,13 +194,14 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
                     No matching records found.
                 </div>
             ) : (
-                filteredPatients.map((patient) => (
+                filteredPatients.map((patient, index) => (
                 <div
+                    id={`patient-option-${patient.id}`}
                     key={patient.id}
                     role="option"
                     aria-selected={selectedPatientId === patient.id}
                     className={`relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-slate-100 dark:hover:bg-muted border-b border-slate-50 dark:border-border/50 transition-colors last:border-0 ${
-                        selectedPatientId === patient.id ? "bg-slate-50 font-medium dark:bg-muted/50" : ""
+                        selectedPatientId === patient.id || activeIndex === index + 1 ? "bg-slate-50 font-medium dark:bg-muted/50" : ""
                     }`}
                     onClick={() => handleSelect(patient)}
                 >

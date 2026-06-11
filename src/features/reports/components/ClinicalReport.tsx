@@ -23,6 +23,12 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
   const patientName = redact(`${data.firstName} ${data.lastName}`);
   const reportDate = activeReportSavedAt ? new Date(activeReportSavedAt).toISOString() : new Date().toISOString();
   const formatSptResult = (value?: string) => value ? `${value} mm` : '-';
+  const controlValue = (value?: string) => (
+    <>
+      <span className="font-mono tabular-nums">{value || '-'}</span>
+      {value && <span className="text-muted-foreground"> mm</span>}
+    </>
+  );
 
   const formatSymptoms = (data: LogFormData) => {
     return data.symptoms.map(s => {
@@ -89,9 +95,9 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
             <div className="bg-muted border border-border rounded-none p-3 text-sm mb-4 print:bg-white print:border-slate-300 print:p-2 print:mb-2 print:text-xs">
                <div className="font-semibold mb-2 block md:inline md:mr-2">Controls (mm):</div>
                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:inline-flex md:gap-4">
-                   <span>Histamine SPT: <strong>{data.controls?.histamineSpt || '-'}</strong></span>
-                   <span>Saline SPT: <strong>{data.controls?.salineSpt || '-'}</strong></span>
-                   <span>Saline IDT: <strong>{data.controls?.salineIdt || '-'}</strong></span>
+                   <span>Histamine SPT: <strong>{controlValue(data.controls?.histamineSpt)}</strong></span>
+                   <span>Saline SPT: <strong>{controlValue(data.controls?.salineSpt)}</strong></span>
+                   <span>Saline IDT: <strong>{controlValue(data.controls?.salineIdt)}</strong></span>
                </div>
             </div>
             {!data.controls?.histamineSpt && !data.controls?.salineSpt && !data.controls?.salineIdt && (
@@ -176,7 +182,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
                      </span>
                      <div className={`px-2 py-1 rounded-none text-xs font-bold self-start md:self-auto ${
                        data.outcome === 'SUCCESS'
-                         ? 'border border-green-700 text-green-800 bg-transparent dark:text-green-300 dark:border-green-500 print:border-black print:text-black print:bg-white'
+                         ? 'border border-green-700 text-green-800 bg-transparent dark:text-green-300 dark:border-green-500 print:border-black print:text-white print:bg-black'
                          : 'bg-red-600 text-white print:bg-black print:text-white print:border print:border-black'
                      } print:px-1.5 print:py-0.5 print:text-[10px]`}>
                         {data.outcome === 'SUCCESS' ? 'NEGATIVE (Safe)' : 'POSITIVE (Reaction)'}
@@ -216,7 +222,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
              <div className="space-y-3 print:space-y-1">
                <div className="space-y-2">
                  {avoidList.map(drug => (
-                   <p key={drug} className="font-bold text-red-700 dark:text-red-400 text-sm uppercase print:text-xs print:text-black">AVOID {drug}</p>
+                  <p key={drug} className="font-bold text-red-700 dark:text-red-400 text-sm uppercase print:text-xs print:text-black print:font-bold">AVOID {drug}</p>
                  ))}
                </div>
                <ul className="list-disc list-inside space-y-1 text-sm text-foreground/80 print:text-xs">
@@ -262,7 +268,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
 
          {/* Plan */}
          <div className="section-card pb-4 print:pb-2">
-            <h3 className="tracking-tight text-lg mb-2 flex items-center gap-2 text-foreground print:text-sm print:mb-1">
+            <h3 className="text-sm md:text-base font-bold text-foreground uppercase tracking-wider flex items-center gap-2 border-b-2 border-primary pb-2 mb-4 print:text-xs print:mb-2">
               <FileText className="w-5 h-5 print:w-4 print:h-4" /> Assessment & Plan
             </h3>
             <div className="bg-muted border border-border rounded-none p-4 whitespace-pre-wrap text-sm md:text-base print:bg-white print:border-slate-300 print:p-2 print:text-xs">

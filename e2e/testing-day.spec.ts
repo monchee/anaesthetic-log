@@ -79,7 +79,7 @@ test.describe('Testing Day Flow', () => {
     await dismissHelpModal(page);
 
     // ── Step 7: Report screen appears (SUMMARY) ────────────────────────────
-    await expect(page.getByRole('button', { name: 'Clinical Report' })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('tab', { name: 'Clinical Report' })).toBeVisible({ timeout: 10000 });
 
     // ── Step 8: Print button is present ───────────────────────────────────
     const printBtn = page.getByRole('button', { name: /print/i }).first();

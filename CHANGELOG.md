@@ -1,3 +1,36 @@
+## [0.69.0] — 2026-06-11 (Legible)
+
+Summary: Design-audit remediation pass — closes the UI/UX and typography findings from the formal accessibility audit, prioritising the patient-safety items: legible wheal measurements, dark-mode-safe clinical notes, B&W-survivable printed reports, and colourblind-safe severity indicators.
+
+### Fixed
+- **Wheal-size inputs now use tabular figures** — every SPT and IDT result cell in `DrugTestGrid` is `font-mono tabular-nums` unconditionally (previously mono only on a positive result), so digits column-align across rows and a 3mm vs 13mm value can no longer be misread between IDT dilution columns at the positive/negative threshold.
+- **Clinical notes are legible in dark mode** — the Assessment & Plan textareas (`AssessmentSection`, `AssessmentPlanSection`) used hardcoded `bg-white`/slate tokens that rendered near-white text on a white field in dark mode; they now use semantic `bg-background`/`text-foreground`/`border-border` tokens. Notes typed in dark mode are no longer invisible.
+- **Printed reports survive B&W photocopying** — the print stylesheet forces all headings to `#000` and `--foreground` to black, so NSW Health Blue headings no longer wash out to grey on a ward printer; the "AVOID" drug labels in `ClinicalReport` and `PatientHandout` now print bold-black so the avoidance signal is unmistakable in monochrome.
+- **Dark-mode secondary text meets WCAG AA** — `--muted-foreground` raised from `0 0% 60%` (#999, ~3.8:1) to `0 0% 65%` (#a6a6a6, ≥4.5:1), fixing contrast on every section label, table header and caption in dark mode.
+- **Patient name no longer exposed on the active-report banner** — the banner now shows initials (e.g. "J. Smith") instead of the full name, so a previous patient's identity is not visible to the next person at a shared workstation.
+- **Print header/footer no longer overlap content** — replaced the `print:fixed` running header/footer + `body` padding approach with proper `@page` margins (25mm top / 20mm bottom / 15mm sides), preventing the patient identifier from overlapping the first table row on A4.
+- **Reference control inputs drop the number spinner** — Histamine/Saline control fields switched from `type="number"` to `type="text" inputMode="decimal"`, so a bedside scroll can no longer accidentally increment a control baseline.
+
+### Added
+- **Colourblind-safe severity distribution** — the dashboard severity bar now carries `role="img"` with a synthesised text summary, distinct diagonal pattern fills per grade, and legend chips that print the grade numeral (I–IV) as text rather than relying on a colour dot alone.
+- **Full keyboard navigation for the patient selector** — `PatientSelector` now supports ArrowUp/ArrowDown/Enter/Escape with `aria-activedescendant`, so the list is operable without a mouse (WCAG 2.1.1).
+- **Validation errors jump to their field** — the save-time error summary renders each message as a link to the offending control (`visit-date`, `drug-filter`, `clinical-plan`); a single click focuses the field instead of a manual scroll-hunt.
+- **Required-field validation on manual patient entry** — First Name, Last Name and MRN now block "Save & Close" with inline error text, preventing an unidentifiable clinical record.
+- **Report tabs expose proper ARIA roles** — the Clinical Report / Handout / Letter tab bar now uses `role="tablist"`/`role="tab"` with `aria-selected`.
+
+### Changed
+- **Type scale corrected** — `h4` changed from `text-base font-bold` to `text-lg font-semibold`, removing the inverted weight-to-size relationship against `h3`.
+- **Section labels and heading consistency** — ad-hoc `uppercase tracking-wide` label strings across the testing and patient screens consolidated onto the `.section-label` utility; the Assessment & Plan report heading now matches the other section headings (uppercase, tracking-wider, primary underline).
+- **Narrative measure controlled** — long narrative blocks in `PowerchartLetter`, `PatientHandout` and `PatientHistory` are now constrained with `max-w-prose` for a readable line length.
+- **`.app-wordmark` class** — the login wordmark's `tracking-widest` is now an isolated utility class, reserved so functional headings don't inherit logotype spacing.
+
+### Notes
+- All original audit findings (Workstream A UI/UX + Workstream B Typography) are addressed; the full report lives at `plans/dream-design-audit-2026-06-11.md`.
+- 216 unit tests pass; typecheck and lint clean; production build green. The testing-day E2E selector was updated for the new report-tab role.
+
+### Chore
+- Version bump to 0.69.0
+
 ## [0.68.0] — 2026-06-10 (Polished)
 
 Summary: Final pass of the audit cycle — completes the section decomposition, hoists the help modal to the app root so it's a true singleton, and raises the coverage floor.

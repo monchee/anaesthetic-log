@@ -30,6 +30,7 @@ export function DashboardScreen({
 }: DashboardScreenProps) {
   return (
     <ScreenLayout title="Clinical Dashboard" icon={<LayoutDashboard className="w-5 h-5" />} {...layoutProps}>
+      <h2 className="sr-only">Dashboard analytics and patient records</h2>
       <Dashboard
         setScreen={onSetScreen}
         existingPatients={patients}

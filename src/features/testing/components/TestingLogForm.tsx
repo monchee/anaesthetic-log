@@ -11,6 +11,7 @@ import {
   TryptaseSection,
   VisitDetailsSection,
 } from './TestingLogFormSections';
+import { ValidationErrorLink } from './SaveActionSection';
 
 interface TestingLogFormProps {
   formData: LogFormData;
@@ -45,19 +46,25 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     challengeOptions,
   } = useTestingLogLogic({ formData, setFormData, drugCategories });
 
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrorLink[]>([]);
   const [drugFilter, setDrugFilter] = useState('');
   const [nurseNotesOpen, setNurseNotesOpen] = useState(false);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
 
   const testingService = new TestingService();
+  const toValidationLink = (message: string): ValidationErrorLink => {
+    const lower = message.toLowerCase();
+    if (lower.includes('visit date')) return { message, fieldId: 'visit-date' };
+    if (lower.includes('drug') || lower.includes('test panel')) return { message, fieldId: 'drug-filter' };
+    return { message, fieldId: 'clinical-plan' };
+  };
 
   const handleSave = () => {
     const { isValid, errors } = testingService.validateForm(formData);
     if (!isValid) {
-      setValidationErrors(errors);
+      setValidationErrors(errors.map(toValidationLink));
       requestAnimationFrame(() => {
-        errorSummaryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        errorSummaryRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
         errorSummaryRef.current?.focus();
       });
       return;

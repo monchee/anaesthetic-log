@@ -2,8 +2,13 @@ import React from 'react';
 import { Button } from '@/components/ui';
 import { Save } from 'lucide-react';
 
+export interface ValidationErrorLink {
+  message: string;
+  fieldId: string;
+}
+
 interface SaveActionSectionProps {
-  validationErrors: string[];
+  validationErrors: ValidationErrorLink[];
   errorSummaryRef: React.RefObject<HTMLDivElement | null>;
   onSave: () => void;
 }
@@ -20,7 +25,11 @@ export function SaveActionSection({ validationErrors, errorSummaryRef, onSave }:
         >
           <p className="font-semibold">Please fix the following before saving:</p>
           <ul className="list-disc list-inside space-y-0.5">
-            {validationErrors.map((error, index) => <li key={index}>{error}</li>)}
+            {validationErrors.map((error, index) => (
+              <li key={index}>
+                <a className="underline underline-offset-2" href={`#${error.fieldId}`}>{error.message}</a>
+              </li>
+            ))}
           </ul>
         </div>
       )}

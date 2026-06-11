@@ -40,6 +40,16 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
   const totalPatients = animatedTotalPatients || 1;
   const max = topAgents[0]?.count || 1;
   const widthTransitionClass = reduceMotion ? '' : 'transition-[width] duration-500';
+  const gradeMeta = [
+    { key: 'I', label: 'I - Cutaneous', count: gradeCounts.I, className: 'bg-status-grade1', pattern: 'repeating-linear-gradient(45deg, transparent 0 6px, hsl(var(--background) / 0.35) 6px 8px)' },
+    { key: 'II', label: 'II - Mild systemic', count: gradeCounts.II, className: 'bg-status-grade2', pattern: 'repeating-linear-gradient(90deg, transparent 0 5px, hsl(var(--background) / 0.35) 5px 7px)' },
+    { key: 'III', label: 'III - Severe systemic', count: gradeCounts.III, className: 'bg-status-grade3', pattern: 'repeating-linear-gradient(135deg, transparent 0 4px, hsl(var(--background) / 0.35) 4px 6px)' },
+    { key: 'IV', label: 'IV - Cardiac arrest', count: gradeCounts.IV, className: 'bg-status-grade4', pattern: 'repeating-linear-gradient(0deg, transparent 0 3px, hsl(var(--background) / 0.4) 3px 5px)' },
+    { key: 'Ungraded', label: 'Ungraded', count: gradeCounts.Ungraded, className: 'bg-slate-300 dark:bg-muted/60', pattern: 'repeating-linear-gradient(45deg, transparent 0 8px, hsl(var(--foreground) / 0.18) 8px 10px)' },
+  ] as const;
+  const severitySummary = gradeMeta
+    .map(({ label, count }) => `${label}: ${Math.round((count / totalPatients) * 100)}% (${count})`)
+    .join(', ');
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -117,70 +127,32 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
         </CardHeader>
         <CardContent className="p-4 pt-6">
           {/* Stacked Bar */}
-          <div className="flex h-8 w-full rounded-none overflow-hidden mb-4 bg-slate-100 dark:bg-card">
-            {gradeCounts.I > 0 && (
-              <div 
-                style={{ width: animateCharts ? `${(gradeCounts.I / totalPatients) * 100}%` : '0%' }} 
-                className={`bg-status-grade1 h-full ${widthTransitionClass}`} 
-                aria-label={`Grade I: ${gradeCounts.I}`}
-                title={`Grade I: ${gradeCounts.I}`}
+          <div
+            className="flex h-8 w-full rounded-none overflow-hidden mb-4 bg-slate-100 dark:bg-card"
+            role="img"
+            aria-label={`Severity distribution: ${severitySummary}`}
+          >
+            {gradeMeta.map(({ key, label, count, className, pattern }, index) => count > 0 && (
+              <div
+                key={key}
+                aria-hidden="true"
+                style={{
+                  width: animateCharts ? `${(count / totalPatients) * 100}%` : '0%',
+                  backgroundImage: pattern,
+                }}
+                className={`${className} h-full ${widthTransitionClass} ${reduceMotion || index === 0 ? '' : index < 3 ? 'delay-75' : 'delay-100'}`}
+                title={`${label}: ${count}`}
               />
-            )}
-            {gradeCounts.II > 0 && (
-              <div 
-                style={{ width: animateCharts ? `${(gradeCounts.II / totalPatients) * 100}%` : '0%' }} 
-                className={`bg-status-grade2 h-full ${widthTransitionClass} ${reduceMotion ? '' : 'delay-75'}`} 
-                aria-label={`Grade II: ${gradeCounts.II}`}
-                title={`Grade II: ${gradeCounts.II}`}
-              />
-            )}
-            {gradeCounts.III > 0 && (
-              <div 
-                style={{ width: animateCharts ? `${(gradeCounts.III / totalPatients) * 100}%` : '0%' }} 
-                className={`bg-status-grade3 h-full ${widthTransitionClass} ${reduceMotion ? '' : 'delay-75'}`} 
-                aria-label={`Grade III: ${gradeCounts.III}`}
-                title={`Grade III: ${gradeCounts.III}`}
-              />
-            )}
-            {gradeCounts.IV > 0 && (
-              <div 
-                style={{ width: animateCharts ? `${(gradeCounts.IV / totalPatients) * 100}%` : '0%' }} 
-                className={`bg-status-grade4 h-full ${widthTransitionClass} ${reduceMotion ? '' : 'delay-100'}`} 
-                aria-label={`Grade IV: ${gradeCounts.IV}`}
-                title={`Grade IV: ${gradeCounts.IV}`}
-              />
-            )}
-            {gradeCounts.Ungraded > 0 && (
-              <div 
-                style={{ width: animateCharts ? `${(gradeCounts.Ungraded / totalPatients) * 100}%` : '0%' }} 
-                className={`bg-slate-300 dark:bg-muted/60 h-full ${widthTransitionClass} ${reduceMotion ? '' : 'delay-100'}`}
-                aria-label={`Ungraded: ${gradeCounts.Ungraded}`}
-                title={`Ungraded: ${gradeCounts.Ungraded}`}
-              />
-            )}
+            ))}
           </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs tabular-nums mt-4">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-status-grade1"></span>
-              <span className="text-muted-foreground">I: <b className="text-foreground">{gradeCounts.I}</b></span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-status-grade2"></span>
-              <span className="text-muted-foreground">II: <b className="text-foreground">{gradeCounts.II}</b></span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-status-grade3"></span>
-              <span className="text-muted-foreground">III: <b className="text-foreground">{gradeCounts.III}</b></span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-status-grade4"></span>
-              <span className="text-muted-foreground">IV: <b className="text-foreground">{gradeCounts.IV}</b></span>
-            </div>
-            <div className="flex items-center gap-1.5 col-span-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-muted/60"></span>
-              <span className="text-muted-foreground">Ungraded: <b className="text-foreground">{gradeCounts.Ungraded}</b></span>
-            </div>
+            {gradeMeta.map(({ key, label, count, className }) => (
+              <div key={key} className={`flex items-center gap-1.5 ${key === 'Ungraded' ? 'col-span-2' : ''}`}>
+                <span className={`inline-flex h-4 min-w-4 items-center justify-center rounded-none text-[0.625rem] font-bold text-white ${className}`}>{key === 'Ungraded' ? '-' : key}</span>
+                <span className="text-muted-foreground">{label}: <b className="text-foreground">{count}</b></span>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>

@@ -128,7 +128,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[280px] p-4 rounded-none border-border shadow-md" align="start">
-            <Label className="text-xs font-bold text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
+            <Label className="section-label mb-3 block">
               Reaction Severity
             </Label>
             <div className="grid grid-cols-3 gap-2 w-full">
@@ -166,7 +166,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[280px] p-4 rounded-none border-border shadow-md" align="start">
-            <Label className="text-xs font-bold text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
+            <Label className="section-label mb-3 block">
               Procedure Outcome
             </Label>
             <div className="flex bg-slate-100 dark:bg-card p-1 border border-border h-9">
@@ -203,7 +203,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-4 rounded-none border-border shadow-md" align="start">
-            <Label className="text-xs font-bold text-foreground uppercase tracking-[0.1em] mb-3 opacity-70 flex items-center gap-1.5">
+            <Label className="section-label mb-3 flex items-center gap-1.5">
               Date Range
             </Label>
             <div className="flex items-center gap-2 h-9">
@@ -211,14 +211,14 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                 type="date"
                 value={filters.dateFrom}
                 onChange={(e) => updateFilter('dateFrom', e.target.value)}
-                className="h-full flex-1 text-[11px] px-2 rounded-none border-border focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-card"
+                className="h-full flex-1 text-xs px-2 rounded-none border-border focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-card"
               />
               <span className="text-xs text-slate-400 font-black uppercase shrink-0 px-0.5">To</span>
               <Input
                 type="date"
                 value={filters.dateTo}
                 onChange={(e) => updateFilter('dateTo', e.target.value)}
-                className="h-full flex-1 text-[11px] px-2 rounded-none border-border focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-card"
+                className="h-full flex-1 text-xs px-2 rounded-none border-border focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-card"
               />
             </div>
           </PopoverContent>
@@ -236,14 +236,14 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[280px] p-4 rounded-none border-border shadow-md" align="start">
-            <Label className="text-xs font-bold text-foreground uppercase tracking-[0.1em] mb-3 block opacity-70">
+            <Label className="section-label mb-3 block">
               Hospital Location
             </Label>
             <div className="relative h-9">
               <select
                 value={filters.hospital}
                 onChange={(e) => updateFilter('hospital', e.target.value)}
-                className="w-full h-full px-3 text-[11px] appearance-none rounded-none border border-border bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-colors cursor-pointer pr-10"
+                className="w-full h-full px-3 text-xs appearance-none rounded-none border border-border bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-colors cursor-pointer pr-10"
               >
                 <option value="">All Hospitals</option>
                 {suggestions.hospitals.map(h => (
@@ -310,7 +310,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
               )}
             </div>
             
-            <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground opacity-70 flex items-center gap-2">
+            <div className="section-label flex items-center gap-2">
                {hasAgents && <span className="text-primary">{filters.suspectedAgents.length} Selected</span>}
                {!hasAgents && <span>0 Selected</span>}
             </div>

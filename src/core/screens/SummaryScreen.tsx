@@ -100,7 +100,7 @@ export function SummaryScreen({
       actions={<Button onClick={onExit} variant="ghost" className={BACK_BTN}><LogOut className={BACK_ICON} /> Exit</Button>}
       contentClassName="py-4 space-y-4"
     >
-      <div className="flex overflow-x-auto border-b border-border no-print -mx-1 px-1">
+      <div className="flex overflow-x-auto border-b border-border no-print -mx-1 px-1" role="tablist" aria-label="Report type">
         {([
           { key: 'report', label: 'Clinical Report', icon: <FileText className="w-4 h-4" /> },
           { key: 'handout', label: 'Patient Handout', icon: <User className="w-4 h-4" /> },
@@ -108,6 +108,10 @@ export function SummaryScreen({
         ] as const).map(({ key, label, icon }) => (
           <button
             key={key}
+            id={`report-tab-${key}`}
+            role="tab"
+            aria-selected={activeReportTab === key}
+            aria-controls={`report-panel-${key}`}
             onClick={() => setActiveReportTab(key)}
             className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors rounded-none whitespace-nowrap shrink-0
               ${activeReportTab === key
@@ -122,12 +126,14 @@ export function SummaryScreen({
 
       <RedactProvider>
         <RedactToggle />
-        {activeReportTab === 'report' && <ClinicalReport data={lastSavedRecord} activeReportSavedAt={activeReportSavedAt} />}
-        {activeReportTab === 'handout' && <PatientHandout data={lastSavedRecord} activeReportSavedAt={activeReportSavedAt} />}
-        {activeReportTab === 'letter' && <PowerchartLetter data={lastSavedRecord} patient={selectedPatient} activeReportSavedAt={activeReportSavedAt} />}
+        <div id={`report-panel-${activeReportTab}`} role="tabpanel" aria-labelledby={`report-tab-${activeReportTab}`}>
+          {activeReportTab === 'report' && <ClinicalReport data={lastSavedRecord} activeReportSavedAt={activeReportSavedAt} />}
+          {activeReportTab === 'handout' && <PatientHandout data={lastSavedRecord} activeReportSavedAt={activeReportSavedAt} />}
+          {activeReportTab === 'letter' && <PowerchartLetter data={lastSavedRecord} patient={selectedPatient} activeReportSavedAt={activeReportSavedAt} />}
+        </div>
       </RedactProvider>
 
-      <div className="grid grid-cols-3 gap-3 no-print mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 no-print mt-4">
         <Button onClick={() => window.print()} size="lg" variant="outline" className="py-5 h-auto text-sm rounded-none">
           <Printer className="w-4 h-4 mr-2" /> Print
         </Button>

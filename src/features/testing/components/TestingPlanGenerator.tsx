@@ -339,9 +339,9 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         <div className={`flex items-center border-b border-dashed pb-1 mb-2 ${
                             urgent ? 'border-red-300 dark:border-red-800' : 'border-border'
                         }`}>
-                            <h4 className={`text-xs font-semibold uppercase tracking-wider ${
+                            <h3 className={`text-xs font-semibold uppercase tracking-wider ${
                                 urgent ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'
-                            }`}>Request Details</h4>
+                            }`}>Request Details</h3>
                         </div>
                         <div className="flex flex-wrap items-center gap-4">
                             <div className="flex items-center gap-2">
@@ -372,7 +372,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     {/* Documents to Chase */}
                     <div className="space-y-2 rounded-none p-3 transition-colors duration-150">
                         <div className="flex items-center border-b border-dashed border-border pb-1 mb-2">
-                            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Documents to Chase</h4>
+                            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Documents to Chase</h3>
                         </div>
                         <div className="flex flex-wrap gap-2">
                             <div className="flex items-center gap-2">
@@ -401,7 +401,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     {/* Drug Selection Grid */}
                     <div className="space-y-2 rounded-none p-3 transition-colors duration-150">
                         <div className="flex items-center justify-between border-b border-dashed border-border pb-1 mb-2">
-                            <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Drugs for Testing</h4>
+                            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Drugs for Testing</h3>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -600,7 +600,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             {selectedDrugs.includes(entry.name) && <Check className="w-3 h-3 shrink-0" />}
                                             <span className="truncate">{entry.name}</span>
                                             {entry.fromRedcapOther && (
-                                              <span className="shrink-0 text-[10px] uppercase tracking-wide opacity-90">
+                                              <span className="shrink-0 text-[0.625rem] uppercase tracking-wider opacity-90">
                                                 (not listed)
                                               </span>
                                             )}

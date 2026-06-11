@@ -46,7 +46,7 @@ describe('reports print safety', () => {
     });
 
     const { rerender } = renderReport(<ClinicalReport data={base} />);
-    expect(screen.getByText('NEGATIVE (Safe)')).toHaveClass('border', 'print:bg-white', 'print:text-black');
+    expect(screen.getByText('NEGATIVE (Safe)')).toHaveClass('border', 'print:bg-black', 'print:text-white');
 
     rerender(<RedactProvider><ClinicalReport data={{ ...base, outcome: 'UNSUCCESS' }} /></RedactProvider>);
     expect(screen.getByText('POSITIVE (Reaction)')).toHaveClass('bg-red-600', 'print:bg-black', 'print:text-white');

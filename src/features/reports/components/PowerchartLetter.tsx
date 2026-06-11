@@ -107,6 +107,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
 
         {/* Narrative */}
         <div className="section-card bg-card border border-border rounded-none p-4 space-y-4 text-sm leading-relaxed text-foreground/90 print:bg-white print:border-slate-300 print:p-2 print:text-xs print:space-y-1.5">
+          <div className="max-w-prose space-y-4 print:space-y-1.5">
           {patient && patient.id !== 'manual' && (
             <p>
               {fullName} presented to {patient.history.hospital || '[hospital]'} for a {patient.history.procedure?.toLowerCase() || '[procedure]'} on the {formatDate(patient.history.date)}.
@@ -134,6 +135,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
               })}
             </ul>
           )}
+          </div>
         </div>
 
         {/* Results Summary (3B restyle) */}

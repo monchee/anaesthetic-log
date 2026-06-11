@@ -4,6 +4,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TestingLogForm from './TestingLogForm';
 import { LogFormData } from '@/types';
+import { TestingService } from '../services/TestingService';
 
 
 
@@ -299,6 +300,42 @@ describe('TestingLogForm', () => {
       await waitFor(() => {
         expect(mockProps.onSubmit).toHaveBeenCalled();
       });
+    });
+
+    it('links visit date validation errors to the visit date field', async () => {
+      render(<TestWrapper initialData={{ ...mockFormData, visitDate: '' }} props={mockProps} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
+
+      const errorLink = await screen.findByRole('link', { name: /Visit date is required/i });
+      expect(errorLink).toHaveAttribute('href', '#visit-date');
+      expect(mockProps.onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('links drug panel validation errors to the drug filter field', async () => {
+      render(<TestWrapper initialData={{ ...mockFormData, testPanel: [] }} props={mockProps} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
+
+      const errorLink = await screen.findByRole('link', { name: /At least one drug test is required/i });
+      expect(errorLink).toHaveAttribute('href', '#drug-filter');
+      expect(mockProps.onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('links unknown validation errors to the clinical plan field', async () => {
+      const validateSpy = vi.spyOn(TestingService.prototype, 'validateForm').mockReturnValue({
+        isValid: false,
+        errors: ['Clinical plan needs review'],
+      });
+
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
+
+      const errorLink = await screen.findByRole('link', { name: /Clinical plan needs review/i });
+      expect(errorLink).toHaveAttribute('href', '#clinical-plan');
+      expect(mockProps.onSubmit).not.toHaveBeenCalled();
+      validateSpy.mockRestore();
     });
   });
 

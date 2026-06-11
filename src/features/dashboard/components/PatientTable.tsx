@@ -123,7 +123,6 @@ const PatientTable: React.FC<PatientTableProps> = ({
               <Button
                 onClick={() => setIsSheetOpen(true)}
                 size="sm"
-                className="bg-red-600 hover:bg-red-700 text-white"
               >
                 <Upload className="w-4 h-4 mr-2" />
                 Upload CSV
@@ -198,7 +197,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                     className="hover:bg-slate-50/80 dark:hover:bg-card/50 transition-colors group animate-row-enter"
                     title="Click to view patient details"
                   >
-                    <td className="px-4 py-3 whitespace-nowrap text-muted-foreground font-mono text-xs">
+                    <td className="px-4 py-3 whitespace-nowrap text-muted-foreground font-mono tabular-nums text-xs">
                       {formatDate(p.history.date)}
                     </td>
                     <td className="px-4 py-3 font-medium text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">

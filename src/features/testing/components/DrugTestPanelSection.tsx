@@ -58,7 +58,7 @@ export function DrugTestPanelSection({
       <CardContent className="pt-3 sm:pt-4 md:pt-4 space-y-4 sm:space-y-5 md:space-y-6">
         <div className="space-y-4 mb-6">
           <div className="flex justify-between items-center border-b border-border pb-2">
-            <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">Select Drugs to Test:<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>
+            <Label className="section-label">Select Drugs to Test:<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>
             <Button
               variant="ghost"
               size="sm"
@@ -73,6 +73,7 @@ export function DrugTestPanelSection({
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
             <Input
+              id="drug-filter"
               value={drugFilter}
               onChange={e => setDrugFilter(e.target.value)}
               placeholder="Filter drugs..."
@@ -108,7 +109,7 @@ export function DrugTestPanelSection({
               return (
                 <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${category === 'Others' ? 'col-span-full' : ''} ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-card/50'}`}>
                   <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-border'}`}>
-                    <p className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-muted-foreground'}`}>
+                    <p className={`section-label flex items-center gap-2 ${hasActiveSelection ? theme.headerText : ''}`}>
                       {category}
                       {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-full ${theme.pulse} animate-pulse`}></span>}
                     </p>
@@ -169,11 +170,12 @@ export function DrugTestPanelSection({
                 <Label htmlFor={id} className="text-xs font-medium text-slate-700 dark:text-foreground/80">{label}</Label>
                 <Input
                   id={id}
-                  type="number"
-                  min="0"
+                  type="text"
+                  inputMode="decimal"
+                  pattern="[0-9]*"
                   onKeyDown={preventNegativeInput}
                   placeholder="0"
-                  className="bg-background h-9 w-full md:w-20 text-center text-sm font-mono"
+                  className="bg-background h-9 w-full md:w-20 text-center text-sm font-mono tabular-nums"
                   value={formData.controls[field]}
                   onChange={(e) => onControlChange(field, e.target.value)}
                 />
