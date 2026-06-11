@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseRedcapCSV } from './csvUtils';
+import { parseRedcapCSV, decodeCsvBytes, normalizeHeader } from './csvUtils';
 
 const baseHeaders = [
   'Record ID',
@@ -173,5 +173,57 @@ describe('parseRedcapCSV', () => {
     const headerOnly = parseRedcapCSV(baseHeaders.join(','));
     expect(headerOnly.success).toBe(false);
     expect(headerOnly.error).toBe('Empty or invalid CSV.');
+  });
+
+  it('lists detected columns in the error so mismatches are diagnosable', () => {
+    const result = parseRedcapCSV(csv(['Record ID', 'First Name', 'Last Name'], [['REC-1', 'Alice', 'Smith']]));
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('Detected columns begin with:');
+    expect(result.error).toContain('"Record ID"');
+  });
+});
+
+describe('parseRedcapCSV — encoding & header robustness', () => {
+  const minimalHeaders = ['Record ID', 'First Name', 'Last Name', 'Date of Reaction:'];
+  const minimalRow = ['REC-1', 'Alice', 'Smith', '2026-01-02'];
+
+  it('tolerates non-breaking spaces and doubled whitespace in required headers', () => {
+    // REDCap/Excel sometimes emit U+00A0 (NBSP) or doubled spaces inside labels.
+    const headers = ['Record ID', 'First Name', 'Last  Name', 'Date of Reaction:'];
+    const result = parseRedcapCSV(csv(headers, [minimalRow]));
+    expect(result.success).toBe(true);
+    expect(result.data[0]).toMatchObject({ id: 'REC-1', firstName: 'Alice', lastName: 'Smith' });
+  });
+
+  it('strips a leading BOM character from the CSV text', () => {
+    const result = parseRedcapCSV('﻿' + csv(minimalHeaders, [minimalRow]));
+    expect(result.success).toBe(true);
+    expect(result.data[0].id).toBe('REC-1');
+  });
+
+  it('normalizeHeader removes BOM/zero-width, converts NBSP, and collapses spaces', () => {
+    expect(normalizeHeader('﻿Date of Reaction:')).toBe('Date of Reaction:');
+    expect(normalizeHeader('First​  Name ')).toBe('First Name');
+  });
+
+  it('decodeCsvBytes strips a UTF-8 BOM', () => {
+    const body = Buffer.from('Record ID,First Name', 'utf8');
+    const bytes = new Uint8Array(3 + body.length);
+    bytes[0] = 0xEF; bytes[1] = 0xBB; bytes[2] = 0xBF;
+    bytes.set(body, 3);
+    expect(decodeCsvBytes(bytes.buffer)).toBe('Record ID,First Name');
+  });
+
+  it('decodeCsvBytes reads UTF-16LE files (what Excel "Save As" produces)', () => {
+    const csvText = csv(minimalHeaders, [minimalRow]);
+    const body = Buffer.from(csvText, 'utf16le');
+    const bytes = new Uint8Array(2 + body.length);
+    bytes[0] = 0xFF; bytes[1] = 0xFE; // UTF-16LE BOM
+    bytes.set(body, 2);
+
+    const decoded = decodeCsvBytes(bytes.buffer);
+    const result = parseRedcapCSV(decoded);
+    expect(result.success).toBe(true);
+    expect(result.data[0]).toMatchObject({ id: 'REC-1', firstName: 'Alice', lastName: 'Smith' });
   });
 });

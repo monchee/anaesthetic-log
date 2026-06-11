@@ -1,3 +1,14 @@
+## [0.71.0] — 2026-06-11 (Any Encoding)
+
+Summary: Fixes CSV import rejecting valid REDCap exports with "Missing required columns" when the file isn't UTF-8. Excel "Save As" commonly writes UTF-16, which the app decoded as UTF-8 — garbling every column name so all required headers failed at once. Imports now work regardless of file encoding.
+
+### Fixed
+- **CSV upload now reads any file encoding** — all three upload paths (main upload sheet, Help modal, Dashboard) read the file as bytes and detect the byte-order mark (UTF-8, UTF-16LE, UTF-16BE) before decoding, instead of assuming UTF-8. A UTF-16 export from Excel no longer turns column names into mojibake. New `decodeCsvBytes` helper in `csvUtils.ts`.
+- **Header matching tolerates invisible characters** — `normalizeHeader` strips BOM and zero-width spaces, converts non-breaking spaces (U+00A0) to regular spaces, and collapses doubled whitespace, applied once to every parsed header so both validation and column-mapping are resilient to REDCap/Excel label artifacts.
+
+### Changed
+- **CSV parse errors now name the detected columns** — the "Missing required columns" message lists the first few column names actually found in the file, so an encoding garble vs a genuine column rename is diagnosable at a glance.
+
 ## [0.70.0] — 2026-06-11 (Medication Chart)
 
 Summary: Redesigns the testing plan request form to match the standard national medication chart (NIMC) template — patient ID label box header, one row per SPT/IDT step in a flat administration table — so the printed document is clinically familiar and audit-compliant.

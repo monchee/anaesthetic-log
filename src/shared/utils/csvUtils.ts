@@ -22,11 +22,36 @@ const REQUIRED_HEADERS = [
 ];
 
 /**
+ * Normalizes a CSV header token so matching is resilient to invisible
+ * characters that REDCap/Excel exports commonly introduce: byte-order marks,
+ * zero-width spaces, non-breaking spaces, and doubled whitespace.
+ */
+export const normalizeHeader = (h: string): string =>
+    h.replace(/[\uFEFF\u200B]/g, '')   // strip BOM / zero-width space
+     .replace(/\u00A0/g, ' ')           // NBSP -> regular space
+     .replace(/\s+/g, ' ')              // collapse whitespace runs
+     .trim();
+
+/**
+ * Decodes an uploaded CSV file's bytes, honoring the byte-order mark so that
+ * UTF-16 files (produced by Excel "Save As") are read correctly rather than
+ * garbled into mojibake. Falls back to UTF-8. A leading BOM is stripped.
+ */
+export const decodeCsvBytes = (buf: ArrayBuffer): string => {
+    const bytes = new Uint8Array(buf);
+    let encoding = 'utf-8';
+    if (bytes[0] === 0xFF && bytes[1] === 0xFE) encoding = 'utf-16le';
+    else if (bytes[0] === 0xFE && bytes[1] === 0xFF) encoding = 'utf-16be';
+    const text = new TextDecoder(encoding).decode(buf);
+    return text.replace(/^\uFEFF/, '');
+};
+
+/**
  * Validates that the CSV headers contain all required REDCap columns.
  * Returns null if valid, or an error message if validation fails.
  */
 const validateCSVHeaders = (headers: string[]): string | null => {
-    const normalizedHeaders = headers.map(h => h.trim());
+    const normalizedHeaders = headers.map(normalizeHeader);
     const missingHeaders: string[] = [];
 
     for (const required of REQUIRED_HEADERS) {
@@ -36,8 +61,10 @@ const validateCSVHeaders = (headers: string[]): string | null => {
     }
 
     if (missingHeaders.length > 0) {
+        const detected = headers.slice(0, 4).map(h => JSON.stringify(h)).join(', ');
         return `Missing required columns: ${missingHeaders.join(', ')}. ` +
-               `Please ensure you're exporting from REDCap using "CSV / Microsoft Excel (labels)" format.`;
+               `Detected columns begin with: ${detected}. ` +
+               `Please export from REDCap using "CSV / Microsoft Excel (labels)" format (UTF-8).`;
     }
 
     return null;
@@ -189,10 +216,12 @@ const ANAESTHESIA_MAP_CONFIG = [
 ];
 
 export const parseRedcapCSV = (csvText: string): CsvParseResult => {
-  const lines = csvText.split(/\r?\n/).filter(l => l.trim());
+  const lines = csvText.replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim());
   if (lines.length < 2) return { success: false, data: [], error: "Empty or invalid CSV." };
 
-  const headers = splitCSVLine(lines[0]);
+  // Normalize header tokens once so all downstream matching (exact and
+  // substring) is resilient to BOM / NBSP / zero-width / doubled whitespace.
+  const headers = splitCSVLine(lines[0]).map(normalizeHeader);
 
   // Validate headers before processing
   const headerError = validateCSVHeaders(headers);

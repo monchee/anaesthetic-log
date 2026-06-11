@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { parseRedcapCSV } from '@shared/utils';
+import { parseRedcapCSV, decodeCsvBytes } from '@shared/utils';
 import { Screen, Patient, LogFormData } from '@/types';
 import { toast } from 'sonner';
 import { useCountUp } from '@shared/hooks/useCountUp';
@@ -101,7 +101,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
           const reader = new FileReader();
           reader.onload = (event) => {
               try {
-                const text = event.target?.result as string;
+                const text = decodeCsvBytes(event.target?.result as ArrayBuffer);
                 const result = parseRedcapCSV(text);
 
                 if (result.success) {
@@ -146,7 +146,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
               });
               setIsUploading(false);
           };
-          reader.readAsText(file);
+          reader.readAsArrayBuffer(file);
       }
       if (fileInputRef.current) fileInputRef.current.value = '';
   };

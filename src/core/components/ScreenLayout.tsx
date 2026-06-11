@@ -6,7 +6,7 @@ import DisclaimerBanner from './DisclaimerBanner';
 import { useTheme } from './ThemeProvider';
 import { Screen, Patient } from '@/types';
 import { CSVUploadInstructions } from '@features/dashboard/components/CSVUploadInstructions';
-import { parseRedcapCSV } from '@shared/utils';
+import { parseRedcapCSV, decodeCsvBytes } from '@shared/utils';
 import { toast } from 'sonner';
 
 interface ScreenLayoutProps {
@@ -71,7 +71,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
             const reader = new FileReader();
             reader.onload = (event) => {
                 try {
-                    const text = event.target?.result as string;
+                    const text = decodeCsvBytes(event.target?.result as ArrayBuffer);
                     const result = parseRedcapCSV(text);
 
                     if (result.success) {
@@ -92,7 +92,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                     setIsUploading(false);
                 }
             };
-            reader.readAsText(file);
+            reader.readAsArrayBuffer(file);
         }
 
         if (e.target) {
