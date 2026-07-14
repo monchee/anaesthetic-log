@@ -83,6 +83,7 @@ export interface LogFormData {
   mrn: string;
   firstName: string;
   lastName: string;
+  dob?: string;
   visitDate: string;
   controls: Controls;
   testPanel: DrugTestRow[];

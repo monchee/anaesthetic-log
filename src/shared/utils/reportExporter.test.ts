@@ -83,10 +83,12 @@ describe('formatClinicalReportAsText', () => {
       firstName: 'Alice',
       lastName: 'Smith',
       mrn: 'MRN-999',
+      dob: '1980-05-01',
     }), () => '[redacted]');
 
     expect(text).toContain('Patient: [redacted]');
     expect(text).toContain('MRN: [redacted]');
+    expect(text).toContain('DOB: [redacted]');
     expect(text).not.toContain('Alice Smith');
     expect(text).not.toContain('MRN-999');
   });
@@ -124,9 +126,11 @@ describe('formatPatientHandoutAsText', () => {
     const text = formatPatientHandoutAsText(createMockLogFormData({
       firstName: 'Alice',
       lastName: 'Smith',
+      dob: '1980-05-01',
     }), () => '[redacted]');
 
     expect(text).toContain('Patient: [redacted]');
+    expect(text).toContain('DOB: [redacted]');
     expect(text).not.toContain('Alice Smith');
   });
 });

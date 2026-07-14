@@ -26,6 +26,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
         <ReportPrintIdentity
           patientName={patientName}
           mrn={redact(data.mrn)}
+          dob={data.dob}
           reportTitle="Allergy Testing Results"
           requestDate={reportDate}
         />
@@ -41,12 +42,16 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
         <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-3 print:space-y-2">
            
            {/* Header Info */}
-            <div className="section-card bg-muted border border-border rounded-none p-4 flex justify-between items-start print:bg-white print:border-slate-300 print:p-2">
+            <div className="section-card bg-muted border border-border rounded-none p-4 grid grid-cols-1 sm:grid-cols-3 gap-4 print:grid-cols-3 print:bg-white print:border-slate-300 print:p-2">
                <div>
                   <p className="text-xs text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Patient Name</p>
                   <p className="text-xl font-semibold tracking-tight text-primary print:text-sm print:text-black">{patientName}</p>
                </div>
-               <div className="text-right">
+               <div>
+                  <p className="text-xs text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Date of Birth</p>
+                  <p className="text-lg font-medium print:text-sm">{data.dob ? redact(formatDate(data.dob)) : 'Not recorded'}</p>
+               </div>
+               <div className="sm:text-right print:text-right">
                   <p className="text-xs text-muted-foreground uppercase font-semibold tracking-wider print:text-[9px]">Date</p>
                   <p className="text-lg font-medium print:text-sm">{formatDate(data.visitDate)}</p>
                </div>

@@ -265,19 +265,19 @@ export function LogScreen({
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="manual-first-name" className="section-label mb-1.5 block">First Name</Label>
+                  <Label htmlFor="manual-first-name" className="section-label mb-1.5 block">First Name<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>
                   <Input id="manual-first-name" value={selectedPatient.firstName} onChange={(e) => { onManualDetailChange('firstName', e.target.value); setManualPatientErrors(prev => ({ ...prev, firstName: '' })); }} placeholder="Enter first name" aria-invalid={!!manualPatientErrors.firstName} aria-describedby={manualPatientErrors.firstName ? 'manual-first-name-error' : undefined} />
                   {manualPatientErrors.firstName && <p id="manual-first-name-error" className="text-destructive text-xs mt-1">{manualPatientErrors.firstName}</p>}
                 </div>
                 <div>
-                  <Label htmlFor="manual-last-name" className="section-label mb-1.5 block">Last Name</Label>
+                  <Label htmlFor="manual-last-name" className="section-label mb-1.5 block">Last Name<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>
                   <Input id="manual-last-name" value={selectedPatient.lastName} onChange={(e) => { onManualDetailChange('lastName', e.target.value); setManualPatientErrors(prev => ({ ...prev, lastName: '' })); }} placeholder="Enter last name" aria-invalid={!!manualPatientErrors.lastName} aria-describedby={manualPatientErrors.lastName ? 'manual-last-name-error' : undefined} />
                   {manualPatientErrors.lastName && <p id="manual-last-name-error" className="text-destructive text-xs mt-1">{manualPatientErrors.lastName}</p>}
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="manual-mrn" className="section-label mb-1.5 block">MRN</Label>
+                  <Label htmlFor="manual-mrn" className="section-label mb-1.5 block">MRN<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>
                   <Input id="manual-mrn" value={selectedPatient.mrn} onChange={(e) => { onManualDetailChange('mrn', e.target.value); setManualPatientErrors(prev => ({ ...prev, mrn: '' })); }} placeholder="Medical Record Number..." aria-invalid={!!manualPatientErrors.mrn} aria-describedby={manualPatientErrors.mrn ? 'manual-mrn-error' : undefined} />
                   {manualPatientErrors.mrn && <p id="manual-mrn-error" className="text-destructive text-xs mt-1">{manualPatientErrors.mrn}</p>}
                 </div>

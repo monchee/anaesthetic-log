@@ -130,6 +130,25 @@ test.describe('Testing Day Flow', () => {
     await expect(page.getByText(/Chen, Wei|Wei Chen/)).toBeVisible({ timeout: 5000 });
   });
 
+  test('marks only required manual patient fields with asterisks', async ({ page }) => {
+    const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
+    await expect(patientSelector).toBeVisible({ timeout: 10000 });
+    await patientSelector.click();
+    await page.getByRole('option', { name: /New Patient \(Manual Entry\)/i }).click();
+
+    const dialog = page.getByRole('dialog', { name: 'New Patient Details' });
+    await expect(dialog).toBeVisible();
+
+    for (const fieldId of ['manual-first-name', 'manual-last-name', 'manual-mrn']) {
+      await expect(dialog.locator(`label[for="${fieldId}"] span[aria-hidden="true"]`)).toHaveText('*');
+    }
+
+    await expect(dialog.locator('label span[aria-hidden="true"]')).toHaveCount(3);
+    for (const fieldId of ['manual-redcap-id', 'manual-dob', 'manual-gender', 'manual-city']) {
+      await expect(dialog.locator(`label[for="${fieldId}"] span[aria-hidden="true"]`)).toHaveCount(0);
+    }
+  });
+
   test('patient identity bar stays visible while scrolling the drug grid', async ({ page }) => {
     const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
     await expect(patientSelector).toBeVisible({ timeout: 10000 });

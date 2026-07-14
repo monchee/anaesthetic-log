@@ -27,14 +27,15 @@ export function useAnaestheticApp() {
         ...prev,
         firstName: selectedPatient?.firstName || '',
         lastName: selectedPatient?.lastName || '',
-        mrn: selectedPatient?.mrn || ''
+        mrn: selectedPatient?.mrn || '',
+        dob: selectedPatient?.dob || ''
       }));
     }
   }, [selectedPatient, setFormData]);
 
   const handleManualDetailChange = (field: keyof Patient, value: string) => {
     originalHandleManualDetailChange(field, value);
-    if (field === 'firstName' || field === 'lastName' || field === 'mrn') {
+    if (field === 'firstName' || field === 'lastName' || field === 'mrn' || field === 'dob') {
       setFormData(prev => ({
         ...prev,
         [field]: value

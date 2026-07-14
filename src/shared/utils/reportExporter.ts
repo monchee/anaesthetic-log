@@ -23,6 +23,7 @@ export function formatClinicalReportAsText(data: LogFormData, redact?: (value: s
   lines.push('');
   lines.push(`Patient: ${redact ? redact(`${data.firstName} ${data.lastName}`) : `${data.firstName} ${data.lastName}`}`);
   lines.push(`MRN: ${redact ? redact(data.mrn) : data.mrn}`);
+  lines.push(`DOB: ${data.dob ? (redact ? redact(formatDate(data.dob)) : formatDate(data.dob)) : 'Unknown'}`);
   lines.push(`Visit Date: ${data.visitDate ? new Date(data.visitDate).toLocaleDateString('en-AU') : 'Unknown'}`);
   lines.push('');
 
@@ -138,6 +139,7 @@ export function formatPatientHandoutAsText(data: LogFormData, redact?: (value: s
   lines.push('ALLERGY TESTING RESULTS — PATIENT INFORMATION HANDOUT');
   lines.push('');
   lines.push(`Patient: ${redact ? redact(`${data.firstName} ${data.lastName}`) : `${data.firstName} ${data.lastName}`}`);
+  lines.push(`DOB: ${data.dob ? (redact ? redact(formatDate(data.dob)) : formatDate(data.dob)) : 'Unknown'}`);
   lines.push(`Date: ${data.visitDate ? new Date(data.visitDate).toLocaleDateString('en-AU') : 'Unknown'}`);
   lines.push('');
 
