@@ -17,7 +17,7 @@
  * `@playwright/test`.
  */
 
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -27,6 +27,17 @@ const changelogData = JSON.parse(readFileSync(resolve(_dirname, '../src/shared/d
 const CURRENT_VERSION = changelogData[0].version;
 
 export { expect };
+
+/** Dismiss the Quick Start / What's New modal when demo data opens it. */
+export async function dismissHelpModal(page: Page) {
+  const dialog = page.getByRole('dialog');
+  const dismissButton = dialog.getByRole('button', { name: /skip for now|got it/i });
+
+  if (await dismissButton.first().isVisible().catch(() => false)) {
+    await dismissButton.first().click();
+    await expect(dialog).toBeHidden({ timeout: 5_000 });
+  }
+}
 
 export const test = base.extend<object>({
   page: async ({ page }, use) => {
