@@ -149,6 +149,7 @@ function AnaestheticLogApp() {
       return (
         <TestingScreen
           layoutProps={layoutProps}
+          selectedPatient={selectedPatient}
           formData={formData}
           setFormData={setFormData}
           onBack={() => setScreen(Screen.LOG)}

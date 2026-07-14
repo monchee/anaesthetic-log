@@ -5,6 +5,7 @@ import { ScreenLayout } from '@core/components/ScreenLayout';
 import { APP_CONFIG, DRUG_CATEGORIES } from '@shared/utils/constants';
 import { LogFormData, Patient, TestingPlanData } from '@/types';
 import { CommonScreenLayoutProps } from './types';
+import { PatientIdentityBar } from '@features/patients/components/PatientIdentityBar';
 
 const TestingLogForm = React.lazy(() => import('@features/testing/components/TestingLogForm'));
 const TestingPlanPrintView = React.lazy(() => import('@features/testing/components/TestingPlanPrintView'));
@@ -38,6 +39,7 @@ export function PrintPlanScreen({
 
 interface TestingScreenProps {
   layoutProps: CommonScreenLayoutProps;
+  selectedPatient: Patient | null;
   formData: LogFormData;
   setFormData: React.Dispatch<React.SetStateAction<LogFormData>>;
   onBack: () => void;
@@ -46,6 +48,7 @@ interface TestingScreenProps {
 
 export function TestingScreen({
   layoutProps,
+  selectedPatient,
   formData,
   setFormData,
   onBack,
@@ -58,6 +61,14 @@ export function TestingScreen({
       actions={<Button onClick={onBack} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
       contentClassName="py-4" className="pb-32"
     >
+      <PatientIdentityBar
+        firstName={selectedPatient?.firstName ?? formData.firstName}
+        lastName={selectedPatient?.lastName ?? formData.lastName}
+        mrn={selectedPatient?.mrn ?? formData.mrn}
+        dob={selectedPatient?.dob}
+        reactionDate={selectedPatient?.history.date}
+        className="mb-4"
+      />
       <TestingLogForm
         formData={formData}
         setFormData={setFormData}
