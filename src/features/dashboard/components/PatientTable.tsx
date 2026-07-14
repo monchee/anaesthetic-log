@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Card, CardHeader, CardTitle, Button, Input, Badge, Skeleton } from '@/components/ui';
-import { ChevronLeft, ChevronRight, FileText, Search, Upload, Download } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, FileText, Search, Upload, Download } from 'lucide-react';
 import { ACTIVE_REPORT_TTL_MS, formatDate, formatTime, getGradeVariant, parsePatientTimeline } from '@shared/utils';
+import {
+  ACTIVE_REPORT_KEY,
+  getIfFresh,
+  TESTING_DRAFT_KEY,
+  TESTING_PLAN_BUILDER_DRAFTS_KEY,
+} from '@shared/utils/ttlStorage';
+import {
+  derivePatientStatus,
+  type PatientStatusResult,
+  type PatientWorkflowStatus,
+} from '@shared/utils/patientStatus';
 import { Patient } from '@/types';
 import { AdvancedSearchFilters, AdvancedSearchPanel } from './AdvancedSearchFilters';
 import { CSVUploadInstructions } from './CSVUploadInstructions';
@@ -9,7 +20,6 @@ import { exportDeidentifiedCSV, downloadFile } from '@shared/utils/auditExporter
 import { AdvancedSearchFilters as SearchFilters } from '../hooks/useAdvancedSearch';
 
 interface PatientTableProps {
-  paginatedPatients: Patient[];
   filteredPatients: Patient[];
   currentPage: number;
   ITEMS_PER_PAGE: number;
@@ -34,13 +44,48 @@ interface PatientTableProps {
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleNextPage: () => void;
   handlePrevPage: () => void;
+  resetPage: () => void;
   allPatients: Patient[];
   isLoading?: boolean;
   patientDbSavedAt?: number | null;
 }
 
+type WorklistQuickFilter = 'all' | 'needs-action' | 'reported';
+
+const QUICK_FILTERS: ReadonlyArray<{ value: WorklistQuickFilter; label: string }> = [
+  { value: 'all', label: 'All' },
+  { value: 'needs-action', label: 'Needs action' },
+  { value: 'reported', label: 'Reported' },
+];
+
+const STATUS_BADGES: Record<PatientWorkflowStatus, {
+  label: string;
+  variant: 'outline' | 'info' | 'warning' | 'success';
+}> = {
+  referral: { label: 'Referral', variant: 'outline' },
+  'plan-drafted': { label: 'Plan drafted', variant: 'info' },
+  testing: { label: 'Testing', variant: 'warning' },
+  reported: { label: 'Reported', variant: 'success' },
+};
+
+const PatientStatusBadges: React.FC<{ result: PatientStatusResult }> = ({ result }) => {
+  const statusBadge = STATUS_BADGES[result.status];
+
+  return (
+    <div className="flex flex-wrap items-center gap-1">
+      <Badge variant={statusBadge.variant} className="whitespace-nowrap px-2 py-0 text-[11px] leading-5">
+        {statusBadge.label}
+      </Badge>
+      {result.docsOutstanding ? (
+        <Badge variant="warning" className="whitespace-nowrap px-2 py-0 text-[11px] leading-5">
+          Docs outstanding
+        </Badge>
+      ) : null}
+    </div>
+  );
+};
+
 const PatientTable: React.FC<PatientTableProps> = ({
-  paginatedPatients,
   filteredPatients,
   currentPage,
   ITEMS_PER_PAGE,
@@ -61,11 +106,42 @@ const PatientTable: React.FC<PatientTableProps> = ({
   fileInputRef,
   handleNextPage,
   handlePrevPage,
+  resetPage,
   allPatients,
   isLoading = false,
   patientDbSavedAt,
 }) => {
-  const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
+  const [quickFilter, setQuickFilter] = useState<WorklistQuickFilter>('all');
+  const statusInputs = useMemo(() => ({
+    planDrafts: getIfFresh<Record<string, unknown>>(TESTING_PLAN_BUILDER_DRAFTS_KEY),
+    testingDraft: getIfFresh<{ mrn?: string }>(TESTING_DRAFT_KEY),
+    activeReport: getIfFresh<{ mrn?: string }>(ACTIVE_REPORT_KEY),
+  }), []);
+
+  const patientsWithStatus = useMemo(() => filteredPatients.map(patient => ({
+    patient,
+    result: derivePatientStatus(patient, statusInputs),
+  })), [filteredPatients, statusInputs]);
+
+  const quickFilteredPatients = useMemo(() => patientsWithStatus.filter(({ result }) => {
+    if (quickFilter === 'reported') return result.status === 'reported';
+    if (quickFilter === 'needs-action') {
+      return result.docsOutstanding || result.status !== 'reported';
+    }
+    return true;
+  }), [patientsWithStatus, quickFilter]);
+
+  const totalPages = Math.ceil(quickFilteredPatients.length / ITEMS_PER_PAGE);
+  const paginatedPatients = useMemo(() => quickFilteredPatients.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  ), [currentPage, ITEMS_PER_PAGE, quickFilteredPatients]);
+
+  const selectQuickFilter = (value: WorklistQuickFilter) => {
+    setQuickFilter(value);
+    resetPage();
+  };
+
   const handleMobileCardKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, patient: Patient) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -155,6 +231,25 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 isExpanded={isFiltersExpanded}
                 setIsExpanded={setIsFiltersExpanded}
               />
+              <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Worklist filters">
+                {QUICK_FILTERS.map(({ value, label }) => {
+                  const isSelected = quickFilter === value;
+                  return (
+                    <Button
+                      key={value}
+                      type="button"
+                      size="sm"
+                      variant={isSelected ? 'default' : 'outline'}
+                      aria-pressed={isSelected}
+                      onClick={() => selectQuickFilter(value)}
+                      className="h-8 rounded-full px-3 text-xs"
+                    >
+                      {isSelected ? <Check className="mr-1 h-3.5 w-3.5" aria-hidden="true" /> : null}
+                      {label}
+                    </Button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Row 2: Expanded Filters */}
@@ -180,6 +275,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
               <th scope="col" className="px-4 py-3 w-48">Patient</th>
               <th scope="col" className="px-4 py-3">Procedure</th>
               <th scope="col" className="px-4 py-3 w-48">Timeline</th>
+              <th scope="col" className="px-4 py-3 w-48">Status</th>
               <th scope="col" className="px-4 py-3 text-center w-28">Grade</th>
             </tr>
           </thead>
@@ -191,11 +287,12 @@ const PatientTable: React.FC<PatientTableProps> = ({
                   <td className="px-4 py-3"><Skeleton className="h-4 w-32" /></td>
                   <td className="px-4 py-3"><Skeleton className="h-4 w-40" /></td>
                   <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-5 w-24" /></td>
                   <td className="px-4 py-3 text-center"><Skeleton className="h-5 w-16 mx-auto" /></td>
                 </tr>
               ))
             ) : paginatedPatients.length > 0 ? (
-              paginatedPatients.map((p, index) => {
+              paginatedPatients.map(({ patient: p, result }, index) => {
                 const { events: timelineEvents } = parsePatientTimeline(p.history);
                 return (
                   <tr
@@ -242,6 +339,9 @@ const PatientTable: React.FC<PatientTableProps> = ({
                         {timelineEvents.length === 0 && <span className="text-muted-foreground text-xs">-</span>}
                       </div>
                     </td>
+                    <td className="px-4 py-3">
+                      <PatientStatusBadges result={result} />
+                    </td>
                     <td className="px-4 py-3 text-center">
                       <Badge
                         variant={getGradeVariant(p.history.grade || 'Ungraded')}
@@ -254,15 +354,21 @@ const PatientTable: React.FC<PatientTableProps> = ({
                   </tr>
                 );
               })
+            ) : quickFilter !== 'all' && filteredPatients.length > 0 ? (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground italic">
+                  No patients match this filter.
+                </td>
+              </tr>
             ) : activeFilterCount > 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground italic">
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground italic">
                   No matching records found.
                 </td>
               </tr>
             ) : (
               <tr>
-                <td colSpan={5} className="px-4 py-10 text-center">
+                <td colSpan={6} className="px-4 py-10 text-center">
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <Upload className="w-8 h-8 opacity-40" aria-hidden="true" />
                     <p className="text-sm font-medium">No patient data loaded</p>
@@ -286,7 +392,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
             </div>
           ))
         ) : paginatedPatients.length > 0 ? (
-          paginatedPatients.map((p, index) => {
+          paginatedPatients.map(({ patient: p, result }, index) => {
             const { events: timelineEvents } = parsePatientTimeline(p.history);
             return (
               <div
@@ -308,9 +414,12 @@ const PatientTable: React.FC<PatientTableProps> = ({
                       {formatDate(p.history.date)}
                     </div>
                   </div>
-                  <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-xs shrink-0 w-20 justify-center">
-                    {(p.history.grade || 'Ungraded').split(' -')[0]}
-                  </Badge>
+                  <div className="flex shrink-0 flex-col items-end gap-1">
+                    <PatientStatusBadges result={result} />
+                    <Badge variant={getGradeVariant(p.history.grade || 'Ungraded')} className="whitespace-nowrap text-xs w-20 justify-center">
+                      {(p.history.grade || 'Ungraded').split(' -')[0]}
+                    </Badge>
+                  </div>
                 </div>
 
                 <div className="text-sm text-muted-foreground mt-1 line-clamp-1 italic">
@@ -336,6 +445,10 @@ const PatientTable: React.FC<PatientTableProps> = ({
               </div>
             );
           })
+        ) : quickFilter !== 'all' && filteredPatients.length > 0 ? (
+          <div className="p-8 text-center text-muted-foreground italic text-sm">
+            No patients match this filter.
+          </div>
         ) : activeFilterCount > 0 ? (
           <div className="p-8 text-center text-muted-foreground italic text-sm">
             No matching records found.
@@ -352,10 +465,10 @@ const PatientTable: React.FC<PatientTableProps> = ({
       </div>
 
       {/* Pagination Controls */}
-      {filteredPatients.length > 0 && (
+      {quickFilteredPatients.length > 0 && (
         <div className="flex items-center justify-between px-4 py-3 border-t border-border bg-slate-50/50 dark:bg-muted/20">
           <div className="text-xs text-muted-foreground hidden sm:block">
-            Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredPatients.length)} of {filteredPatients.length} records
+            Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, quickFilteredPatients.length)} of {quickFilteredPatients.length} records
           </div>
           <div
             className="text-xs text-muted-foreground sm:hidden"
@@ -386,7 +499,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
               variant="outline"
               size="sm"
               onClick={handleNextPage}
-              disabled={currentPage * ITEMS_PER_PAGE >= filteredPatients.length}
+              disabled={currentPage * ITEMS_PER_PAGE >= quickFilteredPatients.length}
               className="h-8 px-2"
               aria-label="Go to next page"
             >

@@ -159,13 +159,6 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
   }, [filters, existingPatients]);
 
   const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
-  const paginatedPatients = useMemo(() => {
-    return filteredPatients.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      currentPage * ITEMS_PER_PAGE
-    );
-  }, [filteredPatients, currentPage, ITEMS_PER_PAGE]);
-
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
   };
@@ -224,7 +217,6 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
         {/* Patient Database Table (Full Width) - Paginated */}
         <div style={{ '--section-index': 1 } as React.CSSProperties} className={sectionRevealClass}>
           <PatientTable
-            paginatedPatients={paginatedPatients}
             filteredPatients={filteredPatients}
             currentPage={currentPage}
             ITEMS_PER_PAGE={ITEMS_PER_PAGE}
@@ -245,6 +237,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
             fileInputRef={fileInputRef}
             handleNextPage={handleNextPage}
             handlePrevPage={handlePrevPage}
+            resetPage={() => setCurrentPage(1)}
             allPatients={existingPatients}
             isLoading={isLoadingPatients}
             patientDbSavedAt={patientDbSavedAt}
