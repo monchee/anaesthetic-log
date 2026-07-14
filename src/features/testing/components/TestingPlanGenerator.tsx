@@ -494,6 +494,9 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         {filteredDrugs.map(drug => {
                                             const fromHistory = historyDrugs.includes(drug);
                                             const isDefault = DEFAULT_SELECTED_DRUGS.includes(drug);
+                                            const protocols = getSkinProtocolsForDrug(drug);
+                                            const activeProtocolIndex = Math.min(selectedProtocols[drug] ?? 0, Math.max(protocols.length - 1, 0));
+                                            const needsPharmacyVerification = protocols[activeProtocolIndex]?.needsPharmacyVerification === true;
                                             return (
                                             <button
                                                 key={drug}
@@ -507,6 +510,11 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             >
                                                 {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
                                                 {drug}
+                                                {selectedDrugs.includes(drug) && needsPharmacyVerification && (
+                                                    <span className="border border-amber-400 bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-amber-900 dark:border-amber-600 dark:bg-amber-950/40 dark:text-amber-200">
+                                                        ⚠ Confirm preparation with pharmacy
+                                                    </span>
+                                                )}
                                                 {isDefault && (
                                                     <span title="Pre-filled for all patients by default" className="inline-flex">
                                                         <Pin className="w-3 h-3 shrink-0 opacity-70" aria-label="Standard pre-fill" />

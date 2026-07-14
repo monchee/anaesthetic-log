@@ -12,6 +12,7 @@ export interface ChallengeStep {
 
 export interface DrugProtocol {
   drugName: string;
+  needsPharmacyVerification?: true;
   category: string;
   testType: 'skin' | 'challenge' | 'control' | 'experimental';
   presentation: string;

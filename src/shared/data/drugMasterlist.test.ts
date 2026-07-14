@@ -13,3 +13,31 @@ describe('drugMasterlist diluents', () => {
     expect(getSkinProtocolsForDrug('Penicillin Major')[0].diluent).toBe('Phosphate-buffered saline (1 mL supplied diluent — not plain saline)');
   });
 });
+
+describe('drugMasterlist pharmacy verification flags', () => {
+  it('flags exactly the unresolved skin protocols named in the release warning', () => {
+    const flaggedProtocols = DRUG_MASTERLIST.filter(protocol => protocol.needsPharmacyVerification === true);
+
+    expect(flaggedProtocols.map(protocol => protocol.drugName)).toEqual([
+      'Cephalexin',
+      'Methoxybenzylpenicillin',
+      'Cefuroxime Suspension',
+      'Levofloxacin',
+      'Levonorgestrel',
+      'Methylene Blue',
+      'IV Contrast',
+      'Atropine',
+    ]);
+    expect(flaggedProtocols.every(protocol => protocol.testType === 'skin')).toBe(true);
+  });
+
+  it('does not flag unrelated or challenge protocols', () => {
+    expect(getSkinProtocolsForDrug('Rocuronium')[0].needsPharmacyVerification).toBeUndefined();
+    expect(getSkinProtocolsForDrug('Cefazolin')[0].needsPharmacyVerification).toBeUndefined();
+
+    const cephalexinChallenge = DRUG_MASTERLIST.find(
+      protocol => protocol.drugName === 'Cephalexin' && protocol.testType === 'challenge'
+    );
+    expect(cephalexinChallenge?.needsPharmacyVerification).toBeUndefined();
+  });
+});

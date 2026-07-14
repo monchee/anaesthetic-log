@@ -6,6 +6,7 @@ import { TESTING_PLAN_BUILDER_DRAFTS_KEY } from '@shared/utils/ttlStorage';
 
 const drugCategories = {
   'Muscle Relaxants': ['Cis-atracurium'],
+  Penicillins: ['Cephalexin'],
   Hypnotics: ['Ketamine'],
   Others: ['Chlorhexidine', 'Latex'],
 };
@@ -68,6 +69,16 @@ describe('TestingPlanGenerator', () => {
     expect(onPreview).toHaveBeenCalledWith(expect.objectContaining({
       selectedProtocols: expect.objectContaining({ Ketamine: 1 }),
     }));
+  });
+
+  it('shows pharmacy verification only for a selected flagged drug', () => {
+    renderGenerator();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cephalexin' }));
+
+    expect(screen.getByText('⚠ Confirm preparation with pharmacy')).toBeInTheDocument();
+    expect(within(screen.getByRole('button', { name: /Cephalexin/i })).getByText(/Confirm preparation with pharmacy/)).toBeInTheDocument();
+    expect(within(screen.getByRole('button', { name: /Chlorhexidine/i })).queryByText(/Confirm preparation with pharmacy/)).not.toBeInTheDocument();
   });
 
   it('restores a per-patient builder draft from TTL storage', async () => {
