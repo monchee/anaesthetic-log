@@ -73,19 +73,26 @@ test.describe('Testing Day Flow', () => {
       await histamineField.fill('5');
     }
 
-    // ── Step 6: Save clinical record ──────────────────────────────────────
+    // ── Step 6: Enter and read back a positive SPT wheal ──────────────────
+    const sptWhealField = page.getByPlaceholder('-').first();
+    await expect(sptWhealField).toBeVisible();
+    await sptWhealField.fill('3');
+    await expect(sptWhealField).toHaveValue('3');
+    await expect(page.getByText('+POS').first()).toBeVisible();
+
+    // ── Step 7: Save clinical record ──────────────────────────────────────
     const saveBtn = page.getByRole('button', { name: /Save Clinical Record/i });
     await saveBtn.click();
     await dismissHelpModal(page);
 
-    // ── Step 7: Report screen appears (SUMMARY) ────────────────────────────
+    // ── Step 8: Report screen appears (SUMMARY) ────────────────────────────
     await expect(page.getByRole('tab', { name: 'Clinical Report' })).toBeVisible({ timeout: 10000 });
 
-    // ── Step 8: Print button is present ───────────────────────────────────
+    // ── Step 9: Print button is present ───────────────────────────────────
     const printBtn = page.getByRole('button', { name: /print/i }).first();
     await expect(printBtn).toBeVisible({ timeout: 5000 });
 
-    // ── Step 9: Navigate back to the log, then to Dashboard ────────────────
+    // ── Step 10: Navigate back to the log, then to Dashboard ───────────────
     await page.getByRole('button', { name: /Start New Log/i }).click();
     await dismissHelpModal(page);
     const dashboardBtn = page.getByRole('button', { name: /dashboard/i }).first();
@@ -93,7 +100,7 @@ test.describe('Testing Day Flow', () => {
     await dashboardBtn.click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
 
-    // ── Step 10: Recent Testing Activity shows sessions ────────────────────
+    // ── Step 11: Recent Testing Activity shows sessions ────────────────────
     // Mock logs are seeded — the dashboard should show at least one recent session
     await expect(page.getByText(/Recent Testing Activity/i).or(page.getByText(/recent/i))).toBeVisible({ timeout: 5000 });
   });
