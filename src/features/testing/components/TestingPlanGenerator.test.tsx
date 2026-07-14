@@ -63,7 +63,7 @@ describe('TestingPlanGenerator', () => {
     fireEvent.click(screen.getByRole('combobox', { name: 'Ketamine' }));
     fireEvent.click(await screen.findByRole('option', { name: /1:100 start/i }));
 
-    fireEvent.click(screen.getByRole('button', { name: /Preview & Print Plan/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Preview & Print Request Form/i }));
 
     expect(onPreview).toHaveBeenCalledWith(expect.objectContaining({
       selectedProtocols: expect.objectContaining({ Ketamine: 1 }),
@@ -96,7 +96,7 @@ describe('TestingPlanGenerator', () => {
     await waitFor(() => expect(screen.getByDisplayValue('Restore this plan')).toBeInTheDocument());
     expect(screen.getByRole('button', { name: 'Ketamine' })).toHaveAttribute('aria-pressed', 'true');
 
-    fireEvent.click(screen.getByRole('button', { name: /Preview & Print Plan/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Preview & Print Request Form/i }));
     expect(onPreview).toHaveBeenCalledWith(expect.objectContaining({
       selectedDrugs: ['Ketamine'],
       selectedProtocols: { Ketamine: 1 },

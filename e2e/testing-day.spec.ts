@@ -55,8 +55,8 @@ test.describe('Testing Day Flow', () => {
     await expect(weiOption).toBeVisible({ timeout: 5000 });
     await weiOption.click();
 
-    // ── Step 3: Proceed to Testing Panel ──────────────────────────────────
-    const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
+    // ── Step 3: Start Testing Session ──────────────────────────────────
+    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
     await page.waitForLoadState('networkidle');
@@ -116,7 +116,7 @@ test.describe('Testing Day Flow', () => {
     await page.waitForTimeout(300);
     await page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first().click();
 
-    const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
+    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
     await dismissHelpModal(page);
@@ -167,7 +167,7 @@ test.describe('Testing Day Flow', () => {
     await page.waitForTimeout(300);
     await page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first().click();
 
-    const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
+    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
     await dismissHelpModal(page);

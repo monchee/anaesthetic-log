@@ -315,7 +315,7 @@ export function LogScreen({
           <div style={{ '--section-index': selectedPatient.id !== 'manual' ? 2 : 1 } as React.CSSProperties} className="animate-section-reveal">
             <div className="flex justify-end pt-4">
               <Button size="lg" className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors btn-press" onClick={onProceedToTesting}>
-                Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
+                Start Testing Session <ChevronRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
           </div>

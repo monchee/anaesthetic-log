@@ -69,7 +69,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
   const handleEmail = () => {
     const body = formatTestingPlanAsText(patient, data, drugCategories);
-    const subject = `Testing Plan: ${patient.firstName} ${patient.lastName} - ${reactionDate ? new Date(reactionDate).toLocaleDateString('en-AU') : 'Date unknown'}`;
+    const subject = `Testing Request Form: ${patient.firstName} ${patient.lastName} - ${reactionDate ? new Date(reactionDate).toLocaleDateString('en-AU') : 'Date unknown'}`;
     window.location.href = `mailto:SLHD-RPA-allergynurses@health.nsw.gov.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
@@ -88,7 +88,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
       {/* Screen-only Controls */}
       <div className="p-4 border-b border-border bg-muted flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">
-        <p className="text-lg font-semibold tracking-tight text-foreground">Testing Plan Document</p>
+        <p className="text-lg font-semibold tracking-tight text-foreground">Testing Request Form</p>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <Button size="sm" variant="outline" onClick={handleEmail}>
             <Mail className="w-4 h-4 mr-2" /> Email to Allergy Nurse
@@ -365,7 +365,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
         {/* Proceed Action (Hidden on Print) */}
         <div className="mt-8 pt-4 border-t border-border print:hidden flex justify-end">
           <Button size="lg" onClick={onProceed} className="shadow-lg shadow-border">
-            Proceed to Testing Panel <ChevronRight className="ml-2 w-4 h-4" />
+            Start Testing Session <ChevronRight className="ml-2 w-4 h-4" />
           </Button>
         </div>
 

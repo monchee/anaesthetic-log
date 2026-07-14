@@ -30,7 +30,7 @@ export function PrintPlanScreen({
   onProceed,
 }: PrintPlanScreenProps) {
   return (
-    <ScreenLayout title="Testing Plan Preview" icon={<ClipboardList className="w-5 h-5" />} {...layoutProps} showFooter={false}
+    <ScreenLayout title="Testing Request Form" icon={<ClipboardList className="w-5 h-5" />} {...layoutProps} showFooter={false}
       actions={<Button onClick={onBack} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
     >
       <TestingPlanPrintView patient={selectedPatient} data={testingPlanData} drugCategories={DRUG_CATEGORIES} onProceed={onProceed} />

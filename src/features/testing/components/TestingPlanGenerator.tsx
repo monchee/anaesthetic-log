@@ -315,7 +315,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     <ClipboardList className="w-5 h-5" />
                 </div>
                 <div>
-                    <h2 className="font-semibold text-primary dark:text-primary text-lg">Testing Plan / Request Form</h2>
+                    <h2 className="font-semibold text-primary dark:text-primary text-lg">Testing Request Form</h2>
                     <p className="text-xs text-muted-foreground font-medium">
                       Select drugs to generate a printable testing plan
                     </p>
@@ -708,7 +708,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                     <div className="flex justify-end pt-4 border-t border-border">
                         <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-white shadow-sm font-semibold">
-                            <Printer className="w-4 h-4 mr-2" /> Preview & Print Plan
+                            <Printer className="w-4 h-4 mr-2" /> Preview & Print Request Form
                         </Button>
                     </div>
                 </div>

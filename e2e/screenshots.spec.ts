@@ -73,7 +73,7 @@ test.describe('Baseline screenshots (Phase 0)', () => {
       await patientSearch.fill('Wei');
       await page.waitForTimeout(300); // debounce
       await page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first().click();
-      const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
+      const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
       await expect(proceedBtn).toBeVisible({ timeout: 5000 });
       await proceedBtn.click();
       await page.waitForLoadState('networkidle');

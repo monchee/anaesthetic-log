@@ -279,7 +279,7 @@ test.describe('Accessibility Tests', () => {
     await weiOption.click();
 
     // Proceed to testing panel
-    const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
+    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
 
@@ -430,7 +430,7 @@ test.describe('Automated Accessibility Scans', () => {
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
     await selectMockPatient(page);
-    await expect(page.getByText('Testing Plan / Request Form')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Testing Request Form')).toBeVisible({ timeout: 10000 });
     await expect(page.getByText('Select Drugs for Testing')).toBeVisible({ timeout: 10000 });
     await injectAxe(page);
 
@@ -630,7 +630,7 @@ test.describe('Automated Accessibility Scans', () => {
     const weiOption = page.locator('[role="option"]', { hasText: /Chen.*Wei/i }).first();
     await expect(weiOption).toBeVisible({ timeout: 5000 });
     await weiOption.click();
-    const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
+    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
     await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
