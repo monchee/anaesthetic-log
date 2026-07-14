@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@/components/ui';
-import { Activity, Plus, X } from 'lucide-react';
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@/components/ui';
+import { Activity, FileInput, Plus, X } from 'lucide-react';
 import { LogFormData } from '@/types';
 import { EMPTY_TRYPTASE } from './TestingLogFormSectionShared';
 
@@ -18,6 +18,12 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
             <Activity className="w-4 h-4 text-primary" />
           </div>
           Serial Serum Tryptase
+          {formData.tryptase?.source === 'referral' && (
+            <Badge variant="outline" className="ml-auto gap-1 text-[11px] font-normal normal-case tracking-normal text-muted-foreground">
+              <FileInput className="h-3 w-3" aria-hidden="true" />
+              Imported from referral — verify
+            </Badge>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-6 space-y-5">
@@ -30,9 +36,8 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
             onClick={() => setFormData(prev => ({
               ...prev,
               tryptase: {
+                ...(prev.tryptase ?? EMPTY_TRYPTASE),
                 obtained: !(prev.tryptase?.obtained ?? false),
-                significantElevation: prev.tryptase?.significantElevation ?? false,
-                values: prev.tryptase?.values ?? [],
               },
             }))}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-none border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
@@ -57,6 +62,7 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                   tryptase: {
                     ...(prev.tryptase ?? EMPTY_TRYPTASE),
                     significantElevation: !(prev.tryptase ?? EMPTY_TRYPTASE).significantElevation,
+                    source: 'entered',
                   },
                 }))}
                 className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-none border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
@@ -84,7 +90,7 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                         const vals = [...(formData.tryptase?.values ?? [])];
                         while (vals.length <= idx) vals.push({ time: '', result: '' });
                         vals[idx] = { ...vals[idx], time: e.target.value };
-                        setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals } }));
+                        setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals, source: 'entered' } }));
                       }}
                     />
                     <Input
@@ -95,7 +101,7 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                         const vals = [...(formData.tryptase?.values ?? [])];
                         while (vals.length <= idx) vals.push({ time: '', result: '' });
                         vals[idx] = { ...vals[idx], result: e.target.value };
-                        setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals } }));
+                        setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals, source: 'entered' } }));
                       }}
                     />
                   </div>
@@ -104,7 +110,7 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                       type="button"
                       onClick={() => {
                         const vals = (formData.tryptase?.values ?? []).filter((_, i) => i !== idx);
-                        setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals } }));
+                        setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals, source: 'entered' } }));
                       }}
                       className="text-muted-foreground hover:text-destructive p-1"
                     >
@@ -124,6 +130,7 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                     tryptase: {
                       ...(prev.tryptase ?? EMPTY_TRYPTASE),
                       values: [...(prev.tryptase ?? EMPTY_TRYPTASE).values, { time: '', result: '' }],
+                      source: 'entered',
                     },
                   }))}
                 >

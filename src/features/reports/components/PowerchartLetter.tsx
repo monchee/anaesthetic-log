@@ -119,7 +119,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
 
           {/* Tryptase sentence (3A) — always rendered; defaults to "not obtained" */}
           <p className="italic text-foreground/80">
-            {formatTryptaseSentence(data.tryptase ?? { obtained: false, significantElevation: false, values: [] })}
+            {formatTryptaseSentence(data.tryptase)}
           </p>
 
           <p>

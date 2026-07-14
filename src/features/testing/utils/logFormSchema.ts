@@ -24,6 +24,8 @@ const sanitizeTryptase = (value: unknown): TryptaseData | undefined => {
           };
         })
       : [],
+    source: source.source === 'referral' || source.source === 'entered' ? source.source : undefined,
+    hadReferralData: source.hadReferralData === true ? true : undefined,
   };
 };
 

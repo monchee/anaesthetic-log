@@ -41,6 +41,42 @@ describe('logFormSchema', () => {
     });
   });
 
+  it('restores legacy tryptase drafts without provenance fields', () => {
+    const restored = safeParseLogFormData({
+      tryptase: {
+        obtained: true,
+        significantElevation: false,
+        values: [{ time: '09:15', result: '4.2' }],
+      },
+    });
+
+    expect(restored?.tryptase).toEqual({
+      obtained: true,
+      significantElevation: false,
+      values: [{ time: '09:15', result: '4.2' }],
+      source: undefined,
+      hadReferralData: undefined,
+    });
+  });
+
+  it('preserves referral provenance when saving and restoring tryptase data', () => {
+    expect(parseLogFormData({
+      tryptase: {
+        obtained: false,
+        significantElevation: false,
+        values: [],
+        source: 'entered',
+        hadReferralData: true,
+      },
+    }).tryptase).toEqual({
+      obtained: false,
+      significantElevation: false,
+      values: [],
+      source: 'entered',
+      hadReferralData: true,
+    });
+  });
+
   it('throws a typed ZodError for invalid root data', () => {
     expect(() => parseLogFormData(null)).toThrow(ZodError);
     expect(safeParseLogFormData(null)).toBeNull();

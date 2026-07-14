@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { usePatientState } from '@features/patients/hooks/usePatientState';
 import { useTestingState } from '@features/testing/hooks/useTestingState';
@@ -13,6 +13,7 @@ export function useAnaestheticApp() {
   const { setFormData, handleSubmit: originalHandleSubmit, resetForm: originalResetForm, clearActiveReport: originalClearActiveReport } = testingState;
   const navigation = useAppNavigation();
   const disclaimer = useDisclaimer();
+  const lastTryptasePrefillPatientId = useRef<string | null>(null);
 
   // Compose handlers that need cross-concern coordination
   const handleDashboardPatientSelect = (patient: Patient) => {
@@ -22,15 +23,33 @@ export function useAnaestheticApp() {
   };
 
   useEffect(() => {
-    if (selectedPatient) {
-      setFormData(prev => ({
-        ...prev,
-        firstName: selectedPatient?.firstName || '',
-        lastName: selectedPatient?.lastName || '',
-        mrn: selectedPatient?.mrn || '',
-        dob: selectedPatient?.dob || ''
-      }));
+    if (!selectedPatient) {
+      lastTryptasePrefillPatientId.current = null;
+      return;
     }
+
+    const isNewPatientSelection = lastTryptasePrefillPatientId.current !== selectedPatient.id;
+    lastTryptasePrefillPatientId.current = selectedPatient.id;
+    const referralTryptases = selectedPatient.history.tryptases;
+
+    setFormData(prev => ({
+      ...prev,
+      firstName: selectedPatient.firstName || '',
+      lastName: selectedPatient.lastName || '',
+      mrn: selectedPatient.mrn || '',
+      dob: selectedPatient.dob || '',
+      ...(isNewPatientSelection && referralTryptases?.length
+        ? {
+            tryptase: {
+              obtained: true,
+              significantElevation: false,
+              values: referralTryptases.map(({ time, result }) => ({ time: time ?? '', result })),
+              source: 'referral' as const,
+              hadReferralData: true,
+            },
+          }
+        : {}),
+    }));
   }, [selectedPatient, setFormData]);
 
   const handleManualDetailChange = (field: keyof Patient, value: string) => {

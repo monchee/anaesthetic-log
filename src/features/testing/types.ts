@@ -75,6 +75,8 @@ export interface TryptaseData {
   obtained: boolean;
   significantElevation: boolean;
   values: TryptaseValue[];
+  source?: 'referral' | 'entered';
+  hadReferralData?: boolean;
 }
 
 export interface LogFormData {
