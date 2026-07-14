@@ -129,4 +129,30 @@ test.describe('Testing Day Flow', () => {
     await expect(page.getByLabel(/histamine/i).first()).toHaveValue('5');
     await expect(page.getByText(/Chen, Wei|Wei Chen/)).toBeVisible({ timeout: 5000 });
   });
+
+  test('patient identity bar stays visible while scrolling the drug grid', async ({ page }) => {
+    const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
+    await expect(patientSelector).toBeVisible({ timeout: 10000 });
+
+    await patientSelector.click();
+    const patientSearch = page.getByRole('textbox', { name: /Filter patients by ID or name/i });
+    await expect(patientSearch).toBeVisible({ timeout: 5000 });
+    await patientSearch.fill('Wei');
+    await page.waitForTimeout(300);
+    await page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first().click();
+
+    const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
+    await expect(proceedBtn).toBeVisible({ timeout: 5000 });
+    await proceedBtn.click();
+    await dismissHelpModal(page);
+
+    const identityBar = page.locator('[aria-label="Patient identity"]');
+    await expect(identityBar).toBeVisible({ timeout: 10000 });
+    await expect(identityBar).toContainText(/Chen, Wei|Wei Chen/i);
+
+    // Scroll the page well past the top of the drug grid; the bar must remain on screen.
+    await page.mouse.wheel(0, 1500);
+    await expect(identityBar).toBeInViewport();
+    await expect(identityBar).toContainText(/Chen, Wei|Wei Chen/i);
+  });
 });
