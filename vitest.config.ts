@@ -25,6 +25,12 @@ export default defineConfig({
           functions: 51,
           lines: 68,
         },
+        'src/shared/utils/csvUtils.ts': {
+          statements: 76,
+          branches: 62,
+          functions: 78,
+          lines: 80,
+        },
       },
       exclude: [
         'node_modules/',

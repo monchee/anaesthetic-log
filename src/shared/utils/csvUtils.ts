@@ -70,26 +70,44 @@ const validateCSVHeaders = (headers: string[]): string | null => {
     return null;
 };
 
-const splitCSVLine = (line: string) => {
-  const result = [];
+/**
+ * Splits raw CSV text into records of cells, honoring quoted fields that
+ * contain commas, escaped quotes ("") and newlines. Replaces per-line
+ * splitting so a multi-line free-text answer cannot fragment a row.
+ * Records whose cells are all empty are dropped (blank lines).
+ */
+const splitCSVRecords = (text: string): string[][] => {
+  const records: string[][] = [];
+  let row: string[] = [];
   let current = '';
   let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
-    if (char === '"' && line[i+1] === '"') {
+  const endCell = () => { row.push(current.trim()); current = ''; };
+  const endRecord = () => {
+    endCell();
+    if (row.some(cell => cell !== '')) records.push(row);
+    row = [];
+  };
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === '"' && text[i + 1] === '"') {
       current += '"';
       i++;
     } else if (char === '"') {
       inQuotes = !inQuotes;
     } else if (char === ',' && !inQuotes) {
-      result.push(current.trim());
-      current = '';
+      endCell();
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && text[i + 1] === '\n') i++;
+      endRecord();
+    } else if (char === '\r' && inQuotes) {
+      current += '\n';
+      if (text[i + 1] === '\n') i++;
     } else {
       current += char;
     }
   }
-  result.push(current.trim());
-  return result;
+  endRecord();
+  return records;
 };
 
 const normalizeTime = (timeStr: string): string => {
@@ -216,12 +234,12 @@ const ANAESTHESIA_MAP_CONFIG = [
 ];
 
 export const parseRedcapCSV = (csvText: string): CsvParseResult => {
-  const lines = csvText.replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim());
-  if (lines.length < 2) return { success: false, data: [], error: "Empty or invalid CSV." };
+  const records = splitCSVRecords(csvText.replace(/^\uFEFF/, ''));
+  if (records.length < 2) return { success: false, data: [], error: "Empty or invalid CSV." };
 
   // Normalize header tokens once so all downstream matching (exact and
   // substring) is resilient to BOM / NBSP / zero-width / doubled whitespace.
-  const headers = splitCSVLine(lines[0]).map(normalizeHeader);
+  const headers = records[0].map(normalizeHeader);
 
   // Validate headers before processing
   const headerError = validateCSVHeaders(headers);
@@ -495,10 +513,10 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   const parsingErrors: string[] = [];
   const skippedRows: number[] = [];
 
-  for (let i = 1; i < lines.length; i++) {
-    const row = splitCSVLine(lines[i]);
+  for (let i = 1; i < records.length; i++) {
+    const row = records[i];
     if (row.length < 2) {
-        skippedRows.push(i + 1); // +1 for 1-based row number
+        skippedRows.push(i + 1); // +1 for 1-based record number
         continue;
     }
 
