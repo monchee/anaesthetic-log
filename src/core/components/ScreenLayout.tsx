@@ -77,7 +77,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                     if (result.success) {
                         onUploadPatients(result.data, file.lastModified);
                         toast.success('Database updated', {
-                            description: `Successfully loaded ${result.data.length} records from CSV.`,
+                            description: `Imported ${result.data.length} record(s).${result.details ? ` ${result.details.join(' ')}` : ''}`,
                         });
                         setIsCSVUploadSheetOpen(false);
                     } else {
@@ -91,6 +91,10 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 } finally {
                     setIsUploading(false);
                 }
+            };
+            reader.onerror = () => {
+                toast.error('Error reading file', { duration: 8000 });
+                setIsUploading(false);
             };
             reader.readAsArrayBuffer(file);
         }

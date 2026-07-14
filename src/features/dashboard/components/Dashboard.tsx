@@ -120,7 +120,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                     } else {
                         onUploadPatients(result.data, file.lastModified);
                         toast.success('Database updated', {
-                            description: `Successfully loaded ${result.data.length} records from CSV.${result.details ? ` ${result.details.join(' ')}` : ''}`,
+                            description: `Imported ${result.data.length} record(s).${result.details ? ` ${result.details.join(' ')}` : ''}`,
                         });
                         setIsSheetOpen(false);
                     }

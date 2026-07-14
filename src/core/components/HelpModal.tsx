@@ -4,6 +4,7 @@ import {
   HelpCircle,
   Upload,
   FileSpreadsheet,
+  Loader2,
   Sparkles,
 } from 'lucide-react';
 import { parseRedcapCSV, decodeCsvBytes } from '@shared/utils';
@@ -30,6 +31,7 @@ interface HelpModalProps {
 
 export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrigger = false, hasData = false, setScreen }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isNewVersion, setIsNewVersion] = useState(() => {
     try { return localStorage.getItem(LAST_SEEN_KEY) !== CURRENT_VERSION; }
@@ -62,6 +64,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
     const file = e.target.files?.[0];
 
     if (file && onUploadPatients) {
+      setIsUploading(true);
       const reader = new FileReader();
       reader.onload = (event) => {
         try {
@@ -71,7 +74,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
           if (result.success) {
             onUploadPatients(result.data);
             toast.success('Database updated', {
-              description: `Successfully loaded ${result.data.length} records from CSV.`,
+              description: `Imported ${result.data.length} record(s).${result.details ? ` ${result.details.join(' ')}` : ''}`,
             });
             setIsOpen(false);
           } else {
@@ -82,7 +85,13 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
           }
         } catch {
           toast.error('Error reading file', { duration: 8000 });
+        } finally {
+          setIsUploading(false);
         }
+      };
+      reader.onerror = () => {
+        toast.error('Error reading file', { duration: 8000 });
+        setIsUploading(false);
       };
       reader.readAsArrayBuffer(file);
     }
@@ -116,6 +125,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
         accept=".csv"
         aria-label="Upload CSV file"
         onChange={handleFileUpload}
+        disabled={isUploading}
         className="hidden"
       />
 
@@ -180,15 +190,23 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="w-full flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-border hover:border-red-600 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors cursor-pointer"
+              disabled={isUploading}
+              aria-live="polite"
+              className="w-full flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-border hover:border-red-600 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors cursor-pointer disabled:cursor-wait disabled:border-primary/40 disabled:bg-muted/40"
             >
               <div className="flex items-center justify-center w-12 h-12 bg-red-600">
-                <Upload className="w-6 h-6 text-white" />
+                {isUploading
+                  ? <Loader2 className="w-6 h-6 animate-spin text-white" aria-hidden="true" />
+                  : <Upload className="w-6 h-6 text-white" />}
               </div>
               <div className="text-center">
-                <p className="font-semibold text-foreground text-sm">Upload REDCap CSV</p>
+                <p className="font-semibold text-foreground text-sm">
+                  {isUploading ? 'Parsing…' : 'Upload REDCap CSV'}
+                </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Export using "CSV / Microsoft Excel (labels)" format
+                  {isUploading
+                    ? 'Reading and validating patient records'
+                    : 'Export using "CSV / Microsoft Excel (labels)" format'}
                 </p>
               </div>
             </button>

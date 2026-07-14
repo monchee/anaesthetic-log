@@ -253,6 +253,7 @@ describe('Dashboard', () => {
             anaesthetist: '',
           },
         }],
+        details: ['Skipped 2 empty or malformed row(s): 4, 8'],
       });
 
       render(<Dashboard {...mockProps} />);
@@ -265,8 +266,15 @@ describe('Dashboard', () => {
 
       fireEvent.change(fileInput, { target: { files: [file] } });
 
+      expect(screen.getByRole('status')).toHaveTextContent('Parsing…');
+
       await waitFor(() => {
         expect(mockProps.onUploadPatients).toHaveBeenCalled();
+      });
+
+      const { toast } = await import('sonner');
+      expect(toast.success).toHaveBeenCalledWith('Database updated', {
+        description: 'Imported 1 record(s). Skipped 2 empty or malformed row(s): 4, 8',
       });
     });
 
