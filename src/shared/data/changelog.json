@@ -1,5 +1,56 @@
 [
   {
+    "version": "v0.72.0",
+    "codename": "Referral Trust",
+    "date": "14 July 2026",
+    "summary": "Tryptase results from the referral now prefill the testing record and Powerchart letter, preventing the clinically unsafe false claim that serial samples were \"not obtained.\" This release also adds a persistent patient worklist, clearer clinical completeness cues, safer imports, and stronger privacy protections across the five-phase UX improvement programme.",
+    "highlight": false,
+    "changes": [
+      "Sticky patient identity at clinical decision points \u2014 Testing Session and Summary screens keep the patient's name, MRN, and DOB visible while clinicians scroll, reducing wrong-patient risk during data entry and report review.",
+      "Visible autosave status \u2014 testing-session and Testing Request Form drafts now show when they are saving and when they were last saved, making browser-local persistence explicit.",
+      "Persistent patient worklist with workflow status \u2014 imported cohorts persist for 6 hours across refreshes, while the dashboard derives Referral, Plan drafted, Testing, and Reported states and adds Needs action and Reported filters.",
+      "Expiry warning for local clinical data \u2014 a banner warns before the 6-hour browser-local TTL expires and offers a Keep working action to extend the active session.",
+      "Honest suspected-agent review \u2014 an explicit empty state no longer implies an agent was identified when none was imported, and clinicians can tap medication-timeline entries to mark or unmark suspected agents.",
+      "Missing-information checklist \u2014 patient history highlights absent anaesthetic charts, resuscitation charts, tryptase results, discharge letters, suspected agents, and differential diagnosis before testing proceeds.",
+      "High-risk context chips \u2014 beta-blocker, ACE inhibitor, pregnancy, and asthma context now appears during patient review and testing where it can inform clinical decisions.",
+      "Pharmacy-verification flags \u2014 testing-request builder and print views flag masterlist preparations whose concentration or preparation details still require pharmacy confirmation.",
+      "Clinical terminology is consistent end to end \u2014 screens and actions now use Testing Request Form, Testing Session, and Reports consistently instead of mixing plan, log, and summary labels.",
+      "Confirmation dialogs share one safety pattern \u2014 destructive and high-impact actions now use the same accessible confirmation dialog, wording hierarchy, and destructive styling.",
+      "CSV uploads explain progress and outcomes \u2014 upload surfaces show parsing state plus imported and skipped-row totals, so clinicians receive clear feedback instead of a silent transition.",
+      "Duplicate uploads can replace the cohort \u2014 uploading an already loaded REDCap database now offers an explicit full-database replacement flow instead of rejecting the file.",
+      "Quoted multi-line CSV fields import correctly \u2014 the REDCap parser now honours quoted records containing commas, escaped quotes, and embedded newlines instead of splitting one patient across multiple rows.",
+      "Sentry removes PHI from every event text surface \u2014 identifiers and DOB-shaped dates are scrubbed from messages, exceptions, breadcrumbs, and extras; user and cookie data are removed before transmission.",
+      "MRNs retain their recorded casing \u2014 patient identifiers are displayed verbatim instead of being incorrectly forced to lowercase.",
+      "Referral tryptase data reaches the Powerchart letter \u2014 imported tryptase samples prefill the testing record and generated letter, so existing results are reported rather than falsely described as \"not obtained.\""
+    ]
+  },
+  {
+    "version": "v0.71.0",
+    "codename": "Any Encoding",
+    "date": "11 June 2026",
+    "summary": "Fixes CSV import rejecting valid REDCap exports with \"Missing required columns\" when the file isn't UTF-8. Excel \"Save As\" commonly writes UTF-16, which the app decoded as UTF-8 \u2014 garbling every column name so all required headers failed at once. Imports now work regardless of file encoding.",
+    "highlight": false,
+    "changes": [
+      "CSV upload now reads any file encoding \u2014 all three upload paths (main upload sheet, Help modal, Dashboard) read the file as bytes and detect the byte-order mark (UTF-8, UTF-16LE, UTF-16BE) before decoding, instead of assuming UTF-8. A UTF-16 export from Excel no longer turns column names into mojibake. New `decodeCsvBytes` helper in `csvUtils.ts`.",
+      "Header matching tolerates invisible characters \u2014 `normalizeHeader` strips BOM and zero-width spaces, converts non-breaking spaces (U+00A0) to regular spaces, and collapses doubled whitespace, applied once to every parsed header so both validation and column-mapping are resilient to REDCap/Excel label artifacts.",
+      "CSV parse errors now name the detected columns \u2014 the \"Missing required columns\" message lists the first few column names actually found in the file, so an encoding garble vs a genuine column rename is diagnosable at a glance."
+    ]
+  },
+  {
+    "version": "v0.70.0",
+    "codename": "Medication Chart",
+    "date": "11 June 2026",
+    "summary": "Redesigns the testing plan request form to match the standard national medication chart (NIMC) template \u2014 patient ID label box header, one row per SPT/IDT step in a flat administration table \u2014 so the printed document is clinically familiar and audit-compliant.",
+    "highlight": false,
+    "changes": [
+      "Testing plan print view now matches NIMC medication chart format \u2014 replaces the accent-border / patient-banner layout with the standard two-column header: a bordered \"Affix patient identification label here\" box (pre-filled URN, family name, given names, address watermark, DOB, M/F checkboxes, red \"First prescriber\" warning) and a right column with the red \"Attach ADR sticker\" box and form title.",
+      "Flat per-step table replaces grouped drug table \u2014 each drug now produces one row per test step (1 SPT row + 1 row per IDT dilution) instead of stacking all IDT concentrations in a single cell; columns match the NIMC \"Once only and nurse initiated medicines\" format: Date | Drug | Type | Concentration | Date | Time | Signature | Print name | Wheal (mm) | Time.",
+      "Reference controls moved to a bordered strip above the table \u2014 Histamine SPT / Saline SPT / Saline IDT fill-in lines now sit in a clearly delineated section immediately above the protocol table.",
+      "Three blank rows added at table bottom for handwritten additions at time of testing.",
+      "\"not listed\" badge preserved for REDCap-sourced custom drugs \u2014 shown inline next to the drug name in the Type column."
+    ]
+  },
+  {
     "version": "v0.69.0",
     "codename": "Legible",
     "date": "11 June 2026",
