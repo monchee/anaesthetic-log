@@ -204,7 +204,7 @@ describe('TestingLogForm', () => {
       render(<TestWrapper initialData={mockFormData} props={mockProps} />);
 
       const positiveInputs = screen.getAllByDisplayValue('3');
-      expect(positiveInputs[0]).toHaveClass('text-red-600');
+      expect(positiveInputs[0]).toHaveClass('text-red-700');
     });
 
     it('prevents negative input in test results', () => {

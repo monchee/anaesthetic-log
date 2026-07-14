@@ -39,7 +39,7 @@ const WhealInput = ({ value, onChange }: WhealInputProps) => (
       inputMode="decimal"
       pattern="[0-9]*"
       onKeyDown={preventNegativeInput}
-      className={`h-9 text-center font-mono tabular-nums ${isPositive(value) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
+      className={`h-9 text-center font-mono tabular-nums ${isPositive(value) ? 'text-red-700 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
       placeholder="-"
       value={value}
       onChange={(e) => onChange(e.target.value)}
@@ -202,7 +202,7 @@ const DrugRow = React.memo(({
         {/* SPT */}
         <div className="space-y-1">
           <div className="section-label text-center">SPT</div>
-          <div className="text-xs text-center text-muted-foreground/60 leading-tight min-h-[2rem] flex items-center justify-center">
+          <div className="text-xs text-center text-muted-foreground leading-tight min-h-[2rem] flex items-center justify-center">
             {row.drugName === 'Other' ? (row.customSptConcentration || '') : (protocol?.sptNeatConcentration ? 'Neat' : '')}
           </div>
           <WhealInput
@@ -217,7 +217,7 @@ const DrugRow = React.memo(({
           return (
             <div key={si} className="space-y-1">
               <div className="section-label text-center">IDT {step.ratio}</div>
-              <div className="text-xs text-center text-muted-foreground/60 leading-tight min-h-[2rem] flex items-center justify-center">
+              <div className="text-xs text-center text-muted-foreground leading-tight min-h-[2rem] flex items-center justify-center">
                 {step.concentration}
               </div>
               <WhealInput

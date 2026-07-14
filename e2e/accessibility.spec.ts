@@ -55,6 +55,25 @@ async function selectMockPatient(page: any) {
   await weiOption.click();
 }
 
+async function startPopulatedTestingSession(page: any) {
+  await selectMockPatient(page);
+
+  const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
+  await expect(proceedBtn).toBeVisible({ timeout: 5000 });
+  await proceedBtn.click();
+  await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
+
+  await page.getByLabel('Histamine (SPT)').fill('5');
+  await page.getByLabel('Saline (SPT)').fill('0');
+  await page.getByLabel('Saline (IDT)').fill('0');
+
+  const sptWhealField = page.getByPlaceholder('-').first();
+  await expect(sptWhealField).toBeVisible();
+  await sptWhealField.fill('3');
+  await expect(page.getByText('+POS').first()).toBeVisible();
+  await expect(page.getByText(/Draft saved/)).toBeVisible({ timeout: 5000 });
+}
+
 test.describe('Accessibility Tests', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -613,27 +632,11 @@ test.describe('Automated Accessibility Scans', () => {
     expect(violations.length).toBe(0);
   });
 
-  test('axe-core scan on testing log form', async ({ page }) => {
+  test('axe-core scan on populated testing session', async ({ page }) => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
-
-    // Navigate to testing form via patient selection
-    const patientBtn = page.locator('button[aria-haspopup="listbox"]').first();
-    await expect(patientBtn).toBeVisible({ timeout: 10000 });
-    await patientBtn.click();
-    const searchInput = page.locator('input[aria-label="Filter patients by ID or name"]');
-    await expect(searchInput).toBeVisible({ timeout: 5000 });
-    await searchInput.fill('Wei');
-    await page.waitForTimeout(300);
-    // Patient names are displayed as "LastName, FirstName" in the selector
-    const weiOption = page.locator('[role="option"]', { hasText: /Chen.*Wei/i }).first();
-    await expect(weiOption).toBeVisible({ timeout: 5000 });
-    await weiOption.click();
-    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
-    await expect(proceedBtn).toBeVisible({ timeout: 5000 });
-    await proceedBtn.click();
-    await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
+    await startPopulatedTestingSession(page);
 
     await injectAxe(page);
 
@@ -644,10 +647,10 @@ test.describe('Automated Accessibility Scans', () => {
           resolve(results.violations);
         });
       });
-    }, [AXE_EXCLUDE_CONTEXT, AXE_RULES_NO_CONTRAST]) as any[];
+    }, [AXE_EXCLUDE_CONTEXT, { rules: { 'color-contrast': { enabled: true } } }]) as any[];
 
     if (violations.length > 0) {
-      console.log('Accessibility Violations on testing log form:');
+      console.log('Accessibility Violations on populated testing session:');
       violations.forEach((v: any) => {
         console.log(`- ${v.id}: ${v.description}`);
         v.nodes.forEach((n: any) => {
@@ -658,5 +661,52 @@ test.describe('Automated Accessibility Scans', () => {
     }
 
     expect(violations.length).toBe(0);
+  });
+
+  test('axe-core scans all Summary report tabs', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForSelector('[role="banner"]', { timeout: 15000 });
+    await dismissHelpModal(page);
+    await startPopulatedTestingSession(page);
+
+    await page.getByRole('button', { name: /Save Clinical Record/i }).click();
+    await dismissHelpModal(page);
+    await expect(page.getByRole('tab', { name: 'Clinical Report' })).toBeVisible({ timeout: 10000 });
+    await injectAxe(page);
+
+    const reportTabs = [
+      { name: 'Clinical Report', heading: 'Anaesthetic Testing Report' },
+      { name: 'Patient Handout', heading: 'Allergy Testing Results' },
+      { name: 'Powerchart Letter', heading: 'Anaesthetic Allergy Clinic' },
+    ];
+
+    for (const reportTab of reportTabs) {
+      const tab = page.getByRole('tab', { name: reportTab.name });
+      await tab.click();
+      await expect(tab).toHaveAttribute('aria-selected', 'true');
+      await expect(page.getByRole('heading', { name: reportTab.heading })).toBeVisible({ timeout: 10000 });
+
+      const violations = await page.evaluate(([ctx, opts]) => {
+        return new Promise((resolve) => {
+          (window as any).axe.run(ctx, opts, (err: any, results: any) => {
+            if (err) resolve([]);
+            resolve(results.violations);
+          });
+        });
+      }, [AXE_EXCLUDE_CONTEXT, { rules: { 'color-contrast': { enabled: true } } }]) as any[];
+
+      if (violations.length > 0) {
+        console.log(`Accessibility Violations on ${reportTab.name}:`);
+        violations.forEach((v: any) => {
+          console.log(`- ${v.id}: ${v.description}`);
+          v.nodes.forEach((n: any) => {
+            console.log(`  Target: ${n.target.join(', ')}`);
+            console.log(`  HTML: ${n.html}`);
+          });
+        });
+      }
+
+      expect(violations.length).toBe(0);
+    }
   });
 });
