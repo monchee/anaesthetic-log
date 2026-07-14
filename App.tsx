@@ -16,12 +16,13 @@ import { LogScreen } from '@core/screens/LogScreen';
 import { ResearchScreen } from '@core/screens/ResearchScreen';
 import { SummaryScreen } from '@core/screens/SummaryScreen';
 import { PrintPlanScreen, TestingScreen } from '@core/screens/TestingScreens';
+import { ScreenUnavailable } from '@core/components/ScreenUnavailable';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
 type ReportTab = 'report' | 'handout' | 'letter';
 
-function AnaestheticLogApp() {
+export function AnaestheticLogApp() {
   useEffect(() => {
     purgeStale();
 
@@ -122,30 +123,52 @@ function AnaestheticLogApp() {
       );
     }
 
-    if (screen === Screen.SUMMARY && lastSavedRecord) {
+    if (screen === Screen.SUMMARY) {
+      if (lastSavedRecord) {
+        return (
+          <SummaryScreen
+            layoutProps={layoutProps}
+            lastSavedRecord={lastSavedRecord}
+            selectedPatient={selectedPatient}
+            activeReportSavedAt={activeReportSavedAt}
+            activeReportTab={activeReportTab}
+            setActiveReportTab={setActiveReportTab}
+            research={research}
+            onExit={resetToLog}
+            onStartNewLog={resetToLog}
+          />
+        );
+      }
+
       return (
-        <SummaryScreen
-          layoutProps={layoutProps}
-          lastSavedRecord={lastSavedRecord}
-          selectedPatient={selectedPatient}
-          activeReportSavedAt={activeReportSavedAt}
-          activeReportTab={activeReportTab}
-          setActiveReportTab={setActiveReportTab}
-          research={research}
-          onExit={resetToLog}
-          onStartNewLog={resetToLog}
+        <ScreenUnavailable
+          title="No active report"
+          message="This screen needs an active report. Local data may have expired, or the page was reloaded."
+          onGoHome={() => setScreen(Screen.LOG)}
+          onGoDashboard={() => setScreen(Screen.DASHBOARD)}
         />
       );
     }
 
-    if (screen === Screen.PRINT_PLAN && selectedPatient && testingPlanData) {
+    if (screen === Screen.PRINT_PLAN) {
+      if (selectedPatient && testingPlanData) {
+        return (
+          <PrintPlanScreen
+            layoutProps={layoutProps}
+            selectedPatient={selectedPatient}
+            testingPlanData={testingPlanData}
+            onBack={() => setScreen(Screen.LOG)}
+            onProceed={handleProceedToTesting}
+          />
+        );
+      }
+
       return (
-        <PrintPlanScreen
-          layoutProps={layoutProps}
-          selectedPatient={selectedPatient}
-          testingPlanData={testingPlanData}
-          onBack={() => setScreen(Screen.LOG)}
-          onProceed={handleProceedToTesting}
+        <ScreenUnavailable
+          title="No active testing plan"
+          message="This screen needs an active testing plan. Local data may have expired, or the page was reloaded."
+          onGoHome={() => setScreen(Screen.LOG)}
+          onGoDashboard={() => setScreen(Screen.DASHBOARD)}
         />
       );
     }
