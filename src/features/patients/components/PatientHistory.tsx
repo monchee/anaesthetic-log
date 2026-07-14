@@ -192,6 +192,18 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                             </div>
                         </div>
                     )}
+
+                    {history.differentialDiagnosis && (
+                        <div className="space-y-2">
+                            <div className="section-label flex items-center gap-2">
+                                <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                                Differential Diagnosis
+                            </div>
+                            <div className="bg-card p-3 rounded-none border border-border text-muted-foreground leading-relaxed text-xs">
+                                {history.differentialDiagnosis}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* 3. Serum Tryptase */}

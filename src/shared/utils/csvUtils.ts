@@ -425,6 +425,44 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
     else if (/Biochemical Results:\s*Tryptase \d+:/.test(t)) biochemTryptaseIndices.push(idx);
   });
 
+  // --- 5b. Map Uploaded Documents, Conditions & Differential Diagnosis ---
+  type UploadedDocKey = 'anaestheticChart' | 'resusChart' | 'tryptaseResults' | 'dischargeLetter' | 'other';
+  const uploadedDocIndices: Record<UploadedDocKey, number[]> = {
+    anaestheticChart: [],
+    resusChart: [],
+    tryptaseResults: [],
+    dischargeLetter: [],
+    other: [],
+  };
+  const conditionChoiceMap: Array<{ choice: string; columnIndex: number }> = [];
+  const highRiskMedChoiceMap: Array<{ choice: string; columnIndex: number }> = [];
+  let differentialDiagnosisIdx = -1;
+
+  headers.forEach((h, idx) => {
+    const lowerH = h.toLowerCase();
+    const choiceMatch = h.match(DRUG_CHOICE_REGEX);
+
+    if (choiceMatch && lowerH.includes('relevant conditions')) {
+      conditionChoiceMap.push({ choice: choiceMatch[1].trim(), columnIndex: idx });
+    } else if (choiceMatch && lowerH.includes('patient taking')) {
+      highRiskMedChoiceMap.push({ choice: choiceMatch[1].trim(), columnIndex: idx });
+    }
+
+    if (differentialDiagnosisIdx === -1 && lowerH.includes('differential') && lowerH.includes('diagnosis')) {
+      differentialDiagnosisIdx = idx;
+    }
+
+    if (lowerH.startsWith('documents to chase')) return;
+    const looksLikeUpload = lowerH.includes('upload') || lowerH.includes('picture') || lowerH.includes('file');
+    if (!looksLikeUpload) return;
+
+    if (lowerH.includes('anaesthetic chart')) uploadedDocIndices.anaestheticChart.push(idx);
+    else if (lowerH.includes('resus chart') || lowerH.includes('resuscitation chart')) uploadedDocIndices.resusChart.push(idx);
+    else if (lowerH.includes('tryptase') && lowerH.includes('result')) uploadedDocIndices.tryptaseResults.push(idx);
+    else if (lowerH.includes('discharge letter')) uploadedDocIndices.dischargeLetter.push(idx);
+    else if (lowerH.includes('other') && lowerH.includes('document')) uploadedDocIndices.other.push(idx);
+  });
+
   // --- 6. Map Testing Plan Instrument ---
   // The last REDCap instrument has explicit checkboxes for which drugs to test.
   // We distinguish it from reaction-drug columns by finding the first
@@ -674,6 +712,38 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
       });
     }
     if (tryptases.length > 0) p.history.tryptases = tryptases;
+
+    // Extract uploaded-document presence. A false value is only authoritative
+    // when at least one matching upload column exists in this export.
+    const uploadedDocs: Partial<Record<UploadedDocKey, boolean>> = {};
+    (Object.keys(uploadedDocIndices) as UploadedDocKey[]).forEach(key => {
+      const indices = uploadedDocIndices[key];
+      if (indices.length > 0) {
+        uploadedDocs[key] = indices.some(idx => Boolean(row[idx]?.trim()));
+      }
+    });
+    if (Object.keys(uploadedDocs).length > 0) p.history.uploadedDocs = uploadedDocs;
+
+    // Extract relevant conditions and regularly taken high-risk medicines.
+    const isChecked = (columnIndex: number) => {
+      const val = row[columnIndex]?.trim().toLowerCase();
+      return ['checked', '1', 'yes'].includes(val);
+    };
+    if (conditionChoiceMap.length > 0) {
+      p.history.conditions = conditionChoiceMap
+        .filter(entry => isChecked(entry.columnIndex))
+        .map(entry => entry.choice);
+    }
+    if (highRiskMedChoiceMap.length > 0) {
+      p.history.highRiskMeds = highRiskMedChoiceMap
+        .filter(entry => isChecked(entry.columnIndex))
+        .map(entry => entry.choice);
+    }
+
+    const differentialDiagnosis = differentialDiagnosisIdx !== -1
+      ? row[differentialDiagnosisIdx]?.trim()
+      : '';
+    if (differentialDiagnosis) p.history.differentialDiagnosis = differentialDiagnosis;
 
     // Extract Testing Plan (explicit REDCap instrument)
     if (testingPlanDrugMap.length > 0) {

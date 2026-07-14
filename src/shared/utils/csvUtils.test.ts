@@ -183,6 +183,95 @@ describe('parseRedcapCSV', () => {
   });
 });
 
+describe('parseRedcapCSV — phase 3 clinical fields', () => {
+  // Inferred REDCap labelled-export header format, pending verification against a real export.
+  const inferredHeaders = [
+    'Record ID',
+    'First Name',
+    'Last Name',
+    'Date of Reaction:',
+    'Relevant Conditions (choice=Asthma)',
+    'Relevant Conditions (choice=Diabetes)',
+    'Tick if Patient Taking Regularly (choice=Beta-blocker)',
+    'Patient Taking (choice=ACE inhibitor)',
+    'Patient Taking (choice=Statin)',
+    'Anaesthetic Chart - upload adequate quality picture',
+    'Anaesthetic Chart - upload adequate quality picture',
+    'Resus Chart - upload adequate quality picture',
+    'Tryptase Results - upload file',
+    'Discharge Letter - upload file',
+    'Differential diagnosis',
+    'Muscle Relaxant (choice=Vecuronium)',
+    'Documents to Chase: Anaesthetic Chart',
+  ];
+
+  const inferredRow = (overrides: Record<number, string> = {}): string[] => {
+    const row = Array(inferredHeaders.length).fill('');
+    row[0] = 'REC-T3.4';
+    row[1] = 'Alex';
+    row[2] = 'Patient';
+    row[3] = '2026-07-14';
+    Object.entries(overrides).forEach(([index, value]) => {
+      row[Number(index)] = value;
+    });
+    return row;
+  };
+
+  it('parses upload presence across duplicate instruments and omits absent document types', () => {
+    const result = parseRedcapCSV(csv(inferredHeaders, [inferredRow({
+      9: '',
+      10: 'anaesthetic-chart.pdf',
+      11: '',
+      12: 'tryptase-results.pdf',
+      13: '',
+    })]));
+
+    expect(result.success).toBe(true);
+    expect(result.data[0].history.uploadedDocs).toEqual({
+      anaestheticChart: true,
+      resusChart: false,
+      tryptaseResults: true,
+      dischargeLetter: false,
+    });
+    expect(result.data[0].history.uploadedDocs).not.toHaveProperty('other');
+  });
+
+  it('includes only checked conditions and high-risk medicines', () => {
+    const result = parseRedcapCSV(csv(inferredHeaders, [inferredRow({
+      4: 'Checked',
+      5: 'Unchecked',
+      6: '1',
+      7: 'yes',
+      8: '0',
+    })]));
+
+    expect(result.data[0].history.conditions).toEqual(['Asthma']);
+    expect(result.data[0].history.highRiskMeds).toEqual(['Beta-blocker', 'ACE inhibitor']);
+  });
+
+  it('captures differential diagnosis only when non-empty', () => {
+    const present = parseRedcapCSV(csv(inferredHeaders, [inferredRow({ 14: 'Non-IgE mediated mast-cell activation' })]));
+    const absentHeaders = inferredHeaders.filter(header => header !== 'Differential diagnosis');
+    const absent = parseRedcapCSV(csv(absentHeaders, [[
+      'REC-NO-DIFF', 'Alex', 'Patient', '2026-07-14',
+    ]]));
+
+    expect(present.data[0].history.differentialDiagnosis).toBe('Non-IgE mediated mast-cell activation');
+    expect(absent.data[0].history.differentialDiagnosis).toBeUndefined();
+  });
+
+  it('keeps outstanding documents separate from uploaded-document presence', () => {
+    const result = parseRedcapCSV(csv(inferredHeaders, [inferredRow({
+      9: 'anaesthetic-chart.jpg',
+      15: 'Unchecked',
+      16: 'Checked',
+    })]));
+
+    expect(result.data[0].history.documentsToChase).toEqual({ anaestheticChart: true });
+    expect(result.data[0].history.uploadedDocs?.anaestheticChart).toBe(true);
+  });
+});
+
 describe('parseRedcapCSV — encoding & header robustness', () => {
   const minimalHeaders = ['Record ID', 'First Name', 'Last Name', 'Date of Reaction:'];
   const minimalRow = ['REC-1', 'Alice', 'Smith', '2026-01-02'];
