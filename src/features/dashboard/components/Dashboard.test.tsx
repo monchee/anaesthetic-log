@@ -119,6 +119,19 @@ describe('Dashboard', () => {
   });
 
   describe('Rendering', () => {
+    it('shows the imported cohort count and six-hour expiry time', () => {
+      const savedAt = new Date(2026, 6, 14, 10, 30).getTime();
+      render(
+        <Dashboard
+          {...mockProps}
+          isCustomData
+          patientDbSavedAt={savedAt}
+        />
+      );
+
+      expect(screen.getByText('Imported database · 2 patients · expires 16:30')).toBeInTheDocument();
+    });
+
     it('exposes dashboard sections as level-two headings', () => {
       render(<Dashboard {...mockProps} />);
 

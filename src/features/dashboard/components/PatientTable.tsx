@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, Button, Input, Badge, Skeleton } from '@/components/ui';
 import { ChevronLeft, ChevronRight, FileText, Search, Upload, Download } from 'lucide-react';
-import { formatDate, getGradeVariant, parsePatientTimeline } from '@shared/utils';
+import { ACTIVE_REPORT_TTL_MS, formatDate, formatTime, getGradeVariant, parsePatientTimeline } from '@shared/utils';
 import { Patient } from '@/types';
 import { AdvancedSearchFilters, AdvancedSearchPanel } from './AdvancedSearchFilters';
 import { CSVUploadInstructions } from './CSVUploadInstructions';
@@ -36,6 +36,7 @@ interface PatientTableProps {
   handlePrevPage: () => void;
   allPatients: Patient[];
   isLoading?: boolean;
+  patientDbSavedAt?: number | null;
 }
 
 const PatientTable: React.FC<PatientTableProps> = ({
@@ -62,6 +63,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
   handlePrevPage,
   allPatients,
   isLoading = false,
+  patientDbSavedAt,
 }) => {
   const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
   const handleMobileCardKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, patient: Patient) => {
@@ -83,6 +85,11 @@ const PatientTable: React.FC<PatientTableProps> = ({
               </CardTitle>
               <div className="text-xs text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1">
                 <span>{isCustomData ? `Updated ${databaseDate}` : 'Demo data'}</span>
+                {isCustomData && patientDbSavedAt !== null && patientDbSavedAt !== undefined ? (
+                  <span>
+                    Imported database · {allPatients.length} patients · expires {formatTime(patientDbSavedAt + ACTIVE_REPORT_TTL_MS)}
+                  </span>
+                ) : null}
                 <span className="flex items-center gap-2" aria-label="Timeline legend">
                   <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />Induction</span>
                   <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-red-500" aria-hidden="true" />Reaction</span>

@@ -92,6 +92,7 @@ export function useAnaestheticApp() {
     patients: patientState.patients,
     databaseDate: patientState.databaseDate,
     hasUploadedData: patientState.hasUploadedData,
+    patientDbSavedAt: patientState.patientDbSavedAt,
     isLoadingPatients: patientState.isLoadingPatients,
 
     // Disclaimer

@@ -34,6 +34,7 @@ test.describe('Testing Day Flow', () => {
     // Clear persisted patient data so mock patients load fresh
     await page.evaluate(() => {
       localStorage.removeItem('anaesthetic_patients');
+      localStorage.removeItem('dream:patient_db');
     });
     await page.reload();
     await page.waitForLoadState('networkidle');

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { AppProviders } from '@core/components/AppProviders';
 import { Screen } from '@shared/types';
 import { APP_CONFIG } from '@shared/utils/constants';
+import { purgeStale } from '@shared/utils/ttlStorage';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
 import { reportWebVitals } from './src/lib/analytics';
@@ -22,6 +23,8 @@ type ReportTab = 'report' | 'handout' | 'letter';
 
 function AnaestheticLogApp() {
   useEffect(() => {
+    purgeStale();
+
     const runPostPaintSetup = () => {
       void initSentry();
       reportWebVitals();
@@ -44,7 +47,7 @@ function AnaestheticLogApp() {
     lastDraftSavedAt, isSavingDraft,
     testingPlanData, setTestingPlanData,
     isPatientDialogOpen, setIsPatientDialogOpen,
-    patients, databaseDate, hasUploadedData, isLoadingPatients, recentLogs,
+    patients, databaseDate, hasUploadedData, patientDbSavedAt, isLoadingPatients, recentLogs,
     showDisclaimer, handleDismissDisclaimer,
     handlePatientSelect, handleManualDetailChange,
     handleSubmit, handleUploadPatients, handleDashboardPatientSelect, resetForm, clearActiveReport,
@@ -106,6 +109,7 @@ function AnaestheticLogApp() {
           patients={patients}
           recentLogs={recentLogs}
           isLoadingPatients={isLoadingPatients}
+          patientDbSavedAt={patientDbSavedAt}
           onSetScreen={setScreen}
           onViewLog={(log) => {
             setLastSavedRecord(log);

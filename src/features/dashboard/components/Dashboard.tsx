@@ -23,6 +23,7 @@ interface DashboardProps {
   databaseDate: string;
   isCustomData?: boolean;
   isLoadingPatients?: boolean;
+  patientDbSavedAt?: number | null;
 }
 
 const getPrefersReducedMotion = () => (
@@ -31,7 +32,7 @@ const getPrefersReducedMotion = () => (
     : false
 );
 
-const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate, isCustomData, isLoadingPatients }) => {
+const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate, isCustomData, isLoadingPatients, patientDbSavedAt }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -246,6 +247,7 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
             handlePrevPage={handlePrevPage}
             allPatients={existingPatients}
             isLoading={isLoadingPatients}
+            patientDbSavedAt={patientDbSavedAt}
           />
         </div>
 
