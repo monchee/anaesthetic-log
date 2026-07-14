@@ -10,6 +10,7 @@ import RecentTestingActivity from './RecentTestingActivity';
 import { useAdvancedSearch } from '../hooks/useAdvancedSearch';
 import PatientTable from './PatientTable';
 import SkinTestBreakdown from './SkinTestBreakdown';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 interface DashboardProps {
   setScreen: (screen: Screen) => void;
@@ -40,6 +41,11 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(getPrefersReducedMotion);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
+  const [pendingReplacement, setPendingReplacement] = useState<{
+    data: Patient[];
+    fileLastModified?: number;
+    details?: string[];
+  } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Advanced Search Hook
@@ -111,12 +117,10 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                     const duplicates = result.data.filter(p => existingIds.has(p.id));
 
                     if (duplicates.length > 0) {
-                        const dupDetail = duplicates.length > 3
-                            ? `First few: ${duplicates.slice(0, 3).map(d => d.id).join(', ')}...`
-                            : `IDs: ${duplicates.map(d => d.id).join(', ')}`;
-                        toast.error('Duplicate records detected', {
-                            description: `${duplicates.length} record(s) already exist in the database. ${dupDetail}`,
-                            duration: 10000,
+                        setPendingReplacement({
+                            data: result.data,
+                            fileLastModified: file.lastModified,
+                            details: result.details,
                         });
                     } else {
                         onUploadPatients(result.data, file.lastModified);
@@ -188,8 +192,34 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
   const sectionRevealClass = prefersReducedMotion ? '' : 'animate-section-reveal';
 
+  const handleConfirmReplacement = () => {
+    if (!pendingReplacement) return;
+
+    onUploadPatients(pendingReplacement.data, pendingReplacement.fileLastModified);
+    toast.success('Database updated', {
+      description: `Imported ${pendingReplacement.data.length} record(s).${pendingReplacement.details ? ` ${pendingReplacement.details.join(' ')}` : ''}`,
+    });
+    setIsSheetOpen(false);
+    setPendingReplacement(null);
+  };
+
+  const handleReplacementDialogChange = (open: boolean) => {
+    if (!open) setPendingReplacement(null);
+  };
+
   return (
     <div className="space-y-8">
+
+        <ConfirmDialog
+          open={pendingReplacement !== null}
+          onOpenChange={handleReplacementDialogChange}
+          title="Replace existing database?"
+          message={`Replace existing database (${existingPatients.length} records) with this export (${pendingReplacement?.data.length ?? 0} records)? Unsaved testing drafts are kept.`}
+          confirmLabel="Replace database"
+          cancelLabel="Cancel"
+          variant="danger"
+          onConfirm={handleConfirmReplacement}
+        />
 
         {/* Modern Stats Grid */}
         <div style={{ '--section-index': 0 } as React.CSSProperties} className={sectionRevealClass}>

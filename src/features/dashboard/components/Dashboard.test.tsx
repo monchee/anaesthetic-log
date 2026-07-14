@@ -291,6 +291,76 @@ describe('Dashboard', () => {
       });
     });
 
+    it('offers to replace the database when the CSV contains a duplicate record ID', async () => {
+      const { parseRedcapCSV } = await import('@shared/utils');
+      const replacementPatients = [
+        mockPatients[0],
+        { ...mockPatients[1], id: '3', mrn: 'MRN003' },
+      ];
+      (parseRedcapCSV as any).mockReturnValue({
+        success: true,
+        data: replacementPatients,
+        details: ['Skipped 1 empty row: 4'],
+      });
+
+      render(<Dashboard {...mockProps} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /Upload CSV/i }));
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const file = new File(['mock,csv,data'], 'replacement.csv', {
+        type: 'text/csv',
+        lastModified: 1_720_000_000_000,
+      });
+      fireEvent.change(fileInput, { target: { files: [file] } });
+
+      const dialog = await screen.findByRole('dialog', { name: 'Replace existing database?' });
+      expect(within(dialog).getByText(
+        'Replace existing database (2 records) with this export (2 records)? Unsaved testing drafts are kept.'
+      )).toBeInTheDocument();
+      expect(mockProps.onUploadPatients).not.toHaveBeenCalled();
+
+      fireEvent.click(within(dialog).getByRole('button', { name: 'Replace database' }));
+
+      await waitFor(() => {
+        expect(mockProps.onUploadPatients).toHaveBeenCalledWith(
+          replacementPatients,
+          1_720_000_000_000
+        );
+      });
+      const { toast } = await import('sonner');
+      expect(toast.success).toHaveBeenCalledWith('Database updated', {
+        description: 'Imported 2 record(s). Skipped 1 empty row: 4',
+      });
+      expect(screen.queryByRole('dialog', { name: 'Replace existing database?' })).not.toBeInTheDocument();
+      expect(screen.queryByText('Update Database')).not.toBeInTheDocument();
+    });
+
+    it('keeps the existing database when duplicate replacement is cancelled', async () => {
+      const { parseRedcapCSV } = await import('@shared/utils');
+      (parseRedcapCSV as any).mockReturnValue({
+        success: true,
+        data: [mockPatients[0]],
+      });
+
+      render(<Dashboard {...mockProps} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /Upload CSV/i }));
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const file = new File(['mock,csv,data'], 'duplicate.csv', { type: 'text/csv' });
+      fireEvent.change(fileInput, { target: { files: [file] } });
+
+      const dialog = await screen.findByRole('dialog', { name: 'Replace existing database?' });
+      fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog', { name: 'Replace existing database?' })).not.toBeInTheDocument();
+      });
+      expect(mockProps.onUploadPatients).not.toHaveBeenCalled();
+      const { toast } = await import('sonner');
+      expect(toast.success).not.toHaveBeenCalled();
+      expect(toast.error).not.toHaveBeenCalled();
+    });
+
     it('shows error message on failed CSV parse', async () => {
       const { parseRedcapCSV } = await import('@shared/utils');
       (parseRedcapCSV as any).mockReturnValue({
