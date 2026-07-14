@@ -13,7 +13,7 @@ before starting, honor its STOP conditions, and update your row when done.
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
 | 001 | CSV quote-aware record splitting + coverage gate | P1 | M | — | DONE |
-| 002 | Sentry PHI scrub hardening | P2 | S | — | TODO |
+| 002 | Sentry PHI scrub hardening | P2 | S | — | DONE |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) |
 REJECTED (with one-line rationale)
