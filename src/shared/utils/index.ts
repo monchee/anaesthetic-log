@@ -4,6 +4,7 @@ export { getGradeVariant, type GradeVariant } from './gradingUtils';
 export { isSkinTestPositive, getPositiveResults, getNegativeResults, getCrossSensitizedDrugs } from './testingUtils';
 export { parsePatientTimeline, type TimelineEvent } from './timelineUtils';
 export { getOutstandingDocuments, type OutstandingDocument } from './patientStatus';
+export { deriveHighRiskChips } from './highRiskContext';
 export { parseRedcapCSV, decodeCsvBytes, normalizeHeader, type CsvParseResult } from './csvUtils';
 export { animationConfig, transitions } from './animations';
 export { showToast } from './toast-config';

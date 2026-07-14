@@ -6,7 +6,9 @@ import { APP_CONFIG, DRUG_CATEGORIES } from '@shared/utils/constants';
 import { LogFormData, Patient, TestingPlanData } from '@/types';
 import { CommonScreenLayoutProps } from './types';
 import { PatientIdentityBar } from '@features/patients/components/PatientIdentityBar';
+import { HighRiskContextChips } from '@features/patients/components/HighRiskContextChips';
 import { DraftSaveIndicator } from '@features/testing/components/DraftSaveIndicator';
+import { deriveHighRiskChips } from '@shared/utils/highRiskContext';
 
 const TestingLogForm = React.lazy(() => import('@features/testing/components/TestingLogForm'));
 const TestingPlanPrintView = React.lazy(() => import('@features/testing/components/TestingPlanPrintView'));
@@ -59,6 +61,10 @@ export function TestingScreen({
   onBack,
   onSubmit,
 }: TestingScreenProps) {
+  const highRiskChips = selectedPatient
+    ? deriveHighRiskChips(selectedPatient.history)
+    : [];
+
   return (
     <ScreenLayout
       title="Testing Session" icon={<TestTube2 className="w-5 h-5" />}
@@ -72,7 +78,11 @@ export function TestingScreen({
         mrn={selectedPatient?.mrn ?? formData.mrn}
         dob={selectedPatient?.dob}
         reactionDate={selectedPatient?.history.date}
-        className="mb-4"
+        className={highRiskChips.length > 0 ? 'mb-2' : 'mb-4'}
+      />
+      <HighRiskContextChips
+        chips={highRiskChips}
+        className="mx-1 mb-3 border-l-2 border-amber-400 bg-amber-50/70 px-2.5 py-2 dark:bg-amber-950/20"
       />
       <div className="flex min-h-4 justify-end px-1">
         <DraftSaveIndicator

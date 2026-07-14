@@ -17,6 +17,27 @@ function renderHistory(
   };
 }
 
+describe('PatientHistory high-risk clinical context', () => {
+  it('renders matching medication and condition chips', () => {
+    renderHistory({
+      highRiskMeds: ['Taking a beta blocker', 'ACE-I'],
+      conditions: ['Pregnancy', 'Asthma'],
+    });
+
+    const context = screen.getByRole('region', { name: 'High-risk clinical context' });
+    expect(within(context).getByText('Beta-blocker')).toBeInTheDocument();
+    expect(within(context).getByText('ACE-inhibitor')).toBeInTheDocument();
+    expect(within(context).getByText('Pregnancy')).toBeInTheDocument();
+    expect(within(context).getByText('Asthma')).toBeInTheDocument();
+  });
+
+  it('does not render the context row when there are no matches', () => {
+    renderHistory({ highRiskMeds: ['Anti-hypertensive'], conditions: ['Eczema'] });
+
+    expect(screen.queryByRole('region', { name: 'High-risk clinical context' })).not.toBeInTheDocument();
+  });
+});
+
 describe('PatientHistory referral information checklist', () => {
   it('renders all checks as passing when referral information is complete', () => {
     renderHistory({

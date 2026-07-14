@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle, Badge, Popover, PopoverConten
 import { Patient } from '@/types';
 import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck, FlaskConical, Flag } from 'lucide-react';
 import { formatDate, getGradeVariant, parsePatientTimeline, calculateTimeDifference, getOutstandingDocuments } from '@shared/utils';
+import { deriveHighRiskChips } from '@shared/utils/highRiskContext';
+import { HighRiskContextChips } from './HighRiskContextChips';
 
 interface PatientHistoryProps {
   patient: Patient;
@@ -27,6 +29,7 @@ function getTryptasePeak(samples?: TryptaseSample[]): { index: number; value: nu
 
 const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspectedAgent }) => {
   const { history } = patient;
+  const highRiskChips = deriveHighRiskChips(history);
 
   const formatTime = (time?: string) => {
     if (!time) return "--:--";
@@ -167,6 +170,11 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                 )}
             </div>
         </div>
+
+        <HighRiskContextChips
+            chips={highRiskChips}
+            className="border border-amber-200 bg-amber-50/70 px-3 py-2 dark:border-amber-800 dark:bg-amber-950/20"
+        />
 
         <section aria-labelledby="referral-checklist-heading" className="border border-border bg-muted/20 px-3 py-2.5">
             <h3 id="referral-checklist-heading" className="section-label mb-2">Referral information</h3>
