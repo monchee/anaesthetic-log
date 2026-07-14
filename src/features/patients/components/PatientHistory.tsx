@@ -2,11 +2,12 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Badge, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { Patient } from '@/types';
-import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck, FlaskConical } from 'lucide-react';
+import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck, FlaskConical, Flag } from 'lucide-react';
 import { formatDate, getGradeVariant, parsePatientTimeline, calculateTimeDifference } from '@shared/utils';
 
 interface PatientHistoryProps {
   patient: Patient;
+  onToggleSuspectedAgent: (drugName: string) => void;
 }
 
 type TryptaseSample = NonNullable<Patient['history']['tryptases']>[number];
@@ -24,7 +25,7 @@ function getTryptasePeak(samples?: TryptaseSample[]): { index: number; value: nu
   }, null);
 }
 
-const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
+const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspectedAgent }) => {
   const { history } = patient;
 
   const formatTime = (time?: string) => {
@@ -144,7 +145,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
             <div className="lg:col-span-7 flex flex-col gap-5">
                 
                 {/* 1. Suspected Agents */}
-                {history.suspectedAgents && history.suspectedAgents.length > 0 && (
+                {history.suspectedAgents && history.suspectedAgents.length > 0 ? (
                     <div className="space-y-2">
                             <div className="flex items-center gap-2">
                             <AlertTriangle className="h-3.5 w-3.5 text-red-500 shrink-0" />
@@ -155,6 +156,16 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                 <Badge key={i} variant="danger" className="text-xs px-2.5 py-0.5">{agent}</Badge>
                             ))}
                         </div>
+                    </div>
+                ) : (
+                    <div className="space-y-2">
+                        <div className="section-label flex items-center gap-2">
+                            <Info className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                            Suspected Culprit Agents
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Not captured in referral — review the medication timeline below.
+                        </p>
                     </div>
                 )}
 
@@ -386,10 +397,23 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                         <span className="font-bold text-xs text-red-700 dark:text-red-300">
                                                             {event.label}
                                                         </span>
-                                                    ) : (
-                                                        <span className="font-semibold text-xs text-foreground/90">
+                                                    ) : event.type === 'med' ? (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => onToggleSuspectedAgent(event.label)}
+                                                            aria-pressed={history.suspectedAgents.includes(event.label)}
+                                                            aria-label={`${history.suspectedAgents.includes(event.label) ? 'Unmark' : 'Mark'} ${event.label} as suspected culprit agent`}
+                                                            className={`inline-flex items-center gap-1 border px-2 py-1 text-xs font-semibold transition-colors ${
+                                                                history.suspectedAgents.includes(event.label)
+                                                                    ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300'
+                                                                    : 'border-border bg-muted/40 text-foreground/90 hover:border-primary/50 hover:text-primary'
+                                                            }`}
+                                                        >
+                                                            {history.suspectedAgents.includes(event.label) && <Flag className="h-3 w-3 fill-current" aria-hidden="true" />}
                                                             {event.label}
-                                                        </span>
+                                                        </button>
+                                                    ) : (
+                                                        <span className="font-semibold text-xs text-foreground/90">{event.label}</span>
                                                     )}
                                                 </div>
                                                 <span className={`font-mono text-xs font-bold ${
@@ -421,13 +445,21 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             <p className="section-label mb-2">Agents with no listed time</p>
                             <div className="flex flex-wrap gap-1.5">
                                 {untimedAdministered.map((drug, idx) => (
-                                    <Badge 
-                                        key={idx} 
-                                        variant="secondary"
-                                        className="text-xs font-medium text-muted-foreground bg-muted border-border"
+                                    <button
+                                        key={idx}
+                                        type="button"
+                                        onClick={() => onToggleSuspectedAgent(drug)}
+                                        aria-pressed={history.suspectedAgents.includes(drug)}
+                                        aria-label={`${history.suspectedAgents.includes(drug) ? 'Unmark' : 'Mark'} ${drug} as suspected culprit agent`}
+                                        className={`inline-flex items-center gap-1 border px-2.5 py-0.5 text-xs font-medium transition-colors ${
+                                            history.suspectedAgents.includes(drug)
+                                                ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300'
+                                                : 'border-border bg-muted text-muted-foreground hover:border-primary/50 hover:text-primary'
+                                        }`}
                                     >
+                                        {history.suspectedAgents.includes(drug) && <Flag className="h-3 w-3 fill-current" aria-hidden="true" />}
                                         {drug}
-                                    </Badge>
+                                    </button>
                                 ))}
                             </div>
                         </div>

@@ -1,15 +1,54 @@
-import { render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import PatientHistory from './PatientHistory';
 import { createMockPatient, createMockPatientHistory } from '@/src/test/factories/patientFactory';
 
-function renderHistory(historyOverrides: Parameters<typeof createMockPatientHistory>[0] = {}) {
+function renderHistory(
+  historyOverrides: Parameters<typeof createMockPatientHistory>[0] = {},
+  onToggleSuspectedAgent = vi.fn(),
+) {
   const patient = createMockPatient({
     history: createMockPatientHistory(historyOverrides),
   });
 
-  return render(<PatientHistory patient={patient} />);
+  return {
+    ...render(<PatientHistory patient={patient} onToggleSuspectedAgent={onToggleSuspectedAgent} />),
+    onToggleSuspectedAgent,
+  };
 }
+
+describe('PatientHistory suspected culprit agents', () => {
+  it('explains when suspected agents were not captured in the referral', () => {
+    renderHistory({ suspectedAgents: [] });
+
+    expect(screen.getByText('Suspected Culprit Agents')).toBeInTheDocument();
+    expect(screen.getByText('Not captured in referral — review the medication timeline below.')).toBeInTheDocument();
+  });
+
+  it('keeps populated suspected agents in the danger panel', () => {
+    renderHistory({ suspectedAgents: ['Rocuronium'] });
+
+    const agent = screen.getAllByText('Rocuronium').find(element => element.closest('.bg-red-50'));
+    expect(agent).toHaveClass('bg-red-500', 'text-white');
+  });
+
+  it('toggles a timed medication with the exact drug name', () => {
+    const onToggleSuspectedAgent = vi.fn();
+    renderHistory({ suspectedAgents: [], medications: ['Propofol @ 09:10'] }, onToggleSuspectedAgent);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Mark Propofol as suspected culprit agent' }));
+
+    expect(onToggleSuspectedAgent).toHaveBeenCalledWith('Propofol');
+  });
+
+  it('renders a marked timeline medication in its pressed danger state', () => {
+    renderHistory({ suspectedAgents: ['Propofol'], medications: ['Propofol @ 09:10'] });
+
+    const markedDrug = screen.getByRole('button', { name: 'Unmark Propofol as suspected culprit agent' });
+    expect(markedDrug).toHaveAttribute('aria-pressed', 'true');
+    expect(markedDrug).toHaveClass('bg-red-50');
+  });
+});
 
 describe('PatientHistory serum tryptase display', () => {
   it('renders multiple tryptase samples in order with time and result', () => {

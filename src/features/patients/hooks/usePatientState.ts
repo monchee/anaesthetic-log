@@ -81,6 +81,37 @@ export function usePatientState() {
     setPatientDbSavedAt(getSavedAt(PATIENT_DB_KEY, ACTIVE_REPORT_TTL_MS));
   };
 
+  const toggleSuspectedAgent = (patientId: string, drugName: string) => {
+    const patientIndex = patients.findIndex(patient => patient.id === patientId);
+    if (patientIndex === -1) return;
+
+    const patient = patients[patientIndex];
+    const suspectedAgents = patient.history.suspectedAgents.includes(drugName)
+      ? patient.history.suspectedAgents.filter(agent => agent !== drugName)
+      : [...patient.history.suspectedAgents, drugName];
+    const updatedPatient = {
+      ...patient,
+      history: { ...patient.history, suspectedAgents },
+    };
+    const updatedPatients = patients.map((currentPatient, index) =>
+      index === patientIndex ? updatedPatient : currentPatient
+    );
+
+    setPatients(updatedPatients);
+    setSelectedPatient(currentPatient =>
+      currentPatient?.id === patientId ? updatedPatient : currentPatient
+    );
+
+    if (hasUploadedData) {
+      setWithTTL(PATIENT_DB_KEY, {
+        patients: updatedPatients,
+        databaseDate,
+        hasUploadedData,
+      });
+      setPatientDbSavedAt(getSavedAt(PATIENT_DB_KEY, ACTIVE_REPORT_TTL_MS));
+    }
+  };
+
   return {
     selectedPatient,
     setSelectedPatient,
@@ -94,5 +125,6 @@ export function usePatientState() {
     handlePatientSelect,
     handleManualDetailChange,
     handleUploadPatients,
+    toggleSuspectedAgent,
   };
 }

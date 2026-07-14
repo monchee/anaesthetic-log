@@ -47,6 +47,7 @@ interface LogScreenProps {
   patients: Patient[];
   onPatientSelect: (patient: Patient) => void;
   onManualDetailChange: (field: keyof Patient, value: string) => void;
+  onToggleSuspectedAgent: (patientId: string, drugName: string) => void;
   onSetTestingPlanData: (data: TestingPlanData) => void;
   onProceedToTesting: () => void;
   onClearActiveReport: () => void;
@@ -65,6 +66,7 @@ export function LogScreen({
   patients,
   onPatientSelect,
   onManualDetailChange,
+  onToggleSuspectedAgent,
   onSetTestingPlanData,
   onProceedToTesting,
   onClearActiveReport,
@@ -298,7 +300,10 @@ export function LogScreen({
         <div key={selectedPatient.id} className="space-y-8">
           {selectedPatient.id !== 'manual' && (
             <div style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
-              <PatientHistory patient={selectedPatient} />
+              <PatientHistory
+                patient={selectedPatient}
+                onToggleSuspectedAgent={(drugName) => onToggleSuspectedAgent(selectedPatient.id, drugName)}
+              />
             </div>
           )}
           <div style={{ '--section-index': selectedPatient.id !== 'manual' ? 1 : 0 } as React.CSSProperties} className="animate-section-reveal">

@@ -123,6 +123,7 @@ export function useAnaestheticApp() {
     handleManualDetailChange,
     handleSubmit,
     handleUploadPatients: patientState.handleUploadPatients,
+    toggleSuspectedAgent: patientState.toggleSuspectedAgent,
     handleDashboardPatientSelect,
     resetForm,
     clearActiveReport,

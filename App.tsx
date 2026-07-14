@@ -51,7 +51,7 @@ export function AnaestheticLogApp() {
     patients, databaseDate, hasUploadedData, patientDbSavedAt, isLoadingPatients, recentLogs,
     showDisclaimer, handleDismissDisclaimer,
     handlePatientSelect, handleManualDetailChange,
-    handleSubmit, handleUploadPatients, handleDashboardPatientSelect, resetForm, clearActiveReport,
+    handleSubmit, handleUploadPatients, toggleSuspectedAgent, handleDashboardPatientSelect, resetForm, clearActiveReport,
   } = useAnaestheticApp();
 
   const [activeReportTab, setActiveReportTab] = React.useState<ReportTab>('report');
@@ -206,6 +206,7 @@ export function AnaestheticLogApp() {
         patients={patients}
         onPatientSelect={handlePatientSelect}
         onManualDetailChange={handleManualDetailChange}
+        onToggleSuspectedAgent={toggleSuspectedAgent}
         onSetTestingPlanData={setTestingPlanData}
         onProceedToTesting={handleProceedToTesting}
         onClearActiveReport={clearActiveReport}

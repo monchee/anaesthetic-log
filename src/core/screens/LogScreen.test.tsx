@@ -44,6 +44,7 @@ describe('LogScreen clear-report confirmation', () => {
           patients={[]}
           onPatientSelect={vi.fn()}
           onManualDetailChange={vi.fn()}
+          onToggleSuspectedAgent={vi.fn()}
           onSetTestingPlanData={vi.fn()}
           onProceedToTesting={vi.fn()}
           onClearActiveReport={onClearActiveReport}

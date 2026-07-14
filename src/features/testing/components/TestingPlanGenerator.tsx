@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Card, CardContent, Button, Label, Switch, Checkbox, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Patient, TestingPlanData, CustomDrugEntry, DocumentsToChase } from '@/types';
@@ -53,13 +53,19 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
       ...(patient.history.preInductionDrugs ?? []),
       ...(patient.history.postInductionDrugs ?? []),
       ...(patient.history.medications ?? []),
+      ...(patient.history.suspectedAgents ?? []),
     ].map(stripForMatch).filter(Boolean);
     return Object.values(drugCategories).flat().filter(drug => {
       const normDrug = stripForMatch(drug);
       return normDrug.length > 0 && patientDrugs.some(pd => pd.includes(normDrug) || normDrug.includes(pd));
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [patient.id]);
+  }, [
+    drugCategories,
+    patient.history.medications,
+    patient.history.postInductionDrugs,
+    patient.history.preInductionDrugs,
+    patient.history.suspectedAgents,
+  ]);
 
   const initialDrugs = useMemo(() => {
     // Priority 1: explicit testing plan from REDCap instrument
@@ -109,6 +115,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
   const [draftPatientId, setDraftPatientId] = useState(patient.id);
   const [lastDraftSavedAt, setLastDraftSavedAt] = useState<number | null>(null);
+  const previousHistoryDrugs = useRef({ patientId: patient.id, drugs: historyDrugs });
   const today = useMemo(getTodayDate, []);
   const allKnownDrugs = useMemo(
     () => [...new Set(Object.values(drugCategories).flat())],
@@ -131,6 +138,24 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
     setIsOpen(true);
     setDraftPatientId(patient.id);
   }, [patient.id, defaultDraft]);
+
+  useEffect(() => {
+    if (previousHistoryDrugs.current.patientId !== patient.id) {
+      previousHistoryDrugs.current = { patientId: patient.id, drugs: historyDrugs };
+      return;
+    }
+
+    const newlyAddedHistoryDrugs = historyDrugs.filter(
+      drug => !previousHistoryDrugs.current.drugs.includes(drug)
+    );
+    previousHistoryDrugs.current = { patientId: patient.id, drugs: historyDrugs };
+    if (newlyAddedHistoryDrugs.length > 0) {
+      setSelectedDrugs(currentDrugs => [
+        ...currentDrugs,
+        ...newlyAddedHistoryDrugs.filter(drug => !currentDrugs.includes(drug)),
+      ]);
+    }
+  }, [historyDrugs, patient.id]);
 
   useEffect(() => {
     if (draftPatientId !== patient.id) return;

@@ -124,4 +124,48 @@ describe('usePatientState', () => {
     expect(mockPatientsRead).toHaveBeenCalledTimes(1);
     expect(localStorage.getItem(PATIENT_DB_KEY)).toBeNull();
   });
+
+  it('adds and removes a suspected agent and updates the selected patient', async () => {
+    const setWithTTLSpy = vi.spyOn(ttlStorage, 'setWithTTL');
+    const { result } = renderHook(() => usePatientState());
+    await waitFor(() => expect(result.current.isLoadingPatients).toBe(false));
+
+    act(() => result.current.handlePatientSelect(result.current.patients[0]));
+    act(() => result.current.toggleSuspectedAgent('mock-1', 'Propofol'));
+
+    expect(result.current.patients[0].history.suspectedAgents).toEqual(['Propofol']);
+    expect(result.current.selectedPatient?.history.suspectedAgents).toEqual(['Propofol']);
+    expect(setWithTTLSpy).not.toHaveBeenCalled();
+
+    act(() => result.current.toggleSuspectedAgent('mock-1', 'Propofol'));
+
+    expect(result.current.patients[0].history.suspectedAgents).toEqual([]);
+    expect(result.current.selectedPatient?.history.suspectedAgents).toEqual([]);
+    expect(setWithTTLSpy).not.toHaveBeenCalled();
+  });
+
+  it('persists suspected-agent changes for an uploaded cohort', async () => {
+    writeStoredCohort({
+      patients: importedPatients,
+      databaseDate: '14/07/2026',
+      hasUploadedData: true,
+    }, Date.now());
+    const setWithTTLSpy = vi.spyOn(ttlStorage, 'setWithTTL');
+    const { result } = renderHook(() => usePatientState());
+    await waitFor(() => expect(result.current.isLoadingPatients).toBe(false));
+
+    act(() => result.current.handlePatientSelect(result.current.patients[0]));
+    act(() => result.current.toggleSuspectedAgent('synthetic-1', 'Propofol'));
+
+    expect(result.current.patients[0].history.suspectedAgents).toEqual(['Test agent', 'Propofol']);
+    expect(result.current.selectedPatient?.history.suspectedAgents).toEqual(['Test agent', 'Propofol']);
+    expect(setWithTTLSpy).toHaveBeenCalledWith(PATIENT_DB_KEY, {
+      patients: [expect.objectContaining({
+        id: 'synthetic-1',
+        history: expect.objectContaining({ suspectedAgents: ['Test agent', 'Propofol'] }),
+      })],
+      databaseDate: '14/07/2026',
+      hasUploadedData: true,
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import TestingPlanGenerator from './TestingPlanGenerator';
 import { createMockPatient } from '@/src/test/factories/patientFactory';
@@ -146,6 +146,25 @@ describe('TestingPlanGenerator', () => {
     renderGenerator(vi.fn(), patientWithReactionDrug);
 
     expect(screen.getByRole('button', { name: /Cis-atracurium/i })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('auto-selects and badges a drug added only as a suspected agent', () => {
+    const patientWithManualSuspect = createMockPatient({
+      id: 'PLAN-SUSPECT',
+      history: {
+        ...patient.history,
+        medications: [],
+        preInductionDrugs: [],
+        postInductionDrugs: [],
+        suspectedAgents: ['Ketamine'],
+      },
+    });
+
+    renderGenerator(vi.fn(), patientWithManualSuspect);
+
+    const ketamine = screen.getByRole('button', { name: /Ketamine/i });
+    expect(ketamine).toHaveAttribute('aria-pressed', 'true');
+    expect(within(ketamine).getByLabelText('Given at time of reaction')).toBeInTheDocument();
   });
 
   it('surfaces REDCap Others text and adds it as a selected custom item', async () => {

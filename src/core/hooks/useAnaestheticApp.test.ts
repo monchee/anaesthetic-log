@@ -43,6 +43,7 @@ describe('useAnaestheticApp tryptase prefill', () => {
       handlePatientSelect: vi.fn(),
       handleManualDetailChange: vi.fn(),
       handleUploadPatients: vi.fn(),
+      toggleSuspectedAgent: vi.fn(),
     } as ReturnType<typeof usePatientState>));
 
     vi.mocked(useTestingState).mockImplementation(() => ({
