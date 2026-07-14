@@ -76,6 +76,8 @@ export function useAnaestheticApp() {
     lastSavedRecord: testingState.lastSavedRecord,
     setLastSavedRecord: testingState.setLastSavedRecord,
     activeReportSavedAt: testingState.activeReportSavedAt,
+    lastDraftSavedAt: testingState.lastDraftSavedAt,
+    isSavingDraft: testingState.isSavingDraft,
     testingPlanData: testingState.testingPlanData,
     setTestingPlanData: testingState.setTestingPlanData,
     recentLogs: testingState.recentLogs,

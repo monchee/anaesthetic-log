@@ -6,6 +6,7 @@ import { APP_CONFIG, DRUG_CATEGORIES } from '@shared/utils/constants';
 import { LogFormData, Patient, TestingPlanData } from '@/types';
 import { CommonScreenLayoutProps } from './types';
 import { PatientIdentityBar } from '@features/patients/components/PatientIdentityBar';
+import { DraftSaveIndicator } from '@features/testing/components/DraftSaveIndicator';
 
 const TestingLogForm = React.lazy(() => import('@features/testing/components/TestingLogForm'));
 const TestingPlanPrintView = React.lazy(() => import('@features/testing/components/TestingPlanPrintView'));
@@ -42,6 +43,8 @@ interface TestingScreenProps {
   selectedPatient: Patient | null;
   formData: LogFormData;
   setFormData: React.Dispatch<React.SetStateAction<LogFormData>>;
+  lastDraftSavedAt: number | null;
+  isSavingDraft: boolean;
   onBack: () => void;
   onSubmit: () => LogFormData;
 }
@@ -51,6 +54,8 @@ export function TestingScreen({
   selectedPatient,
   formData,
   setFormData,
+  lastDraftSavedAt,
+  isSavingDraft,
   onBack,
   onSubmit,
 }: TestingScreenProps) {
@@ -69,6 +74,12 @@ export function TestingScreen({
         reactionDate={selectedPatient?.history.date}
         className="mb-4"
       />
+      <div className="flex min-h-4 justify-end px-1">
+        <DraftSaveIndicator
+          isSaving={isSavingDraft}
+          lastSavedAt={lastDraftSavedAt}
+        />
+      </div>
       <TestingLogForm
         formData={formData}
         setFormData={setFormData}

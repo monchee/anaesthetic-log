@@ -1,5 +1,5 @@
 export { cn } from './cn';
-export { formatDate, calculateTimeDifference } from './dateUtils';
+export { formatDate, formatTime, calculateTimeDifference } from './dateUtils';
 export { getGradeVariant, type GradeVariant } from './gradingUtils';
 export { isSkinTestPositive, getPositiveResults, getNegativeResults, getCrossSensitizedDrugs } from './testingUtils';
 export { parsePatientTimeline, type TimelineEvent } from './timelineUtils';

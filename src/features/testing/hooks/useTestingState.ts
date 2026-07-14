@@ -40,6 +40,8 @@ export function useTestingState() {
   const [formData, setFormData] = useState<LogFormData>(INITIAL_FORM_STATE);
   const [lastSavedRecord, setLastSavedRecord] = useState<LogFormData | null>(null);
   const [activeReportSavedAt, setActiveReportSavedAt] = useState<number | null>(null);
+  const [lastDraftSavedAt, setLastDraftSavedAt] = useState<number | null>(null);
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [testingPlanData, setTestingPlanData] = useState<TestingPlanData | null>(null);
   const [recentLogs, setRecentLogs] = useState<LogFormData[]>([]);
 
@@ -64,10 +66,17 @@ export function useTestingState() {
   // clinician has entered real data; the timestamped entry self-expires (6h).
   const draftTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
-    if (!isTestingSessionDirty(formData)) return;
+    if (!isTestingSessionDirty(formData)) {
+      setIsSavingDraft(false);
+      return;
+    }
     if (draftTimer.current) clearTimeout(draftTimer.current);
+    setIsSavingDraft(true);
     draftTimer.current = setTimeout(() => {
       setWithTTL(TESTING_DRAFT_KEY, formData);
+      setLastDraftSavedAt(Date.now());
+      setIsSavingDraft(false);
+      draftTimer.current = null;
     }, 500);
     return () => {
       if (draftTimer.current) clearTimeout(draftTimer.current);
@@ -121,6 +130,8 @@ export function useTestingState() {
     lastSavedRecord,
     setLastSavedRecord,
     activeReportSavedAt,
+    lastDraftSavedAt,
+    isSavingDraft,
     testingPlanData,
     setTestingPlanData,
     recentLogs,

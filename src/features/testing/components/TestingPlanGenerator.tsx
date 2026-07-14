@@ -6,6 +6,7 @@ import { Printer, Check, X, ClipboardList, ChevronDown, Plus, History, Pin, Sear
 import { CATEGORY_THEMES, DEFAULT_THEME, DEFAULT_SELECTED_DRUGS } from '@shared/utils/constants';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 import { getIfFresh, setWithTTL, TESTING_PLAN_BUILDER_DRAFTS_KEY } from '@shared/utils/ttlStorage';
+import { DraftSaveIndicator } from './DraftSaveIndicator';
 
 interface TestingPlanGeneratorProps {
   patient: Patient;
@@ -107,6 +108,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   const [documentsToChase, setDocumentsToChase] = useState<DocumentsToChase>(restoredDraft.documentsToChase);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
   const [draftPatientId, setDraftPatientId] = useState(patient.id);
+  const [lastDraftSavedAt, setLastDraftSavedAt] = useState<number | null>(null);
   const today = useMemo(getTodayDate, []);
   const allKnownDrugs = useMemo(
     () => [...new Set(Object.values(drugCategories).flat())],
@@ -146,6 +148,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
         documentsToChase,
       },
     });
+    setLastDraftSavedAt(Date.now());
   }, [customDrugs, documentsToChase, draftPatientId, notes, patient.id, reactionDate, selectedDrugs, selectedProtocols, urgent]);
 
   const toggleDoc = (key: 'tryptases' | 'anaestheticChart' | 'other') => {
@@ -316,6 +319,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     <p className="text-xs text-muted-foreground font-medium">
                       Select drugs to generate a printable testing plan
                     </p>
+                    <DraftSaveIndicator lastSavedAt={lastDraftSavedAt} className="mt-1 block" />
                 </div>
              </div>
              <div className="flex items-center gap-3">

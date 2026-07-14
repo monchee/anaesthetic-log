@@ -12,6 +12,14 @@ export const formatDate = (dateStr: string): string => {
   return `${day}/${month}/${year}`;
 };
 
+export const formatTime = (timestamp: number): string => {
+    return new Date(timestamp).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23',
+    });
+};
+
 export const calculateTimeDifference = (start?: string, end?: string): number | null => {
     if (!start || !end) return null;
 

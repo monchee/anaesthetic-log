@@ -41,6 +41,7 @@ function AnaestheticLogApp() {
   const {
     screen, setScreen, formData, setFormData,
     selectedPatient, lastSavedRecord, setLastSavedRecord, activeReportSavedAt,
+    lastDraftSavedAt, isSavingDraft,
     testingPlanData, setTestingPlanData,
     isPatientDialogOpen, setIsPatientDialogOpen,
     patients, databaseDate, hasUploadedData, isLoadingPatients, recentLogs,
@@ -152,6 +153,8 @@ function AnaestheticLogApp() {
           selectedPatient={selectedPatient}
           formData={formData}
           setFormData={setFormData}
+          lastDraftSavedAt={lastDraftSavedAt}
+          isSavingDraft={isSavingDraft}
           onBack={() => setScreen(Screen.LOG)}
           onSubmit={handleSubmit}
         />

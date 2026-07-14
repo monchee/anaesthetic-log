@@ -47,6 +47,13 @@ describe('TestingPlanGenerator', () => {
     expect(screen.getByLabelText('Date of Reaction')).toHaveAttribute('max');
   });
 
+  it('shows when its plan-builder draft was saved', async () => {
+    renderGenerator();
+
+    const indicator = await screen.findByText(/Draft saved · \d{2}:\d{2}/);
+    expect(indicator).toHaveAttribute('aria-live', 'polite');
+  });
+
   it('passes the selected protocol index to preview', async () => {
     const { onPreview } = renderGenerator();
 
