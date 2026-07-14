@@ -20,16 +20,16 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       thresholds: {
         'src/features/testing/**/*.{ts,tsx}': {
-          statements: 64,
-          branches: 64.1,
-          functions: 51,
-          lines: 68,
+          statements: 69,
+          branches: 69,
+          functions: 57,
+          lines: 73,
         },
         'src/shared/utils/csvUtils.ts': {
-          statements: 76,
-          branches: 62,
-          functions: 78,
-          lines: 80,
+          statements: 79,
+          branches: 66,
+          functions: 81,
+          lines: 82,
         },
       },
       exclude: [
