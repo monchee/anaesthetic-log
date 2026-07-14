@@ -3,7 +3,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Sun, Moon, Menu, HelpCircle, Upload, Stethoscope, LayoutDashboard, Info, FlaskConical, Mail, BookOpen, ScrollText, Database } from 'lucide-react';
 import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
+import TTLExpiryBanner from './TTLExpiryBanner';
 import { useTheme } from './ThemeProvider';
+import { useTTLExpiryWarning } from '@shared/hooks/useTTLExpiryWarning';
 import { Screen, Patient } from '@/types';
 import { CSVUploadInstructions } from '@features/dashboard/components/CSVUploadInstructions';
 import { parseRedcapCSV, decodeCsvBytes } from '@shared/utils';
@@ -62,6 +64,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     const setIsCSVUploadSheetOpen = onCSVUploadSheetOpenChange ?? setIsCSVUploadSheetOpenLocal;
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const ttlExpiryWarning = useTTLExpiryWarning();
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -220,6 +223,15 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 {showDisclaimer && !isCustomData && onDismissDisclaimer && (
                     <div className="print:hidden">
                         <DisclaimerBanner onClose={onDismissDisclaimer} onUploadClick={() => setIsCSVUploadSheetOpen(true)} />
+                    </div>
+                )}
+                {ttlExpiryWarning.isNearExpiry && !ttlExpiryWarning.isDismissed && ttlExpiryWarning.expiresAt !== null && (
+                    <div className="print:hidden">
+                        <TTLExpiryBanner
+                            expiresAt={ttlExpiryWarning.expiresAt}
+                            onKeepWorking={ttlExpiryWarning.keepWorking}
+                            onDismiss={ttlExpiryWarning.dismiss}
+                        />
                     </div>
                 )}
             </header>

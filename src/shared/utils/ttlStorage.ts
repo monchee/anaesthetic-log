@@ -40,6 +40,21 @@ export function setWithTTL<T>(key: string, value: T): void {
   }
 }
 
+/** Refresh a stored entry's write timestamp without changing its value. */
+export function refreshTTL(key: string): void {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return;
+    const entry = JSON.parse(raw) as TTLEntry<unknown>;
+    localStorage.setItem(key, JSON.stringify({
+      value: entry.value,
+      savedAt: Date.now(),
+    } satisfies TTLEntry<unknown>));
+  } catch {
+    // localStorage may be unavailable or the entry corrupt — non-fatal
+  }
+}
+
 /**
  * Return the stored value if it was written within `ttlMs`, otherwise remove
  * the key and return null. Also returns null for missing/corrupt entries.
