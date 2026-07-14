@@ -28,7 +28,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   };
 
   const variantStyles = {
-    danger: 'bg-red-600 hover:bg-red-700 text-white',
+    danger: 'bg-destructive hover:bg-destructive/90 text-destructive-foreground',
     warning: 'bg-amber-600 hover:bg-amber-700 text-white',
     info: 'bg-blue-600 hover:bg-blue-700 text-white',
   };

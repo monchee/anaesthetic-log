@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  AlertTriangle,
   ChevronRight,
   FileText,
   Info,
@@ -25,6 +24,7 @@ import {
   Input,
   Label,
 } from '@/components/ui';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
 import TestingPlanGenerator from '@features/testing/components/TestingPlanGenerator';
@@ -119,27 +119,15 @@ export function LogScreen({
         </div>
       )}
 
-      <Dialog open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-destructive">
-              <AlertTriangle className="w-5 h-5" /> Clear active report?
-            </DialogTitle>
-          </DialogHeader>
-          <p className="text-sm text-muted-foreground py-2">
-            This permanently removes the current report{lastSavedRecord ? <> for <strong className="text-foreground">{lastSavedRecord.firstName} {lastSavedRecord.lastName}</strong></> : ''} and any in-progress testing draft from this device. This cannot be undone.
-          </p>
-          <DialogFooter className="gap-2 sm:gap-2">
-            <Button variant="outline" onClick={() => setConfirmClearOpen(false)} className="rounded-none">Cancel</Button>
-            <Button
-              onClick={() => { onClearActiveReport(); setConfirmClearOpen(false); }}
-              className="rounded-none bg-destructive hover:bg-destructive/90 text-white"
-            >
-              Clear report
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={confirmClearOpen}
+        onOpenChange={setConfirmClearOpen}
+        title="Clear active report?"
+        message={`This permanently removes the current report${lastSavedRecord ? ` for ${lastSavedRecord.firstName} ${lastSavedRecord.lastName}` : ''} and any in-progress testing draft from this device. This cannot be undone.`}
+        confirmLabel="Clear report"
+        variant="danger"
+        onConfirm={onClearActiveReport}
+      />
 
       <Card className="shadow-sm rounded-none">
         <CardHeader className="pb-3 border-b border-border bg-card">
