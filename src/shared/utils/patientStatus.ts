@@ -13,6 +13,20 @@ export interface PatientStatusResult {
   docsOutstanding: boolean;
 }
 
+export type OutstandingDocument = 'tryptases' | 'anaestheticChart' | 'other';
+
+const OUTSTANDING_DOCUMENT_FIELDS: OutstandingDocument[] = [
+  'tryptases',
+  'anaestheticChart',
+  'other',
+];
+
+export function getOutstandingDocuments(
+  documentsToChase: Patient['history']['documentsToChase'],
+): OutstandingDocument[] {
+  return OUTSTANDING_DOCUMENT_FIELDS.filter(field => Boolean(documentsToChase?.[field]));
+}
+
 export function derivePatientStatus(
   patient: Patient,
   inputs: DerivePatientStatusInputs,
@@ -28,12 +42,7 @@ export function derivePatientStatus(
     status = 'plan-drafted';
   }
 
-  const documentsToChase = patient.history.documentsToChase;
-  const docsOutstanding = Boolean(
-    documentsToChase?.tryptases
-      || documentsToChase?.anaestheticChart
-      || documentsToChase?.other,
-  );
+  const docsOutstanding = getOutstandingDocuments(patient.history.documentsToChase).length > 0;
 
   return { status, docsOutstanding };
 }

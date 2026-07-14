@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Badge, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { Patient } from '@/types';
 import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck, FlaskConical, Flag } from 'lucide-react';
-import { formatDate, getGradeVariant, parsePatientTimeline, calculateTimeDifference } from '@shared/utils';
+import { formatDate, getGradeVariant, parsePatientTimeline, calculateTimeDifference, getOutstandingDocuments } from '@shared/utils';
 
 interface PatientHistoryProps {
   patient: Patient;
@@ -88,6 +88,35 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
         : `${history.tryptases.length} samples`
     : history.tryptase;
 
+  const hasTryptaseSamples = Boolean(history.tryptases?.length);
+  const hasExposureData = sortedEvents.length > 0 || untimedAdministered.length > 0;
+  const outstandingDocuments = getOutstandingDocuments(history.documentsToChase);
+  const outstandingDocumentLabels = outstandingDocuments.map(document => {
+    switch (document) {
+      case 'tryptases': return 'tryptase';
+      case 'anaestheticChart': return 'anaesthetic chart';
+      case 'other': return 'other documents';
+    }
+  });
+  const chartUploadStatus = history.uploadedDocs?.anaestheticChart;
+
+  const checklistItems = [
+    hasTryptaseSamples
+      ? { state: 'pass', label: 'Tryptase recorded', icon: CheckCircle2 }
+      : { state: 'warning', label: 'Tryptase not recorded — check with referrer', icon: AlertCircle },
+    hasExposureData
+      ? { state: 'pass', label: 'Timed medication exposures present', icon: CheckCircle2 }
+      : { state: 'warning', label: 'No timed exposures recorded', icon: AlertCircle },
+    outstandingDocuments.length === 0
+      ? { state: 'pass', label: 'No documents outstanding', icon: CheckCircle2 }
+      : { state: 'warning', label: `Documents outstanding: ${outstandingDocumentLabels.join(', ')}`, icon: AlertCircle },
+    chartUploadStatus === true
+      ? { state: 'pass', label: 'Anaesthetic chart uploaded', icon: CheckCircle2 }
+      : chartUploadStatus === false
+        ? { state: 'warning', label: 'Anaesthetic chart not uploaded', icon: AlertCircle }
+        : { state: 'unknown', label: 'Anaesthetic chart upload status not tracked in this export', icon: HelpCircle },
+  ] as const;
+
   return (
     <Card className="shadow-md bg-card">
       <CardHeader className="pb-3 border-b border-border bg-slate-50/50 dark:bg-muted/20">
@@ -138,6 +167,27 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                 )}
             </div>
         </div>
+
+        <section aria-labelledby="referral-checklist-heading" className="border border-border bg-muted/20 px-3 py-2.5">
+            <h3 id="referral-checklist-heading" className="section-label mb-2">Referral information</h3>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-2">
+                {checklistItems.map(item => {
+                    const ItemIcon = item.icon;
+                    const stateClass = item.state === 'pass'
+                        ? 'text-emerald-700 dark:text-emerald-400'
+                        : item.state === 'warning'
+                            ? 'text-amber-700 dark:text-amber-400'
+                            : 'text-muted-foreground';
+
+                    return (
+                        <li key={item.label} data-state={item.state} className={`flex items-start gap-1.5 text-xs font-medium leading-4 ${stateClass}`}>
+                            <ItemIcon className="h-3.5 w-3.5 shrink-0 mt-px" aria-hidden="true" />
+                            <span>{item.label}</span>
+                        </li>
+                    );
+                })}
+            </ul>
+        </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             

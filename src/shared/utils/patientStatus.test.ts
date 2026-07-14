@@ -2,6 +2,7 @@ import type { Patient } from '@features/patients/types';
 import { describe, expect, it } from 'vitest';
 import {
   derivePatientStatus,
+  getOutstandingDocuments,
   type DerivePatientStatusInputs,
 } from './patientStatus';
 
@@ -121,6 +122,16 @@ describe('derivePatientStatus status', () => {
 });
 
 describe('derivePatientStatus docsOutstanding', () => {
+  it('uses the reusable document helper for the same three chase flags', () => {
+    expect(getOutstandingDocuments({
+      tryptases: true,
+      anaestheticChart: false,
+      other: true,
+      otherText: 'Referral letter',
+    })).toEqual(['tryptases', 'other']);
+    expect(getOutstandingDocuments(undefined)).toEqual([]);
+  });
+
   it.each([
     ['tryptases', { tryptases: true }],
     ['anaesthetic chart', { anaestheticChart: true }],
