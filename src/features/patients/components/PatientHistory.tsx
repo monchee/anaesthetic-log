@@ -2,11 +2,14 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Badge, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { Patient } from '@/types';
-import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck, FlaskConical } from 'lucide-react';
-import { formatDate, getGradeVariant, parsePatientTimeline, calculateTimeDifference } from '@shared/utils';
+import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck, FlaskConical, Flag } from 'lucide-react';
+import { formatDate, getGradeVariant, parsePatientTimeline, calculateTimeDifference, getOutstandingDocuments } from '@shared/utils';
+import { deriveHighRiskChips } from '@shared/utils/highRiskContext';
+import { HighRiskContextChips } from './HighRiskContextChips';
 
 interface PatientHistoryProps {
   patient: Patient;
+  onToggleSuspectedAgent: (drugName: string) => void;
 }
 
 type TryptaseSample = NonNullable<Patient['history']['tryptases']>[number];
@@ -24,8 +27,9 @@ function getTryptasePeak(samples?: TryptaseSample[]): { index: number; value: nu
   }, null);
 }
 
-const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
+const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspectedAgent }) => {
   const { history } = patient;
+  const highRiskChips = deriveHighRiskChips(history);
 
   const formatTime = (time?: string) => {
     if (!time) return "--:--";
@@ -87,6 +91,35 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
         : `${history.tryptases.length} samples`
     : history.tryptase;
 
+  const hasTryptaseSamples = Boolean(history.tryptases?.length);
+  const hasExposureData = sortedEvents.length > 0 || untimedAdministered.length > 0;
+  const outstandingDocuments = getOutstandingDocuments(history.documentsToChase);
+  const outstandingDocumentLabels = outstandingDocuments.map(document => {
+    switch (document) {
+      case 'tryptases': return 'tryptase';
+      case 'anaestheticChart': return 'anaesthetic chart';
+      case 'other': return 'other documents';
+    }
+  });
+  const chartUploadStatus = history.uploadedDocs?.anaestheticChart;
+
+  const checklistItems = [
+    hasTryptaseSamples
+      ? { state: 'pass', label: 'Tryptase recorded', icon: CheckCircle2 }
+      : { state: 'warning', label: 'Tryptase not recorded — check with referrer', icon: AlertCircle },
+    hasExposureData
+      ? { state: 'pass', label: 'Timed medication exposures present', icon: CheckCircle2 }
+      : { state: 'warning', label: 'No timed exposures recorded', icon: AlertCircle },
+    outstandingDocuments.length === 0
+      ? { state: 'pass', label: 'No documents outstanding', icon: CheckCircle2 }
+      : { state: 'warning', label: `Documents outstanding: ${outstandingDocumentLabels.join(', ')}`, icon: AlertCircle },
+    chartUploadStatus === true
+      ? { state: 'pass', label: 'Anaesthetic chart uploaded', icon: CheckCircle2 }
+      : chartUploadStatus === false
+        ? { state: 'warning', label: 'Anaesthetic chart not uploaded', icon: AlertCircle }
+        : { state: 'unknown', label: 'Anaesthetic chart upload status not tracked in this export', icon: HelpCircle },
+  ] as const;
+
   return (
     <Card className="shadow-md bg-card">
       <CardHeader className="pb-3 border-b border-border bg-slate-50/50 dark:bg-muted/20">
@@ -138,13 +171,39 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
             </div>
         </div>
 
+        <HighRiskContextChips
+            chips={highRiskChips}
+            className="border border-amber-200 bg-amber-50/70 px-3 py-2 dark:border-amber-800 dark:bg-amber-950/20"
+        />
+
+        <section aria-labelledby="referral-checklist-heading" className="border border-border bg-muted/20 px-3 py-2.5">
+            <h3 id="referral-checklist-heading" className="section-label mb-2">Referral information</h3>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-2">
+                {checklistItems.map(item => {
+                    const ItemIcon = item.icon;
+                    const stateClass = item.state === 'pass'
+                        ? 'text-emerald-700 dark:text-emerald-400'
+                        : item.state === 'warning'
+                            ? 'text-amber-700 dark:text-amber-400'
+                            : 'text-muted-foreground';
+
+                    return (
+                        <li key={item.label} data-state={item.state} className={`flex items-start gap-1.5 text-xs font-medium leading-4 ${stateClass}`}>
+                            <ItemIcon className="h-3.5 w-3.5 shrink-0 mt-px" aria-hidden="true" />
+                            <span>{item.label}</span>
+                        </li>
+                    );
+                })}
+            </ul>
+        </section>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             {/* LEFT COLUMN (Details) */}
             <div className="lg:col-span-7 flex flex-col gap-5">
                 
                 {/* 1. Suspected Agents */}
-                {history.suspectedAgents && history.suspectedAgents.length > 0 && (
+                {history.suspectedAgents && history.suspectedAgents.length > 0 ? (
                     <div className="space-y-2">
                             <div className="flex items-center gap-2">
                             <AlertTriangle className="h-3.5 w-3.5 text-red-500 shrink-0" />
@@ -155,6 +214,16 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                 <Badge key={i} variant="danger" className="text-xs px-2.5 py-0.5">{agent}</Badge>
                             ))}
                         </div>
+                    </div>
+                ) : (
+                    <div className="space-y-2">
+                        <div className="section-label flex items-center gap-2">
+                            <Info className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                            Suspected Culprit Agents
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Not captured in referral — review the medication timeline below.
+                        </p>
                     </div>
                 )}
 
@@ -178,6 +247,18 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             </div>
                             <div className="bg-card p-3 rounded-none border border-border text-muted-foreground leading-relaxed text-xs italic">
                                 {history.comments}
+                            </div>
+                        </div>
+                    )}
+
+                    {history.differentialDiagnosis && (
+                        <div className="space-y-2">
+                            <div className="section-label flex items-center gap-2">
+                                <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                                Differential Diagnosis
+                            </div>
+                            <div className="bg-card p-3 rounded-none border border-border text-muted-foreground leading-relaxed text-xs">
+                                {history.differentialDiagnosis}
                             </div>
                         </div>
                     )}
@@ -386,10 +467,23 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                                                         <span className="font-bold text-xs text-red-700 dark:text-red-300">
                                                             {event.label}
                                                         </span>
-                                                    ) : (
-                                                        <span className="font-semibold text-xs text-foreground/90">
+                                                    ) : event.type === 'med' ? (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => onToggleSuspectedAgent(event.label)}
+                                                            aria-pressed={history.suspectedAgents.includes(event.label)}
+                                                            aria-label={`${history.suspectedAgents.includes(event.label) ? 'Unmark' : 'Mark'} ${event.label} as suspected culprit agent`}
+                                                            className={`inline-flex items-center gap-1 border px-2 py-1 text-xs font-semibold transition-colors ${
+                                                                history.suspectedAgents.includes(event.label)
+                                                                    ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300'
+                                                                    : 'border-border bg-muted/40 text-foreground/90 hover:border-primary/50 hover:text-primary'
+                                                            }`}
+                                                        >
+                                                            {history.suspectedAgents.includes(event.label) && <Flag className="h-3 w-3 fill-current" aria-hidden="true" />}
                                                             {event.label}
-                                                        </span>
+                                                        </button>
+                                                    ) : (
+                                                        <span className="font-semibold text-xs text-foreground/90">{event.label}</span>
                                                     )}
                                                 </div>
                                                 <span className={`font-mono text-xs font-bold ${
@@ -421,13 +515,21 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
                             <p className="section-label mb-2">Agents with no listed time</p>
                             <div className="flex flex-wrap gap-1.5">
                                 {untimedAdministered.map((drug, idx) => (
-                                    <Badge 
-                                        key={idx} 
-                                        variant="secondary"
-                                        className="text-xs font-medium text-muted-foreground bg-muted border-border"
+                                    <button
+                                        key={idx}
+                                        type="button"
+                                        onClick={() => onToggleSuspectedAgent(drug)}
+                                        aria-pressed={history.suspectedAgents.includes(drug)}
+                                        aria-label={`${history.suspectedAgents.includes(drug) ? 'Unmark' : 'Mark'} ${drug} as suspected culprit agent`}
+                                        className={`inline-flex items-center gap-1 border px-2.5 py-0.5 text-xs font-medium transition-colors ${
+                                            history.suspectedAgents.includes(drug)
+                                                ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300'
+                                                : 'border-border bg-muted text-muted-foreground hover:border-primary/50 hover:text-primary'
+                                        }`}
                                     >
+                                        {history.suspectedAgents.includes(drug) && <Flag className="h-3 w-3 fill-current" aria-hidden="true" />}
                                         {drug}
-                                    </Badge>
+                                    </button>
                                 ))}
                             </div>
                         </div>

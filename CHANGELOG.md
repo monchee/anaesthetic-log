@@ -1,3 +1,29 @@
+## [0.72.0] — 2026-07-14 (Referral Trust)
+
+Summary: Tryptase results from the referral now prefill the testing record and Powerchart letter, preventing the clinically unsafe false claim that serial samples were "not obtained." This release also adds a persistent patient worklist, clearer clinical completeness cues, safer imports, and stronger privacy protections across the five-phase UX improvement programme.
+
+### Added
+- **Sticky patient identity at clinical decision points** — Testing Session and Summary screens keep the patient's name, MRN, and DOB visible while clinicians scroll, reducing wrong-patient risk during data entry and report review.
+- **Visible autosave status** — testing-session and Testing Request Form drafts now show when they are saving and when they were last saved, making browser-local persistence explicit.
+- **Persistent patient worklist with workflow status** — imported cohorts persist for 6 hours across refreshes, while the dashboard derives Referral, Plan drafted, Testing, and Reported states and adds Needs action and Reported filters.
+- **Expiry warning for local clinical data** — a banner warns before the 6-hour browser-local TTL expires and offers a Keep working action to extend the active session.
+- **Honest suspected-agent review** — an explicit empty state no longer implies an agent was identified when none was imported, and clinicians can tap medication-timeline entries to mark or unmark suspected agents.
+- **Missing-information checklist** — patient history highlights absent anaesthetic charts, resuscitation charts, tryptase results, discharge letters, suspected agents, and differential diagnosis before testing proceeds.
+- **High-risk context chips** — beta-blocker, ACE inhibitor, pregnancy, and asthma context now appears during patient review and testing where it can inform clinical decisions.
+- **Pharmacy-verification flags** — testing-request builder and print views flag masterlist preparations whose concentration or preparation details still require pharmacy confirmation.
+
+### Changed
+- **Clinical terminology is consistent end to end** — screens and actions now use Testing Request Form, Testing Session, and Reports consistently instead of mixing plan, log, and summary labels.
+- **Confirmation dialogs share one safety pattern** — destructive and high-impact actions now use the same accessible confirmation dialog, wording hierarchy, and destructive styling.
+- **CSV uploads explain progress and outcomes** — upload surfaces show parsing state plus imported and skipped-row totals, so clinicians receive clear feedback instead of a silent transition.
+- **Duplicate uploads can replace the cohort** — uploading an already loaded REDCap database now offers an explicit full-database replacement flow instead of rejecting the file.
+
+### Fixed
+- **Quoted multi-line CSV fields import correctly** — the REDCap parser now honours quoted records containing commas, escaped quotes, and embedded newlines instead of splitting one patient across multiple rows.
+- **Sentry removes PHI from every event text surface** — identifiers and DOB-shaped dates are scrubbed from messages, exceptions, breadcrumbs, and extras; user and cookie data are removed before transmission.
+- **MRNs retain their recorded casing** — patient identifiers are displayed verbatim instead of being incorrectly forced to lowercase.
+- **Referral tryptase data reaches the Powerchart letter** — imported tryptase samples prefill the testing record and generated letter, so existing results are reported rather than falsely described as "not obtained."
+
 ## [0.71.0] — 2026-06-11 (Any Encoding)
 
 Summary: Fixes CSV import rejecting valid REDCap exports with "Missing required columns" when the file isn't UTF-8. Excel "Save As" commonly writes UTF-16, which the app decoded as UTF-8 — garbling every column name so all required headers failed at once. Imports now work regardless of file encoding.

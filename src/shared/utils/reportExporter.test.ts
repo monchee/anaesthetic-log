@@ -18,6 +18,24 @@ describe('formatTryptaseSentence', () => {
       .toBe('Serial serum tryptase samples were not obtained.');
   });
 
+  it('keeps the exact not-obtained sentence when there was no referral data', () => {
+    expect(formatTryptaseSentence({
+      obtained: false,
+      significantElevation: false,
+      values: [],
+      hadReferralData: false,
+    })).toBe('Serial serum tryptase samples were not obtained.');
+  });
+
+  it('uses pending-confirmation wording when the referral contained tryptase data', () => {
+    expect(formatTryptaseSentence({
+      obtained: false,
+      significantElevation: false,
+      values: [],
+      hadReferralData: true,
+    })).toBe('Serial serum tryptase results are pending confirmation.');
+  });
+
   it('uses the standard obtained and not-elevated sentence with values', () => {
     expect(formatTryptaseSentence({
       obtained: true,
@@ -83,10 +101,12 @@ describe('formatClinicalReportAsText', () => {
       firstName: 'Alice',
       lastName: 'Smith',
       mrn: 'MRN-999',
+      dob: '1980-05-01',
     }), () => '[redacted]');
 
     expect(text).toContain('Patient: [redacted]');
     expect(text).toContain('MRN: [redacted]');
+    expect(text).toContain('DOB: [redacted]');
     expect(text).not.toContain('Alice Smith');
     expect(text).not.toContain('MRN-999');
   });
@@ -124,9 +144,11 @@ describe('formatPatientHandoutAsText', () => {
     const text = formatPatientHandoutAsText(createMockLogFormData({
       firstName: 'Alice',
       lastName: 'Smith',
+      dob: '1980-05-01',
     }), () => '[redacted]');
 
     expect(text).toContain('Patient: [redacted]');
+    expect(text).toContain('DOB: [redacted]');
     expect(text).not.toContain('Alice Smith');
   });
 });
@@ -158,6 +180,21 @@ describe('generateLetterText', () => {
 
     expect(text).toContain('John presented to the RPA ANZAAG Allergy Clinic');
     expect(text).not.toContain('presented to [hospital]');
+  });
+
+  it('never claims samples were not obtained when referral data awaits confirmation', () => {
+    const text = generateLetterText(createMockLogFormData({
+      tryptase: {
+        obtained: false,
+        significantElevation: false,
+        values: [],
+        source: 'entered',
+        hadReferralData: true,
+      },
+    }), createMockPatient());
+
+    expect(text).toContain('Serial serum tryptase results are pending confirmation.');
+    expect(text).not.toContain('Serial serum tryptase samples were not obtained.');
   });
 
   it('redacts patient identifiers when requested', () => {

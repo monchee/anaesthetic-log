@@ -70,4 +70,26 @@ describe('TestingPlanPrintView', () => {
     expect(screen.getByText('Sodium citrate flush')).toBeInTheDocument();
     expect(screen.getByText('not listed')).toHaveClass('border');
   });
+
+  it('prints a black-and-white-safe pharmacy warning only for flagged drugs', () => {
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={{
+          ...baseData,
+          selectedDrugs: ['Cephalexin', 'Rocuronium'],
+          selectedProtocols: { Cephalexin: 0, Rocuronium: 0 },
+        }}
+        drugCategories={{
+          Penicillins: ['Cephalexin'],
+          'Muscle Relaxants': ['Rocuronium'],
+        }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    const warning = screen.getByText('⚠ Confirm preparation with pharmacy');
+    expect(warning).toHaveClass('print:border-black', 'print:bg-white', 'print:text-black', 'font-bold');
+    expect(screen.getAllByText(/Confirm preparation with pharmacy/)).toHaveLength(1);
+  });
 });

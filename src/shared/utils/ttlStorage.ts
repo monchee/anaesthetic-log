@@ -14,7 +14,13 @@ export const ACTIVE_REPORT_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 export const ACTIVE_REPORT_KEY = 'dream:active_report';
 export const TESTING_DRAFT_KEY = 'dream:testing_draft';
 export const TESTING_PLAN_BUILDER_DRAFTS_KEY = 'dream:testing_plan_builder_drafts';
-export const PATIENT_DATA_KEYS = [ACTIVE_REPORT_KEY, TESTING_DRAFT_KEY, TESTING_PLAN_BUILDER_DRAFTS_KEY] as const;
+export const PATIENT_DB_KEY = 'dream:patient_db';
+export const PATIENT_DATA_KEYS = [
+  ACTIVE_REPORT_KEY,
+  TESTING_DRAFT_KEY,
+  TESTING_PLAN_BUILDER_DRAFTS_KEY,
+  PATIENT_DB_KEY,
+] as const;
 
 interface TTLEntry<T> {
   value: T;
@@ -31,6 +37,21 @@ export function setWithTTL<T>(key: string, value: T): void {
       console.warn(`Unable to save local clinical data for "${key}": browser storage quota exceeded.`);
     }
     // localStorage may be unavailable (private mode / quota) — non-fatal
+  }
+}
+
+/** Refresh a stored entry's write timestamp without changing its value. */
+export function refreshTTL(key: string): void {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return;
+    const entry = JSON.parse(raw) as TTLEntry<unknown>;
+    localStorage.setItem(key, JSON.stringify({
+      value: entry.value,
+      savedAt: Date.now(),
+    } satisfies TTLEntry<unknown>));
+  } catch {
+    // localStorage may be unavailable or the entry corrupt — non-fatal
   }
 }
 

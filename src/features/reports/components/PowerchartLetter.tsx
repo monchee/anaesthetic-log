@@ -119,7 +119,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
 
           {/* Tryptase sentence (3A) — always rendered; defaults to "not obtained" */}
           <p className="italic text-foreground/80">
-            {formatTryptaseSentence(data.tryptase ?? { obtained: false, significantElevation: false, values: [] })}
+            {formatTryptaseSentence(data.tryptase)}
           </p>
 
           <p>
@@ -162,7 +162,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
           )}
           {negResults.length > 0 && (
             <div>
-              <p className="text-xs uppercase tracking-wider font-bold text-slate-500 mb-1 print:text-[9px]">Negative</p>
+              <p className="text-xs uppercase tracking-wider font-bold text-slate-600 mb-1 print:text-[9px]">Negative</p>
               <ul className="space-y-1">
                 {negResults.map((drug, i) => (
                   <li key={i} className="text-foreground/80 text-sm print:text-xs">{drug}: negative</li>

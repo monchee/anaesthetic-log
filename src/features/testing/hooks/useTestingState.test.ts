@@ -167,24 +167,39 @@ describe('useTestingState', () => {
     });
   });
 
-  it('autosaves dirty sessions after the debounce delay', () => {
+  it('autosaves dirty sessions after the debounce delay', async () => {
     vi.useFakeTimers();
+    const initialTime = new Date(2026, 5, 10, 14, 5);
+    vi.setSystemTime(initialTime);
     const { result } = renderHook(() => useTestingState());
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(result.current.lastDraftSavedAt).toBeNull();
+    expect(result.current.isSavingDraft).toBe(false);
 
     act(() => {
       result.current.setFormData({ ...result.current.formData, controls: { ...result.current.formData.controls, histamineSpt: '5' } });
     });
 
+    expect(result.current.isSavingDraft).toBe(true);
+    expect(result.current.lastDraftSavedAt).toBeNull();
+
     act(() => {
       vi.advanceTimersByTime(499);
     });
     expect(localStorage.getItem(TESTING_DRAFT_KEY)).toBeNull();
+    expect(result.current.lastDraftSavedAt).toBeNull();
 
     act(() => {
       vi.advanceTimersByTime(1);
     });
 
     expect(readTTL<LogFormData>(TESTING_DRAFT_KEY)?.controls.histamineSpt).toBe('5');
+    expect(result.current.lastDraftSavedAt).toBe(initialTime.getTime() + 500);
+    expect(result.current.isSavingDraft).toBe(false);
   });
 
   it('sanitizes and saves submitted records, then clears the draft', async () => {

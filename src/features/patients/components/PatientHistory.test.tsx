@@ -1,15 +1,137 @@
-import { render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import PatientHistory from './PatientHistory';
 import { createMockPatient, createMockPatientHistory } from '@/src/test/factories/patientFactory';
 
-function renderHistory(historyOverrides: Parameters<typeof createMockPatientHistory>[0] = {}) {
+function renderHistory(
+  historyOverrides: Parameters<typeof createMockPatientHistory>[0] = {},
+  onToggleSuspectedAgent = vi.fn(),
+) {
   const patient = createMockPatient({
     history: createMockPatientHistory(historyOverrides),
   });
 
-  return render(<PatientHistory patient={patient} />);
+  return {
+    ...render(<PatientHistory patient={patient} onToggleSuspectedAgent={onToggleSuspectedAgent} />),
+    onToggleSuspectedAgent,
+  };
 }
+
+describe('PatientHistory high-risk clinical context', () => {
+  it('renders matching medication and condition chips', () => {
+    renderHistory({
+      highRiskMeds: ['Taking a beta blocker', 'ACE-I'],
+      conditions: ['Pregnancy', 'Asthma'],
+    });
+
+    const context = screen.getByRole('region', { name: 'High-risk clinical context' });
+    expect(within(context).getByText('Beta-blocker')).toBeInTheDocument();
+    expect(within(context).getByText('ACE-inhibitor')).toBeInTheDocument();
+    expect(within(context).getByText('Pregnancy')).toBeInTheDocument();
+    expect(within(context).getByText('Asthma')).toBeInTheDocument();
+  });
+
+  it('does not render the context row when there are no matches', () => {
+    renderHistory({ highRiskMeds: ['Anti-hypertensive'], conditions: ['Eczema'] });
+
+    expect(screen.queryByRole('region', { name: 'High-risk clinical context' })).not.toBeInTheDocument();
+  });
+});
+
+describe('PatientHistory referral information checklist', () => {
+  it('renders all checks as passing when referral information is complete', () => {
+    renderHistory({
+      tryptases: [{ time: '09:30', result: '12.4' }],
+      medications: ['Propofol @ 09:10'],
+      documentsToChase: { tryptases: false, anaestheticChart: false, other: false },
+      uploadedDocs: { anaestheticChart: true },
+    });
+
+    const checklist = screen.getByRole('region', { name: 'Referral information' });
+    expect(within(checklist).getByText('Tryptase recorded')).toBeInTheDocument();
+    expect(within(checklist).getByText('Timed medication exposures present')).toBeInTheDocument();
+    expect(within(checklist).getByText('No documents outstanding')).toBeInTheDocument();
+    expect(within(checklist).getByText('Anaesthetic chart uploaded')).toBeInTheDocument();
+
+    const items = within(checklist).getAllByRole('listitem');
+    expect(items).toHaveLength(4);
+    items.forEach(item => {
+      expect(item).toHaveAttribute('data-state', 'pass');
+      expect(item).toHaveClass('text-emerald-700');
+    });
+  });
+
+  it('renders all checks as warnings when referral information is missing', () => {
+    renderHistory({
+      tryptases: undefined,
+      medications: [],
+      preInductionDrugs: [],
+      postInductionDrugs: [],
+      inductionTime: undefined,
+      reactionTime: undefined,
+      documentsToChase: { tryptases: true, anaestheticChart: true, other: true },
+      uploadedDocs: { anaestheticChart: false },
+    });
+
+    const checklist = screen.getByRole('region', { name: 'Referral information' });
+    expect(within(checklist).getByText('Tryptase not recorded — check with referrer')).toBeInTheDocument();
+    expect(within(checklist).getByText('No timed exposures recorded')).toBeInTheDocument();
+    expect(within(checklist).getByText('Documents outstanding: tryptase, anaesthetic chart, other documents')).toBeInTheDocument();
+    expect(within(checklist).getByText('Anaesthetic chart not uploaded')).toBeInTheDocument();
+
+    const items = within(checklist).getAllByRole('listitem');
+    expect(items).toHaveLength(4);
+    items.forEach(item => {
+      expect(item).toHaveAttribute('data-state', 'warning');
+      expect(item).toHaveClass('text-amber-700');
+    });
+  });
+
+  it('renders an absent chart-upload field as unknown rather than warning', () => {
+    renderHistory({ uploadedDocs: undefined });
+
+    const checklist = screen.getByRole('region', { name: 'Referral information' });
+    const unknownLabel = within(checklist).getByText('Anaesthetic chart upload status not tracked in this export');
+    const item = unknownLabel.closest('li');
+
+    expect(item).toHaveAttribute('data-state', 'unknown');
+    expect(item).toHaveClass('text-muted-foreground');
+    expect(item).not.toHaveClass('text-amber-700');
+  });
+});
+
+describe('PatientHistory suspected culprit agents', () => {
+  it('explains when suspected agents were not captured in the referral', () => {
+    renderHistory({ suspectedAgents: [] });
+
+    expect(screen.getByText('Suspected Culprit Agents')).toBeInTheDocument();
+    expect(screen.getByText('Not captured in referral — review the medication timeline below.')).toBeInTheDocument();
+  });
+
+  it('keeps populated suspected agents in the danger panel', () => {
+    renderHistory({ suspectedAgents: ['Rocuronium'] });
+
+    const agent = screen.getAllByText('Rocuronium').find(element => element.closest('.bg-red-50'));
+    expect(agent).toHaveClass('bg-red-500', 'text-white');
+  });
+
+  it('toggles a timed medication with the exact drug name', () => {
+    const onToggleSuspectedAgent = vi.fn();
+    renderHistory({ suspectedAgents: [], medications: ['Propofol @ 09:10'] }, onToggleSuspectedAgent);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Mark Propofol as suspected culprit agent' }));
+
+    expect(onToggleSuspectedAgent).toHaveBeenCalledWith('Propofol');
+  });
+
+  it('renders a marked timeline medication in its pressed danger state', () => {
+    renderHistory({ suspectedAgents: ['Propofol'], medications: ['Propofol @ 09:10'] });
+
+    const markedDrug = screen.getByRole('button', { name: 'Unmark Propofol as suspected culprit agent' });
+    expect(markedDrug).toHaveAttribute('aria-pressed', 'true');
+    expect(markedDrug).toHaveClass('bg-red-50');
+  });
+});
 
 describe('PatientHistory serum tryptase display', () => {
   it('renders multiple tryptase samples in order with time and result', () => {

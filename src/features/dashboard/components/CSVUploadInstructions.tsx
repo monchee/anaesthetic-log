@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui';
-import { ExternalLink, FileUp } from 'lucide-react';
+import { ExternalLink, FileUp, Loader2 } from 'lucide-react';
 
 interface CSVUploadInstructionsProps {
   isOpen: boolean;
@@ -87,26 +87,37 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
           </div>
 
           <div className="flex justify-center pt-4">
-            <input
-              type="file"
-              accept=".csv"
-              onChange={onUpload}
-              disabled={isUploading}
-              className="block w-full text-sm text-muted-foreground
-                file:mr-4 file:py-2 file:px-4
-                rounded-full
-                file:border-0
-                file:text-sm
-                file:font-semibold
-                file:bg-primary
-                file:text-white
-                hover:file:bg-primary/90
-                focus:outline-none
-                focus:ring-2 focus:ring-primary
-                focus:ring-offset-2
-                disabled:opacity-50
-                disabled:cursor-not-allowed"
-            />
+            {isUploading ? (
+              <div
+                role="status"
+                aria-live="polite"
+                className="flex w-full items-center justify-center gap-2 border border-border bg-muted/40 px-4 py-3 text-sm font-medium text-foreground"
+              >
+                <Loader2 className="h-4 w-4 animate-spin text-primary" aria-hidden="true" />
+                <span>Parsing…</span>
+              </div>
+            ) : (
+              <input
+                type="file"
+                accept=".csv"
+                onChange={onUpload}
+                disabled={isUploading}
+                className="block w-full text-sm text-muted-foreground
+                  file:mr-4 file:py-2 file:px-4
+                  rounded-full
+                  file:border-0
+                  file:text-sm
+                  file:font-semibold
+                  file:bg-primary
+                  file:text-white
+                  hover:file:bg-primary/90
+                  focus:outline-none
+                  focus:ring-2 focus:ring-primary
+                  focus:ring-offset-2
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed"
+              />
+            )}
           </div>
         </div>
       </SheetContent>

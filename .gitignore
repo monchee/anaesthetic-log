@@ -32,6 +32,7 @@ coverage/
 test-results/
 test-results*.json
 playwright-report/
+e2e/screenshots/
 
 # Patient data / PII — must never be committed
 /data/

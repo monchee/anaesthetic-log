@@ -12,6 +12,7 @@ interface DashboardScreenProps {
   patients: Patient[];
   recentLogs: LogFormData[];
   isLoadingPatients: boolean;
+  patientDbSavedAt: number | null;
   onSetScreen: (screen: Screen) => void;
   onViewLog: (log: LogFormData) => void;
   onSelectPatient: (patient: Patient) => void;
@@ -23,6 +24,7 @@ export function DashboardScreen({
   patients,
   recentLogs,
   isLoadingPatients,
+  patientDbSavedAt,
   onSetScreen,
   onViewLog,
   onSelectPatient,
@@ -43,6 +45,7 @@ export function DashboardScreen({
         databaseDate={layoutProps.databaseDate}
         isCustomData={layoutProps.isCustomData}
         isLoadingPatients={isLoadingPatients}
+        patientDbSavedAt={patientDbSavedAt}
       />
     </ScreenLayout>
   );

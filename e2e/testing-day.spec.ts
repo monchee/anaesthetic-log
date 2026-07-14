@@ -34,6 +34,7 @@ test.describe('Testing Day Flow', () => {
     // Clear persisted patient data so mock patients load fresh
     await page.evaluate(() => {
       localStorage.removeItem('anaesthetic_patients');
+      localStorage.removeItem('dream:patient_db');
     });
     await page.reload();
     await page.waitForLoadState('networkidle');
@@ -55,8 +56,8 @@ test.describe('Testing Day Flow', () => {
     await expect(weiOption).toBeVisible({ timeout: 5000 });
     await weiOption.click();
 
-    // ── Step 3: Proceed to Testing Panel ──────────────────────────────────
-    const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
+    // ── Step 3: Start Testing Session ──────────────────────────────────
+    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
     await page.waitForLoadState('networkidle');
@@ -73,19 +74,26 @@ test.describe('Testing Day Flow', () => {
       await histamineField.fill('5');
     }
 
-    // ── Step 6: Save clinical record ──────────────────────────────────────
+    // ── Step 6: Enter and read back a positive SPT wheal ──────────────────
+    const sptWhealField = page.getByPlaceholder('-').first();
+    await expect(sptWhealField).toBeVisible();
+    await sptWhealField.fill('3');
+    await expect(sptWhealField).toHaveValue('3');
+    await expect(page.getByText('+POS').first()).toBeVisible();
+
+    // ── Step 7: Save clinical record ──────────────────────────────────────
     const saveBtn = page.getByRole('button', { name: /Save Clinical Record/i });
     await saveBtn.click();
     await dismissHelpModal(page);
 
-    // ── Step 7: Report screen appears (SUMMARY) ────────────────────────────
+    // ── Step 8: Report screen appears (SUMMARY) ────────────────────────────
     await expect(page.getByRole('tab', { name: 'Clinical Report' })).toBeVisible({ timeout: 10000 });
 
-    // ── Step 8: Print button is present ───────────────────────────────────
+    // ── Step 9: Print button is present ───────────────────────────────────
     const printBtn = page.getByRole('button', { name: /print/i }).first();
     await expect(printBtn).toBeVisible({ timeout: 5000 });
 
-    // ── Step 9: Navigate back to the log, then to Dashboard ────────────────
+    // ── Step 10: Navigate back to the log, then to Dashboard ───────────────
     await page.getByRole('button', { name: /Start New Log/i }).click();
     await dismissHelpModal(page);
     const dashboardBtn = page.getByRole('button', { name: /dashboard/i }).first();
@@ -93,7 +101,7 @@ test.describe('Testing Day Flow', () => {
     await dashboardBtn.click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
 
-    // ── Step 10: Recent Testing Activity shows sessions ────────────────────
+    // ── Step 11: Recent Testing Activity shows sessions ────────────────────
     // Mock logs are seeded — the dashboard should show at least one recent session
     await expect(page.getByText(/Recent Testing Activity/i).or(page.getByText(/recent/i))).toBeVisible({ timeout: 5000 });
   });
@@ -109,7 +117,7 @@ test.describe('Testing Day Flow', () => {
     await page.waitForTimeout(300);
     await page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first().click();
 
-    const proceedBtn = page.getByRole('button', { name: /Proceed to Testing Panel/i });
+    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
     await dismissHelpModal(page);
@@ -128,5 +136,50 @@ test.describe('Testing Day Flow', () => {
     await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
     await expect(page.getByLabel(/histamine/i).first()).toHaveValue('5');
     await expect(page.getByText(/Chen, Wei|Wei Chen/)).toBeVisible({ timeout: 5000 });
+  });
+
+  test('marks only required manual patient fields with asterisks', async ({ page }) => {
+    const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
+    await expect(patientSelector).toBeVisible({ timeout: 10000 });
+    await patientSelector.click();
+    await page.getByRole('option', { name: /New Patient \(Manual Entry\)/i }).click();
+
+    const dialog = page.getByRole('dialog', { name: 'New Patient Details' });
+    await expect(dialog).toBeVisible();
+
+    for (const fieldId of ['manual-first-name', 'manual-last-name', 'manual-mrn']) {
+      await expect(dialog.locator(`label[for="${fieldId}"] span[aria-hidden="true"]`)).toHaveText('*');
+    }
+
+    await expect(dialog.locator('label span[aria-hidden="true"]')).toHaveCount(3);
+    for (const fieldId of ['manual-redcap-id', 'manual-dob', 'manual-gender', 'manual-city']) {
+      await expect(dialog.locator(`label[for="${fieldId}"] span[aria-hidden="true"]`)).toHaveCount(0);
+    }
+  });
+
+  test('patient identity bar stays visible while scrolling the drug grid', async ({ page }) => {
+    const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
+    await expect(patientSelector).toBeVisible({ timeout: 10000 });
+
+    await patientSelector.click();
+    const patientSearch = page.getByRole('textbox', { name: /Filter patients by ID or name/i });
+    await expect(patientSearch).toBeVisible({ timeout: 5000 });
+    await patientSearch.fill('Wei');
+    await page.waitForTimeout(300);
+    await page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first().click();
+
+    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
+    await expect(proceedBtn).toBeVisible({ timeout: 5000 });
+    await proceedBtn.click();
+    await dismissHelpModal(page);
+
+    const identityBar = page.locator('[aria-label="Patient identity"]');
+    await expect(identityBar).toBeVisible({ timeout: 10000 });
+    await expect(identityBar).toContainText(/Chen, Wei|Wei Chen/i);
+
+    // Scroll the page well past the top of the drug grid; the bar must remain on screen.
+    await page.mouse.wheel(0, 1500);
+    await expect(identityBar).toBeInViewport();
+    await expect(identityBar).toContainText(/Chen, Wei|Wei Chen/i);
   });
 });

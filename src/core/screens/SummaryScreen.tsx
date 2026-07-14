@@ -21,6 +21,7 @@ import { formatClinicalReportAsText, formatPatientHandoutAsText, generateLetterT
 import { RedactProvider, useRedact } from '@features/reports/hooks/useRedact';
 import { CommonScreenLayoutProps } from './types';
 import { useResearchSubmit } from '@features/research/hooks/useResearchSubmit';
+import { PatientIdentityBar } from '@features/patients/components/PatientIdentityBar';
 
 const ClinicalReport = React.lazy(() => import('@features/reports/components/ClinicalReport'));
 const PatientHandout = React.lazy(() => import('@features/reports/components/PatientHandout'));
@@ -125,6 +126,13 @@ export function SummaryScreen({
       </div>
 
       <RedactProvider>
+        <PatientIdentityBar
+          firstName={selectedPatient?.firstName ?? lastSavedRecord.firstName}
+          lastName={selectedPatient?.lastName ?? lastSavedRecord.lastName}
+          mrn={selectedPatient?.mrn ?? lastSavedRecord.mrn}
+          dob={selectedPatient?.dob}
+          reactionDate={selectedPatient?.history.date}
+        />
         <RedactToggle />
         <div id={`report-panel-${activeReportTab}`} role="tabpanel" aria-labelledby={`report-tab-${activeReportTab}`}>
           {activeReportTab === 'report' && <ClinicalReport data={lastSavedRecord} activeReportSavedAt={activeReportSavedAt} />}

@@ -26,7 +26,7 @@ export function VisitDetailsSection({ formData, onInputChange }: VisitDetailsSec
             </div>
             <div className="border-l pl-4 border-border">
               <div className="section-label">MRN</div>
-              <div className="text-lg font-bold text-slate-900 dark:text-primary font-mono lowercase">
+              <div className="text-lg font-bold text-slate-900 dark:text-primary font-mono">
                 {formData.mrn}
               </div>
             </div>

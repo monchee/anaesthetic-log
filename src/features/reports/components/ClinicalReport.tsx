@@ -47,6 +47,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
       <ReportPrintIdentity
         patientName={patientName}
         mrn={redact(data.mrn)}
+        dob={data.dob}
         reportTitle="Anaesthetic Testing Report"
         requestDate={reportDate}
       />
@@ -77,6 +78,10 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
             <div>
                <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">MRN</label>
                <p className="text-lg font-mono font-medium text-foreground print:text-sm">{redact(data.mrn)}</p>
+            </div>
+            <div>
+               <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">Date of Birth</label>
+               <p className="text-lg font-medium text-foreground print:text-sm">{data.dob ? redact(formatDate(data.dob)) : 'Not recorded'}</p>
             </div>
             <div className="md:col-span-2 print:col-span-2">
                <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">Visit Date</label>

@@ -24,6 +24,8 @@ const sanitizeTryptase = (value: unknown): TryptaseData | undefined => {
           };
         })
       : [],
+    source: source.source === 'referral' || source.source === 'entered' ? source.source : undefined,
+    hadReferralData: source.hadReferralData === true ? true : undefined,
   };
 };
 
@@ -65,6 +67,7 @@ const RawLogFormDataSchema = z.object({
   mrn: z.unknown().optional().transform(stringOrEmpty),
   firstName: z.unknown().optional().transform(stringOrEmpty),
   lastName: z.unknown().optional().transform(stringOrEmpty),
+  dob: z.unknown().optional().transform(stringOrEmpty),
   visitDate: z.unknown().optional().transform(stringOrEmpty),
   controls: z.unknown().optional().transform((value) => {
     const controls = toRecord(value);
@@ -101,6 +104,7 @@ export const LogFormDataSchema = RawLogFormDataSchema.transform((data): LogFormD
   mrn: data.mrn ?? '',
   firstName: data.firstName ?? '',
   lastName: data.lastName ?? '',
+  dob: data.dob ?? '',
   visitDate: data.visitDate ?? '',
   controls: data.controls ?? {
     histamineSpt: '',

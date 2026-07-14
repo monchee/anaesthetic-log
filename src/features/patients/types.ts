@@ -40,4 +40,14 @@ export interface PatientHistory {
   testingPlan?: string[];
   testingPlanCustom?: string;
   documentsToChase?: { tryptases?: boolean; anaestheticChart?: boolean; other?: boolean; otherText?: string };
+  uploadedDocs?: {
+    anaestheticChart?: boolean;
+    resusChart?: boolean;
+    tryptaseResults?: boolean;
+    dischargeLetter?: boolean;
+    other?: boolean;
+  };
+  conditions?: string[];
+  highRiskMeds?: string[];
+  differentialDiagnosis?: string;
 }

@@ -128,6 +128,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Cephalexin', category: 'Penicillins', testType: 'skin',
+    needsPharmacyVerification: true,
     presentation: '2mg/mL', sptNeatConcentration: 'Neat (2mg/mL)', diluent: '0.9% sodium chloride',
     idtSteps: [s('1:100', '0.02mg/mL'), s('1:10', '0.2mg/mL'), s('Neat', '2mg/mL')],
     challengeSteps: [], protocolLabel: 'IV',
@@ -140,6 +141,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Methoxybenzylpenicillin', category: 'Penicillins', testType: 'skin',
+    needsPharmacyVerification: true,
     presentation: '', sptNeatConcentration: '', diluent: '',
     idtSteps: [],
     challengeSteps: [], protocolLabel: '',
@@ -370,6 +372,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Cefuroxime Suspension', category: 'Others', testType: 'skin',
+    needsPharmacyVerification: true,
     presentation: '125mg/5mL', sptNeatConcentration: 'Neat (25mg/mL)', diluent: '',
     idtSteps: [s('1:100', '0.29mg/mL')],
     challengeSteps: [], protocolLabel: 'Suspension',
@@ -472,12 +475,14 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   },
   {
     drugName: 'Levofloxacin', category: 'Others', testType: 'skin',
+    needsPharmacyVerification: true,
     presentation: '500mg', sptNeatConcentration: 'Neat (5mg/mL)', diluent: '0.9% sodium chloride (tablet prep — confirm with pharmacist)',
     idtSteps: [s('1:100', '0.05mg/mL')],
     challengeSteps: [], protocolLabel: 'Tablet',
   },
   {
     drugName: 'Levonorgestrel', category: 'Others', testType: 'skin',
+    needsPharmacyVerification: true,
     presentation: '750mcg tablet', sptNeatConcentration: 'Neat', diluent: '0.9% sodium chloride',
     idtSteps: [s('1:100', '0.05mg/mL')],
     challengeSteps: [], protocolLabel: 'Oral',
@@ -635,6 +640,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // Methylene Blue — not in CSV, keep for backwards compat
   {
     drugName: 'Methylene Blue', category: 'Others', testType: 'skin',
+    needsPharmacyVerification: true,
     presentation: '', sptNeatConcentration: '', diluent: '',
     idtSteps: [],
     challengeSteps: [], protocolLabel: '',
@@ -642,6 +648,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // IV Contrast (generic) — not in CSV, keep for backwards compat
   {
     drugName: 'IV Contrast', category: 'Others', testType: 'skin',
+    needsPharmacyVerification: true,
     presentation: '', sptNeatConcentration: '', diluent: '',
     idtSteps: [],
     challengeSteps: [], protocolLabel: '',
@@ -649,6 +656,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // Atropine — not in CSV, keep for backwards compat
   {
     drugName: 'Atropine', category: 'Others', testType: 'skin',
+    needsPharmacyVerification: true,
     presentation: '', sptNeatConcentration: '', diluent: '',
     idtSteps: [],
     challengeSteps: [], protocolLabel: '',

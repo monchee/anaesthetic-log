@@ -1,0 +1,3 @@
+Record ID,First Name,Last Name,Date of birth,Gender,City,Date of Reaction:,Procedure:,Severity of Allergic Reaction,Write a brief summary
+SYN-9001,Avery,Testpatient,1980-01-01,Other,Test City,2026-07-01,Synthetic procedure,Grade II - Moderate,Synthetic non-PHI test reaction
+SYN-9002,Jordan,Samplepatient,1990-02-02,Other,Test City,2026-07-02,Synthetic procedure,Grade I - Mild,Synthetic non-PHI test reaction

@@ -22,6 +22,7 @@ interface TestRow {
   diluent?: string;
   isFirstForDrug: boolean;
   isCustomNotListed?: boolean;
+  needsPharmacyVerification?: boolean;
 }
 
 const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: TestingPlanPrintViewProps) => {
@@ -39,13 +40,16 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
       let isFirst = true;
       if (protocol?.sptNeatConcentration) {
-        testRows.push({ drugName: d, protocolLabel, category, type: 'SPT', concentration: protocol.sptNeatConcentration, diluent: protocol.diluent, isFirstForDrug: isFirst });
+        testRows.push({ drugName: d, protocolLabel, category, type: 'SPT', concentration: protocol.sptNeatConcentration, diluent: protocol.diluent, isFirstForDrug: isFirst, needsPharmacyVerification: protocol.needsPharmacyVerification === true });
         isFirst = false;
       }
       protocol?.idtSteps?.forEach(step => {
-        testRows.push({ drugName: d, protocolLabel, category, type: 'IDT', concentration: step.ratio + (step.concentration ? ` (${step.concentration})` : ''), isFirstForDrug: isFirst });
+        testRows.push({ drugName: d, protocolLabel, category, type: 'IDT', concentration: step.ratio + (step.concentration ? ` (${step.concentration})` : ''), isFirstForDrug: isFirst, needsPharmacyVerification: isFirst && protocol.needsPharmacyVerification === true });
         isFirst = false;
       });
+      if (isFirst && protocol?.needsPharmacyVerification === true) {
+        testRows.push({ drugName: d, protocolLabel, category, type: 'SPT', concentration: '—', isFirstForDrug: true, needsPharmacyVerification: true });
+      }
     });
   });
 
@@ -69,7 +73,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
   const handleEmail = () => {
     const body = formatTestingPlanAsText(patient, data, drugCategories);
-    const subject = `Testing Plan: ${patient.firstName} ${patient.lastName} - ${reactionDate ? new Date(reactionDate).toLocaleDateString('en-AU') : 'Date unknown'}`;
+    const subject = `Testing Request Form: ${patient.firstName} ${patient.lastName} - ${reactionDate ? new Date(reactionDate).toLocaleDateString('en-AU') : 'Date unknown'}`;
     window.location.href = `mailto:SLHD-RPA-allergynurses@health.nsw.gov.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
@@ -88,7 +92,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
       {/* Screen-only Controls */}
       <div className="p-4 border-b border-border bg-muted flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">
-        <p className="text-lg font-semibold tracking-tight text-foreground">Testing Plan Document</p>
+        <p className="text-lg font-semibold tracking-tight text-foreground">Testing Request Form</p>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <Button size="sm" variant="outline" onClick={handleEmail}>
             <Mail className="w-4 h-4 mr-2" /> Email to Allergy Nurse
@@ -290,9 +294,16 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                       )}
                     </div>
                     {row.isFirstForDrug && (
-                      <div className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-500 uppercase tracking-wide mt-0.5">
-                        {row.category}
-                      </div>
+                      <>
+                        <div className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-500 uppercase tracking-wide mt-0.5">
+                          {row.category}
+                        </div>
+                        {row.needsPharmacyVerification && (
+                          <div className="mt-1 border border-amber-500 bg-amber-50 px-1 py-0.5 text-[9px] font-bold leading-tight text-amber-950 print:border-black print:bg-white print:text-[8px] print:text-black">
+                            ⚠ Confirm preparation with pharmacy
+                          </div>
+                        )}
+                      </>
                     )}
                   </td>
                   <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5 text-center font-bold text-foreground print:text-black">
@@ -365,7 +376,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
         {/* Proceed Action (Hidden on Print) */}
         <div className="mt-8 pt-4 border-t border-border print:hidden flex justify-end">
           <Button size="lg" onClick={onProceed} className="shadow-lg shadow-border">
-            Proceed to Testing Panel <ChevronRight className="ml-2 w-4 h-4" />
+            Start Testing Session <ChevronRight className="ml-2 w-4 h-4" />
           </Button>
         </div>
 

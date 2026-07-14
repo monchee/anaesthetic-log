@@ -27,6 +27,31 @@ const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
 
 const isPositive = (v: string) => (parseInt(v, 10) || 0) >= SKIN_TEST_POSITIVE_THRESHOLD;
 
+interface WhealInputProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const WhealInput = ({ value, onChange }: WhealInputProps) => (
+  <div className="relative">
+    <Input
+      type="text"
+      inputMode="decimal"
+      pattern="[0-9]*"
+      onKeyDown={preventNegativeInput}
+      className={`h-9 text-center font-mono tabular-nums ${isPositive(value) ? 'text-red-700 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
+      placeholder="-"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+    {isPositive(value) ? (
+      <span className="pointer-events-none absolute -right-1.5 -top-1.5 z-10 rounded-none bg-red-600 px-1 py-0.5 text-[9px] font-bold leading-none text-white dark:bg-red-500">
+        +POS
+      </span>
+    ) : null}
+  </div>
+);
+
 interface DrugRowProps {
   row: DrugTestRow;
   index: number;
@@ -177,18 +202,12 @@ const DrugRow = React.memo(({
         {/* SPT */}
         <div className="space-y-1">
           <div className="section-label text-center">SPT</div>
-          <div className="text-xs text-center text-muted-foreground/60 leading-tight min-h-[2rem] flex items-center justify-center">
+          <div className="text-xs text-center text-muted-foreground leading-tight min-h-[2rem] flex items-center justify-center">
             {row.drugName === 'Other' ? (row.customSptConcentration || '') : (protocol?.sptNeatConcentration ? 'Neat' : '')}
           </div>
-          <Input
-            type="text"
-            inputMode="decimal"
-            pattern="[0-9]*"
-            onKeyDown={preventNegativeInput}
-            className={`h-9 text-center font-mono tabular-nums ${isPositive(row.sptWheal) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
-            placeholder="-"
+          <WhealInput
             value={row.sptWheal}
-            onChange={(e) => onUpdate(index, 'sptWheal', e.target.value)}
+            onChange={(value) => onUpdate(index, 'sptWheal', value)}
           />
         </div>
 
@@ -198,18 +217,12 @@ const DrugRow = React.memo(({
           return (
             <div key={si} className="space-y-1">
               <div className="section-label text-center">IDT {step.ratio}</div>
-              <div className="text-xs text-center text-muted-foreground/60 leading-tight min-h-[2rem] flex items-center justify-center">
+              <div className="text-xs text-center text-muted-foreground leading-tight min-h-[2rem] flex items-center justify-center">
                 {step.concentration}
               </div>
-              <Input
-                type="text"
-                inputMode="decimal"
-                pattern="[0-9]*"
-                onKeyDown={preventNegativeInput}
-                className={`h-9 text-center font-mono tabular-nums ${isPositive(val) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
-                placeholder="-"
+              <WhealInput
                 value={val}
-                onChange={(e) => onUpdate(index, `idt_${si}`, e.target.value)}
+                onChange={(value) => onUpdate(index, `idt_${si}`, value)}
               />
             </div>
           );
@@ -220,15 +233,9 @@ const DrugRow = React.memo(({
           <div key={si} className="space-y-1">
             <div className="section-label text-center">IDT {si + 1}</div>
             <div className="min-h-[2rem]" />
-            <Input
-              type="text"
-              inputMode="decimal"
-              pattern="[0-9]*"
-              onKeyDown={preventNegativeInput}
-              className={`h-9 text-center font-mono tabular-nums ${isPositive(val) ? 'text-red-600 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
-              placeholder="-"
+            <WhealInput
               value={val}
-              onChange={(e) => onUpdate(index, `idt_${si}`, e.target.value)}
+              onChange={(value) => onUpdate(index, `idt_${si}`, value)}
             />
           </div>
         ))}

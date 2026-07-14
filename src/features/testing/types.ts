@@ -12,6 +12,7 @@ export interface ChallengeStep {
 
 export interface DrugProtocol {
   drugName: string;
+  needsPharmacyVerification?: true;
   category: string;
   testType: 'skin' | 'challenge' | 'control' | 'experimental';
   presentation: string;
@@ -75,6 +76,8 @@ export interface TryptaseData {
   obtained: boolean;
   significantElevation: boolean;
   values: TryptaseValue[];
+  source?: 'referral' | 'entered';
+  hadReferralData?: boolean;
 }
 
 export interface LogFormData {
@@ -83,6 +86,7 @@ export interface LogFormData {
   mrn: string;
   firstName: string;
   lastName: string;
+  dob?: string;
   visitDate: string;
   controls: Controls;
   testPanel: DrugTestRow[];

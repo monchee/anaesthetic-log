@@ -21,16 +21,20 @@ describe('reports print safety', () => {
   });
 
   it('adds print-only patient identity to every report document', () => {
-    const data = createMockLogFormData({ firstName: 'Wei', lastName: 'Chen', mrn: 'MRN-42' });
+    const data = createMockLogFormData({ firstName: 'Wei', lastName: 'Chen', mrn: 'MRN-42', dob: '1980-05-01' });
     const patient = createMockPatient({ firstName: 'Wei', lastName: 'Chen', mrn: 'MRN-42', dob: '1980-05-01' });
 
     const { rerender } = renderReport(<ClinicalReport data={data} />);
     expect(screen.getByRole('heading', { level: 2, name: 'Anaesthetic Testing Report' })).toBeInTheDocument();
-    expect(screen.getAllByText(/Wei Chen · MRN MRN-42/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Wei Chen · MRN MRN-42 · DOB 01\/05\/1980/).length).toBeGreaterThan(0);
+    expect(screen.getByText('Date of Birth')).toBeInTheDocument();
+    expect(screen.getAllByText('01/05/1980').length).toBeGreaterThan(0);
 
     rerender(<RedactProvider><PatientHandout data={data} /></RedactProvider>);
     expect(screen.getByRole('heading', { level: 2, name: 'Allergy Testing Results' })).toBeInTheDocument();
-    expect(screen.getAllByText(/Wei Chen · MRN MRN-42/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Wei Chen · MRN MRN-42 · DOB 01\/05\/1980/).length).toBeGreaterThan(0);
+    expect(screen.getByText('Date of Birth')).toBeInTheDocument();
+    expect(screen.getAllByText('01/05/1980').length).toBeGreaterThan(0);
 
     rerender(<RedactProvider><PowerchartLetter data={data} patient={patient} /></RedactProvider>);
     expect(screen.getByRole('heading', { level: 2, name: 'Anaesthetic Allergy Clinic' })).toBeInTheDocument();

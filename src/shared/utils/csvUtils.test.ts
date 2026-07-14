@@ -183,6 +183,95 @@ describe('parseRedcapCSV', () => {
   });
 });
 
+describe('parseRedcapCSV — phase 3 clinical fields', () => {
+  // Inferred REDCap labelled-export header format, pending verification against a real export.
+  const inferredHeaders = [
+    'Record ID',
+    'First Name',
+    'Last Name',
+    'Date of Reaction:',
+    'Relevant Conditions (choice=Asthma)',
+    'Relevant Conditions (choice=Diabetes)',
+    'Tick if Patient Taking Regularly (choice=Beta-blocker)',
+    'Patient Taking (choice=ACE inhibitor)',
+    'Patient Taking (choice=Statin)',
+    'Anaesthetic Chart - upload adequate quality picture',
+    'Anaesthetic Chart - upload adequate quality picture',
+    'Resus Chart - upload adequate quality picture',
+    'Tryptase Results - upload file',
+    'Discharge Letter - upload file',
+    'Differential diagnosis',
+    'Muscle Relaxant (choice=Vecuronium)',
+    'Documents to Chase: Anaesthetic Chart',
+  ];
+
+  const inferredRow = (overrides: Record<number, string> = {}): string[] => {
+    const row = Array(inferredHeaders.length).fill('');
+    row[0] = 'REC-T3.4';
+    row[1] = 'Alex';
+    row[2] = 'Patient';
+    row[3] = '2026-07-14';
+    Object.entries(overrides).forEach(([index, value]) => {
+      row[Number(index)] = value;
+    });
+    return row;
+  };
+
+  it('parses upload presence across duplicate instruments and omits absent document types', () => {
+    const result = parseRedcapCSV(csv(inferredHeaders, [inferredRow({
+      9: '',
+      10: 'anaesthetic-chart.pdf',
+      11: '',
+      12: 'tryptase-results.pdf',
+      13: '',
+    })]));
+
+    expect(result.success).toBe(true);
+    expect(result.data[0].history.uploadedDocs).toEqual({
+      anaestheticChart: true,
+      resusChart: false,
+      tryptaseResults: true,
+      dischargeLetter: false,
+    });
+    expect(result.data[0].history.uploadedDocs).not.toHaveProperty('other');
+  });
+
+  it('includes only checked conditions and high-risk medicines', () => {
+    const result = parseRedcapCSV(csv(inferredHeaders, [inferredRow({
+      4: 'Checked',
+      5: 'Unchecked',
+      6: '1',
+      7: 'yes',
+      8: '0',
+    })]));
+
+    expect(result.data[0].history.conditions).toEqual(['Asthma']);
+    expect(result.data[0].history.highRiskMeds).toEqual(['Beta-blocker', 'ACE inhibitor']);
+  });
+
+  it('captures differential diagnosis only when non-empty', () => {
+    const present = parseRedcapCSV(csv(inferredHeaders, [inferredRow({ 14: 'Non-IgE mediated mast-cell activation' })]));
+    const absentHeaders = inferredHeaders.filter(header => header !== 'Differential diagnosis');
+    const absent = parseRedcapCSV(csv(absentHeaders, [[
+      'REC-NO-DIFF', 'Alex', 'Patient', '2026-07-14',
+    ]]));
+
+    expect(present.data[0].history.differentialDiagnosis).toBe('Non-IgE mediated mast-cell activation');
+    expect(absent.data[0].history.differentialDiagnosis).toBeUndefined();
+  });
+
+  it('keeps outstanding documents separate from uploaded-document presence', () => {
+    const result = parseRedcapCSV(csv(inferredHeaders, [inferredRow({
+      9: 'anaesthetic-chart.jpg',
+      15: 'Unchecked',
+      16: 'Checked',
+    })]));
+
+    expect(result.data[0].history.documentsToChase).toEqual({ anaestheticChart: true });
+    expect(result.data[0].history.uploadedDocs?.anaestheticChart).toBe(true);
+  });
+});
+
 describe('parseRedcapCSV — encoding & header robustness', () => {
   const minimalHeaders = ['Record ID', 'First Name', 'Last Name', 'Date of Reaction:'];
   const minimalRow = ['REC-1', 'Alice', 'Smith', '2026-01-02'];
@@ -225,5 +314,88 @@ describe('parseRedcapCSV — encoding & header robustness', () => {
     const result = parseRedcapCSV(decoded);
     expect(result.success).toBe(true);
     expect(result.data[0]).toMatchObject({ id: 'REC-1', firstName: 'Alice', lastName: 'Smith' });
+  });
+});
+
+describe('parseRedcapCSV — quoted fields containing newlines', () => {
+  it('preserves LF inside a quoted summary', () => {
+    const row = Array(baseHeaders.length).fill('');
+    row[0] = 'REC-LF';
+    row[1] = 'Alice';
+    row[2] = 'Smith';
+    row[3] = '2026-01-02';
+    row[16] = '"Line one\nLine two"';
+
+    const result = parseRedcapCSV(csv(baseHeaders, [row]));
+
+    expect(result.success).toBe(true);
+    expect(result.data).toHaveLength(1);
+    expect(result.data[0]).toMatchObject({ id: 'REC-LF', firstName: 'Alice', lastName: 'Smith' });
+    expect(result.data[0].history.reactionSummary).toBe('Line one\nLine two');
+  });
+
+  it('normalizes CRLF inside a quoted field to LF', () => {
+    const row = Array(baseHeaders.length).fill('');
+    row[0] = 'REC-CRLF';
+    row[1] = 'Bob';
+    row[2] = 'Jones';
+    row[3] = '2026-02-03';
+    row[16] = '"Line one\r\nLine two"';
+
+    const result = parseRedcapCSV(csv(baseHeaders, [row]));
+
+    expect(result.success).toBe(true);
+    expect(result.data).toHaveLength(1);
+    expect(result.data[0]).toMatchObject({ id: 'REC-CRLF', firstName: 'Bob', lastName: 'Jones' });
+    expect(result.data[0].history.reactionSummary).toBe('Line one\nLine two');
+  });
+
+  it('does not create phantom patients from a multi-line middle row', () => {
+    const rows = [
+      ['REC-1', 'Alice', 'Smith', '2026-01-02'],
+      ['REC-2', 'Bob', 'Jones', '2026-02-03'],
+      ['REC-3', 'Cara', 'Ng', '2026-03-04'],
+    ].map(values => [...values, ...Array(baseHeaders.length - values.length).fill('')]);
+    rows[1][17] = '"First line\nSecond line"';
+
+    const result = parseRedcapCSV(csv(baseHeaders, rows));
+
+    expect(result.success).toBe(true);
+    expect(result.data).toHaveLength(3);
+    expect(result.data.map(patient => patient.id)).toEqual(['REC-1', 'REC-2', 'REC-3']);
+    expect(result.data.some(patient => patient.firstName === 'Unknown')).toBe(false);
+  });
+
+  it('continues to skip blank lines between rows', () => {
+    const rows = [
+      ['REC-1', 'Alice', 'Smith', '2026-01-02'],
+      ['REC-2', 'Bob', 'Jones', '2026-02-03'],
+    ];
+    const csvWithBlankLine = csv(baseHeaders, rows).replace('\nREC-2', '\n\nREC-2');
+
+    const result = parseRedcapCSV(csvWithBlankLine);
+
+    expect(result.success).toBe(true);
+    expect(result.data).toHaveLength(2);
+    expect(result.data.map(patient => patient.id)).toEqual(['REC-1', 'REC-2']);
+  });
+
+  it('parses a newline in the final cell of the final row without a trailing newline', () => {
+    const headers = baseHeaders.slice(0, 18);
+    const row = Array(headers.length).fill('');
+    row[0] = 'REC-EOF';
+    row[1] = 'Dana';
+    row[2] = 'Lee';
+    row[3] = '2026-04-05';
+    row[17] = '"Final line one\nFinal line two"';
+    const csvText = csv(headers, [row]);
+
+    expect(csvText.endsWith('\n')).toBe(false);
+    const result = parseRedcapCSV(csvText);
+
+    expect(result.success).toBe(true);
+    expect(result.data).toHaveLength(1);
+    expect(result.data[0]).toMatchObject({ id: 'REC-EOF', firstName: 'Dana', lastName: 'Lee' });
+    expect(result.data[0].history.comments).toBe('Final line one\nFinal line two');
   });
 });

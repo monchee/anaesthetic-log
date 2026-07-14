@@ -3,8 +3,12 @@ import { Patient } from '@/types';
 import { isSkinTestPositive, getPositiveResults, getNegativeResults, getCrossSensitizationNotes, getCrossSensitizedDrugs, buildRecommendations } from './testingUtils';
 import { formatDate } from './dateUtils';
 
-export function formatTryptaseSentence(tryptase: TryptaseData): string {
-  if (!tryptase.obtained) return 'Serial serum tryptase samples were not obtained.';
+export function formatTryptaseSentence(tryptase?: TryptaseData): string {
+  if (!tryptase?.obtained) {
+    return tryptase?.hadReferralData === true
+      ? 'Serial serum tryptase results are pending confirmation.'
+      : 'Serial serum tryptase samples were not obtained.';
+  }
   const formatted = tryptase.values
     .filter(v => v.result)
     .map((v, i) => `T${i + 1}${v.time ? ` (${v.time})` : ''}: ${v.result}`)
@@ -23,6 +27,7 @@ export function formatClinicalReportAsText(data: LogFormData, redact?: (value: s
   lines.push('');
   lines.push(`Patient: ${redact ? redact(`${data.firstName} ${data.lastName}`) : `${data.firstName} ${data.lastName}`}`);
   lines.push(`MRN: ${redact ? redact(data.mrn) : data.mrn}`);
+  lines.push(`DOB: ${data.dob ? (redact ? redact(formatDate(data.dob)) : formatDate(data.dob)) : 'Unknown'}`);
   lines.push(`Visit Date: ${data.visitDate ? new Date(data.visitDate).toLocaleDateString('en-AU') : 'Unknown'}`);
   lines.push('');
 
@@ -138,6 +143,7 @@ export function formatPatientHandoutAsText(data: LogFormData, redact?: (value: s
   lines.push('ALLERGY TESTING RESULTS — PATIENT INFORMATION HANDOUT');
   lines.push('');
   lines.push(`Patient: ${redact ? redact(`${data.firstName} ${data.lastName}`) : `${data.firstName} ${data.lastName}`}`);
+  lines.push(`DOB: ${data.dob ? (redact ? redact(formatDate(data.dob)) : formatDate(data.dob)) : 'Unknown'}`);
   lines.push(`Date: ${data.visitDate ? new Date(data.visitDate).toLocaleDateString('en-AU') : 'Unknown'}`);
   lines.push('');
 
@@ -224,7 +230,7 @@ export function generateLetterText(data: LogFormData, patient: Patient | null, r
   }
 
   // Tryptase sentence (3A) — always present; defaults to "not obtained"
-  lines.push(formatTryptaseSentence(data.tryptase ?? { obtained: false, significantElevation: false, values: [] }));
+  lines.push(formatTryptaseSentence(data.tryptase));
   lines.push('');
 
   const testingDate = data.visitDate ? formatDate(data.visitDate) : '[date]';

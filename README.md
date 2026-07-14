@@ -12,7 +12,7 @@ A private clinical Progressive Web App for the Royal Prince Alfred Hospital Depa
 
 ## Project Status
 
-- **Current version:** v0.65.0
+- **Current version:** v0.72.0
 - **Live app:** [allergy.yuson.au](https://allergy.yuson.au)
 - **Repository:** private/internal clinical tooling
 - **Production host:** Cloudflare Pages
@@ -24,6 +24,7 @@ A private clinical Progressive Web App for the Royal Prince Alfred Hospital Depa
 ### Patient Workflow
 - Import patient records from REDCap CSV exports.
 - Search, filter, and review patient reaction histories.
+- Review a missing-information checklist and high-risk clinical context before testing.
 - Create manual patient entries when a record is not in the imported database.
 - Keep in-progress testing data browser-local with time-limited persistence.
 
@@ -42,6 +43,7 @@ A private clinical Progressive Web App for the Royal Prince Alfred Hospital Depa
 
 ### Research and Review
 - View dashboard summaries of recent clinical activity and imported patient data.
+- Use the dashboard worklist to track referral, plan-drafted, testing, and reported status and filter patients who need action.
 - Optionally submit only deidentified research payloads to a configured Supabase project.
 - Track app changes through the in-app changelog and Quick Start "What's New" modal.
 - Curate short changelog summaries with `Summary:` lines in `CHANGELOG.md`.

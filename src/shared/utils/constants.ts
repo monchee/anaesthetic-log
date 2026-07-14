@@ -77,11 +77,11 @@ export const CATEGORY_THEMES: Record<string, CategoryTheme> = {
     activeRing: "ring-teal-100 dark:ring-teal-900/50",
     headerText: "text-teal-700 dark:text-teal-300",
     headerBorder: "border-teal-200 dark:border-teal-800",
-    btnSelected: "bg-teal-600 border-teal-600 text-white shadow-sm ring-1 ring-teal-100 dark:ring-teal-900",
+    btnSelected: "bg-teal-700 border-teal-700 text-white shadow-sm ring-1 ring-teal-100 dark:ring-teal-900",
     btnHover: "hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 dark:hover:border-teal-400",
     pulse: "bg-teal-600",
     rowBorder: "border-l-teal-600",
-    actionText: "text-teal-600 dark:text-teal-400"
+    actionText: "text-teal-700 dark:text-teal-400"
   },
   "Others": {
     activeBg: "bg-slate-100 dark:bg-muted",

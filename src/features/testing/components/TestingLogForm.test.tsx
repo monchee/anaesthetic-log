@@ -86,6 +86,15 @@ describe('TestingLogForm', () => {
       expect(screen.getByText(/MRN001/)).toBeInTheDocument();
     });
 
+    it('renders an alphanumeric MRN verbatim, never lowercased', () => {
+      const mixedCaseData = { ...mockFormData, mrn: 'MrN00aB1' };
+      render(<TestWrapper initialData={mixedCaseData} props={mockProps} />);
+
+      const mrnElement = screen.getByText('MrN00aB1');
+      expect(mrnElement).toBeInTheDocument();
+      expect(mrnElement.className).not.toMatch(/\blowercase\b/);
+    });
+
     it('renders drug test rows', () => {
       render(<TestWrapper initialData={mockFormData} props={mockProps} />);
 
@@ -195,7 +204,7 @@ describe('TestingLogForm', () => {
       render(<TestWrapper initialData={mockFormData} props={mockProps} />);
 
       const positiveInputs = screen.getAllByDisplayValue('3');
-      expect(positiveInputs[0]).toHaveClass('text-red-600');
+      expect(positiveInputs[0]).toHaveClass('text-red-700');
     });
 
     it('prevents negative input in test results', () => {

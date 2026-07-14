@@ -70,26 +70,44 @@ const validateCSVHeaders = (headers: string[]): string | null => {
     return null;
 };
 
-const splitCSVLine = (line: string) => {
-  const result = [];
+/**
+ * Splits raw CSV text into records of cells, honoring quoted fields that
+ * contain commas, escaped quotes ("") and newlines. Replaces per-line
+ * splitting so a multi-line free-text answer cannot fragment a row.
+ * Records whose cells are all empty are dropped (blank lines).
+ */
+const splitCSVRecords = (text: string): string[][] => {
+  const records: string[][] = [];
+  let row: string[] = [];
   let current = '';
   let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
-    if (char === '"' && line[i+1] === '"') {
+  const endCell = () => { row.push(current.trim()); current = ''; };
+  const endRecord = () => {
+    endCell();
+    if (row.some(cell => cell !== '')) records.push(row);
+    row = [];
+  };
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (char === '"' && text[i + 1] === '"') {
       current += '"';
       i++;
     } else if (char === '"') {
       inQuotes = !inQuotes;
     } else if (char === ',' && !inQuotes) {
-      result.push(current.trim());
-      current = '';
+      endCell();
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && text[i + 1] === '\n') i++;
+      endRecord();
+    } else if (char === '\r' && inQuotes) {
+      current += '\n';
+      if (text[i + 1] === '\n') i++;
     } else {
       current += char;
     }
   }
-  result.push(current.trim());
-  return result;
+  endRecord();
+  return records;
 };
 
 const normalizeTime = (timeStr: string): string => {
@@ -216,12 +234,12 @@ const ANAESTHESIA_MAP_CONFIG = [
 ];
 
 export const parseRedcapCSV = (csvText: string): CsvParseResult => {
-  const lines = csvText.replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim());
-  if (lines.length < 2) return { success: false, data: [], error: "Empty or invalid CSV." };
+  const records = splitCSVRecords(csvText.replace(/^\uFEFF/, ''));
+  if (records.length < 2) return { success: false, data: [], error: "Empty or invalid CSV." };
 
   // Normalize header tokens once so all downstream matching (exact and
   // substring) is resilient to BOM / NBSP / zero-width / doubled whitespace.
-  const headers = splitCSVLine(lines[0]).map(normalizeHeader);
+  const headers = records[0].map(normalizeHeader);
 
   // Validate headers before processing
   const headerError = validateCSVHeaders(headers);
@@ -407,6 +425,44 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
     else if (/Biochemical Results:\s*Tryptase \d+:/.test(t)) biochemTryptaseIndices.push(idx);
   });
 
+  // --- 5b. Map Uploaded Documents, Conditions & Differential Diagnosis ---
+  type UploadedDocKey = 'anaestheticChart' | 'resusChart' | 'tryptaseResults' | 'dischargeLetter' | 'other';
+  const uploadedDocIndices: Record<UploadedDocKey, number[]> = {
+    anaestheticChart: [],
+    resusChart: [],
+    tryptaseResults: [],
+    dischargeLetter: [],
+    other: [],
+  };
+  const conditionChoiceMap: Array<{ choice: string; columnIndex: number }> = [];
+  const highRiskMedChoiceMap: Array<{ choice: string; columnIndex: number }> = [];
+  let differentialDiagnosisIdx = -1;
+
+  headers.forEach((h, idx) => {
+    const lowerH = h.toLowerCase();
+    const choiceMatch = h.match(DRUG_CHOICE_REGEX);
+
+    if (choiceMatch && lowerH.includes('relevant conditions')) {
+      conditionChoiceMap.push({ choice: choiceMatch[1].trim(), columnIndex: idx });
+    } else if (choiceMatch && lowerH.includes('patient taking')) {
+      highRiskMedChoiceMap.push({ choice: choiceMatch[1].trim(), columnIndex: idx });
+    }
+
+    if (differentialDiagnosisIdx === -1 && lowerH.includes('differential') && lowerH.includes('diagnosis')) {
+      differentialDiagnosisIdx = idx;
+    }
+
+    if (lowerH.startsWith('documents to chase')) return;
+    const looksLikeUpload = lowerH.includes('upload') || lowerH.includes('picture') || lowerH.includes('file');
+    if (!looksLikeUpload) return;
+
+    if (lowerH.includes('anaesthetic chart')) uploadedDocIndices.anaestheticChart.push(idx);
+    else if (lowerH.includes('resus chart') || lowerH.includes('resuscitation chart')) uploadedDocIndices.resusChart.push(idx);
+    else if (lowerH.includes('tryptase') && lowerH.includes('result')) uploadedDocIndices.tryptaseResults.push(idx);
+    else if (lowerH.includes('discharge letter')) uploadedDocIndices.dischargeLetter.push(idx);
+    else if (lowerH.includes('other') && lowerH.includes('document')) uploadedDocIndices.other.push(idx);
+  });
+
   // --- 6. Map Testing Plan Instrument ---
   // The last REDCap instrument has explicit checkboxes for which drugs to test.
   // We distinguish it from reaction-drug columns by finding the first
@@ -495,10 +551,10 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
   const parsingErrors: string[] = [];
   const skippedRows: number[] = [];
 
-  for (let i = 1; i < lines.length; i++) {
-    const row = splitCSVLine(lines[i]);
+  for (let i = 1; i < records.length; i++) {
+    const row = records[i];
     if (row.length < 2) {
-        skippedRows.push(i + 1); // +1 for 1-based row number
+        skippedRows.push(i + 1); // +1 for 1-based record number
         continue;
     }
 
@@ -656,6 +712,38 @@ export const parseRedcapCSV = (csvText: string): CsvParseResult => {
       });
     }
     if (tryptases.length > 0) p.history.tryptases = tryptases;
+
+    // Extract uploaded-document presence. A false value is only authoritative
+    // when at least one matching upload column exists in this export.
+    const uploadedDocs: Partial<Record<UploadedDocKey, boolean>> = {};
+    (Object.keys(uploadedDocIndices) as UploadedDocKey[]).forEach(key => {
+      const indices = uploadedDocIndices[key];
+      if (indices.length > 0) {
+        uploadedDocs[key] = indices.some(idx => Boolean(row[idx]?.trim()));
+      }
+    });
+    if (Object.keys(uploadedDocs).length > 0) p.history.uploadedDocs = uploadedDocs;
+
+    // Extract relevant conditions and regularly taken high-risk medicines.
+    const isChecked = (columnIndex: number) => {
+      const val = row[columnIndex]?.trim().toLowerCase();
+      return ['checked', '1', 'yes'].includes(val);
+    };
+    if (conditionChoiceMap.length > 0) {
+      p.history.conditions = conditionChoiceMap
+        .filter(entry => isChecked(entry.columnIndex))
+        .map(entry => entry.choice);
+    }
+    if (highRiskMedChoiceMap.length > 0) {
+      p.history.highRiskMeds = highRiskMedChoiceMap
+        .filter(entry => isChecked(entry.columnIndex))
+        .map(entry => entry.choice);
+    }
+
+    const differentialDiagnosis = differentialDiagnosisIdx !== -1
+      ? row[differentialDiagnosisIdx]?.trim()
+      : '';
+    if (differentialDiagnosis) p.history.differentialDiagnosis = differentialDiagnosis;
 
     // Extract Testing Plan (explicit REDCap instrument)
     if (testingPlanDrugMap.length > 0) {

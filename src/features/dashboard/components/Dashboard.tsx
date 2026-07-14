@@ -10,6 +10,7 @@ import RecentTestingActivity from './RecentTestingActivity';
 import { useAdvancedSearch } from '../hooks/useAdvancedSearch';
 import PatientTable from './PatientTable';
 import SkinTestBreakdown from './SkinTestBreakdown';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 interface DashboardProps {
   setScreen: (screen: Screen) => void;
@@ -23,6 +24,7 @@ interface DashboardProps {
   databaseDate: string;
   isCustomData?: boolean;
   isLoadingPatients?: boolean;
+  patientDbSavedAt?: number | null;
 }
 
 const getPrefersReducedMotion = () => (
@@ -31,7 +33,7 @@ const getPrefersReducedMotion = () => (
     : false
 );
 
-const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate, isCustomData, isLoadingPatients }) => {
+const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate, isCustomData, isLoadingPatients, patientDbSavedAt }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -39,6 +41,11 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(getPrefersReducedMotion);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
+  const [pendingReplacement, setPendingReplacement] = useState<{
+    data: Patient[];
+    fileLastModified?: number;
+    details?: string[];
+  } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Advanced Search Hook
@@ -110,17 +117,15 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
                     const duplicates = result.data.filter(p => existingIds.has(p.id));
 
                     if (duplicates.length > 0) {
-                        const dupDetail = duplicates.length > 3
-                            ? `First few: ${duplicates.slice(0, 3).map(d => d.id).join(', ')}...`
-                            : `IDs: ${duplicates.map(d => d.id).join(', ')}`;
-                        toast.error('Duplicate records detected', {
-                            description: `${duplicates.length} record(s) already exist in the database. ${dupDetail}`,
-                            duration: 10000,
+                        setPendingReplacement({
+                            data: result.data,
+                            fileLastModified: file.lastModified,
+                            details: result.details,
                         });
                     } else {
                         onUploadPatients(result.data, file.lastModified);
                         toast.success('Database updated', {
-                            description: `Successfully loaded ${result.data.length} records from CSV.${result.details ? ` ${result.details.join(' ')}` : ''}`,
+                            description: `Imported ${result.data.length} record(s).${result.details ? ` ${result.details.join(' ')}` : ''}`,
                         });
                         setIsSheetOpen(false);
                     }
@@ -158,13 +163,6 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
   }, [filters, existingPatients]);
 
   const totalPages = Math.ceil(filteredPatients.length / ITEMS_PER_PAGE);
-  const paginatedPatients = useMemo(() => {
-    return filteredPatients.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      currentPage * ITEMS_PER_PAGE
-    );
-  }, [filteredPatients, currentPage, ITEMS_PER_PAGE]);
-
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
   };
@@ -194,8 +192,34 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
 
   const sectionRevealClass = prefersReducedMotion ? '' : 'animate-section-reveal';
 
+  const handleConfirmReplacement = () => {
+    if (!pendingReplacement) return;
+
+    onUploadPatients(pendingReplacement.data, pendingReplacement.fileLastModified);
+    toast.success('Database updated', {
+      description: `Imported ${pendingReplacement.data.length} record(s).${pendingReplacement.details ? ` ${pendingReplacement.details.join(' ')}` : ''}`,
+    });
+    setIsSheetOpen(false);
+    setPendingReplacement(null);
+  };
+
+  const handleReplacementDialogChange = (open: boolean) => {
+    if (!open) setPendingReplacement(null);
+  };
+
   return (
     <div className="space-y-8">
+
+        <ConfirmDialog
+          open={pendingReplacement !== null}
+          onOpenChange={handleReplacementDialogChange}
+          title="Replace existing database?"
+          message={`Replace existing database (${existingPatients.length} records) with this export (${pendingReplacement?.data.length ?? 0} records)? Unsaved testing drafts are kept.`}
+          confirmLabel="Replace database"
+          cancelLabel="Cancel"
+          variant="danger"
+          onConfirm={handleConfirmReplacement}
+        />
 
         {/* Modern Stats Grid */}
         <div style={{ '--section-index': 0 } as React.CSSProperties} className={sectionRevealClass}>
@@ -223,7 +247,6 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
         {/* Patient Database Table (Full Width) - Paginated */}
         <div style={{ '--section-index': 1 } as React.CSSProperties} className={sectionRevealClass}>
           <PatientTable
-            paginatedPatients={paginatedPatients}
             filteredPatients={filteredPatients}
             currentPage={currentPage}
             ITEMS_PER_PAGE={ITEMS_PER_PAGE}
@@ -244,8 +267,10 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
             fileInputRef={fileInputRef}
             handleNextPage={handleNextPage}
             handlePrevPage={handlePrevPage}
+            resetPage={() => setCurrentPage(1)}
             allPatients={existingPatients}
             isLoading={isLoadingPatients}
+            patientDbSavedAt={patientDbSavedAt}
           />
         </div>
 

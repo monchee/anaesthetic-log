@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { usePatientState } from '@features/patients/hooks/usePatientState';
 import { useTestingState } from '@features/testing/hooks/useTestingState';
@@ -13,6 +13,7 @@ export function useAnaestheticApp() {
   const { setFormData, handleSubmit: originalHandleSubmit, resetForm: originalResetForm, clearActiveReport: originalClearActiveReport } = testingState;
   const navigation = useAppNavigation();
   const disclaimer = useDisclaimer();
+  const lastTryptasePrefillPatientId = useRef<string | null>(null);
 
   // Compose handlers that need cross-concern coordination
   const handleDashboardPatientSelect = (patient: Patient) => {
@@ -22,19 +23,38 @@ export function useAnaestheticApp() {
   };
 
   useEffect(() => {
-    if (selectedPatient) {
-      setFormData(prev => ({
-        ...prev,
-        firstName: selectedPatient?.firstName || '',
-        lastName: selectedPatient?.lastName || '',
-        mrn: selectedPatient?.mrn || ''
-      }));
+    if (!selectedPatient) {
+      lastTryptasePrefillPatientId.current = null;
+      return;
     }
+
+    const isNewPatientSelection = lastTryptasePrefillPatientId.current !== selectedPatient.id;
+    lastTryptasePrefillPatientId.current = selectedPatient.id;
+    const referralTryptases = selectedPatient.history.tryptases;
+
+    setFormData(prev => ({
+      ...prev,
+      firstName: selectedPatient.firstName || '',
+      lastName: selectedPatient.lastName || '',
+      mrn: selectedPatient.mrn || '',
+      dob: selectedPatient.dob || '',
+      ...(isNewPatientSelection && referralTryptases?.length
+        ? {
+            tryptase: {
+              obtained: true,
+              significantElevation: false,
+              values: referralTryptases.map(({ time, result }) => ({ time: time ?? '', result })),
+              source: 'referral' as const,
+              hadReferralData: true,
+            },
+          }
+        : {}),
+    }));
   }, [selectedPatient, setFormData]);
 
   const handleManualDetailChange = (field: keyof Patient, value: string) => {
     originalHandleManualDetailChange(field, value);
-    if (field === 'firstName' || field === 'lastName' || field === 'mrn') {
+    if (field === 'firstName' || field === 'lastName' || field === 'mrn' || field === 'dob') {
       setFormData(prev => ({
         ...prev,
         [field]: value
@@ -76,6 +96,8 @@ export function useAnaestheticApp() {
     lastSavedRecord: testingState.lastSavedRecord,
     setLastSavedRecord: testingState.setLastSavedRecord,
     activeReportSavedAt: testingState.activeReportSavedAt,
+    lastDraftSavedAt: testingState.lastDraftSavedAt,
+    isSavingDraft: testingState.isSavingDraft,
     testingPlanData: testingState.testingPlanData,
     setTestingPlanData: testingState.setTestingPlanData,
     recentLogs: testingState.recentLogs,
@@ -89,6 +111,7 @@ export function useAnaestheticApp() {
     patients: patientState.patients,
     databaseDate: patientState.databaseDate,
     hasUploadedData: patientState.hasUploadedData,
+    patientDbSavedAt: patientState.patientDbSavedAt,
     isLoadingPatients: patientState.isLoadingPatients,
 
     // Disclaimer
@@ -100,6 +123,7 @@ export function useAnaestheticApp() {
     handleManualDetailChange,
     handleSubmit,
     handleUploadPatients: patientState.handleUploadPatients,
+    toggleSuspectedAgent: patientState.toggleSuspectedAgent,
     handleDashboardPatientSelect,
     resetForm,
     clearActiveReport,

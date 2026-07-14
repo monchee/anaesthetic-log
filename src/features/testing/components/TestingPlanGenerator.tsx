@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Card, CardContent, Button, Label, Switch, Checkbox, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Patient, TestingPlanData, CustomDrugEntry, DocumentsToChase } from '@/types';
@@ -6,6 +6,7 @@ import { Printer, Check, X, ClipboardList, ChevronDown, Plus, History, Pin, Sear
 import { CATEGORY_THEMES, DEFAULT_THEME, DEFAULT_SELECTED_DRUGS } from '@shared/utils/constants';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 import { getIfFresh, setWithTTL, TESTING_PLAN_BUILDER_DRAFTS_KEY } from '@shared/utils/ttlStorage';
+import { DraftSaveIndicator } from './DraftSaveIndicator';
 
 interface TestingPlanGeneratorProps {
   patient: Patient;
@@ -52,13 +53,19 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
       ...(patient.history.preInductionDrugs ?? []),
       ...(patient.history.postInductionDrugs ?? []),
       ...(patient.history.medications ?? []),
+      ...(patient.history.suspectedAgents ?? []),
     ].map(stripForMatch).filter(Boolean);
     return Object.values(drugCategories).flat().filter(drug => {
       const normDrug = stripForMatch(drug);
       return normDrug.length > 0 && patientDrugs.some(pd => pd.includes(normDrug) || normDrug.includes(pd));
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [patient.id]);
+  }, [
+    drugCategories,
+    patient.history.medications,
+    patient.history.postInductionDrugs,
+    patient.history.preInductionDrugs,
+    patient.history.suspectedAgents,
+  ]);
 
   const initialDrugs = useMemo(() => {
     // Priority 1: explicit testing plan from REDCap instrument
@@ -107,6 +114,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   const [documentsToChase, setDocumentsToChase] = useState<DocumentsToChase>(restoredDraft.documentsToChase);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
   const [draftPatientId, setDraftPatientId] = useState(patient.id);
+  const [lastDraftSavedAt, setLastDraftSavedAt] = useState<number | null>(null);
+  const previousHistoryDrugs = useRef({ patientId: patient.id, drugs: historyDrugs });
   const today = useMemo(getTodayDate, []);
   const allKnownDrugs = useMemo(
     () => [...new Set(Object.values(drugCategories).flat())],
@@ -131,6 +140,24 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
   }, [patient.id, defaultDraft]);
 
   useEffect(() => {
+    if (previousHistoryDrugs.current.patientId !== patient.id) {
+      previousHistoryDrugs.current = { patientId: patient.id, drugs: historyDrugs };
+      return;
+    }
+
+    const newlyAddedHistoryDrugs = historyDrugs.filter(
+      drug => !previousHistoryDrugs.current.drugs.includes(drug)
+    );
+    previousHistoryDrugs.current = { patientId: patient.id, drugs: historyDrugs };
+    if (newlyAddedHistoryDrugs.length > 0) {
+      setSelectedDrugs(currentDrugs => [
+        ...currentDrugs,
+        ...newlyAddedHistoryDrugs.filter(drug => !currentDrugs.includes(drug)),
+      ]);
+    }
+  }, [historyDrugs, patient.id]);
+
+  useEffect(() => {
     if (draftPatientId !== patient.id) return;
 
     const drafts = getIfFresh<TestingPlanBuilderDrafts>(TESTING_PLAN_BUILDER_DRAFTS_KEY) ?? {};
@@ -146,6 +173,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
         documentsToChase,
       },
     });
+    setLastDraftSavedAt(Date.now());
   }, [customDrugs, documentsToChase, draftPatientId, notes, patient.id, reactionDate, selectedDrugs, selectedProtocols, urgent]);
 
   const toggleDoc = (key: 'tryptases' | 'anaestheticChart' | 'other') => {
@@ -312,10 +340,11 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     <ClipboardList className="w-5 h-5" />
                 </div>
                 <div>
-                    <h2 className="font-semibold text-primary dark:text-primary text-lg">Testing Plan / Request Form</h2>
+                    <h2 className="font-semibold text-primary dark:text-primary text-lg">Testing Request Form</h2>
                     <p className="text-xs text-muted-foreground font-medium">
                       Select drugs to generate a printable testing plan
                     </p>
+                    <DraftSaveIndicator lastSavedAt={lastDraftSavedAt} className="mt-1 block" />
                 </div>
              </div>
              <div className="flex items-center gap-3">
@@ -465,6 +494,9 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         {filteredDrugs.map(drug => {
                                             const fromHistory = historyDrugs.includes(drug);
                                             const isDefault = DEFAULT_SELECTED_DRUGS.includes(drug);
+                                            const protocols = getSkinProtocolsForDrug(drug);
+                                            const activeProtocolIndex = Math.min(selectedProtocols[drug] ?? 0, Math.max(protocols.length - 1, 0));
+                                            const needsPharmacyVerification = protocols[activeProtocolIndex]?.needsPharmacyVerification === true;
                                             return (
                                             <button
                                                 key={drug}
@@ -478,6 +510,11 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             >
                                                 {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
                                                 {drug}
+                                                {selectedDrugs.includes(drug) && needsPharmacyVerification && (
+                                                    <span className="border border-amber-400 bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-amber-900 dark:border-amber-600 dark:bg-amber-950/40 dark:text-amber-200">
+                                                        ⚠ Confirm preparation with pharmacy
+                                                    </span>
+                                                )}
                                                 {isDefault && (
                                                     <span title="Pre-filled for all patients by default" className="inline-flex">
                                                         <Pin className="w-3 h-3 shrink-0 opacity-70" aria-label="Standard pre-fill" />
@@ -704,7 +741,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                     <div className="flex justify-end pt-4 border-t border-border">
                         <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-white shadow-sm font-semibold">
-                            <Printer className="w-4 h-4 mr-2" /> Preview & Print Plan
+                            <Printer className="w-4 h-4 mr-2" /> Preview & Print Request Form
                         </Button>
                     </div>
                 </div>

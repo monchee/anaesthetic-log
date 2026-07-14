@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  AlertTriangle,
   ChevronRight,
   FileText,
   Info,
@@ -25,6 +24,7 @@ import {
   Input,
   Label,
 } from '@/components/ui';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
 import TestingPlanGenerator from '@features/testing/components/TestingPlanGenerator';
@@ -47,6 +47,7 @@ interface LogScreenProps {
   patients: Patient[];
   onPatientSelect: (patient: Patient) => void;
   onManualDetailChange: (field: keyof Patient, value: string) => void;
+  onToggleSuspectedAgent: (patientId: string, drugName: string) => void;
   onSetTestingPlanData: (data: TestingPlanData) => void;
   onProceedToTesting: () => void;
   onClearActiveReport: () => void;
@@ -65,6 +66,7 @@ export function LogScreen({
   patients,
   onPatientSelect,
   onManualDetailChange,
+  onToggleSuspectedAgent,
   onSetTestingPlanData,
   onProceedToTesting,
   onClearActiveReport,
@@ -119,27 +121,15 @@ export function LogScreen({
         </div>
       )}
 
-      <Dialog open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-destructive">
-              <AlertTriangle className="w-5 h-5" /> Clear active report?
-            </DialogTitle>
-          </DialogHeader>
-          <p className="text-sm text-muted-foreground py-2">
-            This permanently removes the current report{lastSavedRecord ? <> for <strong className="text-foreground">{lastSavedRecord.firstName} {lastSavedRecord.lastName}</strong></> : ''} and any in-progress testing draft from this device. This cannot be undone.
-          </p>
-          <DialogFooter className="gap-2 sm:gap-2">
-            <Button variant="outline" onClick={() => setConfirmClearOpen(false)} className="rounded-none">Cancel</Button>
-            <Button
-              onClick={() => { onClearActiveReport(); setConfirmClearOpen(false); }}
-              className="rounded-none bg-destructive hover:bg-destructive/90 text-white"
-            >
-              Clear report
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={confirmClearOpen}
+        onOpenChange={setConfirmClearOpen}
+        title="Clear active report?"
+        message={`This permanently removes the current report${lastSavedRecord ? ` for ${lastSavedRecord.firstName} ${lastSavedRecord.lastName}` : ''} and any in-progress testing draft from this device. This cannot be undone.`}
+        confirmLabel="Clear report"
+        variant="danger"
+        onConfirm={onClearActiveReport}
+      />
 
       <Card className="shadow-sm rounded-none">
         <CardHeader className="pb-3 border-b border-border bg-card">
@@ -265,19 +255,19 @@ export function LogScreen({
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="manual-first-name" className="section-label mb-1.5 block">First Name</Label>
+                  <Label htmlFor="manual-first-name" className="section-label mb-1.5 block">First Name<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>
                   <Input id="manual-first-name" value={selectedPatient.firstName} onChange={(e) => { onManualDetailChange('firstName', e.target.value); setManualPatientErrors(prev => ({ ...prev, firstName: '' })); }} placeholder="Enter first name" aria-invalid={!!manualPatientErrors.firstName} aria-describedby={manualPatientErrors.firstName ? 'manual-first-name-error' : undefined} />
                   {manualPatientErrors.firstName && <p id="manual-first-name-error" className="text-destructive text-xs mt-1">{manualPatientErrors.firstName}</p>}
                 </div>
                 <div>
-                  <Label htmlFor="manual-last-name" className="section-label mb-1.5 block">Last Name</Label>
+                  <Label htmlFor="manual-last-name" className="section-label mb-1.5 block">Last Name<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>
                   <Input id="manual-last-name" value={selectedPatient.lastName} onChange={(e) => { onManualDetailChange('lastName', e.target.value); setManualPatientErrors(prev => ({ ...prev, lastName: '' })); }} placeholder="Enter last name" aria-invalid={!!manualPatientErrors.lastName} aria-describedby={manualPatientErrors.lastName ? 'manual-last-name-error' : undefined} />
                   {manualPatientErrors.lastName && <p id="manual-last-name-error" className="text-destructive text-xs mt-1">{manualPatientErrors.lastName}</p>}
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="manual-mrn" className="section-label mb-1.5 block">MRN</Label>
+                  <Label htmlFor="manual-mrn" className="section-label mb-1.5 block">MRN<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>
                   <Input id="manual-mrn" value={selectedPatient.mrn} onChange={(e) => { onManualDetailChange('mrn', e.target.value); setManualPatientErrors(prev => ({ ...prev, mrn: '' })); }} placeholder="Medical Record Number..." aria-invalid={!!manualPatientErrors.mrn} aria-describedby={manualPatientErrors.mrn ? 'manual-mrn-error' : undefined} />
                   {manualPatientErrors.mrn && <p id="manual-mrn-error" className="text-destructive text-xs mt-1">{manualPatientErrors.mrn}</p>}
                 </div>
@@ -310,7 +300,10 @@ export function LogScreen({
         <div key={selectedPatient.id} className="space-y-8">
           {selectedPatient.id !== 'manual' && (
             <div style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
-              <PatientHistory patient={selectedPatient} />
+              <PatientHistory
+                patient={selectedPatient}
+                onToggleSuspectedAgent={(drugName) => onToggleSuspectedAgent(selectedPatient.id, drugName)}
+              />
             </div>
           )}
           <div style={{ '--section-index': selectedPatient.id !== 'manual' ? 1 : 0 } as React.CSSProperties} className="animate-section-reveal">
@@ -327,7 +320,7 @@ export function LogScreen({
           <div style={{ '--section-index': selectedPatient.id !== 'manual' ? 2 : 1 } as React.CSSProperties} className="animate-section-reveal">
             <div className="flex justify-end pt-4">
               <Button size="lg" className="w-full sm:w-auto text-base py-6 rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors btn-press" onClick={onProceedToTesting}>
-                Proceed to Testing Panel <ChevronRight className="ml-2 w-5 h-5" />
+                Start Testing Session <ChevronRight className="ml-2 w-5 h-5" />
               </Button>
             </div>
           </div>

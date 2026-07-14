@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { AppProviders } from '@core/components/AppProviders';
 import { Screen } from '@shared/types';
 import { APP_CONFIG } from '@shared/utils/constants';
+import { purgeStale } from '@shared/utils/ttlStorage';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
 import { reportWebVitals } from './src/lib/analytics';
@@ -15,13 +16,16 @@ import { LogScreen } from '@core/screens/LogScreen';
 import { ResearchScreen } from '@core/screens/ResearchScreen';
 import { SummaryScreen } from '@core/screens/SummaryScreen';
 import { PrintPlanScreen, TestingScreen } from '@core/screens/TestingScreens';
+import { ScreenUnavailable } from '@core/components/ScreenUnavailable';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
 type ReportTab = 'report' | 'handout' | 'letter';
 
-function AnaestheticLogApp() {
+export function AnaestheticLogApp() {
   useEffect(() => {
+    purgeStale();
+
     const runPostPaintSetup = () => {
       void initSentry();
       reportWebVitals();
@@ -41,12 +45,13 @@ function AnaestheticLogApp() {
   const {
     screen, setScreen, formData, setFormData,
     selectedPatient, lastSavedRecord, setLastSavedRecord, activeReportSavedAt,
+    lastDraftSavedAt, isSavingDraft,
     testingPlanData, setTestingPlanData,
     isPatientDialogOpen, setIsPatientDialogOpen,
-    patients, databaseDate, hasUploadedData, isLoadingPatients, recentLogs,
+    patients, databaseDate, hasUploadedData, patientDbSavedAt, isLoadingPatients, recentLogs,
     showDisclaimer, handleDismissDisclaimer,
     handlePatientSelect, handleManualDetailChange,
-    handleSubmit, handleUploadPatients, handleDashboardPatientSelect, resetForm, clearActiveReport,
+    handleSubmit, handleUploadPatients, toggleSuspectedAgent, handleDashboardPatientSelect, resetForm, clearActiveReport,
   } = useAnaestheticApp();
 
   const [activeReportTab, setActiveReportTab] = React.useState<ReportTab>('report');
@@ -105,6 +110,7 @@ function AnaestheticLogApp() {
           patients={patients}
           recentLogs={recentLogs}
           isLoadingPatients={isLoadingPatients}
+          patientDbSavedAt={patientDbSavedAt}
           onSetScreen={setScreen}
           onViewLog={(log) => {
             setLastSavedRecord(log);
@@ -117,30 +123,52 @@ function AnaestheticLogApp() {
       );
     }
 
-    if (screen === Screen.SUMMARY && lastSavedRecord) {
+    if (screen === Screen.SUMMARY) {
+      if (lastSavedRecord) {
+        return (
+          <SummaryScreen
+            layoutProps={layoutProps}
+            lastSavedRecord={lastSavedRecord}
+            selectedPatient={selectedPatient}
+            activeReportSavedAt={activeReportSavedAt}
+            activeReportTab={activeReportTab}
+            setActiveReportTab={setActiveReportTab}
+            research={research}
+            onExit={resetToLog}
+            onStartNewLog={resetToLog}
+          />
+        );
+      }
+
       return (
-        <SummaryScreen
-          layoutProps={layoutProps}
-          lastSavedRecord={lastSavedRecord}
-          selectedPatient={selectedPatient}
-          activeReportSavedAt={activeReportSavedAt}
-          activeReportTab={activeReportTab}
-          setActiveReportTab={setActiveReportTab}
-          research={research}
-          onExit={resetToLog}
-          onStartNewLog={resetToLog}
+        <ScreenUnavailable
+          title="No active report"
+          message="This screen needs an active report. Local data may have expired, or the page was reloaded."
+          onGoHome={() => setScreen(Screen.LOG)}
+          onGoDashboard={() => setScreen(Screen.DASHBOARD)}
         />
       );
     }
 
-    if (screen === Screen.PRINT_PLAN && selectedPatient && testingPlanData) {
+    if (screen === Screen.PRINT_PLAN) {
+      if (selectedPatient && testingPlanData) {
+        return (
+          <PrintPlanScreen
+            layoutProps={layoutProps}
+            selectedPatient={selectedPatient}
+            testingPlanData={testingPlanData}
+            onBack={() => setScreen(Screen.LOG)}
+            onProceed={handleProceedToTesting}
+          />
+        );
+      }
+
       return (
-        <PrintPlanScreen
-          layoutProps={layoutProps}
-          selectedPatient={selectedPatient}
-          testingPlanData={testingPlanData}
-          onBack={() => setScreen(Screen.LOG)}
-          onProceed={handleProceedToTesting}
+        <ScreenUnavailable
+          title="No active testing plan"
+          message="This screen needs an active testing plan. Local data may have expired, or the page was reloaded."
+          onGoHome={() => setScreen(Screen.LOG)}
+          onGoDashboard={() => setScreen(Screen.DASHBOARD)}
         />
       );
     }
@@ -149,8 +177,11 @@ function AnaestheticLogApp() {
       return (
         <TestingScreen
           layoutProps={layoutProps}
+          selectedPatient={selectedPatient}
           formData={formData}
           setFormData={setFormData}
+          lastDraftSavedAt={lastDraftSavedAt}
+          isSavingDraft={isSavingDraft}
           onBack={() => setScreen(Screen.LOG)}
           onSubmit={handleSubmit}
         />
@@ -175,6 +206,7 @@ function AnaestheticLogApp() {
         patients={patients}
         onPatientSelect={handlePatientSelect}
         onManualDetailChange={handleManualDetailChange}
+        onToggleSuspectedAgent={toggleSuspectedAgent}
         onSetTestingPlanData={setTestingPlanData}
         onProceedToTesting={handleProceedToTesting}
         onClearActiveReport={clearActiveReport}

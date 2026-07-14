@@ -5,6 +5,10 @@ import { ScreenLayout } from '@core/components/ScreenLayout';
 import { APP_CONFIG, DRUG_CATEGORIES } from '@shared/utils/constants';
 import { LogFormData, Patient, TestingPlanData } from '@/types';
 import { CommonScreenLayoutProps } from './types';
+import { PatientIdentityBar } from '@features/patients/components/PatientIdentityBar';
+import { HighRiskContextChips } from '@features/patients/components/HighRiskContextChips';
+import { DraftSaveIndicator } from '@features/testing/components/DraftSaveIndicator';
+import { deriveHighRiskChips } from '@shared/utils/highRiskContext';
 
 const TestingLogForm = React.lazy(() => import('@features/testing/components/TestingLogForm'));
 const TestingPlanPrintView = React.lazy(() => import('@features/testing/components/TestingPlanPrintView'));
@@ -28,7 +32,7 @@ export function PrintPlanScreen({
   onProceed,
 }: PrintPlanScreenProps) {
   return (
-    <ScreenLayout title="Testing Plan Preview" icon={<ClipboardList className="w-5 h-5" />} {...layoutProps} showFooter={false}
+    <ScreenLayout title="Testing Request Form" icon={<ClipboardList className="w-5 h-5" />} {...layoutProps} showFooter={false}
       actions={<Button onClick={onBack} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
     >
       <TestingPlanPrintView patient={selectedPatient} data={testingPlanData} drugCategories={DRUG_CATEGORIES} onProceed={onProceed} />
@@ -38,19 +42,29 @@ export function PrintPlanScreen({
 
 interface TestingScreenProps {
   layoutProps: CommonScreenLayoutProps;
+  selectedPatient: Patient | null;
   formData: LogFormData;
   setFormData: React.Dispatch<React.SetStateAction<LogFormData>>;
+  lastDraftSavedAt: number | null;
+  isSavingDraft: boolean;
   onBack: () => void;
   onSubmit: () => LogFormData;
 }
 
 export function TestingScreen({
   layoutProps,
+  selectedPatient,
   formData,
   setFormData,
+  lastDraftSavedAt,
+  isSavingDraft,
   onBack,
   onSubmit,
 }: TestingScreenProps) {
+  const highRiskChips = selectedPatient
+    ? deriveHighRiskChips(selectedPatient.history)
+    : [];
+
   return (
     <ScreenLayout
       title="Testing Session" icon={<TestTube2 className="w-5 h-5" />}
@@ -58,6 +72,24 @@ export function TestingScreen({
       actions={<Button onClick={onBack} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
       contentClassName="py-4" className="pb-32"
     >
+      <PatientIdentityBar
+        firstName={selectedPatient?.firstName ?? formData.firstName}
+        lastName={selectedPatient?.lastName ?? formData.lastName}
+        mrn={selectedPatient?.mrn ?? formData.mrn}
+        dob={selectedPatient?.dob}
+        reactionDate={selectedPatient?.history.date}
+        className={highRiskChips.length > 0 ? 'mb-2' : 'mb-4'}
+      />
+      <HighRiskContextChips
+        chips={highRiskChips}
+        className="mx-1 mb-3 border-l-2 border-amber-400 bg-amber-50/70 px-2.5 py-2 dark:bg-amber-950/20"
+      />
+      <div className="flex min-h-4 justify-end px-1">
+        <DraftSaveIndicator
+          isSaving={isSavingDraft}
+          lastSavedAt={lastDraftSavedAt}
+        />
+      </div>
       <TestingLogForm
         formData={formData}
         setFormData={setFormData}

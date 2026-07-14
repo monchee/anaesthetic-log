@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import TestingPlanGenerator from './TestingPlanGenerator';
 import { createMockPatient } from '@/src/test/factories/patientFactory';
@@ -6,6 +6,7 @@ import { TESTING_PLAN_BUILDER_DRAFTS_KEY } from '@shared/utils/ttlStorage';
 
 const drugCategories = {
   'Muscle Relaxants': ['Cis-atracurium'],
+  Penicillins: ['Cephalexin'],
   Hypnotics: ['Ketamine'],
   Others: ['Chlorhexidine', 'Latex'],
 };
@@ -47,6 +48,13 @@ describe('TestingPlanGenerator', () => {
     expect(screen.getByLabelText('Date of Reaction')).toHaveAttribute('max');
   });
 
+  it('shows when its plan-builder draft was saved', async () => {
+    renderGenerator();
+
+    const indicator = await screen.findByText(/Draft saved · \d{2}:\d{2}/);
+    expect(indicator).toHaveAttribute('aria-live', 'polite');
+  });
+
   it('passes the selected protocol index to preview', async () => {
     const { onPreview } = renderGenerator();
 
@@ -56,11 +64,21 @@ describe('TestingPlanGenerator', () => {
     fireEvent.click(screen.getByRole('combobox', { name: 'Ketamine' }));
     fireEvent.click(await screen.findByRole('option', { name: /1:100 start/i }));
 
-    fireEvent.click(screen.getByRole('button', { name: /Preview & Print Plan/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Preview & Print Request Form/i }));
 
     expect(onPreview).toHaveBeenCalledWith(expect.objectContaining({
       selectedProtocols: expect.objectContaining({ Ketamine: 1 }),
     }));
+  });
+
+  it('shows pharmacy verification only for a selected flagged drug', () => {
+    renderGenerator();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cephalexin' }));
+
+    expect(screen.getByText('⚠ Confirm preparation with pharmacy')).toBeInTheDocument();
+    expect(within(screen.getByRole('button', { name: /Cephalexin/i })).getByText(/Confirm preparation with pharmacy/)).toBeInTheDocument();
+    expect(within(screen.getByRole('button', { name: /Chlorhexidine/i })).queryByText(/Confirm preparation with pharmacy/)).not.toBeInTheDocument();
   });
 
   it('restores a per-patient builder draft from TTL storage', async () => {
@@ -89,7 +107,7 @@ describe('TestingPlanGenerator', () => {
     await waitFor(() => expect(screen.getByDisplayValue('Restore this plan')).toBeInTheDocument());
     expect(screen.getByRole('button', { name: 'Ketamine' })).toHaveAttribute('aria-pressed', 'true');
 
-    fireEvent.click(screen.getByRole('button', { name: /Preview & Print Plan/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Preview & Print Request Form/i }));
     expect(onPreview).toHaveBeenCalledWith(expect.objectContaining({
       selectedDrugs: ['Ketamine'],
       selectedProtocols: { Ketamine: 1 },
@@ -139,6 +157,25 @@ describe('TestingPlanGenerator', () => {
     renderGenerator(vi.fn(), patientWithReactionDrug);
 
     expect(screen.getByRole('button', { name: /Cis-atracurium/i })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('auto-selects and badges a drug added only as a suspected agent', () => {
+    const patientWithManualSuspect = createMockPatient({
+      id: 'PLAN-SUSPECT',
+      history: {
+        ...patient.history,
+        medications: [],
+        preInductionDrugs: [],
+        postInductionDrugs: [],
+        suspectedAgents: ['Ketamine'],
+      },
+    });
+
+    renderGenerator(vi.fn(), patientWithManualSuspect);
+
+    const ketamine = screen.getByRole('button', { name: /Ketamine/i });
+    expect(ketamine).toHaveAttribute('aria-pressed', 'true');
+    expect(within(ketamine).getByLabelText('Given at time of reaction')).toBeInTheDocument();
   });
 
   it('surfaces REDCap Others text and adds it as a selected custom item', async () => {

@@ -81,7 +81,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         },
         {
           question: "How do I create a testing plan request?",
-          answer: "Navigate to a patient's record and select 'Create Testing Plan Request'. Select the drugs you want to test, note any urgent indicators, list documents to chase, and add clinical notes. This generates a printable request form."
+          answer: "Navigate to a patient's record and build a Testing Request Form. Select the drugs you want to test, note any urgent indicators, list documents to chase, and add clinical notes. This generates a printable request form."
         },
         {
           question: "Can I export or email reports?",
