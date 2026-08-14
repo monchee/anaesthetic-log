@@ -20,6 +20,7 @@ interface TestingLogFormProps {
   drugCategories: Record<string, string[]>;
   symptomOptions: readonly string[] | string[];
   interventionOptions: readonly string[] | string[];
+  isDirectEntry?: boolean;
 }
 
 const TestingLogForm: React.FC<TestingLogFormProps> = ({
@@ -29,6 +30,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   drugCategories,
   symptomOptions,
   interventionOptions,
+  isDirectEntry = false,
 }) => {
   const {
     drugToCategoryMap,
@@ -54,6 +56,9 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   const testingService = new TestingService();
   const toValidationLink = (message: string): ValidationErrorLink => {
     const lower = message.toLowerCase();
+    if (lower.includes('mrn')) return { message, fieldId: 'patient-mrn' };
+    if (lower.includes('first name')) return { message, fieldId: 'patient-first-name' };
+    if (lower.includes('last name')) return { message, fieldId: 'patient-last-name' };
     if (lower.includes('visit date')) return { message, fieldId: 'visit-date' };
     if (lower.includes('drug') || lower.includes('test panel')) return { message, fieldId: 'drug-filter' };
     return { message, fieldId: 'clinical-plan' };
@@ -75,7 +80,12 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
   return (
     <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-4 sm:mt-6 md:mt-8">
-      <VisitDetailsSection formData={formData} onInputChange={handleInputChange} />
+      <VisitDetailsSection
+        formData={formData}
+        onInputChange={handleInputChange}
+        isDirectEntry={isDirectEntry}
+        validationErrors={validationErrors}
+      />
       <DrugTestPanelSection
         formData={formData}
         setFormData={setFormData}

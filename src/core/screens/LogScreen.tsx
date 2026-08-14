@@ -7,6 +7,8 @@ import {
   Shield,
   Stethoscope,
   Target,
+  TestTube2,
+  Upload,
   User,
   Users,
 } from 'lucide-react';
@@ -50,7 +52,9 @@ interface LogScreenProps {
   onToggleSuspectedAgent: (patientId: string, drugName: string) => void;
   onSetTestingPlanData: (data: TestingPlanData) => void;
   onProceedToTesting: () => void;
+  onStartDirectTesting: () => void;
   onClearActiveReport: () => void;
+  isTestingDraftDirty?: boolean;
 }
 
 export function LogScreen({
@@ -69,13 +73,24 @@ export function LogScreen({
   onToggleSuspectedAgent,
   onSetTestingPlanData,
   onProceedToTesting,
+  onStartDirectTesting,
   onClearActiveReport,
+  isTestingDraftDirty = false,
 }: LogScreenProps) {
+  const [confirmDiscardDraftOpen, setConfirmDiscardDraftOpen] = React.useState(false);
   const [manualPatientErrors, setManualPatientErrors] = React.useState<Record<'firstName' | 'lastName' | 'mrn', string>>({
     firstName: '',
     lastName: '',
     mrn: '',
   });
+
+  const handleDirectTestingClick = () => {
+    if (isTestingDraftDirty) {
+      setConfirmDiscardDraftOpen(true);
+    } else {
+      onStartDirectTesting();
+    }
+  };
   const activeReportExpiresIn = activeReportSavedAt
     ? (() => {
         const msLeft = ACTIVE_REPORT_TTL_MS - (Date.now() - activeReportSavedAt);
@@ -179,6 +194,59 @@ export function LogScreen({
           </div>
         </CardContent>
       </Card>
+
+      {!selectedPatient && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <button
+            type="button"
+            onClick={() => layoutProps.onCSVUploadSheetOpenChange(true)}
+            className="flex flex-col text-left p-5 bg-card hover:bg-muted/40 dark:hover:bg-card/70 border border-border transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            aria-label="Upload REDCap export & review records"
+          >
+            <div className="flex items-center gap-3 mb-2.5">
+              <div className="p-2 bg-primary/10 dark:bg-primary/20 text-primary shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors rounded-none">
+                <Upload className="w-5 h-5" />
+              </div>
+              <span className="font-semibold text-base text-foreground group-hover:text-primary transition-colors">
+                Upload REDCap export & review records
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Import patient records from a REDCap CSV export and review clinic analytics in the Dashboard.
+            </p>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDirectTestingClick}
+            className="flex flex-col text-left p-5 bg-card hover:bg-muted/40 dark:hover:bg-card/70 border border-border transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            aria-label="Open Allergy Testing"
+          >
+            <div className="flex items-center gap-3 mb-2.5">
+              <div className="p-2 bg-primary/10 dark:bg-primary/20 text-primary shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors rounded-none">
+                <TestTube2 className="w-5 h-5" />
+              </div>
+              <span className="font-semibold text-base text-foreground group-hover:text-primary transition-colors">
+                Open Allergy Testing
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Start a fresh testing session directly without selecting a patient or creating a testing plan.
+            </p>
+          </button>
+        </div>
+      )}
+
+      <ConfirmDialog
+        open={confirmDiscardDraftOpen}
+        onOpenChange={setConfirmDiscardDraftOpen}
+        title="Start fresh testing session?"
+        message="You have unsaved changes in your current testing session. Starting a fresh session will discard these changes. This cannot be undone."
+        confirmLabel="Start fresh session"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={onStartDirectTesting}
+      />
 
       {!selectedPatient && (
         <Card className="shadow-sm rounded-none border-primary/20 bg-primary/5 dark:bg-card/40">

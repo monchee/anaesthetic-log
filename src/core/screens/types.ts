@@ -9,6 +9,7 @@ export interface CommonScreenLayoutProps {
   isCustomData: boolean;
   onDismissDisclaimer: () => void;
   onUploadPatients: (newPatients: Patient[], fileLastModified?: number) => void;
+  onUploadComplete?: () => void;
   csvUploadSheetOpen: boolean;
   onCSVUploadSheetOpenChange: Dispatch<SetStateAction<boolean>>;
 }

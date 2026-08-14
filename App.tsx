@@ -51,7 +51,7 @@ export function AnaestheticLogApp() {
     patients, databaseDate, hasUploadedData, patientDbSavedAt, isLoadingPatients, recentLogs,
     showDisclaimer, handleDismissDisclaimer,
     handlePatientSelect, handleManualDetailChange,
-    handleSubmit, handleUploadPatients, toggleSuspectedAgent, handleDashboardPatientSelect, resetForm, clearActiveReport,
+    handleSubmit, handleStartDirectTesting, isTestingDraftDirty, handleUploadPatients, toggleSuspectedAgent, handleDashboardPatientSelect, resetForm, clearActiveReport,
   } = useAnaestheticApp();
 
   const [activeReportTab, setActiveReportTab] = React.useState<ReportTab>('report');
@@ -85,6 +85,11 @@ export function AnaestheticLogApp() {
     setScreen(Screen.LOG);
   };
 
+  const handleHomeUploadComplete = () => {
+    setScreen(Screen.DASHBOARD);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const layoutProps = {
     setScreen,
     currentScreen: screen,
@@ -93,6 +98,7 @@ export function AnaestheticLogApp() {
     isCustomData: hasUploadedData,
     onDismissDisclaimer: handleDismissDisclaimer,
     onUploadPatients: handleUploadPatients,
+    onUploadComplete: screen === Screen.LOG ? handleHomeUploadComplete : undefined,
     csvUploadSheetOpen,
     onCSVUploadSheetOpenChange: setCsvUploadSheetOpen,
   };
@@ -209,7 +215,9 @@ export function AnaestheticLogApp() {
         onToggleSuspectedAgent={toggleSuspectedAgent}
         onSetTestingPlanData={setTestingPlanData}
         onProceedToTesting={handleProceedToTesting}
+        onStartDirectTesting={handleStartDirectTesting}
         onClearActiveReport={clearActiveReport}
+        isTestingDraftDirty={isTestingDraftDirty}
       />
     );
   };
@@ -219,6 +227,7 @@ export function AnaestheticLogApp() {
       {renderScreenContent()}
       <HelpModal
         onUploadPatients={handleUploadPatients}
+        onUploadComplete={screen === Screen.LOG ? handleHomeUploadComplete : undefined}
         hideTrigger={true}
         hasData={hasUploadedData}
         setScreen={setScreen}

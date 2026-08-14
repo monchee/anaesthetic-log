@@ -366,6 +366,58 @@ describe('TestingLogForm', () => {
     });
   });
 
+  describe('Direct Entry Mode', () => {
+    it('renders editable identity fields when isDirectEntry is true', () => {
+      render(<TestWrapper initialData={mockFormData} props={{ ...mockProps, isDirectEntry: true }} />);
+
+      expect(screen.getByLabelText(/MRN/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Last Name/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Date of Birth/i)).toBeInTheDocument();
+    });
+
+    it('updates form state when typing into direct entry identity fields', () => {
+      const emptyData: LogFormData = {
+        ...mockFormData,
+        mrn: '',
+        firstName: '',
+        lastName: '',
+        dob: '',
+      };
+      render(<TestWrapper initialData={emptyData} props={{ ...mockProps, isDirectEntry: true }} />);
+
+      fireEvent.change(screen.getByLabelText(/^MRN/i), { target: { value: 'MRN999' } });
+      fireEvent.change(screen.getByLabelText(/^First Name/i), { target: { value: 'Alice' } });
+      fireEvent.change(screen.getByLabelText(/^Last Name/i), { target: { value: 'Smith' } });
+      fireEvent.change(screen.getByLabelText(/Date of Birth/i), { target: { value: '1985-05-12' } });
+
+      expect(mockProps.setFormData).toHaveBeenCalledWith(expect.objectContaining({
+        mrn: 'MRN999',
+      }));
+    });
+
+    it('displays accessible validation errors linking to identity fields when required fields are missing', async () => {
+      const emptyData: LogFormData = {
+        ...mockFormData,
+        mrn: '',
+        firstName: '',
+        lastName: '',
+      };
+      render(<TestWrapper initialData={emptyData} props={{ ...mockProps, isDirectEntry: true }} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
+
+      const mrnLink = await screen.findByRole('link', { name: /MRN is required/i });
+      const firstNameLink = await screen.findByRole('link', { name: /First name is required/i });
+      const lastNameLink = await screen.findByRole('link', { name: /Last name is required/i });
+
+      expect(mrnLink).toHaveAttribute('href', '#patient-mrn');
+      expect(firstNameLink).toHaveAttribute('href', '#patient-first-name');
+      expect(lastNameLink).toHaveAttribute('href', '#patient-last-name');
+      expect(mockProps.onSubmit).not.toHaveBeenCalled();
+    });
+  });
+
   describe('Edge Cases', () => {
     it('handles empty drug categories', () => {
       const propsWithEmptyCategories = {

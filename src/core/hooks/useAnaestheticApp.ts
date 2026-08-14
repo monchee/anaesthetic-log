@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { usePatientState } from '@features/patients/hooks/usePatientState';
 import { useTestingState } from '@features/testing/hooks/useTestingState';
+import { isTestingSessionDirty } from '@features/testing/utils/isTestingSessionDirty';
 import { useAppNavigation } from './useAppNavigation';
 import { useDisclaimer } from '@shared/hooks/useDisclaimer';
 import { Patient, Screen } from '@/types';
@@ -70,6 +71,14 @@ export function useAnaestheticApp() {
     return savedRecord;
   };
 
+  const handleStartDirectTesting = () => {
+    patientState.setSelectedPatient(null);
+    testingState.setTestingPlanData(null);
+    originalResetForm();
+    navigation.setScreen(Screen.TESTING);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const resetForm = () => {
     originalResetForm();
     patientState.setSelectedPatient(null);
@@ -102,6 +111,9 @@ export function useAnaestheticApp() {
     setTestingPlanData: testingState.setTestingPlanData,
     recentLogs: testingState.recentLogs,
     INITIAL_FORM_STATE: testingState.INITIAL_FORM_STATE,
+    isTestingDraftDirty: isTestingSessionDirty(testingState.formData, {
+      includeIdentity: !selectedPatient,
+    }) || (!selectedPatient && testingState.formData.visitDate !== testingState.INITIAL_FORM_STATE.visitDate),
 
     // Patient state
     selectedPatient: patientState.selectedPatient,
@@ -122,6 +134,7 @@ export function useAnaestheticApp() {
     handlePatientSelect,
     handleManualDetailChange,
     handleSubmit,
+    handleStartDirectTesting,
     handleUploadPatients: patientState.handleUploadPatients,
     toggleSuspectedAgent: patientState.toggleSuspectedAgent,
     handleDashboardPatientSelect,

@@ -98,4 +98,15 @@ describe('AnaestheticLogApp guarded screens', () => {
     expect(appState.setScreen).toHaveBeenNthCalledWith(1, Screen.LOG);
     expect(appState.setScreen).toHaveBeenNthCalledWith(2, Screen.DASHBOARD);
   });
+
+  it('triggers handleStartDirectTesting when direct testing action is clicked from Home', () => {
+    const handleStartDirectTesting = vi.fn();
+    const appState = createAppState(Screen.LOG, { handleStartDirectTesting, isTestingDraftDirty: false });
+    mockedUseAnaestheticApp.mockReturnValue(appState);
+
+    render(<AnaestheticLogApp />);
+
+    fireEvent.click(screen.getByRole('button', { name: /Open Allergy Testing/i }));
+    expect(handleStartDirectTesting).toHaveBeenCalledOnce();
+  });
 });

@@ -24,12 +24,13 @@ const LAST_SEEN_KEY = 'dream:last_seen_version';
 
 interface HelpModalProps {
   onUploadPatients?: (patients: Patient[]) => void;
+  onUploadComplete?: () => void;
   hideTrigger?: boolean;
   hasData?: boolean;
   setScreen?: (screen: Screen) => void;
 }
 
-export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrigger = false, hasData = false, setScreen }) => {
+export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, onUploadComplete, hideTrigger = false, hasData = false, setScreen }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -77,6 +78,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
               description: `Imported ${result.data.length} record(s).${result.details ? ` ${result.details.join(' ')}` : ''}`,
             });
             setIsOpen(false);
+            onUploadComplete?.();
           } else {
             toast.error('Failed to parse CSV', {
               description: result.error || 'Please check the file format.',
@@ -179,7 +181,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
               Welcome to The DREAM App
             </h2>
             <p className="text-sm text-muted-foreground">
-              Manage patient records, test results, and allergy workups from your REDCap database.
+              Manage patient records and allergy testing plans from your REDCap database, or start direct allergy testing sessions at bedside.
             </p>
           </div>
 

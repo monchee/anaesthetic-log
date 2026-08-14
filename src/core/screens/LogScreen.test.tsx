@@ -47,6 +47,7 @@ describe('LogScreen clear-report confirmation', () => {
           onToggleSuspectedAgent={vi.fn()}
           onSetTestingPlanData={vi.fn()}
           onProceedToTesting={vi.fn()}
+          onStartDirectTesting={vi.fn()}
           onClearActiveReport={onClearActiveReport}
         />
       );
@@ -65,5 +66,141 @@ describe('LogScreen clear-report confirmation', () => {
 
     expect(onClearActiveReport).toHaveBeenCalledOnce();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+});
+
+describe('LogScreen Home quick-start actions', () => {
+  const defaultLayoutProps = {
+    setScreen: vi.fn(),
+    currentScreen: Screen.LOG,
+    databaseDate: '',
+    showDisclaimer: false,
+    isCustomData: false,
+    onDismissDisclaimer: vi.fn(),
+    onUploadPatients: vi.fn(),
+    csvUploadSheetOpen: false,
+    onCSVUploadSheetOpenChange: vi.fn(),
+  };
+
+  it('renders quick-start actions when no patient is selected', () => {
+    render(
+      <LogScreen
+        layoutProps={defaultLayoutProps}
+        appSubtitle=""
+        selectedPatient={null}
+        lastSavedRecord={null}
+        activeReportSavedAt={null}
+        isPatientDialogOpen={false}
+        setIsPatientDialogOpen={vi.fn()}
+        confirmClearOpen={false}
+        setConfirmClearOpen={vi.fn()}
+        patients={[]}
+        onPatientSelect={vi.fn()}
+        onManualDetailChange={vi.fn()}
+        onToggleSuspectedAgent={vi.fn()}
+        onSetTestingPlanData={vi.fn()}
+        onProceedToTesting={vi.fn()}
+        onStartDirectTesting={vi.fn()}
+        onClearActiveReport={vi.fn()}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: /Upload REDCap export & review records/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Open Allergy Testing/i })).toBeInTheDocument();
+  });
+
+  it('opens the CSV upload sheet when upload quick-action is clicked', () => {
+    const onCSVUploadSheetOpenChange = vi.fn();
+    render(
+      <LogScreen
+        layoutProps={{
+          ...defaultLayoutProps,
+          onCSVUploadSheetOpenChange,
+        }}
+        appSubtitle=""
+        selectedPatient={null}
+        lastSavedRecord={null}
+        activeReportSavedAt={null}
+        isPatientDialogOpen={false}
+        setIsPatientDialogOpen={vi.fn()}
+        confirmClearOpen={false}
+        setConfirmClearOpen={vi.fn()}
+        patients={[]}
+        onPatientSelect={vi.fn()}
+        onManualDetailChange={vi.fn()}
+        onToggleSuspectedAgent={vi.fn()}
+        onSetTestingPlanData={vi.fn()}
+        onProceedToTesting={vi.fn()}
+        onStartDirectTesting={vi.fn()}
+        onClearActiveReport={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Upload REDCap export & review records/i }));
+    expect(onCSVUploadSheetOpenChange).toHaveBeenCalledWith(true);
+  });
+
+  it('calls onStartDirectTesting immediately when clicking Open Allergy Testing without unsaved draft', () => {
+    const onStartDirectTesting = vi.fn();
+    render(
+      <LogScreen
+        layoutProps={defaultLayoutProps}
+        appSubtitle=""
+        selectedPatient={null}
+        lastSavedRecord={null}
+        activeReportSavedAt={null}
+        isPatientDialogOpen={false}
+        setIsPatientDialogOpen={vi.fn()}
+        confirmClearOpen={false}
+        setConfirmClearOpen={vi.fn()}
+        patients={[]}
+        onPatientSelect={vi.fn()}
+        onManualDetailChange={vi.fn()}
+        onToggleSuspectedAgent={vi.fn()}
+        onSetTestingPlanData={vi.fn()}
+        onProceedToTesting={vi.fn()}
+        onStartDirectTesting={onStartDirectTesting}
+        onClearActiveReport={vi.fn()}
+        isTestingDraftDirty={false}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Open Allergy Testing/i }));
+    expect(onStartDirectTesting).toHaveBeenCalledOnce();
+  });
+
+  it('prompts confirmation when clicking Open Allergy Testing with an unsaved testing draft', () => {
+    const onStartDirectTesting = vi.fn();
+    render(
+      <LogScreen
+        layoutProps={defaultLayoutProps}
+        appSubtitle=""
+        selectedPatient={null}
+        lastSavedRecord={null}
+        activeReportSavedAt={null}
+        isPatientDialogOpen={false}
+        setIsPatientDialogOpen={vi.fn()}
+        confirmClearOpen={false}
+        setConfirmClearOpen={vi.fn()}
+        patients={[]}
+        onPatientSelect={vi.fn()}
+        onManualDetailChange={vi.fn()}
+        onToggleSuspectedAgent={vi.fn()}
+        onSetTestingPlanData={vi.fn()}
+        onProceedToTesting={vi.fn()}
+        onStartDirectTesting={onStartDirectTesting}
+        onClearActiveReport={vi.fn()}
+        isTestingDraftDirty={true}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Open Allergy Testing/i }));
+
+    expect(onStartDirectTesting).not.toHaveBeenCalled();
+    expect(screen.getByRole('dialog')).toHaveTextContent('Start fresh testing session?');
+    expect(screen.getByRole('dialog')).toHaveTextContent('You have unsaved changes in your current testing session.');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Start fresh session' }));
+    expect(onStartDirectTesting).toHaveBeenCalledOnce();
   });
 });

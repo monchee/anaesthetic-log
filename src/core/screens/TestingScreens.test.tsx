@@ -13,7 +13,11 @@ vi.mock('@core/components/ScreenLayout', () => ({
 }));
 
 vi.mock('@features/testing/components/TestingLogForm', () => ({
-  default: () => <div>Testing log form</div>,
+  default: ({ isDirectEntry }: { isDirectEntry?: boolean }) => (
+    <div data-testid="testing-log-form" data-direct-entry={isDirectEntry ? 'true' : 'false'}>
+      Testing log form
+    </div>
+  ),
 }));
 
 const layoutProps = {
@@ -43,8 +47,8 @@ function renderTestingScreen(selectedPatient: ReturnType<typeof createMockPatien
   );
 }
 
-describe('TestingScreen high-risk clinical context', () => {
-  it('renders matching chips below the patient identity bar', async () => {
+describe('TestingScreen clinical context and identity display', () => {
+  it('renders read-only identity bar and high-risk chips for selected patients', async () => {
     renderTestingScreen(createMockPatient({
       history: {
         ...createMockPatient().history,
@@ -58,12 +62,14 @@ describe('TestingScreen high-risk clinical context', () => {
     expect(identityBar.compareDocumentPosition(context) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(within(context).getByText('Beta-blocker')).toBeInTheDocument();
     expect(within(context).getByText('Asthma')).toBeInTheDocument();
+    expect(screen.getByTestId('testing-log-form')).toHaveAttribute('data-direct-entry', 'false');
   });
 
-  it('renders no chips and does not crash for manual entry without a selected patient', async () => {
-    expect(() => renderTestingScreen(null)).not.toThrow();
+  it('renders direct-entry testing form and omits read-only identity bar when no patient is selected', async () => {
+    renderTestingScreen(null);
 
-    expect(await screen.findByLabelText('Patient identity')).toHaveTextContent('PATIENT, Manual');
+    expect(screen.queryByLabelText('Patient identity')).not.toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'High-risk clinical context' })).not.toBeInTheDocument();
+    expect(screen.getByTestId('testing-log-form')).toHaveAttribute('data-direct-entry', 'true');
   });
 });

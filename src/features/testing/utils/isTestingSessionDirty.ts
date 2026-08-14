@@ -8,9 +8,24 @@ import { LogFormData } from '../types';
  * patient is selected, so they do NOT count as dirty — only clinical input the
  * user typed does.
  */
-export function isTestingSessionDirty(formData: LogFormData): boolean {
+interface DirtySessionOptions {
+  /** Include standalone patient identity fields in the dirty check. */
+  includeIdentity?: boolean;
+}
+
+export function isTestingSessionDirty(formData: LogFormData, options: DirtySessionOptions = {}): boolean {
   const { controls, testPanel, nurseNotes, tryptase } = formData;
   const hasText = (value: unknown) => String(value ?? '').trim() !== '';
+
+  // Linked sessions receive identity from the selected patient, so identity is
+  // deliberately excluded by default. Direct sessions own these fields and
+  // must protect them before a fresh session resets the form.
+  if (
+    options.includeIdentity &&
+    [formData.mrn, formData.firstName, formData.lastName, formData.dob].some(hasText)
+  ) {
+    return true;
+  }
 
   // Any skin-test result entered
   const panelDirty = testPanel.some(

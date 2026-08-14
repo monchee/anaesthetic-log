@@ -14,8 +14,12 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
       icon: BookOpen,
       items: [
         {
+          question: "What are the ways to start an allergy testing session?",
+          answer: "DREAM supports two entry paths: (1) Patient-Linked Testing: Select a patient from the database on Home, review their reaction history, build and preview a testing plan, and proceed with prefilled drug protocols. (2) Direct Allergy Testing: Click 'Open Allergy Testing' on Home (or navigate directly to /testing) to start a fresh testing session at bedside with editable patient identity fields (MRN, first name, last name, DOB) without pre-selecting a patient or creating a prior plan."
+        },
+        {
           question: "How do I upload patient data?",
-          answer: "Click the 'Update DB' button on the dashboard, then follow the instructions to export your data from REDCap in CSV format. Select the exported file to import your patient records."
+          answer: "Click the 'Update DB' button on the dashboard or 'Upload REDCap export & review records' on Home, then follow the instructions to export your data from REDCap in CSV format. Select the exported file to import your patient records."
         },
         {
           question: "What format should the CSV file be in?",
@@ -59,7 +63,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         },
         {
           question: "How do I record test results?",
-          answer: "Navigate to a patient's record and use the testing forms to record skin prick test results, intradermal test results, and drug challenge outcomes."
+          answer: "You can record test results via a selected patient's testing plan workflow, or directly by clicking 'Open Allergy Testing' on Home (or opening /testing) for standalone bedside data entry with editable patient identity details."
         }
       ]
     },

@@ -27,6 +27,7 @@ interface ScreenLayoutProps {
     isCustomData?: boolean;
     onDismissDisclaimer?: () => void;
     onUploadPatients?: (patients: Patient[], fileLastModified?: number) => void;
+    onUploadComplete?: () => void;
     showNav?: boolean;
     csvUploadSheetOpen?: boolean;
     onCSVUploadSheetOpenChange?: (open: boolean) => void;
@@ -54,6 +55,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
     isCustomData = false,
     onDismissDisclaimer,
     onUploadPatients,
+    onUploadComplete,
     showNav = true,
     csvUploadSheetOpen,
     onCSVUploadSheetOpenChange,
@@ -83,6 +85,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                             description: `Imported ${result.data.length} record(s).${result.details ? ` ${result.details.join(' ')}` : ''}`,
                         });
                         setIsCSVUploadSheetOpen(false);
+                        onUploadComplete?.();
                     } else {
                         toast.error('Failed to parse CSV', {
                             description: result.error || 'Please check the file format.',

@@ -147,3 +147,68 @@ describe('useAnaestheticApp tryptase prefill', () => {
     expect(formData.tryptase).toBe(existingTryptase);
   });
 });
+
+describe('useAnaestheticApp direct testing session', () => {
+  it('clears patient and testing plan, resets form, and navigates to testing screen', () => {
+    const setSelectedPatient = vi.fn();
+    const setTestingPlanData = vi.fn();
+    const resetForm = vi.fn();
+    const setScreen = vi.fn();
+
+    vi.mocked(usePatientState).mockReturnValue({
+      selectedPatient: createMockPatient(),
+      setSelectedPatient,
+      isPatientDialogOpen: false,
+      setIsPatientDialogOpen: vi.fn(),
+      patients: [],
+      databaseDate: '',
+      hasUploadedData: false,
+      patientDbSavedAt: null,
+      isLoadingPatients: false,
+      handlePatientSelect: vi.fn(),
+      handleManualDetailChange: vi.fn(),
+      handleUploadPatients: vi.fn(),
+      toggleSuspectedAgent: vi.fn(),
+    } as unknown as ReturnType<typeof usePatientState>);
+
+    vi.mocked(useTestingState).mockReturnValue({
+      formData: createMockLogFormData(),
+      setFormData: vi.fn(),
+      lastSavedRecord: null,
+      setLastSavedRecord: vi.fn(),
+      activeReportSavedAt: null,
+      lastDraftSavedAt: null,
+      isSavingDraft: false,
+      testingPlanData: { selectedDrugs: ['Propofol'] } as unknown as ReturnType<typeof useTestingState>['testingPlanData'],
+      setTestingPlanData,
+      recentLogs: [],
+      handleSubmit: vi.fn(),
+      resetForm,
+      clearActiveReport: vi.fn(),
+      INITIAL_FORM_STATE: createMockLogFormData(),
+    } as unknown as ReturnType<typeof useTestingState>);
+
+    vi.mocked(useAppNavigation).mockReturnValue({
+      screen: Screen.LOG,
+      setScreen,
+      navigateTo: vi.fn(),
+      navigateToLog: vi.fn(),
+      navigateToDashboard: vi.fn(),
+      navigateToResearch: vi.fn(),
+      navigateToSummary: vi.fn(),
+      navigateToPatientSummary: vi.fn(),
+      navigateToTesting: vi.fn(),
+      navigateToPrintPlan: vi.fn(),
+      navigateToChangelog: vi.fn(),
+    });
+
+    const { result } = renderHook(() => useAnaestheticApp());
+
+    result.current.handleStartDirectTesting();
+
+    expect(setSelectedPatient).toHaveBeenCalledWith(null);
+    expect(setTestingPlanData).toHaveBeenCalledWith(null);
+    expect(resetForm).toHaveBeenCalled();
+    expect(setScreen).toHaveBeenCalledWith(Screen.TESTING);
+  });
+});

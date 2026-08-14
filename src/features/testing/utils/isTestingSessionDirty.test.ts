@@ -37,6 +37,12 @@ describe('isTestingSessionDirty', () => {
     expect(isTestingSessionDirty(cleanSession())).toBe(false);
   });
 
+  it('can treat standalone identity as dirty without changing linked-session defaults', () => {
+    expect(isTestingSessionDirty({ ...cleanSession(), firstName: 'Direct' }, { includeIdentity: true })).toBe(true);
+    expect(isTestingSessionDirty({ ...cleanSession(), firstName: 'Direct' })).toBe(false);
+    expect(isTestingSessionDirty({ ...cleanSession(), dob: '1985-05-12' }, { includeIdentity: true })).toBe(true);
+  });
+
   it('detects skin-test and row note data', () => {
     expect(isTestingSessionDirty({
       ...cleanSession(),

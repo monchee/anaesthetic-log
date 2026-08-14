@@ -61,29 +61,34 @@ export function TestingScreen({
   onBack,
   onSubmit,
 }: TestingScreenProps) {
+  const isDirectEntry = !selectedPatient;
   const highRiskChips = selectedPatient
     ? deriveHighRiskChips(selectedPatient.history)
     : [];
 
   return (
     <ScreenLayout
-      title="Testing Session" icon={<TestTube2 className="w-5 h-5" />}
+      title={isDirectEntry ? 'Allergy Testing' : 'Testing Session'} icon={<TestTube2 className="w-5 h-5" />}
       {...layoutProps}
       actions={<Button onClick={onBack} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
       contentClassName="py-4" className="pb-32"
     >
-      <PatientIdentityBar
-        firstName={selectedPatient?.firstName ?? formData.firstName}
-        lastName={selectedPatient?.lastName ?? formData.lastName}
-        mrn={selectedPatient?.mrn ?? formData.mrn}
-        dob={selectedPatient?.dob}
-        reactionDate={selectedPatient?.history.date}
-        className={highRiskChips.length > 0 ? 'mb-2' : 'mb-4'}
-      />
-      <HighRiskContextChips
-        chips={highRiskChips}
-        className="mx-1 mb-3 border-l-2 border-amber-400 bg-amber-50/70 px-2.5 py-2 dark:bg-amber-950/20"
-      />
+      {selectedPatient && (
+        <>
+          <PatientIdentityBar
+            firstName={selectedPatient.firstName}
+            lastName={selectedPatient.lastName}
+            mrn={selectedPatient.mrn}
+            dob={selectedPatient.dob}
+            reactionDate={selectedPatient.history.date}
+            className={highRiskChips.length > 0 ? 'mb-2' : 'mb-4'}
+          />
+          <HighRiskContextChips
+            chips={highRiskChips}
+            className="mx-1 mb-3 border-l-2 border-amber-400 bg-amber-50/70 px-2.5 py-2 dark:bg-amber-950/20"
+          />
+        </>
+      )}
       <div className="flex min-h-4 justify-end px-1">
         <DraftSaveIndicator
           isSaving={isSavingDraft}
@@ -97,6 +102,7 @@ export function TestingScreen({
         drugCategories={DRUG_CATEGORIES}
         symptomOptions={APP_CONFIG.SYMPTOM_OPTIONS}
         interventionOptions={APP_CONFIG.INTERVENTION_OPTIONS}
+        isDirectEntry={isDirectEntry}
       />
     </ScreenLayout>
   );

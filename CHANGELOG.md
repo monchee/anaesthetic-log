@@ -1,3 +1,16 @@
+## [0.75.0] — 2026-08-14 (Direct Testing Entry)
+
+Summary: Adds quick-start entry points for REDCap review and direct Allergy Testing, with editable patient identity fields and safe draft protection.
+
+### Added
+- **Home quick-start actions** — users can upload a REDCap export and continue directly to Dashboard, or open Allergy Testing without first selecting a patient or creating a testing plan.
+- **Direct Allergy Testing identity fields** — nurses can enter MRN, first name, last name, and optional DOB in a fresh testing session; required identity validation remains enforced before saving.
+- **Safe direct-session entry** — the `/testing` route opens the same fresh-session state, while unsaved direct testing data triggers confirmation before it can be discarded.
+
+### Changed
+- **Patient-linked testing identity remains protected** — testing sessions opened from a patient record continue to show read-only identity information and preserve the existing selected drugs and plan workflow.
+- **Help and FAQ guidance** — documents both the patient-linked workflow and the direct testing/REDCap review entry paths.
+
 ## [0.74.0] — 2026-08-14 (Clipboard Handoff)
 
 Summary: Adds plain-text clipboard copying for the Testing Request Form preview with toast feedback, and updates FAQ export guidance.
