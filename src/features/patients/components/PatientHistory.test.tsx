@@ -57,7 +57,7 @@ describe('PatientHistory referral information checklist', () => {
     expect(items).toHaveLength(4);
     items.forEach(item => {
       expect(item).toHaveAttribute('data-state', 'pass');
-      expect(item).toHaveClass('text-emerald-700');
+      expect(item).toHaveClass('text-status-success');
     });
   });
 
@@ -83,7 +83,7 @@ describe('PatientHistory referral information checklist', () => {
     expect(items).toHaveLength(4);
     items.forEach(item => {
       expect(item).toHaveAttribute('data-state', 'warning');
-      expect(item).toHaveClass('text-amber-700');
+      expect(item).toHaveClass('text-status-warning');
     });
   });
 
@@ -96,7 +96,7 @@ describe('PatientHistory referral information checklist', () => {
 
     expect(item).toHaveAttribute('data-state', 'unknown');
     expect(item).toHaveClass('text-muted-foreground');
-    expect(item).not.toHaveClass('text-amber-700');
+    expect(item).not.toHaveClass('text-status-warning');
   });
 });
 

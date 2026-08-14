@@ -362,14 +362,14 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     {/* Request Details: Date of Reaction + Urgent */}
                     <div className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${
                         urgent
-                            ? 'bg-red-50 dark:bg-red-900/20 ring-1 ring-red-300 dark:ring-red-800'
+                            ? 'bg-status-danger/10 ring-1 ring-status-danger/30'
                             : ''
                     }`}>
                         <div className={`flex items-center border-b border-dashed pb-1 mb-2 ${
-                            urgent ? 'border-red-300 dark:border-red-800' : 'border-border'
+                            urgent ? 'border-status-danger/30' : 'border-border'
                         }`}>
                             <h3 className={`text-xs font-semibold uppercase tracking-wider ${
-                                urgent ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'
+                                urgent ? 'text-status-danger' : 'text-muted-foreground'
                             }`}>Request Details</h3>
                         </div>
                         <div className="flex flex-wrap items-center gap-4">
@@ -580,26 +580,26 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         {/* Custom Drugs Section */}
                         <div className={`col-span-full space-y-2 rounded-none p-3 transition-colors duration-150 ${
                             hasPendingRedcapOther
-                              ? 'bg-amber-50 dark:bg-amber-950/30 ring-1 ring-amber-300 dark:ring-amber-700'
+                              ? 'bg-status-warning/10 ring-1 ring-status-warning/30'
                               : hasCustomActive ? `${customTheme.activeBg} ${customTheme.activeRing} ring-1` : 'hover:bg-muted/50'
                           }`}>
                             <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${
-                                hasPendingRedcapOther ? 'border-amber-300 dark:border-amber-700' : hasCustomActive ? `${customTheme.headerBorder}` : 'border-border'
+                                hasPendingRedcapOther ? 'border-status-warning/30' : hasCustomActive ? `${customTheme.headerBorder}` : 'border-border'
                               }`}>
                                 <h4 className={`text-xs font-semibold uppercase tracking-wider flex items-center gap-2 ${
-                                    hasPendingRedcapOther ? 'text-amber-700 dark:text-amber-400' : hasCustomActive ? customTheme.headerText : 'text-muted-foreground'
+                                    hasPendingRedcapOther ? 'text-status-warning' : hasCustomActive ? customTheme.headerText : 'text-muted-foreground'
                                   }`}>
                                     Additional Items
                                     {hasPendingRedcapOther
-                                      ? <span className="flex h-1.5 w-1.5 rounded-none bg-amber-500 animate-pulse"></span>
+                                      ? <span className="flex h-1.5 w-1.5 rounded-none bg-status-warning animate-pulse"></span>
                                       : hasCustomActive && <span className={`flex h-1.5 w-1.5 rounded-none ${customTheme.pulse} animate-pulse`}></span>}
                                 </h4>
                             </div>
                             {hasPendingRedcapOther && (
-                              <div className="mb-3 border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30 p-3 rounded-none">
+                              <div className="mb-3 border border-status-warning/30 bg-status-warning/10 p-3 rounded-none">
                                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                   <div className="space-y-1">
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+                                    <p className="text-xs font-semibold uppercase tracking-wider text-status-warning">
                                       From REDCap — Others (not listed)
                                     </p>
                                     <p className="text-sm text-foreground whitespace-pre-wrap">{redcapOtherText}</p>
@@ -609,7 +609,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     size="sm"
                                     variant="outline"
                                     onClick={addRedcapOtherAsCustomDrug}
-                                    className="h-8 shrink-0 border-amber-400 text-amber-700 hover:bg-amber-100 dark:border-amber-600 dark:text-amber-300 dark:hover:bg-amber-900/40 rounded-none"
+                                    className="h-8 shrink-0 border-status-warning/50 text-status-warning hover:bg-status-warning/15 rounded-none"
                                   >
                                     <Plus className="w-3.5 h-3.5 mr-1.5" />
                                     Add as custom item
@@ -627,8 +627,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             className={`min-w-0 flex-1 text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                                                 entry.fromRedcapOther
                                                 ? selectedDrugs.includes(entry.name)
-                                                  ? 'bg-slate-700 border-amber-400 text-white shadow-sm ring-1 ring-amber-200 dark:ring-amber-900'
-                                                  : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-700 dark:hover:bg-amber-900/40'
+                                                  ? 'bg-status-warning text-status-warning-foreground border-status-warning shadow-sm ring-1 ring-status-warning/30'
+                                                  : 'bg-status-warning/10 text-status-warning border-status-warning/30 hover:bg-status-warning/20'
                                                 : selectedDrugs.includes(entry.name)
                                                   ? customTheme.btnSelected
                                                   : `bg-card text-muted-foreground border-border hover:bg-muted/50 ${customTheme.btnHover}`
@@ -637,7 +637,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             {selectedDrugs.includes(entry.name) && <Check className="w-3 h-3 shrink-0" />}
                                             <span className="truncate">{entry.name}</span>
                                             {entry.fromRedcapOther && (
-                                              <span className="shrink-0 text-[0.625rem] uppercase tracking-wider opacity-90">
+                                              <span className="shrink-0 text-xs uppercase tracking-wider opacity-90">
                                                 (not listed)
                                               </span>
                                             )}

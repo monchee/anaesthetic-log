@@ -29,8 +29,8 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 
   const variantStyles = {
     danger: 'bg-destructive hover:bg-destructive/90 text-destructive-foreground',
-    warning: 'bg-amber-600 hover:bg-amber-700 text-white',
-    info: 'bg-blue-600 hover:bg-blue-700 text-white',
+    warning: 'bg-status-warning hover:bg-status-warning/90 text-status-warning-foreground',
+    info: 'bg-status-info hover:bg-status-info/90 text-status-info-foreground',
   };
 
   return (
@@ -40,7 +40,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           <DialogTitle className="text-lg">{title}</DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <p className="text-sm text-slate-600 dark:text-foreground/80">{message}</p>
+          <p className="text-sm text-muted-foreground">{message}</p>
         </div>
         <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
           <Button

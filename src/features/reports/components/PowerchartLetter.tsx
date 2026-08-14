@@ -47,7 +47,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
       />
 
       {/* Minimal Accent Header */}
-      <div className="border-l-4 border-primary bg-muted p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">
+      <div className="border border-border bg-muted p-4 md:p-6 print:bg-white print:border-none print:p-2">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <h2 className="text-xl md:text-2xl font-bold text-foreground print:text-black">Anaesthetic Allergy Clinic</h2>
@@ -143,11 +143,12 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
           <h3 className="font-bold text-sm uppercase tracking-wider border-b-2 border-primary pb-2 text-foreground print:text-xs print:pb-0.5">Results</h3>
           {posResults.length > 0 && (
             <div className="space-y-2">
-              <p className="text-xs uppercase tracking-wider font-bold text-red-700 dark:text-red-400 print:text-[9px]">Positive</p>
+              <p className="text-xs uppercase tracking-wider font-bold text-status-danger print:text-[9px]">Positive</p>
               {posResults.map((drug, i) => (
-                <div key={i} className="border-l-4 border-red-500 bg-card p-3 rounded-none print:bg-white print:border-l-4 print:border-black print:p-2">
-                  <span className="font-bold text-red-700 dark:text-red-400 uppercase text-sm print:text-xs print:text-black">{drug}</span>
-                  <span className="text-red-600 dark:text-red-400 text-sm font-semibold print:text-xs print:text-black">: Positive</span>
+                // impeccable-disable-next-line side-tab
+                <div key={i} className="border border-status-danger/30 bg-card p-3 rounded-none print:bg-white print:border-l-4 print:border-black print:p-2">
+                  <span className="font-bold text-status-danger uppercase text-sm print:text-xs print:text-black">{drug}</span>
+                  <span className="text-status-danger text-sm font-semibold print:text-xs print:text-black">: Positive</span>
                 </div>
               ))}
             </div>

@@ -5,7 +5,7 @@ export const showToast = {
     toast.success(message, {
       duration: 4000,
       classNames: {
-        toast: 'border-l-4 border-l-green-500',
+        toast: 'border border-status-success/40 bg-card text-foreground rounded-none shadow-md',
       },
     });
   },
@@ -13,7 +13,7 @@ export const showToast = {
     toast.error(message, {
       duration: 6000,
       classNames: {
-        toast: 'border-l-4 border-l-red-500',
+        toast: 'border border-status-danger/40 bg-card text-foreground rounded-none shadow-md',
       },
     });
   },
@@ -21,14 +21,14 @@ export const showToast = {
     toast(message, {
       duration: 5000,
       classNames: {
-        toast: 'border-l-4 border-l-blue-500',
+        toast: 'border border-status-info/40 bg-card text-foreground rounded-none shadow-md',
       },
     });
   },
   loading: (message: string) => {
     return toast.loading(message, {
       classNames: {
-        toast: 'border-l-4 border-l-purple-500',
+        toast: 'border border-primary/40 bg-card text-foreground rounded-none shadow-md',
       },
     });
   },
@@ -39,7 +39,7 @@ export const showToast = {
       closeButton: true,
       action: { label: 'Reload now', onClick: onReload },
       classNames: {
-        toast: 'border-l-4 border-l-primary',
+        toast: 'border border-primary bg-card text-foreground rounded-none shadow-md',
       },
     });
   },

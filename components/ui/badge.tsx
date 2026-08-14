@@ -21,7 +21,7 @@ const badgeVariants = cva(
         danger: "border-transparent bg-status-danger text-status-danger-foreground shadow hover:bg-status-danger/90 dark:bg-status-danger",
         grade4: "border-transparent bg-status-grade4 text-white hover:bg-status-grade4/90",
         grade3: "border-transparent bg-status-grade3 text-white hover:bg-status-grade3/90",
-        grade2: "border-transparent bg-status-grade2 text-slate-950 hover:bg-status-grade2/90",
+        grade2: "border-transparent bg-status-grade2 text-foreground font-semibold hover:bg-status-grade2/90",
         grade1: "border-transparent bg-status-grade1 text-white hover:bg-status-grade1/90",
         ungraded: "border-transparent bg-muted text-muted-foreground hover:bg-muted/80",
       },

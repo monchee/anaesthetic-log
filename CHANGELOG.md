@@ -1,3 +1,15 @@
+## [0.76.1] — 2026-08-15 (Workbench Polish & Performance)
+
+Summary: Removes known production build and Chromium console warnings with updated browser data, web-vitals compatibility, and granular code splitting, while completing whole-project Clinical Workbench design and print styling polish.
+
+### Added
+- **Granular vendor and runtime chunking** — Configures dedicated production chunk boundaries for React/DOM runtime, Supabase, Sentry, Radix UI components, forms, and icons, eliminating production chunk-size warnings.
+- **Whole-project Clinical Workbench polish** — Finalizes semantic category and status tokens, zero-radius geometry, high-contrast focus rings, and print-safe typography across clinical reports, handouts, letters, and dashboard views.
+
+### Changed
+- **Warning-free telemetry and browser data** — Updates `web-vitals` and Browserslist data, with a scoped fallback for browsers without `visibility-state` performance entries while preserving all five reported metrics.
+- **Operational documentation** — Updates README notes to reflect clean production chunking without expected warnings.
+
 ## [0.76.0] — 2026-08-14 (Clinical Workbench Refinement)
 
 Summary: Refines the Clinical Workbench interface with semantic category and status tokens, improved typography and print scaling, responsive PatientTable workflows, enhanced draft and pharmacy verification affordances, and expanded regression coverage.

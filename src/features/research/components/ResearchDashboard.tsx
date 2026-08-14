@@ -307,8 +307,8 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
   }
 
   const positivityColor = (rate: number) => {
-    if (rate >= 25) return { bar: 'bg-destructive', text: 'text-destructive dark:text-red-400', badge: 'destructive' as const };
-    if (rate >= 10) return { bar: 'bg-amber-500', text: 'text-amber-600 dark:text-amber-400', badge: 'outline' as const };
+    if (rate >= 25) return { bar: 'bg-destructive', text: 'text-destructive', badge: 'destructive' as const };
+    if (rate >= 10) return { bar: 'bg-status-warning', text: 'text-status-warning', badge: 'warning' as const };
     return { bar: 'bg-primary', text: 'text-primary', badge: 'secondary' as const };
   };
 
@@ -325,22 +325,22 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
                   <Database className="w-4 h-4 text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-foreground">Research Database</p>
+                  <CardTitle className="text-base text-foreground">Research Database</CardTitle>
                   <p className="text-xs text-muted-foreground">{records.length} de-identified session{records.length !== 1 ? 's' : ''}</p>
                 </div>
               </div>
               <div className="flex gap-2">
                 <Button
-                  variant="outline"
                   size="sm"
+                  variant="outline"
                   onClick={load}
                   className="rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Refresh
                 </Button>
                 <Button
-                  variant="outline"
                   size="sm"
+                  variant="outline"
                   onClick={() => exportToCsv(records)}
                   disabled={records.length === 0}
                   className="rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -354,7 +354,7 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
 
               {/* Sessions */}
-              <div className="border border-border border-l-4 border-l-primary bg-card p-4 rounded-none shadow-sm">
+              <div className="border border-border bg-card p-4 rounded-none shadow-sm">
                 <div className="flex items-center justify-between mb-2">
                   <span className="section-label">Sessions</span>
                   <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
@@ -370,11 +370,11 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
               </div>
 
               {/* Drugs tested */}
-              <div className="border border-border border-l-4 border-l-nsw-blue bg-card p-4 rounded-none shadow-sm">
+              <div className="border border-border bg-card p-4 rounded-none shadow-sm">
                 <div className="flex items-center justify-between mb-2">
                   <span className="section-label">Drugs Tested</span>
-                  <div className="bg-nsw-blue/10 dark:bg-nsw-blue/20 p-1.5 rounded-none">
-                    <FlaskConical className="w-3.5 h-3.5 text-nsw-blue" />
+                  <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
+                    <FlaskConical className="w-3.5 h-3.5 text-primary" />
                   </div>
                 </div>
                 <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
@@ -386,11 +386,11 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
               </div>
 
               {/* Overall positivity */}
-              <div className="border border-border border-l-4 border-l-amber-500 bg-card p-4 rounded-none shadow-sm">
+              <div className="border border-border bg-card p-4 rounded-none shadow-sm">
                 <div className="flex items-center justify-between mb-2">
                   <span className="section-label">Positivity Rate</span>
-                  <div className="bg-amber-500/10 dark:bg-amber-500/20 p-1.5 rounded-none">
-                    <TrendingUp className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                  <div className="bg-status-warning/10 p-1.5 rounded-none">
+                    <TrendingUp className="w-3.5 h-3.5 text-status-warning" />
                   </div>
                 </div>
                 <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
@@ -404,11 +404,11 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
               </div>
 
               {/* Challenge pass rate */}
-              <div className="border border-border border-l-4 border-l-status-grade1 bg-card p-4 rounded-none shadow-sm">
+              <div className="border border-border bg-card p-4 rounded-none shadow-sm">
                 <div className="flex items-center justify-between mb-2">
                   <span className="section-label">Challenge Pass</span>
-                  <div className="bg-status-grade1/10 dark:bg-status-grade1/20 p-1.5 rounded-none">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-status-grade1 dark:text-emerald-400" />
+                  <div className="bg-status-success/10 p-1.5 rounded-none">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-status-success" />
                   </div>
                 </div>
                 <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
@@ -452,7 +452,7 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
                       </span>
                       <span className="flex-1 font-medium text-sm text-foreground flex items-center gap-2 min-w-0 truncate">
                         <span className="truncate">{d.name}</span>
-                        {isTop && <Trophy className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-label="Highest positivity count" />}
+                        {isTop && <Trophy className="w-3.5 h-3.5 text-status-warning shrink-0" aria-label="Highest positivity count" />}
                       </span>
                       <span className="text-xs text-muted-foreground font-mono shrink-0 hidden sm:block">
                         {d.positive}/{d.tested}

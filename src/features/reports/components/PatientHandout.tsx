@@ -32,7 +32,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
         />
 
         {/* Minimal Accent Header */}
-        <div className="border-l-4 border-primary bg-muted p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">
+        <div className="border border-border bg-muted p-4 md:p-6 print:bg-white print:border-none print:p-2">
           <div className="text-center">
             <h2 className="text-xl md:text-2xl font-bold text-foreground print:text-black">Allergy Testing Results</h2>
             <p className="text-sm text-muted-foreground mt-1">Patient Information Handout</p>
@@ -59,20 +59,21 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
 
            {/* Positive Results */}
             <div className="section-card">
-               <h3 className="text-red-700 dark:text-red-400 font-bold text-sm uppercase tracking-wider mb-4 pb-2 border-b-2 border-red-500 flex items-center gap-2 print:text-xs print:mb-1 print:pb-1 print:text-black print:border-black">
+               <h3 className="text-status-danger font-bold text-sm uppercase tracking-wider mb-4 pb-2 border-b-2 border-status-danger flex items-center gap-2 print:text-xs print:mb-1 print:pb-1 print:text-black print:border-black">
                   <Ban className="w-5 h-5 print:w-3 print:h-3" /> Drugs to avoid
                </h3>
               {avoidList.length > 0 ? (
                  <ul className="space-y-3 print:space-y-1">
                     {avoidList.map((drugName, idx) => (
-                        <li key={idx} className="avoid-entry bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-700 p-4 rounded-none flex justify-between items-center print:bg-white print:border-black print:border-l-8 print:p-1.5 print:text-xs">
+                        // impeccable-disable-next-line side-tab
+                        <li key={idx} className="avoid-entry bg-status-danger/10 border border-status-danger/30 p-4 rounded-none flex justify-between items-center print:bg-white print:border-black print:border-l-8 print:p-1.5 print:text-xs">
                            <div>
-                             <span className="font-semibold text-red-900 dark:text-red-200 text-lg print:text-xs print:text-black print:font-bold">{drugName}</span>
+                             <span className="font-semibold text-foreground text-lg print:text-xs print:text-black print:font-bold">{drugName}</span>
                              {crossSensitized.includes(drugName) && (
-                               <p className="text-xs text-red-700/70 dark:text-red-200/80 mt-0.5 print:text-[9px] print:text-black">cross-sensitization risk</p>
+                               <p className="text-xs text-status-danger mt-0.5 print:text-[9px] print:text-black">cross-sensitization risk</p>
                              )}
                            </div>
-                           <span className="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-none print:bg-black print:text-white print:px-2 print:py-1 print:text-[10px] print:tracking-wider">AVOID</span>
+                           <span className="bg-status-danger text-status-danger-foreground text-xs font-semibold px-2 py-1 rounded-none print:bg-black print:text-white print:px-2 print:py-1 print:text-[10px] print:tracking-wider">AVOID</span>
                         </li>
                     ))}
                  </ul>
@@ -83,15 +84,15 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
 
            {/* Negative Results */}
             <div className="section-card">
-               <h3 className="text-green-700 dark:text-green-400 font-bold text-sm uppercase tracking-wider mb-4 pb-2 border-b-2 border-green-500 flex items-center gap-2 print:text-xs print:mb-1 print:pb-1 print:text-black print:border-black">
+               <h3 className="text-status-success font-bold text-sm uppercase tracking-wider mb-4 pb-2 border-b-2 border-status-success flex items-center gap-2 print:text-xs print:mb-1 print:pb-1 print:text-black print:border-black">
                   <ShieldCheck className="w-5 h-5 print:w-3 print:h-3" /> Drugs tolerated
                </h3>
               {negResults.length > 0 ? (
                  <ul className="space-y-3 print:space-y-1">
                     {negResults.map((drugName, idx) => (
-                        <li key={idx} className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-700 p-4 rounded-none flex justify-between items-center print:bg-white print:border-slate-500 print:p-1.5 print:text-xs">
-                           <span className="font-semibold text-green-900 dark:text-green-200 text-lg print:text-xs print:text-black">{drugName}</span>
-                           <span className="border border-green-700 text-green-800 bg-transparent text-xs font-semibold px-2 py-1 rounded-none print:border-black print:text-black print:bg-white print:px-1.5 print:py-0.5 print:text-[9px]">SAFE</span>
+                        <li key={idx} className="bg-status-success/10 border border-status-success/30 p-4 rounded-none flex justify-between items-center print:bg-white print:border-slate-500 print:p-1.5 print:text-xs">
+                           <span className="font-semibold text-foreground text-lg print:text-xs print:text-black">{drugName}</span>
+                           <span className="border border-status-success text-status-success bg-status-success/10 text-xs font-semibold px-2 py-1 rounded-none print:border-black print:text-black print:bg-white print:px-1.5 print:py-0.5 print:text-[9px]">SAFE</span>
                         </li>
                     ))}
                  </ul>

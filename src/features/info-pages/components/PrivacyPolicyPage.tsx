@@ -26,11 +26,11 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Local Processing Notice */}
-          <div className="bg-emerald-500/10 dark:bg-emerald-500/15 rounded-none p-5 border border-emerald-500/30 dark:border-emerald-500/40">
+          <div className="bg-status-success/10 rounded-none p-5 border border-status-success/30">
             <div className="flex items-start gap-3">
-              <Lock className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+              <Lock className="w-5 h-5 text-status-success shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-emerald-900 dark:text-emerald-300 mb-2">Local-First Processing</p>
+                <p className="font-semibold text-status-success mb-2">Local-First Processing</p>
                 <p className="text-sm text-foreground/90 leading-relaxed">
                   During normal local-only use, patient data is processed <strong>on this device in your browser</strong>. The application uses your local REDCap export files and does not transmit identifiable patient information to external servers. If a clinician chooses to save to the research database, only the deidentified research submission payload is sent to the configured Supabase project.
                 </p>
@@ -174,11 +174,11 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Contact */}
-          <div className="bg-nsw-info-bg/80 dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
+          <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 border border-primary/20">
             <div className="flex items-start gap-3">
-              <Mail className="w-5 h-5 text-nsw-info dark:text-nsw-blue shrink-0 mt-0.5" />
+              <Mail className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div>
-                <h2 className="font-semibold text-nsw-info dark:text-nsw-blue text-base mb-2">Privacy Contact</h2>
+                <h2 className="font-semibold text-primary text-base mb-2">Privacy Contact</h2>
                 <p className="text-sm text-foreground/90 leading-relaxed">
                   For privacy-related enquiries or complaints, please contact the RPAH Department of Clinical Immunology & Allergy or the Sydney Local Health District Privacy Officer.
                 </p>

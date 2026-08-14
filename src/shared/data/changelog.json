@@ -1,5 +1,17 @@
 [
   {
+    "version": "v0.76.1",
+    "codename": "Workbench Polish & Performance",
+    "date": "15 August 2026",
+    "summary": "Removes known production build and Chromium console warnings with updated browser data, web-vitals compatibility, and granular code splitting, while completing whole-project Clinical Workbench design and print styling polish.",
+    "highlight": false,
+    "changes": [
+      "Granular vendor and runtime chunking \u2014 Configures dedicated production chunk boundaries for React/DOM runtime, Supabase, Sentry, Radix UI components, forms, and icons, eliminating production chunk-size warnings.",
+      "Whole-project Clinical Workbench polish \u2014 Finalizes semantic category and status tokens, zero-radius geometry, high-contrast focus rings, and print-safe typography across clinical reports, handouts, letters, and dashboard views.",
+      "Operational documentation \u2014 Updates README notes to reflect clean production chunking without expected warnings."
+    ]
+  },
+  {
     "version": "v0.76.0",
     "codename": "Clinical Workbench Refinement",
     "date": "14 August 2026",

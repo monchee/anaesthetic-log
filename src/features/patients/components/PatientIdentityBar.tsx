@@ -24,7 +24,7 @@ export function PatientIdentityBar({
     <aside
       aria-label="Patient identity"
       className={cn(
-        'sticky top-0 z-40 w-full overflow-x-auto border border-primary/30 border-l-4 bg-card/95 px-3 py-2 shadow-sm backdrop-blur-sm print:hidden',
+        'sticky top-0 z-40 w-full overflow-x-auto border border-primary/30 bg-card/95 px-3 py-2 shadow-sm backdrop-blur-sm print:hidden',
         className,
       )}
     >

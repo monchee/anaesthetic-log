@@ -168,8 +168,8 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 ) : null}
                 <span className="flex items-center gap-2" aria-label="Timeline legend">
                   <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />Induction</span>
-                  <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-red-500" aria-hidden="true" />Reaction</span>
-                  <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-muted/60" aria-hidden="true" />Medication</span>
+                  <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-status-danger" aria-hidden="true" />Reaction</span>
+                  <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-muted-foreground/40 dark:bg-muted/60" aria-hidden="true" />Medication</span>
                 </span>
               </div>
             </div>
@@ -329,7 +329,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                             aria-label={`${e.type} event: ${e.time} - ${e.label}`}
                             className={`
                               h-2.5 w-2.5 rounded-full cursor-help inline-block
-                              ${e.type === 'reaction' ? 'bg-red-500' : ''}
+                              ${e.type === 'reaction' ? 'bg-status-danger' : ''}
                               ${e.type === 'induction' ? 'bg-primary' : ''}
                               ${e.type === 'med' ? 'bg-muted-foreground/40 dark:bg-muted/60' : ''}
                             `}
@@ -434,7 +434,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                       aria-label={`${e.type} event: ${e.time} - ${e.label}`}
                       className={`
                         h-2 w-2 rounded-full
-                        ${e.type === 'reaction' ? 'bg-red-500' : ''}
+                        ${e.type === 'reaction' ? 'bg-status-danger' : ''}
                         ${e.type === 'induction' ? 'bg-primary' : ''}
                         ${e.type === 'med' ? 'bg-muted-foreground/40 dark:bg-muted/60' : ''}
                       `}

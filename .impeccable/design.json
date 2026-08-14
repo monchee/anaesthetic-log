@@ -102,17 +102,17 @@
       "status-warning": {
         "role": "status",
         "displayName": "Status Warning",
-        "canonical": "hsl(37.7 92.1% 50.2%)"
+        "canonical": "hsl(37.7 92.1% 42%)"
       },
       "status-danger": {
         "role": "status",
         "displayName": "Status Danger",
-        "canonical": "hsl(346.8 77.2% 49.8%)"
+        "canonical": "hsl(0 84.2% 60.2%)"
       },
       "status-info": {
         "role": "status",
         "displayName": "Status Info",
-        "canonical": "hsl(217 100% 19.6%)"
+        "canonical": "hsl(220 54% 39%)"
       },
       "status-neutral": {
         "role": "status",
@@ -203,8 +203,13 @@
         "section": "colors"
       },
       {
+        "name": "The Semantic Status Rule",
+        "body": "Feedback and alert states must use semantic status tokens (--status-success, --status-warning, --status-danger, --status-info, --status-neutral) rather than raw color utilities (bg-red-600, bg-amber-50, text-green-600).",
+        "section": "colors"
+      },
+      {
         "name": "The Semantic Token Rule",
-        "body": "All UI components must consume semantic theme tokens (--background, --foreground, --border, --muted, --primary) rather than hardcoding static Tailwind slate or zinc values.",
+        "body": "All UI components must consume semantic theme tokens (--background, --foreground, --border, --muted, --primary, --status-*, --cat-*) rather than hardcoding static Tailwind slate or zinc values.",
         "section": "colors"
       },
       {
@@ -218,9 +223,29 @@
         "section": "typography"
       },
       {
+        "name": "The Print Typography Exception Rule",
+        "body": "High-density A4 consultation letters and testing plans intentionally utilize print-specific sub-12px typography (print:text-[8px], print:text-[9px], print:text-[10px]) and high-contrast print borders for paper print legibility and ADR stickers, while screen UI strictly adheres to the standard type ramp (text-xs / 12px minimum).",
+        "section": "typography"
+      },
+      {
+        "name": "The Responsive Header & No-Overflow Rule",
+        "body": "The persistent top navigation bar must adapt responsively between a horizontal button group and a compact dropdown navigation menu, preventing horizontal scrolling, line breaking, or title truncation across viewports. Content containers strictly enforce max-w-6xl with px-3 sm:px-5 md:px-6 responsive padding.",
+        "section": "layout"
+      },
+      {
         "name": "The Flat-By-Default Rule",
         "body": "Surfaces rest flat with clean 1px structural borders. Shadows exist only to indicate active elevation (modals, dropdowns) or interactive hover affordances.",
         "section": "elevation"
+      },
+      {
+        "name": "The Browser Surfaces Rule",
+        "body": "Browser surfaces, selection highlights, input carets, and scrollbars must strictly mirror the application's semantic color tokens and zero-radius geometry.",
+        "section": "surfaces"
+      },
+      {
+        "name": "The Accessible Focus & Motion Rule",
+        "body": "All interactive controls must provide distinct, high-contrast :focus-visible indicators. Motion is restrained and functional, never decorative or disorienting.",
+        "section": "interaction"
       }
     ],
     "dos": [

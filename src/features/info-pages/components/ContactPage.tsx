@@ -87,7 +87,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
 
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
-                <Lightbulb className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                <Lightbulb className="w-5 h-5 text-status-warning" />
                 <h4 className="font-semibold text-foreground">Feature Requests</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
@@ -100,8 +100,8 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Tips for Reporting Issues */}
-          <div className="bg-nsw-info-bg/80 dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
-            <h4 className="font-semibold text-nsw-info dark:text-nsw-blue mb-3">Tips for Reporting Issues</h4>
+          <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 border border-primary/20">
+            <h4 className="font-semibold text-primary mb-3">Tips for Reporting Issues</h4>
             <ul className="space-y-2 text-sm text-foreground/90">
               {[
                 "Describe what you were trying to do when the issue occurred",
@@ -110,7 +110,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
                 "Specify whether the issue is reproducible or occurred only once"
               ].map((tip, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <span className="text-nsw-info dark:text-nsw-blue mt-0.5 select-none">•</span>
+                  <span className="text-primary mt-0.5 select-none">•</span>
                   <span>{tip}</span>
                 </li>
               ))}

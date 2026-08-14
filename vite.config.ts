@@ -156,28 +156,30 @@ export default defineConfig(() => {
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {
-            // Radix UI components - frequently updated, separate chunk
-            'radix-vendor': [
-              '@radix-ui/react-dialog',
-              '@radix-ui/react-dropdown-menu',
-              '@radix-ui/react-label',
-              '@radix-ui/react-popover',
-              '@radix-ui/react-progress',
-              '@radix-ui/react-scroll-area',
-              '@radix-ui/react-select',
-              '@radix-ui/react-separator',
-              '@radix-ui/react-slot',
-              '@radix-ui/react-switch',
-              '@radix-ui/react-tabs',
-              '@radix-ui/react-tooltip',
-            ],
-            // Form libraries
-            'form-vendor': ['react-hook-form', 'zod'],
-            // Icons - heavily used throughout app
-            'icons': ['lucide-react'],
-            // Notifications
-            'notifications': ['sonner'],
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('@sentry')) {
+                return 'sentry-vendor';
+              }
+              if (id.includes('@supabase')) {
+                return 'supabase-vendor';
+              }
+              if (id.includes('@radix-ui')) {
+                return 'radix-vendor';
+              }
+              if (id.includes('react-hook-form') || id.includes('zod')) {
+                return 'form-vendor';
+              }
+              if (id.includes('lucide-react')) {
+                return 'icons';
+              }
+              if (id.includes('sonner')) {
+                return 'notifications';
+              }
+              if (id.includes('/react/') || id.includes('/react-dom/') || id.includes('/scheduler/')) {
+                return 'react-vendor';
+              }
+            }
           },
         },
       },

@@ -152,19 +152,19 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
               <p>The application supports modern browsers with JavaScript enabled:</p>
               <ul className="grid grid-cols-2 gap-2 mt-3 ml-4">
                 <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-emerald-500 rounded-none shrink-0" />
+                  <span className="w-2 h-2 bg-status-success rounded-none shrink-0" />
                   <span className="text-foreground/90">Chrome/Edge (latest)</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-emerald-500 rounded-none shrink-0" />
+                  <span className="w-2 h-2 bg-status-success rounded-none shrink-0" />
                   <span className="text-foreground/90">Firefox (latest)</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-emerald-500 rounded-none shrink-0" />
+                  <span className="w-2 h-2 bg-status-success rounded-none shrink-0" />
                   <span className="text-foreground/90">Safari (latest)</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-amber-500 rounded-none shrink-0" />
+                  <span className="w-2 h-2 bg-status-warning rounded-none shrink-0" />
                   <span className="text-foreground/90">Mobile browsers</span>
                 </li>
               </ul>

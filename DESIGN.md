@@ -23,6 +23,11 @@ colors:
   status-grade2: "hsl(37.7, 92.1%, 50.2%)"
   status-grade3: "hsl(24.6, 95%, 53.1%)"
   status-grade4: "hsl(346.8, 77.2%, 49.8%)"
+  status-success: "hsl(142.1, 76.2%, 36.3%)"
+  status-warning: "hsl(37.7, 92.1%, 42%)"
+  status-danger: "hsl(0, 84.2%, 60.2%)"
+  status-info: "hsl(220, 54%, 39%)"
+  status-neutral: "hsl(215.4, 16.3%, 44%)"
   nsw-blue: "hsl(218, 98%, 54%)"
   nsw-blue-light: "hsl(199, 92%, 89%)"
   nsw-info: "hsl(220, 54%, 39%)"
@@ -146,6 +151,8 @@ All 10 clinical drug categories and default categories consume semantic CSS toke
 ### Named Rules
 **The Clinical Palette Rule.** Color is never merely decorative; color carries diagnostic, navigational, or interactive meaning. Status hues (green, amber, orange, red) are reserved strictly for clinical grade, positive/negative test outcomes, or validation errors. Grade severity tokens (`--status-grade1` through `--status-grade4`) remain strictly decoupled from drug category themes.
 
+**The Semantic Status Rule.** Feedback and alert states must use semantic status tokens (`--status-success`, `--status-warning`, `--status-danger`, `--status-info`, `--status-neutral`) rather than raw color utilities (`bg-red-600`, `bg-amber-50`, `text-green-600`).
+
 **The Semantic Token Rule.** All UI components must consume semantic theme tokens (`--background`, `--foreground`, `--border`, `--muted`, `--primary`, `--status-*`, `--cat-*`) rather than hardcoding static Tailwind slate or zinc values.
 
 ## Typography
@@ -170,6 +177,8 @@ All 10 clinical drug categories and default categories consume semantic CSS toke
 
 **The Dynamic Scalability Rule.** All typography respects the global `FontSizeProvider` scale multiplier (85% to 125%) to support varying clinical workstation viewing distances.
 
+**The Print Typography Exception Rule.** High-density A4 consultation letters and testing plans intentionally utilize print-specific sub-12px typography (`print:text-[8px]`, `print:text-[9px]`, `print:text-[10px]`) and high-contrast print borders for paper print legibility and ADR stickers, while screen UI strictly adheres to the standard type ramp (`text-xs` / 12px minimum).
+
 ## Layout
 
 The DREAM layout is structured around a single-page clinical workstation model:
@@ -179,6 +188,21 @@ The DREAM layout is structured around a single-page clinical workstation model:
 - **Responsive Adaptability & Table Safeguards:**
   - In intermediate viewports (768px–1024px), table columns for patient names, procedures, and suspect agents enforce safe width constraints (`max-w-[130px] md:max-w-[150px] lg:max-w-[180px] truncate`) with full-value accessible `title` attributes.
   - Mobile card views and pagination touch controls enforce a minimum 44px tap target height.
+
+### Named Rules
+**The Responsive Header & No-Overflow Rule.** The persistent top navigation bar must adapt responsively between a horizontal button group and a compact dropdown navigation menu, preventing horizontal scrolling, line breaking, or title truncation across viewports. Content containers strictly enforce `max-w-6xl` with `px-3 sm:px-5 md:px-6` responsive padding, and dense data tables must use bounded column widths with accessible text truncation.
+
+## Browser Surfaces & Interaction
+
+- **Selection:** `::selection` uses `hsl(var(--accent))` and `hsl(var(--accent-foreground))` to harmonize highlighted text with NSW Health brand accents.
+- **Caret:** Text inputs and textareas enforce `caret-color: hsl(var(--primary))` for consistent brand feedback during data entry.
+- **Custom Scrollbars:** Thin zero-radius scrollbars (`scrollbar-width: thin; scrollbar-color: hsl(var(--border)) transparent;` with rectangular thumb) align with the rectangular clinical workstation aesthetic.
+- **Focus & Motion:** All interactive elements provide crisp keyboard focus outlines (`*:focus-visible` with 2px ring and ring offset). Screen transitions use subtle CSS reveals (`animate-screen-enter`, `btn-press`) and strictly respect `prefers-reduced-motion` with zero decorative spring bounce animations.
+
+### Named Rules
+**The Browser Surfaces Rule.** Browser surfaces, selection highlights, input carets, and scrollbars must strictly mirror the application's semantic color tokens and zero-radius geometry.
+
+**The Accessible Focus & Motion Rule.** All interactive controls must provide distinct, high-contrast `:focus-visible` indicators. Motion is restrained and functional, never decorative or disorienting.
 
 ## Elevation & Depth
 

@@ -155,7 +155,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                                 onClick={() => setScreen(screen)}
                                                 aria-current={isActive ? 'page' : undefined}
                                                 aria-label={label}
-                                                className={`h-11 min-w-11 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-[color,background-color,border-color,transform,box-shadow] duration-200 shadow-sm btn-press
+                                                className={`h-11 min-w-11 px-3 rounded-none flex items-center gap-1.5 text-sm border border-white/20 transition-[color,background-color,border-color,transform,box-shadow] duration-200 shadow-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary
                                                     ${isActive
                                                         ? 'bg-white text-primary font-medium'
                                                         : 'bg-white/10 hover:bg-white/30 text-white'
@@ -179,7 +179,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                     <DropdownMenuTrigger asChild>
                                         <button
                                             type="button"
-                                            className="h-11 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-[color,background-color,border-color,transform,box-shadow] duration-200 shadow-sm group btn-press"
+                                            className="h-11 px-4 rounded-none bg-white/10 hover:bg-white/30 text-white hover:text-white font-medium flex items-center gap-2 border border-white/20 transition-[color,background-color,border-color,transform,box-shadow] duration-200 shadow-sm group btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
                                             title="Open Navigation Menu"
                                             aria-label="Menu"
                                         >
@@ -246,13 +246,13 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                 role="main"
                 aria-label="Main content"
                 tabIndex={-1}
-                className="flex-1 w-full max-w-6xl mx-auto sm:px-5 md:px-6 py-3 sm:py-4 md:py-6 flex flex-col relative z-10 animate-screen-enter"
+                className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-5 md:px-6 py-3 sm:py-4 md:py-6 flex flex-col relative z-10 animate-screen-enter"
             >
                 <div className={`${contentClassName || ''} flex-1 flex flex-col`}>
                     <React.Suspense fallback={
                         <div className="flex-1 flex flex-col items-center justify-center p-12 text-muted-foreground min-h-[50vh]">
                             <div className="flex flex-col items-center gap-4">
-                                <div className="h-8 w-8 rounded-full border-4 border-primary/20 border-t-primary animate-spin"></div>
+                                <div className="h-8 w-8 rounded-none border-2 border-primary/20 border-t-primary animate-spin"></div>
                                 <span className="text-sm font-medium animate-pulse">Loading content...</span>
                             </div>
                         </div>

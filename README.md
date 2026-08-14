@@ -12,7 +12,7 @@ A private clinical Progressive Web App for the Royal Prince Alfred Hospital Depa
 
 ## Project Status
 
-- **Current version:** v0.76.0
+- **Current version:** v0.76.1
 - **Live app:** [allergy.yuson.au](https://allergy.yuson.au)
 - **Repository:** private/internal clinical tooling
 - **Production host:** Cloudflare Pages
@@ -154,7 +154,7 @@ src/
 
 - GitHub Actions validate pushes and pull requests to `main`.
 - Branch protection is not configured because GitHub reports it is unavailable for this private repository without GitHub Pro.
-- The production Vite build currently emits a large chunk warning; the build still completes successfully.
+- Production assets are split into dedicated vendor chunks (React runtime, Supabase, Sentry, Radix UI, forms, and icons) so production builds stay well within chunk-size limits without warnings.
 - `/manifest.webmanifest` is generated from the Vite PWA configuration. The Vite config is the manifest source of truth.
 
 ## Internal Use and Licensing

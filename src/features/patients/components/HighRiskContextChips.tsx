@@ -15,7 +15,7 @@ export function HighRiskContextChips({ chips, className }: HighRiskContextChipsP
       aria-label="High-risk clinical context"
       className={cn('flex flex-wrap items-center gap-2', className)}
     >
-      <span className="flex items-center gap-1.5 text-xs font-semibold text-amber-800 dark:text-amber-300">
+      <span className="flex items-center gap-1.5 text-xs font-semibold text-status-warning">
         <AlertTriangle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
         High-risk context
       </span>
@@ -24,7 +24,7 @@ export function HighRiskContextChips({ chips, className }: HighRiskContextChipsP
           <Badge
             key={chip}
             variant="warning"
-            className="rounded-none border border-amber-300 px-2 py-0.5 text-xs dark:border-amber-700"
+            className="rounded-none border border-status-warning/40 px-2 py-0.5 text-xs"
           >
             {chip}
           </Badge>

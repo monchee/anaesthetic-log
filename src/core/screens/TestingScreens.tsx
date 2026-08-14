@@ -87,7 +87,7 @@ export function TestingScreen({
           />
           <HighRiskContextChips
             chips={highRiskChips}
-            className="mx-1 mb-3 border-l-2 border-amber-400 bg-amber-50/70 px-2.5 py-2 dark:bg-amber-950/20"
+            className="mx-1 mb-3 border border-status-warning/30 bg-status-warning/10 px-2.5 py-2"
           />
         </>
       )}

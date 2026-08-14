@@ -35,11 +35,11 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Emergency Warning */}
-          <div className="bg-amber-500/10 dark:bg-amber-500/15 rounded-none p-5 border border-amber-500/30 dark:border-amber-500/40">
+          <div className="bg-status-warning/10 rounded-none p-5 border border-status-warning/30">
             <div className="flex items-start gap-3">
-              <Phone className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              <Phone className="w-5 h-5 text-status-warning shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-amber-900 dark:text-amber-300 mb-2">Emergency Information</h4>
+                <h4 className="font-semibold text-status-warning mb-2">Emergency Information</h4>
                 <div className="text-sm text-foreground/90 space-y-2">
                   <p>
                     <strong className="text-foreground">This application is NOT suitable for emergency situations.</strong>

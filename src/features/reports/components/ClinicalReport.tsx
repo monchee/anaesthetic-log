@@ -53,7 +53,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
       />
 
       {/* Minimal Accent Header */}
-      <div className="border-l-4 border-primary bg-muted p-4 md:p-6 print:bg-white print:border-l-0 print:p-2">
+      <div className="border border-border bg-muted p-4 md:p-6 print:bg-white print:border-none print:p-2">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <h2 className="text-xl md:text-2xl font-bold text-foreground print:text-black">Anaesthetic Testing Report</h2>
@@ -180,15 +180,15 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
               <History className="w-5 h-5 print:w-4 print:h-4" /> Drug Challenge Details
             </h3>
             {data.proceedToChallenge ? (
-               <div className={`border-l-4 p-4 rounded-none bg-card ${data.outcome === 'SUCCESS' ? 'border-green-500 print:border-black' : 'border-red-500 print:border-black print:border-l-8'} print:bg-white print:p-2`}>
+               <div className={`border p-4 rounded-none bg-card ${data.outcome === 'SUCCESS' ? 'border-status-success print:border-black' : 'border-status-danger print:border-black'} print:bg-white print:p-2`}>
                   <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2 gap-2 print:mb-1">
                      <span className="font-bold text-lg print:text-sm">
                         {data.challengeDrug === 'Other' ? (data.challengeDrugCustom || 'Other') : data.challengeDrug}
                      </span>
                      <div className={`px-2 py-1 rounded-none text-xs font-bold self-start md:self-auto ${
                        data.outcome === 'SUCCESS'
-                         ? 'border border-green-700 text-green-800 bg-transparent dark:text-green-300 dark:border-green-500 print:border-black print:text-white print:bg-black'
-                         : 'bg-red-600 text-white print:bg-black print:text-white print:border print:border-black'
+                         ? 'border border-status-success text-status-success bg-status-success/10 print:border-black print:text-white print:bg-black'
+                         : 'bg-status-danger text-status-danger-foreground print:bg-black print:text-white print:border print:border-black'
                      } print:px-1.5 print:py-0.5 print:text-[10px]`}>
                         {data.outcome === 'SUCCESS' ? 'NEGATIVE (Safe)' : 'POSITIVE (Reaction)'}
                      </div>
@@ -209,9 +209,9 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
 
          {/* Cross-sensitization (3C) */}
          {crossNotes.length > 0 && (
-           <div className="section-card space-y-1">
+           <div className="section-card space-y-2">
              {crossNotes.map((note, i) => (
-               <p key={i} className="text-sm italic text-foreground/80 border-l-4 border-amber-400 pl-3 print:text-xs">{note}</p>
+               <p key={i} className="text-sm italic text-foreground/90 border border-status-warning/30 bg-status-warning/10 p-3 rounded-none print:border-none print:p-0 print:text-xs">{note}</p>
              ))}
            </div>
          )}

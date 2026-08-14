@@ -63,7 +63,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
         <CardContent className="p-4 pt-6">
           <div className="grid grid-cols-2 gap-3">
             {/* Records — REDCap records and session logs shown separately */}
-            <div className="bg-card rounded-none p-3 border border-border border-l-4 border-l-primary">
+            <div className="bg-card rounded-none p-3 border border-border">
               <div className="flex items-center gap-2 mb-1">
                 <Users className="w-4 h-4 text-primary" />
                 <span className="section-label">Records</span>
@@ -75,19 +75,19 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             </div>
 
             {/* Severe */}
-            <div className="bg-card rounded-none p-3 border border-border border-l-4 border-l-red-500">
+            <div className="bg-card rounded-none p-3 border border-border">
               <div className="flex items-center gap-2 mb-1">
-                <AlertTriangle className="w-4 h-4 text-red-500" />
+                <AlertTriangle className="w-4 h-4 text-status-danger" />
                 <span className="section-label">Severe</span>
               </div>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold tabular-nums text-foreground">{animatedSevereCount}</span>
-                <span className="text-xs font-medium tabular-nums text-red-500">{severeRate}%</span>
+                <span className="text-xs font-medium tabular-nums text-status-danger">{severeRate}%</span>
               </div>
             </div>
 
             {/* Abandoned */}
-            <div className="bg-card rounded-none p-3 border border-border border-l-4 border-l-amber-500">
+            <div className="bg-card rounded-none p-3 border border-border">
               <div className="flex items-center gap-2 mb-1">
                 <Ban className="w-4 h-4 text-status-grade2" />
                 <span className="section-label">Abandoned</span>
@@ -99,9 +99,9 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             </div>
 
             {/* Avg Time */}
-            <div className="bg-card rounded-none p-3 border border-border border-l-4 border-l-nsw-blue">
+            <div className="bg-card rounded-none p-3 border border-border">
               <div className="flex items-center gap-2 mb-1">
-                <Timer className="w-4 h-4 text-nsw-blue" />
+                <Timer className="w-4 h-4 text-primary" />
                 <span
                   className="section-label"
                   title="Average induction-to-reaction time in minutes, excluding values outside 0-240 minutes."
@@ -149,7 +149,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs tabular-nums mt-4">
             {gradeMeta.map(({ key, label, count, className }) => (
               <div key={key} className={`flex items-center gap-1.5 ${key === 'Ungraded' ? 'col-span-2' : ''}`}>
-                <span className={`inline-flex h-4 min-w-4 items-center justify-center rounded-none text-[0.625rem] font-bold text-white ${className}`}>{key === 'Ungraded' ? '-' : key}</span>
+                <span className={`inline-flex h-4 min-w-4 items-center justify-center rounded-none text-xs font-bold text-white ${className}`}>{key === 'Ungraded' ? '-' : key}</span>
                 <span className="text-muted-foreground">{label}: <b className="text-foreground">{count}</b></span>
               </div>
             ))}

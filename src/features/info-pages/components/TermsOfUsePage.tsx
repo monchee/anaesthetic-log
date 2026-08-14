@@ -64,8 +64,8 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
                   <span><strong className="text-foreground">Authorised users</strong> within the Sydney Local Health District for legitimate clinical purposes</span>
                 </li>
               </ul>
-              <p className="mt-3 text-amber-900 dark:text-amber-300 bg-amber-500/10 dark:bg-amber-500/15 p-3.5 rounded-none border border-amber-500/30 dark:border-amber-500/40 text-sm">
-                <strong className="text-foreground">Unauthorised use:</strong> Use of this application for any purpose other than legitimate clinical assessment and management is prohibited.
+              <p className="mt-3 bg-status-warning/10 p-3.5 rounded-none border border-status-warning/30 text-sm text-foreground">
+                <strong className="text-status-warning">Unauthorised use:</strong> Use of this application for any purpose other than legitimate clinical assessment and management is prohibited.
               </p>
             </div>
           </div>
@@ -117,11 +117,11 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Medical Disclaimer */}
-          <div className="bg-amber-500/10 dark:bg-amber-500/15 rounded-none p-5 border border-amber-500/30 dark:border-amber-500/40">
+          <div className="bg-status-warning/10 rounded-none p-5 border border-status-warning/30">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-status-warning shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-amber-900 dark:text-amber-300 mb-2">5. Medical Disclaimer</h4>
+                <h4 className="font-semibold text-status-warning mb-2">5. Medical Disclaimer</h4>
                 <div className="text-sm text-foreground/90 space-y-2">
                   <p>
                     This application is a clinical support tool designed to assist healthcare professionals. It does not provide medical advice and should not replace professional clinical judgment.

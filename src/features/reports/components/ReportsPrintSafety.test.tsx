@@ -53,7 +53,7 @@ describe('reports print safety', () => {
     expect(screen.getByText('NEGATIVE (Safe)')).toHaveClass('border', 'print:bg-black', 'print:text-white');
 
     rerender(<RedactProvider><ClinicalReport data={{ ...base, outcome: 'UNSUCCESS' }} /></RedactProvider>);
-    expect(screen.getByText('POSITIVE (Reaction)')).toHaveClass('bg-red-600', 'print:bg-black', 'print:text-white');
+    expect(screen.getByText('POSITIVE (Reaction)')).toHaveClass('bg-status-danger', 'print:bg-black', 'print:text-white');
   });
 
   it('uses black-and-white distinguishable patient handout safe and avoid badges', () => {

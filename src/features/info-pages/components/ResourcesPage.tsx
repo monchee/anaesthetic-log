@@ -22,7 +22,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           title: "ASCIA - Australasian Society of Clinical Immunology and Allergy",
           description: "Drug allergy testing and management guidelines for clinical immunology.",
           url: "https://www.allergy.org.au",
-          icon: <BookOpen className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          icon: <BookOpen className="w-5 h-5 text-status-success" />
         },
         {
           title: "NHMRC - National Health & Medical Research Council",
@@ -56,7 +56,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           title: "NAP6 - 6th National Audit Project",
           description: "UK national audit on perioperative anaphylaxis - comprehensive guidelines and recommendations.",
           url: "https://www.nationalauditprojects.org.uk/NAP6home",
-          icon: <Globe className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+          icon: <Globe className="w-5 h-5 text-status-warning" />
         },
         {
           title: "TGA - Therapeutic Goods Administration",

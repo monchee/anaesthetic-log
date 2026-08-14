@@ -45,7 +45,7 @@ const WhealInput = ({ value, onChange }: WhealInputProps) => (
       onChange={(e) => onChange(e.target.value)}
     />
     {isPositive(value) ? (
-      <span className="pointer-events-none absolute -right-1.5 -top-1.5 z-10 rounded-none bg-status-danger px-1 py-0.5 text-[0.625rem] font-bold leading-none text-status-danger-foreground">
+      <span className="pointer-events-none absolute -right-1.5 -top-1.5 z-10 rounded-none bg-status-danger px-1 py-0.5 text-xs font-bold leading-none text-status-danger-foreground">
         +POS
       </span>
     ) : null}

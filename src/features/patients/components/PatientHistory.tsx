@@ -58,8 +58,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
   const getOutcomeConfig = (outcome?: string) => {
       if (!outcome) return { text: "Not recorded", color: "text-muted-foreground", icon: HelpCircle };
       const lower = outcome.toLowerCase();
-      if (lower.includes('completed') || lower === '2') return { text: "Completed", color: "text-green-600 dark:text-green-400", icon: CheckCircle2 };
-      if (lower.includes('abandoned') || lower.includes('adandoned') || lower === '1') return { text: "Abandoned", color: "text-red-600 dark:text-red-400", icon: AlertCircle };
+      if (lower.includes('completed') || lower === '2') return { text: "Completed", color: "text-status-success", icon: CheckCircle2 };
+      if (lower.includes('abandoned') || lower.includes('adandoned') || lower === '1') return { text: "Abandoned", color: "text-status-danger", icon: AlertCircle };
       return { text: outcome, color: "text-foreground/70", icon: HelpCircle };
   };
 
@@ -67,16 +67,6 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
   const OutcomeIcon = outcomeConfig.icon;
 
   const doctorName = history.referringDoctor || history.anaesthetist || "Unknown";
-
-  const getGradeBorderColor = (variant: ReturnType<typeof getGradeVariant>): string => {
-    switch (variant) {
-      case 'grade4': return 'border-l-status-grade4';
-      case 'grade3': return 'border-l-status-grade3';
-      case 'grade2': return 'border-l-status-grade2';
-      case 'grade1': return 'border-l-status-grade1';
-      default:       return 'border-l-muted-foreground/40';
-    }
-  };
 
   const elapsedMinutes = calculateTimeDifference(history.inductionTime, history.reactionTime);
   const elapsedLabel = elapsedMinutes !== null
@@ -133,7 +123,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
       <CardContent className="p-5 space-y-6">
         
         {/* Header Information Box */}
-        <div className={`mt-2 bg-background p-4 rounded-none border border-border border-l-4 ${getGradeBorderColor(getGradeVariant(history.grade))} shadow-sm flex flex-wrap items-center justify-between gap-y-2 gap-x-3`}>
+        <div className="mt-2 bg-background p-4 rounded-none border border-border shadow-sm flex flex-wrap items-center justify-between gap-y-2 gap-x-3">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
             <span className="font-semibold text-foreground text-lg tracking-tight">
                 {formatDate(history.date)}
@@ -173,7 +163,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
 
         <HighRiskContextChips
             chips={highRiskChips}
-            className="border border-amber-200 bg-amber-50/70 px-3 py-2 dark:border-amber-800 dark:bg-amber-950/20"
+            className="border border-status-warning/30 bg-status-warning/10 px-3 py-2"
         />
 
         <section aria-labelledby="referral-checklist-heading" className="border border-border bg-muted/20 px-3 py-2.5">
@@ -182,9 +172,9 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                 {checklistItems.map(item => {
                     const ItemIcon = item.icon;
                     const stateClass = item.state === 'pass'
-                        ? 'text-emerald-700 dark:text-emerald-400'
+                        ? 'text-status-success'
                         : item.state === 'warning'
-                            ? 'text-amber-700 dark:text-amber-400'
+                            ? 'text-status-warning'
                             : 'text-muted-foreground';
 
                     return (
@@ -284,7 +274,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                                     {history.tryptases.map((sample, index) => {
                                         const isPeak = history.tryptases!.length >= 2 && tryptasePeak?.index === index;
                                         return (
-                                            <tr key={`${sample.time ?? 'no-time'}-${sample.result}-${index}`} className={isPeak ? 'bg-violet-50/70 dark:bg-violet-950/20 font-semibold' : undefined}>
+                                            <tr key={`${sample.time ?? 'no-time'}-${sample.result}-${index}`} className={isPeak ? 'bg-primary/5 font-semibold' : undefined}>
                                                 <th scope="row" className="px-3 py-2 font-semibold text-foreground">
                                                     T{index + 1}
                                                 </th>
@@ -294,9 +284,9 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                                                 <td className="px-3 py-2 tabular-nums text-foreground">
                                                     <span>{sample.result}</span>
                                                     {isPeak && (
-                                                        <span className="ml-2 inline-flex items-center border border-violet-300 dark:border-violet-700 px-1.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300">
-                                                            Peak
-                                                        </span>
+                                                         <span className="ml-2 inline-flex items-center border border-primary/30 px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider text-primary">
+                                                             Peak
+                                                         </span>
                                                     )}
                                                 </td>
                                             </tr>
@@ -321,8 +311,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                             {(history.firstSymptom || history.predominantSymptom) && (
                                 <div className="space-y-2 border-b border-border pb-3 mb-1">
                                     {history.firstSymptom && (
-                                        <div className="flex flex-col gap-0.5 border-l-2 border-amber-400 pl-2">
-                                            <span className="section-label text-amber-700 dark:text-amber-400">First Sign</span>
+                                        <div className="flex flex-col gap-0.5 border-l-2 border-status-warning pl-2">
+                                            <span className="section-label text-status-warning">First Sign</span>
                                             <span className="text-foreground/90 font-semibold text-sm leading-tight">{history.firstSymptom}</span>
                                         </div>
                                     )}

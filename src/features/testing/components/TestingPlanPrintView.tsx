@@ -178,7 +178,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
           {/* Right: ADR sticker + form title */}
           <div className="flex flex-col min-w-[180px] print:min-w-[160px]">
             <div className="border-b border-border print:border-black p-2 print:p-1.5 text-center">
-              <p className="text-xs print:text-[10px] font-bold text-red-600 print:text-red-700 border border-red-500 print:border-red-700 px-2 py-0.5 inline-block">
+              <p className="text-xs print:text-[10px] font-bold text-status-danger print:text-red-700 border border-status-danger print:border-red-700 px-2 py-0.5 inline-block">
                 Attach ADR sticker
               </p>
               <p className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-600 mt-0.5">See front page for details</p>
@@ -201,7 +201,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
         {/* Urgent Banner */}
         {urgent && (
-          <div className="flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-2 print:py-1 font-bold uppercase tracking-wider text-sm print:bg-black print:border-2 print:border-black rounded-none">
+          <div className="flex items-center gap-3 bg-status-danger text-status-danger-foreground px-5 py-3 print:px-2 print:py-1 font-bold uppercase tracking-wider text-sm print:bg-black print:border-2 print:border-black rounded-none">
             <AlertTriangle className="w-5 h-5 print:w-4 print:h-4 shrink-0" />
             URGENT — Priority Testing Required
           </div>
@@ -221,17 +221,17 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </h3>
             <div className="flex flex-wrap gap-2 print:gap-1">
               {documentsToChase.tryptases && (
-                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black rounded-none">
+                <Badge variant="outline" className="gap-1 bg-status-warning/10 border-status-warning/30 text-status-warning font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black rounded-none">
                   Tryptases
                 </Badge>
               )}
               {documentsToChase.anaestheticChart && (
-                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black rounded-none">
+                <Badge variant="outline" className="gap-1 bg-status-warning/10 border-status-warning/30 text-status-warning font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black rounded-none">
                   Anaesthetic Chart
                 </Badge>
               )}
               {documentsToChase.other && (
-                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black rounded-none">
+                <Badge variant="outline" className="gap-1 bg-status-warning/10 border-status-warning/30 text-status-warning font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black rounded-none">
                   Other{documentsToChase.otherText ? `: ${documentsToChase.otherText}` : ''}
                 </Badge>
               )}

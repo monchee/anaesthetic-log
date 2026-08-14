@@ -110,13 +110,13 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
                   </AccordionTrigger>
                   <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-4 space-y-3">
                     <div className="flex items-start gap-2 pt-1">
-                      <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                      <AlertTriangle className="w-4 h-4 text-status-warning shrink-0 mt-0.5" />
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {item.info}
                       </p>
                     </div>
                     <div className="flex items-start gap-2">
-                      <ArrowRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                      <ArrowRight className="w-4 h-4 text-status-success shrink-0 mt-0.5" />
                       <p className="text-sm text-foreground/90 leading-relaxed">
                         <strong className="text-foreground">Alternatives:</strong> {item.alternatives}
                       </p>
@@ -128,7 +128,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Disclaimer */}
-          <div className="bg-amber-500/10 dark:bg-amber-500/15 rounded-none p-4 border border-amber-500/30 dark:border-amber-500/40">
+          <div className="bg-status-warning/10 rounded-none p-4 border border-status-warning/30">
             <p className="text-sm text-foreground/90 space-y-2 leading-relaxed">
               <strong className="text-foreground">Important:</strong> This reference is for general guidance only. Always consult current clinical guidelines
               (particularly ASCIA recommendations on drug allergy investigation) and consider individual patient factors when making

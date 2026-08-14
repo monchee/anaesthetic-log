@@ -40,7 +40,7 @@ function RedactToggle() {
         onClick={toggleRedact}
         className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
           isRedacted
-            ? 'border-amber-400 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
+            ? 'border-status-warning/40 bg-status-warning/10 text-status-warning'
             : 'border-border bg-card text-muted-foreground hover:text-foreground'
         }`}
         title={isRedacted ? 'Show identifying data' : 'Hide identifying data'}
@@ -156,7 +156,7 @@ export function SummaryScreen({
       {research.isAvailable && (
         <div className="no-print">
           {research.isSubmitted ? (
-            <div className="flex items-center justify-center gap-2 py-5 text-sm text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 rounded-none">
+            <div className="flex items-center justify-center gap-2 py-5 text-sm text-status-success border border-status-success/30 bg-status-success/10 rounded-none">
               <CheckCircle2 className="w-4 h-4" /> Saved to Research Database
             </div>
           ) : (

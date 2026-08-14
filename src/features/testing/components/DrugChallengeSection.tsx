@@ -102,17 +102,17 @@ export function DrugChallengeSection({
                 ] as const).map(([outcome, label, Icon, tone]) => {
                   const isSelected = formData.outcome === outcome;
                   const selectedClass = tone === 'green'
-                    ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                    : 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300';
+                    ? 'bg-status-success/15 border-status-success text-status-success font-bold dark:bg-status-success/20 dark:text-status-success'
+                    : 'bg-status-danger/15 border-status-danger text-status-danger font-bold dark:bg-status-danger/20 dark:text-status-danger';
                   const idleClass = tone === 'green'
-                    ? 'bg-card border-border text-muted-foreground hover:border-green-300 hover:bg-green-50/50 dark:hover:border-green-800 dark:hover:bg-green-900/20 hover:text-foreground'
-                    : 'bg-card border-border text-muted-foreground hover:border-red-300 hover:bg-red-50/50 dark:hover:border-red-800 dark:hover:bg-red-900/20 hover:text-foreground';
+                    ? 'bg-card border-border text-muted-foreground hover:border-status-success/40 hover:bg-status-success/5 hover:text-foreground'
+                    : 'bg-card border-border text-muted-foreground hover:border-status-danger/40 hover:bg-status-danger/5 hover:text-foreground';
                   const iconClass = tone === 'green'
-                    ? 'bg-green-100 text-green-600 dark:bg-green-900/50'
-                    : 'bg-red-100 text-red-600 dark:bg-red-900/50';
+                    ? 'bg-status-success/20 text-status-success'
+                    : 'bg-status-danger/20 text-status-danger';
                   const checkClass = tone === 'green'
-                    ? 'text-green-600 dark:text-green-400'
-                    : 'text-red-600 dark:text-red-400';
+                    ? 'text-status-success'
+                    : 'text-status-danger';
                   return (
                     <button
                       key={outcome}
