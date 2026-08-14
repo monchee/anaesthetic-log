@@ -200,16 +200,22 @@ export function LogScreen({
           <button
             type="button"
             onClick={() => layoutProps.onCSVUploadSheetOpenChange(true)}
-            className="flex flex-col text-left p-5 bg-card hover:bg-muted/40 dark:hover:bg-card/70 border border-border transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="flex flex-col text-left p-5 bg-primary/[0.04] dark:bg-primary/[0.08] hover:bg-primary/[0.08] dark:hover:bg-primary/[0.14] border border-primary/30 dark:border-primary/40 hover:border-primary dark:hover:border-primary transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label="Upload REDCap export & review records"
           >
-            <div className="flex items-center gap-3 mb-2.5">
-              <div className="p-2 bg-primary/10 dark:bg-primary/20 text-primary shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors rounded-none">
-                <Upload className="w-5 h-5" />
+            <div className="flex items-center justify-between gap-3 mb-2.5 w-full">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="p-2.5 bg-primary text-primary-foreground shrink-0 rounded-none group-hover:bg-primary/90 transition-colors">
+                  <Upload className="w-5 h-5" aria-hidden="true" />
+                </div>
+                <span className="font-bold text-base text-foreground group-hover:text-primary transition-colors leading-snug">
+                  Upload REDCap export & review records
+                </span>
               </div>
-              <span className="font-semibold text-base text-foreground group-hover:text-primary transition-colors">
-                Upload REDCap export & review records
-              </span>
+              <ChevronRight
+                className="w-4 h-4 text-primary/60 group-hover:text-primary shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Import patient records from a REDCap CSV export and review clinic analytics in the Dashboard.
@@ -219,16 +225,22 @@ export function LogScreen({
           <button
             type="button"
             onClick={handleDirectTestingClick}
-            className="flex flex-col text-left p-5 bg-card hover:bg-muted/40 dark:hover:bg-card/70 border border-border transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="flex flex-col text-left p-5 bg-primary/[0.04] dark:bg-primary/[0.08] hover:bg-primary/[0.08] dark:hover:bg-primary/[0.14] border border-primary/30 dark:border-primary/40 hover:border-primary dark:hover:border-primary transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label="Open Allergy Testing"
           >
-            <div className="flex items-center gap-3 mb-2.5">
-              <div className="p-2 bg-primary/10 dark:bg-primary/20 text-primary shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors rounded-none">
-                <TestTube2 className="w-5 h-5" />
+            <div className="flex items-center justify-between gap-3 mb-2.5 w-full">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="p-2.5 bg-primary text-primary-foreground shrink-0 rounded-none group-hover:bg-primary/90 transition-colors">
+                  <TestTube2 className="w-5 h-5" aria-hidden="true" />
+                </div>
+                <span className="font-bold text-base text-foreground group-hover:text-primary transition-colors leading-snug">
+                  Open Allergy Testing
+                </span>
               </div>
-              <span className="font-semibold text-base text-foreground group-hover:text-primary transition-colors">
-                Open Allergy Testing
-              </span>
+              <ChevronRight
+                className="w-4 h-4 text-primary/60 group-hover:text-primary shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Start a fresh testing session directly without selecting a patient or creating a testing plan.

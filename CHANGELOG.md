@@ -1,3 +1,11 @@
+## [0.76.2] — 2026-08-15 (Quick Start Emphasis)
+
+Summary: Strengthens Home quick-start entry points with prominent, equal-weight action cards for REDCap review and direct Allergy Testing, featuring responsive grid layouts and accessibility-preserving visual treatments.
+
+### Changed
+- **Equal-weight Home quick-start entry points** — Elevates REDCap CSV review and direct Allergy Testing into balanced, prominent action cards with clear descriptive copy.
+- **Responsive and accessible visual treatment** — Refines quick-start cards with high-contrast iconography, theme-aware tinted surfaces, fluid responsive layout, and visible focus rings preserving accessibility standards.
+
 ## [0.76.1] — 2026-08-15 (Workbench Polish & Performance)
 
 Summary: Removes known production build and Chromium console warnings with updated browser data, web-vitals compatibility, and granular code splitting, while completing whole-project Clinical Workbench design and print styling polish.

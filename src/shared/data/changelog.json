@@ -1,5 +1,16 @@
 [
   {
+    "version": "v0.76.2",
+    "codename": "Quick Start Emphasis",
+    "date": "15 August 2026",
+    "summary": "Strengthens Home quick-start entry points with prominent, equal-weight action cards for REDCap review and direct Allergy Testing, featuring responsive grid layouts and accessibility-preserving visual treatments.",
+    "highlight": false,
+    "changes": [
+      "Equal-weight Home quick-start entry points \u2014 Elevates REDCap CSV review and direct Allergy Testing into balanced, prominent action cards with clear descriptive copy.",
+      "Responsive and accessible visual treatment \u2014 Refines quick-start cards with high-contrast iconography, theme-aware tinted surfaces, fluid responsive layout, and visible focus rings preserving accessibility standards."
+    ]
+  },
+  {
     "version": "v0.76.1",
     "codename": "Workbench Polish & Performance",
     "date": "15 August 2026",
