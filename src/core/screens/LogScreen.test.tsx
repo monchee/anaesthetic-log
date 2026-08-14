@@ -83,7 +83,7 @@ describe('LogScreen Home quick-start actions', () => {
     onCSVUploadSheetOpenChange: vi.fn(),
   };
 
-  it('renders quick-start actions with descriptions when no patient is selected', () => {
+  it('renders quick-start actions with descriptions and distinctive semantic colour styling when no patient is selected', () => {
     render(
       <LogScreen
         layoutProps={defaultLayoutProps}
@@ -113,6 +113,14 @@ describe('LogScreen Home quick-start actions', () => {
     expect(testingBtn).toBeInTheDocument();
     expect(uploadBtn).toHaveTextContent('Import patient records from a REDCap CSV export and review clinic analytics in the Dashboard.');
     expect(testingBtn).toHaveTextContent('Start a fresh testing session directly without selecting a patient or creating a testing plan.');
+
+    // Cool blue/cyan treatment on REDCap upload
+    expect(uploadBtn).toHaveClass('bg-sky-500/[0.04]', 'border-sky-500/30', 'focus-visible:ring-sky-500');
+    // Warm amber/orange treatment on Allergy Testing
+    expect(testingBtn).toHaveClass('bg-amber-500/[0.04]', 'border-amber-500/30', 'focus-visible:ring-amber-500');
+    // Preserved shared button traits
+    expect(uploadBtn).toHaveClass('btn-press', 'rounded-none');
+    expect(testingBtn).toHaveClass('btn-press', 'rounded-none');
   });
 
   it('does not render quick-start actions when a patient is selected', () => {

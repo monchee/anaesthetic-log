@@ -200,20 +200,20 @@ export function LogScreen({
           <button
             type="button"
             onClick={() => layoutProps.onCSVUploadSheetOpenChange(true)}
-            className="flex flex-col text-left p-5 bg-primary/[0.04] dark:bg-primary/[0.08] hover:bg-primary/[0.08] dark:hover:bg-primary/[0.14] border border-primary/30 dark:border-primary/40 hover:border-primary dark:hover:border-primary transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="flex flex-col text-left p-5 bg-sky-500/[0.04] dark:bg-sky-500/[0.08] hover:bg-sky-500/[0.08] dark:hover:bg-sky-500/[0.14] border border-sky-500/30 dark:border-sky-500/40 hover:border-sky-500 dark:hover:border-sky-400 transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:focus-visible:ring-sky-400 focus-visible:ring-offset-2"
             aria-label="Upload REDCap export & review records"
           >
             <div className="flex items-center justify-between gap-3 mb-2.5 w-full">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2.5 bg-primary text-primary-foreground shrink-0 rounded-none group-hover:bg-primary/90 transition-colors">
+                <div className="p-2.5 bg-sky-600 dark:bg-sky-600 text-white shrink-0 rounded-none group-hover:bg-sky-700 dark:group-hover:bg-sky-500 transition-colors">
                   <Upload className="w-5 h-5" aria-hidden="true" />
                 </div>
-                <span className="font-bold text-base text-foreground group-hover:text-primary transition-colors leading-snug">
+                <span className="font-bold text-base text-foreground group-hover:text-sky-700 dark:group-hover:text-sky-300 transition-colors leading-snug">
                   Upload REDCap export & review records
                 </span>
               </div>
               <ChevronRight
-                className="w-4 h-4 text-primary/60 group-hover:text-primary shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+                className="w-4 h-4 text-sky-600/70 dark:text-sky-400/70 group-hover:text-sky-700 dark:group-hover:text-sky-300 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
                 aria-hidden="true"
               />
             </div>
@@ -225,20 +225,20 @@ export function LogScreen({
           <button
             type="button"
             onClick={handleDirectTestingClick}
-            className="flex flex-col text-left p-5 bg-primary/[0.04] dark:bg-primary/[0.08] hover:bg-primary/[0.08] dark:hover:bg-primary/[0.14] border border-primary/30 dark:border-primary/40 hover:border-primary dark:hover:border-primary transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="flex flex-col text-left p-5 bg-amber-500/[0.04] dark:bg-amber-500/[0.08] hover:bg-amber-500/[0.08] dark:hover:bg-amber-500/[0.14] border border-amber-500/30 dark:border-amber-500/40 hover:border-amber-500 dark:hover:border-amber-400 transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 dark:focus-visible:ring-amber-400 focus-visible:ring-offset-2"
             aria-label="Open Allergy Testing"
           >
             <div className="flex items-center justify-between gap-3 mb-2.5 w-full">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2.5 bg-primary text-primary-foreground shrink-0 rounded-none group-hover:bg-primary/90 transition-colors">
+                <div className="p-2.5 bg-amber-600 dark:bg-amber-600 text-white shrink-0 rounded-none group-hover:bg-amber-700 dark:group-hover:bg-amber-500 transition-colors">
                   <TestTube2 className="w-5 h-5" aria-hidden="true" />
                 </div>
-                <span className="font-bold text-base text-foreground group-hover:text-primary transition-colors leading-snug">
+                <span className="font-bold text-base text-foreground group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors leading-snug">
                   Open Allergy Testing
                 </span>
               </div>
               <ChevronRight
-                className="w-4 h-4 text-primary/60 group-hover:text-primary shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+                className="w-4 h-4 text-amber-600/70 dark:text-amber-400/70 group-hover:text-amber-700 dark:group-hover:text-amber-300 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
                 aria-hidden="true"
               />
             </div>

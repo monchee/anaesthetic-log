@@ -1,3 +1,11 @@
+## [0.76.3] — 2026-08-15 (Distinctive Quick-Start Colours)
+
+Summary: Applies distinct semantic colour styling to Home quick-start entry points, styling REDCap review in cool blue/sky tones and Allergy Testing in warm amber tones while preserving all accessibility standards, responsive layouts, and clinical behaviours.
+
+### Changed
+- **Distinctive quick-start action colours** — Styles the REDCap CSV review action with cool blue (`sky`) accents and the direct Allergy Testing action with warm amber accents, enabling immediate visual distinction between administrative review and direct clinical testing entry points.
+- **Preserved accessibility and interaction behaviour** — Maintains high-contrast iconography, theme-aware tinted backgrounds, visible keyboard focus rings, zero-radius geometry, responsive grid sizing, and existing modal and navigation workflows across both quick-start actions.
+
 ## [0.76.2] — 2026-08-15 (Quick Start Emphasis)
 
 Summary: Strengthens Home quick-start entry points with prominent, equal-weight action cards for REDCap review and direct Allergy Testing, featuring responsive grid layouts and accessibility-preserving visual treatments.
