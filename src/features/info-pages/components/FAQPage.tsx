@@ -85,7 +85,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         },
         {
           question: "Can I export or email reports?",
-          answer: "You can copy reports as plain text to your clipboard, and testing plans can be emailed to the allergy nursing team. All exports maintain proper formatting for clinical use."
+          answer: "You can copy reports and testing request forms as plain text to your clipboard, and testing request forms can also be emailed to the allergy nursing team. All exports maintain proper formatting for clinical use."
         }
       ]
     },

@@ -1,5 +1,17 @@
 [
   {
+    "version": "v0.74.0",
+    "codename": "Clipboard Handoff",
+    "date": "14 August 2026",
+    "summary": "Adds plain-text clipboard copying for the Testing Request Form preview with toast feedback, and updates FAQ export guidance.",
+    "highlight": false,
+    "changes": [
+      "Copy as Text for Testing Request Form preview \u2014 Clinicians can now copy formatted testing request details directly to the clipboard from the print preview screen, reusing the email formatter while preserving all clinical and protocol details.",
+      "Clipboard feedback notifications \u2014 Displays immediate success and failure toasts when copying testing request text to the clipboard.",
+      "FAQ export guidance update \u2014 Clarifies that both clinical reports and testing request forms support plain text clipboard export alongside email dispatch."
+    ]
+  },
+  {
     "version": "v0.73.0",
     "codename": "Clinical Workbench",
     "date": "14 August 2026",

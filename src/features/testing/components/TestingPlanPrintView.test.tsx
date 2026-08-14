@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import TestingPlanPrintView from './TestingPlanPrintView';
 import { TestingPlanData } from '@/types';
 import { createMockPatient } from '@/src/test/factories/patientFactory';
+import { formatTestingPlanAsText } from '@shared/utils/testingPlanFormatter';
+import { showToast } from '@shared/utils';
 
 const patient = createMockPatient({
   id: 'PRINT-001',
@@ -31,6 +33,20 @@ const baseData: TestingPlanData = {
 };
 
 describe('TestingPlanPrintView', () => {
+  const originalClipboard = navigator.clipboard;
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  afterEach(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: originalClipboard,
+      configurable: true,
+      writable: true,
+    });
+  });
+
   it('renders flat SPT/IDT rows with Concentration column and omits challenge protocols', () => {
     render(
       <TestingPlanPrintView
@@ -91,5 +107,98 @@ describe('TestingPlanPrintView', () => {
     const warning = screen.getByText('⚠ Confirm preparation with pharmacy');
     expect(warning).toHaveClass('print:border-black', 'print:bg-white', 'print:text-black', 'font-bold');
     expect(screen.getAllByText(/Confirm preparation with pharmacy/)).toHaveLength(1);
+  });
+
+  it('renders the screen-only "Copy as Text" button in controls', () => {
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={baseData}
+        drugCategories={{ Cephalosporins: ['Cefazolin'] }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    const copyButton = screen.getByRole('button', { name: /Copy as Text/i });
+    expect(copyButton).toBeInTheDocument();
+  });
+
+  it('copies exact formatted testing plan text to clipboard and shows success toast', async () => {
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: writeTextMock },
+      configurable: true,
+      writable: true,
+    });
+    const toastSuccessSpy = vi.spyOn(showToast, 'success');
+
+    const drugCategories = { Cephalosporins: ['Cefazolin'] };
+    const expectedBody = formatTestingPlanAsText(patient, baseData, drugCategories);
+
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={baseData}
+        drugCategories={drugCategories}
+        onProceed={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Copy as Text/i }));
+
+    await waitFor(() => {
+      expect(writeTextMock).toHaveBeenCalledTimes(1);
+      expect(writeTextMock).toHaveBeenCalledWith(expectedBody);
+      expect(toastSuccessSpy).toHaveBeenCalledWith('Testing request copied to clipboard');
+    });
+  });
+
+  it('shows error toast when navigator.clipboard.writeText rejects', async () => {
+    const writeTextMock = vi.fn().mockRejectedValue(new Error('Permission denied'));
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: writeTextMock },
+      configurable: true,
+      writable: true,
+    });
+    const toastErrorSpy = vi.spyOn(showToast, 'error');
+
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={baseData}
+        drugCategories={{ Cephalosporins: ['Cefazolin'] }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Copy as Text/i }));
+
+    await waitFor(() => {
+      expect(toastErrorSpy).toHaveBeenCalledWith('Failed to copy testing request to clipboard');
+    });
+  });
+
+  it('shows error toast when Clipboard API is unavailable', async () => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: undefined,
+      configurable: true,
+      writable: true,
+    });
+    const toastErrorSpy = vi.spyOn(showToast, 'error');
+
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={baseData}
+        drugCategories={{ Cephalosporins: ['Cefazolin'] }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Copy as Text/i }));
+
+    await waitFor(() => {
+      expect(toastErrorSpy).toHaveBeenCalledWith('Failed to copy testing request to clipboard');
+    });
   });
 });

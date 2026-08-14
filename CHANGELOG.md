@@ -1,3 +1,14 @@
+## [0.74.0] — 2026-08-14 (Clipboard Handoff)
+
+Summary: Adds plain-text clipboard copying for the Testing Request Form preview with toast feedback, and updates FAQ export guidance.
+
+### Added
+- **Copy as Text for Testing Request Form preview** — Clinicians can now copy formatted testing request details directly to the clipboard from the print preview screen, reusing the email formatter while preserving all clinical and protocol details.
+- **Clipboard feedback notifications** — Displays immediate success and failure toasts when copying testing request text to the clipboard.
+
+### Changed
+- **FAQ export guidance update** — Clarifies that both clinical reports and testing request forms support plain text clipboard export alongside email dispatch.
+
 ## [0.73.0] — 2026-08-14 (Clinical Workbench)
 
 Summary: Adopts the Clinical Workbench design system across the interface with strict zero-radius geometry, semantic theme tokens, visible keyboard focus indicators, and formal design specifications in PRODUCT.md, DESIGN.md, and .impeccable/design.json.

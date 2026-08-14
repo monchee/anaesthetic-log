@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Card, CardContent, Badge } from '@/components/ui';
 import { Patient, TestingPlanData } from '@/types';
-import { formatDate } from '@shared/utils';
-import { Printer, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText } from 'lucide-react';
+import { formatDate, showToast } from '@shared/utils';
+import { Printer, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText, Copy } from 'lucide-react';
 import { formatTestingPlanAsText } from '@shared/utils/testingPlanFormatter';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 
@@ -71,6 +71,19 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
   const handlePrint = () => window.print();
 
+  const handleCopy = async () => {
+    const body = formatTestingPlanAsText(patient, data, drugCategories);
+    try {
+      if (!navigator.clipboard?.writeText) {
+        throw new Error('Clipboard API unavailable');
+      }
+      await navigator.clipboard.writeText(body);
+      showToast.success('Testing request copied to clipboard');
+    } catch {
+      showToast.error('Failed to copy testing request to clipboard');
+    }
+  };
+
   const handleEmail = () => {
     const body = formatTestingPlanAsText(patient, data, drugCategories);
     const subject = `Testing Request Form: ${patient.firstName} ${patient.lastName} - ${reactionDate ? new Date(reactionDate).toLocaleDateString('en-AU') : 'Date unknown'}`;
@@ -93,7 +106,10 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
       {/* Screen-only Controls */}
       <div className="p-4 border-b border-border bg-muted flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">
         <p className="text-lg font-semibold tracking-tight text-foreground">Testing Request Form</p>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <Button size="sm" variant="outline" onClick={handleCopy} className="rounded-none">
+            <Copy className="w-4 h-4 mr-2" /> Copy as Text
+          </Button>
           <Button size="sm" variant="outline" onClick={handleEmail} className="rounded-none">
             <Mail className="w-4 h-4 mr-2" /> Email to Allergy Nurse
           </Button>
