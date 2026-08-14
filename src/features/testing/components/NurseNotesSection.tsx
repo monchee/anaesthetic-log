@@ -12,9 +12,9 @@ interface NurseNotesSectionProps {
 
 export function NurseNotesSection({ formData, setFormData, isOpen, setIsOpen }: NurseNotesSectionProps) {
   return (
-    <Card style={{ '--section-index': 5 } as React.CSSProperties} className="animate-section-reveal border-blue-200 dark:border-blue-900/40">
+    <Card style={{ '--section-index': 5 } as React.CSSProperties} className="animate-section-reveal rounded-none border-blue-200 dark:border-blue-900/40">
       <CardHeader className="pb-3 border-b border-blue-100 dark:border-blue-900/30">
-        <button type="button" className="flex items-center justify-between w-full text-left" onClick={() => setIsOpen(open => !open)}>
+        <button type="button" className="flex items-center justify-between w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-none p-0.5" onClick={() => setIsOpen(open => !open)}>
           <CardTitle className="flex items-center gap-2 text-base text-blue-700 dark:text-blue-400">
             <div className="bg-blue-100 dark:bg-blue-900/40 p-1.5 rounded-none">
               <ClipboardList className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -36,7 +36,7 @@ export function NurseNotesSection({ formData, setFormData, isOpen, setIsOpen }: 
               <Label htmlFor={id} className="text-blue-800 dark:text-blue-300 font-medium">{label}</Label>
               <textarea
                 id={id}
-                className="flex min-h-[80px] w-full rounded-none border border-blue-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:border-blue-900/40 dark:bg-background dark:placeholder:text-muted-foreground"
+                className="flex min-h-[80px] w-full rounded-none border border-blue-200 bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:border-blue-900/40 dark:bg-background"
                 placeholder={placeholder}
                 value={formData.nurseNotes?.[field] || ''}
                 onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, [field]: e.target.value } }))}
@@ -47,7 +47,7 @@ export function NurseNotesSection({ formData, setFormData, isOpen, setIsOpen }: 
             <Label htmlFor="nurse-signed" className="text-blue-800 dark:text-blue-300 font-medium">Signed by (RN)</Label>
             <Input
               id="nurse-signed"
-              className="border-blue-200 dark:border-blue-900/40 focus:ring-blue-400"
+              className="border-blue-200 dark:border-blue-900/40 focus:ring-blue-400 rounded-none bg-background text-foreground"
               placeholder="Nurse name..."
               value={formData.nurseNotes?.signedBy || ''}
               onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, signedBy: e.target.value } }))}

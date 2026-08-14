@@ -20,7 +20,7 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
       <SheetContent className="rounded-none border-l border-border">
         <SheetHeader className="mb-6 pt-12">
           <SheetTitle className="flex items-center gap-2">
-            <FileUp className="w-5 h-5 text-red-600" />
+            <FileUp className="w-5 h-5 text-primary" />
             Update Database
           </SheetTitle>
           <SheetDescription>
@@ -31,17 +31,17 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
         <div className="space-y-6">
           <div className="bg-card p-4 rounded-none border border-border">
             <h4 className="font-semibold mb-2 flex items-center gap-2 text-foreground">
-              <ExternalLink className="w-4 h-4 text-red-600" /> Step 1: Login
+              <ExternalLink className="w-4 h-4 text-primary" /> Step 1: Login
             </h4>
             <p className="text-sm text-muted-foreground mb-2">
-              Go to <a href="https://redcap.slhd.nsw.gov.au/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline font-medium">redcap.slhd.nsw.gov.au</a> and log in with your credentials.
+              Go to <a href="https://redcap.slhd.nsw.gov.au/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">redcap.slhd.nsw.gov.au</a> and log in with your credentials.
             </p>
             <p className="text-xs text-muted-foreground italic">(You must have data export rights)</p>
           </div>
 
           <div className="space-y-4">
             <div className="flex gap-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-primary/10 text-xs font-bold text-primary dark:bg-primary/20">
                 2
               </div>
               <div className="text-sm text-muted-foreground">
@@ -50,7 +50,7 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
             </div>
 
             <div className="flex gap-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-primary/10 text-xs font-bold text-primary dark:bg-primary/20">
                 3
               </div>
               <div className="text-sm text-muted-foreground">
@@ -59,7 +59,7 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
             </div>
 
             <div className="flex gap-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-primary/10 text-xs font-bold text-primary dark:bg-primary/20">
                 4
               </div>
               <div className="text-sm text-muted-foreground">
@@ -68,7 +68,7 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
             </div>
 
             <div className="flex gap-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-xs font-bold text-red-600 dark:text-red-300">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-primary/10 text-xs font-bold text-primary dark:bg-primary/20">
                 5
               </div>
               <div className="text-sm text-muted-foreground">
@@ -77,7 +77,7 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
             </div>
 
             <div className="flex gap-3">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40 text-xs font-bold text-green-600 dark:text-green-300">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-none bg-status-grade1/15 text-xs font-bold text-status-grade1 dark:bg-status-grade1/20">
                 6
               </div>
               <div className="text-sm text-muted-foreground">
@@ -104,15 +104,16 @@ export const CSVUploadInstructions: React.FC<CSVUploadInstructionsProps> = ({
                 disabled={isUploading}
                 className="block w-full text-sm text-muted-foreground
                   file:mr-4 file:py-2 file:px-4
-                  rounded-full
+                  rounded-none
+                  file:rounded-none
                   file:border-0
                   file:text-sm
                   file:font-semibold
                   file:bg-primary
-                  file:text-white
+                  file:text-primary-foreground
                   hover:file:bg-primary/90
                   focus:outline-none
-                  focus:ring-2 focus:ring-primary
+                  focus:ring-2 focus:ring-ring
                   focus:ring-offset-2
                   disabled:opacity-50
                   disabled:cursor-not-allowed"

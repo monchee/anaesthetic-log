@@ -57,18 +57,18 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                     role="button"
                     tabIndex={0}
                     style={{ '--row-index': Math.min(idx, 9) } as React.CSSProperties}
-                    className="hover:bg-slate-50 dark:hover:bg-card/50 cursor-pointer transition-colors group animate-row-enter focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+                    className="hover:bg-muted/50 dark:hover:bg-card/50 cursor-pointer transition-colors group animate-row-enter focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
                     onClick={() => onViewLog(log)}
                     onKeyDown={(event) => handleRowKeyDown(event, log)}
                     aria-label={`View testing log for ${log.firstName} ${log.lastName}`}
                   >
-                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground group-hover:text-slate-700 dark:group-hover:text-foreground/80 transition-colors">{formatDate(log.visitDate)}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors">{formatDate(log.visitDate)}</td>
                     <td className="px-4 py-3 font-medium text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">{log.lastName}, {log.firstName}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1 items-center">
                         {positives.map(p => <Badge key={p} variant="danger" className="text-xs px-1.5 py-0 h-5">{p}</Badge>)}
                         {negatives.map(n => <span key={n} className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded-none border border-border">{n}</span>)}
-                        {positives.length === 0 && negatives.length === 0 && <span className="text-slate-400 italic text-xs">-</span>}
+                        {positives.length === 0 && negatives.length === 0 && <span className="text-muted-foreground italic text-xs">-</span>}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-xs">

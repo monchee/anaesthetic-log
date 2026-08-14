@@ -11,15 +11,15 @@ interface TryptaseSectionProps {
 
 export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps) {
   return (
-    <Card style={{ '--section-index': 3 } as React.CSSProperties} className="animate-section-reveal">
+    <Card style={{ '--section-index': 3 } as React.CSSProperties} className="animate-section-reveal rounded-none">
       <CardHeader className="pb-3 border-b border-border">
         <CardTitle className="flex items-center gap-2 text-base text-foreground">
-          <div className="bg-slate-100 dark:bg-card/40 p-1.5 rounded-none">
+          <div className="bg-muted p-1.5 rounded-none">
             <Activity className="w-4 h-4 text-primary" />
           </div>
           Serial Serum Tryptase
           {formData.tryptase?.source === 'referral' && (
-            <Badge variant="outline" className="ml-auto gap-1 text-[11px] font-normal normal-case tracking-normal text-muted-foreground">
+            <Badge variant="outline" className="ml-auto gap-1 text-[11px] font-normal normal-case tracking-normal text-muted-foreground rounded-none">
               <FileInput className="h-3 w-3" aria-hidden="true" />
               Imported from referral — verify
             </Badge>
@@ -40,13 +40,13 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                 obtained: !(prev.tryptase?.obtained ?? false),
               },
             }))}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-none border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
-              formData.tryptase?.obtained ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-none border-2 border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              formData.tryptase?.obtained ? 'bg-primary' : 'bg-muted'
             }`}
           >
-            <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform ${formData.tryptase?.obtained ? 'translate-x-5' : 'translate-x-0'}`} />
+            <span className={`pointer-events-none inline-block h-5 w-5 rounded-none bg-background shadow-sm transform transition-transform ${formData.tryptase?.obtained ? 'translate-x-5' : 'translate-x-0'}`} />
           </button>
-          <Label>Tryptase samples obtained</Label>
+          <Label className="text-foreground">Tryptase samples obtained</Label>
         </div>
 
         {formData.tryptase?.obtained && (
@@ -65,13 +65,13 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                     source: 'entered',
                   },
                 }))}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-none border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
-                  formData.tryptase.significantElevation ? 'bg-red-500' : 'bg-slate-200 dark:bg-slate-700'
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-none border-2 border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  formData.tryptase.significantElevation ? 'bg-red-500' : 'bg-muted'
                 }`}
               >
-                <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform ${formData.tryptase.significantElevation ? 'translate-x-5' : 'translate-x-0'}`} />
+                <span className={`pointer-events-none inline-block h-5 w-5 rounded-none bg-background shadow-sm transform transition-transform ${formData.tryptase.significantElevation ? 'translate-x-5' : 'translate-x-0'}`} />
               </button>
-              <Label className={formData.tryptase.significantElevation ? 'text-red-600 font-semibold' : ''}>
+              <Label className={formData.tryptase.significantElevation ? 'text-red-600 font-semibold' : 'text-foreground'}>
                 Clinically significant dynamic elevation
               </Label>
             </div>
@@ -81,10 +81,10 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
               {(formData.tryptase.values.length === 0 ? [{ time: '', result: '' }] : formData.tryptase.values).map((_, idx) => (
                 <div key={idx} className="flex items-center gap-3">
                   <div className="flex-1 flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground w-4 shrink-0">T{idx + 1}</span>
+                    <span className="text-sm text-muted-foreground w-4 shrink-0 font-mono">T{idx + 1}</span>
                     <Input
                       placeholder="Time (e.g. 15:30)"
-                      className="h-9 rounded-none text-sm"
+                      className="h-9 rounded-none text-sm font-mono tabular-nums bg-background"
                       value={formData.tryptase?.values[idx]?.time ?? ''}
                       onChange={e => {
                         const vals = [...(formData.tryptase?.values ?? [])];
@@ -95,7 +95,7 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                     />
                     <Input
                       placeholder="Result"
-                      className="h-9 rounded-none text-sm w-28"
+                      className="h-9 rounded-none text-sm w-28 font-mono tabular-nums bg-background"
                       value={formData.tryptase?.values[idx]?.result ?? ''}
                       onChange={e => {
                         const vals = [...(formData.tryptase?.values ?? [])];
@@ -112,7 +112,8 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                         const vals = (formData.tryptase?.values ?? []).filter((_, i) => i !== idx);
                         setFormData(prev => ({ ...prev, tryptase: { ...(prev.tryptase ?? EMPTY_TRYPTASE), values: vals, source: 'entered' } }));
                       }}
-                      className="text-muted-foreground hover:text-destructive p-1"
+                      className="text-muted-foreground hover:text-destructive p-1 rounded-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-destructive"
+                      aria-label={`Remove sample T${idx + 1}`}
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -124,7 +125,7 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="text-xs h-7 px-2 rounded-none"
+                  className="text-xs h-7 px-2 rounded-none font-normal text-muted-foreground hover:text-foreground"
                   onClick={() => setFormData(prev => ({
                     ...prev,
                     tryptase: {

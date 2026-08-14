@@ -37,7 +37,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
   const reportDate = activeReportSavedAt ? new Date(activeReportSavedAt).toISOString() : new Date().toISOString();
 
   return (
-    <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
+    <Card className="rounded-none overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
       <ReportPrintIdentity
         patientName={redactedFullName}
         mrn={redact(data.mrn)}
@@ -162,7 +162,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
           )}
           {negResults.length > 0 && (
             <div>
-              <p className="text-xs uppercase tracking-wider font-bold text-slate-600 mb-1 print:text-[9px]">Negative</p>
+              <p className="text-xs uppercase tracking-wider font-bold text-muted-foreground mb-1 print:text-[9px]">Negative</p>
               <ul className="space-y-1">
                 {negResults.map((drug, i) => (
                   <li key={i} className="text-foreground/80 text-sm print:text-xs">{drug}: negative</li>
@@ -212,7 +212,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
 
         {/* Report Timestamp */}
         {activeReportSavedAt && (
-          <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[9px] print:pt-1 print:mt-1">
+          <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-border print:text-[9px] print:pt-1 print:mt-1">
             Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
           </div>
         )}
@@ -225,7 +225,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
         )}
 
         {/* MDT Signature */}
-        <div className="pt-6 border-t border-slate-200 print:pt-1 print:break-inside-avoid">
+        <div className="pt-6 border-t border-border print:pt-1 print:break-inside-avoid">
           <p className="text-sm font-semibold text-foreground/90 print:text-xs">
             Allergy MDT: Dr. D Zalcberg, Dr. A Stoyanov and CNC K. Wells.
           </p>

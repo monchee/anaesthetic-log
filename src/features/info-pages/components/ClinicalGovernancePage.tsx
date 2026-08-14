@@ -10,13 +10,13 @@ interface ClinicalGovernancePageProps {
 const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card>
+      <Card className="rounded-none border-border shadow-none">
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
+          <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
             <div className="flex items-start gap-4">
-              <Hospital className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
+              <Hospital className="w-8 h-8 text-primary shrink-0" />
               <div>
                 <h3 className="font-semibold text-lg text-foreground mb-2">RPAH Clinical Governance Framework</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -36,20 +36,20 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
               <p>The application is developed and maintained under the oversight of:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>RPAH Department of Clinical Immunology & Allergy</strong> — Clinical leadership and direction</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">RPAH Department of Clinical Immunology & Allergy</strong> — Clinical leadership and direction</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Sydney Local Health District (SLHD)</strong> — Organisational governance and accountability</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Sydney Local Health District (SLHD)</strong> — Organisational governance and accountability</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>eHealth NSW</strong> — Digital health standards and compliance</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">eHealth NSW</strong> — Digital health standards and compliance</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Clinical Director — Immunology & Allergy</strong> — Clinical governance accountability</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Clinical Director — Immunology & Allergy</strong> — Clinical governance accountability</span>
                 </li>
               </ul>
             </div>
@@ -65,24 +65,24 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
               <p>We maintain clinical safety through:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Clinician-led Design:</strong> Developed by clinicians for clinical use</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Clinician-led Design:</strong> Developed by clinicians for clinical use</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Peer Review:</strong> Clinical workflows reviewed by specialist immunologists</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Peer Review:</strong> Clinical workflows reviewed by specialist immunologists</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Risk Assessment:</strong> Regular clinical risk assessments for digital tools</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Risk Assessment:</strong> Regular clinical risk assessments for digital tools</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Incident Reporting:</strong> Integrated with SLHD incident management processes</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Incident Reporting:</strong> Integrated with SLHD incident management processes</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Clinical Judgment:</strong> The app supports, not replaces, clinical decision-making</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Clinical Judgment:</strong> The app supports, not replaces, clinical decision-making</span>
                 </li>
               </ul>
             </div>
@@ -98,19 +98,19 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
               <p>We engage with patients and consumers to ensure our services meet their needs:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Patient feedback informs ongoing improvements</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Clear, accessible patient handouts and information</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Transparent about the purpose and limitations of the service</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Respect for patient privacy and autonomy</span>
                 </li>
               </ul>
@@ -127,20 +127,20 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
               <p>We are committed to continuous improvement and evidence-based practice:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Evidence-Based:</strong> Aligned with current Australasian Society of Clinical Immunology and Allergy (ASCIA) guidelines</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Evidence-Based:</strong> Aligned with current Australasian Society of Clinical Immunology and Allergy (ASCIA) guidelines</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Audit and Review:</strong> Regular clinical audit of testing outcomes and patient pathways</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Audit and Review:</strong> Regular clinical audit of testing outcomes and patient pathways</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Outcome Monitoring:</strong> Tracking of clinical outcomes for quality assurance</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Outcome Monitoring:</strong> Tracking of clinical outcomes for quality assurance</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Professional Development:</strong> Team members maintain up-to-date knowledge and skills</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Professional Development:</strong> Team members maintain up-to-date knowledge and skills</span>
                 </li>
               </ul>
             </div>
@@ -152,20 +152,20 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>This application aligns with the following frameworks:</p>
               <div className="grid md:grid-cols-2 gap-3 mt-3">
-                <div className="bg-card p-3 rounded border border-border">
-                  <p className="font-medium text-foreground/90">NSQHS Standard 1</p>
+                <div className="bg-card p-3.5 rounded-none border border-border">
+                  <p className="font-medium text-foreground">NSQHS Standard 1</p>
                   <p className="text-xs text-muted-foreground">Clinical Governance</p>
                 </div>
-                <div className="bg-card p-3 rounded border border-border">
-                  <p className="font-medium text-foreground/90">NSQHS Standard 2</p>
+                <div className="bg-card p-3.5 rounded-none border border-border">
+                  <p className="font-medium text-foreground">NSQHS Standard 2</p>
                   <p className="text-xs text-muted-foreground">Partnering with Consumers</p>
                 </div>
-                <div className="bg-card p-3 rounded border border-border">
-                  <p className="font-medium text-foreground/90">ADHA Framework</p>
+                <div className="bg-card p-3.5 rounded-none border border-border">
+                  <p className="font-medium text-foreground">ADHA Framework</p>
                   <p className="text-xs text-muted-foreground">Digital Health Clinical Governance</p>
                 </div>
-                <div className="bg-card p-3 rounded border border-border">
-                  <p className="font-medium text-foreground/90">NSW Health Policy</p>
+                <div className="bg-card p-3.5 rounded-none border border-border">
+                  <p className="font-medium text-foreground">NSW Health Policy</p>
                   <p className="text-xs text-muted-foreground">Privacy & Security</p>
                 </div>
               </div>
@@ -175,11 +175,11 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
         </CardContent>
       </Card>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center print:hidden">
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
+          className="rounded-none bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-8 shadow-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

@@ -16,19 +16,19 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           title: "ANZAAG - Australian & New Zealand Anaesthetic Allergy Group",
           description: "Guidelines, resources, and educational materials for anaesthetic allergy investigation.",
           url: "https://www.anzaag.com",
-          icon: <Globe className="w-5 h-5 text-blue-500" />
+          icon: <Globe className="w-5 h-5 text-primary" />
         },
         {
           title: "ASCIA - Australasian Society of Clinical Immunology and Allergy",
           description: "Drug allergy testing and management guidelines for clinical immunology.",
           url: "https://www.allergy.org.au",
-          icon: <BookOpen className="w-5 h-5 text-green-500" />
+          icon: <BookOpen className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
         },
         {
           title: "NHMRC - National Health & Medical Research Council",
           description: "Australian health and medical research guidelines and evidence-based resources.",
           url: "https://www.nhmrc.gov.au",
-          icon: <Globe className="w-5 h-5 text-muted-foreground" />
+          icon: <Globe className="w-5 h-5 text-primary" />
         }
       ]
     },
@@ -39,7 +39,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           title: "REDCap",
           description: "Access the REDCap database to view and manage patient records directly.",
           url: "https://redcap.slhd.nsw.gov.au",
-          icon: <Database className="w-5 h-5 text-red-500" />
+          icon: <Database className="w-5 h-5 text-destructive" />
         }
       ]
     },
@@ -56,13 +56,13 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           title: "NAP6 - 6th National Audit Project",
           description: "UK national audit on perioperative anaphylaxis - comprehensive guidelines and recommendations.",
           url: "https://www.nationalauditprojects.org.uk/NAP6home",
-          icon: <Globe className="w-5 h-5 text-amber-500" />
+          icon: <Globe className="w-5 h-5 text-amber-600 dark:text-amber-400" />
         },
         {
           title: "TGA - Therapeutic Goods Administration",
           description: "Australian medicines regulation, adverse event reporting, and therapeutic safety information.",
           url: "https://www.tga.gov.au",
-          icon: <BookOpen className="w-5 h-5 text-red-500" />
+          icon: <BookOpen className="w-5 h-5 text-primary" />
         }
       ]
     }
@@ -70,7 +70,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card>
+      <Card className="rounded-none border-border shadow-none">
         <CardContent className="pt-6 space-y-6">
           
           {resources.map((section, idx) => (
@@ -85,10 +85,10 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block bg-card rounded-none p-4 border border-border hover:border-primary dark:hover:border-primary transition-colors group"
+                    className="block bg-card rounded-none p-4 border border-border hover:border-primary dark:hover:border-primary transition-[border-color,background-color] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="p-2 bg-card rounded-none border border-border shrink-0">
+                      <div className="p-2.5 bg-muted/60 rounded-none border border-border shrink-0">
                         {item.icon}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -96,7 +96,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
                           <h4 className="font-semibold text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">
                             {item.title}
                           </h4>
-                          <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-primary dark:group-hover:text-primary transition-colors" />
+                          <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors" />
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
                           {item.description}
@@ -110,8 +110,8 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
           ))}
 
           {/* Disclaimer */}
-          <div className="bg-slate-100 dark:bg-card rounded-none p-4 border border-border">
-            <p className="text-xs text-muted-foreground">
+          <div className="bg-muted/50 rounded-none p-4 border border-border">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               These links are provided for informational purposes. We are not responsible for the content 
               of external websites. Links were verified at the time of publication but may change.
             </p>
@@ -120,11 +120,11 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
         </CardContent>
       </Card>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center print:hidden">
         <Button 
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
+          className="rounded-none bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-8 shadow-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

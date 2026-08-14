@@ -39,7 +39,7 @@ const WhealInput = ({ value, onChange }: WhealInputProps) => (
       inputMode="decimal"
       pattern="[0-9]*"
       onKeyDown={preventNegativeInput}
-      className={`h-9 text-center font-mono tabular-nums ${isPositive(value) ? 'text-red-700 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
+      className={`h-9 text-center font-mono tabular-nums rounded-none ${isPositive(value) ? 'text-red-700 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
       placeholder="-"
       value={value}
       onChange={(e) => onChange(e.target.value)}
@@ -84,14 +84,14 @@ const DrugRow = React.memo(({
       <div className="flex items-center gap-2">
         {row.drugName === 'Other' ? (
           <Input
-            className="h-9 text-sm flex-1 min-w-0 font-medium font-mono"
+            className="h-9 text-sm flex-1 min-w-0 font-medium font-mono rounded-none"
             placeholder="Specify name..."
             value={row.customName || ''}
             onChange={(e) => onUpdate(index, 'customName', e.target.value)}
             autoFocus
           />
         ) : (
-          <span className="font-medium text-sm text-slate-700 dark:text-foreground/90 flex-1 min-w-0 truncate">
+          <span className="font-semibold text-sm text-foreground flex-1 min-w-0 truncate">
             {row.drugName}
           </span>
         )}
@@ -123,7 +123,7 @@ const DrugRow = React.memo(({
         )}
         <button
           onClick={() => onRemove(index)}
-          className={`shrink-0 text-slate-300 hover:text-red-500 transition-opacity p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-100 md:opacity-0 md:group-hover:opacity-100'}`}
+          className={`shrink-0 text-muted-foreground/60 hover:text-destructive transition-colors p-1 ${row.drugName === 'Other' ? 'opacity-100' : 'opacity-100 md:opacity-0 md:group-hover:opacity-100'}`}
           title="Remove drug"
         >
           <X className="w-4 h-4" />
@@ -132,11 +132,11 @@ const DrugRow = React.memo(({
 
       {/* Custom drug protocol configuration */}
       {row.drugName === 'Other' && (
-        <div className="border border-dashed border-border p-2 space-y-2 bg-slate-50/50 dark:bg-card/30">
+        <div className="border border-dashed border-border p-2 space-y-2 bg-muted/30">
           <div className="flex items-center gap-2">
             <span className="section-label shrink-0 w-7">SPT</span>
             <Input
-              className="h-7 text-xs flex-1"
+              className="h-7 text-xs flex-1 rounded-none font-mono"
               placeholder="Neat concentration (e.g. 10mg/mL)..."
               value={row.customSptConcentration || ''}
               onChange={(e) => onUpdate(index, 'customSptConcentration', e.target.value)}
@@ -147,20 +147,20 @@ const DrugRow = React.memo(({
             {(row.customIdtSteps ?? []).map((step, si) => (
               <div key={si} className="flex items-center gap-1.5">
                 <Input
-                  className="h-7 text-xs flex-1"
+                  className="h-7 text-xs flex-1 rounded-none font-mono"
                   placeholder="Ratio (e.g. 1:100)"
                   value={step.ratio}
                   onChange={(e) => onUpdate(index, `customIdtStep_ratio_${si}`, e.target.value)}
                 />
                 <Input
-                  className="h-7 text-xs flex-1"
+                  className="h-7 text-xs flex-1 rounded-none font-mono"
                   placeholder="Conc. (e.g. 0.1mg/mL)"
                   value={step.concentration}
                   onChange={(e) => onUpdate(index, `customIdtStep_concentration_${si}`, e.target.value)}
                 />
                 <button
                   onClick={() => onRemoveCustomIdtStep(index, si)}
-                  className="shrink-0 text-slate-300 hover:text-red-500 transition-colors"
+                  className="shrink-0 text-muted-foreground/60 hover:text-destructive transition-colors"
                   title="Remove step"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -180,7 +180,7 @@ const DrugRow = React.memo(({
               id={`challenge-${index}`}
               checked={row.includeInChallenge || false}
               onChange={(e) => onUpdate(index, 'includeInChallenge', e.target.checked.toString())}
-              className="w-3.5 h-3.5 accent-primary"
+              className="w-3.5 h-3.5 accent-primary rounded-none"
             />
             <label htmlFor={`challenge-${index}`} className="text-xs text-muted-foreground cursor-pointer select-none">
               Include in drug challenge
@@ -243,7 +243,7 @@ const DrugRow = React.memo(({
 
       {/* Notes */}
       <Input
-        className="h-8 text-xs text-muted-foreground"
+        className="h-8 text-xs text-foreground placeholder:text-muted-foreground rounded-none"
         placeholder="Notes..."
         value={row.notes || ''}
         onChange={(e) => onUpdate(index, 'notes', e.target.value)}

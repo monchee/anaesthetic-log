@@ -137,13 +137,13 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card>
+      <Card className="rounded-none border-border shadow-none">
         <CardContent className="pt-6 space-y-6">
           {faqs.map((category, idx) => (
             <div key={idx} className="space-y-2">
               <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground uppercase tracking-wide mb-3">
                 <category.icon className="w-4 h-4 text-primary shrink-0" />
-                {category.category}
+                <span>{category.category}</span>
               </h3>
               <Accordion type="multiple" className="bg-card rounded-none border border-border px-4">
                 {category.items.map((item, itemIdx) => (
@@ -152,8 +152,8 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
                     value={`item-${itemIdx}`}
                     className="border-b border-border last:border-0"
                   >
-                    <AccordionTrigger className="text-foreground font-medium hover:no-underline">
-                        {item.question}
+                    <AccordionTrigger className="text-foreground font-medium hover:no-underline hover:text-primary transition-colors py-3.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded-none">
+                      {item.question}
                     </AccordionTrigger>
                     <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-4">
                       {item.answer}
@@ -166,11 +166,11 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         </CardContent>
       </Card>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center print:hidden">
         <Button 
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
+          className="rounded-none bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-8 shadow-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

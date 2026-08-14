@@ -27,7 +27,7 @@ const ClinicalReport = React.lazy(() => import('@features/reports/components/Cli
 const PatientHandout = React.lazy(() => import('@features/reports/components/PatientHandout'));
 const PowerchartLetter = React.lazy(() => import('@features/reports/components/PowerchartLetter'));
 
-const BACK_BTN = "h-11 min-w-11 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-[color,background-color,border-color,transform,box-shadow] duration-200 group rounded-none btn-press";
+const BACK_BTN = "h-11 min-w-11 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-[color,background-color,border-color,transform,box-shadow] duration-200 group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary";
 const BACK_ICON = "w-4 h-4 opacity-90 group-hover:opacity-100 transition-opacity";
 
 type ReportTab = 'report' | 'handout' | 'letter';
@@ -38,7 +38,7 @@ function RedactToggle() {
     <div className="flex justify-end mb-2 no-print">
       <button
         onClick={toggleRedact}
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border rounded-none transition-colors ${
+        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
           isRedacted
             ? 'border-amber-400 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
             : 'border-border bg-card text-muted-foreground hover:text-foreground'
@@ -114,10 +114,10 @@ export function SummaryScreen({
             aria-selected={activeReportTab === key}
             aria-controls={`report-panel-${key}`}
             onClick={() => setActiveReportTab(key)}
-            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors rounded-none whitespace-nowrap shrink-0
+            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors rounded-none whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1
               ${activeReportTab === key
-                ? 'border-primary text-primary'
-                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-muted-foreground dark:hover:text-foreground/90'
+                ? 'border-primary text-primary font-semibold'
+                : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
           >
             {icon}{label}
@@ -156,7 +156,7 @@ export function SummaryScreen({
       {research.isAvailable && (
         <div className="no-print">
           {research.isSubmitted ? (
-            <div className="flex items-center justify-center gap-2 py-5 text-sm text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
+            <div className="flex items-center justify-center gap-2 py-5 text-sm text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 rounded-none">
               <CheckCircle2 className="w-4 h-4" /> Saved to Research Database
             </div>
           ) : (
@@ -175,13 +175,13 @@ export function SummaryScreen({
             </Button>
           )}
           {research.error && (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400 text-center">{research.error}</p>
+            <p className="mt-1 text-xs text-destructive text-center">{research.error}</p>
           )}
         </div>
       )}
 
       <div className="no-print border-t border-border pt-6 mt-4">
-        <Button onClick={onStartNewLog} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
+        <Button onClick={onStartNewLog} size="lg" className="w-full py-6 text-lg rounded-none bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-colors btn-press">
           <Plus className="w-5 h-5 mr-2" /> Start New Log
         </Button>
       </div>

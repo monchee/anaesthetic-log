@@ -93,7 +93,7 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-semibold tracking-tight">Screen Lock</CardTitle>
-            <CardDescription className="text-slate-600 dark:text-slate-400">Enter PIN to continue</CardDescription>
+            <CardDescription>Enter PIN to continue</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-4">
@@ -114,14 +114,14 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
                       onChange={e => handleDigitChange(i, e.target.value)}
                       onKeyDown={e => handleKeyDown(i, e)}
                       onPaste={i === 0 ? handlePaste : undefined}
-                      className="w-12 h-14 text-center text-xl text-slate-900 dark:text-slate-100 border border-input bg-background
+                      className="w-12 h-14 text-center text-xl text-foreground border border-input bg-background rounded-none
                                  focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring
                                  transition-colors"
                     />
                   ))}
                 </div>
               </div>
-              {error && <p className="text-destructive text-sm text-center">{error}</p>}
+              {error && <p role="alert" className="text-destructive text-sm text-center">{error}</p>}
               <Button onClick={() => handleUnlock()} className="w-full">Unlock</Button>
               <p className="text-xs text-muted-foreground text-center leading-tight">
                 This is a screen lock to prevent shoulder-surfing on shared workstations. Patient data security is governed separately by the database access controls.

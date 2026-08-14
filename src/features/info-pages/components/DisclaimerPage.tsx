@@ -10,16 +10,16 @@ interface DisclaimerPageProps {
 const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card>
+      <Card className="rounded-none border-border shadow-none">
         <CardContent className="pt-6 space-y-6">
 
           {/* Medical Disclaimer - Highlighted */}
-          <div className="bg-red-50 dark:bg-red-900/20 rounded-none p-6 border-2 border-red-200 dark:border-red-800">
+          <div className="bg-destructive/10 dark:bg-destructive/15 rounded-none p-5 sm:p-6 border-2 border-destructive/30 dark:border-destructive/40">
             <div className="flex items-start gap-4">
-              <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400 shrink-0" />
+              <AlertTriangle className="w-8 h-8 text-destructive shrink-0" />
               <div>
-                <h3 className="font-bold text-lg text-red-900 dark:text-red-300 mb-3">Medical Disclaimer</h3>
-                <div className="text-sm text-red-800 dark:text-red-300 space-y-3">
+                <h3 className="font-bold text-lg text-destructive mb-3">Medical Disclaimer</h3>
+                <div className="text-sm text-foreground/90 space-y-3">
                   <p className="font-medium">
                     This application is intended for use by qualified healthcare professionals ONLY. It is a clinical support tool designed to assist in the assessment and management of patients with suspected or confirmed anaesthetic allergies.
                   </p>
@@ -35,19 +35,19 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Emergency Warning */}
-          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-none p-5 border border-amber-200 dark:border-amber-800">
+          <div className="bg-amber-500/10 dark:bg-amber-500/15 rounded-none p-5 border border-amber-500/30 dark:border-amber-500/40">
             <div className="flex items-start gap-3">
               <Phone className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-semibold text-amber-900 dark:text-amber-300 mb-2">Emergency Information</h4>
-                <div className="text-sm text-amber-800 dark:text-amber-300 space-y-2">
+                <div className="text-sm text-foreground/90 space-y-2">
                   <p>
-                    <strong>This application is NOT suitable for emergency situations.</strong>
+                    <strong className="text-foreground">This application is NOT suitable for emergency situations.</strong>
                   </p>
                   <p>
                     In the event of a medical emergency, call <strong>000</strong> (Australia) immediately for emergency services.
                   </p>
-                  <p className="text-xs mt-3">
+                  <p className="text-xs text-muted-foreground mt-3">
                     If you or a patient is experiencing a severe allergic reaction (anaphylaxis), follow standard emergency protocols including administering adrenaline (epinephrine) if available and calling for emergency assistance.
                   </p>
                 </div>
@@ -67,19 +67,19 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
               </p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Every patient is unique; individual circumstances may warrant deviation from suggested protocols</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>The application cannot account for all possible clinical scenarios</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Users must apply their own clinical expertise and knowledge of the patient</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Recommendations should be verified with current clinical guidelines</span>
                 </li>
               </ul>
@@ -98,15 +98,15 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
               </p>
               <ul className="space-y-1 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Make no representation or warranty regarding the completeness, accuracy, reliability, or timeliness of the information</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Do not warrant that the application will function uninterrupted or error-free</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Do not warrant that defects will be corrected</span>
                 </li>
               </ul>
@@ -122,19 +122,19 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
               </p>
               <ul className="space-y-2 ml-4 mt-3">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Accept no liability for any loss, injury, or damage resulting from use of this application</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Accept no liability for any clinical decisions made based on application outputs</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Accept no liability for any errors or omissions in the information provided</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Accept no liability for any inability to use the application</span>
                 </li>
               </ul>
@@ -168,9 +168,9 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Acceptance */}
-          <div className="bg-nsw-info-bg dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
+          <div className="bg-nsw-info-bg/80 dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
             <h4 className="font-semibold text-nsw-info dark:text-nsw-blue mb-3">Use of Application Constitutes Acceptance</h4>
-            <div className="text-sm text-slate-700 dark:text-foreground/80">
+            <div className="text-sm text-foreground/90">
               <p>
                 By accessing and using this application, you acknowledge that you have read, understood, and agree to be bound by this disclaimer. If you do not agree with any part of this disclaimer, you must not use this application.
               </p>
@@ -180,11 +180,11 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
         </CardContent>
       </Card>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center print:hidden">
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
+          className="rounded-none bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-8 shadow-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

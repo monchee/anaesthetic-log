@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-14T01:48:00.000Z",
+  "title": "Design System: DREAM Allergy Management",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "NSW Health Navy",
+        "canonical": "hsl(217 100% 19.6%)",
+        "tonalRamp": [
+          "hsl(217 100% 10%)",
+          "hsl(217 100% 15%)",
+          "hsl(217 100% 19.6%)",
+          "hsl(217 90% 35%)",
+          "hsl(217 80% 50%)",
+          "hsl(217 90% 65%)",
+          "hsl(217 95% 80%)",
+          "hsl(217 100% 95%)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Clinical Background",
+        "canonical": "hsl(210 40% 98%)",
+        "tonalRamp": [
+          "hsl(210 40% 10%)",
+          "hsl(210 40% 25%)",
+          "hsl(210 40% 40%)",
+          "hsl(210 40% 60%)",
+          "hsl(210 40% 80%)",
+          "hsl(210 40% 90%)",
+          "hsl(210 40% 96%)",
+          "hsl(210 40% 98%)"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Surface White",
+        "canonical": "hsl(0 0% 100%)",
+        "tonalRamp": [
+          "hsl(0 0% 14%)",
+          "hsl(0 0% 25%)",
+          "hsl(0 0% 45%)",
+          "hsl(0 0% 65%)",
+          "hsl(0 0% 85%)",
+          "hsl(0 0% 92%)",
+          "hsl(0 0% 97%)",
+          "hsl(0 0% 100%)"
+        ]
+      },
+      "accent": {
+        "role": "secondary",
+        "displayName": "NSW Brand Light Blue",
+        "canonical": "hsl(199 92% 89%)",
+        "tonalRamp": [
+          "hsl(199 92% 15%)",
+          "hsl(199 92% 30%)",
+          "hsl(199 92% 45%)",
+          "hsl(199 92% 60%)",
+          "hsl(199 92% 75%)",
+          "hsl(199 92% 85%)",
+          "hsl(199 92% 89%)",
+          "hsl(199 92% 95%)"
+        ]
+      },
+      "status-grade1": {
+        "role": "status",
+        "displayName": "Grade I Mild",
+        "canonical": "hsl(142.1 76.2% 36.3%)",
+        "tonalRamp": [
+          "hsl(142 76% 15%)",
+          "hsl(142 76% 25%)",
+          "hsl(142.1 76.2% 36.3%)",
+          "hsl(142 65% 48%)",
+          "hsl(142 60% 65%)",
+          "hsl(142 60% 80%)",
+          "hsl(142 60% 90%)",
+          "hsl(142 60% 95%)"
+        ]
+      },
+      "status-grade4": {
+        "role": "status",
+        "displayName": "Grade IV Critical",
+        "canonical": "hsl(346.8 77.2% 49.8%)",
+        "tonalRamp": [
+          "hsl(347 77% 15%)",
+          "hsl(347 77% 25%)",
+          "hsl(347 77% 35%)",
+          "hsl(346.8 77.2% 49.8%)",
+          "hsl(347 75% 65%)",
+          "hsl(347 75% 80%)",
+          "hsl(347 75% 90%)",
+          "hsl(347 75% 96%)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display Wordmark", "purpose": "DREAM Login Wordmark only." },
+      "headline": { "displayName": "Headline (h1)", "purpose": "Primary screen titles." },
+      "title": { "displayName": "Title (h2)", "purpose": "Section headings and card groups." },
+      "body": { "displayName": "Body", "purpose": "Clinical reading and patient data." },
+      "label": { "displayName": "Section Label", "purpose": "Field metadata and table headers." }
+    },
+    "shadows": [
+      { "name": "flat-resting", "value": "none", "purpose": "Default resting card elevation." },
+      { "name": "subtle-header", "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)", "purpose": "Header and primary action bar." },
+      { "name": "card-interactive-hover", "value": "0 10px 15px -3px rgb(0 0 0 / 0.1)", "purpose": "Hover lift on selectable tiles." }
+    ],
+    "motion": [
+      { "name": "screen-enter", "value": "0.3s cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Screen transition reveal." },
+      { "name": "row-enter", "value": "0.2s cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Staggered data table row entrance." },
+      { "name": "btn-press", "value": "0.1s ease", "purpose": "Tactile micro-press feedback." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary action button in NSW Health Navy with sharp corners and tactile press state.",
+      "html": "<button class=\"ds-btn-primary\">Proceed to Testing</button>",
+      "css": ".ds-btn-primary { background: hsl(var(--primary, 217 100% 19.6%)); color: hsl(var(--primary-foreground, 210 40% 98%)); padding: 8px 16px; font-family: 'Public Sans', sans-serif; font-size: 14px; font-weight: 500; border: 1px solid transparent; border-radius: 0; cursor: pointer; transition: background-color 0.15s, transform 0.1s; } .ds-btn-primary:hover { opacity: 0.92; } .ds-btn-primary:active { transform: scale(0.96); } .ds-btn-primary:focus-visible { outline: 2px solid hsl(var(--ring, 217 100% 19.6%)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Secondary outline/subtle button for navigation and secondary actions.",
+      "html": "<button class=\"ds-btn-secondary\">Back to Log</button>",
+      "css": ".ds-btn-secondary { background: hsl(var(--secondary, 210 40% 96.1%)); color: hsl(var(--secondary-foreground, 222.2 47.4% 11.2%)); padding: 8px 16px; font-family: 'Public Sans', sans-serif; font-size: 14px; font-weight: 500; border: 1px solid hsl(var(--border, 214.3 31.8% 91.4%)); border-radius: 0; cursor: pointer; transition: background-color 0.15s; } .ds-btn-secondary:hover { background: hsl(var(--accent, 199 92% 89%)); } .ds-btn-secondary:focus-visible { outline: 2px solid hsl(var(--ring, 217 100% 19.6%)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Clinical Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat clinical container with sharp 90-degree corners and 1px border.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-header\"><h4 class=\"ds-card-title\">Patient Reaction Summary</h4></div><div class=\"ds-card-body\"><p>Grade III Anaphylaxis reported perioperatively.</p></div></div>",
+      "css": ".ds-card { background: hsl(var(--card, 0 0% 100%)); border: 1px solid hsl(var(--border, 214.3 31.8% 91.4%)); border-radius: 0; font-family: 'Public Sans', sans-serif; color: hsl(var(--foreground, 222.2 84% 4.9%)); } .ds-card-header { padding: 16px 20px; border-bottom: 1px solid hsl(var(--border, 214.3 31.8% 91.4%)); } .ds-card-title { margin: 0; font-size: 16px; font-weight: 600; } .ds-card-body { padding: 16px 20px; font-size: 14px; line-height: 1.5; }"
+    },
+    {
+      "name": "Clinical Input Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Sharp-edged text input with high contrast border and clear focus ring.",
+      "html": "<input type=\"text\" class=\"ds-input\" placeholder=\"Enter wheal size (mm)...\" />",
+      "css": ".ds-input { width: 100%; height: 36px; padding: 6px 12px; font-family: 'Public Sans', sans-serif; font-size: 14px; color: hsl(var(--foreground, 222.2 84% 4.9%)); background: hsl(var(--background, 210 40% 98%)); border: 1px solid hsl(var(--input, 214.3 31.8% 91.4%)); border-radius: 0; } .ds-input:focus-visible { outline: 2px solid hsl(var(--ring, 217 100% 19.6%)); outline-offset: 1px; border-color: hsl(var(--ring, 217 100% 19.6%)); }"
+    },
+    {
+      "name": "Severity Badge",
+      "kind": "chip",
+      "refersTo": "badge-status",
+      "description": "Rectangular severity status badge indicating anaphylaxis reaction grade.",
+      "html": "<span class=\"ds-badge-grade3\">Grade III — Severe</span>",
+      "css": ".ds-badge-grade3 { display: inline-flex; align-items: center; padding: 2px 8px; font-family: 'Public Sans', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 0; background: hsl(var(--status-grade3, 24.6 95% 53.1%) / 0.15); color: hsl(var(--status-grade3, 24.6 95% 53.1%)); border: 1px solid hsl(var(--status-grade3, 24.6 95% 53.1%)); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Clinical Workbench",
+    "overview": "The DREAM design system embodies a rigorous, professional clinical instrument. Designed for clinicians, allergists, and nurses evaluating high-stakes perioperative anaphylaxis cases, the interface prioritizes immediate clarity, rapid data entry, error prevention, and dense visual scannability over consumer decoration or trendy gradients.\n\nEvery surface is crisp, rectangular, and purposeful. Visual rhythm is defined by precise 1px structural borders, distinct severity status badges, high-contrast typography, and restrained interactive feedback. The aesthetic draws direct authority from the NSW Health institutional design palette (NSW Health Navy #002664, NSW Supplementary Blue #146CFD, and NSW Brand Light Blue #CBEDFD).",
+    "keyCharacteristics": [
+      "Zero Radius / Sharp Geometry: True rectangular corners (rounded-none / 0px) across all cards, dialogs, inputs, buttons, and badges.",
+      "High-Density Clinical Utility: Compact tables, structured form grids, visible keyboard focus indicators, and distinct grade indicators (Grade I–IV).",
+      "Semantic Consistency: Direct reliance on theme-aware CSS custom properties (--primary, --card, --border, --status-gradeX) without one-off hardcoded color utilities.",
+      "Dual-Theme Fidelity: Clean medical slate light theme and deep dark mode (#1a1a1a background, #242424 cards, #383838 borders) with calibrated high-contrast status colors.",
+      "Print-First Hygiene: Comprehensive print stylesheets optimized for A4 clinical documentation and eMR medical record archiving."
+    ],
+    "rules": [
+      {
+        "name": "The Clinical Palette Rule",
+        "body": "Color is never merely decorative; color carries diagnostic, navigational, or interactive meaning. Status hues (green, amber, orange, red) are reserved strictly for clinical grade, positive/negative test outcomes, or validation errors.",
+        "section": "colors"
+      },
+      {
+        "name": "The Semantic Token Rule",
+        "body": "All UI components must consume semantic theme tokens (--background, --foreground, --border, --muted, --primary) rather than hardcoding static Tailwind slate or zinc values.",
+        "section": "colors"
+      },
+      {
+        "name": "The Heading Balance Rule",
+        "body": "Major headings use text-wrap: balance and tight tracking (-0.01em) to prevent orphaned words and maintain compact vertical rhythm.",
+        "section": "typography"
+      },
+      {
+        "name": "The Dynamic Scalability Rule",
+        "body": "All typography respects the global FontSizeProvider scale multiplier (85% to 125%) to support varying clinical workstation viewing distances.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Surfaces rest flat with clean 1px structural borders. Shadows exist only to indicate active elevation (modals, dropdowns) or interactive hover affordances.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do maintain strict zero-radius (rounded-none / 0px) styling across all UI elements and shadcn components.",
+      "Do use semantic CSS tokens (--primary, --background, --card, --border, --muted-foreground) across all screens.",
+      "Do ensure all interactive buttons and controls have visible keyboard focus indicators (*:focus-visible).",
+      "Do enforce WCAG AA minimum 4.5:1 text contrast ratios in both light and dark themes.",
+      "Do ensure all print views (testing plans, clinical reports, patient handouts) contain @media print break controls and zero animations.",
+      "Do maintain the 4-digit PIN screen-lock as a shoulder-surfing safeguard on shared clinic terminals."
+    ],
+    "donts": [
+      "Don't apply rounded corners (rounded-md, rounded-lg, rounded-full, etc.) to any component or card container.",
+      "Don't use decorative purple, cyan, or rainbow gradient text fills or neon border glows.",
+      "Don't add decorative or bouncy spring animations that slow down clinical workflows.",
+      "Don't hardcode static Tailwind color utilities (e.g. text-slate-900, bg-white, border-slate-200) where semantic variables exist.",
+      "Don't break table rows or clinical signatures across pages when rendering print sheets.",
+      "Don't exfiltrate or send any patient identifying information to external network services."
+    ]
+  }
+}

@@ -19,11 +19,11 @@ interface AdvancedSearchFiltersProps {
 }
 
 const GRADE_OPTIONS = [
-  { value: 'I', label: 'Grade I', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border-blue-200 dark:border-blue-800' },
-  { value: 'II', label: 'Grade II', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800' },
-  { value: 'III', label: 'Grade III', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300 border-orange-200 dark:border-orange-800' },
-  { value: 'IV', label: 'Grade IV', color: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300 border-red-200 dark:border-red-800' },
-  { value: 'ungraded', label: 'Ungraded', color: 'bg-slate-100 text-slate-600 dark:bg-muted dark:text-muted-foreground border-border' },
+  { value: 'I', label: 'Grade I', color: 'bg-status-grade1/15 text-status-grade1 border-status-grade1/30' },
+  { value: 'II', label: 'Grade II', color: 'bg-status-grade2/15 text-status-grade2 border-status-grade2/30' },
+  { value: 'III', label: 'Grade III', color: 'bg-status-grade3/15 text-status-grade3 border-status-grade3/30' },
+  { value: 'IV', label: 'Grade IV', color: 'bg-status-grade4/15 text-status-grade4 border-status-grade4/30' },
+  { value: 'ungraded', label: 'Ungraded', color: 'bg-muted text-muted-foreground border-border' },
 ];
 
 export const AdvancedSearchFilters: React.FC<Pick<AdvancedSearchFiltersProps, 'activeFilterCount' | 'isExpanded' | 'setIsExpanded'>> = ({
@@ -39,7 +39,7 @@ export const AdvancedSearchFilters: React.FC<Pick<AdvancedSearchFiltersProps, 'a
       className={`h-9 font-medium text-xs border-border transition-colors ${
         isExpanded 
           ? 'bg-muted text-foreground' 
-          : 'bg-card hover:bg-slate-50 dark:hover:bg-muted text-slate-700 dark:text-foreground/80'
+          : 'bg-card hover:bg-muted text-foreground/80'
       }`}
     >
       <Filter className="w-4 h-4 mr-2" />
@@ -78,12 +78,12 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
   };
 
   const getOutcomeStyle = (outcome: string, isSelected: boolean) => {
-    if (!isSelected) return 'bg-card text-muted-foreground border border-border hover:border-slate-300 dark:hover:border-border';
+    if (!isSelected) return 'bg-card text-muted-foreground border border-border hover:border-primary/50';
     
     switch (outcome) {
-      case 'all': return 'bg-slate-900 dark:bg-muted text-slate-50 dark:text-foreground border-transparent shadow-sm';
-      case 'completed': return 'bg-emerald-600 dark:bg-emerald-500 text-white border-transparent shadow-sm';
-      case 'abandoned': return 'bg-rose-600 dark:bg-rose-500 text-white border-transparent shadow-sm';
+      case 'all': return 'bg-primary text-primary-foreground border-transparent shadow-sm';
+      case 'completed': return 'bg-status-grade1 text-white border-transparent shadow-sm';
+      case 'abandoned': return 'bg-status-grade4 text-white border-transparent shadow-sm';
       default: return 'bg-primary text-primary-foreground border-transparent shadow-sm';
     }
   };
@@ -106,7 +106,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
     h-8 text-xs rounded-none border-dashed transition-[color,background-color,border-color,box-shadow]
     ${isActive 
       ? "border-primary/50 bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary" 
-      : "border-border text-muted-foreground hover:bg-slate-50 dark:hover:bg-card hover:text-slate-900 dark:hover:text-foreground/90"
+      : "border-border text-muted-foreground hover:bg-muted hover:text-foreground"
     }
   `;
 
@@ -120,7 +120,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
               <Activity className="w-3.5 h-3.5 mr-2" />
               Severity
               {hasGrades && (
-                <Badge variant="secondary" className="ml-2 px-1 text-xs rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
+                <Badge variant="secondary" className="ml-2 px-1 text-xs rounded-none bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
                   {filters.grades.length}
                 </Badge>
               )}
@@ -145,7 +145,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                       h-9 rounded-none border text-xs font-bold transition-[color,background-color,border-color,box-shadow] flex items-center justify-center gap-1
                       ${isSelected
                         ? `${grade.color} ring-1 ring-inset ring-current shadow-sm`
-                        : 'bg-card text-muted-foreground border-border hover:border-slate-300 dark:hover:border-border'
+                        : 'bg-card text-muted-foreground border-border hover:border-primary/50'
                       }
                     `}
                   >
@@ -169,7 +169,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             <Label className="section-label mb-3 block">
               Procedure Outcome
             </Label>
-            <div className="flex bg-slate-100 dark:bg-card p-1 border border-border h-9">
+            <div className="flex bg-muted dark:bg-card p-1 border border-border h-9">
               {(['all', 'completed', 'abandoned'] as const).map(outcome => (
                 <button
                   key={outcome}
@@ -213,7 +213,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                 onChange={(e) => updateFilter('dateFrom', e.target.value)}
                 className="h-full flex-1 text-xs px-2 rounded-none border-border focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0 bg-card"
               />
-              <span className="text-xs text-slate-400 font-black uppercase shrink-0 px-0.5">To</span>
+              <span className="text-xs text-muted-foreground font-black uppercase shrink-0 px-0.5">To</span>
               <Input
                 type="date"
                 value={filters.dateTo}
@@ -250,7 +250,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                   <option key={h} value={h}>{h}</option>
                 ))}
               </select>
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
                 <Building2 className="w-3 h-3" />
               </div>
             </div>
@@ -267,7 +267,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
           <SearchIcon className="w-3.5 h-3.5 mr-2" />
           Agents
           {hasAgents && (
-            <Badge variant="secondary" className="ml-2 px-1 text-xs rounded-sm bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
+            <Badge variant="secondary" className="ml-2 px-1 text-xs rounded-none bg-primary/20 text-primary border-none leading-none pt-0.5 h-4">
               {filters.suspectedAgents.length}
             </Badge>
           )}
@@ -280,7 +280,7 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
             variant="ghost"
             size="sm"
             onClick={clearFilters}
-            className="h-8 px-2.5 text-xs font-bold uppercase tracking-[0.05em] text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 ml-auto transition-colors"
+            className="h-8 px-2.5 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground hover:text-destructive hover:bg-destructive/10 ml-auto transition-colors rounded-none"
           >
             <X className="w-3 h-3 mr-1" />
             Clear All
@@ -290,20 +290,20 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
 
       {/* Expanded Agents Panel */}
       {isAgentsExpanded && (
-        <div className="w-full border border-border bg-background shadow-sm flex flex-col animate-in slide-in-from-top-2 fade-in duration-200">
-          <div className="px-4 py-3 border-b border-border bg-slate-50/50 dark:bg-card/50 flex flex-wrap items-center gap-4 justify-between">
+        <div className="w-full border border-border bg-background shadow-sm flex flex-col animate-in slide-in-from-top-2 fade-in duration-200 rounded-none">
+          <div className="px-4 py-3 border-b border-border bg-muted/40 dark:bg-card/50 flex flex-wrap items-center gap-4 justify-between">
             <div className="relative w-full max-w-[320px]">
               <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
                 placeholder="Search specific drugs or agents..." 
                 value={agentSearch}
                 onChange={(e) => setAgentSearch(e.target.value)}
-                className="pl-9 pr-9 h-8 text-xs rounded-sm border-border focus-visible:ring-1 focus-visible:ring-primary bg-background w-full shadow-sm"
+                className="pl-9 pr-9 h-8 text-xs rounded-none border-border focus-visible:ring-1 focus-visible:ring-primary bg-background w-full shadow-sm"
               />
               {agentSearch && (
                 <button 
                   onClick={() => setAgentSearch('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 flex items-center justify-center p-1 rounded-sm hover:bg-slate-100 dark:hover:bg-muted transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground flex items-center justify-center p-1 rounded-none hover:bg-muted transition-colors"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -331,10 +331,10 @@ export const AdvancedSearchPanel: React.FC<Omit<AdvancedSearchFiltersProps, 'isE
                         toggleAgent(drug);
                       }}
                       className={`
-                        px-3 py-1.5 text-xs font-bold transition-[color,background-color,border-color,box-shadow] relative overflow-hidden group
+                        px-3 py-1.5 text-xs font-bold transition-[color,background-color,border-color,box-shadow] relative overflow-hidden group rounded-none
                         ${isSelected
                           ? `${theme.btnSelected} ring-1 ring-inset ring-black/5 dark:ring-white/5 shadow-sm scale-[1.02]`
-                          : `bg-card text-muted-foreground border border-border hover:border-slate-400 dark:hover:border-border hover:bg-white dark:hover:bg-background`
+                          : `bg-card text-muted-foreground border border-border hover:border-primary/50 hover:bg-card`
                         }
                       `}
                       title={category}

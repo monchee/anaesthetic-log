@@ -12,15 +12,16 @@ export const VisitDetailsSection: React.FC<VisitDetailsSectionProps> = ({
   onChange
 }) => {
   return (
-    <Card>
+    <Card className="rounded-none">
       <CardContent className="pt-6">
         <div className="flex items-center gap-4">
-          <Label className="whitespace-nowrap text-base font-semibold text-slate-800 dark:text-primary flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-primary dark:text-primary" /> Visit Date:
+          <Label htmlFor="visit-date-input" className="whitespace-nowrap text-base font-semibold text-foreground flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-primary" /> Visit Date:
           </Label>
           <Input 
+            id="visit-date-input"
             type="date" 
-            className="max-w-[200px] font-mono"
+            className="max-w-[200px] font-mono tabular-nums rounded-none bg-background text-foreground"
             value={visitDate}
             onChange={(e) => onChange(e.target.value)}
           />

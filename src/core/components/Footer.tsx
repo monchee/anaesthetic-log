@@ -68,7 +68,7 @@ const Footer: React.FC<FooterProps> = ({ setScreen, databaseDate, isCustomData =
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-slate-100 dark:bg-card px-3 py-1.5 rounded-none border border-border">
+              <div className="flex items-center gap-2 bg-muted dark:bg-card px-3 py-1.5 rounded-none border border-border">
                 <Database className="w-3.5 h-3.5 text-muted-foreground" />
                 <span className="text-xs font-semibold text-muted-foreground">
                   Dataset: <span className="font-mono">{isCustomData ? databaseDate : 'Demo'}</span>

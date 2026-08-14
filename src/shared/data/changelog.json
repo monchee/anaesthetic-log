@@ -1,5 +1,20 @@
 [
   {
+    "version": "v0.73.0",
+    "codename": "Clinical Workbench",
+    "date": "14 August 2026",
+    "summary": "Adopts the Clinical Workbench design system across the interface with strict zero-radius geometry, semantic theme tokens, visible keyboard focus indicators, and formal design specifications in PRODUCT.md, DESIGN.md, and .impeccable/design.json.",
+    "highlight": false,
+    "changes": [
+      "Formal product specification (`PRODUCT.md`) \u2014 Documents platform context, clinician workflows, local-first privacy principles, clinical calculation constraints, and accessibility targets.",
+      "Design system specification (`DESIGN.md`) \u2014 Establishes the \"Clinical Workbench\" visual language, NSW Health color palette, Public Sans typographic scale, rectangular geometry, elevation rules, and component patterns.",
+      "Design tokens schema (`.impeccable/design.json`) \u2014 Defines machine-readable design system tokens, color ramps, typography scales, shadows, breakpoints, and component examples.",
+      "Strict zero-radius geometry across UI components \u2014 Standardizes sharp rectangular corners (`rounded-none`) across buttons, cards, dialogs, badges, sidebars, dropdowns, hover cards, and skeleton loaders.",
+      "Enhanced keyboard focus visibility and tactile interactions \u2014 Adds consistent high-contrast focus rings (`focus-visible:ring-2`) and tactile micro-press states across buttons, inputs, toggles, and report tabs.",
+      "Semantic theme token consolidation \u2014 Replaces hardcoded color utilities with semantic theme tokens (`--background`, `--card`, `--border`, `--muted`, `--primary`) across info pages, testing forms, and research dashboards."
+    ]
+  },
+  {
     "version": "v0.72.0",
     "codename": "Referral Trust",
     "date": "14 July 2026",

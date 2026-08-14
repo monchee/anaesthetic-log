@@ -242,7 +242,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                       variant={isSelected ? 'default' : 'outline'}
                       aria-pressed={isSelected}
                       onClick={() => selectQuickFilter(value)}
-                      className="h-8 rounded-full px-3 text-xs"
+                      className="h-8 rounded-none px-3 text-xs"
                     >
                       {isSelected ? <Check className="mr-1 h-3.5 w-3.5" aria-hidden="true" /> : null}
                       {label}
@@ -298,7 +298,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                   <tr
                     key={p.id}
                     style={{ '--row-index': Math.min(index, 9) } as React.CSSProperties}
-                    className="hover:bg-slate-50/80 dark:hover:bg-card/50 transition-colors group animate-row-enter"
+                    className="hover:bg-muted/50 dark:hover:bg-card/50 transition-colors group animate-row-enter"
                     title="Click to view patient details"
                   >
                     <td className="px-4 py-3 whitespace-nowrap text-muted-foreground font-mono tabular-nums text-xs">
@@ -331,7 +331,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                               h-2.5 w-2.5 rounded-full cursor-help inline-block
                               ${e.type === 'reaction' ? 'bg-red-500' : ''}
                               ${e.type === 'induction' ? 'bg-primary' : ''}
-                              ${e.type === 'med' ? 'bg-slate-300 dark:bg-muted/60' : ''}
+                              ${e.type === 'med' ? 'bg-muted-foreground/40 dark:bg-muted/60' : ''}
                             `}
                             title={`${e.time} - ${e.label}`}
                           />
@@ -400,7 +400,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 tabIndex={0}
                 key={p.id}
                 style={{ '--row-index': Math.min(index, 9) } as React.CSSProperties}
-                className="block w-full p-2.5 text-left hover:bg-slate-50 dark:hover:bg-card/50 transition-colors cursor-pointer active:bg-slate-100 dark:active:bg-slate-800 animate-row-enter focus-visible:ring-2 focus-visible:ring-primary"
+                className="block w-full p-2.5 text-left hover:bg-muted/50 dark:hover:bg-card/50 transition-colors cursor-pointer active:bg-muted dark:active:bg-muted/50 animate-row-enter focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() => onSelectPatient(p)}
                 onKeyDown={(event) => handleMobileCardKeyDown(event, p)}
                 aria-label={`View details for patient: ${p.firstName} ${p.lastName}`}
@@ -436,7 +436,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                         h-2 w-2 rounded-full
                         ${e.type === 'reaction' ? 'bg-red-500' : ''}
                         ${e.type === 'induction' ? 'bg-primary' : ''}
-                        ${e.type === 'med' ? 'bg-slate-300 dark:bg-muted/60' : ''}
+                        ${e.type === 'med' ? 'bg-muted-foreground/40 dark:bg-muted/60' : ''}
                       `}
                     />
                   ))}
@@ -466,7 +466,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
 
       {/* Pagination Controls */}
       {quickFilteredPatients.length > 0 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-border bg-slate-50/50 dark:bg-muted/20">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-border bg-muted/30 dark:bg-muted/20">
           <div className="text-xs text-muted-foreground hidden sm:block">
             Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, quickFilteredPatients.length)} of {quickFilteredPatients.length} records
           </div>
@@ -489,7 +489,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             </Button>
             <div
-              className="text-xs font-medium text-slate-700 dark:text-foreground/80 px-2 hidden sm:block"
+              className="text-xs font-medium text-foreground/80 px-2 hidden sm:block"
               aria-live="polite"
               aria-atomic="true"
             >

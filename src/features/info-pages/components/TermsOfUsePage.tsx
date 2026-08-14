@@ -10,13 +10,13 @@ interface TermsOfUsePageProps {
 const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card>
+      <Card className="rounded-none border-border shadow-none">
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
+          <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
             <div className="flex items-start gap-4">
-              <Gavel className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
+              <Gavel className="w-8 h-8 text-primary shrink-0" />
               <div>
                 <h3 className="font-semibold text-lg text-foreground mb-2">Terms of Use</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -52,20 +52,20 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
               <p>This application is intended for use by:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Authorised healthcare professionals</strong> involved in the assessment and management of patients with suspected or confirmed anaesthetic allergies</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Authorised healthcare professionals</strong> involved in the assessment and management of patients with suspected or confirmed anaesthetic allergies</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Clinical staff</strong> of the Royal Prince Alfred Hospital Department of Clinical Immunology & Allergy</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Clinical staff</strong> of the Royal Prince Alfred Hospital Department of Clinical Immunology & Allergy</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Authorised users</strong> within the Sydney Local Health District for legitimate clinical purposes</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Authorised users</strong> within the Sydney Local Health District for legitimate clinical purposes</span>
                 </li>
               </ul>
-              <p className="mt-3 text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 p-3 rounded border border-amber-200 dark:border-amber-800">
-                <strong>Unauthorised use:</strong> Use of this application for any purpose other than legitimate clinical assessment and management is prohibited.
+              <p className="mt-3 text-amber-900 dark:text-amber-300 bg-amber-500/10 dark:bg-amber-500/15 p-3.5 rounded-none border border-amber-500/30 dark:border-amber-500/40 text-sm">
+                <strong className="text-foreground">Unauthorised use:</strong> Use of this application for any purpose other than legitimate clinical assessment and management is prohibited.
               </p>
             </div>
           </div>
@@ -77,23 +77,23 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
               <p>As a user of this application, you agree to:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Use the application only for authorised clinical purposes</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Maintain the confidentiality of patient information accessed through the application</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Exercise your own clinical judgment when interpreting application outputs</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Report any technical issues or concerns to the appropriate governance body</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Comply with all applicable NSW Health policies and guidelines</span>
                 </li>
               </ul>
@@ -117,12 +117,12 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           </div>
 
           {/* Medical Disclaimer */}
-          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-none p-5 border border-amber-200 dark:border-amber-800">
+          <div className="bg-amber-500/10 dark:bg-amber-500/15 rounded-none p-5 border border-amber-500/30 dark:border-amber-500/40">
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-semibold text-amber-900 dark:text-amber-300 mb-2">5. Medical Disclaimer</h4>
-                <div className="text-sm text-amber-800 dark:text-amber-300 space-y-2">
+                <div className="text-sm text-foreground/90 space-y-2">
                   <p>
                     This application is a clinical support tool designed to assist healthcare professionals. It does not provide medical advice and should not replace professional clinical judgment.
                   </p>
@@ -183,11 +183,11 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
         </CardContent>
       </Card>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center print:hidden">
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
+          className="rounded-none bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-8 shadow-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

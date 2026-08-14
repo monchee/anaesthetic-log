@@ -485,7 +485,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         </h4>
                                         <button 
                                             onClick={(e) => { e.stopPropagation(); toggleCategory(categoryDrugs); }}
-                                            className={`text-xs hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-muted-foreground hover:text-foreground'}`}
+                                            className={`text-xs hover:underline font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${hasActiveSelection ? theme.actionText : 'text-muted-foreground hover:text-foreground'}`}
                                         >
                                             {allCategorySelected ? 'Select None' : 'Select All'}
                                         </button>
@@ -502,7 +502,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                                 key={drug}
                                                 onClick={() => toggleDrug(drug)}
                                                 aria-pressed={selectedDrugs.includes(drug)}
-                                                className={`text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left ${category === 'Others' ? 'md:w-full' : ''} ${
+                                                className={`text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${category === 'Others' ? 'md:w-full' : ''} ${
                                                 selectedDrugs.includes(drug)
                                                 ? theme.btnSelected
                                                 : `bg-card text-muted-foreground border-border hover:bg-muted/50 ${theme.btnHover}`
@@ -511,7 +511,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                                 {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
                                                 {drug}
                                                 {selectedDrugs.includes(drug) && needsPharmacyVerification && (
-                                                    <span className="border border-amber-400 bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-amber-900 dark:border-amber-600 dark:bg-amber-950/40 dark:text-amber-200">
+                                                    <span className="border border-amber-400 bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-amber-900 dark:border-amber-600 dark:bg-amber-950/40 dark:text-amber-200 rounded-none">
                                                         ⚠ Confirm preparation with pharmacy
                                                     </span>
                                                 )}
@@ -539,7 +539,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         )}
 
                         {protocolChoices.length > 0 && (
-                          <div className="col-span-full border border-border bg-muted/30 p-3 space-y-3">
+                          <div className="col-span-full border border-border bg-muted/30 p-3 space-y-3 rounded-none">
                             <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                               <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Protocol Choices</h5>
                               <span className="text-xs text-muted-foreground tabular-nums">
@@ -558,12 +558,12 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                       value={String(selectedProtocolIndex)}
                                       onValueChange={(value) => updateSelectedProtocol(drug, Number(value))}
                                     >
-                                      <SelectTrigger id={`protocol-${drug}`} className="h-8 text-xs">
+                                      <SelectTrigger id={`protocol-${drug}`} className="h-8 text-xs rounded-none bg-background">
                                         <SelectValue />
                                       </SelectTrigger>
-                                      <SelectContent>
+                                      <SelectContent className="rounded-none">
                                         {protocols.map((protocol, index) => (
-                                          <SelectItem key={`${drug}-${index}`} value={String(index)} className="text-xs">
+                                          <SelectItem key={`${drug}-${index}`} value={String(index)} className="text-xs rounded-none">
                                             {protocol.protocolLabel || `Protocol ${index + 1}`}
                                             {protocol.presentation ? ` - ${protocol.presentation}` : ''}
                                           </SelectItem>
@@ -609,7 +609,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     size="sm"
                                     variant="outline"
                                     onClick={addRedcapOtherAsCustomDrug}
-                                    className="h-8 shrink-0 border-amber-400 text-amber-700 hover:bg-amber-100 dark:border-amber-600 dark:text-amber-300 dark:hover:bg-amber-900/40"
+                                    className="h-8 shrink-0 border-amber-400 text-amber-700 hover:bg-amber-100 dark:border-amber-600 dark:text-amber-300 dark:hover:bg-amber-900/40 rounded-none"
                                   >
                                     <Plus className="w-3.5 h-3.5 mr-1.5" />
                                     Add as custom item
@@ -624,7 +624,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             type="button"
                                             onClick={() => toggleDrug(entry.name)}
                                             aria-pressed={selectedDrugs.includes(entry.name)}
-                                            className={`min-w-0 flex-1 text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left ${
+                                            className={`min-w-0 flex-1 text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                                                 entry.fromRedcapOther
                                                 ? selectedDrugs.includes(entry.name)
                                                   ? 'bg-slate-700 border-amber-400 text-white shadow-sm ring-1 ring-amber-200 dark:ring-amber-900'
@@ -645,7 +645,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         <button
                                             type="button"
                                             onClick={() => removeCustomDrug(entry.name)}
-                                            className="border border-l-0 border-border px-2 text-muted-foreground hover:text-red-500 dark:hover:text-red-300 transition-colors"
+                                            className="border border-l-0 border-border px-2 text-muted-foreground hover:text-red-500 dark:hover:text-red-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-destructive rounded-none"
                                             aria-label={`Remove custom drug ${entry.name}`}
                                             title={`Remove ${entry.name}`}
                                         >
@@ -656,12 +656,12 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             </div>
                             {/* Inline protocol editing for selected custom drugs */}
                             {customDrugs.filter(e => selectedDrugs.includes(e.name)).map(entry => (
-                                <div key={`proto-${entry.name}`} className="border border-dashed border-border p-2 space-y-2 bg-muted/30 mb-2">
+                                <div key={`proto-${entry.name}`} className="border border-dashed border-border p-2 space-y-2 bg-muted/30 mb-2 rounded-none">
                                     <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{entry.name} — Protocol</div>
                                     <div className="flex items-center gap-2">
                                         <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground shrink-0 w-7">SPT</span>
                                         <Input
-                                            className="h-7 text-xs flex-1"
+                                            className="h-7 text-xs flex-1 rounded-none font-mono"
                                             placeholder="Neat concentration (e.g. 10mg/mL)..."
                                             value={entry.sptConcentration || ''}
                                             onChange={ev => updateCustomEntry(entry.name, 'sptConcentration', ev.target.value)}
@@ -671,8 +671,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">IDT Dilutions</div>
                                         {(entry.idtSteps ?? []).map((step, si) => (
                                             <div key={si} className="flex items-center gap-1.5">
-                                                <Input className="h-7 text-xs flex-1" placeholder="Ratio (e.g. 1:100)" value={step.ratio} onChange={ev => updateCustomEntryStep(entry.name, si, 'ratio', ev.target.value)} />
-                                                <Input className="h-7 text-xs flex-1" placeholder="Conc. (e.g. 0.1mg/mL)" value={step.concentration} onChange={ev => updateCustomEntryStep(entry.name, si, 'concentration', ev.target.value)} />
+                                                <Input className="h-7 text-xs flex-1 rounded-none font-mono" placeholder="Ratio (e.g. 1:100)" value={step.ratio} onChange={ev => updateCustomEntryStep(entry.name, si, 'ratio', ev.target.value)} />
+                                                <Input className="h-7 text-xs flex-1 rounded-none font-mono" placeholder="Conc. (e.g. 0.1mg/mL)" value={step.concentration} onChange={ev => updateCustomEntryStep(entry.name, si, 'concentration', ev.target.value)} />
                                                 <button onClick={() => removeCustomEntryIdtStep(entry.name, si)} className="shrink-0 text-muted-foreground/50 hover:text-red-500 transition-colors" title="Remove step">
                                                     <X className="w-3.5 h-3.5" />
                                                 </button>
@@ -690,14 +690,14 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             ))}
                             <div className="flex gap-2">
                                 <Input
-                                    className="flex-1 h-8 text-xs"
+                                    className="flex-1 h-8 text-xs rounded-none bg-background"
                                     placeholder="Add custom drug..."
                                     value={newCustomDrug}
                                     onChange={e => setNewCustomDrug(e.target.value)}
                                     onKeyDown={e => e.key === 'Enter' && addCustomDrug()}
                                     aria-describedby={customDrugNotice ? 'custom-drug-notice' : undefined}
                                 />
-                                <Button size="sm" variant="outline" onClick={addCustomDrug} className="h-8 w-8 p-0" aria-label="Add custom drug">
+                                <Button size="sm" variant="outline" onClick={addCustomDrug} className="h-8 w-8 p-0 rounded-none" aria-label="Add custom drug">
                                     <Plus className="w-4 h-4" />
                                 </Button>
                             </div>
@@ -735,12 +735,12 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             id="testing-plan-notes"
                             value={notes}
                             onChange={e => setNotes(e.target.value)}
-                            className="min-h-[60px]"
+                            className="min-h-[60px] rounded-none bg-background"
                         />
                     </div>
 
                     <div className="flex justify-end pt-4 border-t border-border">
-                        <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-white shadow-sm font-semibold">
+                        <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold rounded-none btn-press">
                             <Printer className="w-4 h-4 mr-2" /> Preview & Print Request Form
                         </Button>
                     </div>

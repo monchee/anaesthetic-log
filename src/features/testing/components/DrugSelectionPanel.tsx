@@ -38,7 +38,7 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
           const theme = CATEGORY_THEMES[category] || DEFAULT_THEME;
 
           return (
-            <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-slate-50 dark:hover:bg-slate-900/50'}`}>
+            <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-muted/50'}`}>
               <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-border'}`}>
                 <h4 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-muted-foreground'}`}>
                   {category}
@@ -46,7 +46,7 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
                 </h4>
                 <button 
                   onClick={(e) => { e.preventDefault(); onToggleCategory(categoryDrugs); }}
-                  className={`text-xs hover:underline font-medium transition-colors ${hasActiveSelection ? theme.actionText : 'text-slate-500 hover:text-muted-foreground dark:hover:text-foreground/90'}`}
+                  className={`text-xs hover:underline font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${hasActiveSelection ? theme.actionText : 'text-muted-foreground hover:text-foreground'}`}
                 >
                   {allCategorySelected ? 'Select None' : 'Select All'}
                 </button>
@@ -58,10 +58,11 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
                     <button
                       key={drug}
                       onClick={() => onToggleDrug(drug)}
-                      className={`text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left ${
+                      aria-pressed={isSelected}
+                      className={`text-xs px-2.5 py-1.5 rounded-none border transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                         isSelected 
                         ? theme.btnSelected
-                        : `bg-card text-muted-foreground border-border hover:bg-slate-50 dark:hover:bg-card ${theme.btnHover}`
+                        : `bg-card text-muted-foreground border-border hover:bg-muted/50 ${theme.btnHover}`
                       }`}
                     >
                       {isSelected && <Check className="w-3 h-3 shrink-0" />}
@@ -73,7 +74,7 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
                 {category === 'Others' && (
                   <button
                     onClick={onAddCustomDrug}
-                    className={`text-xs px-2.5 py-1.5 rounded-none border border-dashed border-border text-muted-foreground hover:bg-slate-50 dark:hover:bg-card transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 font-medium ${theme.btnHover}`}
+                    className={`text-xs px-2.5 py-1.5 rounded-none border border-dashed border-border text-muted-foreground hover:bg-muted/50 transition-[color,background-color,border-color,box-shadow] duration-150 flex items-center gap-1.5 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${theme.btnHover}`}
                   >
                     <Plus className="w-3 h-3 shrink-0" />
                     Other

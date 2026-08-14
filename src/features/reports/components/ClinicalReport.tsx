@@ -43,7 +43,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
   };
 
   return (
-    <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none">
+    <Card className="rounded-none overflow-hidden print:overflow-visible print:shadow-none print:border-none">
       <ReportPrintIdentity
         patientName={patientName}
         mrn={redact(data.mrn)}
@@ -115,11 +115,11 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
                 <div className="hidden md:block print:block">
                   <table className="w-full text-sm text-left border-collapse print:text-xs">
                      <thead>
-                        <tr className="border-b-2 border-slate-200 text-muted-foreground">
-                          <th className="py-2 font-semibold print:py-1 print:text-[10px]">Drug Tested</th>
-                          <th className="py-2 font-semibold print:py-1 print:text-[10px]">SPT</th>
-                          <th className="py-2 font-semibold print:py-1 print:text-[10px]">IDT Results</th>
-                          <th className="py-2 font-semibold print:py-1 print:text-[10px]">Notes</th>
+                        <tr className="border-b-2 border-border text-muted-foreground">
+                          <th scope="col" className="py-2 font-semibold print:py-1 print:text-[10px]">Drug Tested</th>
+                          <th scope="col" className="py-2 font-semibold print:py-1 print:text-[10px]">SPT</th>
+                          <th scope="col" className="py-2 font-semibold print:py-1 print:text-[10px]">IDT Results</th>
+                          <th scope="col" className="py-2 font-semibold print:py-1 print:text-[10px]">Notes</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -128,10 +128,10 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
                              <td className="py-2 font-medium print:py-1 print:text-xs">
                                {row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName}
                              </td>
-                             <td className="py-2 print:py-1 print:text-xs">{formatSptResult(row.sptWheal)}</td>
-                             <td className="py-2 print:py-1 print:text-xs">
+                             <td className="py-2 print:py-1 print:text-xs font-mono tabular-nums">{formatSptResult(row.sptWheal)}</td>
+                             <td className="py-2 print:py-1 print:text-xs font-mono tabular-nums">
                                {row.idtResults?.length
-                                 ? row.idtResults.filter(Boolean).map((v, i) => `IDT ${i + 1}: ${v}mm`).join(' / ') || '-'
+                                 ? row.idtResults.filter(Boolean).map((v, idx) => `IDT ${idx + 1}: ${v}mm`).join(' / ') || '-'
                                  : [row.idt100 && `1:100: ${row.idt100}mm`, row.idt10 && `1:10: ${row.idt10}mm`, row.idtNeat && `Neat: ${row.idtNeat}mm`].filter(Boolean).join(' / ') || '-'}
                              </td>
                              <td className="py-2 print:py-1 print:text-xs text-muted-foreground">{row.notes || ''}</td>
@@ -151,13 +151,13 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
                           <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
                               <div>
                                  <span className="text-xs text-muted-foreground uppercase font-bold block">SPT</span>
-                                 <span className="font-medium">{formatSptResult(row.sptWheal)}</span>
+                                 <span className="font-medium font-mono tabular-nums">{formatSptResult(row.sptWheal)}</span>
                               </div>
                               <div>
                                  <span className="text-xs text-muted-foreground uppercase font-bold block">IDT Results</span>
-                                 <span className="font-medium">
+                                 <span className="font-medium font-mono tabular-nums">
                                    {row.idtResults?.length
-                                     ? row.idtResults.filter(Boolean).map((v, i) => `IDT ${i + 1}: ${v}mm`).join(' / ') || '-'
+                                     ? row.idtResults.filter(Boolean).map((v, idx) => `IDT ${idx + 1}: ${v}mm`).join(' / ') || '-'
                                      : [row.idt100 && `1:100: ${row.idt100}mm`, row.idt10 && `1:10: ${row.idt10}mm`, row.idtNeat && `Neat: ${row.idtNeat}mm`].filter(Boolean).join(' / ') || '-'}
                                  </span>
                               </div>
@@ -283,13 +283,13 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
 
          {/* Report Timestamp */}
          {activeReportSavedAt && (
-           <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[9px] print:pt-2 print:mt-2">
+           <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-border print:text-[9px] print:pt-2 print:mt-2">
              Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
            </div>
          )}
 
          {/* Print Footer */}
-         <div className="hidden print:block pt-4 border-t border-slate-200 mt-4">
+         <div className="hidden print:block pt-4 border-t border-border mt-4">
             <div className="flex justify-between text-xs">
                <div className="border-t border-black w-40 pt-1">Clinician Signature</div>
                <div className="border-t border-black w-40 pt-1">Date</div>

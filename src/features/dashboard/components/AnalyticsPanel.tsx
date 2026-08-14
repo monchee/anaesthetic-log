@@ -45,7 +45,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
     { key: 'II', label: 'II - Mild systemic', count: gradeCounts.II, className: 'bg-status-grade2', pattern: 'repeating-linear-gradient(90deg, transparent 0 5px, hsl(var(--background) / 0.35) 5px 7px)' },
     { key: 'III', label: 'III - Severe systemic', count: gradeCounts.III, className: 'bg-status-grade3', pattern: 'repeating-linear-gradient(135deg, transparent 0 4px, hsl(var(--background) / 0.35) 4px 6px)' },
     { key: 'IV', label: 'IV - Cardiac arrest', count: gradeCounts.IV, className: 'bg-status-grade4', pattern: 'repeating-linear-gradient(0deg, transparent 0 3px, hsl(var(--background) / 0.4) 3px 5px)' },
-    { key: 'Ungraded', label: 'Ungraded', count: gradeCounts.Ungraded, className: 'bg-slate-300 dark:bg-muted/60', pattern: 'repeating-linear-gradient(45deg, transparent 0 8px, hsl(var(--foreground) / 0.18) 8px 10px)' },
+    { key: 'Ungraded', label: 'Ungraded', count: gradeCounts.Ungraded, className: 'bg-muted-foreground/40 dark:bg-muted/60', pattern: 'repeating-linear-gradient(45deg, transparent 0 8px, hsl(var(--foreground) / 0.18) 8px 10px)' },
   ] as const;
   const severitySummary = gradeMeta
     .map(({ label, count }) => `${label}: ${Math.round((count / totalPatients) * 100)}% (${count})`)
@@ -128,7 +128,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
         <CardContent className="p-4 pt-6">
           {/* Stacked Bar */}
           <div
-            className="flex h-8 w-full rounded-none overflow-hidden mb-4 bg-slate-100 dark:bg-card"
+            className="flex h-8 w-full rounded-none overflow-hidden mb-4 bg-muted dark:bg-card"
             role="img"
             aria-label={`Severity distribution: ${severitySummary}`}
           >
@@ -172,10 +172,10 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
                 return (
                   <div key={idx} className="group">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="font-medium text-slate-700 dark:text-foreground/80 truncate pr-2">{agent.name}</span>
+                      <span className="font-medium text-foreground/80 truncate pr-2">{agent.name}</span>
                       <span className="font-bold tabular-nums text-foreground shrink-0">{agent.count}</span>
                     </div>
-                    <div className="h-2 w-full bg-slate-100 dark:bg-card rounded-none overflow-hidden">
+                    <div className="h-2 w-full bg-muted dark:bg-card rounded-none overflow-hidden">
                       <div 
                         className={`h-full bg-primary rounded-none ${widthTransitionClass}`} 
                         style={{ 

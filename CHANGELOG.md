@@ -1,3 +1,17 @@
+## [0.73.0] — 2026-08-14 (Clinical Workbench)
+
+Summary: Adopts the Clinical Workbench design system across the interface with strict zero-radius geometry, semantic theme tokens, visible keyboard focus indicators, and formal design specifications in PRODUCT.md, DESIGN.md, and .impeccable/design.json.
+
+### Added
+- **Formal product specification (`PRODUCT.md`)** — Documents platform context, clinician workflows, local-first privacy principles, clinical calculation constraints, and accessibility targets.
+- **Design system specification (`DESIGN.md`)** — Establishes the "Clinical Workbench" visual language, NSW Health color palette, Public Sans typographic scale, rectangular geometry, elevation rules, and component patterns.
+- **Design tokens schema (`.impeccable/design.json`)** — Defines machine-readable design system tokens, color ramps, typography scales, shadows, breakpoints, and component examples.
+
+### Changed
+- **Strict zero-radius geometry across UI components** — Standardizes sharp rectangular corners (`rounded-none`) across buttons, cards, dialogs, badges, sidebars, dropdowns, hover cards, and skeleton loaders.
+- **Enhanced keyboard focus visibility and tactile interactions** — Adds consistent high-contrast focus rings (`focus-visible:ring-2`) and tactile micro-press states across buttons, inputs, toggles, and report tabs.
+- **Semantic theme token consolidation** — Replaces hardcoded color utilities with semantic theme tokens (`--background`, `--card`, `--border`, `--muted`, `--primary`) across info pages, testing forms, and research dashboards.
+
 ## [0.72.0] — 2026-07-14 (Referral Trust)
 
 Summary: Tryptase results from the referral now prefill the testing record and Powerchart letter, preventing the clinically unsafe false claim that serial samples were "not obtained." This release also adds a persistent patient worklist, clearer clinical completeness cues, safer imports, and stronger privacy protections across the five-phase UX improvement programme.

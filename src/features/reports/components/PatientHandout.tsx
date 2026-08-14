@@ -22,7 +22,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
   const { avoidList } = buildRecommendations(posResults, crossSensitized);
 
   return (
-    <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none">
+    <Card className="rounded-none overflow-hidden print:overflow-visible print:shadow-none print:border-none">
         <ReportPrintIdentity
           patientName={patientName}
           mrn={redact(data.mrn)}
@@ -79,7 +79,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
               ) : (
                  <p className="text-muted-foreground italic p-4 bg-muted/30 dark:bg-muted/20 rounded-none border border-border print:p-2 print:text-xs">No positive reactions recorded today.</p>
               )}
-           </div>
+            </div>
 
            {/* Negative Results */}
             <div className="section-card">
@@ -98,27 +98,27 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
               ) : (
                  <p className="text-muted-foreground italic p-4 bg-muted/30 dark:bg-muted/20 rounded-none border border-border print:p-2 print:text-xs">No negative results recorded.</p>
               )}
-           </div>
+            </div>
 
            {/* Department Info */}
             <div className="section-card bg-muted border border-border rounded-none p-4 text-sm space-y-2 print:bg-white print:border-slate-300 print:p-2 print:space-y-0.5 print:text-xs">
-               <h3 className="font-semibold text-primary dark:text-primary mb-2 uppercase text-xs tracking-wider print:text-[10px] print:mb-1 print:text-black">Contact Information</h3>
+               <h3 className="font-semibold text-primary mb-2 uppercase text-xs tracking-wider print:text-[10px] print:mb-1 print:text-black">Contact Information</h3>
                <p className="font-semibold dark:text-foreground/90 print:text-xs">Department of Clinical Immunology & Allergy</p>
               <p className="dark:text-foreground/80 print:text-xs">Royal Prince Alfred Hospital</p>
               <p className="dark:text-foreground/80 print:text-xs">Clinic location: Level 5, Gloucester House</p>
               <p className="dark:text-foreground/80 print:text-xs">Phone: (02) 9515 7586</p>
               <p className="dark:text-foreground/80 print:text-xs">Email: SLHD-RPA-ClinicalImmunology@health.nsw.gov.au</p>
               <p className="pt-2 text-muted-foreground italic print:pt-1 print:text-xs max-w-prose">If you have any questions about these results, please contact the clinic.</p>
-           </div>
+            </div>
 
-           <div className="section-card bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-none p-4 text-center text-sm print:bg-white print:border-slate-300 print:text-xs">
-              <p className="text-foreground/80">This report summarises your skin and/or challenge tests performed today.</p>
-              <p className="font-semibold text-foreground mt-2 print:mt-1">Please provide this document to your anaesthetist before any future surgery.</p>
-           </div>
+            <div className="section-card bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-none p-4 text-center text-sm print:bg-white print:border-slate-300 print:text-xs">
+               <p className="text-foreground/80">This report summarises your skin and/or challenge tests performed today.</p>
+               <p className="font-semibold text-foreground mt-2 print:mt-1">Please provide this document to your anaesthetist before any future surgery.</p>
+            </div>
 
         {/* Report Timestamp */}
         {activeReportSavedAt && (
-          <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-slate-200 print:text-[9px] print:pt-2 print:mt-2">
+          <div className="text-xs text-muted-foreground pt-4 mt-4 border-t border-border print:text-[9px] print:pt-2 print:mt-2">
             Report generated: {new Date(activeReportSavedAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
           </div>
         )}

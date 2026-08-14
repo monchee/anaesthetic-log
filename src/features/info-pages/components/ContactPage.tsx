@@ -10,13 +10,13 @@ interface ContactPageProps {
 const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card>
+      <Card className="rounded-none border-border shadow-none">
         <CardContent className="pt-6 space-y-6">
           
           {/* Clinic Contact */}
-          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
+          <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
             <div className="flex items-start gap-4">
-              <Building2 className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
+              <Building2 className="w-8 h-8 text-primary shrink-0" />
               <div>
                 <h3 className="font-semibold text-lg text-foreground mb-3">The DREAM App</h3>
                 <div className="space-y-2 text-sm text-muted-foreground">
@@ -26,16 +26,16 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
                     <p>Missenden Road, Camperdown NSW 2050</p>
                   </div>
                   <div className="pt-2 border-t border-border">
-                    <p><strong>Phone:</strong> (02) 9515 7586</p>
-                    <p><strong>Email:</strong>{' '}
+                    <p><strong className="text-foreground">Phone:</strong> (02) 9515 7586</p>
+                    <p><strong className="text-foreground">Email:</strong>{' '}
                       <a
                         href="mailto:SLHD-RPA-ClinicalImmunology@health.nsw.gov.au"
-                        className="underline underline-offset-2 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded-none"
+                        className="text-primary hover:text-primary/80 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-none transition-colors"
                       >
                         SLHD-RPA-ClinicalImmunology@health.nsw.gov.au
                       </a>
                     </p>
-                    <p><strong>Clinic Location:</strong> Level 5, Gloucester House</p>
+                    <p><strong className="text-foreground">Clinic Location:</strong> Level 5, Gloucester House</p>
                   </div>
                   <div className="pt-2 border-t border-border">
                     <p className="text-xs italic text-muted-foreground">Standard business hours: Monday to Friday, 9:00 AM – 5:00 PM</p>
@@ -49,7 +49,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
           <div className="grid md:grid-cols-3 gap-4">
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
-                <MessageSquare className="w-5 h-5 text-blue-500" />
+                <MessageSquare className="w-5 h-5 text-primary" />
                 <h4 className="font-semibold text-foreground">General Enquiries</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
@@ -62,7 +62,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
 
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
-                <Bug className="w-5 h-5 text-red-500" />
+                <Bug className="w-5 h-5 text-destructive" />
                 <h4 className="font-semibold text-foreground">Report an Issue</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
@@ -70,13 +70,13 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
               </p>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <p>
-                  <strong>Standard issues:</strong> Report to your clinic administrator with steps to reproduce.
+                  <strong className="text-foreground">Standard issues:</strong> Report to your clinic administrator with steps to reproduce.
                 </p>
                 <p>
-                  <strong>Urgent/Critical issues:</strong> Contact the allergy nursing team directly at{' '}
+                  <strong className="text-foreground">Urgent/Critical issues:</strong> Contact the allergy nursing team directly at{' '}
                   <a
                     href="mailto:SLHD-RPA-allergynurses@health.nsw.gov.au"
-                    className="font-semibold underline underline-offset-2 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded-none"
+                    className="font-semibold text-primary hover:text-primary/80 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-none transition-colors"
                   >
                     SLHD-RPA-allergynurses@health.nsw.gov.au
                   </a>{' '}
@@ -87,7 +87,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
 
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
-                <Lightbulb className="w-5 h-5 text-amber-500" />
+                <Lightbulb className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                 <h4 className="font-semibold text-foreground">Feature Requests</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
@@ -100,9 +100,9 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Tips for Reporting Issues */}
-          <div className="bg-nsw-info-bg dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
+          <div className="bg-nsw-info-bg/80 dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
             <h4 className="font-semibold text-nsw-info dark:text-nsw-blue mb-3">Tips for Reporting Issues</h4>
-            <ul className="space-y-2 text-sm text-slate-700 dark:text-foreground/80">
+            <ul className="space-y-2 text-sm text-foreground/90">
               {[
                 "Describe what you were trying to do when the issue occurred",
                 "Note any error messages that appeared",
@@ -110,8 +110,8 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
                 "Specify whether the issue is reproducible or occurred only once"
               ].map((tip, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <span className="text-nsw-info dark:text-nsw-blue mt-0.5">•</span>
-                  {tip}
+                  <span className="text-nsw-info dark:text-nsw-blue mt-0.5 select-none">•</span>
+                  <span>{tip}</span>
                 </li>
               ))}
             </ul>
@@ -120,11 +120,11 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
         </CardContent>
       </Card>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center print:hidden">
         <Button 
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
+          className="rounded-none bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-8 shadow-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

@@ -10,15 +10,15 @@ interface AboutPageProps {
 const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card>
+      <Card className="rounded-none border-border shadow-none">
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
+          <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
             <div className="flex items-start gap-4">
-              <Stethoscope className="w-8 h-8 text-slate-900 dark:text-primary shrink-0" />
+              <Stethoscope className="w-8 h-8 text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg mb-2">The DREAM App</h3>
+                <h3 className="font-semibold text-lg text-foreground mb-2">The DREAM App</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   The Royal Prince Alfred Hospital (RPAH) Anaesthetic Allergy Clinic is a specialist service
                   for patients who have experienced a suspected allergic reaction during an anaesthetic.
@@ -29,12 +29,12 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
             </div>
           </div>
 
-          {/* Purpose */}
+          {/* Purpose & Data Privacy */}
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
                 <Target className="w-5 h-5 text-primary" />
-                <h4 className="font-semibold">Purpose</h4>
+                <h4 className="font-semibold text-foreground">Purpose</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 This tool helps clinicians prepare for allergy clinic appointments — quickly reviewing
@@ -46,7 +46,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
                 <Shield className="w-5 h-5 text-primary" />
-                <h4 className="font-semibold">Data Privacy</h4>
+                <h4 className="font-semibold text-foreground">Data Privacy</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 During normal clinical use, patient data is processed in your browser from local
@@ -60,7 +60,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Users className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold">Key Features</h4>
+              <h4 className="font-semibold text-foreground">Key Features</h4>
             </div>
             <ul className="grid sm:grid-cols-2 gap-3">
               {[
@@ -78,8 +78,8 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
                 "Research database for contributing to cross-patient studies"
               ].map((feature, idx) => (
                 <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="text-primary mt-0.5">•</span>
-                  {feature}
+                  <span className="text-primary mt-0.5 select-none">•</span>
+                  <span>{feature}</span>
                 </li>
               ))}
             </ul>
@@ -88,11 +88,11 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
         </CardContent>
       </Card>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center print:hidden">
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
+          className="rounded-none bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-8 shadow-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

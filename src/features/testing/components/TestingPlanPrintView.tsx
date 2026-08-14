@@ -88,16 +88,16 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
   );
 
   return (
-    <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
+    <Card className="rounded-none overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
 
       {/* Screen-only Controls */}
       <div className="p-4 border-b border-border bg-muted flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">
         <p className="text-lg font-semibold tracking-tight text-foreground">Testing Request Form</p>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Button size="sm" variant="outline" onClick={handleEmail}>
+          <Button size="sm" variant="outline" onClick={handleEmail} className="rounded-none">
             <Mail className="w-4 h-4 mr-2" /> Email to Allergy Nurse
           </Button>
-          <Button size="sm" onClick={handlePrint}>
+          <Button size="sm" onClick={handlePrint} className="rounded-none">
             <Printer className="w-4 h-4 mr-2" /> Print Now
           </Button>
         </div>
@@ -185,7 +185,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
         {/* Urgent Banner */}
         {urgent && (
-          <div className="flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-2 print:py-1 font-bold uppercase tracking-wider text-sm print:bg-black print:border-2 print:border-black">
+          <div className="flex items-center gap-3 bg-red-600 text-white px-5 py-3 print:px-2 print:py-1 font-bold uppercase tracking-wider text-sm print:bg-black print:border-2 print:border-black rounded-none">
             <AlertTriangle className="w-5 h-5 print:w-4 print:h-4 shrink-0" />
             URGENT — Priority Testing Required
           </div>
@@ -205,17 +205,17 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             </h3>
             <div className="flex flex-wrap gap-2 print:gap-1">
               {documentsToChase.tryptases && (
-                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black">
+                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black rounded-none">
                   Tryptases
                 </Badge>
               )}
               {documentsToChase.anaestheticChart && (
-                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black">
+                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black rounded-none">
                   Anaesthetic Chart
                 </Badge>
               )}
               {documentsToChase.other && (
-                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black">
+                <Badge variant="outline" className="gap-1 bg-amber-50 border-amber-300 text-amber-800 dark:bg-amber-900/20 dark:border-amber-700/50 dark:text-amber-400 font-semibold uppercase tracking-wide print:text-[10px] print:bg-white print:border print:border-black print:text-black rounded-none">
                   Other{documentsToChase.otherText ? `: ${documentsToChase.otherText}` : ''}
                 </Badge>
               )}
@@ -259,27 +259,28 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
               <tr>
                 <th
                   colSpan={10}
+                  scope="colgroup"
                   className="border border-border print:border-black bg-muted print:bg-white px-3 py-2 print:py-1.5 text-left font-bold text-sm print:text-[10px] text-foreground print:text-black"
                 >
                   Skin Prick Test (SPT) and Intradermal Test (IDT) Protocol
                 </th>
               </tr>
               <tr className="bg-muted/50 print:bg-white text-muted-foreground print:text-slate-700 uppercase text-[10px] print:text-[8px] tracking-wide">
-                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left w-14 print:w-12">Date</th>
-                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left">Drug (generic name)</th>
-                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-12 print:w-10">Type</th>
-                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left w-[22%]">Concentration</th>
-                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-14 print:w-12">Date</th>
-                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-12 print:w-10">Time</th>
-                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-20 print:w-16">Signature</th>
-                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-20 print:w-16">Print name</th>
-                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-16 print:w-14">Wheal (mm)</th>
-                <th className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-12 print:w-10">Time</th>
+                <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left w-14 print:w-12">Date</th>
+                <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left">Drug (generic name)</th>
+                <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-12 print:w-10">Type</th>
+                <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left w-[22%]">Concentration</th>
+                <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-14 print:w-12">Date</th>
+                <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-12 print:w-10">Time</th>
+                <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-20 print:w-16">Signature</th>
+                <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-20 print:w-16">Print name</th>
+                <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-16 print:w-14">Wheal (mm)</th>
+                <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-12 print:w-10">Time</th>
               </tr>
             </thead>
             <tbody>
               {testRows.length > 0 ? testRows.map((row, i) => (
-                <tr key={i} className={row.isFirstForDrug ? 'bg-slate-50 dark:bg-slate-800/30 print:bg-gray-50' : 'bg-white dark:bg-transparent print:bg-white'}>
+                <tr key={i} className={row.isFirstForDrug ? 'bg-muted/30 print:bg-gray-50' : 'bg-background print:bg-white'}>
                   <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5 print:h-7" />
                   <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5">
                     <div className="font-semibold text-foreground print:text-black leading-tight flex flex-wrap items-center gap-1">
@@ -299,7 +300,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                           {row.category}
                         </div>
                         {row.needsPharmacyVerification && (
-                          <div className="mt-1 border border-amber-500 bg-amber-50 px-1 py-0.5 text-[9px] font-bold leading-tight text-amber-950 print:border-black print:bg-white print:text-[8px] print:text-black">
+                          <div className="mt-1 border border-amber-500 bg-amber-50 px-1 py-0.5 text-[9px] font-bold leading-tight text-amber-950 print:border-black print:bg-white print:text-[8px] print:text-black rounded-none">
                             ⚠ Confirm preparation with pharmacy
                           </div>
                         )}
@@ -375,7 +376,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
 
         {/* Proceed Action (Hidden on Print) */}
         <div className="mt-8 pt-4 border-t border-border print:hidden flex justify-end">
-          <Button size="lg" onClick={onProceed} className="shadow-lg shadow-border">
+          <Button size="lg" onClick={onProceed} className="rounded-none bg-primary hover:bg-primary/90 text-primary-foreground btn-press shadow-md">
             Start Testing Session <ChevronRight className="ml-2 w-4 h-4" />
           </Button>
         </div>

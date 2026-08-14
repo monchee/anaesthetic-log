@@ -1,5 +1,18 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Download, RefreshCw, FlaskConical, ChevronDown, ChevronUp, Trash2, Database, ClipboardList, TrendingUp, CheckCircle2, BarChart2, Trophy } from 'lucide-react';
+import {
+  Download,
+  RefreshCw,
+  FlaskConical,
+  ChevronDown,
+  ChevronUp,
+  Trash2,
+  Database,
+  ClipboardList,
+  TrendingUp,
+  CheckCircle2,
+  BarChart2,
+  Trophy,
+} from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Progress, Skeleton } from '../../../../components/ui';
 import { fetchAllResults, exportToCsv, deleteResult } from '../services/ResearchService';
 import { ResearchRecord } from '../types';
@@ -29,41 +42,44 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
   };
 
   return (
-    <div className="px-4 py-4 bg-slate-50 dark:bg-card/50 border-t border-border space-y-4">
+    <div className="px-4 py-4 bg-muted/30 dark:bg-card/40 border-t border-border space-y-4">
       {/* Controls */}
       <div>
-        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5">Controls</p>
-        <div className="flex gap-4 text-xs text-slate-700 dark:text-foreground/80">
-          <span>Histamine SPT: <strong>{record.histamine_spt || '—'}</strong></span>
-          <span>Saline SPT: <strong>{record.saline_spt || '—'}</strong></span>
-          <span>Saline IDT: <strong>{record.saline_idt || '—'}</strong></span>
+        <p className="section-label mb-1.5">Controls</p>
+        <div className="flex flex-wrap gap-4 text-xs text-foreground/85">
+          <span>Histamine SPT: <strong className="font-mono text-foreground">{record.histamine_spt || '—'}</strong></span>
+          <span>Saline SPT: <strong className="font-mono text-foreground">{record.saline_spt || '—'}</strong></span>
+          <span>Saline IDT: <strong className="font-mono text-foreground">{record.saline_idt || '—'}</strong></span>
         </div>
       </div>
 
       {/* Test Panel */}
       {record.test_panel.length > 0 && (
         <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5">Test panel</p>
-          <div className="border border-border overflow-x-auto">
+          <p className="section-label mb-1.5">Test panel</p>
+          <div className="border border-border overflow-x-auto rounded-none">
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-muted border-b border-border">
-                  {['Drug', 'SPT', 'IDT Results', 'Result'].map(h => (
-                    <th key={h} className="px-3 py-1.5 text-left font-medium text-muted-foreground">{h}</th>
+                  {['Drug', 'SPT', 'IDT Results', 'Result'].map((h) => (
+                    <th key={h} className="px-3 py-1.5 text-left font-semibold text-muted-foreground uppercase text-[11px] tracking-wider">
+                      {h}
+                    </th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {record.test_panel.map((d, i) => (
-                  <tr key={i} className={d.is_positive ? 'bg-red-50 dark:bg-red-950/20' : ''}>
-                    <td className="px-3 py-1.5 font-medium text-slate-700 dark:text-foreground/90">{d.drug_name}</td>
-                    <td className="px-3 py-1.5 text-muted-foreground">{d.spt_wheal || '—'}</td>
-                    <td className="px-3 py-1.5 text-muted-foreground">{d.idt_results || '—'}</td>
+                  <tr key={i} className={d.is_positive ? 'bg-destructive/10' : 'hover:bg-muted/30 transition-colors'}>
+                    <td className="px-3 py-1.5 font-medium text-foreground">{d.drug_name}</td>
+                    <td className="px-3 py-1.5 text-muted-foreground font-mono">{d.spt_wheal || '—'}</td>
+                    <td className="px-3 py-1.5 text-muted-foreground font-mono">{d.idt_results || '—'}</td>
                     <td className="px-3 py-1.5">
-                      {d.is_positive
-                        ? <span className="text-red-600 dark:text-red-400 font-semibold">Positive</span>
-                        : <span className="text-muted-foreground">Negative</span>
-                      }
+                      {d.is_positive ? (
+                        <span className="text-destructive font-semibold">Positive</span>
+                      ) : (
+                        <span className="text-muted-foreground">Negative</span>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -76,14 +92,33 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
       {/* Challenge */}
       {record.proceed_to_challenge && (
         <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1.5">Challenge test</p>
-          <div className="flex flex-wrap gap-4 text-xs text-slate-700 dark:text-foreground/80">
-            <span>Drug: <strong>{record.challenge_drug || '—'}</strong></span>
-            <span>Outcome: <strong className={record.challenge_outcome === 'SUCCESS' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}>
-              {record.challenge_outcome === 'SUCCESS' ? 'Pass' : record.challenge_outcome === 'UNSUCCESS' ? 'Fail' : '—'}
-            </strong></span>
-            {record.reaction_time && <span>Reaction time: <strong>{record.reaction_time}</strong></span>}
-            {record.intervention_type && <span>Intervention: <strong>{record.intervention_type}</strong></span>}
+          <p className="section-label mb-1.5">Challenge test</p>
+          <div className="flex flex-wrap gap-4 text-xs text-foreground/85">
+            <span>Drug: <strong className="text-foreground">{record.challenge_drug || '—'}</strong></span>
+            <span>
+              Outcome:{' '}
+              <strong
+                className={
+                  record.challenge_outcome === 'SUCCESS'
+                    ? 'text-status-grade1 dark:text-emerald-400 font-semibold'
+                    : record.challenge_outcome === 'UNSUCCESS'
+                    ? 'text-destructive dark:text-red-400 font-semibold'
+                    : 'text-muted-foreground'
+                }
+              >
+                {record.challenge_outcome === 'SUCCESS' ? 'Pass' : record.challenge_outcome === 'UNSUCCESS' ? 'Fail' : '—'}
+              </strong>
+            </span>
+            {record.reaction_time && (
+              <span>
+                Reaction time: <strong className="font-mono text-foreground">{record.reaction_time}</strong>
+              </span>
+            )}
+            {record.intervention_type && (
+              <span>
+                Intervention: <strong className="text-foreground">{record.intervention_type}</strong>
+              </span>
+            )}
           </div>
           {record.symptoms.length > 0 && (
             <div className="mt-1 text-xs text-muted-foreground">
@@ -96,28 +131,44 @@ function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDele
       {/* Plan */}
       {record.plan && (
         <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Plan</p>
-          <p className="text-xs text-slate-700 dark:text-foreground/80 whitespace-pre-wrap">{record.plan}</p>
+          <p className="section-label mb-1">Plan</p>
+          <p className="text-xs text-foreground/85 whitespace-pre-wrap">{record.plan}</p>
         </div>
       )}
 
       {/* Delete */}
       <div className="flex flex-col items-end gap-1 pt-1">
         {deleteError && (
-          <p className="text-xs text-red-600 dark:text-red-400">{deleteError}</p>
+          <p className="text-xs text-destructive">{deleteError}</p>
         )}
         {confirmDelete ? (
           <div className="flex items-center gap-2">
-            <span className="text-xs text-red-600 dark:text-red-400">Delete this record?</span>
-            <Button variant="destructive" size="sm" onClick={handleDelete} disabled={deleting} className="rounded-none text-xs h-7 px-2">
+            <span className="text-xs text-destructive">Delete this record?</span>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDelete}
+              disabled={deleting}
+              className="rounded-none text-xs h-7 px-2.5 btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
               {deleting ? 'Deleting…' : 'Confirm delete'}
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setConfirmDelete(false)} className="rounded-none text-xs h-7 px-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setConfirmDelete(false)}
+              className="rounded-none text-xs h-7 px-2.5 btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
               Cancel
             </Button>
           </div>
         ) : (
-          <Button variant="ghost" size="sm" onClick={handleDelete} className="rounded-none text-xs h-7 px-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleDelete}
+            className="rounded-none text-xs h-7 px-2 text-destructive hover:text-destructive hover:bg-destructive/10 btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
             <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete record
           </Button>
         )}
@@ -194,7 +245,7 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
     return (
       <div className="space-y-3 py-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-14 w-full" />
+          <Skeleton key={i} className="h-14 w-full rounded-none" />
         ))}
       </div>
     );
@@ -204,12 +255,12 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
     const isUnconfigured = error.includes('not configured') || error.includes('Failed to fetch');
     return (
       <div className="flex min-h-[360px] flex-col items-center justify-center px-4 py-16 text-center">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center border border-border bg-card">
-          <Database className="w-7 h-7 text-muted-foreground" />
+        <div className="mb-4 flex h-12 w-12 items-center justify-center border border-border bg-card rounded-none shadow-sm">
+          <Database className="w-6 h-6 text-muted-foreground" />
         </div>
-        <p className="font-semibold text-foreground">
+        <h3 className="font-semibold text-foreground text-base">
           {isUnconfigured ? 'Research database is not configured' : 'Could not load research data'}
-        </p>
+        </h3>
         <p className="mt-2 text-sm text-muted-foreground max-w-md">
           {isUnconfigured
             ? 'The clinical dashboard can run from local demo or uploaded REDCap data, but the Research screen needs a connected Supabase research database.'
@@ -218,11 +269,11 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
 
         {isUnconfigured && (
           <div className="mt-5 grid w-full max-w-md gap-2 text-left text-xs">
-            <div className="flex items-center justify-between gap-4 border border-border bg-card px-3 py-2">
+            <div className="flex items-center justify-between gap-4 border border-border bg-card px-3 py-2 rounded-none">
               <span className="font-medium text-muted-foreground">Research database</span>
               <span className="font-semibold text-foreground">Not configured</span>
             </div>
-            <div className="flex items-center justify-between gap-4 border border-border bg-card px-3 py-2">
+            <div className="flex items-center justify-between gap-4 border border-border bg-card px-3 py-2 rounded-none">
               <span className="font-medium text-muted-foreground">Demo mode</span>
               <span className="font-semibold text-foreground">Local patient dataset only</span>
             </div>
@@ -231,14 +282,21 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
 
         <div className="mt-5 flex flex-wrap justify-center gap-2">
           {!isUnconfigured && (
-            <Button variant="outline" size="sm" onClick={load} className="rounded-none">Retry</Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={load}
+              className="rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              Retry
+            </Button>
           )}
           {isUnconfigured && setScreen && (
             <Button
               variant="outline"
               size="sm"
               onClick={() => setScreen(Screen.TECHNICAL_DOCUMENTATION)}
-              className="rounded-none"
+              className="rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Learn about research setup →
             </Button>
@@ -249,244 +307,271 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
   }
 
   const positivityColor = (rate: number) => {
-    if (rate >= 25) return { bar: 'bg-red-500', text: 'text-red-600 dark:text-red-400', badge: 'destructive' as const };
+    if (rate >= 25) return { bar: 'bg-destructive', text: 'text-destructive dark:text-red-400', badge: 'destructive' as const };
     if (rate >= 10) return { bar: 'bg-amber-500', text: 'text-amber-600 dark:text-amber-400', badge: 'outline' as const };
     return { bar: 'bg-primary', text: 'text-primary', badge: 'secondary' as const };
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
 
       {/* Header + stat cards */}
-      <Card className="shadow-sm rounded-none">
-        <CardHeader className="pb-3 border-b border-border bg-card">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-                <Database className="w-4 h-4 text-primary" />
+      <div style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
+        <Card className="shadow-sm rounded-none">
+          <CardHeader className="pb-3 border-b border-border bg-card">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
+                  <Database className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm text-foreground">Research Database</p>
+                  <p className="text-xs text-muted-foreground">{records.length} de-identified session{records.length !== 1 ? 's' : ''}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-sm text-foreground">Research Database</p>
-                <p className="text-xs text-muted-foreground">{records.length} de-identified session{records.length !== 1 ? 's' : ''}</p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={load}
+                  className="rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Refresh
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => exportToCsv(records)}
+                  disabled={records.length === 0}
+                  className="rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <Download className="w-3.5 h-3.5 mr-1.5" /> Export CSV
+                </Button>
               </div>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={load} className="rounded-none">
-                <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Refresh
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => exportToCsv(records)} disabled={records.length === 0} className="rounded-none">
-                <Download className="w-3.5 h-3.5 mr-1.5" /> Export CSV
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-4">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          </CardHeader>
+          <CardContent className="pt-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
 
-        {/* Sessions */}
-        <div className="border border-border border-l-4 border-l-blue-500 bg-background p-4 rounded-none">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Sessions</span>
-            <div className="bg-blue-50 dark:bg-blue-900/30 p-1.5 rounded-none">
-              <ClipboardList className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
-            {stats.totalSubmissions}
-          </div>
-          <div className="text-xs text-muted-foreground">
-            {stats.avgDrugsPerSession ? `avg ${stats.avgDrugsPerSession} drugs/session` : 'no data yet'}
-          </div>
-        </div>
+              {/* Sessions */}
+              <div className="border border-border border-l-4 border-l-primary bg-card p-4 rounded-none shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="section-label">Sessions</span>
+                  <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
+                    <ClipboardList className="w-3.5 h-3.5 text-primary" />
+                  </div>
+                </div>
+                <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
+                  {stats.totalSubmissions}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {stats.avgDrugsPerSession ? `avg ${stats.avgDrugsPerSession} drugs/session` : 'no data yet'}
+                </div>
+              </div>
 
-        {/* Drugs tested */}
-        <div className="border border-border border-l-4 border-l-violet-500 bg-background p-4 rounded-none">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Drugs Tested</span>
-            <div className="bg-violet-50 dark:bg-violet-900/30 p-1.5 rounded-none">
-              <FlaskConical className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
-            {stats.totalDrugs}
-          </div>
-          <div className="text-xs text-muted-foreground">
-            {stats.totalPositive > 0 ? `${stats.totalPositive} positive result${stats.totalPositive !== 1 ? 's' : ''}` : 'across all sessions'}
-          </div>
-        </div>
+              {/* Drugs tested */}
+              <div className="border border-border border-l-4 border-l-nsw-blue bg-card p-4 rounded-none shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="section-label">Drugs Tested</span>
+                  <div className="bg-nsw-blue/10 dark:bg-nsw-blue/20 p-1.5 rounded-none">
+                    <FlaskConical className="w-3.5 h-3.5 text-nsw-blue" />
+                  </div>
+                </div>
+                <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
+                  {stats.totalDrugs}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {stats.totalPositive > 0 ? `${stats.totalPositive} positive result${stats.totalPositive !== 1 ? 's' : ''}` : 'across all sessions'}
+                </div>
+              </div>
 
-        {/* Overall positivity */}
-        <div className="border border-border border-l-4 border-l-amber-500 bg-background p-4 rounded-none">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Positivity Rate</span>
-            <div className="bg-amber-50 dark:bg-amber-900/30 p-1.5 rounded-none">
-              <TrendingUp className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-            </div>
-          </div>
-          <div className="text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
-            {stats.totalDrugs > 0 ? `${stats.overallPositivityRate}%` : '—'}
-          </div>
-          <div className="text-xs text-muted-foreground">
-            {stats.positiveSessionCount > 0
-              ? `${stats.positiveSessionCount} session${stats.positiveSessionCount !== 1 ? 's' : ''} with positives`
-              : 'no positive results yet'}
-          </div>
-        </div>
+              {/* Overall positivity */}
+              <div className="border border-border border-l-4 border-l-amber-500 bg-card p-4 rounded-none shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="section-label">Positivity Rate</span>
+                  <div className="bg-amber-500/10 dark:bg-amber-500/20 p-1.5 rounded-none">
+                    <TrendingUp className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                  </div>
+                </div>
+                <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
+                  {stats.totalDrugs > 0 ? `${stats.overallPositivityRate}%` : '—'}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {stats.positiveSessionCount > 0
+                    ? `${stats.positiveSessionCount} session${stats.positiveSessionCount !== 1 ? 's' : ''} with positives`
+                    : 'no positive results yet'}
+                </div>
+              </div>
 
-        {/* Challenge pass rate */}
-        <div className="border border-border border-l-4 border-l-emerald-500 bg-background p-4 rounded-none">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Challenge Pass</span>
-            <div className="bg-emerald-50 dark:bg-emerald-900/30 p-1.5 rounded-none">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              {/* Challenge pass rate */}
+              <div className="border border-border border-l-4 border-l-status-grade1 bg-card p-4 rounded-none shadow-sm">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="section-label">Challenge Pass</span>
+                  <div className="bg-status-grade1/10 dark:bg-status-grade1/20 p-1.5 rounded-none">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-status-grade1 dark:text-emerald-400" />
+                  </div>
+                </div>
+                <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
+                  {stats.challengeSuccessRate !== null ? `${stats.challengeSuccessRate}%` : '—'}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {stats.challengeCount > 0
+                    ? `${stats.challengeSuccessCount}/${stats.challengeCount} challenge${stats.challengeCount !== 1 ? 's' : ''} passed`
+                    : 'no challenges recorded'}
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
-            {stats.challengeSuccessRate !== null ? `${stats.challengeSuccessRate}%` : '—'}
-          </div>
-          <div className="text-xs text-muted-foreground">
-            {stats.challengeCount > 0
-              ? `${stats.challengeSuccessCount}/${stats.challengeCount} challenge${stats.challengeCount !== 1 ? 's' : ''} passed`
-              : 'no challenges recorded'}
-          </div>
-        </div>
-        </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Drug positivity breakdown */}
-      <Card className="shadow-sm rounded-none">
-        <CardHeader className="pb-3 border-b border-border bg-card">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-              <BarChart2 className="w-4 h-4 text-primary" />
-            </div>
-            Positivity by Drug
-            {stats.drugStats.length > 0 && (
-              <span className="text-xs font-normal text-muted-foreground ml-1">top {stats.drugStats.length}</span>
-            )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          {stats.drugStats.length > 0 ? (
-            <div className="divide-y divide-border">
-              {stats.drugStats.map((d, i) => {
-                const { text } = positivityColor(d.rate);
-                const isTop = i === 0 && d.positive > 0;
-                return (
-                  <div key={d.name} className="flex items-center gap-3 px-4 py-3">
-                    <span className="w-5 text-xs font-semibold text-muted-foreground tabular-nums text-right shrink-0">
-                      {i + 1}
-                    </span>
-                    <span className="flex-1 font-medium text-sm text-slate-700 dark:text-foreground/90 flex items-center gap-2">
-                      {d.name}
-                      {isTop && <Trophy className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
-                    </span>
-                    <span className="text-xs text-muted-foreground shrink-0 hidden sm:block">
-                      {d.positive}/{d.tested}
-                    </span>
-                    <div className="w-28 sm:w-36 shrink-0">
-                      <Progress value={Math.min(d.rate, 100)} className="h-2 rounded-none" />
+      <div style={{ '--section-index': 1 } as React.CSSProperties} className="animate-section-reveal">
+        <Card className="shadow-sm rounded-none">
+          <CardHeader className="pb-3 border-b border-border bg-card">
+            <CardTitle as="h2" className="flex items-center gap-2 text-base text-foreground">
+              <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
+                <BarChart2 className="w-4 h-4 text-primary" />
+              </div>
+              Positivity by Drug
+              {stats.drugStats.length > 0 && (
+                <span className="text-xs font-normal text-muted-foreground ml-1">top {stats.drugStats.length}</span>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            {stats.drugStats.length > 0 ? (
+              <div className="divide-y divide-border">
+                {stats.drugStats.map((d, i) => {
+                  const { text } = positivityColor(d.rate);
+                  const isTop = i === 0 && d.positive > 0;
+                  return (
+                    <div key={d.name} className="flex items-center gap-3 px-4 py-3 hover:bg-muted/30 transition-colors">
+                      <span className="w-5 text-xs font-semibold text-muted-foreground tabular-nums text-right shrink-0">
+                        {i + 1}
+                      </span>
+                      <span className="flex-1 font-medium text-sm text-foreground flex items-center gap-2 min-w-0 truncate">
+                        <span className="truncate">{d.name}</span>
+                        {isTop && <Trophy className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-label="Highest positivity count" />}
+                      </span>
+                      <span className="text-xs text-muted-foreground font-mono shrink-0 hidden sm:block">
+                        {d.positive}/{d.tested}
+                      </span>
+                      <div className="w-28 sm:w-36 shrink-0">
+                        <Progress value={Math.min(d.rate, 100)} className="h-2 rounded-none bg-muted" />
+                      </div>
+                      <span className={`w-12 text-right text-xs font-bold tabular-nums shrink-0 ${text}`}>
+                        {d.rate.toFixed(0)}%
+                      </span>
                     </div>
-                    <span className={`w-10 text-right text-xs font-bold tabular-nums shrink-0 ${text}`}>
-                      {d.rate.toFixed(0)}%
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted-foreground">
-              <BarChart2 className="w-6 h-6" />
-              <p className="text-sm">No data yet. Save a testing session to populate this chart.</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted-foreground">
+                <BarChart2 className="w-6 h-6" />
+                <p className="text-sm">No data yet. Save a testing session to populate this chart.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Records list */}
-      <Card className="shadow-sm rounded-none">
-        <CardHeader className="pb-3 border-b border-border bg-card">
-          <CardTitle className="flex items-center justify-between gap-2 text-lg">
-            <span className="flex items-center gap-2">
-              <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-                <Database className="w-4 h-4 text-primary" />
-              </div>
-              All Submissions
-            </span>
-            <span className="text-sm font-normal text-muted-foreground">
-              {records.length} record{records.length !== 1 ? 's' : ''}
-            </span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          {records.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted-foreground">
-              <Database className="w-6 h-6" />
-              <p className="text-sm">No submissions yet.</p>
-              <p className="text-xs">Complete a testing session and click "Save to Research Database".</p>
-            </div>
-          ) : (
-          <div className="divide-y divide-border">
-            {records.map((r) => {
-              const isExpanded = expandedId === r.id;
-              return (
-                <div key={r.id}>
-                  <button
-                    onClick={() => setExpandedId(isExpanded ? null : r.id)}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-card/50 transition-colors"
-                  >
-                    <div className="flex-1 min-w-0 grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-0.5 text-xs">
-                      <div>
-                        <span className="text-muted-foreground">Visit </span>
-                        <span className="font-medium text-slate-700 dark:text-foreground/90">
-                          {r.visit_date ? new Date(r.visit_date).toLocaleDateString('en-AU') : '—'}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">REDCap </span>
-                        <span className="font-medium text-slate-700 dark:text-foreground/90">{r.redcap_id ?? '—'}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-muted-foreground">{r.total_drugs_tested} drugs</span>
-                        {r.positive_count > 0 ? (
-                          <Badge variant="destructive" className="text-xs h-4 px-1.5 rounded-none">
-                            {r.positive_count} +
-                          </Badge>
-                        ) : (
-                          <Badge variant="secondary" className="text-xs h-4 px-1.5 rounded-none">all −</Badge>
-                        )}
-                      </div>
-                      <div>
-                        {r.proceed_to_challenge ? (
-                          <span className={`font-medium ${r.challenge_outcome === 'SUCCESS' ? 'text-emerald-600 dark:text-emerald-400' : r.challenge_outcome === 'UNSUCCESS' ? 'text-red-600 dark:text-red-400' : 'text-slate-500'}`}>
-                            Challenge: {r.challenge_outcome === 'SUCCESS' ? 'Pass' : r.challenge_outcome === 'UNSUCCESS' ? 'Fail' : '—'}
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground">No challenge</span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="shrink-0 text-muted-foreground">
-                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </div>
-                  </button>
-                  {isExpanded && (
-                    <SubmissionDetail
-                      record={r}
-                      onDelete={() => {
-                        setRecords((prev) => prev.filter((x) => x.id !== r.id));
-                        setExpandedId(null);
-                      }}
-                    />
-                  )}
+      <div style={{ '--section-index': 2 } as React.CSSProperties} className="animate-section-reveal">
+        <Card className="shadow-sm rounded-none">
+          <CardHeader className="pb-3 border-b border-border bg-card">
+            <CardTitle as="h2" className="flex items-center justify-between gap-2 text-base text-foreground">
+              <span className="flex items-center gap-2">
+                <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
+                  <Database className="w-4 h-4 text-primary" />
                 </div>
-              );
-            })}
-          </div>
-          )}
-        </CardContent>
-      </Card>
+                All Submissions
+              </span>
+              <span className="text-xs font-normal text-muted-foreground">
+                {records.length} record{records.length !== 1 ? 's' : ''}
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            {records.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted-foreground">
+                <Database className="w-6 h-6" />
+                <p className="text-sm font-medium text-foreground">No submissions yet.</p>
+                <p className="text-xs text-muted-foreground">Complete a testing session and click "Save to Research Database".</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-border">
+                {records.map((r) => {
+                  const isExpanded = expandedId === r.id;
+                  return (
+                    <div key={r.id}>
+                      <button
+                        type="button"
+                        onClick={() => setExpandedId(isExpanded ? null : r.id)}
+                        aria-expanded={isExpanded}
+                        className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-muted/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+                      >
+                        <div className="flex-1 min-w-0 grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-0.5 text-xs">
+                          <div>
+                            <span className="text-muted-foreground">Visit </span>
+                            <span className="font-medium text-foreground font-mono">
+                              {r.visit_date ? new Date(r.visit_date).toLocaleDateString('en-AU') : '—'}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">REDCap </span>
+                            <span className="font-medium text-foreground font-mono">{r.redcap_id ?? '—'}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-muted-foreground font-mono">{r.total_drugs_tested} drugs</span>
+                            {r.positive_count > 0 ? (
+                              <Badge variant="destructive" className="text-xs h-4 px-1.5 rounded-none font-mono">
+                                {r.positive_count} +
+                              </Badge>
+                            ) : (
+                              <Badge variant="secondary" className="text-xs h-4 px-1.5 rounded-none font-mono">all −</Badge>
+                            )}
+                          </div>
+                          <div>
+                            {r.proceed_to_challenge ? (
+                              <span
+                                className={`font-medium ${
+                                  r.challenge_outcome === 'SUCCESS'
+                                    ? 'text-status-grade1 dark:text-emerald-400 font-semibold'
+                                    : r.challenge_outcome === 'UNSUCCESS'
+                                    ? 'text-destructive dark:text-red-400 font-semibold'
+                                    : 'text-muted-foreground'
+                                }`}
+                              >
+                                Challenge: {r.challenge_outcome === 'SUCCESS' ? 'Pass' : r.challenge_outcome === 'UNSUCCESS' ? 'Fail' : '—'}
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground">No challenge</span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="shrink-0 text-muted-foreground">
+                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        </div>
+                      </button>
+                      {isExpanded && (
+                        <SubmissionDetail
+                          record={r}
+                          onDelete={() => {
+                            setRecords((prev) => prev.filter((x) => x.id !== r.id));
+                            setExpandedId(null);
+                          }}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -66,7 +66,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
               <th scope="col" className="px-4 py-3 text-center bg-card">IDT 1:10</th>
               <th scope="col" className="px-4 py-3 text-center bg-card">IDT Neat</th>
               <th scope="col" className="px-4 py-3 text-center bg-card">Challenge Pos</th>
-              <th scope="col" className="px-4 py-3 text-center bg-slate-100/50 dark:bg-muted/50 border-l border-border">Total Cases</th>
+              <th scope="col" className="px-4 py-3 text-center bg-muted/50 border-l border-border">Total Cases</th>
             </tr>
           </thead>
           <tbody className="bg-background">
@@ -79,7 +79,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                   <React.Fragment key={cIdx}>
                     <tr
                       style={{ '--row-index': Math.min(cIdx, 9) } as React.CSSProperties}
-                      className="bg-card hover:bg-slate-100/80 dark:hover:bg-muted/80 border-b border-border transition-colors animate-row-enter"
+                      className="bg-card hover:bg-muted/80 border-b border-border transition-colors animate-row-enter"
                     >
                       <td colSpan={6} className="px-4 py-2.5">
                         <button
@@ -95,7 +95,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                       </td>
                       <td className="px-4 py-2.5 text-center border-l border-border">
                         {totalCategoryPositives > 0 ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-none text-xs font-medium bg-slate-100 dark:bg-card/50 text-slate-800 dark:text-primary">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-none text-xs font-medium bg-muted dark:bg-card text-foreground dark:text-primary">
                             <span className="tabular-nums">{totalCategoryPositives}</span>
                           </span>
                         ) : (
@@ -104,14 +104,14 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                       </td>
                     </tr>
                     {isExpanded && categoryGroup.stats.map((item, i) => (
-                      <tr key={i} className="hover:bg-slate-50/50 dark:hover:bg-card/50 transition-colors border-b border-slate-50 dark:border-border animate-in fade-in slide-in-from-top-1">
-                        <td className="px-4 py-3 font-medium text-slate-700 dark:text-foreground/80 pl-10 border-l-4 border-l-primary hover:border-l-primary transition-[color,background-color,border-color,box-shadow]">{item.name}</td>
+                      <tr key={i} className="hover:bg-muted/40 dark:hover:bg-card/50 transition-colors border-b border-border animate-in fade-in slide-in-from-top-1">
+                        <td className="px-4 py-3 font-medium text-foreground/80 pl-10 border-l-4 border-l-primary hover:border-l-primary transition-[color,background-color,border-color,box-shadow]">{item.name}</td>
                         <td className="px-4 py-3 text-center text-muted-foreground tabular-nums">{item.spt || '-'}</td>
                         <td className="px-4 py-3 text-center text-muted-foreground tabular-nums">{item.idt100 || '-'}</td>
                         <td className="px-4 py-3 text-center text-muted-foreground tabular-nums">{item.idt10 || '-'}</td>
                         <td className="px-4 py-3 text-center text-muted-foreground tabular-nums">{item.idtNeat || '-'}</td>
                         <td className="px-4 py-3 text-center text-muted-foreground tabular-nums">{item.challenge || '-'}</td>
-                        <td className="px-4 py-3 text-center font-bold text-foreground bg-slate-50/30 dark:bg-card/30 border-l border-border tabular-nums">
+                        <td className="px-4 py-3 text-center font-bold text-foreground bg-muted/30 dark:bg-card/30 border-l border-border tabular-nums">
                           {item.total || <span className="text-muted-foreground font-normal">-</span>}
                         </td>
                       </tr>

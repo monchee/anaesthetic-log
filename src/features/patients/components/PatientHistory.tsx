@@ -70,11 +70,11 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
 
   const getGradeBorderColor = (variant: ReturnType<typeof getGradeVariant>): string => {
     switch (variant) {
-      case 'grade4': return 'border-l-rose-600';
-      case 'grade3': return 'border-l-orange-500';
-      case 'grade2': return 'border-l-amber-500';
-      case 'grade1': return 'border-l-emerald-600';
-      default:       return 'border-l-slate-300 dark:border-l-slate-600';
+      case 'grade4': return 'border-l-status-grade4';
+      case 'grade3': return 'border-l-status-grade3';
+      case 'grade2': return 'border-l-status-grade2';
+      case 'grade1': return 'border-l-status-grade1';
+      default:       return 'border-l-muted-foreground/40';
     }
   };
 
@@ -122,7 +122,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
 
   return (
     <Card className="shadow-md bg-card">
-      <CardHeader className="pb-3 border-b border-border bg-slate-50/50 dark:bg-muted/20">
+      <CardHeader className="pb-3 border-b border-border bg-muted/30 dark:bg-muted/20">
         <CardTitle className="flex items-center gap-2 text-base font-semibold tracking-tight text-foreground">
           <div className="bg-primary/15 dark:bg-primary/20 p-1.5 rounded-none">
             <History className="h-4 w-4 text-primary dark:text-primary" />
@@ -140,12 +140,12 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
             </span>
             <span className="text-muted-foreground/30 text-xl font-normal hidden sm:inline">|</span>
             <span className="text-base text-primary dark:text-primary font-semibold uppercase tracking-wider leading-tight break-words">
-                {history.procedure}
+                {history.procedure || "Procedure not recorded"}
             </span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
                 {(history.tryptases?.length || history.tryptase) && (
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-800 px-2.5 py-1 rounded-none">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-primary dark:text-primary bg-primary/10 dark:bg-primary/20 border border-primary/20 dark:border-primary/30 px-2.5 py-1 rounded-none">
                         <FlaskConical className="h-3.5 w-3.5 shrink-0" />
                         <span className="font-semibold uppercase tracking-wide text-xs">Tryptase:</span>
                         <span>{tryptaseChipText}</span>
@@ -234,7 +234,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                             <FileText className="h-3.5 w-3.5 text-primary dark:text-primary" /> 
                             Reaction Summary
                         </div>
-                        <div className="bg-background p-3 rounded-none border border-border text-slate-700 dark:text-foreground/80 leading-relaxed text-sm max-w-prose">
+                        <div className="bg-background p-3 rounded-none border border-border text-foreground/80 leading-relaxed text-sm max-w-prose">
                             {history.reactionSummary || "No summary provided."}
                         </div>
                     </div>
@@ -341,9 +341,9 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                                         s.detail ? (
                                             <Popover key={i}>
                                                 <PopoverTrigger asChild>
-                                                    <div className="inline-flex items-center gap-1 rounded-none bg-muted border border-border px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:text-foreground/90 shadow-sm cursor-pointer hover:border-primary/50 hover:text-primary transition-colors">
+                                                    <div className="inline-flex items-center gap-1 rounded-none bg-muted border border-border px-2.5 py-0.5 text-xs font-semibold text-foreground/90 shadow-sm cursor-pointer hover:border-primary/50 hover:text-primary transition-colors">
                                                         {s.label}
-                                                        <Info className="w-3 h-3 opacity-50 text-blue-500" />
+                                                        <Info className="w-3 h-3 opacity-50 text-primary" />
                                                     </div>
                                                 </PopoverTrigger>
                                                 <PopoverContent className="w-64 text-xs p-3" sideOffset={4}>
@@ -351,7 +351,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                                                 </PopoverContent>
                                             </Popover>
                                         ) : (
-                                            <span key={i} className="inline-flex items-center rounded-none bg-muted border border-border px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:text-foreground/90 shadow-sm">
+                                            <span key={i} className="inline-flex items-center rounded-none bg-muted border border-border px-2.5 py-0.5 text-xs font-semibold text-foreground/90 shadow-sm">
                                                 {s.label}
                                             </span>
                                         )
@@ -368,15 +368,15 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                         </div>
                         <div className="bg-background p-3 rounded-none border border-border flex-1">
                             {history.treatment && history.treatment.length > 0 ? (
-                                <ul className="text-slate-700 dark:text-foreground/80 text-xs space-y-1.5">
+                                <ul className="text-foreground/80 text-xs space-y-1.5">
                                     {history.treatment.map((t, i) => (
                                         <li key={i} className="flex items-start gap-1.5">
-                                            <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0 mt-0.5" />
+                                            <CheckCircle2 className="h-3 w-3 text-status-grade1 shrink-0 mt-0.5" />
                                             <span>{t}</span>
                                         </li>
                                     ))}
                                 </ul>
-                            ) : <span className="text-slate-400 italic text-xs">None recorded</span>}
+                            ) : <span className="text-muted-foreground italic text-xs">None recorded</span>}
                         </div>
                     </div>
                 </div>
@@ -395,14 +395,14 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                                 <span className="font-medium text-muted-foreground">{history.referringDoctorPosition}</span>
                             )}
                             {(history.referringDoctorPosition && (history.providerNumber || history.referringPhone)) && (
-                                <span className="text-slate-200 dark:text-muted-foreground">|</span>
+                                <span className="text-border">|</span>
                             )}
                             {history.providerNumber && <span className="opacity-80">#{history.providerNumber}</span>}
                             {history.referringPhone && <span className="opacity-80 flex items-center gap-0.5"><Phone className="h-2 w-2" /> {history.referringPhone}</span>}
                         </div>
                     </div>
 
-                    <div className="space-y-1 flex-1 min-w-0 sm:border-l sm:border-slate-200 sm:dark:border-border sm:pl-4">
+                    <div className="space-y-1 flex-1 min-w-0 sm:border-l sm:border-border sm:pl-4">
                         <span className="section-label flex items-center gap-1.5">
                             <Building2 className="h-3 w-3" /> Hospital
                         </span>

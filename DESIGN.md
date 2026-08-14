@@ -1,0 +1,228 @@
+---
+name: DREAM Allergy Management
+description: Local-first clinical workbench for perioperative anaesthetic allergy assessment, testing, and reporting.
+colors:
+  primary: "hsl(217, 100%, 19.6%)"
+  primary-foreground: "hsl(210, 40%, 98%)"
+  background: "hsl(210, 40%, 98%)"
+  foreground: "hsl(222.2, 84%, 4.9%)"
+  card: "hsl(0, 0%, 100%)"
+  card-foreground: "hsl(222.2, 84%, 4.9%)"
+  secondary: "hsl(210, 40%, 96.1%)"
+  secondary-foreground: "hsl(222.2, 47.4%, 11.2%)"
+  muted: "hsl(210, 40%, 96.1%)"
+  muted-foreground: "hsl(215.4, 16.3%, 44%)"
+  accent: "hsl(199, 92%, 89%)"
+  accent-foreground: "hsl(218, 100%, 20%)"
+  destructive: "hsl(0, 84.2%, 60.2%)"
+  destructive-foreground: "hsl(210, 40%, 98%)"
+  border: "hsl(214.3, 31.8%, 91.4%)"
+  input: "hsl(214.3, 31.8%, 91.4%)"
+  ring: "hsl(217, 100%, 19.6%)"
+  status-grade1: "hsl(142.1, 76.2%, 36.3%)"
+  status-grade2: "hsl(37.7, 92.1%, 50.2%)"
+  status-grade3: "hsl(24.6, 95%, 53.1%)"
+  status-grade4: "hsl(346.8, 77.2%, 49.8%)"
+  nsw-blue: "hsl(218, 98%, 54%)"
+  nsw-blue-light: "hsl(199, 92%, 89%)"
+  nsw-info: "hsl(220, 54%, 39%)"
+  nsw-info-bg: "hsl(228, 33%, 93%)"
+typography:
+  display:
+    fontFamily: "Public Sans, sans-serif"
+    fontSize: "3rem"
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: "0.1em"
+  headline:
+    fontFamily: "Public Sans, sans-serif"
+    fontSize: "1.875rem"
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: "-0.01em"
+  title:
+    fontFamily: "Public Sans, sans-serif"
+    fontSize: "1.5rem"
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: "-0.01em"
+  body:
+    fontFamily: "Public Sans, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: "normal"
+  label:
+    fontFamily: "Public Sans, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "0.05em"
+rounded:
+  none: "0px"
+spacing:
+  xs: "4px"
+  sm: "8px"
+  md: "16px"
+  lg: "24px"
+  xl: "32px"
+components:
+  button-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.primary-foreground}"
+    rounded: "{rounded.none}"
+    padding: "8px 16px"
+  button-secondary:
+    backgroundColor: "{colors.secondary}"
+    textColor: "{colors.secondary-foreground}"
+    rounded: "{rounded.none}"
+    padding: "8px 16px"
+  button-destructive:
+    backgroundColor: "{colors.destructive}"
+    textColor: "{colors.destructive-foreground}"
+    rounded: "{rounded.none}"
+    padding: "8px 16px"
+---
+
+# Design System: DREAM Allergy Management
+
+## Overview
+
+**Creative North Star: "Clinical Workbench"**
+
+The DREAM design system embodies a rigorous, professional clinical instrument. Designed for clinicians, allergists, and nurses evaluating high-stakes perioperative anaphylaxis cases, the interface prioritizes immediate clarity, rapid data entry, error prevention, and dense visual scannability over consumer decoration or trendy gradients.
+
+Every surface is crisp, rectangular, and purposeful. Visual rhythm is defined by precise 1px structural borders, distinct severity status badges, high-contrast typography, and restrained interactive feedback. The aesthetic draws direct authority from the NSW Health institutional design palette (NSW Health Navy `#002664`, NSW Supplementary Blue `#146CFD`, and NSW Brand Light Blue `#CBEDFD`).
+
+**Key Characteristics:**
+- **Zero Radius / Sharp Geometry:** True rectangular corners (`rounded-none` / `0px`) across all cards, dialogs, inputs, buttons, and badges.
+- **High-Density Clinical Utility:** Compact tables, structured form grids, visible keyboard focus indicators, and distinct grade indicators (Grade I–IV).
+- **Semantic Consistency:** Direct reliance on theme-aware CSS custom properties (`--primary`, `--card`, `--border`, `--status-gradeX`) without one-off hardcoded color utilities.
+- **Dual-Theme Fidelity:** Clean medical slate light theme and deep dark mode (`#1a1a1a` background, `#242424` cards, `#383838` borders) with calibrated high-contrast status colors.
+- **Print-First Hygiene:** Comprehensive print stylesheets optimized for A4 clinical documentation and eMR medical record archiving.
+
+## Colors
+
+The palette combines authoritative NSW Health clinical navy with functional alert and reaction severity tokens.
+
+### Primary
+- **NSW Health Navy** (`hsl(217 100% 19.6%)` / `#002664` in Light Mode, `hsl(217 90% 62%)` in Dark Mode): Used for the application header bar, active navigation indicators, primary action buttons, key brand headings, and active focus rings.
+
+### Secondary
+- **Clinical Slate Neutral** (`hsl(210 40% 96.1%)` / `#f1f5f9` in Light Mode, `hsl(0 0% 18%)` in Dark Mode): Used for secondary buttons, subtle container backdrops, and table sub-headers.
+
+### Status & Severity (Clinical Grading)
+- **Grade I — Mild (Cutaneous/Mucosal)** (`hsl(142.1 76.2% 36.3%)` / `#16a34a` in Light, `hsl(142 65% 48%)` in Dark): Emerald badge for generalized erythema, urticaria, or angioedema.
+- **Grade II — Moderate (Multi-system)** (`hsl(37.7 92.1% 50.2%)` / `#f59e0b` in Light, `hsl(44 90% 52%)` in Dark): Amber badge for cutaneous signs plus mild respiratory/cardiovascular features.
+- **Grade III — Severe (Life-threatening)** (`hsl(24.6 95% 53.1%)` / `#f97316` in Light, `hsl(25 90% 55%)` in Dark): Orange badge for bronchospasm, cardiovascular collapse, or profound shock.
+- **Grade IV — Critical (Cardiac Arrest)** (`hsl(346.8 77.2% 49.8%)` / `#e11d48` in Light, `hsl(347 75% 55%)` in Dark): Rose/red badge for circulatory arrest requiring CPR.
+
+### Neutral
+- **Background** (`hsl(210 40% 98%)` / `#f8fafc` Light, `hsl(0 0% 10%)` / `#1a1a1a` Dark): Main viewport canvas.
+- **Card / Surface** (`hsl(0 0% 100%)` / `#ffffff` Light, `hsl(0 0% 14%)` / `#242424` Dark): Elevated clinical cards, tables, and dialog sheets.
+- **Foreground Text** (`hsl(222.2 84% 4.9%)` / `#020817` Light, `hsl(0 0% 95%)` / `#f2f2f2` Dark): Primary reading text with high contrast.
+- **Muted Foreground** (`hsl(215.4 16.3% 44%)` / `#5f6f82` Light, `hsl(0 0% 65%)` / `#a6a6a6` Dark): Field descriptions, timestamps, and secondary table metadata (targeting ≥4.5:1 contrast ratio).
+- **Border / Divider** (`hsl(214.3 31.8% 91.4%)` / `#e2e8f0` Light, `hsl(0 0% 22%)` / `#383838` Dark): 1px structural gridlines.
+
+### Named Rules
+**The Clinical Palette Rule.** Color is never merely decorative; color carries diagnostic, navigational, or interactive meaning. Status hues (green, amber, orange, red) are reserved strictly for clinical grade, positive/negative test outcomes, or validation errors.
+
+**The Semantic Token Rule.** All UI components must consume semantic theme tokens (`--background`, `--foreground`, `--border`, `--muted`, `--primary`) rather than hardcoding static Tailwind slate or zinc values.
+
+## Typography
+
+**Display Font:** Public Sans (fallback: Inter, sans-serif)  
+**Body Font:** Public Sans (fallback: Inter, sans-serif)  
+**Monospace / Data Font:** ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace (used for numeric IDs, timestamps, MRN, and concentrations)
+
+**Character:** Clean, objective grotesque sans-serif with high x-height and exceptional legibility across dense medical data grids and printed consultation letters.
+
+### Hierarchy
+- **Display** (Bold 700, `3rem` / `48px`, Line-height 1, Tracking `0.1em`): Reserved strictly for the login wordmark (`.app-wordmark`).
+- **Headline (h1)** (Semibold 600, `1.875rem` / `30px`, Line-height 1.25, Tracking `-0.01em`): Main view headers and screen titles.
+- **Title (h2)** (Semibold 600, `1.5rem` / `24px`, Line-height 1.3, Tracking `-0.01em`): Section headings and major card titles.
+- **Subtitle (h3)** (Semibold 600, `1.25rem` / `20px`, Line-height 1.35): Subsection headings and dialog titles.
+- **Card Header (h4)** (Semibold 600, `1.125rem` / `18px`, Line-height 1.4): Card titles and table group headers.
+- **Body** (Regular 400, `0.875rem` / `14px` to `1rem` / `16px`, Line-height 1.5): Standard reading text and form values. Max line length 65–75ch for narrative blocks.
+- **Section Label** (Bold 700, `0.75rem` / `12px`, Line-height 1.2, Tracking `0.05em`, Uppercase): Field group badges and table column headers (`.section-label`).
+
+### Named Rules
+**The Heading Balance Rule.** Major headings use `text-wrap: balance` and tight tracking (`-0.01em`) to prevent orphaned words and maintain compact vertical rhythm.
+
+**The Dynamic Scalability Rule.** All typography respects the global `FontSizeProvider` scale multiplier (85% to 125%) to support varying clinical workstation viewing distances.
+
+## Layout
+
+The DREAM layout is structured around a single-page clinical workstation model:
+- **Header Bar:** Persistent top navigation bar in NSW Health Navy (`--primary`) spanning full viewport width, housing the DREAM brand mark, active section navigation, theme switcher, and utility menu.
+- **Container Max-Width:** Content container constrained to `max-w-6xl` (1152px) with responsive horizontal padding (`px-3 sm:px-5 md:px-6`) ensuring dense readability on both 1080p+ desktop monitors and clinical tablets.
+- **Spacing Rhythm:** Based on an 8px modular baseline (4px / 8px / 16px / 24px / 32px). Dense data grids use 4px–8px internal cell padding; card sections use 16px–24px gaps.
+- **Responsive Adaptability:** Stacks vertically on mobile/tablet viewports (`< 768px`) with touch-accessible tap targets (minimum 44px height for interactive nav and action buttons), while expanding into multi-column side-by-side data grids on desktop viewports (`≥ 1024px`).
+
+## Elevation & Depth
+
+Surfaces in DREAM are intentionally flat and architectural. Depth is established through subtle 1px border lines (`border border-border`) and tonal background shifts rather than heavy floating drop shadows.
+
+### Shadow Vocabulary
+- **Resting Flat** (`box-shadow: none` / `border: 1px solid hsl(var(--border))`): Default state for cards, tables, and form sections.
+- **Resting Subtle** (`shadow-sm` / `0 1px 2px 0 rgb(0 0 0 / 0.05)`): Applied to top header and primary action cards.
+- **Interactive Hover** (`shadow-lg` / `0 10px 15px -3px rgb(0 0 0 / 0.1)` + `-translate-y-1`): Applied strictly to clickable card selection tiles (`.card-interactive`).
+- **Modal / Dialog** (`shadow-xl` / `0 20px 25px -5px rgb(0 0 0 / 0.1)`): Applied to dialog popups, dropdown menus, and slide-over sheets.
+
+### Named Rules
+**The Flat-By-Default Rule.** Surfaces rest flat with clean 1px structural borders. Shadows exist only to indicate active elevation (modals, dropdowns) or interactive hover affordances.
+
+## Shapes
+
+DREAM adopts a strict, authoritative **sharp-corner form language** (`radius: 0` / `rounded-none`).
+
+- **Corners:** 0px border radius across all cards, buttons, inputs, dropdown menus, tabs, tooltips, dialogs, and status badges.
+- **Borders:** Consistent 1px solid borders using `hsl(var(--border))` to frame clinical cards, table cells, and input controls.
+- **Visual Silhouette:** Rectangular, laboratory-instrument aesthetic that conveys institutional stability, clinical precision, and alignment with NSW Health digital guidelines.
+
+## Components
+
+### Buttons
+- **Shape:** Rectangular (`rounded-none`).
+- **Primary:** Background `hsl(var(--primary))`, text `hsl(var(--primary-foreground))`, padding `8px 16px` (`h-10 px-4`), semibold font. Hover darkens or lifts subtly.
+- **Secondary:** Background `hsl(var(--secondary))`, text `hsl(var(--secondary-foreground))`, border `1px solid hsl(var(--border))`.
+- **Destructive:** Background `hsl(var(--destructive))`, text `hsl(var(--destructive-foreground))`.
+- **Ghost / Outline:** Transparent background, visible border or text on hover.
+- **Interaction:** Micro-press tactile feedback (`active:scale-[0.96]`), visible focus ring with 2px offset (`focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`).
+
+### Cards & Containers
+- **Shape:** Rectangular (`rounded-none`), border `1px solid hsl(var(--border))`, background `hsl(var(--card))`.
+- **Card Header:** Border-bottom `1px solid hsl(var(--border))` where distinct division is required; padding `16px 20px`.
+- **Interactive Card:** Card with `.card-interactive` class providing subtle hover lift and shadow for clickable patient or tool selection.
+
+### Form Inputs & Textareas
+- **Shape:** Rectangular (`rounded-none`), border `1px solid hsl(var(--input))`, background `hsl(var(--background))` or `hsl(var(--card))`.
+- **Focus:** Crisp 2px outline `outline-2 outline-ring outline-offset-0` or `ring-2 ring-ring`.
+- **Disabled State:** Opacity 50%, cursor not-allowed.
+
+### Tables & Data Grids
+- **Header:** Background `hsl(var(--muted))`, text `hsl(var(--muted-foreground))`, uppercase tracking-wider font (`text-xs font-bold`).
+- **Rows:** Alternating subtle hover state (`hover:bg-muted/50`), border-bottom `1px solid hsl(var(--border))`.
+- **Clinical Badges:** Pill-free rectangular badges with high-contrast text and border matching clinical status colors.
+
+### Navigation & Header
+- **App Header:** NSW Health Navy background (`bg-primary`), crisp white contrast text, sharp navigation buttons with `bg-white/10` resting and `bg-white text-primary` active state.
+- **Dropdowns & Dialogs:** Rectangular containers with sharp borders, backdrop blur overlay, and smooth enter animations.
+
+## Do's and Don'ts
+
+### Do:
+- **Do** maintain strict zero-radius (`rounded-none` / `0px`) styling across all UI elements and shadcn components.
+- **Do** use semantic CSS tokens (`--primary`, `--background`, `--card`, `--border`, `--muted-foreground`) across all screens.
+- **Do** ensure all interactive buttons and controls have visible keyboard focus indicators (`*:focus-visible`).
+- **Do** target WCAG AA minimum 4.5:1 text contrast ratios across light and dark themes.
+- **Do** ensure all print views (testing plans, clinical reports, patient handouts) contain `@media print` break controls and zero animations.
+- **Do** maintain the 4-digit PIN screen-lock as a shoulder-surfing safeguard on shared clinic terminals.
+
+### Don't:
+- **Don't** apply rounded corners (`rounded-md`, `rounded-lg`, `rounded-full`, etc.) to any component or card container.
+- **Don't** use decorative purple, cyan, or rainbow gradient text fills or neon border glows.
+- **Don't** add decorative or bouncy spring animations that slow down clinical workflows.
+- **Don't** hardcode static Tailwind color utilities (e.g. `text-slate-900`, `bg-white`, `border-slate-200`) where semantic variables exist.
+- **Don't** break table rows or clinical signatures across pages when rendering print sheets.
+- **Don't** exfiltrate or send any patient identifying information to external network services.

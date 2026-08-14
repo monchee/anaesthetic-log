@@ -12,13 +12,13 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card>
+      <Card className="rounded-none border-border shadow-none">
         <CardContent className="pt-6 space-y-6">
 
           {/* Introduction */}
-          <div className="bg-gradient-to-r from-slate-900/5 to-primary/5 dark:from-slate-900/20 dark:to-slate-800/10 rounded-none p-6 border border-slate-900/10 dark:border-primary/30">
-            <p className="text-slate-700 dark:text-foreground/80 leading-relaxed">
-              <strong>Royal Prince Alfred Hospital (RPAH) Anaesthetic Allergy Clinic</strong> is committed to protecting the privacy and confidentiality of your personal and health information. This Privacy Policy explains how we collect, use, store, and safeguard information through this application.
+          <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
+            <p className="text-foreground/90 leading-relaxed">
+              <strong className="text-foreground">Royal Prince Alfred Hospital (RPAH) Anaesthetic Allergy Clinic</strong> is committed to protecting the privacy and confidentiality of your personal and health information. This Privacy Policy explains how we collect, use, store, and safeguard information through this application.
             </p>
             <p className="text-sm text-muted-foreground mt-3">
               Last updated: {lastUpdated}
@@ -26,12 +26,12 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           </div>
 
           {/* Local Processing Notice */}
-          <div className="bg-green-50 dark:bg-green-900/20 rounded-none p-5 border border-green-200 dark:border-green-800">
+          <div className="bg-emerald-500/10 dark:bg-emerald-500/15 rounded-none p-5 border border-emerald-500/30 dark:border-emerald-500/40">
             <div className="flex items-start gap-3">
-              <Lock className="w-5 h-5 text-green-600 dark:text-green-400 shrink-0 mt-0.5" />
+              <Lock className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-green-900 dark:text-green-300 mb-2">Local-First Processing</p>
-                <p className="text-sm text-green-800 dark:text-green-300">
+                <p className="font-semibold text-emerald-900 dark:text-emerald-300 mb-2">Local-First Processing</p>
+                <p className="text-sm text-foreground/90 leading-relaxed">
                   During normal local-only use, patient data is processed <strong>on this device in your browser</strong>. The application uses your local REDCap export files and does not transmit identifiable patient information to external servers. If a clinician chooses to save to the research database, only the deidentified research submission payload is sent to the configured Supabase project.
                 </p>
               </div>
@@ -48,16 +48,16 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
               <p>The application may process the following types of information when you use REDCap data exports:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Personal Information:</strong> Name, date of birth, MRN/hospital ID, city or suburb</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Personal Information:</strong> Name, date of birth, MRN/hospital ID, city or suburb</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Health Information:</strong> Allergy history, test results, clinical notes, reaction details</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Health Information:</strong> Allergy history, test results, clinical notes, reaction details</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Clinical Data:</strong> Testing plans, skin prick test results, intradermal test results, challenge outcomes</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Clinical Data:</strong> Testing plans, skin prick test results, intradermal test results, challenge outcomes</span>
                 </li>
               </ul>
             </div>
@@ -73,19 +73,19 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
               <p>Your information is used solely for:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Clinical assessment and management of anaesthetic allergies</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Generating clinical reports and patient handouts</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Tracking testing workflows and outcomes</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Clinical audit and quality improvement activities</span>
                 </li>
               </ul>
@@ -102,20 +102,20 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
               <p>We implement appropriate security measures to protect your information:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Local Processing:</strong> During normal use, patient data remains on your device without server transmission</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Local Processing:</strong> During normal use, patient data remains on your device without server transmission</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>Browser Security:</strong> Utilises your browser's built-in security features</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">Browser Security:</strong> Utilises your browser's built-in security features</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>No Persistent Storage:</strong> Data is cleared when the session ends (unless explicitly saved locally)</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">No Persistent Storage:</strong> Data is cleared when the session ends (unless explicitly saved locally)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span><strong>REDCap Compliance:</strong> Original data remains secure within the REDCap system</span>
+                  <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">REDCap Compliance:</strong> Original data remains secure within the REDCap system</span>
                 </li>
               </ul>
             </div>
@@ -128,22 +128,22 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
               <h2 className="font-semibold text-foreground text-base">Your Rights</h2>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
-              <p>Under the <strong>Health Records and Information Privacy Act 2002 (NSW)</strong> and the <strong>Privacy Act 1988 (Cth)</strong>, you have the right to:</p>
+              <p>Under the <strong className="text-foreground">Health Records and Information Privacy Act 2002 (NSW)</strong> and the <strong className="text-foreground">Privacy Act 1988 (Cth)</strong>, you have the right to:</p>
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Access your personal and health information held by RPAH</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Request correction of inaccurate or incomplete information</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Make a complaint about how your information is handled</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Choose not to identify yourself (where practicable)</span>
                 </li>
               </ul>
@@ -157,33 +157,33 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
               <p>This application does not use tracking cookies or third-party analytics. Browser storage (localStorage) holds only non-identifying preferences:</p>
               <ul className="space-y-1 ml-4">
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Theme preference (light/dark mode)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>Font size accessibility settings</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span>PWA installation status</span>
                 </li>
               </ul>
-              <p>Patient and clinical data may be cached temporarily on this device to support an in-progress session (the current report and testing draft). This data is <strong>automatically deleted after 6 hours</strong> and is removed when you start a new log. Optional research database submission sends only the deidentified research payload to the configured Supabase project.</p>
+              <p className="pt-1">Patient and clinical data may be cached temporarily on this device to support an in-progress session (the current report and testing draft). This data is <strong className="text-foreground">automatically deleted after 6 hours</strong> and is removed when you start a new log. Optional research database submission sends only the deidentified research payload to the configured Supabase project.</p>
             </div>
           </div>
 
           {/* Contact */}
-          <div className="bg-nsw-info-bg dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
+          <div className="bg-nsw-info-bg/80 dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
             <div className="flex items-start gap-3">
               <Mail className="w-5 h-5 text-nsw-info dark:text-nsw-blue shrink-0 mt-0.5" />
               <div>
                 <h2 className="font-semibold text-nsw-info dark:text-nsw-blue text-base mb-2">Privacy Contact</h2>
-                <p className="text-sm text-slate-700 dark:text-foreground/80">
+                <p className="text-sm text-foreground/90 leading-relaxed">
                   For privacy-related enquiries or complaints, please contact the RPAH Department of Clinical Immunology & Allergy or the Sydney Local Health District Privacy Officer.
                 </p>
                 <p className="text-xs text-muted-foreground mt-2">
-                  General enquiries can be made through the <button onClick={() => setScreen(Screen.CONTACT)} className="underline text-nsw-info dark:text-nsw-blue hover:opacity-80">Contact page</button>.
+                  General enquiries can be made through the <button type="button" onClick={() => setScreen(Screen.CONTACT)} className="underline text-primary hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-none">Contact page</button>.
                 </p>
               </div>
             </div>
@@ -192,11 +192,11 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
         </CardContent>
       </Card>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center print:hidden">
         <Button
           onClick={() => setScreen(Screen.LOG)}
           size="lg"
-          className="bg-slate-900 dark:bg-primary hover:bg-primary text-white px-8"
+          className="rounded-none bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-8 shadow-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           <Home className="w-5 h-5 mr-2" />
           Return Home

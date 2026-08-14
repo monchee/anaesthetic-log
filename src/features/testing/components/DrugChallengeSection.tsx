@@ -38,22 +38,22 @@ export function DrugChallengeSection({
           role="switch"
           aria-checked={formData.proceedToChallenge}
           onClick={() => onInputChange('proceedToChallenge', !formData.proceedToChallenge)}
-          className={`flex w-full items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-[color,background-color,border-color,box-shadow] duration-150 group ${
+          className={`flex w-full items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-[color,background-color,border-color,box-shadow] duration-150 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
             formData.proceedToChallenge
-              ? 'border-primary bg-[white] dark:bg-card/10 shadow-sm'
-              : 'border-slate-100 hover:border-border dark:hover:border-border bg-background'
+              ? 'border-primary bg-primary/5 dark:bg-card/40 shadow-sm'
+              : 'border-border hover:border-primary/40 bg-card'
           }`}
         >
           <div className="flex items-center gap-4">
             <div className={`p-2.5 rounded-none transition-colors ${
               formData.proceedToChallenge
-                ? 'bg-primary text-white'
-                : 'bg-slate-100 text-slate-400 dark:bg-muted dark:text-muted-foreground group-hover:text-slate-600 dark:group-hover:text-foreground/80'
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted text-muted-foreground group-hover:text-foreground'
             }`}>
               <Activity className="w-5 h-5" />
             </div>
             <div className="text-left">
-              <span className={`font-semibold tracking-tight transition-colors ${formData.proceedToChallenge ? 'text-slate-900 dark:text-primary' : 'text-slate-700 dark:text-foreground/80'}`}>
+              <span className={`font-semibold tracking-tight transition-colors ${formData.proceedToChallenge ? 'text-foreground font-bold' : 'text-foreground'}`}>
                 Drug Challenge
               </span>
               <p className="text-xs text-muted-foreground">Proceed with live drug challenge</p>
@@ -67,22 +67,22 @@ export function DrugChallengeSection({
         {formData.proceedToChallenge && (
           <div className="space-y-8 pl-1 sm:pl-2 animate-in slide-in-from-top-2 fade-in duration-150">
             <div className="space-y-3">
-              <Label className="text-sm font-semibold text-slate-700 dark:text-foreground/80 flex items-center gap-2">Select Challenge Drug</Label>
+              <Label htmlFor="challenge-drug-select" className="text-sm font-semibold text-foreground flex items-center gap-2">Select Challenge Drug</Label>
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1 group">
                   <Syringe className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors pointer-events-none" />
                   <Select value={formData.challengeDrug} onValueChange={(value) => onInputChange('challengeDrug', value)}>
-                    <SelectTrigger className="pl-10 h-11 border-border focus:border-primary focus:ring-primary" aria-label="Select challenge drug">
+                    <SelectTrigger id="challenge-drug-select" className="pl-10 h-11 border-border focus:border-ring focus:ring-ring rounded-none bg-background text-foreground" aria-label="Select challenge drug">
                       <SelectValue placeholder="Choose drug from list..." />
                     </SelectTrigger>
-                    <SelectContent>
-                      {challengeOptions.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}
+                    <SelectContent className="rounded-none">
+                      {challengeOptions.map(opt => <SelectItem key={opt} value={opt} className="rounded-none">{opt}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
                 {formData.challengeDrug === 'Other' && (
                   <Input
-                    className="flex-1 h-11"
+                    className="flex-1 h-11 rounded-none font-mono"
                     placeholder="Specify custom drug name..."
                     aria-label="Custom challenge drug name"
                     value={formData.challengeDrugCustom || ''}
@@ -94,7 +94,7 @@ export function DrugChallengeSection({
             </div>
 
             <div className="space-y-3">
-              <Label className="text-sm font-semibold text-slate-700 dark:text-foreground/80">Observation Outcome</Label>
+              <Label className="text-sm font-semibold text-foreground">Observation Outcome</Label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {([
                   ['SUCCESS', 'Tolerated (Safe)', ThumbsUp, 'green'],
@@ -105,8 +105,8 @@ export function DrugChallengeSection({
                     ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300'
                     : 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300';
                   const idleClass = tone === 'green'
-                    ? 'bg-white border-slate-200 text-slate-600 hover:border-green-300 hover:bg-green-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-green-800 dark:hover:bg-green-900/20'
-                    : 'bg-white border-slate-200 text-slate-600 hover:border-red-300 hover:bg-red-50/50 dark:bg-background dark:border-border dark:text-muted-foreground dark:hover:border-red-800 dark:hover:bg-red-900/20';
+                    ? 'bg-card border-border text-muted-foreground hover:border-green-300 hover:bg-green-50/50 dark:hover:border-green-800 dark:hover:bg-green-900/20 hover:text-foreground'
+                    : 'bg-card border-border text-muted-foreground hover:border-red-300 hover:bg-red-50/50 dark:hover:border-red-800 dark:hover:bg-red-900/20 hover:text-foreground';
                   const iconClass = tone === 'green'
                     ? 'bg-green-100 text-green-600 dark:bg-green-900/50'
                     : 'bg-red-100 text-red-600 dark:bg-red-900/50';
@@ -118,9 +118,9 @@ export function DrugChallengeSection({
                       key={outcome}
                       type="button"
                       onClick={() => onInputChange('outcome', outcome)}
-                      className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-[color,background-color,border-color,box-shadow] duration-150 hover:shadow-md ${isSelected ? selectedClass : idleClass}`}
+                      className={`relative flex flex-col items-center justify-center gap-2 p-3 md:p-6 rounded-none border-2 transition-[color,background-color,border-color,box-shadow] duration-150 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isSelected ? selectedClass : idleClass}`}
                     >
-                      <div className={`p-3 rounded-none ${isSelected ? iconClass : 'bg-slate-100 text-slate-400 dark:bg-card'}`}>
+                      <div className={`p-3 rounded-none ${isSelected ? iconClass : 'bg-muted text-muted-foreground'}`}>
                         <Icon className="w-6 h-6" />
                       </div>
                       <span className="font-bold text-sm">{label}</span>

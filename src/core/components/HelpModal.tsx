@@ -143,7 +143,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
 
           {/* What's New */}
           {isNewVersion && (
-            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-sm p-3 mb-5">
+            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-none p-3 mb-5">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-1.5 min-w-0">
                   <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
@@ -192,12 +192,12 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
               aria-live="polite"
-              className="w-full flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-border hover:border-red-600 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors cursor-pointer disabled:cursor-wait disabled:border-primary/40 disabled:bg-muted/40"
+              className="w-full flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-border hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors cursor-pointer disabled:cursor-wait disabled:border-primary/40 disabled:bg-muted/40 rounded-none"
             >
-              <div className="flex items-center justify-center w-12 h-12 bg-red-600">
+              <div className="flex items-center justify-center w-12 h-12 bg-primary">
                 {isUploading
-                  ? <Loader2 className="w-6 h-6 animate-spin text-white" aria-hidden="true" />
-                  : <Upload className="w-6 h-6 text-white" />}
+                  ? <Loader2 className="w-6 h-6 animate-spin text-primary-foreground" aria-hidden="true" />
+                  : <Upload className="w-6 h-6 text-primary-foreground" />}
               </div>
               <div className="text-center">
                 <p className="font-semibold text-foreground text-sm">
@@ -218,7 +218,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onUploadPatients, hideTrig
               variant="ghost"
               size="sm"
               onClick={() => { markSeen(); setIsOpen(false); }}
-              className="text-slate-500 hover:text-muted-foreground dark:hover:text-white text-xs"
+              className="text-muted-foreground hover:text-foreground text-xs"
             >
               Skip for now
             </Button>

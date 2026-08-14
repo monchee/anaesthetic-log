@@ -11,9 +11,13 @@ interface ResearchScreenProps {
 
 export function ResearchScreen({ layoutProps }: ResearchScreenProps) {
   return (
-    <ScreenLayout title="Research Database" icon={<Database className="w-5 h-5" />} {...layoutProps}
-      contentClassName="py-4"
+    <ScreenLayout
+      title="Research Database"
+      icon={<Database className="w-5 h-5" />}
+      {...layoutProps}
+      contentClassName="py-3 sm:py-4 space-y-4"
     >
+      <h2 className="sr-only">Research database analytics and de-identified submissions</h2>
       <ResearchDashboard setScreen={layoutProps.setScreen} />
     </ScreenLayout>
   );
