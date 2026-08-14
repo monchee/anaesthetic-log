@@ -264,7 +264,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             ].map(({ label, unit }) => (
               <span key={label} className="flex items-end gap-1">
                 <span className="text-foreground/80 print:text-slate-700">{label}</span>
-                <span className="border-b border-gray-400 print:border-black inline-block min-w-[3rem] print:h-5" />
+                <span className="border-b border-border dark:border-border print:border-black inline-block min-w-[3rem] print:h-5" />
                 <span className="text-muted-foreground">{unit}</span>
               </span>
             ))}
@@ -281,7 +281,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                   Skin Prick Test (SPT) and Intradermal Test (IDT) Protocol
                 </th>
               </tr>
-              <tr className="bg-muted/50 print:bg-white text-muted-foreground print:text-slate-700 uppercase text-[10px] print:text-[8px] tracking-wide">
+              <tr className="bg-muted/50 print:bg-white text-muted-foreground print:text-slate-700 uppercase text-[10px] print:text-[8px] tracking-wider">
                 <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left w-14 print:w-12">Date</th>
                 <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-left">Drug (generic name)</th>
                 <th scope="col" className="border border-border print:border-black px-1.5 py-1.5 print:py-1 font-semibold text-center w-12 print:w-10">Type</th>
@@ -316,7 +316,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                           {row.category}
                         </div>
                         {row.needsPharmacyVerification && (
-                          <div className="mt-1 border border-amber-500 bg-amber-50 px-1 py-0.5 text-[9px] font-bold leading-tight text-amber-950 print:border-black print:bg-white print:text-[8px] print:text-black rounded-none">
+                          <div className="mt-1 border border-status-warning bg-status-warning/10 px-1 py-0.5 text-xs font-bold leading-tight text-status-warning print:border-black print:bg-white print:text-[8px] print:text-black rounded-none">
                             ⚠ Confirm preparation with pharmacy
                           </div>
                         )}
@@ -371,7 +371,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
           ].map(({ label, width }) => (
             <span key={label} className="flex items-end gap-1.5">
               <span className="font-semibold text-foreground/80 print:text-slate-700">{label}:</span>
-              <span className={`border-b border-gray-400 print:border-black inline-block print:h-6 ${width}`} />
+              <span className={`border-b border-border dark:border-border print:border-black inline-block print:h-6 ${width}`} />
             </span>
           ))}
         </div>

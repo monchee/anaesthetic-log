@@ -76,7 +76,9 @@ describe('TestingPlanGenerator', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Cephalexin' }));
 
-    expect(screen.getByText('⚠ Confirm preparation with pharmacy')).toBeInTheDocument();
+    const warning = screen.getByText('⚠ Confirm preparation with pharmacy');
+    expect(warning).toBeInTheDocument();
+    expect(warning).toHaveClass('border-status-warning', 'text-status-warning');
     expect(within(screen.getByRole('button', { name: /Cephalexin/i })).getByText(/Confirm preparation with pharmacy/)).toBeInTheDocument();
     expect(within(screen.getByRole('button', { name: /Chlorhexidine/i })).queryByText(/Confirm preparation with pharmacy/)).not.toBeInTheDocument();
   });

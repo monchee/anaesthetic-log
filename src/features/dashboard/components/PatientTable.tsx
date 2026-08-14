@@ -73,11 +73,11 @@ const PatientStatusBadges: React.FC<{ result: PatientStatusResult }> = ({ result
 
   return (
     <div className="flex flex-wrap items-center gap-1">
-      <Badge variant={statusBadge.variant} className="whitespace-nowrap px-2 py-0 text-[11px] leading-5">
+      <Badge variant={statusBadge.variant} className="whitespace-nowrap px-2 py-0 text-xs leading-5">
         {statusBadge.label}
       </Badge>
       {result.docsOutstanding ? (
-        <Badge variant="warning" className="whitespace-nowrap px-2 py-0 text-[11px] leading-5">
+        <Badge variant="warning" className="whitespace-nowrap px-2 py-0 text-xs leading-5">
           Docs outstanding
         </Badge>
       ) : null}
@@ -272,11 +272,11 @@ const PatientTable: React.FC<PatientTableProps> = ({
           <thead className="bg-card text-xs uppercase text-muted-foreground font-semibold">
             <tr>
               <th scope="col" className="px-4 py-3 w-28">Date</th>
-              <th scope="col" className="px-4 py-3 w-48">Patient</th>
-              <th scope="col" className="px-4 py-3">Procedure</th>
-              <th scope="col" className="px-4 py-3 w-48">Timeline</th>
-              <th scope="col" className="px-4 py-3 w-48">Status</th>
-              <th scope="col" className="px-4 py-3 text-center w-28">Grade</th>
+              <th scope="col" className="px-4 py-3 w-40 md:w-44 lg:w-48">Patient</th>
+              <th scope="col" className="px-4 py-3 min-w-[140px]">Procedure</th>
+              <th scope="col" className="px-4 py-3 w-32 md:w-36 lg:w-48">Timeline</th>
+              <th scope="col" className="px-4 py-3 w-36 md:w-40 lg:w-48">Status</th>
+              <th scope="col" className="px-4 py-3 text-center w-24 md:w-28">Grade</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border bg-background">
@@ -308,7 +308,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                       <button
                         type="button"
                         onClick={() => onSelectPatient(p)}
-                        className="block max-w-[180px] truncate border-0 bg-transparent p-0 text-left font-medium text-foreground cursor-pointer group-hover:text-primary dark:group-hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        className="block max-w-[130px] md:max-w-[150px] lg:max-w-[180px] truncate border-0 bg-transparent p-0 text-left font-medium text-foreground cursor-pointer group-hover:text-primary dark:group-hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                         aria-label={`View details for patient: ${p.firstName} ${p.lastName}`}
                         title={`${p.lastName}, ${p.firstName}`}
                       >
@@ -316,7 +316,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                       </button>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">
-                      <div className="line-clamp-1 max-w-xs" title={p.history.procedure}>
+                      <div className="line-clamp-1 max-w-[150px] md:max-w-[200px] lg:max-w-xs" title={p.history.procedure || 'Unknown'}>
                         {p.history.procedure || <span className="italic text-muted-foreground">Unknown</span>}
                       </div>
                     </td>
@@ -400,7 +400,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 tabIndex={0}
                 key={p.id}
                 style={{ '--row-index': Math.min(index, 9) } as React.CSSProperties}
-                className="block w-full p-2.5 text-left hover:bg-muted/50 dark:hover:bg-card/50 transition-colors cursor-pointer active:bg-muted dark:active:bg-muted/50 animate-row-enter focus-visible:ring-2 focus-visible:ring-primary"
+                className="block w-full min-h-[44px] p-3 text-left hover:bg-muted/50 dark:hover:bg-card/50 transition-colors cursor-pointer active:bg-muted dark:active:bg-muted/50 animate-row-enter focus-visible:ring-2 focus-visible:ring-primary rounded-none btn-press"
                 onClick={() => onSelectPatient(p)}
                 onKeyDown={(event) => handleMobileCardKeyDown(event, p)}
                 aria-label={`View details for patient: ${p.firstName} ${p.lastName}`}
@@ -483,7 +483,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
               size="sm"
               onClick={handlePrevPage}
               disabled={currentPage === 1}
-              className="h-8 px-2"
+              className="h-8 min-h-[44px] sm:min-h-8 min-w-[44px] sm:min-w-8 px-2 rounded-none btn-press"
               aria-label="Go to previous page"
             >
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
@@ -500,7 +500,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
               size="sm"
               onClick={handleNextPage}
               disabled={currentPage * ITEMS_PER_PAGE >= quickFilteredPatients.length}
-              className="h-8 px-2"
+              className="h-8 min-h-[44px] sm:min-h-8 min-w-[44px] sm:min-w-8 px-2 rounded-none btn-press"
               aria-label="Go to next page"
             >
               <ChevronRight className="h-4 w-4" aria-hidden="true" />

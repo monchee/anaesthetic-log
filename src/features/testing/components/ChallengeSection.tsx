@@ -140,18 +140,18 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                 onClick={() => onChange('outcome', 'SUCCESS')}
                 className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-[color,background-color,border-color,box-shadow] duration-150 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   outcome === 'SUCCESS'
-                  ? 'bg-green-50 border-green-500 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                  : 'bg-card border-border text-muted-foreground hover:border-green-300 hover:bg-green-50/50 dark:hover:border-green-800 dark:hover:bg-green-900/20 hover:text-foreground'
+                  ? 'bg-status-success/15 border-status-success text-status-success dark:bg-status-success/20 dark:text-status-success'
+                  : 'bg-card border-border text-muted-foreground hover:border-status-success/40 hover:bg-status-success/10 hover:text-foreground'
                 }`}
               >
                 <div className={`p-3 rounded-none ${
-                  outcome === 'SUCCESS' ? 'bg-green-100 text-green-600 dark:bg-green-900/50' : 'bg-muted text-muted-foreground'
+                  outcome === 'SUCCESS' ? 'bg-status-success/20 text-status-success' : 'bg-muted text-muted-foreground'
                 }`}>
                   <ThumbsUp className="w-6 h-6" />
                 </div>
                 <span className="font-bold text-sm">Tolerated (Safe)</span>
                 {outcome === 'SUCCESS' && (
-                  <div className="absolute top-3 right-3 text-green-600 dark:text-green-400">
+                  <div className="absolute top-3 right-3 text-status-success">
                     <CheckCircle2 className="w-5 h-5" />
                   </div>
                 )}
@@ -162,18 +162,18 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                 onClick={() => onChange('outcome', 'UNSUCCESS')}
                 className={`relative flex flex-col items-center justify-center gap-2 p-6 rounded-none border-2 transition-[color,background-color,border-color,box-shadow] duration-150 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   outcome === 'UNSUCCESS'
-                  ? 'bg-red-50 border-red-500 text-red-800 dark:bg-red-900/20 dark:text-red-300'
-                  : 'bg-card border-border text-muted-foreground hover:border-red-300 hover:bg-red-50/50 dark:hover:border-red-800 dark:hover:bg-red-900/20 hover:text-foreground'
+                  ? 'bg-status-danger/15 border-status-danger text-status-danger dark:bg-status-danger/20 dark:text-status-danger'
+                  : 'bg-card border-border text-muted-foreground hover:border-status-danger/40 hover:bg-status-danger/10 hover:text-foreground'
                 }`}
               >
                 <div className={`p-3 rounded-none ${
-                  outcome === 'UNSUCCESS' ? 'bg-red-100 text-red-600 dark:bg-red-900/50' : 'bg-muted text-muted-foreground'
+                  outcome === 'UNSUCCESS' ? 'bg-status-danger/20 text-status-danger' : 'bg-muted text-muted-foreground'
                 }`}>
                   <ThumbsDown className="w-6 h-6" />
                 </div>
                 <span className="font-bold text-sm">Reaction Occurred</span>
                 {outcome === 'UNSUCCESS' && (
-                  <div className="absolute top-3 right-3 text-red-600 dark:text-red-400">
+                  <div className="absolute top-3 right-3 text-status-danger">
                     <AlertOctagon className="w-5 h-5" />
                   </div>
                 )}
@@ -183,17 +183,17 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
 
           {/* Reaction Details */}
           {outcome === 'UNSUCCESS' && (
-            <div className="bg-red-50 dark:bg-red-900/10 p-5 rounded-none border border-red-200 dark:border-red-900/30 space-y-6 animate-in fade-in slide-in-from-top-1 shadow-sm">
-              <div className="flex items-center gap-2 pb-2 border-b border-red-200 dark:border-red-900/30">
-                <Activity className="w-5 h-5 text-red-600" />
-                <h4 className="font-bold text-red-800 dark:text-red-300 text-sm uppercase tracking-wide">
+            <div className="bg-status-danger/10 p-5 rounded-none border border-status-danger/30 space-y-6 animate-in fade-in slide-in-from-top-1 shadow-sm">
+              <div className="flex items-center gap-2 pb-2 border-b border-status-danger/30">
+                <Activity className="w-5 h-5 text-status-danger" />
+                <h4 className="font-bold text-status-danger text-sm uppercase tracking-wide">
                   Reaction Documentation
                 </h4>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="legacy-reaction-time" className="text-red-900 dark:text-red-200 font-semibold flex items-center gap-2">
+                  <Label htmlFor="legacy-reaction-time" className="text-foreground font-semibold flex items-center gap-2">
                     <Clock className="w-4 h-4" /> Time to Reaction (min)
                   </Label>
                   <Input
@@ -203,19 +203,19 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                     onKeyDown={preventNegativeInput}
                     value={reactionTime}
                     onChange={(e) => onChange('reactionTime', e.target.value)}
-                    className="bg-background border-red-200 dark:border-red-900/30 focus:border-red-400 focus:ring-red-400 font-mono tabular-nums rounded-none"
+                    className="bg-background border-border focus:border-status-danger focus:ring-status-danger font-mono tabular-nums rounded-none"
                     placeholder="e.g. 5"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="legacy-intervention-type" className="text-red-900 dark:text-red-200 font-semibold flex items-center gap-2">
+                  <Label htmlFor="legacy-intervention-type" className="text-foreground font-semibold flex items-center gap-2">
                     <Stethoscope className="w-4 h-4" /> Treatment Required
                   </Label>
                   <select
                     id="legacy-intervention-type"
                     value={interventionType}
                     onChange={(e) => onChange('interventionType', e.target.value)}
-                    className="w-full h-11 px-3 border-red-200 border rounded-none focus:border-red-400 focus:ring-red-400 bg-background dark:border-red-900/30 focus:outline-none focus:ring-2 text-sm text-foreground"
+                    className="w-full h-11 px-3 border-border border rounded-none focus:border-status-danger focus:ring-status-danger bg-background focus:outline-none focus:ring-2 text-sm text-foreground"
                   >
                     <option value="" disabled>Select intervention...</option>
                     {interventionOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
@@ -225,19 +225,19 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
 
               {interventionType === 'Other' && (
                 <div className="space-y-2 animate-in fade-in">
-                  <Label htmlFor="legacy-intervention-other" className="text-red-900 dark:text-red-200">Specify Treatment Details</Label>
+                  <Label htmlFor="legacy-intervention-other" className="text-foreground">Specify Treatment Details</Label>
                   <Input
                     id="legacy-intervention-other"
                     value={interventionOther}
                     onChange={(e) => onChange('interventionOther', e.target.value)}
-                    className="bg-background border-red-200 dark:border-red-900/30 rounded-none"
+                    className="bg-background border-border rounded-none"
                     placeholder="Describe intervention..."
                   />
                 </div>
               )}
 
               <div className="space-y-3">
-                <Label className="text-red-900 dark:text-red-200 font-semibold">Observed Symptoms</Label>
+                <Label className="text-foreground font-semibold">Observed Symptoms</Label>
                 <div className="flex flex-wrap gap-2">
                   {symptomOptions.map(sym => (
                     <button
@@ -246,8 +246,8 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
                       onClick={() => onToggleSymptom(sym)}
                       className={`px-3 py-1.5 rounded-none text-xs font-medium border transition-[color,background-color,border-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                         symptoms.includes(sym)
-                        ? 'bg-red-600 text-white border-red-600 shadow-sm'
-                        : 'bg-card text-red-900 border-red-200 hover:bg-red-100 hover:border-red-300 dark:bg-background dark:text-red-200 dark:border-red-900/50 dark:hover:bg-red-900/20 dark:hover:border-red-800'
+                        ? 'bg-status-danger text-status-danger-foreground border-status-danger shadow-sm'
+                        : 'bg-card text-foreground border-border hover:bg-status-danger/10 hover:border-status-danger/30 dark:bg-background dark:text-foreground dark:hover:bg-status-danger/20'
                       }`}
                     >
                       {sym}
@@ -257,12 +257,12 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
               </div>
               {symptoms.includes('Other') && (
                 <div className="space-y-2 animate-in fade-in">
-                  <Label htmlFor="legacy-symptoms-other" className="text-red-900 dark:text-red-200">Specify Other Symptoms</Label>
+                  <Label htmlFor="legacy-symptoms-other" className="text-foreground">Specify Other Symptoms</Label>
                   <Input
                     id="legacy-symptoms-other"
                     value={symptomsOther}
                     onChange={(e) => onChange('symptomsOther', e.target.value)}
-                    className="bg-background border-red-200 dark:border-red-900/30 rounded-none"
+                    className="bg-background border-border rounded-none"
                     placeholder="Describe symptoms..."
                   />
                 </div>

@@ -93,6 +93,31 @@
           "hsl(347 75% 90%)",
           "hsl(347 75% 96%)"
         ]
+      },
+      "status-success": {
+        "role": "status",
+        "displayName": "Status Success",
+        "canonical": "hsl(142.1 76.2% 36.3%)"
+      },
+      "status-warning": {
+        "role": "status",
+        "displayName": "Status Warning",
+        "canonical": "hsl(37.7 92.1% 50.2%)"
+      },
+      "status-danger": {
+        "role": "status",
+        "displayName": "Status Danger",
+        "canonical": "hsl(346.8 77.2% 49.8%)"
+      },
+      "status-info": {
+        "role": "status",
+        "displayName": "Status Info",
+        "canonical": "hsl(217 100% 19.6%)"
+      },
+      "status-neutral": {
+        "role": "status",
+        "displayName": "Status Neutral",
+        "canonical": "hsl(215.4 16.3% 44%)"
       }
     },
     "typographyMeta": {

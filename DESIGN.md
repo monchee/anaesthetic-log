@@ -111,11 +111,30 @@ The palette combines authoritative NSW Health clinical navy with functional aler
 ### Secondary
 - **Clinical Slate Neutral** (`hsl(210 40% 96.1%)` / `#f1f5f9` in Light Mode, `hsl(0 0% 18%)` in Dark Mode): Used for secondary buttons, subtle container backdrops, and table sub-headers.
 
-### Status & Severity (Clinical Grading)
+### Status & Severity (Clinical Grading & State Feedback)
 - **Grade I — Mild (Cutaneous/Mucosal)** (`hsl(142.1 76.2% 36.3%)` / `#16a34a` in Light, `hsl(142 65% 48%)` in Dark): Emerald badge for generalized erythema, urticaria, or angioedema.
 - **Grade II — Moderate (Multi-system)** (`hsl(37.7 92.1% 50.2%)` / `#f59e0b` in Light, `hsl(44 90% 52%)` in Dark): Amber badge for cutaneous signs plus mild respiratory/cardiovascular features.
 - **Grade III — Severe (Life-threatening)** (`hsl(24.6 95% 53.1%)` / `#f97316` in Light, `hsl(25 90% 55%)` in Dark): Orange badge for bronchospasm, cardiovascular collapse, or profound shock.
 - **Grade IV — Critical (Cardiac Arrest)** (`hsl(346.8 77.2% 49.8%)` / `#e11d48` in Light, `hsl(347 75% 55%)` in Dark): Rose/red badge for circulatory arrest requiring CPR.
+- **Status Success** (`--status-success`): Feedback state for successful observations, completed protocols, and verified data.
+- **Status Warning** (`--status-warning`): Feedback state for unsaved draft changes, outstanding documents, and pharmacy preparation alerts.
+- **Status Danger** (`--status-danger`): Feedback state for positive test wheals (≥3mm), adverse challenge reactions, and suspected culprit agents.
+- **Status Info** (`--status-info`): Informational state for drafted plans and guidance callouts.
+- **Status Neutral** (`--status-neutral`): Neutral baseline state for referral worklist items and unflagged records.
+
+### Drug Category Tokens
+All 10 clinical drug categories and default categories consume semantic CSS tokens (`--cat-<category>-*`) mapped through Tailwind namespaces (`bg-category-...`, `text-category-...`, `border-l-category-...`):
+- `Muscle Relaxants` (`--cat-muscle-relaxants-*`): Blue semantic namespace.
+- `Penicillins` (`--cat-penicillins-*`): Emerald semantic namespace.
+- `Cephalosporins` (`--cat-cephalosporins-*`): Amber semantic namespace.
+- `Hypnotics` (`--cat-hypnotics-*`): Indigo semantic namespace.
+- `Local Anaesthetics` (`--cat-local-anaesthetics-*`): Teal semantic namespace.
+- `Opioids` (`--cat-opioids-*`): Orange semantic namespace.
+- `Antiseptics` (`--cat-antiseptics-*`): Rose semantic namespace.
+- `Others` (`--cat-others-*`): Slate semantic namespace.
+- `Reversal Agents` (`--cat-reversal-agents-*`): Violet semantic namespace.
+- `Proton Pump Inhibitors` (`--cat-proton-pump-inhibitors-*`): Cyan semantic namespace.
+- `Default Category` (`--cat-default-*`): Muted slate fallback.
 
 ### Neutral
 - **Background** (`hsl(210 40% 98%)` / `#f8fafc` Light, `hsl(0 0% 10%)` / `#1a1a1a` Dark): Main viewport canvas.
@@ -125,17 +144,17 @@ The palette combines authoritative NSW Health clinical navy with functional aler
 - **Border / Divider** (`hsl(214.3 31.8% 91.4%)` / `#e2e8f0` Light, `hsl(0 0% 22%)` / `#383838` Dark): 1px structural gridlines.
 
 ### Named Rules
-**The Clinical Palette Rule.** Color is never merely decorative; color carries diagnostic, navigational, or interactive meaning. Status hues (green, amber, orange, red) are reserved strictly for clinical grade, positive/negative test outcomes, or validation errors.
+**The Clinical Palette Rule.** Color is never merely decorative; color carries diagnostic, navigational, or interactive meaning. Status hues (green, amber, orange, red) are reserved strictly for clinical grade, positive/negative test outcomes, or validation errors. Grade severity tokens (`--status-grade1` through `--status-grade4`) remain strictly decoupled from drug category themes.
 
-**The Semantic Token Rule.** All UI components must consume semantic theme tokens (`--background`, `--foreground`, `--border`, `--muted`, `--primary`) rather than hardcoding static Tailwind slate or zinc values.
+**The Semantic Token Rule.** All UI components must consume semantic theme tokens (`--background`, `--foreground`, `--border`, `--muted`, `--primary`, `--status-*`, `--cat-*`) rather than hardcoding static Tailwind slate or zinc values.
 
 ## Typography
 
 **Display Font:** Public Sans (fallback: Inter, sans-serif)  
 **Body Font:** Public Sans (fallback: Inter, sans-serif)  
-**Monospace / Data Font:** ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace (used for numeric IDs, timestamps, MRN, and concentrations)
+**Monospace / Data Font:** ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace (used for numeric IDs, timestamps, MRN, wheal measurements, and concentrations with `tabular-nums`)
 
-**Character:** Clean, objective grotesque sans-serif with high x-height and exceptional legibility across dense medical data grids and printed consultation letters.
+**Character:** Clean, objective grotesque sans-serif with high x-height and exceptional legibility across dense medical data grids and printed consultation letters. All on-screen sub-12px text sizes are migrated to scalable `text-xs` or `.section-label` (`text-[0.625rem]`), while preserving print-specific sub-12px sizing (`print:text-[8px]`, `print:text-[9px]`, `print:text-[10px]`).
 
 ### Hierarchy
 - **Display** (Bold 700, `3rem` / `48px`, Line-height 1, Tracking `0.1em`): Reserved strictly for the login wordmark (`.app-wordmark`).
@@ -157,7 +176,9 @@ The DREAM layout is structured around a single-page clinical workstation model:
 - **Header Bar:** Persistent top navigation bar in NSW Health Navy (`--primary`) spanning full viewport width, housing the DREAM brand mark, active section navigation, theme switcher, and utility menu.
 - **Container Max-Width:** Content container constrained to `max-w-6xl` (1152px) with responsive horizontal padding (`px-3 sm:px-5 md:px-6`) ensuring dense readability on both 1080p+ desktop monitors and clinical tablets.
 - **Spacing Rhythm:** Based on an 8px modular baseline (4px / 8px / 16px / 24px / 32px). Dense data grids use 4px–8px internal cell padding; card sections use 16px–24px gaps.
-- **Responsive Adaptability:** Stacks vertically on mobile/tablet viewports (`< 768px`) with touch-accessible tap targets (minimum 44px height for interactive nav and action buttons), while expanding into multi-column side-by-side data grids on desktop viewports (`≥ 1024px`).
+- **Responsive Adaptability & Table Safeguards:**
+  - In intermediate viewports (768px–1024px), table columns for patient names, procedures, and suspect agents enforce safe width constraints (`max-w-[130px] md:max-w-[150px] lg:max-w-[180px] truncate`) with full-value accessible `title` attributes.
+  - Mobile card views and pagination touch controls enforce a minimum 44px tap target height.
 
 ## Elevation & Depth
 
@@ -180,7 +201,7 @@ DREAM adopts a strict, authoritative **sharp-corner form language** (`radius: 0`
 - **Borders:** Consistent 1px solid borders using `hsl(var(--border))` to frame clinical cards, table cells, and input controls.
 - **Visual Silhouette:** Rectangular, laboratory-instrument aesthetic that conveys institutional stability, clinical precision, and alignment with NSW Health digital guidelines.
 
-## Components
+## Components & Clinical Affordances
 
 ### Buttons
 - **Shape:** Rectangular (`rounded-none`).
@@ -205,15 +226,19 @@ DREAM adopts a strict, authoritative **sharp-corner form language** (`radius: 0`
 - **Rows:** Alternating subtle hover state (`hover:bg-muted/50`), border-bottom `1px solid hsl(var(--border))`.
 - **Clinical Badges:** Pill-free rectangular badges with high-contrast text and border matching clinical status colors.
 
-### Navigation & Header
-- **App Header:** NSW Health Navy background (`bg-primary`), crisp white contrast text, sharp navigation buttons with `bg-white/10` resting and `bg-white text-primary` active state.
-- **Dropdowns & Dialogs:** Rectangular containers with sharp borders, backdrop blur overlay, and smooth enter animations.
+### Clinical Affordances
+- **DraftSaveIndicator:** Unobtrusive status text displaying draft lifecycle states:
+  - *Unsaved changes:* `text-status-warning font-semibold` without exposing patient details.
+  - *Saving:* `text-muted-foreground animate-pulse` ("Saving…").
+  - *Saved:* `text-muted-foreground` ("Draft saved · HH:mm").
+  - *No draft:* Hidden or subdued label ("No draft").
+- **Pharmacy Verification Alert:** On-screen uses `border border-status-warning bg-status-warning/10 text-status-warning font-semibold text-xs` with `⚠ Confirm preparation with pharmacy`. Print views override to high-contrast black-and-white (`print:border-black print:bg-white print:text-[8px] print:text-black rounded-none`).
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** maintain strict zero-radius (`rounded-none` / `0px`) styling across all UI elements and shadcn components.
-- **Do** use semantic CSS tokens (`--primary`, `--background`, `--card`, `--border`, `--muted-foreground`) across all screens.
+- **Do** use semantic CSS tokens (`--primary`, `--background`, `--card`, `--border`, `--muted-foreground`, `--status-*`, `--cat-*`) across all screens.
 - **Do** ensure all interactive buttons and controls have visible keyboard focus indicators (`*:focus-visible`).
 - **Do** target WCAG AA minimum 4.5:1 text contrast ratios across light and dark themes.
 - **Do** ensure all print views (testing plans, clinical reports, patient handouts) contain `@media print` break controls and zero animations.

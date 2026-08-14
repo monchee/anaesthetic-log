@@ -188,6 +188,7 @@ export function AnaestheticLogApp() {
           setFormData={setFormData}
           lastDraftSavedAt={lastDraftSavedAt}
           isSavingDraft={isSavingDraft}
+          isDirty={isTestingDraftDirty}
           onBack={() => setScreen(Screen.LOG)}
           onSubmit={handleSubmit}
         />

@@ -111,8 +111,8 @@ describe('PatientHistory suspected culprit agents', () => {
   it('keeps populated suspected agents in the danger panel', () => {
     renderHistory({ suspectedAgents: ['Rocuronium'] });
 
-    const agent = screen.getAllByText('Rocuronium').find(element => element.closest('.bg-red-50'));
-    expect(agent).toHaveClass('bg-red-500', 'text-white');
+    const agent = screen.getAllByText('Rocuronium').find(element => element.closest('.bg-status-danger\\/10'));
+    expect(agent).toHaveClass('bg-status-danger', 'text-status-danger-foreground');
   });
 
   it('toggles a timed medication with the exact drug name', () => {
@@ -129,7 +129,7 @@ describe('PatientHistory suspected culprit agents', () => {
 
     const markedDrug = screen.getByRole('button', { name: 'Unmark Propofol as suspected culprit agent' });
     expect(markedDrug).toHaveAttribute('aria-pressed', 'true');
-    expect(markedDrug).toHaveClass('bg-red-50');
+    expect(markedDrug).toHaveClass('bg-status-danger/10', 'text-status-danger');
   });
 });
 

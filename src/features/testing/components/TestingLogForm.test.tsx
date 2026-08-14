@@ -204,7 +204,7 @@ describe('TestingLogForm', () => {
       render(<TestWrapper initialData={mockFormData} props={mockProps} />);
 
       const positiveInputs = screen.getAllByDisplayValue('3');
-      expect(positiveInputs[0]).toHaveClass('text-red-700');
+      expect(positiveInputs[0]).toHaveClass('text-status-danger');
     });
 
     it('prevents negative input in test results', () => {
@@ -234,7 +234,7 @@ describe('TestingLogForm', () => {
       fireEvent.click(symptomButton);
 
       await waitFor(() => {
-        expect(symptomButton).toHaveClass('bg-red-600');
+        expect(symptomButton).toHaveClass('bg-status-danger');
       });
     });
 
@@ -261,12 +261,12 @@ describe('TestingLogForm', () => {
       render(<TestWrapper initialData={formDataWithSymptoms} props={mockProps} />);
 
       const rashButton = screen.getByText('Rash');
-      expect(rashButton).toHaveClass('bg-red-600');
+      expect(rashButton).toHaveClass('bg-status-danger');
 
       fireEvent.click(rashButton);
 
       await waitFor(() => {
-        expect(rashButton).not.toHaveClass('bg-red-600');
+        expect(rashButton).not.toHaveClass('bg-status-danger');
       });
     });
   });

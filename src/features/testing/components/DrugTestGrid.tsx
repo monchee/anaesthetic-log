@@ -39,13 +39,13 @@ const WhealInput = ({ value, onChange }: WhealInputProps) => (
       inputMode="decimal"
       pattern="[0-9]*"
       onKeyDown={preventNegativeInput}
-      className={`h-9 text-center font-mono tabular-nums rounded-none ${isPositive(value) ? 'text-red-700 font-bold bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/50' : ''}`}
+      className={`h-9 text-center font-mono tabular-nums rounded-none ${isPositive(value) ? 'text-status-danger font-bold bg-status-danger/10 border-status-danger/40 dark:bg-status-danger/20 dark:text-status-danger dark:border-status-danger/50' : ''}`}
       placeholder="-"
       value={value}
       onChange={(e) => onChange(e.target.value)}
     />
     {isPositive(value) ? (
-      <span className="pointer-events-none absolute -right-1.5 -top-1.5 z-10 rounded-none bg-red-600 px-1 py-0.5 text-[9px] font-bold leading-none text-white dark:bg-red-500">
+      <span className="pointer-events-none absolute -right-1.5 -top-1.5 z-10 rounded-none bg-status-danger px-1 py-0.5 text-[0.625rem] font-bold leading-none text-status-danger-foreground">
         +POS
       </span>
     ) : null}

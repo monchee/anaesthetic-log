@@ -1,3 +1,14 @@
+## [0.76.0] — 2026-08-14 (Clinical Workbench Refinement)
+
+Summary: Refines the Clinical Workbench interface with semantic category and status tokens, improved typography and print scaling, responsive PatientTable workflows, enhanced draft and pharmacy verification affordances, and expanded regression coverage.
+
+### Added
+- **Semantic category and status tokens** — Extends Tailwind design tokens with semantic drug category palettes (`--cat-*`) and structured status color tokens (`success`, `warning`, `danger`, `info`, `neutral`) for consistent theme styling across clinical views.
+- **Typography and print scaling** — Refines Public Sans font hierarchy and print stylesheets to guarantee legibility, optimal contrast, and robust black-and-white page scaling across clinical forms and reports.
+- **Responsive PatientTable** — Improves table layout, quick filters (`Needs action`, `Reported`), search responsiveness, and pagination affordances on mobile and tablet viewport widths.
+- **Draft and pharmacy affordances** — Streamlines in-progress session persistence indicators and highlights unverified masterlist preparations with clear pharmacy confirmation callouts.
+- **Regression test coverage** — Adds comprehensive unit and component test suites covering patient worklist filtering, design token contracts, and draft lifecycle transitions.
+
 ## [0.75.0] — 2026-08-14 (Direct Testing Entry)
 
 Summary: Adds quick-start entry points for REDCap review and direct Allergy Testing, with editable patient identity fields and safe draft protection.

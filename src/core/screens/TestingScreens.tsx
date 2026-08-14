@@ -47,6 +47,7 @@ interface TestingScreenProps {
   setFormData: React.Dispatch<React.SetStateAction<LogFormData>>;
   lastDraftSavedAt: number | null;
   isSavingDraft: boolean;
+  isDirty?: boolean;
   onBack: () => void;
   onSubmit: () => LogFormData;
 }
@@ -58,6 +59,7 @@ export function TestingScreen({
   setFormData,
   lastDraftSavedAt,
   isSavingDraft,
+  isDirty = false,
   onBack,
   onSubmit,
 }: TestingScreenProps) {
@@ -92,6 +94,7 @@ export function TestingScreen({
       <div className="flex min-h-4 justify-end px-1">
         <DraftSaveIndicator
           isSaving={isSavingDraft}
+          isDirty={isDirty}
           lastSavedAt={lastDraftSavedAt}
         />
       </div>

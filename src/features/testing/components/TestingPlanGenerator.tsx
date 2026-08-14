@@ -511,7 +511,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                                 {selectedDrugs.includes(drug) && <Check className="w-3 h-3 shrink-0" />}
                                                 {drug}
                                                 {selectedDrugs.includes(drug) && needsPharmacyVerification && (
-                                                    <span className="border border-amber-400 bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold leading-tight text-amber-900 dark:border-amber-600 dark:bg-amber-950/40 dark:text-amber-200 rounded-none">
+                                                    <span className="border border-status-warning bg-status-warning/10 px-1.5 py-0.5 text-xs font-semibold leading-tight text-status-warning rounded-none">
                                                         ⚠ Confirm preparation with pharmacy
                                                     </span>
                                                 )}
@@ -645,7 +645,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                         <button
                                             type="button"
                                             onClick={() => removeCustomDrug(entry.name)}
-                                            className="border border-l-0 border-border px-2 text-muted-foreground hover:text-red-500 dark:hover:text-red-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-destructive rounded-none"
+                                            className="border border-l-0 border-border px-2 text-muted-foreground hover:text-destructive transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-destructive rounded-none"
                                             aria-label={`Remove custom drug ${entry.name}`}
                                             title={`Remove ${entry.name}`}
                                         >
@@ -673,7 +673,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             <div key={si} className="flex items-center gap-1.5">
                                                 <Input className="h-7 text-xs flex-1 rounded-none font-mono" placeholder="Ratio (e.g. 1:100)" value={step.ratio} onChange={ev => updateCustomEntryStep(entry.name, si, 'ratio', ev.target.value)} />
                                                 <Input className="h-7 text-xs flex-1 rounded-none font-mono" placeholder="Conc. (e.g. 0.1mg/mL)" value={step.concentration} onChange={ev => updateCustomEntryStep(entry.name, si, 'concentration', ev.target.value)} />
-                                                <button onClick={() => removeCustomEntryIdtStep(entry.name, si)} className="shrink-0 text-muted-foreground/50 hover:text-red-500 transition-colors" title="Remove step">
+                                                <button onClick={() => removeCustomEntryIdtStep(entry.name, si)} className="shrink-0 text-muted-foreground/50 hover:text-destructive transition-colors" title="Remove step">
                                                     <X className="w-3.5 h-3.5" />
                                                 </button>
                                             </div>

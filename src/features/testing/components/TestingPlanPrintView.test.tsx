@@ -105,7 +105,7 @@ describe('TestingPlanPrintView', () => {
     );
 
     const warning = screen.getByText('⚠ Confirm preparation with pharmacy');
-    expect(warning).toHaveClass('print:border-black', 'print:bg-white', 'print:text-black', 'font-bold');
+    expect(warning).toHaveClass('border-status-warning', 'text-status-warning', 'print:border-black', 'print:bg-white', 'print:text-black', 'font-bold');
     expect(screen.getAllByText(/Confirm preparation with pharmacy/)).toHaveLength(1);
   });
 

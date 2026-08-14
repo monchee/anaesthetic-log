@@ -13,8 +13,8 @@ export function AssessmentPlanSection({ plan, onInputChange }: AssessmentPlanSec
     <Card style={{ '--section-index': 4 } as React.CSSProperties} className="animate-section-reveal">
       <CardHeader className="pb-3 border-b border-border">
         <CardTitle className="flex items-center gap-2 text-base text-foreground">
-          <div className="bg-emerald-100 dark:bg-emerald-900/40 p-1.5 rounded-none">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <div className="bg-status-success/15 dark:bg-status-success/20 p-1.5 rounded-none">
+            <CheckCircle2 className="w-4 h-4 text-status-success" />
           </div>
           Assessment & Plan
         </CardTitle>

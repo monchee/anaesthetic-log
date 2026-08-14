@@ -162,7 +162,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                                                     }`}
                                             >
                                                 <Icon className="w-4 h-4" />
-                                                <span className={isActive ? 'inline' : 'hidden sm:inline'}>{label}</span>
+                                                <span className={isActive ? 'inline' : 'hidden lg:inline'}>{label}</span>
                                             </button>
                                         );
                                     })}

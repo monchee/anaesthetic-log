@@ -206,10 +206,10 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                 {history.suspectedAgents && history.suspectedAgents.length > 0 ? (
                     <div className="space-y-2">
                             <div className="flex items-center gap-2">
-                            <AlertTriangle className="h-3.5 w-3.5 text-red-500 shrink-0" />
-                            <span className="text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400">Suspected Culprit Agents</span>
+                            <AlertTriangle className="h-3.5 w-3.5 text-status-danger shrink-0" />
+                            <span className="text-xs font-bold uppercase tracking-wider text-status-danger">Suspected Culprit Agents</span>
                         </div>
-                        <div className="bg-red-50 dark:bg-red-950/20 p-3 rounded-none border border-red-100 dark:border-red-900/30 flex flex-wrap gap-2 min-h-[44px] items-center">
+                        <div className="bg-status-danger/10 p-3 rounded-none border border-status-danger/30 flex flex-wrap gap-2 min-h-[44px] items-center">
                             {history.suspectedAgents.map((agent, i) => (
                                 <Badge key={i} variant="danger" className="text-xs px-2.5 py-0.5">{agent}</Badge>
                             ))}
@@ -421,7 +421,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                 <div className="bg-background rounded-none border border-border shadow-sm overflow-visible flex-1 flex flex-col">
                     
                     {/* Key Times Header */}
-                    <div className="bg-slate-100 dark:bg-card border-b border-border px-4 py-2 flex items-center gap-4 text-xs shrink-0 rounded-none">
+                    <div className="bg-muted dark:bg-card border-b border-border px-4 py-2 flex items-center gap-4 text-xs shrink-0 rounded-none">
                         <div className="flex items-center gap-1.5">
                             <span className="section-label">Induction:</span>
                             <span className="font-mono font-semibold text-primary dark:text-primary text-xs">
@@ -433,7 +433,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                         )}
                         <div className="flex items-center gap-1.5">
                             <span className="section-label">Reaction:</span>
-                            <span className="font-mono font-bold text-red-600 dark:text-red-400 text-xs">
+                            <span className="font-mono font-bold text-status-danger text-xs">
                                 {formatTime(history.reactionTime)}
                             </span>
                         </div>
@@ -447,10 +447,10 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                                     <div key={idx} className="relative pl-6">
                                         <div className={`absolute top-0.5 rounded-full border-2 shadow-sm z-10
                                             ${event.type === 'reaction'
-                                                ? 'h-4 w-4 -left-[8px] bg-red-500 border-white dark:border-border ring-2 ring-red-200 dark:ring-red-900/50'
+                                                ? 'h-4 w-4 -left-[8px] bg-status-danger border-white dark:border-border ring-2 ring-status-danger/30'
                                                 : event.type === 'induction'
                                                 ? 'h-3.5 w-3.5 -left-[7px] bg-primary border-white dark:border-border'
-                                                : 'h-2.5 w-2.5 -left-[5px] bg-slate-300 dark:bg-muted/60 border-white dark:border-border'}`}
+                                                : 'h-2.5 w-2.5 -left-[5px] bg-muted-foreground/40 dark:bg-muted/60 border-white dark:border-border'}`}
                                         />
                                         
                                         <div className="flex flex-col gap-0.5">
@@ -464,7 +464,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                                                             <MonitorCheck className="w-3.5 h-3.5 text-primary opacity-70" />
                                                         </div>
                                                     ) : event.type === 'reaction' ? (
-                                                        <span className="font-bold text-xs text-red-700 dark:text-red-300">
+                                                        <span className="font-bold text-xs text-status-danger">
                                                             {event.label}
                                                         </span>
                                                     ) : event.type === 'med' ? (
@@ -475,7 +475,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                                                             aria-label={`${history.suspectedAgents.includes(event.label) ? 'Unmark' : 'Mark'} ${event.label} as suspected culprit agent`}
                                                             className={`inline-flex items-center gap-1 border px-2 py-1 text-xs font-semibold transition-colors ${
                                                                 history.suspectedAgents.includes(event.label)
-                                                                    ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300'
+                                                                    ? 'border-status-danger/30 bg-status-danger/10 text-status-danger'
                                                                     : 'border-border bg-muted/40 text-foreground/90 hover:border-primary/50 hover:text-primary'
                                                             }`}
                                                         >
@@ -487,7 +487,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                                                     )}
                                                 </div>
                                                 <span className={`font-mono text-xs font-bold ${
-                                                    event.type === 'reaction' ? 'text-red-600 dark:text-red-400' :
+                                                    event.type === 'reaction' ? 'text-status-danger' :
                                                     event.type === 'induction' ? 'text-primary dark:text-primary' :
                                                     'text-muted-foreground'
                                                 }`}>
@@ -523,7 +523,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                                         aria-label={`${history.suspectedAgents.includes(drug) ? 'Unmark' : 'Mark'} ${drug} as suspected culprit agent`}
                                         className={`inline-flex items-center gap-1 border px-2.5 py-0.5 text-xs font-medium transition-colors ${
                                             history.suspectedAgents.includes(drug)
-                                                ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300'
+                                                ? 'border-status-danger/30 bg-status-danger/10 text-status-danger'
                                                 : 'border-border bg-muted text-muted-foreground hover:border-primary/50 hover:text-primary'
                                         }`}
                                     >
@@ -536,7 +536,7 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
                     )}
 
                     {/* Outcome Footer */}
-                    <div className="bg-slate-100 dark:bg-card border-t border-border px-4 py-2 flex items-center justify-between shrink-0 rounded-none">
+                    <div className="bg-muted dark:bg-card border-t border-border px-4 py-2 flex items-center justify-between shrink-0 rounded-none">
                             <span className="section-label">Outcome</span>
                             <div className={`font-bold text-xs flex items-center gap-1.5 ${outcomeConfig.color}`}>
                             <OutcomeIcon className="h-3.5 w-3.5" />

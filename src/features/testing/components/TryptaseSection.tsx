@@ -19,7 +19,7 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
           </div>
           Serial Serum Tryptase
           {formData.tryptase?.source === 'referral' && (
-            <Badge variant="outline" className="ml-auto gap-1 text-[11px] font-normal normal-case tracking-normal text-muted-foreground rounded-none">
+            <Badge variant="outline" className="ml-auto gap-1 text-xs font-normal normal-case tracking-normal text-muted-foreground rounded-none">
               <FileInput className="h-3 w-3" aria-hidden="true" />
               Imported from referral — verify
             </Badge>
@@ -66,12 +66,12 @@ export function TryptaseSection({ formData, setFormData }: TryptaseSectionProps)
                   },
                 }))}
                 className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-none border-2 border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                  formData.tryptase.significantElevation ? 'bg-red-500' : 'bg-muted'
+                  formData.tryptase.significantElevation ? 'bg-status-danger' : 'bg-muted'
                 }`}
               >
                 <span className={`pointer-events-none inline-block h-5 w-5 rounded-none bg-background shadow-sm transform transition-transform ${formData.tryptase.significantElevation ? 'translate-x-5' : 'translate-x-0'}`} />
               </button>
-              <Label className={formData.tryptase.significantElevation ? 'text-red-600 font-semibold' : 'text-foreground'}>
+              <Label className={formData.tryptase.significantElevation ? 'text-status-danger font-semibold' : 'text-foreground'}>
                 Clinically significant dynamic elevation
               </Label>
             </div>
