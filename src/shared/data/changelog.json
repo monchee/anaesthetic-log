@@ -1,5 +1,16 @@
 [
   {
+    "version": "v0.77.1",
+    "codename": "Testing Category Colours Restored",
+    "date": "16 August 2026",
+    "summary": "Restores the distinct semantic drug-category colour palette across light and dark themes for all ten testing categories, protected by comprehensive regression tests.",
+    "highlight": false,
+    "changes": [
+      "Restored semantic drug-category colour palette \u2014 Reinstates the distinct semantic category tokens across all ten drug categories in both light and dark themes, restoring visual distinction across testing plans, workbenches, and reports.",
+      "Category theme regression tests \u2014 Adds automated regression tests in `constants.test.ts` verifying unique class mappings across all drug categories and distinct CSS token definitions in `index.css` for both light and dark themes."
+    ]
+  },
+  {
     "version": "v0.77.0",
     "codename": "Clinical Workflow Safeguards",
     "date": "15 August 2026",

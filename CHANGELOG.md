@@ -1,3 +1,13 @@
+## [0.77.1] — 2026-08-16 (Testing Category Colours Restored)
+
+Summary: Restores the distinct semantic drug-category colour palette across light and dark themes for all ten testing categories, protected by comprehensive regression tests.
+
+### Fixed
+- **Restored semantic drug-category colour palette** — Reinstates the distinct semantic category tokens across all ten drug categories in both light and dark themes, restoring visual distinction across testing plans, workbenches, and reports.
+
+### Added
+- **Category theme regression tests** — Adds automated regression tests in `constants.test.ts` verifying unique class mappings across all drug categories and distinct CSS token definitions in `index.css` for both light and dark themes.
+
 ## [0.77.0] — 2026-08-15 (Clinical Workflow Safeguards)
 
 Summary: Implements clinical work context binding, patient-switch safeguards, progressive testing workflow, outbound action confirmation with redaction, active session TTL cleanup, and interface navigation polish.

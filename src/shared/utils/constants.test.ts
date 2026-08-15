@@ -43,4 +43,63 @@ describe('CATEGORY_THEMES and DEFAULT_THEME semantic mapping', () => {
     expect(cephalosporins.activeBg).toBe('bg-category-cephalosporins-bg');
     expect(cephalosporins.activeRing).toBe('ring-category-cephalosporins-ring');
   });
+
+  it('ensures each drug category maps to unique distinct theme token classes', () => {
+    const categoryNames = Object.keys(DRUG_CATEGORIES);
+    const activeBgs = new Set(categoryNames.map(cat => CATEGORY_THEMES[cat].activeBg));
+    const activeRings = new Set(categoryNames.map(cat => CATEGORY_THEMES[cat].activeRing));
+    const headerTexts = new Set(categoryNames.map(cat => CATEGORY_THEMES[cat].headerText));
+    const headerBorders = new Set(categoryNames.map(cat => CATEGORY_THEMES[cat].headerBorder));
+    const btnSelecteds = new Set(categoryNames.map(cat => CATEGORY_THEMES[cat].btnSelected));
+    const pulses = new Set(categoryNames.map(cat => CATEGORY_THEMES[cat].pulse));
+    const rowBorders = new Set(categoryNames.map(cat => CATEGORY_THEMES[cat].rowBorder));
+    const actionTexts = new Set(categoryNames.map(cat => CATEGORY_THEMES[cat].actionText));
+
+    expect(activeBgs.size).toBe(categoryNames.length);
+    expect(activeRings.size).toBe(categoryNames.length);
+    expect(headerTexts.size).toBe(categoryNames.length);
+    expect(headerBorders.size).toBe(categoryNames.length);
+    expect(btnSelecteds.size).toBe(categoryNames.length);
+    expect(pulses.size).toBe(categoryNames.length);
+    expect(rowBorders.size).toBe(categoryNames.length);
+    expect(actionTexts.size).toBe(categoryNames.length);
+  });
+
+  it('ensures index.css defines distinct category token values across all 10 drug categories in both light and dark themes', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const cssPath = path.resolve(process.cwd(), 'index.css');
+    const cssContent = fs.readFileSync(cssPath, 'utf-8');
+
+    const categorySlugs = [
+      'muscle-relaxants',
+      'penicillins',
+      'cephalosporins',
+      'hypnotics',
+      'local-anaesthetics',
+      'opioids',
+      'antiseptics',
+      'others',
+      'reversal-agents',
+      'proton-pump-inhibitors',
+    ];
+
+    const [lightSection, darkSection] = cssContent.split('.dark {');
+    expect(lightSection).toBeDefined();
+    expect(darkSection).toBeDefined();
+
+    const lightSolidTokens = categorySlugs.map(slug => {
+      const match = lightSection.match(new RegExp(`--cat-${slug}-solid:\\s*([^;]+);`));
+      expect(match, `missing light --cat-${slug}-solid in index.css`).not.toBeNull();
+      return match![1].trim();
+    });
+    expect(new Set(lightSolidTokens).size).toBe(categorySlugs.length);
+
+    const darkSolidTokens = categorySlugs.map(slug => {
+      const match = darkSection.match(new RegExp(`--cat-${slug}-solid:\\s*([^;]+);`));
+      expect(match, `missing dark --cat-${slug}-solid in index.css`).not.toBeNull();
+      return match![1].trim();
+    });
+    expect(new Set(darkSolidTokens).size).toBe(categorySlugs.length);
+  });
 });
