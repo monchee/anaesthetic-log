@@ -38,13 +38,13 @@ test.describe('Smoke Tests', () => {
 
   test('can navigate to dashboard', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('[role="banner"]', { timeout: 15000 });
+    await page.waitForSelector('[role="banner"], aside', { timeout: 15000 });
     await dismissHelpModal(page);
 
-    // Click dashboard button via the primary nav
-    const dashboardButton = page.locator('nav[aria-label="Primary navigation"] button[aria-label="Dashboard"]');
-    await expect(dashboardButton).toBeVisible({ timeout: 10000 });
-    await dashboardButton.click();
+    // Click dashboard link via primary nav
+    const dashboardLink = page.locator('a[href="/dashboard"]').first();
+    await expect(dashboardLink).toBeVisible({ timeout: 10000 });
+    await dashboardLink.click();
 
     // Verify dashboard loads
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
@@ -52,18 +52,19 @@ test.describe('Smoke Tests', () => {
 
   test('theme toggle works', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('[role="banner"]', { timeout: 15000 });
+    await page.waitForSelector('[role="banner"], aside', { timeout: 15000 });
     await dismissHelpModal(page);
 
-    // Theme toggle is in the Menu dropdown
-    const menuTrigger = page.locator('[aria-label="Menu"]').first();
-    await expect(menuTrigger).toBeVisible({ timeout: 10000 });
-    await menuTrigger.click();
-
-    // Find theme toggle item (Light Mode or Dark Mode)
-    const themeItem = page.locator('[role="menuitem"]').filter({ hasText: /light mode|dark mode/i }).first();
-    await expect(themeItem).toBeVisible({ timeout: 5000 });
-    await themeItem.click();
+    // Theme toggle is in the Sidebar or mobile Drawer
+    const themeButton = page.locator('button:has-text("Theme")').first();
+    if (await themeButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await themeButton.click();
+    } else {
+      const menuTrigger = page.locator('[aria-label="Open Navigation Menu"]').first();
+      await menuTrigger.click();
+      const drawerThemeButton = page.locator('#mobile-navigation-drawer button:has-text("Theme")').first();
+      await drawerThemeButton.click();
+    }
 
     // Verify theme changed (dark or light class on html)
     const htmlElement = page.locator('html');

@@ -20,10 +20,10 @@ export function DraftSaveIndicator({
   const dirty = isDirty || hasChanges;
   const status = isSaving
     ? 'Saving…'
-    : dirty
-      ? 'Unsaved changes'
-      : lastSavedAt
-        ? `Draft saved · ${formatTime(lastSavedAt)}`
+    : lastSavedAt
+      ? `Draft saved · ${formatTime(lastSavedAt)}`
+      : dirty
+        ? 'Unsaved changes'
         : showNoDraft
           ? 'No draft'
           : '';
@@ -37,8 +37,8 @@ export function DraftSaveIndicator({
       className={cn(
         'text-xs font-medium tabular-nums transition-colors',
         isSaving && 'text-muted-foreground animate-pulse',
-        dirty && !isSaving && 'text-status-warning font-semibold',
-        !dirty && !isSaving && 'text-muted-foreground',
+        !isSaving && !lastSavedAt && dirty && 'text-status-warning font-semibold',
+        !isSaving && (lastSavedAt || !dirty) && 'text-muted-foreground',
         className,
       )}
     >

@@ -9,7 +9,7 @@ test('uploaded patient cohort persists across a browser refresh', async ({ page 
     await quickStartDialog.getByRole('button', { name: /skip for now|got it/i }).click();
   }
 
-  await page.getByRole('button', { name: 'Upload CSV', exact: true }).click();
+  await page.getByRole('main').getByRole('button', { name: 'Upload CSV', exact: true }).click();
   const uploadSheet = page.getByRole('dialog', { name: 'Update Database' });
   await expect(uploadSheet).toBeVisible();
   await uploadSheet.locator('input[type="file"]').setInputFiles('e2e/fixtures/redcap-sample.csv');

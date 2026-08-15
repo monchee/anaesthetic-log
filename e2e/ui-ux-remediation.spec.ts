@@ -82,8 +82,15 @@ test.describe('UI/UX remediation regressions', () => {
       await dialog.getByRole('button', { name: 'Skip for now' }).click();
     }
 
-    const activeDashboard = page
-      .locator('nav[aria-label="Primary navigation"] button[aria-current="page"]')
+    const menuTrigger = page.getByRole('button', { name: 'Open Navigation Menu' });
+    await expect(menuTrigger).toBeVisible({ timeout: 5000 });
+    await menuTrigger.click();
+
+    const drawer = page.getByRole('dialog', { name: 'Navigation Drawer' });
+    await expect(drawer).toBeVisible({ timeout: 5000 });
+
+    const activeDashboard = drawer
+      .locator('nav[aria-label="Primary mobile navigation"] a[aria-current="page"]')
       .filter({ hasText: 'Dashboard' });
 
     await expect(activeDashboard).toBeVisible();

@@ -35,6 +35,13 @@ describe('DraftSaveIndicator', () => {
     expect(screen.queryByText('Unsaved changes')).not.toBeInTheDocument();
   });
 
+  it('prioritizes saved draft status over dirty state when lastSavedAt is present', () => {
+    const savedAt = new Date(2026, 5, 10, 14, 5).getTime();
+    render(<DraftSaveIndicator isDirty lastSavedAt={savedAt} />);
+    expect(screen.getByText('Draft saved · 14:05')).toBeInTheDocument();
+    expect(screen.queryByText('Unsaved changes')).not.toBeInTheDocument();
+  });
+
   it('renders No draft when showNoDraft is true and no draft exists', () => {
     render(<DraftSaveIndicator showNoDraft lastSavedAt={null} />);
     expect(screen.getByText('No draft')).toBeInTheDocument();

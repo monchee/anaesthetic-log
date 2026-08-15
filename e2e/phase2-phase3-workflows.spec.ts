@@ -21,7 +21,7 @@ async function openFreshApp(page: Page, path = '/') {
 }
 
 async function uploadPatientDatabase(page: Page) {
-  await page.getByRole('button', { name: 'Upload CSV', exact: true }).click();
+  await page.getByRole('main').getByRole('button', { name: 'Upload CSV', exact: true }).click();
   const uploadSheet = page.getByRole('dialog', { name: 'Update Database' });
   await expect(uploadSheet).toBeVisible();
   await uploadSheet.locator('input[type="file"]').setInputFiles(CSV_FIXTURE);

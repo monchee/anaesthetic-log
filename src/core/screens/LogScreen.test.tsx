@@ -1,17 +1,29 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Screen } from '@/types';
+import { Screen, Patient } from '@/types';
 import { createMockLogFormData } from '@/src/test/factories/testingDataFactory';
 import { createMockPatient } from '@/src/test/factories/patientFactory';
 import { LogScreen } from './LogScreen';
 
 vi.mock('@core/components/ScreenLayout', () => ({
-  ScreenLayout: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  ScreenLayout: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 vi.mock('@features/patients/components/PatientSelector', () => ({
-  default: () => <div>Patient selector</div>,
+  default: ({ onSelectPatient }: { onSelectPatient: (p: Patient) => void }) => (
+    <div>
+      <span>Patient selector</span>
+      <button
+        type="button"
+        onClick={() =>
+          onSelectPatient(createMockPatient({ id: 'new-patient-99', firstName: 'Sarah', lastName: 'Connor' }))
+        }
+      >
+        Select Candidate Patient
+      </button>
+    </div>
+  ),
 }));
 
 describe('LogScreen clear-report confirmation', () => {
@@ -243,5 +255,173 @@ describe('LogScreen Home quick-start actions', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Start fresh session' }));
     expect(onStartDirectTesting).toHaveBeenCalledOnce();
+  });
+});
+
+describe('LogScreen Workflow Mode ordering', () => {
+  const baseProps = {
+    layoutProps: {
+      setScreen: vi.fn(),
+      currentScreen: Screen.LOG,
+      databaseDate: '',
+      showDisclaimer: false,
+      isCustomData: false,
+      onDismissDisclaimer: vi.fn(),
+      onUploadPatients: vi.fn(),
+      csvUploadSheetOpen: false,
+      onCSVUploadSheetOpenChange: vi.fn(),
+    },
+    appSubtitle: '',
+    selectedPatient: null,
+    lastSavedRecord: null,
+    activeReportSavedAt: null,
+    isPatientDialogOpen: false,
+    setIsPatientDialogOpen: vi.fn(),
+    confirmClearOpen: false,
+    setConfirmClearOpen: vi.fn(),
+    patients: [],
+    onPatientSelect: vi.fn(),
+    onManualDetailChange: vi.fn(),
+    onToggleSuspectedAgent: vi.fn(),
+    onSetTestingPlanData: vi.fn(),
+    onProceedToTesting: vi.fn(),
+    onStartDirectTesting: vi.fn(),
+    onClearActiveReport: vi.fn(),
+  };
+
+  it('orders Patient Selection before Quick-start actions in clinician mode', () => {
+    render(<LogScreen {...baseProps} workflowMode="clinician" />);
+
+    const patientCard = screen.getByText('Patient Selection');
+    const directAction = screen.getByRole('button', { name: /Open Allergy Testing/i });
+
+    // Compare document order
+    expect(patientCard.compareDocumentPosition(directAction)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
+  });
+
+  it('orders Quick-start actions before Patient Selection in nurse mode', () => {
+    render(<LogScreen {...baseProps} workflowMode="nurse" />);
+
+    const directAction = screen.getByRole('button', { name: /Open Allergy Testing/i });
+    const patientCard = screen.getByText('Patient Selection');
+
+    // In nurse mode, directAction should precede patientCard
+    expect(directAction.compareDocumentPosition(patientCard)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
+  });
+});
+
+describe('LogScreen active work banners', () => {
+  const baseProps = {
+    layoutProps: {
+      setScreen: vi.fn(),
+      currentScreen: Screen.LOG,
+      databaseDate: '',
+      showDisclaimer: false,
+      isCustomData: false,
+      onDismissDisclaimer: vi.fn(),
+      onUploadPatients: vi.fn(),
+      csvUploadSheetOpen: false,
+      onCSVUploadSheetOpenChange: vi.fn(),
+    },
+    appSubtitle: '',
+    selectedPatient: null,
+    lastSavedRecord: createMockLogFormData({ firstName: 'Alex', lastName: 'Rivera' }),
+    activeReportSavedAt: Date.now() - 5000,
+    isPatientDialogOpen: false,
+    setIsPatientDialogOpen: vi.fn(),
+    confirmClearOpen: false,
+    setConfirmClearOpen: vi.fn(),
+    patients: [],
+    onPatientSelect: vi.fn(),
+    onManualDetailChange: vi.fn(),
+    onToggleSuspectedAgent: vi.fn(),
+    onSetTestingPlanData: vi.fn(),
+    onProceedToTesting: vi.fn(),
+    onStartDirectTesting: vi.fn(),
+    onClearActiveReport: vi.fn(),
+    isTestingDraftDirty: true,
+  };
+
+  it('orders Active Report before Testing Draft in clinician mode', () => {
+    render(<LogScreen {...baseProps} workflowMode="clinician" />);
+
+    const activeReportText = screen.getByText(/Active report:/i);
+    const draftText = screen.getByText(/In-progress testing session/i);
+
+    expect(activeReportText.compareDocumentPosition(draftText)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
+  });
+
+  it('orders Testing Draft before Active Report in nurse mode', () => {
+    render(<LogScreen {...baseProps} workflowMode="nurse" />);
+
+    const draftText = screen.getByText(/In-progress testing session/i);
+    const activeReportText = screen.getByText(/Active report:/i);
+
+    expect(draftText.compareDocumentPosition(activeReportText)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
+  });
+});
+
+describe('LogScreen dirty patient switch confirmation', () => {
+  it('guards selecting a different patient when testing draft is dirty', () => {
+    const onPatientSelect = vi.fn();
+    const onResetForm = vi.fn();
+
+    render(
+      <LogScreen
+        layoutProps={{
+          setScreen: vi.fn(),
+          currentScreen: Screen.LOG,
+          databaseDate: '',
+          showDisclaimer: false,
+          isCustomData: false,
+          onDismissDisclaimer: vi.fn(),
+          onUploadPatients: vi.fn(),
+          csvUploadSheetOpen: false,
+          onCSVUploadSheetOpenChange: vi.fn(),
+        }}
+        appSubtitle=""
+        selectedPatient={createMockPatient({ id: 'current-patient-1', firstName: 'John', lastName: 'Doe' })}
+        lastSavedRecord={null}
+        activeReportSavedAt={null}
+        isPatientDialogOpen={false}
+        setIsPatientDialogOpen={vi.fn()}
+        confirmClearOpen={false}
+        setConfirmClearOpen={vi.fn()}
+        patients={[]}
+        onPatientSelect={onPatientSelect}
+        onManualDetailChange={vi.fn()}
+        onToggleSuspectedAgent={vi.fn()}
+        onSetTestingPlanData={vi.fn()}
+        onProceedToTesting={vi.fn()}
+        onStartDirectTesting={vi.fn()}
+        onClearActiveReport={vi.fn()}
+        isTestingDraftDirty={true}
+        onResetForm={onResetForm}
+      />
+    );
+
+    // Click candidate patient
+    fireEvent.click(screen.getByRole('button', { name: 'Select Candidate Patient' }));
+
+    // Should open confirmation dialog and not switch immediately
+    expect(screen.getByRole('dialog')).toHaveTextContent('Switch patient?');
+    expect(screen.getByRole('dialog')).toHaveTextContent('You have unsaved changes in your current testing session.');
+    expect(onPatientSelect).not.toHaveBeenCalled();
+
+    // Confirm switch
+    fireEvent.click(screen.getByRole('button', { name: 'Switch patient' }));
+
+    expect(onResetForm).toHaveBeenCalledOnce();
+    expect(onPatientSelect).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'new-patient-99', firstName: 'Sarah' })
+    );
   });
 });

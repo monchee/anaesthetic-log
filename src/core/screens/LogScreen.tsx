@@ -35,8 +35,9 @@ import { DRUG_CATEGORIES } from '@shared/utils/constants';
 import { Patient, LogFormData, Screen, TestingPlanData } from '@/types';
 import { CommonScreenLayoutProps } from './types';
 import { ScreenLayout } from '@core/components/ScreenLayout';
+import { WorkflowMode } from '@core/hooks/useWorkflowMode';
 
-interface LogScreenProps {
+export interface LogScreenProps {
   layoutProps: CommonScreenLayoutProps;
   appSubtitle: string;
   selectedPatient: Patient | null;
@@ -55,6 +56,8 @@ interface LogScreenProps {
   onStartDirectTesting: () => void;
   onClearActiveReport: () => void;
   isTestingDraftDirty?: boolean;
+  workflowMode?: WorkflowMode;
+  onResetForm?: () => void;
 }
 
 export function LogScreen({
@@ -76,13 +79,20 @@ export function LogScreen({
   onStartDirectTesting,
   onClearActiveReport,
   isTestingDraftDirty = false,
+  workflowMode = 'clinician',
+  onResetForm,
 }: LogScreenProps) {
   const [confirmDiscardDraftOpen, setConfirmDiscardDraftOpen] = React.useState(false);
+  const [pendingPatientToSelect, setPendingPatientToSelect] = React.useState<Patient | null>(null);
+  const [confirmPatientSwitchOpen, setConfirmPatientSwitchOpen] = React.useState(false);
+
   const [manualPatientErrors, setManualPatientErrors] = React.useState<Record<'firstName' | 'lastName' | 'mrn', string>>({
     firstName: '',
     lastName: '',
     mrn: '',
   });
+
+  const effectiveWorkflowMode: WorkflowMode = workflowMode || layoutProps.workflowMode || 'clinician';
 
   const handleDirectTestingClick = () => {
     if (isTestingDraftDirty) {
@@ -91,6 +101,24 @@ export function LogScreen({
       onStartDirectTesting();
     }
   };
+
+  const handlePatientSelectCandidate = (candidate: Patient) => {
+    if (isTestingDraftDirty && selectedPatient?.id !== candidate.id) {
+      setPendingPatientToSelect(candidate);
+      setConfirmPatientSwitchOpen(true);
+    } else {
+      onPatientSelect(candidate);
+    }
+  };
+
+  const handleConfirmPatientSwitch = () => {
+    if (pendingPatientToSelect) {
+      onResetForm?.();
+      onPatientSelect(pendingPatientToSelect);
+      setPendingPatientToSelect(null);
+    }
+  };
+
   const activeReportExpiresIn = activeReportSavedAt
     ? (() => {
         const msLeft = ACTIVE_REPORT_TTL_MS - (Date.now() - activeReportSavedAt);
@@ -100,6 +128,7 @@ export function LogScreen({
         return h > 0 ? `${h}h ${m}m` : `${m}m`;
       })()
     : null;
+
   const activeReportInitials = lastSavedRecord
     ? `${lastSavedRecord.firstName?.[0] ? `${lastSavedRecord.firstName[0]}. ` : ''}${lastSavedRecord.lastName || 'Active patient'}`
     : '';
@@ -116,45 +145,308 @@ export function LogScreen({
     setIsPatientDialogOpen(false);
   };
 
+  // Active work banner items
+  const renderActiveReportBanner = () => {
+    if (!lastSavedRecord || !activeReportExpiresIn) return null;
+    return (
+      <div
+        key="active-report-banner"
+        className="no-print flex items-center justify-between px-4 py-2.5 bg-primary/10 border border-primary/20 rounded-none gap-3"
+      >
+        <div className="flex items-center gap-2 text-sm min-w-0">
+          <FileText className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
+          <span className="truncate text-foreground">
+            Active report: <strong>{activeReportInitials}</strong>
+            <span className="text-muted-foreground text-xs ml-2">· expires in {activeReportExpiresIn}</span>
+          </span>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => (layoutProps.navigate ? layoutProps.navigate(Screen.SUMMARY) : layoutProps.setScreen(Screen.SUMMARY))}
+            className="rounded-none h-9 text-xs btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Open Report
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setConfirmClearOpen(true)}
+            className="rounded-none h-9 text-xs text-muted-foreground hover:text-destructive btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Clear
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderTestingDraftBanner = () => {
+    if (!isTestingDraftDirty) return null;
+    return (
+      <div
+        key="testing-draft-banner"
+        className="no-print flex items-center justify-between px-4 py-2.5 bg-amber-500/10 border border-amber-500/30 rounded-none gap-3"
+      >
+        <div className="flex items-center gap-2 text-sm min-w-0">
+          <TestTube2 className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" aria-hidden="true" />
+          <span className="truncate text-foreground">
+            In-progress testing session
+            <span className="text-muted-foreground text-xs ml-2">· uncommitted draft kept locally</span>
+          </span>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <Button
+            size="sm"
+            onClick={() => (layoutProps.navigate ? layoutProps.navigate(Screen.TESTING) : layoutProps.setScreen(Screen.TESTING))}
+            className="rounded-none h-9 text-xs bg-amber-600 hover:bg-amber-700 text-white font-semibold btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+          >
+            Resume Testing
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderActiveWorkBanners = () => {
+    if (effectiveWorkflowMode === 'nurse') {
+      return (
+        <div className="space-y-2">
+          {renderTestingDraftBanner()}
+          {renderActiveReportBanner()}
+        </div>
+      );
+    }
+    return (
+      <div className="space-y-2">
+        {renderActiveReportBanner()}
+        {renderTestingDraftBanner()}
+      </div>
+    );
+  };
+
+  // Quick-start actions panel
+  const renderQuickStartActions = () => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <button
+        type="button"
+        onClick={() => (layoutProps.onCSVUploadSheetOpenChange ? layoutProps.onCSVUploadSheetOpenChange(true) : undefined)}
+        className="flex flex-col text-left p-5 bg-sky-500/[0.04] dark:bg-sky-500/[0.08] hover:bg-sky-500/[0.08] dark:hover:bg-sky-500/[0.14] border border-sky-500/30 dark:border-sky-500/40 hover:border-sky-500 dark:hover:border-sky-400 transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:focus-visible:ring-sky-400 focus-visible:ring-offset-2"
+        aria-label="Upload REDCap export & review records"
+      >
+        <div className="flex items-center justify-between gap-3 mb-2.5 w-full">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="p-2.5 bg-sky-600 dark:bg-sky-600 text-white shrink-0 rounded-none group-hover:bg-sky-700 dark:group-hover:bg-sky-500 transition-colors">
+              <Upload className="w-5 h-5" aria-hidden="true" />
+            </div>
+            <span className="font-bold text-base text-foreground group-hover:text-sky-700 dark:group-hover:text-sky-300 transition-colors leading-snug">
+              Upload REDCap export & review records
+            </span>
+          </div>
+          <ChevronRight
+            className="w-4 h-4 text-sky-600/70 dark:text-sky-400/70 group-hover:text-sky-700 dark:group-hover:text-sky-300 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+            aria-hidden="true"
+          />
+        </div>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Import patient records from a REDCap CSV export and review clinic analytics in the Dashboard.
+        </p>
+      </button>
+
+      <button
+        type="button"
+        onClick={handleDirectTestingClick}
+        className="flex flex-col text-left p-5 bg-amber-500/[0.04] dark:bg-amber-500/[0.08] hover:bg-amber-500/[0.08] dark:hover:bg-amber-500/[0.14] border border-amber-500/30 dark:border-amber-500/40 hover:border-amber-500 dark:hover:border-amber-400 transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 dark:focus-visible:ring-amber-400 focus-visible:ring-offset-2"
+        aria-label="Open Allergy Testing"
+      >
+        <div className="flex items-center justify-between gap-3 mb-2.5 w-full">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="p-2.5 bg-amber-600 dark:bg-amber-600 text-white shrink-0 rounded-none group-hover:bg-amber-700 dark:group-hover:bg-amber-500 transition-colors">
+              <TestTube2 className="w-5 h-5" aria-hidden="true" />
+            </div>
+            <span className="font-bold text-base text-foreground group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors leading-snug">
+              Open Allergy Testing
+            </span>
+          </div>
+          <ChevronRight
+            className="w-4 h-4 text-amber-600/70 dark:text-amber-400/70 group-hover:text-amber-700 dark:group-hover:text-amber-300 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+            aria-hidden="true"
+          />
+        </div>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Start a fresh testing session directly without selecting a patient or creating a testing plan.
+        </p>
+      </button>
+    </div>
+  );
+
+  // Patient selection card
+  const renderPatientSelectionCard = () => (
+    <Card className="shadow-sm rounded-none">
+      <CardHeader className="pb-3 border-b border-border bg-card">
+        <CardTitle className="flex items-center gap-2 text-lg text-foreground">
+          <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
+            <User className="w-4 h-4 text-primary" aria-hidden="true" />
+          </div>
+          Patient Selection
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-6">
+        <div className="flex flex-col gap-6">
+          <div className="flex items-end gap-2 w-full">
+            <PatientSelector
+              onSelectPatient={handlePatientSelectCandidate}
+              selectedPatientId={selectedPatient?.id}
+              patients={patients}
+            />
+            {selectedPatient?.id === 'manual' && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setIsPatientDialogOpen(true)}
+                className="mb-[1px] shrink-0 h-10 w-10 rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                title="Edit Details"
+                aria-label="Edit manual patient details"
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  // Info and getting started cards
+  const renderInfoCards = () => (
+    <>
+      <Card className="shadow-sm rounded-none border-primary/20 bg-primary/5 dark:bg-card/40">
+        <CardContent className="pt-5 pb-5">
+          <div className="flex gap-3">
+            <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none h-fit mt-0.5">
+              <Info className="w-4 h-4 text-primary" aria-hidden="true" />
+            </div>
+            <div className="space-y-3">
+              <p className="font-semibold text-foreground text-sm">
+                Welcome — here's how to get started
+              </p>
+              <ol className="space-y-1.5 text-sm text-foreground/85">
+                <li className="flex gap-2">
+                  <span className="font-semibold text-primary shrink-0">1.</span>
+                  <span>
+                    Select a patient from the dropdown above — search by name, ID, or date of birth. Choose <strong>New Patient (Manual Entry)</strong> if the patient is not in the database.
+                  </span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-semibold text-primary shrink-0">2.</span>
+                  <span>
+                    If your patient database isn't loaded yet,{' '}
+                    <button
+                      onClick={() => (layoutProps.onCSVUploadSheetOpenChange ? layoutProps.onCSVUploadSheetOpenChange(true) : undefined)}
+                      className="underline text-primary hover:text-primary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      upload a patient CSV
+                    </button>
+                    .
+                  </span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="font-semibold text-primary shrink-0">3.</span>
+                  <span>
+                    Once a patient is selected, review their allergy history and generate a personalised drug testing plan.
+                  </span>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="space-y-4">
+        <div className="bg-primary/5 dark:bg-card/40 p-5 border border-primary/20 shadow-sm rounded-none">
+          <div className="flex items-start gap-3">
+            <Stethoscope className="w-6 h-6 text-primary shrink-0 mt-0.5" aria-hidden="true" />
+            <div>
+              <p className="font-semibold text-sm mb-1 text-foreground">The DREAM App</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                A specialist service for patients who have experienced a suspected allergic reaction
+                during an anaesthetic. Our team investigates these reactions to identify the drug
+                responsible and help plan safe anaesthesia for future procedures.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div className="bg-card border border-border p-4 shadow-sm rounded-none">
+            <div className="flex items-center gap-2 mb-2">
+              <Target className="w-4 h-4 text-primary" aria-hidden="true" />
+              <span className="font-semibold text-sm text-foreground">Purpose</span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Helps clinicians prepare for allergy clinic appointments — reviewing patient histories,
+              recording test results, and generating reports and testing plans.
+            </p>
+          </div>
+          <div className="bg-card border border-border p-4 shadow-sm rounded-none">
+            <div className="flex items-center gap-2 mb-2">
+              <Shield className="w-4 h-4 text-primary" aria-hidden="true" />
+              <span className="font-semibold text-sm text-foreground">Data Privacy</span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Patient data is processed on your own device and never sent to external servers.
+              Anything held locally is automatically cleared after 6 hours, so nothing lingers
+              on a shared workstation.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-card border border-border p-4 shadow-sm rounded-none">
+          <div className="flex items-center gap-2 mb-3">
+            <Users className="w-4 h-4 text-primary" aria-hidden="true" />
+            <span className="font-semibold text-sm text-foreground">Key Features</span>
+          </div>
+          <ul className="grid sm:grid-cols-2 gap-2">
+            {[
+              'Dashboard showing patient statistics at a glance',
+              'Search and filter patients by name, reaction grade, and date',
+              'Detailed patient history and timeline views',
+              'Skin test and drug challenge result recording',
+              'Three report types: clinical report, patient handout, and clinical letter',
+              'Create and print testing plan request forms for nursing staff',
+              'Import patient records from your clinic database',
+              'Works offline — use the app without internet access',
+            ].map((feature, index) => (
+              <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
+                <span className="text-primary mt-0.5 shrink-0" aria-hidden="true">
+                  •
+                </span>
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <ScreenLayout
       title="DREAM"
       subtitle={appSubtitle}
       icon={<Stethoscope className="w-5 h-5" />}
+      workflowMode={effectiveWorkflowMode}
+      isTestingDraftDirty={isTestingDraftDirty}
+      hasActiveReport={Boolean(lastSavedRecord && activeReportSavedAt && Date.now() - activeReportSavedAt < ACTIVE_REPORT_TTL_MS)}
       {...layoutProps}
       contentClassName="py-3 space-y-4"
       className="pb-10"
     >
-      {lastSavedRecord && activeReportExpiresIn && (
-        <div className="no-print flex items-center justify-between px-4 py-2.5 bg-primary/10 border border-primary/20 rounded-none gap-3">
-          <div className="flex items-center gap-2 text-sm min-w-0">
-            <FileText className="w-4 h-4 text-primary shrink-0" />
-            <span className="truncate text-foreground">
-              Active report: <strong>{activeReportInitials}</strong>
-              <span className="text-muted-foreground text-xs ml-2">· expires in {activeReportExpiresIn}</span>
-            </span>
-          </div>
-          <div className="flex gap-2 shrink-0">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => layoutProps.setScreen(Screen.SUMMARY)}
-              className="rounded-none h-9 text-xs btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              Open Report
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => setConfirmClearOpen(true)}
-              className="rounded-none h-9 text-xs text-muted-foreground hover:text-destructive btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              Clear
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* Contextual Active Work Banners */}
+      {renderActiveWorkBanners()}
 
+      {/* Confirm dialogs */}
       <ConfirmDialog
         open={confirmClearOpen}
         onOpenChange={setConfirmClearOpen}
@@ -164,90 +456,6 @@ export function LogScreen({
         variant="danger"
         onConfirm={onClearActiveReport}
       />
-
-      <Card className="shadow-sm rounded-none">
-        <CardHeader className="pb-3 border-b border-border bg-card">
-          <CardTitle className="flex items-center gap-2 text-lg text-foreground">
-            <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-              <User className="w-4 h-4 text-primary" />
-            </div>
-            Patient Selection
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="flex flex-col gap-6">
-            <div className="flex items-end gap-2 w-full">
-              <PatientSelector onSelectPatient={onPatientSelect} selectedPatientId={selectedPatient?.id} patients={patients} />
-              {selectedPatient?.id === 'manual' && (
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setIsPatientDialogOpen(true)}
-                  className="mb-[1px] shrink-0 h-10 w-10 rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  title="Edit Details"
-                  aria-label="Edit manual patient details"
-                >
-                  <Pencil className="w-4 h-4" />
-                </Button>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {!selectedPatient && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <button
-            type="button"
-            onClick={() => layoutProps.onCSVUploadSheetOpenChange(true)}
-            className="flex flex-col text-left p-5 bg-sky-500/[0.04] dark:bg-sky-500/[0.08] hover:bg-sky-500/[0.08] dark:hover:bg-sky-500/[0.14] border border-sky-500/30 dark:border-sky-500/40 hover:border-sky-500 dark:hover:border-sky-400 transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:focus-visible:ring-sky-400 focus-visible:ring-offset-2"
-            aria-label="Upload REDCap export & review records"
-          >
-            <div className="flex items-center justify-between gap-3 mb-2.5 w-full">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2.5 bg-sky-600 dark:bg-sky-600 text-white shrink-0 rounded-none group-hover:bg-sky-700 dark:group-hover:bg-sky-500 transition-colors">
-                  <Upload className="w-5 h-5" aria-hidden="true" />
-                </div>
-                <span className="font-bold text-base text-foreground group-hover:text-sky-700 dark:group-hover:text-sky-300 transition-colors leading-snug">
-                  Upload REDCap export & review records
-                </span>
-              </div>
-              <ChevronRight
-                className="w-4 h-4 text-sky-600/70 dark:text-sky-400/70 group-hover:text-sky-700 dark:group-hover:text-sky-300 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Import patient records from a REDCap CSV export and review clinic analytics in the Dashboard.
-            </p>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleDirectTestingClick}
-            className="flex flex-col text-left p-5 bg-amber-500/[0.04] dark:bg-amber-500/[0.08] hover:bg-amber-500/[0.08] dark:hover:bg-amber-500/[0.14] border border-amber-500/30 dark:border-amber-500/40 hover:border-amber-500 dark:hover:border-amber-400 transition-all duration-200 shadow-sm group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 dark:focus-visible:ring-amber-400 focus-visible:ring-offset-2"
-            aria-label="Open Allergy Testing"
-          >
-            <div className="flex items-center justify-between gap-3 mb-2.5 w-full">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2.5 bg-amber-600 dark:bg-amber-600 text-white shrink-0 rounded-none group-hover:bg-amber-700 dark:group-hover:bg-amber-500 transition-colors">
-                  <TestTube2 className="w-5 h-5" aria-hidden="true" />
-                </div>
-                <span className="font-bold text-base text-foreground group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors leading-snug">
-                  Open Allergy Testing
-                </span>
-              </div>
-              <ChevronRight
-                className="w-4 h-4 text-amber-600/70 dark:text-amber-400/70 group-hover:text-amber-700 dark:group-hover:text-amber-300 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Start a fresh testing session directly without selecting a patient or creating a testing plan.
-            </p>
-          </button>
-        </div>
-      )}
 
       <ConfirmDialog
         open={confirmDiscardDraftOpen}
@@ -260,107 +468,45 @@ export function LogScreen({
         onConfirm={onStartDirectTesting}
       />
 
-      {!selectedPatient && (
-        <Card className="shadow-sm rounded-none border-primary/20 bg-primary/5 dark:bg-card/40">
-          <CardContent className="pt-5 pb-5">
-            <div className="flex gap-3">
-              <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none h-fit mt-0.5">
-                <Info className="w-4 h-4 text-primary" />
-              </div>
-              <div className="space-y-3">
-                <p className="font-semibold text-foreground text-sm">
-                  Welcome — here's how to get started
-                </p>
-                <ol className="space-y-1.5 text-sm text-foreground/85">
-                  <li className="flex gap-2">
-                    <span className="font-semibold text-primary shrink-0">1.</span>
-                    <span>Select a patient from the dropdown above — search by name, ID, or date of birth. Choose <strong>New Patient (Manual Entry)</strong> if the patient is not in the database.</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="font-semibold text-primary shrink-0">2.</span>
-                    <span>If your patient database isn't loaded yet, <button onClick={() => layoutProps.onCSVUploadSheetOpenChange(true)} className="underline text-primary hover:text-primary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">upload a patient CSV</button>.</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="font-semibold text-primary shrink-0">3.</span>
-                    <span>Once a patient is selected, review their allergy history and generate a personalised drug testing plan.</span>
-                  </li>
-                </ol>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <ConfirmDialog
+        open={confirmPatientSwitchOpen}
+        onOpenChange={(open) => {
+          setConfirmPatientSwitchOpen(open);
+          if (!open) setPendingPatientToSelect(null);
+        }}
+        title="Switch patient?"
+        message="You have unsaved changes in your current testing session. Switching patients will discard these changes. This cannot be undone."
+        confirmLabel="Switch patient"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={handleConfirmPatientSwitch}
+      />
+
+      {/* Mode-Aware Layout Composition */}
+      {effectiveWorkflowMode === 'nurse' ? (
+        // Nurse View: Quick Start / Resume first, then Patient Selection
+        <>
+          {!selectedPatient && renderQuickStartActions()}
+          {renderPatientSelectionCard()}
+          {!selectedPatient && renderInfoCards()}
+        </>
+      ) : (
+        // Clinician View: Patient Selection first, then Quick Start
+        <>
+          {renderPatientSelectionCard()}
+          {!selectedPatient && renderQuickStartActions()}
+          {!selectedPatient && renderInfoCards()}
+        </>
       )}
 
-      {!selectedPatient && (
-        <div className="space-y-4">
-          <div className="bg-primary/5 dark:bg-card/40 p-5 border border-primary/20 shadow-sm rounded-none">
-            <div className="flex items-start gap-3">
-              <Stethoscope className="w-6 h-6 text-primary shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-sm mb-1 text-foreground">The DREAM App</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  A specialist service for patients who have experienced a suspected allergic reaction
-                  during an anaesthetic. Our team investigates these reactions to identify the drug
-                  responsible and help plan safe anaesthesia for future procedures.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div className="bg-card border border-border p-4 shadow-sm rounded-none">
-              <div className="flex items-center gap-2 mb-2">
-                <Target className="w-4 h-4 text-primary" />
-                <span className="font-semibold text-sm text-foreground">Purpose</span>
-              </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Helps clinicians prepare for allergy clinic appointments — reviewing patient histories,
-                recording test results, and generating reports and testing plans.
-              </p>
-            </div>
-            <div className="bg-card border border-border p-4 shadow-sm rounded-none">
-              <div className="flex items-center gap-2 mb-2">
-                <Shield className="w-4 h-4 text-primary" />
-                <span className="font-semibold text-sm text-foreground">Data Privacy</span>
-              </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Patient data is processed on your own device and never sent to external servers.
-                Anything held locally is automatically cleared after 6 hours, so nothing lingers
-                on a shared workstation.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-card border border-border p-4 shadow-sm rounded-none">
-            <div className="flex items-center gap-2 mb-3">
-              <Users className="w-4 h-4 text-primary" />
-              <span className="font-semibold text-sm text-foreground">Key Features</span>
-            </div>
-            <ul className="grid sm:grid-cols-2 gap-2">
-              {[
-                "Dashboard showing patient statistics at a glance",
-                "Search and filter patients by name, reaction grade, and date",
-                "Detailed patient history and timeline views",
-                "Skin test and drug challenge result recording",
-                "Three report types: clinical report, patient handout, and clinical letter",
-                "Create and print testing plan request forms for nursing staff",
-                "Import patient records from your clinic database",
-                "Works offline — use the app without internet access",
-              ].map((feature, index) => (
-                <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="text-primary mt-0.5 shrink-0" aria-hidden="true">•</span>{feature}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
-
+      {/* Manual Patient Dialog */}
       {selectedPatient?.id === 'manual' && (
         <Dialog open={isPatientDialogOpen} onOpenChange={setIsPatientDialogOpen}>
           <DialogContent className="max-w-2xl rounded-none">
             <DialogHeader>
-              <DialogTitle className="text-lg font-semibold text-foreground">New Patient Details</DialogTitle>
+              <DialogTitle className="text-lg font-semibold text-foreground">
+                New Patient Details
+              </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -433,7 +579,9 @@ export function LogScreen({
                   )}
                 </div>
                 <div>
-                  <Label htmlFor="manual-redcap-id" className="section-label mb-1.5 block">REDCap Record ID</Label>
+                  <Label htmlFor="manual-redcap-id" className="section-label mb-1.5 block">
+                    REDCap Record ID
+                  </Label>
                   <Input
                     id="manual-redcap-id"
                     className="rounded-none font-mono"
@@ -445,7 +593,9 @@ export function LogScreen({
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <Label htmlFor="manual-dob" className="section-label mb-1.5 block">Date of Birth</Label>
+                  <Label htmlFor="manual-dob" className="section-label mb-1.5 block">
+                    Date of Birth
+                  </Label>
                   <Input
                     id="manual-dob"
                     className="rounded-none"
@@ -455,7 +605,9 @@ export function LogScreen({
                   />
                 </div>
                 <div>
-                  <Label htmlFor="manual-gender" className="section-label mb-1.5 block">Gender</Label>
+                  <Label htmlFor="manual-gender" className="section-label mb-1.5 block">
+                    Gender
+                  </Label>
                   <Input
                     id="manual-gender"
                     className="rounded-none"
@@ -465,7 +617,9 @@ export function LogScreen({
                   />
                 </div>
                 <div>
-                  <Label htmlFor="manual-city" className="section-label mb-1.5 block">City / Suburb</Label>
+                  <Label htmlFor="manual-city" className="section-label mb-1.5 block">
+                    City / Suburb
+                  </Label>
                   <Input
                     id="manual-city"
                     className="rounded-none"
@@ -488,6 +642,7 @@ export function LogScreen({
         </Dialog>
       )}
 
+      {/* Selected Patient History & Plan Generator */}
       {selectedPatient && (
         <div key={selectedPatient.id} className="space-y-8">
           {selectedPatient.id !== 'manual' && (
@@ -504,7 +659,11 @@ export function LogScreen({
               drugCategories={DRUG_CATEGORIES}
               onPreview={(data) => {
                 onSetTestingPlanData(data);
-                layoutProps.setScreen(Screen.PRINT_PLAN);
+                if (layoutProps.navigate) {
+                  layoutProps.navigate(Screen.PRINT_PLAN);
+                } else {
+                  layoutProps.setScreen(Screen.PRINT_PLAN);
+                }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             />

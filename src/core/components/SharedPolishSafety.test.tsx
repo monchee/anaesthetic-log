@@ -105,10 +105,11 @@ describe('Shared polish safety and semantic token regression tests', () => {
       const main = screen.getByRole('main', { name: 'Main content' });
       expect(main).toHaveClass('max-w-6xl', 'px-3', 'sm:px-5', 'md:px-6');
 
-      // Navigation buttons have focus rings and trigger screen changes
-      const dashboardBtn = screen.getByRole('button', { name: 'Dashboard' });
-      expect(dashboardBtn).toHaveClass('focus-visible:ring-2');
-      fireEvent.click(dashboardBtn);
+      // Navigation links have focus rings, correct href, and trigger screen changes
+      const dashboardLink = screen.getByRole('link', { name: 'Dashboard' });
+      expect(dashboardLink).toHaveAttribute('href', '/dashboard');
+      expect(dashboardLink).toHaveClass('focus-visible:ring-2');
+      fireEvent.click(dashboardLink);
       expect(setScreen).toHaveBeenCalledWith(Screen.DASHBOARD);
     });
   });

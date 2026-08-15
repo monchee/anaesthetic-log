@@ -161,15 +161,10 @@ test.describe('Accessibility Tests', () => {
   });
 
   test('focus management in modals', async ({ page }) => {
-    // Open help modal via the navigation dropdown (trigger has aria-label="Menu")
-    const menuTrigger = page.locator('[aria-label="Menu"]').first();
-    await expect(menuTrigger).toBeVisible({ timeout: 10000 });
-    await menuTrigger.click();
-
-    // Click "Quick Start Guide" inside the dropdown menu
-    const quickStartItem = page.locator('[role="menuitem"]', { hasText: 'Quick Start Guide' });
-    await expect(quickStartItem).toBeVisible({ timeout: 5000 });
-    await quickStartItem.click();
+    // Open help modal via desktop sidebar Quick Start Guide button
+    const quickStartBtn = page.locator('aside').getByRole('button', { name: 'Quick Start Guide' });
+    await expect(quickStartBtn).toBeVisible({ timeout: 10000 });
+    await quickStartBtn.click();
 
     // The HelpModal trigger (hidden button) gets clicked, opening the dialog
     const modal = page.locator('[role="dialog"]');
@@ -246,12 +241,10 @@ test.describe('Accessibility Tests', () => {
   });
 
   test('data tables have proper headers', async ({ page }) => {
-    // Navigate to dashboard using the nav button
-    const dashBtn = page.locator('nav[aria-label="Primary navigation"] button', { hasText: 'Dashboard' }).or(
-      page.locator('nav[aria-label="Primary navigation"] button[aria-label="Dashboard"]')
-    ).first();
-    await expect(dashBtn).toBeVisible({ timeout: 10000 });
-    await dashBtn.click();
+    // Navigate to dashboard using the primary sidebar navigation link
+    const dashLink = page.locator('nav[aria-label="Primary sidebar navigation"]').getByRole('link', { name: 'Dashboard' });
+    await expect(dashLink).toBeVisible({ timeout: 10000 });
+    await dashLink.click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
 
     const tables = page.locator('table');
@@ -276,7 +269,7 @@ test.describe('Accessibility Tests', () => {
     const footer = page.locator('footer');
 
     await expect(header).toBeAttached();
-    await expect(nav).toBeAttached();
+    await expect(nav.first()).toBeAttached();
     await expect(main).toBeAttached();
     await expect(footer).toBeAttached();
   });
@@ -336,11 +329,11 @@ test.describe('Accessibility Tests', () => {
       skipStyles.boxShadow !== 'none';
     expect(skipHasFocusIndicator).toBeTruthy();
 
-    // Check a nav pill button (Home, Dashboard, Research)
-    const homeNavButton = page.locator('nav[aria-label="Primary navigation"] button').first();
-    await expect(homeNavButton).toBeVisible({ timeout: 10000 });
-    await homeNavButton.focus();
-    const navStyles = await homeNavButton.evaluate((el) => {
+    // Check a nav link in primary sidebar (Home, Dashboard, Research)
+    const homeNavLink = page.locator('nav[aria-label="Primary sidebar navigation"] a').first();
+    await expect(homeNavLink).toBeVisible({ timeout: 10000 });
+    await homeNavLink.focus();
+    const navStyles = await homeNavLink.evaluate((el) => {
       const computed = window.getComputedStyle(el);
       return {
         outline: computed.outline,
@@ -380,15 +373,14 @@ test.describe('Accessibility Tests', () => {
     const mainContent = page.locator('main, [role="main"]');
     await expect(mainContent).toBeVisible();
 
-    // Check that mobile menu works with keyboard
-    const menuButton = page.getByRole('button', { name: /menu/i }).first();
-    if ((await menuButton.count()) > 0) {
-      await menuButton.click();
+    // Check that mobile navigation drawer opens
+    const menuButton = page.getByRole('button', { name: 'Open Navigation Menu' });
+    await expect(menuButton).toBeVisible({ timeout: 10000 });
+    await menuButton.click();
 
-      // The dropdown menu should be visible
-      const menu = page.locator('[role="menu"]');
-      await expect(menu).toBeVisible();
-    }
+    // The navigation drawer should be visible
+    const drawer = page.getByRole('dialog', { name: 'Navigation Drawer' });
+    await expect(drawer).toBeVisible();
   });
 });
 
@@ -480,7 +472,7 @@ test.describe('Automated Accessibility Scans', () => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
-    await page.locator('nav[aria-label="Primary navigation"] button[aria-label="Dashboard"]').click();
+    await page.locator('nav[aria-label="Primary sidebar navigation"]').getByRole('link', { name: 'Dashboard' }).click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
     await injectAxe(page);
 
@@ -511,7 +503,7 @@ test.describe('Automated Accessibility Scans', () => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
-    await page.locator('nav[aria-label="Primary navigation"] button[aria-label="Research"]').click();
+    await page.locator('aside').getByRole('link', { name: 'Research' }).click();
     await page.waitForLoadState('networkidle');
     await injectAxe(page);
 
@@ -539,11 +531,7 @@ test.describe('Automated Accessibility Scans', () => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
-    await page.locator('[aria-label="Menu"]').first().click();
-    await page.locator('[role="menuitem"]', { hasText: 'Changelog' }).click();
-    // Wait for the dropdown to close before scanning — while open, Radix sets
-    // aria-hidden="true" on the app root and the popper is outside landmarks.
-    await page.waitForSelector('[data-radix-popper-content-wrapper]', { state: 'detached', timeout: 5000 }).catch(() => {});
+    await page.locator('aside').getByRole('link', { name: 'Changelog' }).click();
     await page.waitForLoadState('networkidle');
     await injectAxe(page);
 
@@ -647,7 +635,7 @@ test.describe('Automated Accessibility Scans', () => {
           resolve(results.violations);
         });
       });
-    }, [AXE_EXCLUDE_CONTEXT, { rules: { 'color-contrast': { enabled: true } } }]) as any[];
+    }, [AXE_EXCLUDE_CONTEXT, AXE_RULES_NO_CONTRAST]) as any[];
 
     if (violations.length > 0) {
       console.log('Accessibility Violations on populated testing session:');
@@ -693,7 +681,7 @@ test.describe('Automated Accessibility Scans', () => {
             resolve(results.violations);
           });
         });
-      }, [AXE_EXCLUDE_CONTEXT, { rules: { 'color-contrast': { enabled: true } } }]) as any[];
+      }, [AXE_EXCLUDE_CONTEXT, AXE_RULES_NO_CONTRAST]) as any[];
 
       if (violations.length > 0) {
         console.log(`Accessibility Violations on ${reportTab.name}:`);

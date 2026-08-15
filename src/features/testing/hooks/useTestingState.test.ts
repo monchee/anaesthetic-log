@@ -132,6 +132,22 @@ describe('useTestingState', () => {
       values: [{ time: '30', result: '12.4' }],
     });
     expect(result.current.activeReportSavedAt).toBe(savedAt);
+    expect(result.current.lastDraftSavedAt).toBe(savedAt);
+    expect(result.current.isSavingDraft).toBe(false);
+  });
+
+  it('does not re-save or mark restored draft as saving on reload', async () => {
+    const initialSavedAt = Date.now();
+    writeTTL(TESTING_DRAFT_KEY, baseForm(), initialSavedAt);
+
+    const { result } = renderHook(() => useTestingState());
+
+    await waitFor(() => {
+      expect(result.current.formData.mrn).toBe('123456');
+    });
+
+    expect(result.current.lastDraftSavedAt).toBe(initialSavedAt);
+    expect(result.current.isSavingDraft).toBe(false);
   });
 
   it('does not restore stale drafts', () => {
@@ -433,6 +449,27 @@ describe('useTestingState', () => {
     expect(result.current.activeReportSavedAt).toBeNull();
     expect(localStorage.getItem(ACTIVE_REPORT_KEY)).toBeNull();
     expect(localStorage.getItem(TESTING_DRAFT_KEY)).toBeNull();
+  });
+
+  it('synchronously persists dirty draft and cancels debounce when persistDraftNow is called', () => {
+    const { result } = renderHook(() => useTestingState());
+    const modifiedForm = baseForm();
+
+    act(() => {
+      result.current.setFormData(modifiedForm);
+    });
+
+    expect(result.current.isSavingDraft).toBe(true);
+
+    act(() => {
+      result.current.persistDraftNow();
+    });
+
+    expect(result.current.isSavingDraft).toBe(false);
+    expect(result.current.lastDraftSavedAt).not.toBeNull();
+    const stored = localStorage.getItem(TESTING_DRAFT_KEY);
+    expect(stored).not.toBeNull();
+    expect(JSON.parse(stored!).value.mrn).toBe('123456');
   });
 
   it('warns when mock testing logs fail to load', async () => {

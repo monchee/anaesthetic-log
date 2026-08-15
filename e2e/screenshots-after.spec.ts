@@ -35,7 +35,14 @@ test.describe('After screenshots (Phases 1-3)', () => {
       await page.screenshot({ path: path.join(OUTPUT_DIR, `log-${vp.name}.png`), fullPage: true });
 
       // ── Dashboard ────────────────────────────────────────────────────────
-      await page.locator('nav[aria-label="Primary navigation"] button[aria-label="Dashboard"]').click();
+      if (vp.name === 'mobile') {
+        await page.getByRole('button', { name: 'Open Navigation Menu' }).click();
+        const drawer = page.getByRole('dialog', { name: 'Navigation Drawer' });
+        await expect(drawer).toBeVisible({ timeout: 5_000 });
+        await drawer.getByRole('link', { name: 'Dashboard' }).click();
+      } else {
+        await page.locator('nav[aria-label="Primary sidebar navigation"]').getByRole('link', { name: 'Dashboard' }).click();
+      }
       await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10_000 });
       await expect(page.getByRole('group', { name: 'Worklist filters' })).toBeVisible({ timeout: 10_000 });
       await expect(page.getByRole('button', { name: /View details for patient:/ }).first()).toBeVisible({ timeout: 10_000 });
@@ -48,7 +55,14 @@ test.describe('After screenshots (Phases 1-3)', () => {
       });
 
       // ── Back home, select seeded mock patient, proceed to testing ───────
-      await page.locator('nav[aria-label="Primary navigation"] button[aria-label="Home"]').click();
+      if (vp.name === 'mobile') {
+        await page.getByRole('button', { name: 'Open Navigation Menu' }).click();
+        const drawer = page.getByRole('dialog', { name: 'Navigation Drawer' });
+        await expect(drawer).toBeVisible({ timeout: 5_000 });
+        await drawer.getByRole('link', { name: 'Home' }).click();
+      } else {
+        await page.locator('nav[aria-label="Primary sidebar navigation"]').getByRole('link', { name: 'Home' }).click();
+      }
       await dismissHelpModal(page);
       const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
       await expect(patientSelector).toBeVisible({ timeout: 10_000 });

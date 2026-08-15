@@ -1,96 +1,274 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Screen } from '../../shared/types';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Screen } from '@/types';
+import {
+  screenFromPath,
+  pathFromScreen,
+  SCREEN_URL_MAP,
+} from '@core/navigation/navigationConfig';
 
-const SCREEN_URL_MAP: Record<string, Screen> = {
-  '/': Screen.LOG,
-  '/log': Screen.LOG, // Support both
-  '/dashboard': Screen.DASHBOARD,
-  '/research': Screen.RESEARCH,
-  '/summary': Screen.SUMMARY,
-  '/patient-summary': Screen.PATIENT_SUMMARY,
-  '/changelog': Screen.CHANGELOG,
-  '/testing': Screen.TESTING,
-  '/print-plan': Screen.PRINT_PLAN,
-  '/about': Screen.ABOUT,
-  '/faq': Screen.FAQ,
-  '/drug-reference': Screen.DRUG_REFERENCE,
-  '/contact': Screen.CONTACT,
-  '/resources': Screen.RESOURCES,
-  '/privacy-policy': Screen.PRIVACY_POLICY,
-  '/clinical-governance': Screen.CLINICAL_GOVERNANCE,
-  '/terms-of-use': Screen.TERMS_OF_USE,
-  '/technical-documentation': Screen.TECHNICAL_DOCUMENTATION,
-  '/disclaimer': Screen.DISCLAIMER,
-};
+export interface NavigateOptions {
+  bypassGuard?: boolean;
+}
 
-const getScreenFromPath = (path: string): Screen => {
-  // Handle root or prefixed paths if needed
-  const normalizedPath = path.endsWith('/') && path.length > 1 ? path.slice(0, -1) : path;
-  return SCREEN_URL_MAP[normalizedPath] || Screen.LOG;
-};
+export interface UseAppNavigationOptions {
+  isDirty?: boolean;
+  persistDraftNow?: () => void;
+}
 
-const getPathFromScreen = (screen: Screen): string => {
-  if (screen === Screen.LOG) return '/';
-  return `/${screen}`;
-};
+export interface AppNavigation {
+  screen: Screen;
+  hrefFor: (screen: Screen) => string;
+  navigate: (screen: Screen, options?: NavigateOptions) => void;
+  pendingNavigation: Screen | null;
+  confirmNavigation: () => void;
+  cancelNavigation: () => void;
+  // Compatibility helpers for existing callers/tests
+  setScreen: (newScreen: Screen | ((prev: Screen) => Screen), options?: NavigateOptions) => void;
+  navigateTo: (screen: Screen, options?: NavigateOptions) => void;
+  navigateToLog: (options?: NavigateOptions) => void;
+  navigateToDashboard: (options?: NavigateOptions) => void;
+  navigateToResearch: (options?: NavigateOptions) => void;
+  navigateToSummary: (options?: NavigateOptions) => void;
+  navigateToPatientSummary: (options?: NavigateOptions) => void;
+  navigateToTesting: (options?: NavigateOptions) => void;
+  navigateToPrintPlan: (options?: NavigateOptions) => void;
+  navigateToChangelog: (options?: NavigateOptions) => void;
+}
 
-export function useAppNavigation() {
-  // Initialize from URL
-  const [screen, setScreenInternal] = useState<Screen>(() => 
-    getScreenFromPath(window.location.pathname)
+interface DreamHistoryState {
+  screen: Screen;
+  dreamNavigationIndex: number;
+}
+
+export function useAppNavigation(options: UseAppNavigationOptions = {}): AppNavigation {
+  const { isDirty = false, persistDraftNow } = options;
+
+  // Initialize screen and navigation index from current location & history state
+  const [screen, setScreenInternal] = useState<Screen>(() => {
+    if (typeof window === 'undefined') return Screen.LOG;
+    return screenFromPath(window.location.pathname);
+  });
+
+  const [pendingNavigation, setPendingNavigation] = useState<Screen | null>(null);
+
+  const navIndexRef = useRef<number>(
+    typeof window !== 'undefined' && typeof window.history.state?.dreamNavigationIndex === 'number'
+      ? window.history.state.dreamNavigationIndex
+      : 0
   );
 
-  // Custom setScreen that updates URL
-  const setScreen = useCallback((newScreen: Screen | ((prev: Screen) => Screen)) => {
-    setScreenInternal(prev => {
-      const next = typeof newScreen === 'function' ? newScreen(prev) : newScreen;
-      const path = getPathFromScreen(next);
-      
-      // Update URL if it changed
-      if (window.location.pathname !== path) {
-        window.history.pushState({ screen: next }, '', path);
+  // Track latest isDirty and screen in refs for event callbacks
+  const isDirtyRef = useRef(isDirty);
+  isDirtyRef.current = isDirty;
+
+  const currentScreenRef = useRef(screen);
+  currentScreenRef.current = screen;
+
+  const persistDraftNowRef = useRef(persistDraftNow);
+  persistDraftNowRef.current = persistDraftNow;
+
+  const isRestoringHistoryRef = useRef(false);
+  const isBypassingPopStateGuardRef = useRef(false);
+  const pendingPopStateRef = useRef<{ targetScreen: Screen; originalDelta: number } | null>(null);
+
+  // Initialize history entry with indexed state if needed
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const initialScreen = screenFromPath(window.location.pathname);
+    const existingIndex = window.history.state?.dreamNavigationIndex;
+    if (typeof existingIndex === 'number') {
+      navIndexRef.current = existingIndex;
+    } else {
+      const initialIndex = 0;
+      navIndexRef.current = initialIndex;
+      const historyState: DreamHistoryState = {
+        screen: initialScreen,
+        dreamNavigationIndex: initialIndex,
+      };
+      window.history.replaceState(historyState, '', pathFromScreen(initialScreen));
+    }
+  }, []);
+
+  const hrefFor = useCallback((targetScreen: Screen): string => {
+    return pathFromScreen(targetScreen);
+  }, []);
+
+  const focusMainContent = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    requestAnimationFrame(() => {
+      const mainEl = document.getElementById('main-content');
+      if (mainEl) {
+        mainEl.focus();
       }
-      
-      return next;
     });
   }, []);
 
-  // Sync state when browser navigation occurs (Back/Forward)
+  const commitNavigation = useCallback((nextScreen: Screen) => {
+    const nextIndex = (navIndexRef.current ?? 0) + 1;
+    navIndexRef.current = nextIndex;
+    const historyState: DreamHistoryState = {
+      screen: nextScreen,
+      dreamNavigationIndex: nextIndex,
+    };
+    const path = pathFromScreen(nextScreen);
+    if (typeof window !== 'undefined') {
+      window.history.pushState(historyState, '', path);
+    }
+    setScreenInternal(nextScreen);
+    focusMainContent();
+  }, [focusMainContent]);
+
+  const navigate = useCallback((targetScreen: Screen, navOptions?: NavigateOptions) => {
+    if (targetScreen === currentScreenRef.current) {
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+
+    // If currently on Testing with unsaved dirty changes, guard leaving unless bypassGuard is set
+    if (!navOptions?.bypassGuard && currentScreenRef.current === Screen.TESTING && isDirtyRef.current) {
+      pendingPopStateRef.current = null;
+      setPendingNavigation(targetScreen);
+      return;
+    }
+
+    commitNavigation(targetScreen);
+  }, [commitNavigation]);
+
+  const confirmNavigation = useCallback(() => {
+    if (pendingNavigation !== null) {
+      const target = pendingNavigation;
+      const pendingPop = pendingPopStateRef.current;
+      pendingPopStateRef.current = null;
+      setPendingNavigation(null);
+
+      persistDraftNowRef.current?.();
+
+      if (pendingPop && pendingPop.originalDelta !== 0) {
+        isBypassingPopStateGuardRef.current = true;
+        if (typeof window !== 'undefined') {
+          window.history.go(pendingPop.originalDelta);
+        }
+      } else {
+        commitNavigation(target);
+      }
+    }
+  }, [pendingNavigation, commitNavigation]);
+
+  const cancelNavigation = useCallback(() => {
+    pendingPopStateRef.current = null;
+    setPendingNavigation(null);
+  }, []);
+
+  // Backward-compatible setScreen
+  const setScreen = useCallback((newScreen: Screen | ((prev: Screen) => Screen), navOptions?: NavigateOptions) => {
+    if (typeof newScreen === 'function') {
+      const next = newScreen(currentScreenRef.current);
+      navigate(next, navOptions);
+    } else {
+      navigate(newScreen, navOptions);
+    }
+  }, [navigate]);
+
+  // Handle popstate (browser Back/Forward)
   useEffect(() => {
-    const handlePopState = () => {
-      const path = window.location.pathname;
-      setScreenInternal(getScreenFromPath(path));
+    if (typeof window === 'undefined') return;
+
+    const handlePopState = (event: PopStateEvent) => {
+      if (isRestoringHistoryRef.current) {
+        isRestoringHistoryRef.current = false;
+        return;
+      }
+
+      const targetPath = window.location.pathname;
+      const targetScreen = screenFromPath(targetPath);
+      const targetIndex = event.state?.dreamNavigationIndex;
+
+      if (isBypassingPopStateGuardRef.current) {
+        isBypassingPopStateGuardRef.current = false;
+        if (typeof targetIndex === 'number') {
+          navIndexRef.current = targetIndex;
+        }
+        setScreenInternal(targetScreen);
+        focusMainContent();
+        return;
+      }
+
+      // Check if we are attempting to leave dirty testing
+      if (currentScreenRef.current === Screen.TESTING && isDirtyRef.current && targetScreen !== Screen.TESTING) {
+        // Restore history entry to keep URL and history aligned with testing session
+        const currentIndex = navIndexRef.current ?? 0;
+        const originalDelta = typeof targetIndex === 'number' ? targetIndex - currentIndex : -1;
+        const restoreDelta = -originalDelta;
+
+        pendingPopStateRef.current = {
+          targetScreen,
+          originalDelta,
+        };
+
+        if (restoreDelta !== 0) {
+          isRestoringHistoryRef.current = true;
+          window.history.go(restoreDelta);
+        } else {
+          window.history.pushState(
+            { screen: Screen.TESTING, dreamNavigationIndex: currentIndex },
+            '',
+            pathFromScreen(Screen.TESTING)
+          );
+        }
+
+        setPendingNavigation(targetScreen);
+        return;
+      }
+
+      // Normal popstate navigation
+      if (typeof targetIndex === 'number') {
+        navIndexRef.current = targetIndex;
+      }
+      setScreenInternal(targetScreen);
+      focusMainContent();
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
+  }, [focusMainContent]);
+
+  // Native beforeunload listener for refresh / tab close / external links
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (currentScreenRef.current === Screen.TESTING && isDirtyRef.current) {
+        persistDraftNowRef.current?.();
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
-
-  const navigateTo = (newScreen: Screen) => {
-    setScreen(newScreen);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const navigateToLog = () => navigateTo(Screen.LOG);
-  const navigateToDashboard = () => navigateTo(Screen.DASHBOARD);
-  const navigateToResearch = () => navigateTo(Screen.RESEARCH);
-  const navigateToSummary = () => navigateTo(Screen.SUMMARY);
-  const navigateToPatientSummary = () => navigateTo(Screen.PATIENT_SUMMARY);
-  const navigateToTesting = () => navigateTo(Screen.TESTING);
-  const navigateToPrintPlan = () => navigateTo(Screen.PRINT_PLAN);
-  const navigateToChangelog = () => navigateTo(Screen.CHANGELOG);
 
   return {
     screen,
+    hrefFor,
+    navigate,
+    pendingNavigation,
+    confirmNavigation,
+    cancelNavigation,
     setScreen,
-    navigateTo,
-    navigateToLog,
-    navigateToDashboard,
-    navigateToResearch,
-    navigateToSummary,
-    navigateToPatientSummary,
-    navigateToTesting,
-    navigateToPrintPlan,
-    navigateToChangelog,
+    navigateTo: navigate,
+    navigateToLog: (opts?: NavigateOptions) => navigate(Screen.LOG, opts),
+    navigateToDashboard: (opts?: NavigateOptions) => navigate(Screen.DASHBOARD, opts),
+    navigateToResearch: (opts?: NavigateOptions) => navigate(Screen.RESEARCH, opts),
+    navigateToSummary: (opts?: NavigateOptions) => navigate(Screen.SUMMARY, opts),
+    navigateToPatientSummary: (opts?: NavigateOptions) => navigate(Screen.PATIENT_SUMMARY, opts),
+    navigateToTesting: (opts?: NavigateOptions) => navigate(Screen.TESTING, opts),
+    navigateToPrintPlan: (opts?: NavigateOptions) => navigate(Screen.PRINT_PLAN, opts),
+    navigateToChangelog: (opts?: NavigateOptions) => navigate(Screen.CHANGELOG, opts),
   };
 }
+
+export { SCREEN_URL_MAP, screenFromPath as getScreenFromPath, pathFromScreen as getPathFromScreen };

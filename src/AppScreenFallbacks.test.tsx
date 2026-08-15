@@ -71,7 +71,7 @@ describe('AnaestheticLogApp guarded screens', () => {
     render(<AnaestheticLogApp />);
 
     expect(screen.getByRole('heading', { name: 'No active report', level: 2 })).toBeInTheDocument();
-    expect(screen.getByText('This screen needs an active report. Local data may have expired, or the page was reloaded.')).toBeInTheDocument();
+    expect(screen.getByText('Reports are available after a testing session has been saved. The active report may also have expired on this device.')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Go Home' }));
     fireEvent.click(screen.getByRole('button', { name: 'Go to Dashboard' }));

@@ -24,16 +24,16 @@ test.describe('Home quick-start entry points', () => {
     await expect(page).toHaveURL(/\/testing$/);
     await expect(page.getByRole('heading', { name: 'Allergy Testing', exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Patient Identity', exact: true })).toBeVisible();
-    await expect(page.getByLabel('MRN', { exact: true })).toBeEditable();
-    await expect(page.getByLabel('First Name', { exact: true })).toBeEditable();
-    await expect(page.getByLabel('Last Name', { exact: true })).toBeEditable();
-    await expect(page.getByLabel('Date of Birth (Optional)', { exact: true })).toBeEditable();
-    await expect(page.getByLabel('Patient identity', { exact: true })).toHaveCount(0);
+    await expect(page.getByLabel(/MRN/i)).toBeEditable();
+    await expect(page.getByLabel(/First Name/i)).toBeEditable();
+    await expect(page.getByLabel(/Last Name/i)).toBeEditable();
+    await expect(page.getByLabel(/Date of Birth/i)).toBeEditable();
+    await expect(page.getByLabel(/Patient identity/i)).toHaveCount(0);
 
     await page.getByRole('button', { name: 'Save Clinical Record', exact: true }).click();
-    await expect(page.getByRole('link', { name: 'MRN is required', exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'First name is required', exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Last name is required', exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: /MRN is required/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /First name is required/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Last name is required/i })).toBeVisible();
   });
 
   test('supports the /testing deep link as a direct session', async ({ page }) => {
@@ -44,8 +44,8 @@ test.describe('Home quick-start entry points', () => {
     await expect(page).toHaveURL(/\/testing$/);
     await expect(page.getByRole('heading', { name: 'Allergy Testing', exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Patient Identity', exact: true })).toBeVisible();
-    await expect(page.getByLabel('MRN', { exact: true })).toBeEditable();
-    await expect(page.getByLabel('Patient identity', { exact: true })).toHaveCount(0);
+    await expect(page.getByLabel(/MRN/i)).toBeEditable();
+    await expect(page.getByLabel(/Patient identity/i)).toHaveCount(0);
   });
 
   test('routes a successful Home REDCap upload to Dashboard', async ({ page }) => {

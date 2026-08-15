@@ -60,12 +60,18 @@ describe('useAnaestheticApp tryptase prefill', () => {
       handleSubmit: vi.fn(() => formData),
       resetForm: vi.fn(),
       clearActiveReport: vi.fn(),
+      persistDraftNow: vi.fn(),
       INITIAL_FORM_STATE: createMockLogFormData(),
     } as ReturnType<typeof useTestingState>));
 
     vi.mocked(useAppNavigation).mockReturnValue({
       screen: Screen.LOG,
       setScreen: vi.fn(),
+      navigate: vi.fn(),
+      hrefFor: vi.fn((s) => (s === Screen.LOG ? '/' : `/${s}`)),
+      pendingNavigation: null,
+      confirmNavigation: vi.fn(),
+      cancelNavigation: vi.fn(),
       navigateTo: vi.fn(),
       navigateToLog: vi.fn(),
       navigateToDashboard: vi.fn(),
@@ -191,6 +197,11 @@ describe('useAnaestheticApp direct testing session', () => {
     vi.mocked(useAppNavigation).mockReturnValue({
       screen: Screen.LOG,
       setScreen,
+      navigate: setScreen,
+      hrefFor: vi.fn((s) => (s === Screen.LOG ? '/' : `/${s}`)),
+      pendingNavigation: null,
+      confirmNavigation: vi.fn(),
+      cancelNavigation: vi.fn(),
       navigateTo: vi.fn(),
       navigateToLog: vi.fn(),
       navigateToDashboard: vi.fn(),
@@ -210,5 +221,55 @@ describe('useAnaestheticApp direct testing session', () => {
     expect(setTestingPlanData).toHaveBeenCalledWith(null);
     expect(resetForm).toHaveBeenCalled();
     expect(setScreen).toHaveBeenCalledWith(Screen.TESTING);
+  });
+});
+
+describe('useAnaestheticApp handleSubmit', () => {
+  it('saves record and navigates to summary with bypassGuard', () => {
+    const navigateMock = vi.fn();
+    const mockRecord = createMockLogFormData({ firstName: 'Jane', lastName: 'Doe' });
+
+    vi.mocked(useTestingState).mockReturnValue({
+      formData: mockRecord,
+      setFormData: vi.fn(),
+      lastSavedRecord: null,
+      setLastSavedRecord: vi.fn(),
+      activeReportSavedAt: null,
+      lastDraftSavedAt: null,
+      isSavingDraft: false,
+      testingPlanData: null,
+      setTestingPlanData: vi.fn(),
+      recentLogs: [],
+      handleSubmit: vi.fn(() => mockRecord),
+      resetForm: vi.fn(),
+      clearActiveReport: vi.fn(),
+      persistDraftNow: vi.fn(),
+      INITIAL_FORM_STATE: createMockLogFormData(),
+    } as unknown as ReturnType<typeof useTestingState>);
+
+    vi.mocked(useAppNavigation).mockReturnValue({
+      screen: Screen.TESTING,
+      setScreen: vi.fn(),
+      navigate: navigateMock,
+      hrefFor: vi.fn((s) => (s === Screen.LOG ? '/' : `/${s}`)),
+      pendingNavigation: null,
+      confirmNavigation: vi.fn(),
+      cancelNavigation: vi.fn(),
+      navigateTo: vi.fn(),
+      navigateToLog: vi.fn(),
+      navigateToDashboard: vi.fn(),
+      navigateToResearch: vi.fn(),
+      navigateToSummary: vi.fn(),
+      navigateToPatientSummary: vi.fn(),
+      navigateToTesting: vi.fn(),
+      navigateToPrintPlan: vi.fn(),
+      navigateToChangelog: vi.fn(),
+    });
+
+    const { result } = renderHook(() => useAnaestheticApp());
+    const saved = result.current.handleSubmit();
+
+    expect(saved).toBe(mockRecord);
+    expect(navigateMock).toHaveBeenCalledWith(Screen.SUMMARY, { bypassGuard: true });
   });
 });

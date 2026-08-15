@@ -5,6 +5,8 @@ import { APP_CONFIG } from '@shared/utils/constants';
 import { purgeStale } from '@shared/utils/ttlStorage';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
+import { useWorkflowMode } from '@core/hooks/useWorkflowMode';
+import { isReportActive } from '@core/navigation/navigationConfig';
 import { reportWebVitals } from './src/lib/analytics';
 import { initSentry } from './src/lib/sentry';
 import { findInfoPageRoute } from '@core/routes/infoPageConfig';
@@ -42,8 +44,11 @@ export function AnaestheticLogApp() {
     };
   }, []);
 
+  const { workflowMode, setWorkflowMode } = useWorkflowMode();
+
   const {
-    screen, setScreen, formData, setFormData,
+    screen, setScreen, navigate, hrefFor, pendingNavigation, confirmNavigation, cancelNavigation,
+    formData, setFormData,
     selectedPatient, lastSavedRecord, setLastSavedRecord, activeReportSavedAt,
     lastDraftSavedAt, isSavingDraft,
     testingPlanData, setTestingPlanData,
@@ -51,13 +56,17 @@ export function AnaestheticLogApp() {
     patients, databaseDate, hasUploadedData, patientDbSavedAt, isLoadingPatients, recentLogs,
     showDisclaimer, handleDismissDisclaimer,
     handlePatientSelect, handleManualDetailChange,
-    handleSubmit, handleStartDirectTesting, isTestingDraftDirty, handleUploadPatients, toggleSuspectedAgent, handleDashboardPatientSelect, resetForm, clearActiveReport,
+    handleSubmit, handleStartDirectTesting, isTestingDraftDirty, handleUploadPatients,
+    toggleSuspectedAgent, handleDashboardPatientSelect, resetForm, clearActiveReport,
   } = useAnaestheticApp();
 
   const [activeReportTab, setActiveReportTab] = React.useState<ReportTab>('report');
   const [csvUploadSheetOpen, setCsvUploadSheetOpen] = React.useState(false);
   const [confirmClearOpen, setConfirmClearOpen] = React.useState(false);
   const research = useResearchSubmit();
+
+  const handleNavigate = navigate || setScreen;
+  const hasActiveReport = isReportActive(lastSavedRecord, activeReportSavedAt);
 
   const handleProceedToTesting = () => {
     if (testingPlanData?.selectedDrugs?.length) {
@@ -76,22 +85,31 @@ export function AnaestheticLogApp() {
       });
       setFormData(prev => ({ ...prev, testPanel: rows }));
     }
-    setScreen(Screen.TESTING);
+    handleNavigate(Screen.TESTING);
   };
 
   const resetToLog = () => {
     research.reset();
     resetForm();
-    setScreen(Screen.LOG);
+    handleNavigate(Screen.LOG);
   };
 
   const handleHomeUploadComplete = () => {
-    setScreen(Screen.DASHBOARD);
+    handleNavigate(Screen.DASHBOARD);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const layoutProps = {
-    setScreen,
+    setScreen: handleNavigate,
+    navigate: handleNavigate,
+    hrefFor,
+    pendingNavigation,
+    confirmNavigation,
+    cancelNavigation,
+    workflowMode,
+    onWorkflowModeChange: setWorkflowMode,
+    isTestingDraftDirty,
+    hasActiveReport,
     currentScreen: screen,
     databaseDate,
     showDisclaimer,
@@ -106,7 +124,13 @@ export function AnaestheticLogApp() {
   const renderScreenContent = () => {
     const infoRoute = findInfoPageRoute(screen);
     if (infoRoute) {
-      return <InfoPageScreen route={infoRoute} layoutProps={layoutProps} onBack={() => setScreen(Screen.LOG)} />;
+      return (
+        <InfoPageScreen
+          route={infoRoute}
+          layoutProps={layoutProps}
+          onBack={() => handleNavigate(Screen.LOG)}
+        />
+      );
     }
 
     if (screen === Screen.DASHBOARD) {
@@ -117,10 +141,10 @@ export function AnaestheticLogApp() {
           recentLogs={recentLogs}
           isLoadingPatients={isLoadingPatients}
           patientDbSavedAt={patientDbSavedAt}
-          onSetScreen={setScreen}
+          onSetScreen={handleNavigate}
           onViewLog={(log) => {
             setLastSavedRecord(log);
-            setScreen(Screen.SUMMARY);
+            handleNavigate(Screen.SUMMARY);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           onSelectPatient={handleDashboardPatientSelect}
@@ -130,7 +154,7 @@ export function AnaestheticLogApp() {
     }
 
     if (screen === Screen.SUMMARY) {
-      if (lastSavedRecord) {
+      if (lastSavedRecord && hasActiveReport) {
         return (
           <SummaryScreen
             layoutProps={layoutProps}
@@ -149,9 +173,9 @@ export function AnaestheticLogApp() {
       return (
         <ScreenUnavailable
           title="No active report"
-          message="This screen needs an active report. Local data may have expired, or the page was reloaded."
-          onGoHome={() => setScreen(Screen.LOG)}
-          onGoDashboard={() => setScreen(Screen.DASHBOARD)}
+          message="Reports are available after a testing session has been saved. The active report may also have expired on this device."
+          onGoHome={() => handleNavigate(Screen.LOG)}
+          onGoDashboard={() => handleNavigate(Screen.DASHBOARD)}
         />
       );
     }
@@ -163,7 +187,7 @@ export function AnaestheticLogApp() {
             layoutProps={layoutProps}
             selectedPatient={selectedPatient}
             testingPlanData={testingPlanData}
-            onBack={() => setScreen(Screen.LOG)}
+            onBack={() => handleNavigate(Screen.LOG)}
             onProceed={handleProceedToTesting}
           />
         );
@@ -173,8 +197,8 @@ export function AnaestheticLogApp() {
         <ScreenUnavailable
           title="No active testing plan"
           message="This screen needs an active testing plan. Local data may have expired, or the page was reloaded."
-          onGoHome={() => setScreen(Screen.LOG)}
-          onGoDashboard={() => setScreen(Screen.DASHBOARD)}
+          onGoHome={() => handleNavigate(Screen.LOG)}
+          onGoDashboard={() => handleNavigate(Screen.DASHBOARD)}
         />
       );
     }
@@ -189,7 +213,7 @@ export function AnaestheticLogApp() {
           lastDraftSavedAt={lastDraftSavedAt}
           isSavingDraft={isSavingDraft}
           isDirty={isTestingDraftDirty}
-          onBack={() => setScreen(Screen.LOG)}
+          onBack={() => handleNavigate(Screen.LOG)}
           onSubmit={handleSubmit}
         />
       );
@@ -219,6 +243,8 @@ export function AnaestheticLogApp() {
         onStartDirectTesting={handleStartDirectTesting}
         onClearActiveReport={clearActiveReport}
         isTestingDraftDirty={isTestingDraftDirty}
+        workflowMode={workflowMode}
+        onResetForm={resetForm}
       />
     );
   };
@@ -231,7 +257,7 @@ export function AnaestheticLogApp() {
         onUploadComplete={screen === Screen.LOG ? handleHomeUploadComplete : undefined}
         hideTrigger={true}
         hasData={hasUploadedData}
-        setScreen={setScreen}
+        setScreen={handleNavigate}
       />
     </React.Suspense>
   );

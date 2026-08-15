@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { toast } from 'sonner';
 import { usePatientState } from '@features/patients/hooks/usePatientState';
 import { useTestingState } from '@features/testing/hooks/useTestingState';
@@ -11,15 +11,35 @@ export function useAnaestheticApp() {
   const patientState = usePatientState();
   const { selectedPatient, handlePatientSelect, handleManualDetailChange: originalHandleManualDetailChange } = patientState;
   const testingState = useTestingState();
-  const { setFormData, handleSubmit: originalHandleSubmit, resetForm: originalResetForm, clearActiveReport: originalClearActiveReport } = testingState;
-  const navigation = useAppNavigation();
+  const {
+    setFormData,
+    handleSubmit: originalHandleSubmit,
+    resetForm: originalResetForm,
+    clearActiveReport: originalClearActiveReport,
+    persistDraftNow,
+  } = testingState;
+
+  const isTestingDraftDirty = useMemo(() => {
+    return (
+      isTestingSessionDirty(testingState.formData, {
+        includeIdentity: !selectedPatient,
+      }) ||
+      (!selectedPatient && testingState.formData.visitDate !== testingState.INITIAL_FORM_STATE.visitDate)
+    );
+  }, [testingState.formData, testingState.INITIAL_FORM_STATE.visitDate, selectedPatient]);
+
+  const navigation = useAppNavigation({
+    isDirty: isTestingDraftDirty,
+    persistDraftNow,
+  });
+
   const disclaimer = useDisclaimer();
   const lastTryptasePrefillPatientId = useRef<string | null>(null);
 
   // Compose handlers that need cross-concern coordination
   const handleDashboardPatientSelect = (patient: Patient) => {
     handlePatientSelect(patient);
-    navigation.setScreen(Screen.LOG);
+    navigation.navigate(Screen.LOG);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -58,7 +78,7 @@ export function useAnaestheticApp() {
     if (field === 'firstName' || field === 'lastName' || field === 'mrn' || field === 'dob') {
       setFormData(prev => ({
         ...prev,
-        [field]: value
+        [field]: value,
       }));
     }
   };
@@ -66,7 +86,7 @@ export function useAnaestheticApp() {
   const handleSubmit = () => {
     const savedRecord = originalHandleSubmit();
     toast.success(`Record saved for ${savedRecord.lastName}, ${savedRecord.firstName}`, { duration: 4000 });
-    navigation.setScreen(Screen.SUMMARY);
+    navigation.navigate(Screen.SUMMARY, { bypassGuard: true });
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return savedRecord;
   };
@@ -75,14 +95,14 @@ export function useAnaestheticApp() {
     patientState.setSelectedPatient(null);
     testingState.setTestingPlanData(null);
     originalResetForm();
-    navigation.setScreen(Screen.TESTING);
+    navigation.navigate(Screen.TESTING);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const resetForm = () => {
     originalResetForm();
     patientState.setSelectedPatient(null);
-    navigation.setScreen(Screen.LOG);
+    navigation.navigate(Screen.LOG);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -90,7 +110,7 @@ export function useAnaestheticApp() {
     originalClearActiveReport();
     patientState.setSelectedPatient(null);
     originalResetForm();
-    navigation.setScreen(Screen.LOG);
+    navigation.navigate(Screen.LOG);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -98,6 +118,11 @@ export function useAnaestheticApp() {
     // Navigation
     screen: navigation.screen,
     setScreen: navigation.setScreen,
+    navigate: navigation.navigate,
+    hrefFor: navigation.hrefFor,
+    pendingNavigation: navigation.pendingNavigation,
+    confirmNavigation: navigation.confirmNavigation,
+    cancelNavigation: navigation.cancelNavigation,
 
     // Testing state
     formData: testingState.formData,
@@ -111,9 +136,8 @@ export function useAnaestheticApp() {
     setTestingPlanData: testingState.setTestingPlanData,
     recentLogs: testingState.recentLogs,
     INITIAL_FORM_STATE: testingState.INITIAL_FORM_STATE,
-    isTestingDraftDirty: isTestingSessionDirty(testingState.formData, {
-      includeIdentity: !selectedPatient,
-    }) || (!selectedPatient && testingState.formData.visitDate !== testingState.INITIAL_FORM_STATE.visitDate),
+    isTestingDraftDirty,
+    persistDraftNow,
 
     // Patient state
     selectedPatient: patientState.selectedPatient,

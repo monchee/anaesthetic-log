@@ -96,9 +96,9 @@ test.describe('Testing Day Flow', () => {
     // ── Step 10: Navigate back to the log, then to Dashboard ───────────────
     await page.getByRole('button', { name: /Start New Log/i }).click();
     await dismissHelpModal(page);
-    const dashboardBtn = page.getByRole('button', { name: /dashboard/i }).first();
-    await expect(dashboardBtn).toBeVisible({ timeout: 5000 });
-    await dashboardBtn.click();
+    const dashboardLink = page.locator('nav[aria-label="Primary sidebar navigation"]').getByRole('link', { name: 'Dashboard' });
+    await expect(dashboardLink).toBeVisible({ timeout: 5000 });
+    await dashboardLink.click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
 
     // ── Step 11: Recent Testing Activity shows sessions ────────────────────
@@ -129,13 +129,17 @@ test.describe('Testing Day Flow', () => {
 
     // Draft autosave is debounced by 500ms.
     await page.waitForTimeout(700);
+    await expect(page.getByText(/Draft saved/)).toBeVisible({ timeout: 5000 });
     await page.reload();
     await page.waitForLoadState('networkidle');
     await dismissHelpModal(page);
 
     await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
     await expect(page.getByLabel(/histamine/i).first()).toHaveValue('5');
-    await expect(page.getByText(/Chen, Wei|Wei Chen/)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByLabel(/first name/i)).toHaveValue('Wei');
+    await expect(page.getByLabel(/last name/i)).toHaveValue('Chen');
+    await expect(page.getByLabel(/mrn/i)).toHaveValue('1');
+    await expect(page.getByText(/Draft saved/)).toBeVisible({ timeout: 5000 });
   });
 
   test('marks only required manual patient fields with asterisks', async ({ page }) => {

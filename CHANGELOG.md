@@ -1,3 +1,16 @@
+## [0.76.4] — 2026-08-15 (Navigation and Direct Entry Workbench)
+
+Summary: Reworked navigation, added Home REDCap review and direct Allergy Testing entry points, strengthened draft-safe history behaviour, accessibility coverage, and autosave restore status.
+
+### Added
+- **Mode-aware navigation architecture** — Introduces `AppSidebar`, `MobileNavigationDrawer`, and `WorkflowModeControl` with tailored views for Clinician and Nurse workflows, integrated hash routing, and `NavigationGuardDialog` protection.
+- **Direct entry and quick-start actions** — Adds prominent Home action cards for REDCap CSV review and direct Allergy Testing with active draft resume indicators and safe patient switching guards.
+- **Synchronous draft persistence** — Adds `persistDraftNow` in `useTestingState` to immediately flush in-flight draft changes and prevent debounce race conditions during navigation.
+
+### Changed
+- **Autosave restore indicator accuracy** — Refines `DraftSaveIndicator` and testing draft restoration to avoid false saving states on mount and accurately reflect saved timestamps and unsaved edits.
+- **Comprehensive test coverage** — Expands unit test suites for navigation components, workflow mode hooks, and draft lifecycle management, alongside updated accessibility and direct entry E2E specs.
+
 ## [0.76.3] — 2026-08-15 (Distinctive Quick-Start Colours)
 
 Summary: Applies distinct semantic colour styling to Home quick-start entry points, styling REDCap review in cool blue/sky tones and Allergy Testing in warm amber tones while preserving all accessibility standards, responsive layouts, and clinical behaviours.
