@@ -620,6 +620,29 @@ test.describe('Automated Accessibility Scans', () => {
     expect(violations.length).toBe(0);
   });
 
+  base('password gate ambient background layers are hidden from assistive technology', async ({ page, baseURL }) => {
+    await page.goto(baseURL ?? '/');
+    await page.waitForSelector('h1', { timeout: 15000 });
+
+    const ambient1 = page.locator('.ambient-light-field-1');
+    const ambient2 = page.locator('.ambient-light-field-2');
+
+    await expect(ambient1).toHaveAttribute('aria-hidden', 'true');
+    await expect(ambient2).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  base('password gate ambient background layers respect prefers-reduced-motion', async ({ page, baseURL }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(baseURL ?? '/');
+    await page.waitForSelector('h1', { timeout: 15000 });
+
+    const ambient1 = page.locator('.ambient-light-field-1');
+    await expect(ambient1).toBeAttached();
+
+    const animation = await ambient1.evaluate((el) => window.getComputedStyle(el).animationName);
+    expect(animation).toBe('none');
+  });
+
   test('axe-core scan on populated testing session', async ({ page }) => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });

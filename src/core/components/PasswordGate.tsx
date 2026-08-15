@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Lock, AlertCircle, KeyRound } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
 
 const APP_VERSION = __APP_VERSION__;
@@ -83,22 +84,46 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
   if (unlocked) return <div className="animate-screen-enter">{children}</div>;
 
   return (
-    <main className={`flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10 ${isExiting ? 'animate-gate-exit pointer-events-none' : ''}`} aria-label="Screen lock">
-      <div className="flex w-full max-w-sm flex-col gap-6 animate-content-enter">
+    <main
+      className={`relative flex min-h-svh flex-col items-center justify-center overflow-hidden bg-background p-6 md:p-10 ${
+        isExiting ? 'animate-gate-exit pointer-events-none' : ''
+      }`}
+      aria-label="Screen lock"
+    >
+      {/* Decorative ambient background light fields */}
+      <div className="ambient-light-field-1" aria-hidden="true" />
+      <div className="ambient-light-field-2" aria-hidden="true" />
+
+      <div className="relative z-10 flex w-full max-w-sm flex-col gap-6 animate-content-enter">
         <div className="flex flex-col items-center gap-1.5 text-center">
-          <h1 className="app-wordmark text-5xl font-bold text-primary">DREAM</h1>
-          <p className="text-xs tracking-wider text-muted-foreground">Drug Reaction Evaluation &amp; Anaesthetic Management</p>
+          <h1 className="app-wordmark text-4xl sm:text-5xl font-bold text-primary">DREAM</h1>
+          <p className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
+            Drug Reaction Evaluation &amp; Anaesthetic Management
+          </p>
         </div>
 
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-semibold tracking-tight">Screen Lock</CardTitle>
-            <CardDescription>Enter PIN to continue</CardDescription>
+        <Card className="border-border bg-card shadow-sm">
+          <CardHeader className="text-center pb-4 sm:pb-5">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
+              <Lock className="size-3.5 text-primary shrink-0" aria-hidden="true" />
+              <span>Clinical Workstation</span>
+            </div>
+            <CardTitle className="text-xl sm:text-2xl font-semibold tracking-tight text-primary dark:text-foreground">
+              Screen Lock
+            </CardTitle>
+            <CardDescription id="pin-instructions" className="text-sm text-muted-foreground">
+              Enter PIN to continue
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-3 items-center">
-                <div className="flex gap-3" role="group" aria-label="PIN entry">
+                <div
+                  className="flex gap-2.5 sm:gap-3"
+                  role="group"
+                  aria-label="PIN entry"
+                  aria-describedby="pin-instructions pin-status"
+                >
                   {[0, 1, 2, 3].map(i => (
                     <input
                       key={i}
@@ -111,19 +136,49 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
                       autoFocus={i === 0}
                       autoComplete={i === 0 ? 'one-time-code' : 'off'}
                       aria-label={`PIN digit ${i + 1} of 4`}
+                      aria-describedby="pin-instructions pin-status"
+                      aria-invalid={error ? 'true' : 'false'}
                       onChange={e => handleDigitChange(i, e.target.value)}
                       onKeyDown={e => handleKeyDown(i, e)}
                       onPaste={i === 0 ? handlePaste : undefined}
-                      className="w-12 h-14 text-center text-xl text-foreground border border-input bg-background rounded-none
-                                 focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring
-                                 transition-colors"
+                      className={`w-12 h-14 sm:w-14 sm:h-14 text-center text-2xl font-mono rounded-none border transition-colors ${
+                        error
+                          ? 'border-destructive text-destructive bg-destructive/5 focus:outline-none focus:ring-2 focus:ring-destructive focus:border-destructive'
+                          : digits[i]
+                            ? 'border-primary/60 bg-primary/[0.03] text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring'
+                            : 'border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring'
+                      }`}
                     />
                   ))}
                 </div>
               </div>
-              {error && <p role="alert" className="text-destructive text-sm text-center">{error}</p>}
-              <Button onClick={() => handleUnlock()} className="w-full">Unlock</Button>
-              <p className="text-xs text-muted-foreground text-center leading-tight">
+
+              {error ? (
+                <div
+                  id="pin-status"
+                  role="alert"
+                  aria-live="assertive"
+                  className="flex items-center justify-center gap-1.5 text-destructive text-sm font-medium text-center"
+                >
+                  <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
+                  <span>{error}</span>
+                </div>
+              ) : (
+                <div id="pin-status" role="status" aria-live="polite" className="sr-only">
+                  <span>Screen locked. Enter 4-digit PIN.</span>
+                </div>
+              )}
+
+              <Button
+                type="button"
+                onClick={() => handleUnlock()}
+                className="w-full h-11 text-sm font-semibold rounded-none btn-press"
+              >
+                <KeyRound className="size-4 shrink-0" aria-hidden="true" />
+                Unlock
+              </Button>
+
+              <p className="text-xs text-muted-foreground text-center leading-relaxed">
                 This is a screen lock to prevent shoulder-surfing on shared workstations. Patient data security is governed separately by the database access controls.
               </p>
             </div>
@@ -134,7 +189,9 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
           <span>RPAH Department of Clinical Immunology &amp; Allergy</span>
         </div>
       </div>
-      <span className="fixed bottom-4 right-4 md:bottom-6 md:right-6 text-xs font-mono text-muted-foreground">v{APP_VERSION}</span>
+      <span className="fixed bottom-4 right-4 md:bottom-6 md:right-6 text-xs font-mono text-muted-foreground">
+        v{APP_VERSION}
+      </span>
     </main>
   );
 };

@@ -453,6 +453,71 @@
   .btn-press {
     @apply active:scale-[0.96] transition-transform duration-100;
   }
+
+  /* Ambient light fields for the clinical lock station */
+  .ambient-light-field-1 {
+    position: absolute;
+    top: -15%;
+    left: -10%;
+    width: 60vw;
+    height: 60vw;
+    max-width: 700px;
+    max-height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, hsl(var(--primary) / 0.08) 0%, hsl(var(--accent) / 0.22) 45%, transparent 70%);
+    filter: blur(50px);
+    pointer-events: none;
+    animation: ambient-drift-1 24s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  .ambient-light-field-2 {
+    position: absolute;
+    bottom: -15%;
+    right: -10%;
+    width: 55vw;
+    height: 55vw;
+    max-width: 650px;
+    max-height: 650px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, hsl(var(--accent) / 0.18) 0%, hsl(var(--primary) / 0.05) 50%, transparent 70%);
+    filter: blur(50px);
+    pointer-events: none;
+    animation: ambient-drift-2 30s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  .dark .ambient-light-field-1 {
+    background: radial-gradient(circle at center, hsl(var(--primary) / 0.12) 0%, hsl(var(--accent) / 0.1) 45%, transparent 70%);
+  }
+
+  .dark .ambient-light-field-2 {
+    background: radial-gradient(circle at center, hsl(var(--accent) / 0.12) 0%, hsl(var(--primary) / 0.07) 50%, transparent 70%);
+  }
+}
+
+@keyframes ambient-drift-1 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, 6%, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(-3%, 3%, 0) scale(0.97);
+  }
+}
+
+@keyframes ambient-drift-2 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-5%, -4%, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(3%, -6%, 0) scale(0.95);
+  }
 }
 
 /* Print Utilities */
@@ -508,7 +573,10 @@
   .animate-row-enter,
   .animate-section-reveal,
   .animate-content-enter,
-  .animate-content-enter-subtle {
+  .animate-content-enter-subtle,
+  .animate-gate-exit,
+  .ambient-light-field-1,
+  .ambient-light-field-2 {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

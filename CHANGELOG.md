@@ -1,3 +1,14 @@
+## [0.77.2] — 2026-08-16 (PIN Gate Redesign)
+
+Summary: Redesigns the clinical workstation screen lock with clearer PIN feedback, accessible status messaging, responsive entry controls, and subtle motion that respects reduced-motion preferences.
+
+### Changed
+- **Clinical workstation lock redesign** — Refines the PIN gate with clearer lock-state hierarchy, larger responsive controls, filled and error states, keyboard-friendly feedback, and accessible live status messaging while preserving the existing PIN and session semantics.
+- **Ambient light field motion** — Adds a restrained semantic light-field animation that supports light and dark themes and disables cleanly for reduced-motion preferences.
+
+### Added
+- **PIN gate regression coverage** — Adds focused component tests and accessibility coverage for the lock structure, input behaviour, error recovery, session persistence, decorative-layer semantics, and reduced-motion contract.
+
 ## [0.77.1] — 2026-08-16 (Testing Category Colours Restored)
 
 Summary: Restores the distinct semantic drug-category colour palette across light and dark themes for all ten testing categories, protected by comprehensive regression tests.
