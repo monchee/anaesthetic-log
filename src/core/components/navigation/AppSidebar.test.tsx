@@ -8,8 +8,6 @@ import { ThemeProvider } from '@core/components/ThemeProvider';
 describe('AppSidebar', () => {
   const defaultProps = {
     currentScreen: Screen.LOG,
-    workflowMode: 'clinician' as const,
-    onWorkflowModeChange: vi.fn(),
     onNavigate: vi.fn(),
     hrefFor: (screen: Screen) => (screen === Screen.LOG ? '/' : `/${screen}`),
     isTestingDraftDirty: false,
@@ -65,22 +63,42 @@ describe('AppSidebar', () => {
     expect(onNavigate).not.toHaveBeenCalled();
   });
 
-  it('renders contextual items when active report or dirty draft exists', () => {
+  it('renders contextual items in stable order (Reports before Testing) when active work exists', () => {
     render(
       <ThemeProvider>
         <AppSidebar
           {...defaultProps}
           isTestingDraftDirty={true}
           hasActiveReport={true}
-          workflowMode="clinician"
         />
       </ThemeProvider>
     );
 
-    expect(screen.getByRole('link', { name: /Reports/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Testing Session/i })).toBeInTheDocument();
+    const reportsLink = screen.getByRole('link', { name: /Reports/i });
+    const testingLink = screen.getByRole('link', { name: /Testing Session/i });
+
+    expect(reportsLink).toBeInTheDocument();
+    expect(testingLink).toBeInTheDocument();
     expect(screen.getByText('Active')).toBeInTheDocument();
     expect(screen.getByText('Draft')).toBeInTheDocument();
+
+    // Verify document ordering (Reports before Testing)
+    expect(reportsLink.compareDocumentPosition(testingLink)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING
+    );
+  });
+
+  it('does not render workflow mode selector', () => {
+    render(
+      <ThemeProvider>
+        <AppSidebar {...defaultProps} />
+      </ThemeProvider>
+    );
+
+    expect(screen.queryByLabelText(/Workflow view/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Workflow view/i)).not.toBeInTheDocument();
+    expect(screen.queryByText('Clinician')).not.toBeInTheDocument();
+    expect(screen.queryByText('Nurse')).not.toBeInTheDocument();
   });
 
   it('triggers utility actions for CSV upload and Quick Start', () => {

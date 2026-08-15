@@ -258,7 +258,7 @@ describe('LogScreen Home quick-start actions', () => {
   });
 });
 
-describe('LogScreen Workflow Mode ordering', () => {
+describe('LogScreen Home layout ordering', () => {
   const baseProps = {
     layoutProps: {
       setScreen: vi.fn(),
@@ -289,26 +289,14 @@ describe('LogScreen Workflow Mode ordering', () => {
     onClearActiveReport: vi.fn(),
   };
 
-  it('orders Patient Selection before Quick-start actions in clinician mode', () => {
-    render(<LogScreen {...baseProps} workflowMode="clinician" />);
+  it('orders Patient Selection before Quick-start actions on Home', () => {
+    render(<LogScreen {...baseProps} />);
 
     const patientCard = screen.getByText('Patient Selection');
     const directAction = screen.getByRole('button', { name: /Open Allergy Testing/i });
 
     // Compare document order
     expect(patientCard.compareDocumentPosition(directAction)).toBe(
-      Node.DOCUMENT_POSITION_FOLLOWING
-    );
-  });
-
-  it('orders Quick-start actions before Patient Selection in nurse mode', () => {
-    render(<LogScreen {...baseProps} workflowMode="nurse" />);
-
-    const directAction = screen.getByRole('button', { name: /Open Allergy Testing/i });
-    const patientCard = screen.getByText('Patient Selection');
-
-    // In nurse mode, directAction should precede patientCard
-    expect(directAction.compareDocumentPosition(patientCard)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING
     );
   });
@@ -346,24 +334,13 @@ describe('LogScreen active work banners', () => {
     isTestingDraftDirty: true,
   };
 
-  it('orders Active Report before Testing Draft in clinician mode', () => {
-    render(<LogScreen {...baseProps} workflowMode="clinician" />);
+  it('orders Active Report before Testing Draft in active work banners', () => {
+    render(<LogScreen {...baseProps} />);
 
     const activeReportText = screen.getByText(/Active report:/i);
     const draftText = screen.getByText(/In-progress testing session/i);
 
     expect(activeReportText.compareDocumentPosition(draftText)).toBe(
-      Node.DOCUMENT_POSITION_FOLLOWING
-    );
-  });
-
-  it('orders Testing Draft before Active Report in nurse mode', () => {
-    render(<LogScreen {...baseProps} workflowMode="nurse" />);
-
-    const draftText = screen.getByText(/In-progress testing session/i);
-    const activeReportText = screen.getByText(/Active report:/i);
-
-    expect(draftText.compareDocumentPosition(activeReportText)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING
     );
   });

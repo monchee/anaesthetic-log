@@ -10,8 +10,6 @@ describe('MobileNavigationDrawer', () => {
     isOpen: false,
     onOpenChange: vi.fn(),
     currentScreen: Screen.LOG,
-    workflowMode: 'clinician' as const,
-    onWorkflowModeChange: vi.fn(),
     onNavigate: vi.fn(),
     hrefFor: (screen: Screen) => (screen === Screen.LOG ? '/' : `/${screen}`),
     isTestingDraftDirty: false,
@@ -34,7 +32,7 @@ describe('MobileNavigationDrawer', () => {
     expect(triggerBtn).toHaveTextContent('Menu');
   });
 
-  it('opens drawer and displays all navigation items with visible text labels', () => {
+  it('opens drawer and displays all navigation items without workflow mode selector', () => {
     render(
       <ThemeProvider>
         <MobileNavigationDrawer {...defaultProps} isOpen={true} />
@@ -53,6 +51,10 @@ describe('MobileNavigationDrawer', () => {
     expect(screen.getByRole('link', { name: /Contact/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Resources/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Changelog/i })).toBeInTheDocument();
+
+    // Verify workflow mode control is absent
+    expect(screen.queryByLabelText(/Workflow view/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Workflow view/i)).not.toBeInTheDocument();
   });
 
   it('closes drawer when Escape key is pressed', () => {

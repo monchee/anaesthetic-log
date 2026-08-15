@@ -84,9 +84,9 @@ describe('navigationConfig', () => {
     });
   });
 
-  describe('Contextual Navigation Items & Workflow Mode ordering', () => {
-    it('orders Reports before Testing in clinician workflow mode', () => {
-      const items = getContextualNavItems('clinician', {
+  describe('Contextual Navigation Items ordering', () => {
+    it('orders Reports before Testing in contextual navigation', () => {
+      const items = getContextualNavItems({
         currentScreen: Screen.LOG,
         isTestingDraftDirty: true,
         hasActiveReport: true,
@@ -99,22 +99,8 @@ describe('navigationConfig', () => {
       expect(items[1].label).toBe('Testing Session');
     });
 
-    it('orders Testing before Reports in nurse workflow mode', () => {
-      const items = getContextualNavItems('nurse', {
-        currentScreen: Screen.LOG,
-        isTestingDraftDirty: true,
-        hasActiveReport: true,
-      });
-
-      expect(items).toHaveLength(2);
-      expect(items[0].screen).toBe(Screen.TESTING);
-      expect(items[0].label).toBe('Testing Session');
-      expect(items[1].screen).toBe(Screen.SUMMARY);
-      expect(items[1].label).toBe('Reports');
-    });
-
     it('shows only active work items that exist', () => {
-      const onlyTesting = getContextualNavItems('clinician', {
+      const onlyTesting = getContextualNavItems({
         currentScreen: Screen.LOG,
         isTestingDraftDirty: true,
         hasActiveReport: false,
@@ -122,7 +108,7 @@ describe('navigationConfig', () => {
       expect(onlyTesting).toHaveLength(1);
       expect(onlyTesting[0].screen).toBe(Screen.TESTING);
 
-      const onlyReports = getContextualNavItems('nurse', {
+      const onlyReports = getContextualNavItems({
         currentScreen: Screen.LOG,
         isTestingDraftDirty: false,
         hasActiveReport: true,
@@ -130,7 +116,7 @@ describe('navigationConfig', () => {
       expect(onlyReports).toHaveLength(1);
       expect(onlyReports[0].screen).toBe(Screen.SUMMARY);
 
-      const none = getContextualNavItems('clinician', {
+      const none = getContextualNavItems({
         currentScreen: Screen.LOG,
         isTestingDraftDirty: false,
         hasActiveReport: false,
@@ -139,7 +125,7 @@ describe('navigationConfig', () => {
     });
 
     it('always shows Testing when currently on Testing screen', () => {
-      const items = getContextualNavItems('clinician', {
+      const items = getContextualNavItems({
         currentScreen: Screen.TESTING,
         isTestingDraftDirty: false,
         hasActiveReport: false,
@@ -149,7 +135,7 @@ describe('navigationConfig', () => {
     });
 
     it('does not show Reports when currentScreen is Screen.SUMMARY if hasActiveReport is false', () => {
-      const items = getContextualNavItems('clinician', {
+      const items = getContextualNavItems({
         currentScreen: Screen.SUMMARY,
         isTestingDraftDirty: false,
         hasActiveReport: false,

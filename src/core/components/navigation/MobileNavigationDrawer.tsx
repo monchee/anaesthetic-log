@@ -15,8 +15,6 @@ import {
   UTILITY_NAV_ITEMS,
   NavigationItem,
 } from '@core/navigation/navigationConfig';
-import { WorkflowMode } from '@core/hooks/useWorkflowMode';
-import { WorkflowModeControl } from './WorkflowModeControl';
 import { useTheme } from '@core/components/ThemeProvider';
 import { shouldHandleNavigation } from './AppSidebar';
 
@@ -24,8 +22,6 @@ interface MobileNavigationDrawerProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   currentScreen: Screen;
-  workflowMode: WorkflowMode;
-  onWorkflowModeChange: (mode: WorkflowMode) => void;
   onNavigate: (screen: Screen) => void;
   hrefFor: (screen: Screen) => string;
   isTestingDraftDirty: boolean;
@@ -40,8 +36,6 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
   isOpen,
   onOpenChange,
   currentScreen,
-  workflowMode,
-  onWorkflowModeChange,
   onNavigate,
   hrefFor,
   isTestingDraftDirty,
@@ -55,7 +49,7 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
   const drawerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const contextualItems = getContextualNavItems(workflowMode, {
+  const contextualItems = getContextualNavItems({
     currentScreen,
     isTestingDraftDirty,
     hasActiveReport,
@@ -201,14 +195,6 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
 
             {/* Scrollable Navigation Content */}
             <div className="p-4 space-y-5 flex-1 overflow-y-auto">
-              {/* Workflow View Mode Control */}
-              <div className="bg-muted/40 dark:bg-muted/20 p-3 border border-border">
-                <WorkflowModeControl
-                  mode={workflowMode}
-                  onChange={onWorkflowModeChange}
-                  compact={false}
-                />
-              </div>
 
               {/* Primary Navigation */}
               <nav aria-label="Primary mobile navigation" className="space-y-1">

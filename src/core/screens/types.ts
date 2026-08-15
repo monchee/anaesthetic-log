@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
 import { Patient, Screen } from '@/types';
-import { WorkflowMode } from '@core/hooks/useWorkflowMode';
 
 export interface CommonScreenLayoutProps {
   setScreen: (screen: Screen) => void;
@@ -9,8 +8,6 @@ export interface CommonScreenLayoutProps {
   pendingNavigation?: Screen | null;
   confirmNavigation?: () => void;
   cancelNavigation?: () => void;
-  workflowMode?: WorkflowMode;
-  onWorkflowModeChange?: (mode: WorkflowMode) => void;
   isTestingDraftDirty?: boolean;
   hasActiveReport?: boolean;
   currentScreen: Screen;

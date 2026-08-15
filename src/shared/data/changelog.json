@@ -1,5 +1,17 @@
 [
   {
+    "version": "v0.76.5",
+    "codename": "Navigation without Workflow View",
+    "date": "15 August 2026",
+    "summary": "Removed the unwanted Clinician/Nurse workflow view and mode-dependent layout while preserving direct Allergy Testing, REDCap review, draft protection, contextual navigation, mobile navigation, and clinical nurse notes.",
+    "highlight": false,
+    "changes": [
+      "Clinician and Nurse workflow view mode \u2014 Removes the workflow mode selector and mode-dependent view switching from desktop and mobile navigation.",
+      "Unified Home layout \u2014 Standardizes Home screen presentation with consistent patient selection, quick-start actions, and informational panels.",
+      "Stable contextual navigation \u2014 Retains dynamic links for active reports and in-progress testing drafts in consistent order across navigation surfaces."
+    ]
+  },
+  {
     "version": "v0.76.4",
     "codename": "Navigation and Direct Entry Workbench",
     "date": "15 August 2026",

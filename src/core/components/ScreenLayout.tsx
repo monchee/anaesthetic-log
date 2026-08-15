@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Screen, Patient } from '@/types';
 import { pathFromScreen } from '@core/navigation/navigationConfig';
-import { WorkflowMode } from '@core/hooks/useWorkflowMode';
 import { AppSidebar } from './navigation/AppSidebar';
 import { MobileNavigationDrawer } from './navigation/MobileNavigationDrawer';
 import { NavigationGuardDialog } from './navigation/NavigationGuardDialog';
@@ -26,8 +25,6 @@ export interface ScreenLayoutProps {
   confirmNavigation?: () => void;
   cancelNavigation?: () => void;
   currentScreen?: Screen;
-  workflowMode?: WorkflowMode;
-  onWorkflowModeChange?: (mode: WorkflowMode) => void;
   isTestingDraftDirty?: boolean;
   hasActiveReport?: boolean;
   databaseDate: string;
@@ -57,8 +54,6 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   confirmNavigation,
   cancelNavigation,
   currentScreen = Screen.LOG,
-  workflowMode = 'clinician',
-  onWorkflowModeChange,
   isTestingDraftDirty = false,
   hasActiveReport = false,
   databaseDate,
@@ -152,8 +147,6 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
       {showNav && (
         <AppSidebar
           currentScreen={currentScreen}
-          workflowMode={workflowMode}
-          onWorkflowModeChange={onWorkflowModeChange || (() => {})}
           onNavigate={onNavigate}
           hrefFor={hrefFor}
           isTestingDraftDirty={isTestingDraftDirty}
@@ -202,8 +195,6 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                         isOpen={isMobileDrawerOpen}
                         onOpenChange={setIsMobileDrawerOpen}
                         currentScreen={currentScreen}
-                        workflowMode={workflowMode}
-                        onWorkflowModeChange={onWorkflowModeChange || (() => {})}
                         onNavigate={onNavigate}
                         hrefFor={hrefFor}
                         isTestingDraftDirty={isTestingDraftDirty}

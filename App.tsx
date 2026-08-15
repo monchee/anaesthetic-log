@@ -5,7 +5,6 @@ import { APP_CONFIG } from '@shared/utils/constants';
 import { purgeStale } from '@shared/utils/ttlStorage';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
-import { useWorkflowMode } from '@core/hooks/useWorkflowMode';
 import { isReportActive } from '@core/navigation/navigationConfig';
 import { reportWebVitals } from './src/lib/analytics';
 import { initSentry } from './src/lib/sentry';
@@ -43,8 +42,6 @@ export function AnaestheticLogApp() {
       if (timeoutId !== undefined) window.clearTimeout(timeoutId);
     };
   }, []);
-
-  const { workflowMode, setWorkflowMode } = useWorkflowMode();
 
   const {
     screen, setScreen, navigate, hrefFor, pendingNavigation, confirmNavigation, cancelNavigation,
@@ -106,8 +103,6 @@ export function AnaestheticLogApp() {
     pendingNavigation,
     confirmNavigation,
     cancelNavigation,
-    workflowMode,
-    onWorkflowModeChange: setWorkflowMode,
     isTestingDraftDirty,
     hasActiveReport,
     currentScreen: screen,
@@ -243,7 +238,6 @@ export function AnaestheticLogApp() {
         onStartDirectTesting={handleStartDirectTesting}
         onClearActiveReport={clearActiveReport}
         isTestingDraftDirty={isTestingDraftDirty}
-        workflowMode={workflowMode}
         onResetForm={resetForm}
       />
     );

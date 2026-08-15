@@ -35,7 +35,6 @@ import { DRUG_CATEGORIES } from '@shared/utils/constants';
 import { Patient, LogFormData, Screen, TestingPlanData } from '@/types';
 import { CommonScreenLayoutProps } from './types';
 import { ScreenLayout } from '@core/components/ScreenLayout';
-import { WorkflowMode } from '@core/hooks/useWorkflowMode';
 
 export interface LogScreenProps {
   layoutProps: CommonScreenLayoutProps;
@@ -56,7 +55,6 @@ export interface LogScreenProps {
   onStartDirectTesting: () => void;
   onClearActiveReport: () => void;
   isTestingDraftDirty?: boolean;
-  workflowMode?: WorkflowMode;
   onResetForm?: () => void;
 }
 
@@ -79,7 +77,6 @@ export function LogScreen({
   onStartDirectTesting,
   onClearActiveReport,
   isTestingDraftDirty = false,
-  workflowMode = 'clinician',
   onResetForm,
 }: LogScreenProps) {
   const [confirmDiscardDraftOpen, setConfirmDiscardDraftOpen] = React.useState(false);
@@ -91,8 +88,6 @@ export function LogScreen({
     lastName: '',
     mrn: '',
   });
-
-  const effectiveWorkflowMode: WorkflowMode = workflowMode || layoutProps.workflowMode || 'clinician';
 
   const handleDirectTestingClick = () => {
     if (isTestingDraftDirty) {
@@ -209,22 +204,12 @@ export function LogScreen({
     );
   };
 
-  const renderActiveWorkBanners = () => {
-    if (effectiveWorkflowMode === 'nurse') {
-      return (
-        <div className="space-y-2">
-          {renderTestingDraftBanner()}
-          {renderActiveReportBanner()}
-        </div>
-      );
-    }
-    return (
-      <div className="space-y-2">
-        {renderActiveReportBanner()}
-        {renderTestingDraftBanner()}
-      </div>
-    );
-  };
+  const renderActiveWorkBanners = () => (
+    <div className="space-y-2">
+      {renderActiveReportBanner()}
+      {renderTestingDraftBanner()}
+    </div>
+  );
 
   // Quick-start actions panel
   const renderQuickStartActions = () => (
@@ -436,7 +421,6 @@ export function LogScreen({
       title="DREAM"
       subtitle={appSubtitle}
       icon={<Stethoscope className="w-5 h-5" />}
-      workflowMode={effectiveWorkflowMode}
       isTestingDraftDirty={isTestingDraftDirty}
       hasActiveReport={Boolean(lastSavedRecord && activeReportSavedAt && Date.now() - activeReportSavedAt < ACTIVE_REPORT_TTL_MS)}
       {...layoutProps}
@@ -482,22 +466,10 @@ export function LogScreen({
         onConfirm={handleConfirmPatientSwitch}
       />
 
-      {/* Mode-Aware Layout Composition */}
-      {effectiveWorkflowMode === 'nurse' ? (
-        // Nurse View: Quick Start / Resume first, then Patient Selection
-        <>
-          {!selectedPatient && renderQuickStartActions()}
-          {renderPatientSelectionCard()}
-          {!selectedPatient && renderInfoCards()}
-        </>
-      ) : (
-        // Clinician View: Patient Selection first, then Quick Start
-        <>
-          {renderPatientSelectionCard()}
-          {!selectedPatient && renderQuickStartActions()}
-          {!selectedPatient && renderInfoCards()}
-        </>
-      )}
+      {/* Stable Home Layout: Patient Selection first, then Quick Start actions and Info Cards */}
+      {renderPatientSelectionCard()}
+      {!selectedPatient && renderQuickStartActions()}
+      {!selectedPatient && renderInfoCards()}
 
       {/* Manual Patient Dialog */}
       {selectedPatient?.id === 'manual' && (

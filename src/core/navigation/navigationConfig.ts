@@ -20,8 +20,6 @@ import {
 import { Screen, LogFormData } from '@/types';
 import { ACTIVE_REPORT_TTL_MS } from '@shared/utils';
 
-export type WorkflowMode = 'clinician' | 'nurse';
-
 export interface NavigationItem {
   screen: Screen;
   label: string;
@@ -96,7 +94,6 @@ export interface ContextualNavOptions {
 }
 
 export function getContextualNavItems(
-  workflowMode: WorkflowMode = 'clinician',
   options: ContextualNavOptions
 ): NavigationItem[] {
   const { currentScreen, isTestingDraftDirty, hasActiveReport } = options;
@@ -124,13 +121,8 @@ export function getContextualNavItems(
 
   const items: NavigationItem[] = [];
 
-  if (workflowMode === 'nurse') {
-    if (showTesting) items.push(testingItem);
-    if (showReports) items.push(reportsItem);
-  } else {
-    if (showReports) items.push(reportsItem);
-    if (showTesting) items.push(testingItem);
-  }
+  if (showReports) items.push(reportsItem);
+  if (showTesting) items.push(testingItem);
 
   return items;
 }

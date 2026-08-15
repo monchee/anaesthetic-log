@@ -13,8 +13,6 @@ import {
   UTILITY_NAV_ITEMS,
   NavigationItem,
 } from '@core/navigation/navigationConfig';
-import { WorkflowMode } from '@core/hooks/useWorkflowMode';
-import { WorkflowModeControl } from './WorkflowModeControl';
 import { useTheme } from '@core/components/ThemeProvider';
 
 export function shouldHandleNavigation(event: React.MouseEvent<HTMLAnchorElement>): boolean {
@@ -33,8 +31,6 @@ export function shouldHandleNavigation(event: React.MouseEvent<HTMLAnchorElement
 
 interface AppSidebarProps {
   currentScreen: Screen;
-  workflowMode: WorkflowMode;
-  onWorkflowModeChange: (mode: WorkflowMode) => void;
   onNavigate: (screen: Screen) => void;
   hrefFor: (screen: Screen) => string;
   isTestingDraftDirty: boolean;
@@ -47,8 +43,6 @@ interface AppSidebarProps {
 
 export const AppSidebar: React.FC<AppSidebarProps> = ({
   currentScreen,
-  workflowMode,
-  onWorkflowModeChange,
   onNavigate,
   hrefFor,
   isTestingDraftDirty,
@@ -60,7 +54,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 }) => {
   const { theme, toggleTheme } = useTheme();
 
-  const contextualItems = getContextualNavItems(workflowMode, {
+  const contextualItems = getContextualNavItems({
     currentScreen,
     isTestingDraftDirty,
     hasActiveReport,
@@ -139,14 +133,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
       {/* Main Content Area in Sidebar */}
       <div className="p-3.5 space-y-5 flex-1">
-        {/* Workflow View Mode Control */}
-        <div className="bg-muted/30 dark:bg-muted/15 p-2.5 border border-border">
-          <WorkflowModeControl
-            mode={workflowMode}
-            onChange={onWorkflowModeChange}
-            compact={true}
-          />
-        </div>
 
         {/* Primary Navigation */}
         <nav aria-label="Primary sidebar navigation" className="space-y-1">
