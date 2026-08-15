@@ -29,9 +29,11 @@ import {
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import PatientSelector from '@features/patients/components/PatientSelector';
 import PatientHistory from '@features/patients/components/PatientHistory';
+import { ClinicalContextBar } from '@features/patients/components/ClinicalContextBar';
 import TestingPlanGenerator from '@features/testing/components/TestingPlanGenerator';
 import { ACTIVE_REPORT_TTL_MS } from '@shared/utils';
 import { DRUG_CATEGORIES } from '@shared/utils/constants';
+import { isDifferentPatient } from '@features/patients/utils/patientIdentity';
 import { Patient, LogFormData, Screen, TestingPlanData } from '@/types';
 import { CommonScreenLayoutProps } from './types';
 import { ScreenLayout } from '@core/components/ScreenLayout';
@@ -48,9 +50,10 @@ export interface LogScreenProps {
   setConfirmClearOpen: (open: boolean) => void;
   patients: Patient[];
   onPatientSelect: (patient: Patient) => void;
+  onConfirmedPatientSelect?: (patient: Patient) => void;
   onManualDetailChange: (field: keyof Patient, value: string) => void;
   onToggleSuspectedAgent: (patientId: string, drugName: string) => void;
-  onSetTestingPlanData: (data: TestingPlanData) => void;
+  onSetTestingPlanData: (data: TestingPlanData | null) => void;
   onProceedToTesting: () => void;
   onStartDirectTesting: () => void;
   onClearActiveReport: () => void;
@@ -70,6 +73,7 @@ export function LogScreen({
   setConfirmClearOpen,
   patients,
   onPatientSelect,
+  onConfirmedPatientSelect,
   onManualDetailChange,
   onToggleSuspectedAgent,
   onSetTestingPlanData,
@@ -98,7 +102,7 @@ export function LogScreen({
   };
 
   const handlePatientSelectCandidate = (candidate: Patient) => {
-    if (isTestingDraftDirty && selectedPatient?.id !== candidate.id) {
+    if (isTestingDraftDirty && isDifferentPatient(selectedPatient, candidate)) {
       setPendingPatientToSelect(candidate);
       setConfirmPatientSwitchOpen(true);
     } else {
@@ -108,8 +112,13 @@ export function LogScreen({
 
   const handleConfirmPatientSwitch = () => {
     if (pendingPatientToSelect) {
-      onResetForm?.();
-      onPatientSelect(pendingPatientToSelect);
+      if (onConfirmedPatientSelect) {
+        onConfirmedPatientSelect(pendingPatientToSelect);
+      } else {
+        onResetForm?.();
+        onSetTestingPlanData(null);
+        onPatientSelect(pendingPatientToSelect);
+      }
       setPendingPatientToSelect(null);
     }
   };
@@ -459,7 +468,7 @@ export function LogScreen({
           if (!open) setPendingPatientToSelect(null);
         }}
         title="Switch patient?"
-        message="You have unsaved changes in your current testing session. Switching patients will discard these changes. This cannot be undone."
+        message={`You have unsaved changes in your current testing session.${selectedPatient ? ` Current: ${selectedPatient.lastName ? `${selectedPatient.lastName.toUpperCase()}, ${selectedPatient.firstName}` : selectedPatient.firstName} (MRN: ${selectedPatient.mrn || '—'}, DOB: ${selectedPatient.dob || 'not recorded'}).` : ''}${pendingPatientToSelect ? ` Target: ${pendingPatientToSelect.lastName ? `${pendingPatientToSelect.lastName.toUpperCase()}, ${pendingPatientToSelect.firstName}` : pendingPatientToSelect.firstName} (MRN: ${pendingPatientToSelect.mrn || '—'}, DOB: ${pendingPatientToSelect.dob || 'not recorded'}).` : ''} Switching patients will discard these changes. This cannot be undone.`}
         confirmLabel="Switch patient"
         cancelLabel="Cancel"
         variant="danger"
@@ -617,6 +626,14 @@ export function LogScreen({
       {/* Selected Patient History & Plan Generator */}
       {selectedPatient && (
         <div key={selectedPatient.id} className="space-y-8">
+          <ClinicalContextBar
+            firstName={selectedPatient.firstName}
+            lastName={selectedPatient.lastName}
+            mrn={selectedPatient.mrn}
+            dob={selectedPatient.dob}
+            reactionDate={selectedPatient.history?.date}
+            source={selectedPatient.id === 'manual' ? 'manual' : 'database'}
+          />
           {selectedPatient.id !== 'manual' && (
             <div style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
               <PatientHistory
@@ -656,3 +673,5 @@ export function LogScreen({
     </ScreenLayout>
   );
 }
+
+export default LogScreen;

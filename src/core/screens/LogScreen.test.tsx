@@ -347,23 +347,119 @@ describe('LogScreen active work banners', () => {
 });
 
 describe('LogScreen dirty patient switch confirmation', () => {
-  it('guards selecting a different patient when testing draft is dirty', () => {
+  const baseLayoutProps = {
+    setScreen: vi.fn(),
+    currentScreen: Screen.LOG,
+    databaseDate: '',
+    showDisclaimer: false,
+    isCustomData: false,
+    onDismissDisclaimer: vi.fn(),
+    onUploadPatients: vi.fn(),
+    csvUploadSheetOpen: false,
+    onCSVUploadSheetOpenChange: vi.fn(),
+  };
+
+  it('calls onConfirmedPatientSelect directly when confirmed and bypasses guarded onPatientSelect', () => {
+    const onPatientSelect = vi.fn();
+    const onConfirmedPatientSelect = vi.fn();
+    const onResetForm = vi.fn();
+
+    render(
+      <LogScreen
+        layoutProps={baseLayoutProps}
+        appSubtitle=""
+        selectedPatient={createMockPatient({ id: 'current-patient-1', firstName: 'John', lastName: 'Doe' })}
+        lastSavedRecord={null}
+        activeReportSavedAt={null}
+        isPatientDialogOpen={false}
+        setIsPatientDialogOpen={vi.fn()}
+        confirmClearOpen={false}
+        setConfirmClearOpen={vi.fn()}
+        patients={[]}
+        onPatientSelect={onPatientSelect}
+        onConfirmedPatientSelect={onConfirmedPatientSelect}
+        onManualDetailChange={vi.fn()}
+        onToggleSuspectedAgent={vi.fn()}
+        onSetTestingPlanData={vi.fn()}
+        onProceedToTesting={vi.fn()}
+        onStartDirectTesting={vi.fn()}
+        onClearActiveReport={vi.fn()}
+        isTestingDraftDirty={true}
+        onResetForm={onResetForm}
+      />
+    );
+
+    // Click candidate patient
+    fireEvent.click(screen.getByRole('button', { name: 'Select Candidate Patient' }));
+
+    // Should open confirmation dialog and not switch immediately
+    expect(screen.getByRole('dialog')).toHaveTextContent('Switch patient?');
+    expect(screen.getByRole('dialog')).toHaveTextContent('You have unsaved changes in your current testing session.');
+    expect(onConfirmedPatientSelect).not.toHaveBeenCalled();
+    expect(onPatientSelect).not.toHaveBeenCalled();
+
+    // Confirm switch
+    fireEvent.click(screen.getByRole('button', { name: 'Switch patient' }));
+
+    expect(onConfirmedPatientSelect).toHaveBeenCalledOnce();
+    expect(onConfirmedPatientSelect).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'new-patient-99', firstName: 'Sarah' })
+    );
+    expect(onPatientSelect).not.toHaveBeenCalled();
+    expect(onResetForm).not.toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('preserves cancel behavior when user dismisses the switch dialog', () => {
+    const onPatientSelect = vi.fn();
+    const onConfirmedPatientSelect = vi.fn();
+    const onResetForm = vi.fn();
+
+    render(
+      <LogScreen
+        layoutProps={baseLayoutProps}
+        appSubtitle=""
+        selectedPatient={createMockPatient({ id: 'current-patient-1', firstName: 'John', lastName: 'Doe' })}
+        lastSavedRecord={null}
+        activeReportSavedAt={null}
+        isPatientDialogOpen={false}
+        setIsPatientDialogOpen={vi.fn()}
+        confirmClearOpen={false}
+        setConfirmClearOpen={vi.fn()}
+        patients={[]}
+        onPatientSelect={onPatientSelect}
+        onConfirmedPatientSelect={onConfirmedPatientSelect}
+        onManualDetailChange={vi.fn()}
+        onToggleSuspectedAgent={vi.fn()}
+        onSetTestingPlanData={vi.fn()}
+        onProceedToTesting={vi.fn()}
+        onStartDirectTesting={vi.fn()}
+        onClearActiveReport={vi.fn()}
+        isTestingDraftDirty={true}
+        onResetForm={onResetForm}
+      />
+    );
+
+    // Click candidate patient
+    fireEvent.click(screen.getByRole('button', { name: 'Select Candidate Patient' }));
+    expect(screen.getByRole('dialog')).toHaveTextContent('Switch patient?');
+
+    // Cancel switch
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(onConfirmedPatientSelect).not.toHaveBeenCalled();
+    expect(onPatientSelect).not.toHaveBeenCalled();
+    expect(onResetForm).not.toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('falls back to calling onResetForm and onPatientSelect when onConfirmedPatientSelect is not provided', () => {
     const onPatientSelect = vi.fn();
     const onResetForm = vi.fn();
 
     render(
       <LogScreen
-        layoutProps={{
-          setScreen: vi.fn(),
-          currentScreen: Screen.LOG,
-          databaseDate: '',
-          showDisclaimer: false,
-          isCustomData: false,
-          onDismissDisclaimer: vi.fn(),
-          onUploadPatients: vi.fn(),
-          csvUploadSheetOpen: false,
-          onCSVUploadSheetOpenChange: vi.fn(),
-        }}
+        layoutProps={baseLayoutProps}
         appSubtitle=""
         selectedPatient={createMockPatient({ id: 'current-patient-1', firstName: 'John', lastName: 'Doe' })}
         lastSavedRecord={null}
@@ -388,11 +484,6 @@ describe('LogScreen dirty patient switch confirmation', () => {
     // Click candidate patient
     fireEvent.click(screen.getByRole('button', { name: 'Select Candidate Patient' }));
 
-    // Should open confirmation dialog and not switch immediately
-    expect(screen.getByRole('dialog')).toHaveTextContent('Switch patient?');
-    expect(screen.getByRole('dialog')).toHaveTextContent('You have unsaved changes in your current testing session.');
-    expect(onPatientSelect).not.toHaveBeenCalled();
-
     // Confirm switch
     fireEvent.click(screen.getByRole('button', { name: 'Switch patient' }));
 
@@ -400,5 +491,50 @@ describe('LogScreen dirty patient switch confirmation', () => {
     expect(onPatientSelect).toHaveBeenCalledWith(
       expect.objectContaining({ id: 'new-patient-99', firstName: 'Sarah' })
     );
+  });
+
+  it('completes patient switch exactly once without re-triggering the parent patient selection guard', () => {
+    let pendingSelection: Patient | null = null;
+    const guardedPatientSelect = vi.fn((_p: Patient) => {
+      // If the old guarded onPatientSelect was called while dirty, it would set pending selection (re-prompting)
+      pendingSelection = _p;
+    });
+    const confirmedPatientSelect = vi.fn();
+
+    render(
+      <LogScreen
+        layoutProps={baseLayoutProps}
+        appSubtitle=""
+        selectedPatient={createMockPatient({ id: 'current-patient-1', firstName: 'John', lastName: 'Doe' })}
+        lastSavedRecord={null}
+        activeReportSavedAt={null}
+        isPatientDialogOpen={false}
+        setIsPatientDialogOpen={vi.fn()}
+        confirmClearOpen={false}
+        setConfirmClearOpen={vi.fn()}
+        patients={[]}
+        onPatientSelect={guardedPatientSelect}
+        onConfirmedPatientSelect={confirmedPatientSelect}
+        onManualDetailChange={vi.fn()}
+        onToggleSuspectedAgent={vi.fn()}
+        onSetTestingPlanData={vi.fn()}
+        onProceedToTesting={vi.fn()}
+        onStartDirectTesting={vi.fn()}
+        onClearActiveReport={vi.fn()}
+        isTestingDraftDirty={true}
+      />
+    );
+
+    // Select candidate
+    fireEvent.click(screen.getByRole('button', { name: 'Select Candidate Patient' }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    // Confirm switch
+    fireEvent.click(screen.getByRole('button', { name: 'Switch patient' }));
+
+    // The confirmed callback was invoked, and the guarded parent callback was NOT invoked
+    expect(confirmedPatientSelect).toHaveBeenCalledOnce();
+    expect(guardedPatientSelect).not.toHaveBeenCalled();
+    expect(pendingSelection).toBeNull();
   });
 });

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppProviders } from '@core/components/AppProviders';
 import { Screen } from '@shared/types';
 import { APP_CONFIG } from '@shared/utils/constants';
@@ -18,6 +18,7 @@ import { ResearchScreen } from '@core/screens/ResearchScreen';
 import { SummaryScreen } from '@core/screens/SummaryScreen';
 import { PrintPlanScreen, TestingScreen } from '@core/screens/TestingScreens';
 import { ScreenUnavailable } from '@core/components/ScreenUnavailable';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
 
@@ -46,29 +47,32 @@ export function AnaestheticLogApp() {
   const {
     screen, setScreen, navigate, hrefFor, pendingNavigation, confirmNavigation, cancelNavigation,
     formData, setFormData,
+    workContext, activeReportContext,
     selectedPatient, lastSavedRecord, setLastSavedRecord, activeReportSavedAt,
     lastDraftSavedAt, isSavingDraft,
     testingPlanData, setTestingPlanData,
     isPatientDialogOpen, setIsPatientDialogOpen,
     patients, databaseDate, hasUploadedData, patientDbSavedAt, isLoadingPatients, recentLogs,
     showDisclaimer, handleDismissDisclaimer,
-    handlePatientSelect, handleManualDetailChange,
+    pendingPatientSelection, confirmPatientSelect, cancelPatientSelect,
+    handlePatientSelect, handleConfirmedPatientSelect, handleManualDetailChange,
     handleSubmit, handleStartDirectTesting, isTestingDraftDirty, handleUploadPatients,
     toggleSuspectedAgent, handleDashboardPatientSelect, resetForm, clearActiveReport,
   } = useAnaestheticApp();
 
-  const [activeReportTab, setActiveReportTab] = React.useState<ReportTab>('report');
-  const [csvUploadSheetOpen, setCsvUploadSheetOpen] = React.useState(false);
-  const [confirmClearOpen, setConfirmClearOpen] = React.useState(false);
+  const [activeReportTab, setActiveReportTab] = useState<ReportTab>('report');
+  const [csvUploadSheetOpen, setCsvUploadSheetOpen] = useState(false);
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const research = useResearchSubmit();
 
   const handleNavigate = navigate || setScreen;
   const hasActiveReport = isReportActive(lastSavedRecord, activeReportSavedAt);
 
   const handleProceedToTesting = () => {
-    if (testingPlanData?.selectedDrugs?.length) {
-      const { selectedDrugs, selectedProtocols } = testingPlanData;
-      const rows = selectedDrugs.map(drug => {
+    if (testingPlanData?.selectedDrugs?.length || testingPlanData?.customDrugs?.length) {
+      const { selectedDrugs = [], selectedProtocols, customDrugs = [] } = testingPlanData;
+      const standardRows = selectedDrugs.map(drug => {
         const protocolIndex = selectedProtocols?.[drug] ?? 0;
         const protocols = getSkinProtocolsForDrug(drug);
         const protocol = protocols[protocolIndex];
@@ -80,7 +84,22 @@ export function AnaestheticLogApp() {
           customName: '',
         };
       });
-      setFormData(prev => ({ ...prev, testPanel: rows }));
+      const customRows = customDrugs.map(c => ({
+        drugName: 'Other',
+        customName: c.name,
+        sptWheal: '',
+        idtResults: Array(c.idtSteps?.length ?? 0).fill(''),
+        protocolIndex: 0,
+        customSptConcentration: c.sptConcentration,
+        customIdtSteps: c.idtSteps,
+        includeInChallenge: c.includeInChallenge,
+      }));
+      const challengeDrugCustom = customDrugs.find(c => c.includeInChallenge)?.name;
+      setFormData(prev => ({
+        ...prev,
+        testPanel: [...standardRows, ...customRows],
+        ...(challengeDrugCustom ? { proceedToChallenge: true, challengeDrug: 'Other', challengeDrugCustom } : {}),
+      }));
     }
     handleNavigate(Screen.TESTING);
   };
@@ -114,6 +133,7 @@ export function AnaestheticLogApp() {
     onUploadComplete: screen === Screen.LOG ? handleHomeUploadComplete : undefined,
     csvUploadSheetOpen,
     onCSVUploadSheetOpenChange: setCsvUploadSheetOpen,
+    onOpenHelp: () => setHelpOpen(true),
   };
 
   const renderScreenContent = () => {
@@ -154,6 +174,7 @@ export function AnaestheticLogApp() {
           <SummaryScreen
             layoutProps={layoutProps}
             lastSavedRecord={lastSavedRecord}
+            workContext={activeReportContext}
             selectedPatient={selectedPatient}
             activeReportSavedAt={activeReportSavedAt}
             activeReportTab={activeReportTab}
@@ -182,6 +203,7 @@ export function AnaestheticLogApp() {
             layoutProps={layoutProps}
             selectedPatient={selectedPatient}
             testingPlanData={testingPlanData}
+            workContext={workContext}
             onBack={() => handleNavigate(Screen.LOG)}
             onProceed={handleProceedToTesting}
           />
@@ -203,6 +225,7 @@ export function AnaestheticLogApp() {
         <TestingScreen
           layoutProps={layoutProps}
           selectedPatient={selectedPatient}
+          workContext={workContext}
           formData={formData}
           setFormData={setFormData}
           lastDraftSavedAt={lastDraftSavedAt}
@@ -231,6 +254,7 @@ export function AnaestheticLogApp() {
         setConfirmClearOpen={setConfirmClearOpen}
         patients={patients}
         onPatientSelect={handlePatientSelect}
+        onConfirmedPatientSelect={handleConfirmedPatientSelect}
         onManualDetailChange={handleManualDetailChange}
         onToggleSuspectedAgent={toggleSuspectedAgent}
         onSetTestingPlanData={setTestingPlanData}
@@ -247,11 +271,27 @@ export function AnaestheticLogApp() {
     <React.Suspense fallback={<div className="min-h-svh bg-background" />}>
       {renderScreenContent()}
       <HelpModal
+        isOpen={helpOpen}
+        onOpenChange={setHelpOpen}
         onUploadPatients={handleUploadPatients}
         onUploadComplete={screen === Screen.LOG ? handleHomeUploadComplete : undefined}
         hideTrigger={true}
         hasData={hasUploadedData}
         setScreen={handleNavigate}
+        onStartDirectTesting={handleStartDirectTesting}
+        isTestingDraftDirty={isTestingDraftDirty}
+      />
+      <ConfirmDialog
+        open={Boolean(pendingPatientSelection)}
+        onOpenChange={(open) => {
+          if (!open) cancelPatientSelect();
+        }}
+        title="Switch patient?"
+        message={`You have unsaved changes in your current testing session.${selectedPatient ? ` Current: ${selectedPatient.lastName ? `${selectedPatient.lastName.toUpperCase()}, ${selectedPatient.firstName}` : selectedPatient.firstName} (MRN: ${selectedPatient.mrn || '—'}, DOB: ${selectedPatient.dob || 'not recorded'}).` : ''}${pendingPatientSelection ? ` Target: ${pendingPatientSelection.patient.lastName ? `${pendingPatientSelection.patient.lastName.toUpperCase()}, ${pendingPatientSelection.patient.firstName}` : pendingPatientSelection.patient.firstName} (MRN: ${pendingPatientSelection.patient.mrn || '—'}, DOB: ${pendingPatientSelection.patient.dob || 'not recorded'}).` : ''} Switching patients will discard these changes. This cannot be undone.`}
+        confirmLabel="Switch patient"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={confirmPatientSelect}
       />
     </React.Suspense>
   );

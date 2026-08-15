@@ -299,7 +299,6 @@ const PatientTable: React.FC<PatientTableProps> = ({
                     key={p.id}
                     style={{ '--row-index': Math.min(index, 9) } as React.CSSProperties}
                     className="hover:bg-muted/50 dark:hover:bg-card/50 transition-colors group animate-row-enter"
-                    title="Click to view patient details"
                   >
                     <td className="px-4 py-3 whitespace-nowrap text-muted-foreground font-mono tabular-nums text-xs">
                       {formatDate(p.history.date)}

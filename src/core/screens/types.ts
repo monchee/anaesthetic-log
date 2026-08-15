@@ -19,4 +19,5 @@ export interface CommonScreenLayoutProps {
   onUploadComplete?: () => void;
   csvUploadSheetOpen: boolean;
   onCSVUploadSheetOpenChange: Dispatch<SetStateAction<boolean>> | ((open: boolean) => void);
+  onOpenHelp?: () => void;
 }

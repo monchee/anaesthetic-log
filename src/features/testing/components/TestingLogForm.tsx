@@ -7,11 +7,14 @@ import {
   DrugChallengeSection,
   DrugTestPanelSection,
   NurseNotesSection,
-  SaveActionSection,
   TryptaseSection,
   VisitDetailsSection,
 } from './TestingLogFormSections';
+import { ReviewSaveSection } from './ReviewSaveSection';
+import { TestingWorkflowIndex, WORKFLOW_SECTIONS } from './TestingWorkflowIndex';
 import { ValidationErrorLink } from './SaveActionSection';
+import { Button } from '@/components/ui';
+import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
 
 interface TestingLogFormProps {
   formData: LogFormData;
@@ -48,12 +51,14 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     challengeOptions,
   } = useTestingLogLogic({ formData, setFormData, drugCategories });
 
+  const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [validationErrors, setValidationErrors] = useState<ValidationErrorLink[]>([]);
   const [drugFilter, setDrugFilter] = useState('');
-  const [nurseNotesOpen, setNurseNotesOpen] = useState(false);
+  const [nurseNotesOpen, setNurseNotesOpen] = useState(true);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
 
   const testingService = new TestingService();
+
   const toValidationLink = (message: string): ValidationErrorLink => {
     const lower = message.toLowerCase();
     if (lower.includes('mrn')) return { message, fieldId: 'patient-mrn' };
@@ -64,13 +69,45 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     return { message, fieldId: 'clinical-plan' };
   };
 
+  const getInvalidSectionIndex = (errors: string[]): number => {
+    for (const error of errors) {
+      const lower = error.toLowerCase();
+      if (lower.includes('mrn') || lower.includes('first name') || lower.includes('last name') || lower.includes('visit date')) {
+        return 0; // Patient and visit
+      }
+      if (lower.includes('drug') || lower.includes('test panel')) {
+        return 1; // SPT and IDT
+      }
+      if (lower.includes('challenge')) {
+        return 2; // Drug challenge
+      }
+      if (lower.includes('plan')) {
+        return 4; // Assessment and plan
+      }
+    }
+    return 6; // Review and save
+  };
+
   const handleSave = () => {
     const { isValid, errors } = testingService.validateForm(formData);
     if (!isValid) {
-      setValidationErrors(errors.map(toValidationLink));
+      const errorLinks = errors.map(toValidationLink);
+      setValidationErrors(errorLinks);
+      const invalidSectionIdx = getInvalidSectionIndex(errors);
+      setActiveSectionIndex(invalidSectionIdx);
+
       requestAnimationFrame(() => {
+        const firstError = errorLinks[0];
+        if (firstError?.fieldId) {
+          const element = document.getElementById(firstError.fieldId);
+          if (element) {
+            element.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+            element.focus?.();
+            return;
+          }
+        }
         errorSummaryRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
-        errorSummaryRef.current?.focus();
+        errorSummaryRef.current?.focus?.();
       });
       return;
     }
@@ -78,52 +115,189 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     onSubmit();
   };
 
+  const handleJumpToSection = (sectionIndex: number, fieldId?: string) => {
+    setActiveSectionIndex(sectionIndex);
+    if (fieldId) {
+      requestAnimationFrame(() => {
+        const element = document.getElementById(fieldId);
+        if (element) {
+          element.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+          element.focus?.();
+        }
+      });
+    }
+  };
+
+  const currentSection = WORKFLOW_SECTIONS[activeSectionIndex];
+
   return (
-    <div className="space-y-4 sm:space-y-5 md:space-y-6 mt-4 sm:mt-6 md:mt-8">
-      <VisitDetailsSection
-        formData={formData}
-        onInputChange={handleInputChange}
-        isDirectEntry={isDirectEntry}
-        validationErrors={validationErrors}
-      />
-      <DrugTestPanelSection
-        formData={formData}
-        setFormData={setFormData}
-        drugCategories={drugCategories}
-        drugFilter={drugFilter}
-        setDrugFilter={setDrugFilter}
-        drugToCategoryMap={drugToCategoryMap}
-        onToggleDrug={toggleDrug}
-        onToggleCategory={toggleCategory}
-        onAddCustomDrug={addCustomDrug}
-        onControlChange={handleControlChange}
-        onUpdateDrugData={updateDrugData}
-        onSelectProtocol={selectProtocol}
-        onRemoveRow={removeRow}
-        onAddCustomIdtStep={addCustomIdtStep}
-        onRemoveCustomIdtStep={removeCustomIdtStep}
-      />
-      <DrugChallengeSection
-        formData={formData}
-        challengeOptions={challengeOptions}
-        symptomOptions={symptomOptions}
-        interventionOptions={interventionOptions}
-        onInputChange={handleInputChange}
-        onToggleSymptom={toggleSymptom}
-      />
-      <TryptaseSection formData={formData} setFormData={setFormData} />
-      <AssessmentPlanSection plan={formData.plan} onInputChange={handleInputChange} />
-      <NurseNotesSection
-        formData={formData}
-        setFormData={setFormData}
-        isOpen={nurseNotesOpen}
-        setIsOpen={setNurseNotesOpen}
-      />
-      <SaveActionSection
-        validationErrors={validationErrors}
-        errorSummaryRef={errorSummaryRef}
-        onSave={handleSave}
-      />
+    <div className="space-y-4 sm:space-y-6">
+      {/* Mobile Top Navigation Header */}
+      <div className="md:hidden flex items-center justify-between p-3 border border-border bg-card shadow-sm rounded-none no-print">
+        <div className="min-w-0">
+          <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Section {activeSectionIndex + 1} of 7
+          </div>
+          <div className="text-sm font-bold text-foreground truncate">
+            {currentSection.label}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5 shrink-0">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setActiveSectionIndex(i => Math.max(0, i - 1))}
+            disabled={activeSectionIndex === 0}
+            className="min-h-[44px] min-w-[44px] p-0 rounded-none btn-press"
+            aria-label="Previous section"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setActiveSectionIndex(i => Math.min(6, i + 1))}
+            disabled={activeSectionIndex === 6}
+            className="min-h-[44px] min-w-[44px] p-0 rounded-none btn-press"
+            aria-label="Next section"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Main Indexed Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] lg:grid-cols-[260px_1fr] gap-6 items-start">
+        {/* Desktop Sticky Workflow Index */}
+        <div className="hidden md:block sticky top-12 z-20">
+          <div className="p-3 border border-border bg-card shadow-sm rounded-none">
+            <TestingWorkflowIndex
+              activeIndex={activeSectionIndex}
+              onSelectSection={setActiveSectionIndex}
+              formData={formData}
+              isDirectEntry={isDirectEntry}
+            />
+          </div>
+        </div>
+
+        {/* Active Section View */}
+        <div className="min-w-0 space-y-6">
+          {/* Section 1: Patient and visit */}
+          {activeSectionIndex === 0 && (
+            <VisitDetailsSection
+              formData={formData}
+              onInputChange={handleInputChange}
+              isDirectEntry={isDirectEntry}
+              validationErrors={validationErrors}
+            />
+          )}
+
+          {/* Section 2: SPT and IDT */}
+          {activeSectionIndex === 1 && (
+            <DrugTestPanelSection
+              formData={formData}
+              setFormData={setFormData}
+              drugCategories={drugCategories}
+              drugFilter={drugFilter}
+              setDrugFilter={setDrugFilter}
+              drugToCategoryMap={drugToCategoryMap}
+              onToggleDrug={toggleDrug}
+              onToggleCategory={toggleCategory}
+              onAddCustomDrug={addCustomDrug}
+              onControlChange={handleControlChange}
+              onUpdateDrugData={updateDrugData}
+              onSelectProtocol={selectProtocol}
+              onRemoveRow={removeRow}
+              onAddCustomIdtStep={addCustomIdtStep}
+              onRemoveCustomIdtStep={removeCustomIdtStep}
+            />
+          )}
+
+          {/* Section 3: Drug challenge */}
+          {activeSectionIndex === 2 && (
+            <DrugChallengeSection
+              formData={formData}
+              challengeOptions={challengeOptions}
+              symptomOptions={symptomOptions}
+              interventionOptions={interventionOptions}
+              onInputChange={handleInputChange}
+              onToggleSymptom={toggleSymptom}
+            />
+          )}
+
+          {/* Section 4: Serial serum tryptase */}
+          {activeSectionIndex === 3 && (
+            <TryptaseSection
+              formData={formData}
+              setFormData={setFormData}
+            />
+          )}
+
+          {/* Section 5: Assessment and plan */}
+          {activeSectionIndex === 4 && (
+            <AssessmentPlanSection
+              plan={formData.plan}
+              onInputChange={handleInputChange}
+            />
+          )}
+
+          {/* Section 6: Nursing notes */}
+          {activeSectionIndex === 5 && (
+            <NurseNotesSection
+              formData={formData}
+              setFormData={setFormData}
+              isOpen={nurseNotesOpen}
+              setIsOpen={setNurseNotesOpen}
+            />
+          )}
+
+          {/* Section 7: Review and save */}
+          {activeSectionIndex === 6 && (
+            <ReviewSaveSection
+              formData={formData}
+              isDirectEntry={isDirectEntry}
+              validationErrors={validationErrors}
+              errorSummaryRef={errorSummaryRef}
+              onSave={handleSave}
+              onJumpToSection={handleJumpToSection}
+            />
+          )}
+
+          {/* Step Navigation Controls between sections */}
+          <div className="flex items-center justify-between pt-4 border-t border-border no-print">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setActiveSectionIndex(i => Math.max(0, i - 1))}
+              disabled={activeSectionIndex === 0}
+              className="min-h-[44px] px-4 rounded-none btn-press"
+            >
+              <ChevronLeft className="w-4 h-4 mr-1.5" /> Previous Section
+            </Button>
+
+            {activeSectionIndex < 6 ? (
+              <Button
+                type="button"
+                onClick={() => setActiveSectionIndex(i => Math.min(6, i + 1))}
+                className="min-h-[44px] px-4 rounded-none bg-primary text-primary-foreground font-semibold btn-press"
+              >
+                Next Section <ChevronRight className="w-4 h-4 ml-1.5" />
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                onClick={handleSave}
+                className="min-h-[44px] px-6 rounded-none bg-primary text-primary-foreground font-bold btn-press shadow-sm"
+              >
+                <Save className="w-4 h-4 mr-2" /> Save Clinical Record
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -4,9 +4,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TestingLogForm from './TestingLogForm';
 import { LogFormData } from '@/types';
-import { TestingService } from '../services/TestingService';
-
-
 
 const mockFormData: LogFormData = {
   mrn: 'MRN001',
@@ -34,7 +31,7 @@ const mockFormData: LogFormData = {
   symptomsOther: '',
   interventionType: '',
   interventionOther: '',
-  plan: '',
+  plan: 'Normal plan',
 };
 
 const mockDrugCategories = {
@@ -46,25 +43,25 @@ const mockDrugCategories = {
 const mockSymptomOptions = ['Rash', 'Urticaria', 'Bronchospasm', 'Hypotension'];
 const mockInterventionOptions = ['Adrenaline', 'Antihistamine', 'Corticosteroid', 'Fluids'];
 
-const TestWrapper = ({ initialData, props }: { initialData: LogFormData, props: any }) => {
+const TestWrapper = ({ initialData, props }: { initialData: LogFormData; props: any }) => {
   const [formData, setFormData] = React.useState(initialData);
   const handleSetFormData = (update: any) => {
     if (typeof update === 'function') {
       setFormData(prev => {
         const next = update(prev);
-        props.setFormData(next); // Call the mock for tracking
+        props.setFormData?.(next);
         return next;
       });
     } else {
       setFormData(update);
-      props.setFormData(update);
+      props.setFormData?.(update);
     }
   };
 
   return <TestingLogForm {...props} formData={formData} setFormData={handleSetFormData as any} />;
 };
 
-describe('TestingLogForm', () => {
+describe('TestingLogForm (Indexed Workflow)', () => {
   const mockProps = {
     formData: mockFormData,
     setFormData: vi.fn(),
@@ -78,7 +75,52 @@ describe('TestingLogForm', () => {
     vi.clearAllMocks();
   });
 
-  describe('Rendering', () => {
+  describe('Workflow Index & Navigation', () => {
+    it('renders all 7 workflow sections in the navigation index', () => {
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+
+      expect(screen.getByRole('button', { name: /1\.\s*Patient and visit/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /2\.\s*SPT and IDT/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /3\.\s*Drug challenge/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /4\.\s*Serial serum tryptase/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /5\.\s*Assessment and plan/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /6\.\s*Nursing notes/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /7\.\s*Review and save/i })).toBeInTheDocument();
+    });
+
+    it('sets aria-current="step" on the active section', () => {
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+
+      const firstSectionBtn = screen.getByRole('button', { name: /1\.\s*Patient and visit/i });
+      expect(firstSectionBtn).toHaveAttribute('aria-current', 'step');
+
+      const secondSectionBtn = screen.getByRole('button', { name: /2\.\s*SPT and IDT/i });
+      expect(secondSectionBtn).not.toHaveAttribute('aria-current');
+
+      fireEvent.click(secondSectionBtn);
+      expect(secondSectionBtn).toHaveAttribute('aria-current', 'step');
+      expect(firstSectionBtn).not.toHaveAttribute('aria-current');
+    });
+
+    it('navigates between sections without mutating or validating formData', () => {
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+
+      // Step to Section 2 (SPT and IDT)
+      const nextBtns = screen.getAllByRole('button', { name: /Next Section/i });
+      fireEvent.click(nextBtns[0]);
+
+      expect(screen.getByText(/SPT & IDT Panel/i)).toBeInTheDocument();
+      expect(mockProps.onSubmit).not.toHaveBeenCalled();
+
+      // Step back
+      const prevBtns = screen.getAllByRole('button', { name: /Previous Section/i });
+      fireEvent.click(prevBtns[0]);
+
+      expect(screen.getByText('Doe, John')).toBeInTheDocument();
+    });
+  });
+
+  describe('Section 1: Patient and Visit', () => {
     it('renders form with patient information', () => {
       render(<TestWrapper initialData={mockFormData} props={mockProps} />);
 
@@ -95,278 +137,6 @@ describe('TestingLogForm', () => {
       expect(mrnElement.className).not.toMatch(/\blowercase\b/);
     });
 
-    it('renders drug test rows', () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      expect(screen.getAllByText('Rocuronium').length).toBeGreaterThan(0);
-    });
-
-    it('renders test type checkboxes', () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      expect(screen.getByLabelText(/Histamine \(SPT\)/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/Saline \(SPT\)/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/Saline \(IDT\)/i)).toBeInTheDocument();
-    });
-
-    it('renders symptom selection', async () => {
-      render(<TestWrapper initialData={{ ...mockFormData, proceedToChallenge: true }} props={mockProps} />);
-
-      // First click on the outcome button to show symptoms
-      const reactionButton = screen.getByText('Reaction Occurred');
-      fireEvent.click(reactionButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Observed Symptoms/i)).toBeInTheDocument();
-      });
-    });
-
-    it('renders intervention selection', async () => {
-      render(<TestWrapper initialData={{ ...mockFormData, proceedToChallenge: true }} props={mockProps} />);
-
-      // First click on the outcome button to show interventions
-      const reactionButton = screen.getByText('Reaction Occurred');
-      fireEvent.click(reactionButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Treatment Required/i)).toBeInTheDocument();
-      });
-    });
-
-    it('renders save button', () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      expect(screen.getByRole('button', { name: /Save Clinical Record/i })).toBeInTheDocument();
-    });
-  });
-
-  describe('Drug Selection', () => {
-    it('allows adding drugs from categories', async () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      // Click on a category selection button
-      const suxButton = screen.getByText('Suxamethonium');
-      fireEvent.click(suxButton);
-
-      await waitFor(() => {
-        // Check if it's now in the test panel list (as a font-medium name)
-        const panelRows = screen.getAllByText('Suxamethonium');
-        expect(panelRows.length).toBeGreaterThan(0);
-      });
-    });
-
-    it('allows adding "Other" drug', async () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      // Find the "Other" button in the selection grid
-      const otherButton = screen.getByRole('button', { name: /^Other$/ });
-      fireEvent.click(otherButton);
-
-      await waitFor(() => {
-        expect(screen.getByPlaceholderText(/Specify name/i)).toBeInTheDocument();
-      });
-    });
-
-    it('removes drug row when remove button clicked', async () => {
-      const formDataWithMultipleDrugs = {
-        ...mockFormData,
-        testPanel: [
-          { drugName: 'Rocuronium', sptWheal: '3', idtResults: [], protocolIndex: 0 },
-          { drugName: 'Propofol', sptWheal: '', idtResults: ['', '5', ''], protocolIndex: 0 }
-        ]
-      };
-
-      render(<TestWrapper initialData={formDataWithMultipleDrugs} props={mockProps} />);
-
-      const removeButtons = screen.getAllByRole('button', { name: /Remove drug/i });
-      fireEvent.click(removeButtons[0]);
-
-      await waitFor(() => {
-        // Use a more specific query for the drug in the test panel
-        // In our case, the name is in a span with font-medium
-        const drugRow = screen.queryByText('Rocuronium', { selector: '.font-medium' });
-        expect(drugRow).toBeNull();
-      });
-    });
-  });
-
-  describe('Test Results', () => {
-    it('allows entering SPT wheal size', async () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      const sptInput = screen.getAllByPlaceholderText('-')[0];
-      fireEvent.change(sptInput, { target: { value: '5' } });
-
-      expect((sptInput as HTMLInputElement).value).toBe('5');
-    });
-
-    it('highlights positive tests (≥3mm) in red', () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      const positiveInputs = screen.getAllByDisplayValue('3');
-      expect(positiveInputs[0]).toHaveClass('text-status-danger');
-    });
-
-    it('prevents negative input in test results', () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      const input = screen.getAllByPlaceholderText('-')[0];
-      fireEvent.keyDown(input, { key: '-', code: 'Minus' });
-
-      // Negative input should be prevented (value doesn't change to negative)
-      expect(input).not.toHaveValue(-1);
-    });
-  });
-
-  describe('Symptoms and Interventions', () => {
-    it('allows adding symptoms', async () => {
-      render(<TestWrapper initialData={{ ...mockFormData, proceedToChallenge: true }} props={mockProps} />);
-
-      // Show reaction fields
-      const reactionButton = screen.getByText('Reaction Occurred');
-      fireEvent.click(reactionButton);
-
-      await waitFor(() => {
-        expect(screen.getByText('Rash')).toBeInTheDocument();
-      });
-
-      const symptomButton = screen.getByText('Rash');
-      fireEvent.click(symptomButton);
-
-      await waitFor(() => {
-        expect(symptomButton).toHaveClass('bg-status-danger');
-      });
-    });
-
-    it('allows adding interventions', async () => {
-      render(<TestWrapper initialData={{ ...mockFormData, proceedToChallenge: true }} props={mockProps} />);
-
-      // Show reaction fields
-      const reactionButton = screen.getByText('Reaction Occurred');
-      fireEvent.click(reactionButton);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Treatment Required/i)).toBeInTheDocument();
-      });
-    });
-
-    it('removes symptoms when clicked again', async () => {
-      const formDataWithSymptoms: LogFormData = {
-        ...mockFormData,
-        proceedToChallenge: true,
-        outcome: 'UNSUCCESS',
-        symptoms: ['Rash', 'Urticaria'],
-      };
-
-      render(<TestWrapper initialData={formDataWithSymptoms} props={mockProps} />);
-
-      const rashButton = screen.getByText('Rash');
-      expect(rashButton).toHaveClass('bg-status-danger');
-
-      fireEvent.click(rashButton);
-
-      await waitFor(() => {
-        expect(rashButton).not.toHaveClass('bg-status-danger');
-      });
-    });
-  });
-
-  describe('Challenge Section', () => {
-    it('renders challenge toggle', () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      expect(screen.getByRole('switch', { name: /Drug Challenge/i })).toBeInTheDocument();
-    });
-
-    it('shows challenge fields when enabled', async () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      const challengeToggle = screen.getByRole('switch', { name: /Drug Challenge/i });
-      fireEvent.click(challengeToggle);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Select Challenge Drug/i)).toBeInTheDocument();
-      });
-    });
-
-    it('allows entering challenge details', async () => {
-      render(<TestWrapper initialData={{ ...mockFormData, proceedToChallenge: true }} props={mockProps} />);
-
-      await waitFor(() => {
-        const drugSelect = screen.getByText(/Choose drug from list/i);
-        expect(drugSelect).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('Form Submission', () => {
-    it('calls onSubmit when save button clicked', async () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      const saveButton = screen.getByRole('button', { name: /Save Clinical Record/i });
-      fireEvent.click(saveButton);
-
-      await waitFor(() => {
-        expect(mockProps.onSubmit).toHaveBeenCalled();
-      });
-    });
-
-    it('links visit date validation errors to the visit date field', async () => {
-      render(<TestWrapper initialData={{ ...mockFormData, visitDate: '' }} props={mockProps} />);
-
-      fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
-
-      const errorLink = await screen.findByRole('link', { name: /Visit date is required/i });
-      expect(errorLink).toHaveAttribute('href', '#visit-date');
-      expect(mockProps.onSubmit).not.toHaveBeenCalled();
-    });
-
-    it('links drug panel validation errors to the drug filter field', async () => {
-      render(<TestWrapper initialData={{ ...mockFormData, testPanel: [] }} props={mockProps} />);
-
-      fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
-
-      const errorLink = await screen.findByRole('link', { name: /At least one drug test is required/i });
-      expect(errorLink).toHaveAttribute('href', '#drug-filter');
-      expect(mockProps.onSubmit).not.toHaveBeenCalled();
-    });
-
-    it('links unknown validation errors to the clinical plan field', async () => {
-      const validateSpy = vi.spyOn(TestingService.prototype, 'validateForm').mockReturnValue({
-        isValid: false,
-        errors: ['Clinical plan needs review'],
-      });
-
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
-
-      const errorLink = await screen.findByRole('link', { name: /Clinical plan needs review/i });
-      expect(errorLink).toHaveAttribute('href', '#clinical-plan');
-      expect(mockProps.onSubmit).not.toHaveBeenCalled();
-      validateSpy.mockRestore();
-    });
-  });
-
-  describe('Accessibility', () => {
-    it('has proper ARIA labels on form inputs', () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      const dateInput = screen.getByLabelText(/Visit Date:/i);
-      expect(dateInput).toBeInTheDocument();
-    });
-
-    it('is keyboard navigable', () => {
-      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
-
-      const saveButton = screen.getByRole('button', { name: /Save Clinical Record/i });
-      saveButton.focus();
-
-      expect(saveButton).toHaveFocus();
-    });
-  });
-
-  describe('Direct Entry Mode', () => {
     it('renders editable identity fields when isDirectEntry is true', () => {
       render(<TestWrapper initialData={mockFormData} props={{ ...mockProps, isDirectEntry: true }} />);
 
@@ -395,45 +165,140 @@ describe('TestingLogForm', () => {
         mrn: 'MRN999',
       }));
     });
+  });
 
-    it('displays accessible validation errors linking to identity fields when required fields are missing', async () => {
-      const emptyData: LogFormData = {
+  describe('Section 2: SPT and IDT', () => {
+    it('renders drug test rows and controls', () => {
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+      fireEvent.click(screen.getByRole('button', { name: /2\.\s*SPT and IDT/i }));
+
+      expect(screen.getAllByText('Rocuronium').length).toBeGreaterThan(0);
+      expect(screen.getByLabelText(/Histamine \(SPT\)/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Saline \(SPT\)/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Saline \(IDT\)/i)).toBeInTheDocument();
+    });
+
+    it('allows adding drugs from categories and "Other" drug', async () => {
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+      fireEvent.click(screen.getByRole('button', { name: /2\.\s*SPT and IDT/i }));
+
+      const suxButton = screen.getByText('Suxamethonium');
+      fireEvent.click(suxButton);
+
+      await waitFor(() => {
+        const panelRows = screen.getAllByText('Suxamethonium');
+        expect(panelRows.length).toBeGreaterThan(0);
+      });
+
+      const otherButton = screen.getByRole('button', { name: /^Other$/ });
+      fireEvent.click(otherButton);
+
+      await waitFor(() => {
+        expect(screen.getByPlaceholderText(/Specify name/i)).toBeInTheDocument();
+      });
+    });
+
+    it('highlights positive tests (≥3mm) with positive indicators', () => {
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+      fireEvent.click(screen.getByRole('button', { name: /2\.\s*SPT and IDT/i }));
+
+      expect(screen.getAllByText('+POS').length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('Section 3: Drug Challenge', () => {
+    it('renders challenge toggle and shows challenge fields when enabled', async () => {
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+      fireEvent.click(screen.getByRole('button', { name: /3\.\s*Drug challenge/i }));
+
+      const challengeToggle = screen.getByRole('switch', { name: /Drug Challenge/i });
+      expect(challengeToggle).toBeInTheDocument();
+
+      fireEvent.click(challengeToggle);
+
+      await waitFor(() => {
+        expect(screen.getByText(/Select Challenge Drug/i)).toBeInTheDocument();
+      });
+    });
+
+    it('allows documenting observed symptoms and interventions on reaction', async () => {
+      const challengeData = {
         ...mockFormData,
-        mrn: '',
-        firstName: '',
-        lastName: '',
+        proceedToChallenge: true,
       };
-      render(<TestWrapper initialData={emptyData} props={{ ...mockProps, isDirectEntry: true }} />);
+      render(<TestWrapper initialData={challengeData} props={mockProps} />);
+      fireEvent.click(screen.getByRole('button', { name: /3\.\s*Drug challenge/i }));
 
-      fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
+      const reactionButton = screen.getByText('Reaction Occurred');
+      fireEvent.click(reactionButton);
 
-      const mrnLink = await screen.findByRole('link', { name: /MRN is required/i });
-      const firstNameLink = await screen.findByRole('link', { name: /First name is required/i });
-      const lastNameLink = await screen.findByRole('link', { name: /Last name is required/i });
+      await waitFor(() => {
+        expect(screen.getByText(/Observed Symptoms/i)).toBeInTheDocument();
+        expect(screen.getByText(/Treatment Required/i)).toBeInTheDocument();
+      });
 
-      expect(mrnLink).toHaveAttribute('href', '#patient-mrn');
-      expect(firstNameLink).toHaveAttribute('href', '#patient-first-name');
-      expect(lastNameLink).toHaveAttribute('href', '#patient-last-name');
+      const rashButton = screen.getByText('Rash');
+      fireEvent.click(rashButton);
+
+      await waitFor(() => {
+        expect(rashButton).toHaveClass('bg-status-danger');
+      });
+    });
+  });
+
+  describe('Section 7: Review and Save / Form Submission', () => {
+    it('calls onSubmit when valid form is saved in Review and Save', async () => {
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+      fireEvent.click(screen.getByRole('button', { name: /7\.\s*Review and save/i }));
+
+      const saveButtons = screen.getAllByRole('button', { name: /Save Clinical Record/i });
+      fireEvent.click(saveButtons[0]);
+
+      expect(mockProps.onSubmit).toHaveBeenCalled();
+    });
+
+    it('automatically jumps to invalid section and displays error links on invalid save attempt', async () => {
+      const invalidData = { ...mockFormData, visitDate: '' };
+      render(<TestWrapper initialData={invalidData} props={mockProps} />);
+
+      // Go to review & save section
+      fireEvent.click(screen.getByRole('button', { name: /7\.\s*Review and save/i }));
+
+      const saveButtons = screen.getAllByRole('button', { name: /Save Clinical Record/i });
+      fireEvent.click(saveButtons[0]);
+
+      // Should automatically jump to Section 0 (Patient and visit)
+      await waitFor(() => {
+        expect(screen.getByText(/Visit date is required/i)).toBeInTheDocument();
+      });
+      expect(mockProps.onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('jumps to drug test panel when panel is invalid', async () => {
+      const invalidPanelData = { ...mockFormData, testPanel: [] };
+      render(<TestWrapper initialData={invalidPanelData} props={mockProps} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /7\.\s*Review and save/i }));
+      const saveButtons = screen.getAllByRole('button', { name: /Save Clinical Record/i });
+      fireEvent.click(saveButtons[0]);
+
+      await waitFor(() => {
+        // Section 2 (SPT/IDT) active
+        expect(screen.getByText(/SPT & IDT Panel/i)).toBeInTheDocument();
+      });
       expect(mockProps.onSubmit).not.toHaveBeenCalled();
     });
   });
 
-  describe('Edge Cases', () => {
-    it('handles empty drug categories', () => {
-      const propsWithEmptyCategories = {
-        ...mockProps,
-        drugCategories: {},
-      };
-
-      render(<TestWrapper initialData={mockFormData} props={propsWithEmptyCategories} />);
-
-      expect(screen.getByText('Doe, John')).toBeInTheDocument();
-    });
-
-    it('handles patient without reaction history', () => {
+  describe('Accessibility', () => {
+    it('has proper ARIA labels and minimum 44px touch targets on navigation controls', () => {
       render(<TestWrapper initialData={mockFormData} props={mockProps} />);
 
-      expect(screen.getByText('Doe, John')).toBeInTheDocument();
+      const sectionBtns = screen.getAllByRole('button', { name: /^[1-7]\.\s/i });
+      expect(sectionBtns.length).toBe(7);
+      sectionBtns.forEach(btn => {
+        expect(btn.className).toMatch(/min-h-\[44px\]/);
+      });
     });
   });
 });

@@ -5,6 +5,14 @@ import {
   ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS, TESTING_DRAFT_KEY,
   setWithTTL, getIfFresh, getSavedAt, removeStored,
 } from '@shared/utils/ttlStorage';
+import {
+  ClinicalWorkContext,
+  createClinicalWorkContext,
+  migrateLegacyRecordToEnvelope,
+  migrateLegacyDraftToEnvelope,
+  TestingDraftEnvelope,
+  ActiveReportEnvelope,
+} from '@shared/types/clinicalWorkContext';
 import { isTestingSessionDirty } from '../utils/isTestingSessionDirty';
 import { parseLogFormData, safeParseLogFormData } from '../utils/logFormSchema';
 
@@ -48,44 +56,119 @@ function isDraftEqual(a: LogFormData | null, b: LogFormData | null): boolean {
 
 export function useTestingState() {
   const [formData, setFormData] = useState<LogFormData>(INITIAL_FORM_STATE);
+  const [workContext, setWorkContext] = useState<ClinicalWorkContext | null>(null);
   const [lastSavedRecord, setLastSavedRecord] = useState<LogFormData | null>(null);
+  const [activeReportContext, setActiveReportContext] = useState<ClinicalWorkContext | null>(null);
   const [activeReportSavedAt, setActiveReportSavedAt] = useState<number | null>(null);
   const [lastDraftSavedAt, setLastDraftSavedAt] = useState<number | null>(null);
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [testingPlanData, setTestingPlanData] = useState<TestingPlanData | null>(null);
   const [recentLogs, setRecentLogs] = useState<LogFormData[]>([]);
+
   const formDataRef = useRef<LogFormData>(formData);
   formDataRef.current = formData;
+  const workContextRef = useRef<ClinicalWorkContext | null>(workContext);
+  workContextRef.current = workContext;
+
+  const lastSavedRecordRef = useRef<LogFormData | null>(lastSavedRecord);
+  lastSavedRecordRef.current = lastSavedRecord;
+  const activeReportSavedAtRef = useRef<number | null>(activeReportSavedAt);
+  activeReportSavedAtRef.current = activeReportSavedAt;
+  const lastDraftSavedAtRef = useRef<number | null>(lastDraftSavedAt);
+  lastDraftSavedAtRef.current = lastDraftSavedAt;
 
   const lastSavedDraftRef = useRef<LogFormData | null>(null);
   const isInitialMount = useRef(true);
 
-  useEffect(() => {
-    // Restore active report from localStorage if written within the TTL window.
-    const record = getIfFresh<LogFormData>(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
-    const savedAt = getSavedAt(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
-    const parsedRecord = record ? safeParseLogFormData(record) : null;
-    if (parsedRecord && savedAt) {
-      setLastSavedRecord(parsedRecord);
-      setActiveReportSavedAt(savedAt);
+  // Deterministic mechanism to clear in-memory state and remove stale storage entries when TTL expires
+  const checkExpiry = useCallback(() => {
+    // 1. Check active report TTL expiry and purge stale storage entry
+    const freshReport = getIfFresh<unknown>(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
+    if (lastSavedRecordRef.current || activeReportSavedAtRef.current) {
+      if (!freshReport) {
+        setLastSavedRecord(null);
+        setActiveReportContext(null);
+        setActiveReportSavedAt(null);
+      }
     }
 
-    // Restore any fresh in-progress testing draft. Submitted records and manual
-    // resets clear this key, so the TTL entry only represents uncommitted work.
-    const draft = getIfFresh<LogFormData>(TESTING_DRAFT_KEY, ACTIVE_REPORT_TTL_MS);
-    const draftSavedAt = getSavedAt(TESTING_DRAFT_KEY, ACTIVE_REPORT_TTL_MS);
-    const parsedDraft = draft ? safeParseLogFormData(draft) : null;
-    if (parsedDraft) {
-      lastSavedDraftRef.current = parsedDraft;
-      setFormData(parsedDraft);
-      if (draftSavedAt) {
-        setLastDraftSavedAt(draftSavedAt);
+    // 2. Check draft TTL expiry and purge stale storage entry
+    const freshDraft = getIfFresh<unknown>(TESTING_DRAFT_KEY, ACTIVE_REPORT_TTL_MS);
+    if (lastDraftSavedAtRef.current) {
+      if (!freshDraft) {
+        lastSavedDraftRef.current = null;
+        setFormData(INITIAL_FORM_STATE);
+        setWorkContext(null);
+        setLastDraftSavedAt(null);
+        setIsSavingDraft(false);
       }
     }
   }, []);
 
-  // Debounced autosave of the in-progress session. Only persists once the
-  // clinician has entered real data; the timestamped entry self-expires (6h).
+  useEffect(() => {
+    // Restore active report envelope from localStorage if written within the TTL window.
+    const rawReport = getIfFresh<unknown>(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
+    const savedAt = getSavedAt(ACTIVE_REPORT_KEY, ACTIVE_REPORT_TTL_MS);
+    const reportEnvelope = rawReport ? migrateLegacyRecordToEnvelope(rawReport, savedAt ?? undefined) : null;
+
+    if (reportEnvelope) {
+      const parsedRecord = safeParseLogFormData(reportEnvelope.record);
+      if (parsedRecord) {
+        setLastSavedRecord(parsedRecord);
+        setActiveReportContext(reportEnvelope.workContext);
+        setActiveReportSavedAt(reportEnvelope.savedAt);
+      }
+    }
+
+    // Restore any fresh in-progress testing draft envelope.
+    const rawDraft = getIfFresh<unknown>(TESTING_DRAFT_KEY, ACTIVE_REPORT_TTL_MS);
+    const draftSavedAt = getSavedAt(TESTING_DRAFT_KEY, ACTIVE_REPORT_TTL_MS);
+    const draftEnvelope = rawDraft ? migrateLegacyDraftToEnvelope(rawDraft, draftSavedAt ?? undefined) : null;
+
+    if (draftEnvelope) {
+      const parsedDraft = safeParseLogFormData(draftEnvelope.formData);
+      if (parsedDraft) {
+        lastSavedDraftRef.current = parsedDraft;
+        setFormData(parsedDraft);
+        setWorkContext(draftEnvelope.workContext);
+        if (draftEnvelope.savedAt) {
+          setLastDraftSavedAt(draftEnvelope.savedAt);
+        }
+      }
+    }
+  }, []);
+
+  // Listen for storage changes, window focus, visibility changes, or interval checks to purge stale in-memory state
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === ACTIVE_REPORT_KEY || e.key === TESTING_DRAFT_KEY || e.key === null) {
+        checkExpiry();
+      }
+    };
+
+    const handleVisibilityOrFocus = () => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+        checkExpiry();
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', handleStorage);
+      window.addEventListener('focus', handleVisibilityOrFocus);
+      document.addEventListener('visibilitychange', handleVisibilityOrFocus);
+
+      const intervalId = window.setInterval(checkExpiry, 60_000);
+
+      return () => {
+        window.removeEventListener('storage', handleStorage);
+        window.removeEventListener('focus', handleVisibilityOrFocus);
+        document.removeEventListener('visibilitychange', handleVisibilityOrFocus);
+        window.clearInterval(intervalId);
+      };
+    }
+  }, [checkExpiry]);
+
+  // Debounced autosave of the in-progress session.
   const draftTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (isInitialMount.current) {
@@ -104,9 +187,45 @@ export function useTestingState() {
     if (draftTimer.current) clearTimeout(draftTimer.current);
     setIsSavingDraft(true);
     draftTimer.current = setTimeout(() => {
-      setWithTTL(TESTING_DRAFT_KEY, formData);
+      let currentContext = workContextRef.current;
+      if (!currentContext) {
+        currentContext = createClinicalWorkContext({
+          source: 'direct',
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          mrn: formData.mrn,
+          dob: formData.dob,
+          testingVisitDate: formData.visitDate,
+        });
+        setWorkContext(currentContext);
+      } else if (currentContext.source === 'direct') {
+        currentContext = {
+          ...currentContext,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          mrn: formData.mrn,
+          dob: formData.dob,
+          testingVisitDate: formData.visitDate,
+        };
+        setWorkContext(currentContext);
+      } else if (currentContext.testingVisitDate !== formData.visitDate) {
+        currentContext = {
+          ...currentContext,
+          testingVisitDate: formData.visitDate,
+        };
+        setWorkContext(currentContext);
+      }
+
+      const draftEnvelope: TestingDraftEnvelope = {
+        schemaVersion: 1,
+        workContext: currentContext,
+        formData,
+        savedAt: Date.now(),
+      };
+
+      setWithTTL(TESTING_DRAFT_KEY, draftEnvelope);
       lastSavedDraftRef.current = formData;
-      setLastDraftSavedAt(Date.now());
+      setLastDraftSavedAt(draftEnvelope.savedAt);
       setIsSavingDraft(false);
       draftTimer.current = null;
     }, 500);
@@ -122,7 +241,43 @@ export function useTestingState() {
     }
     const current = formDataRef.current;
     if (isTestingSessionDirty(current)) {
-      setWithTTL(TESTING_DRAFT_KEY, current);
+      let currentContext = workContextRef.current;
+      if (!currentContext) {
+        currentContext = createClinicalWorkContext({
+          source: 'direct',
+          firstName: current.firstName,
+          lastName: current.lastName,
+          mrn: current.mrn,
+          dob: current.dob,
+          testingVisitDate: current.visitDate,
+        });
+        setWorkContext(currentContext);
+      } else if (currentContext.source === 'direct') {
+        currentContext = {
+          ...currentContext,
+          firstName: current.firstName,
+          lastName: current.lastName,
+          mrn: current.mrn,
+          dob: current.dob,
+          testingVisitDate: current.visitDate,
+        };
+        setWorkContext(currentContext);
+      } else if (currentContext.testingVisitDate !== current.visitDate) {
+        currentContext = {
+          ...currentContext,
+          testingVisitDate: current.visitDate,
+        };
+        setWorkContext(currentContext);
+      }
+
+      const draftEnvelope: TestingDraftEnvelope = {
+        schemaVersion: 1,
+        workContext: currentContext,
+        formData: current,
+        savedAt: Date.now(),
+      };
+
+      setWithTTL(TESTING_DRAFT_KEY, draftEnvelope);
       lastSavedDraftRef.current = current;
       const now = Date.now();
       setLastDraftSavedAt(now);
@@ -135,20 +290,54 @@ export function useTestingState() {
       setRecentLogs(prev => prev.length === 0 ? MOCK_TESTING_LOGS : prev);
     }).catch((error) => {
       console.warn('Unable to load mock testing logs:', error);
-      // Non-fatal fallback — dashboard shows empty state.
     });
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = (explicitContext?: ClinicalWorkContext | null) => {
     try {
       const finalRecord = parseLogFormData(formData);
-      
       const savedAt = Date.now();
+
+      let finalContext = explicitContext || workContextRef.current;
+      if (!finalContext) {
+        finalContext = createClinicalWorkContext({
+          source: 'direct',
+          firstName: finalRecord.firstName,
+          lastName: finalRecord.lastName,
+          mrn: finalRecord.mrn,
+          dob: finalRecord.dob,
+          testingVisitDate: finalRecord.visitDate,
+        });
+      } else if (finalContext.source === 'direct') {
+        finalContext = {
+          ...finalContext,
+          firstName: finalRecord.firstName,
+          lastName: finalRecord.lastName,
+          mrn: finalRecord.mrn,
+          dob: finalRecord.dob,
+          testingVisitDate: finalRecord.visitDate,
+        };
+      } else if (finalContext.testingVisitDate !== finalRecord.visitDate) {
+        finalContext = {
+          ...finalContext,
+          testingVisitDate: finalRecord.visitDate,
+        };
+      }
+
+      const activeEnvelope: ActiveReportEnvelope = {
+        schemaVersion: 1,
+        workContext: finalContext,
+        record: finalRecord,
+        savedAt,
+      };
+
       setLastSavedRecord(finalRecord);
+      setActiveReportContext(finalContext);
       setActiveReportSavedAt(savedAt);
       setRecentLogs(prev => [finalRecord, ...prev]);
-      setWithTTL(ACTIVE_REPORT_KEY, finalRecord);
-      // The session is now committed to a report — drop the in-progress draft.
+      setWithTTL(ACTIVE_REPORT_KEY, activeEnvelope);
+
+      // Session is now committed to a report — drop the in-progress draft.
       lastSavedDraftRef.current = null;
       setLastDraftSavedAt(null);
       setIsSavingDraft(false);
@@ -168,10 +357,10 @@ export function useTestingState() {
     }
     lastSavedDraftRef.current = null;
     setFormData(INITIAL_FORM_STATE);
+    setWorkContext(null);
     setLastDraftSavedAt(null);
     setIsSavingDraft(false);
     removeStored(TESTING_DRAFT_KEY);
-    // Does NOT clear lastSavedRecord — use clearActiveReport for that
   };
 
   const clearActiveReport = () => {
@@ -181,7 +370,9 @@ export function useTestingState() {
     }
     lastSavedDraftRef.current = null;
     setLastSavedRecord(null);
+    setActiveReportContext(null);
     setActiveReportSavedAt(null);
+    setWorkContext(null);
     setLastDraftSavedAt(null);
     setIsSavingDraft(false);
     removeStored(ACTIVE_REPORT_KEY);
@@ -191,8 +382,12 @@ export function useTestingState() {
   return {
     formData,
     setFormData,
+    workContext,
+    setWorkContext,
     lastSavedRecord,
     setLastSavedRecord,
+    activeReportContext,
+    setActiveReportContext,
     activeReportSavedAt,
     lastDraftSavedAt,
     isSavingDraft,

@@ -34,9 +34,12 @@ export function DrugChallengeSection({
       </CardHeader>
       <CardContent className="pt-6 space-y-6">
         <button
+          id="challenge-proceed-switch"
           type="button"
           role="switch"
           aria-checked={formData.proceedToChallenge}
+          aria-label="Proceed with live drug challenge"
+          aria-describedby="challenge-proceed-desc"
           onClick={() => onInputChange('proceedToChallenge', !formData.proceedToChallenge)}
           className={`flex w-full items-center justify-between p-4 rounded-none border-2 cursor-pointer transition-[color,background-color,border-color,box-shadow] duration-150 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
             formData.proceedToChallenge
@@ -56,7 +59,7 @@ export function DrugChallengeSection({
               <span className={`font-semibold tracking-tight transition-colors ${formData.proceedToChallenge ? 'text-foreground font-bold' : 'text-foreground'}`}>
                 Drug Challenge
               </span>
-              <p className="text-xs text-muted-foreground">Proceed with live drug challenge</p>
+              <p id="challenge-proceed-desc" className="text-xs text-muted-foreground">Proceed with live drug challenge</p>
             </div>
           </div>
           <div className={`w-12 h-7 rounded-none p-1 transition-colors duration-150 ease-in-out ${formData.proceedToChallenge ? 'bg-primary' : 'bg-muted'}`}>

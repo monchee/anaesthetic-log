@@ -1,5 +1,19 @@
 [
   {
+    "version": "v0.77.0",
+    "codename": "Clinical Workflow Safeguards",
+    "date": "15 August 2026",
+    "summary": "Implements clinical work context binding, patient-switch safeguards, progressive testing workflow, outbound action confirmation with redaction, active session TTL cleanup, and interface navigation polish.",
+    "highlight": false,
+    "changes": [
+      "Clinical work context binding & patient-switch safeguards \u2014 Introduces `ClinicalWorkContext` model and `ClinicalContextBar` component to securely bind drafts and active reports to verified patient identity, preventing cross-patient data leakage during workflow transitions.",
+      "Progressive testing workflow & review \u2014 Adds `TestingWorkflowIndex` and `ReviewSaveSection` to provide structured multi-step testing execution with pre-save clinical outcome reviews.",
+      "Outbound action confirmation dialog \u2014 Introduces `OutboundActionDialog` across print, copy, and export actions with explicit PHI acknowledgement and redaction options.",
+      "Active session TTL expiry & lifecycle management \u2014 Enhances local draft and active report expiry monitoring across window focus, visibility changes, and storage events.",
+      "Navigation & Help modal polish \u2014 Refines `AppSidebar`, `MobileNavigationDrawer`, and `HelpModal` with keyboard shortcut affordances, accessibility enhancements, and responsive layout polish."
+    ]
+  },
+  {
     "version": "v0.76.5",
     "codename": "Navigation without Workflow View",
     "date": "15 August 2026",

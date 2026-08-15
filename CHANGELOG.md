@@ -1,3 +1,16 @@
+## [0.77.0] — 2026-08-15 (Clinical Workflow Safeguards)
+
+Summary: Implements clinical work context binding, patient-switch safeguards, progressive testing workflow, outbound action confirmation with redaction, active session TTL cleanup, and interface navigation polish.
+
+### Added
+- **Clinical work context binding & patient-switch safeguards** — Introduces `ClinicalWorkContext` model and `ClinicalContextBar` component to securely bind drafts and active reports to verified patient identity, preventing cross-patient data leakage during workflow transitions.
+- **Progressive testing workflow & review** — Adds `TestingWorkflowIndex` and `ReviewSaveSection` to provide structured multi-step testing execution with pre-save clinical outcome reviews.
+- **Outbound action confirmation dialog** — Introduces `OutboundActionDialog` across print, copy, and export actions with explicit PHI acknowledgement and redaction options.
+
+### Changed
+- **Active session TTL expiry & lifecycle management** — Enhances local draft and active report expiry monitoring across window focus, visibility changes, and storage events.
+- **Navigation & Help modal polish** — Refines `AppSidebar`, `MobileNavigationDrawer`, and `HelpModal` with keyboard shortcut affordances, accessibility enhancements, and responsive layout polish.
+
 ## [0.76.5] — 2026-08-15 (Navigation without Workflow View)
 
 Summary: Removed the unwanted Clinician/Nurse workflow view and mode-dependent layout while preserving direct Allergy Testing, REDCap review, draft protection, contextual navigation, mobile navigation, and clinical nurse notes.

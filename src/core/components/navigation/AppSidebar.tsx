@@ -92,7 +92,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         </div>
         {item.badge && (
           <span
-            className={`px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-none ${
+            className={`px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider rounded-none ${
               isActive
                 ? 'bg-white/20 text-white'
                 : 'bg-primary/15 text-primary dark:bg-primary/30'
@@ -124,7 +124,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             <div className="text-lg font-bold tracking-tight text-white leading-none">
               DREAM
             </div>
-            <div className="text-[11px] text-white/80 font-normal mt-1 truncate">
+            <div className="text-xs text-white/80 font-normal mt-1 truncate">
               Anaesthetic Allergy Workbench
             </div>
           </div>
@@ -136,7 +136,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
         {/* Primary Navigation */}
         <nav aria-label="Primary sidebar navigation" className="space-y-1">
-          <div className="px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+          <div className="px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
             Primary Navigation
           </div>
           {PRIMARY_NAV_ITEMS.map((item) => renderNavLink(item))}
@@ -145,9 +145,9 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         {/* Contextual Current Work */}
         {contextualItems.length > 0 && (
           <nav aria-label="Current work navigation" className="space-y-1">
-            <div className="px-1 text-[11px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-1.5 flex items-center justify-between">
+            <div className="px-1 text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-1.5 flex items-center justify-between">
               <span>Current Work</span>
-              <span className="text-[10px] lowercase font-normal opacity-80">contextual</span>
+              <span className="text-xs lowercase font-normal opacity-80">contextual</span>
             </div>
             {contextualItems.map((item) => renderNavLink(item, true))}
           </nav>
@@ -155,7 +155,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
         {/* Utility Menu */}
         <div className="space-y-1 pt-2 border-t border-border">
-          <div className="px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+          <div className="px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
             Utility Menu
           </div>
 
@@ -212,12 +212,12 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
             <span>{theme === 'dark' ? 'Light Theme' : 'Dark Theme'}</span>
           </span>
-          <span className="text-[10px] uppercase font-mono">{theme}</span>
+          <span className="text-xs uppercase font-mono">{theme}</span>
         </button>
 
-        <div className="text-[11px] text-muted-foreground flex items-center justify-between px-1">
+        <div className="text-xs text-muted-foreground flex items-center justify-between px-1">
           <span className="truncate">NSW Health RPAH</span>
-          <span className="font-mono text-[10px]">
+          <span className="font-mono text-xs">
             {isCustomData ? databaseDate : 'Demo'}
           </span>
         </div>

@@ -1,13 +1,15 @@
-import { useRedact } from '@features/reports/hooks/useRedact';
-import { cn, formatDate } from '@shared/utils';
+import React from 'react';
+import { ClinicalContextBar, ClinicalContextBarProps } from './ClinicalContextBar';
 
-export interface PatientIdentityBarProps {
+export interface PatientIdentityBarProps extends Omit<ClinicalContextBarProps, 'context'> {
   firstName: string;
   lastName: string;
   mrn: string;
   dob?: string;
   reactionDate?: string;
+  visitDate?: string;
   className?: string;
+  ariaLabel?: string;
 }
 
 export function PatientIdentityBar({
@@ -16,35 +18,22 @@ export function PatientIdentityBar({
   mrn,
   dob,
   reactionDate,
+  visitDate,
   className,
+  ariaLabel = 'Patient identity',
 }: PatientIdentityBarProps) {
-  const { redact } = useRedact();
-
   return (
-    <aside
-      aria-label="Patient identity"
-      className={cn(
-        'sticky top-0 z-40 w-full overflow-x-auto border border-primary/30 bg-card/95 px-3 py-2 shadow-sm backdrop-blur-sm print:hidden',
-        className,
-      )}
-    >
-      <div className="flex min-w-max items-center gap-2 whitespace-nowrap text-sm font-medium text-foreground dark:text-primary">
-        <span className="font-semibold">
-          {redact(lastName.toUpperCase())}, {redact(firstName)}
-        </span>
-        <span aria-hidden="true" className="text-muted-foreground">·</span>
-        <span>
-          MRN <span className="font-mono font-semibold">{redact(mrn)}</span>
-        </span>
-        <span aria-hidden="true" className="text-muted-foreground">·</span>
-        <span>DOB {dob ? redact(formatDate(dob)) : 'not recorded'}</span>
-        {reactionDate ? (
-          <>
-            <span aria-hidden="true" className="text-muted-foreground">·</span>
-            <span>Reaction {redact(formatDate(reactionDate))}</span>
-          </>
-        ) : null}
-      </div>
-    </aside>
+    <ClinicalContextBar
+      firstName={firstName}
+      lastName={lastName}
+      mrn={mrn}
+      dob={dob}
+      reactionDate={reactionDate}
+      visitDate={visitDate}
+      className={className}
+      ariaLabel={ariaLabel}
+    />
   );
 }
+
+export default PatientIdentityBar;

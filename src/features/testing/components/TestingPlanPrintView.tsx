@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, CardContent, Badge } from '@/components/ui';
 import { Patient, TestingPlanData } from '@/types';
 import { formatDate, showToast } from '@shared/utils';
 import { Printer, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText, Copy } from 'lucide-react';
 import { formatTestingPlanAsText } from '@shared/utils/testingPlanFormatter';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
+import { OutboundActionDialog, OutboundActionType } from '@features/reports/components/OutboundActionDialog';
 
 interface TestingPlanPrintViewProps {
   patient: Patient;
@@ -26,6 +27,7 @@ interface TestRow {
 }
 
 const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: TestingPlanPrintViewProps) => {
+  const [activeOutboundAction, setActiveOutboundAction] = useState<OutboundActionType | null>(null);
   const { selectedDrugs, customDrugs, notes, urgent, reactionDate, documentsToChase } = data;
 
   // Build flat rows: 1 SPT row + N IDT rows per drug
@@ -69,9 +71,11 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
     }
   });
 
-  const handlePrint = () => window.print();
+  const handleConfirmedPrint = () => {
+    window.print();
+  };
 
-  const handleCopy = async () => {
+  const handleConfirmedCopy = async () => {
     const body = formatTestingPlanAsText(patient, data, drugCategories);
     try {
       if (!navigator.clipboard?.writeText) {
@@ -79,12 +83,13 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
       }
       await navigator.clipboard.writeText(body);
       showToast.success('Testing request copied to clipboard');
-    } catch {
+    } catch (err) {
       showToast.error('Failed to copy testing request to clipboard');
+      throw err;
     }
   };
 
-  const handleEmail = () => {
+  const handleConfirmedEmail = () => {
     const body = formatTestingPlanAsText(patient, data, drugCategories);
     const subject = `Testing Request Form: ${patient.firstName} ${patient.lastName} - ${reactionDate ? new Date(reactionDate).toLocaleDateString('en-AU') : 'Date unknown'}`;
     window.location.href = `mailto:SLHD-RPA-allergynurses@health.nsw.gov.au?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -107,17 +112,47 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
       <div className="p-4 border-b border-border bg-muted flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">
         <p className="text-lg font-semibold tracking-tight text-foreground">Testing Request Form</p>
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <Button size="sm" variant="outline" onClick={handleCopy} className="rounded-none">
+          <Button size="sm" variant="outline" onClick={() => setActiveOutboundAction('copy')} className="rounded-none">
             <Copy className="w-4 h-4 mr-2" /> Copy as Text
           </Button>
-          <Button size="sm" variant="outline" onClick={handleEmail} className="rounded-none">
+          <Button size="sm" variant="outline" onClick={() => setActiveOutboundAction('email')} className="rounded-none">
             <Mail className="w-4 h-4 mr-2" /> Email to Allergy Nurse
           </Button>
-          <Button size="sm" onClick={handlePrint} className="rounded-none">
+          <Button size="sm" onClick={() => setActiveOutboundAction('print')} className="rounded-none">
             <Printer className="w-4 h-4 mr-2" /> Print Now
           </Button>
         </div>
       </div>
+
+      {activeOutboundAction && (
+        <OutboundActionDialog
+          open={Boolean(activeOutboundAction)}
+          onOpenChange={(open) => {
+            if (!open) setActiveOutboundAction(null);
+          }}
+          actionType={activeOutboundAction}
+          artifactTitle="Testing Request Form"
+          patientName={`${patient.lastName.toUpperCase()}, ${patient.firstName}`}
+          mrn={patient.mrn}
+          dob={patient.dob}
+          testingDate={reactionDate || undefined}
+          destination={
+            activeOutboundAction === 'email'
+              ? 'SLHD-RPA-allergynurses@health.nsw.gov.au'
+              : undefined
+          }
+          disclosureMode="Identified Clinical Request Form"
+          onConfirm={async () => {
+            if (activeOutboundAction === 'print') {
+              handleConfirmedPrint();
+            } else if (activeOutboundAction === 'copy') {
+              await handleConfirmedCopy();
+            } else if (activeOutboundAction === 'email') {
+              handleConfirmedEmail();
+            }
+          }}
+        />
+      )}
 
       <CardContent className="p-4 md:p-6 print:p-4 space-y-4 print:space-y-3">
 

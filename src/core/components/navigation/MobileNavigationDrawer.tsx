@@ -55,7 +55,7 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
     hasActiveReport,
   });
 
-  // Handle ESC key to close drawer
+  // Handle ESC key and focus trapping (Tab / Shift+Tab)
   useEffect(() => {
     if (!isOpen) return;
 
@@ -63,6 +63,28 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
       if (e.key === 'Escape') {
         e.preventDefault();
         onOpenChange(false);
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        const focusableElements = drawerRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusableElements || focusableElements.length === 0) return;
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
       }
     };
 
@@ -70,14 +92,20 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onOpenChange]);
 
-  // Lock body scroll and trap focus when open
+  // Lock body scroll and focus initial element when open, restore focus when closed
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      const firstFocusable = drawerRef.current?.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      firstFocusable?.focus();
+      const timer = window.setTimeout(() => {
+        const firstFocusable = drawerRef.current?.querySelector<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        firstFocusable?.focus();
+      }, 50);
+      return () => {
+        window.clearTimeout(timer);
+        document.body.style.overflow = '';
+      };
     } else {
       document.body.style.overflow = '';
       triggerRef.current?.focus();
@@ -126,7 +154,7 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
         </div>
         {item.badge && (
           <span
-            className={`px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-none ${
+            className={`px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider rounded-none ${
               isActive
                 ? 'bg-white/20 text-white'
                 : 'bg-primary/15 text-primary dark:bg-primary/30'
@@ -198,7 +226,7 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
 
               {/* Primary Navigation */}
               <nav aria-label="Primary mobile navigation" className="space-y-1">
-                <div className="px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                <div className="px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                   Primary Navigation
                 </div>
                 {PRIMARY_NAV_ITEMS.map((item) => renderNavLink(item))}
@@ -207,9 +235,9 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
               {/* Contextual Current Work */}
               {contextualItems.length > 0 && (
                 <nav aria-label="Current work mobile navigation" className="space-y-1">
-                  <div className="px-1 text-[11px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-1.5 flex items-center justify-between">
+                  <div className="px-1 text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-1.5 flex items-center justify-between">
                     <span>Current Work</span>
-                    <span className="text-[10px] lowercase font-normal opacity-80">contextual</span>
+                    <span className="text-xs lowercase font-normal opacity-80">contextual</span>
                   </div>
                   {contextualItems.map((item) => renderNavLink(item, true))}
                 </nav>
@@ -217,7 +245,7 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
 
               {/* Utility Menu */}
               <div className="space-y-1 pt-2 border-t border-border">
-                <div className="px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                <div className="px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
                   Utility Menu
                 </div>
 
@@ -274,12 +302,12 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
                   {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
                   <span>{theme === 'dark' ? 'Light Theme' : 'Dark Theme'}</span>
                 </span>
-                <span className="text-[10px] uppercase font-mono">{theme}</span>
+                <span className="text-xs uppercase font-mono">{theme}</span>
               </button>
 
-              <div className="text-[11px] text-muted-foreground flex items-center justify-between px-1">
+              <div className="text-xs text-muted-foreground flex items-center justify-between px-1">
                 <span className="truncate">RPAH Anaesthetic Allergy</span>
-                <span className="font-mono text-[10px]">
+                <span className="font-mono text-xs">
                   {isCustomData ? databaseDate : 'Demo'}
                 </span>
               </div>

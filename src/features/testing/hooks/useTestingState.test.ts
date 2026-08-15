@@ -213,7 +213,9 @@ describe('useTestingState', () => {
       vi.advanceTimersByTime(1);
     });
 
-    expect(readTTL<LogFormData>(TESTING_DRAFT_KEY)?.controls.histamineSpt).toBe('5');
+    const storedDraft = readTTL<any>(TESTING_DRAFT_KEY);
+    const draftControls = storedDraft?.formData ? storedDraft.formData.controls : storedDraft?.controls;
+    expect(draftControls?.histamineSpt).toBe('5');
     expect(result.current.lastDraftSavedAt).toBe(initialTime.getTime() + 500);
     expect(result.current.isSavingDraft).toBe(false);
   });
@@ -302,7 +304,9 @@ describe('useTestingState', () => {
       },
     });
     expect(result.current.lastSavedRecord).toEqual(saved);
-    expect(readTTL<LogFormData>(ACTIVE_REPORT_KEY)).toEqual(saved);
+    const storedReport = readTTL<any>(ACTIVE_REPORT_KEY);
+    const reportRecord = storedReport?.record || storedReport;
+    expect(reportRecord).toEqual(saved);
     expect(localStorage.getItem(TESTING_DRAFT_KEY)).toBeNull();
   });
 
@@ -469,7 +473,9 @@ describe('useTestingState', () => {
     expect(result.current.lastDraftSavedAt).not.toBeNull();
     const stored = localStorage.getItem(TESTING_DRAFT_KEY);
     expect(stored).not.toBeNull();
-    expect(JSON.parse(stored!).value.mrn).toBe('123456');
+    const storedValue = JSON.parse(stored!).value;
+    const storedMrn = storedValue?.formData ? storedValue.formData.mrn : storedValue?.mrn;
+    expect(storedMrn).toBe('123456');
   });
 
   it('warns when mock testing logs fail to load', async () => {
@@ -485,5 +491,165 @@ describe('useTestingState', () => {
     await waitFor(() => {
       expect(warnSpy).toHaveBeenCalledWith('Unable to load mock testing logs:', expect.any(Error));
     });
+  });
+
+  it('clears in-memory active report and draft state when TTL storage expires on storage event', async () => {
+    const savedAt = Date.now();
+    writeTTL(ACTIVE_REPORT_KEY, baseForm(), savedAt);
+    writeTTL(TESTING_DRAFT_KEY, baseForm(), savedAt);
+    localStorage.setItem('dream_patients_v1', JSON.stringify({ value: [{ id: 'p1' }], savedAt }));
+
+    const { result } = renderHook(() => useTestingState());
+
+    await waitFor(() => {
+      expect(result.current.lastSavedRecord?.mrn).toBe('123456');
+      expect(result.current.formData.mrn).toBe('123456');
+    });
+
+    // Simulate storage key expiry/removal
+    localStorage.removeItem(ACTIVE_REPORT_KEY);
+    localStorage.removeItem(TESTING_DRAFT_KEY);
+
+    act(() => {
+      window.dispatchEvent(new StorageEvent('storage', { key: ACTIVE_REPORT_KEY }));
+    });
+
+    expect(result.current.lastSavedRecord).toBeNull();
+    expect(result.current.activeReportContext).toBeNull();
+    expect(result.current.activeReportSavedAt).toBeNull();
+
+    act(() => {
+      window.dispatchEvent(new StorageEvent('storage', { key: TESTING_DRAFT_KEY }));
+    });
+
+    expect(result.current.formData.mrn).toBe('');
+    expect(result.current.lastDraftSavedAt).toBeNull();
+
+    // Verify unrelated patient database state is preserved
+    expect(localStorage.getItem('dream_patients_v1')).not.toBeNull();
+  });
+
+  it('clears in-memory active report and draft state on focus or visibilitychange after TTL expiry', async () => {
+    const savedAt = Date.now();
+    writeTTL(ACTIVE_REPORT_KEY, baseForm(), savedAt);
+    writeTTL(TESTING_DRAFT_KEY, baseForm(), savedAt);
+
+    const { result } = renderHook(() => useTestingState());
+
+    await waitFor(() => {
+      expect(result.current.lastSavedRecord?.mrn).toBe('123456');
+    });
+
+    // Remove from storage to simulate TTL expiry
+    localStorage.removeItem(ACTIVE_REPORT_KEY);
+    localStorage.removeItem(TESTING_DRAFT_KEY);
+
+    act(() => {
+      window.dispatchEvent(new Event('focus'));
+    });
+
+    expect(result.current.lastSavedRecord).toBeNull();
+    expect(result.current.formData.mrn).toBe('');
+
+    // Re-seed and test visibilitychange
+    writeTTL(ACTIVE_REPORT_KEY, baseForm(), savedAt);
+    act(() => {
+      result.current.setLastSavedRecord(baseForm());
+    });
+    localStorage.removeItem(ACTIVE_REPORT_KEY);
+
+    act(() => {
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+
+    expect(result.current.lastSavedRecord).toBeNull();
+  });
+
+  it('removes stale active report and draft keys from localStorage during checkExpiry while preserving patient db', async () => {
+    const freshTimestamp = Date.now();
+    writeTTL(ACTIVE_REPORT_KEY, baseForm(), freshTimestamp);
+    writeTTL(TESTING_DRAFT_KEY, baseForm(), freshTimestamp);
+    localStorage.setItem('dream:patient_db', JSON.stringify({ value: { patients: [] }, savedAt: freshTimestamp }));
+
+    const { result } = renderHook(() => useTestingState());
+
+    await waitFor(() => {
+      expect(result.current.lastSavedRecord?.mrn).toBe('123456');
+      expect(result.current.formData.mrn).toBe('123456');
+    });
+
+    // Make entries stale in localStorage without manual removal (simulating elapsed time > TTL)
+    const staleTimestamp = Date.now() - ACTIVE_REPORT_TTL_MS - 5000;
+    writeTTL(ACTIVE_REPORT_KEY, baseForm(), staleTimestamp);
+    writeTTL(TESTING_DRAFT_KEY, baseForm(), staleTimestamp);
+
+    // Trigger checkExpiry via focus event
+    act(() => {
+      window.dispatchEvent(new Event('focus'));
+    });
+
+    // In-memory state should be cleared
+    expect(result.current.lastSavedRecord).toBeNull();
+    expect(result.current.formData.mrn).toBe('');
+
+    // Stale keys should have been purged from localStorage by getIfFresh
+    expect(localStorage.getItem(ACTIVE_REPORT_KEY)).toBeNull();
+    expect(localStorage.getItem(TESTING_DRAFT_KEY)).toBeNull();
+
+    // Patient DB key must remain untouched
+    expect(localStorage.getItem('dream:patient_db')).not.toBeNull();
+  });
+
+  it('retains stable session ID and updates context identity on direct entry edits and visitDate changes', () => {
+    const { result } = renderHook(() => useTestingState());
+
+    act(() => {
+      result.current.setFormData({
+        ...result.current.formData,
+        mrn: 'DIR-123',
+        firstName: 'Alex',
+        lastName: 'Direct',
+        visitDate: '2026-07-01',
+        controls: {
+          histamineSpt: '5',
+          salineSpt: '0',
+          salineIdt: '0',
+        },
+      });
+    });
+
+    act(() => {
+      result.current.persistDraftNow();
+    });
+
+    const sessionId1 = result.current.workContext?.sessionId;
+    expect(sessionId1).toBeDefined();
+    expect(result.current.workContext?.firstName).toBe('Alex');
+    expect(result.current.workContext?.testingVisitDate).toBe('2026-07-01');
+
+    // Change visitDate only
+    act(() => {
+      result.current.setFormData(prev => ({
+        ...prev,
+        visitDate: '2026-07-05',
+      }));
+    });
+
+    act(() => {
+      result.current.persistDraftNow();
+    });
+
+    expect(result.current.workContext?.sessionId).toBe(sessionId1);
+    expect(result.current.workContext?.testingVisitDate).toBe('2026-07-05');
+
+    // Submit preserves the exact session context
+    let saved: LogFormData | undefined;
+    act(() => {
+      saved = result.current.handleSubmit();
+    });
+
+    expect(result.current.activeReportContext?.sessionId).toBe(sessionId1);
+    expect(result.current.activeReportContext?.testingVisitDate).toBe('2026-07-05');
+    expect(saved?.visitDate).toBe('2026-07-05');
   });
 });

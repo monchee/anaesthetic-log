@@ -123,7 +123,7 @@ describe('TestingPlanPrintView', () => {
     expect(copyButton).toBeInTheDocument();
   });
 
-  it('copies exact formatted testing plan text to clipboard and shows success toast', async () => {
+  it('copies exact formatted testing plan text to clipboard and shows success toast after confirmation', async () => {
     const writeTextMock = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextMock },
@@ -146,6 +146,13 @@ describe('TestingPlanPrintView', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Copy as Text/i }));
 
+    // Confirmation dialog opens
+    expect(screen.getByText('Confirm Copy: Testing Request Form')).toBeInTheDocument();
+    expect(screen.getByText('NG, Avery')).toBeInTheDocument();
+    expect(screen.getAllByText('MRN-PRINT').length).toBeGreaterThan(0);
+
+    fireEvent.click(screen.getByRole('button', { name: /Copy to Clipboard/i }));
+
     await waitFor(() => {
       expect(writeTextMock).toHaveBeenCalledTimes(1);
       expect(writeTextMock).toHaveBeenCalledWith(expectedBody);
@@ -153,7 +160,7 @@ describe('TestingPlanPrintView', () => {
     });
   });
 
-  it('shows error toast when navigator.clipboard.writeText rejects', async () => {
+  it('shows error toast when navigator.clipboard.writeText rejects after confirmation', async () => {
     const writeTextMock = vi.fn().mockRejectedValue(new Error('Permission denied'));
     Object.defineProperty(navigator, 'clipboard', {
       value: { writeText: writeTextMock },
@@ -172,13 +179,14 @@ describe('TestingPlanPrintView', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Copy as Text/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Copy to Clipboard/i }));
 
     await waitFor(() => {
       expect(toastErrorSpy).toHaveBeenCalledWith('Failed to copy testing request to clipboard');
     });
   });
 
-  it('shows error toast when Clipboard API is unavailable', async () => {
+  it('shows error toast when Clipboard API is unavailable after confirmation', async () => {
     Object.defineProperty(navigator, 'clipboard', {
       value: undefined,
       configurable: true,
@@ -196,9 +204,46 @@ describe('TestingPlanPrintView', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Copy as Text/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Copy to Clipboard/i }));
 
     await waitFor(() => {
       expect(toastErrorSpy).toHaveBeenCalledWith('Failed to copy testing request to clipboard');
     });
+  });
+
+  it('gates Email action with confirmation showing nurse recipient destination', () => {
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={baseData}
+        drugCategories={{ Cephalosporins: ['Cefazolin'] }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Email to Allergy Nurse/i }));
+
+    expect(screen.getByText('Confirm Email: Testing Request Form')).toBeInTheDocument();
+    expect(screen.getByText('SLHD-RPA-allergynurses@health.nsw.gov.au')).toBeInTheDocument();
+    expect(screen.getByText('Identified Clinical Request Form')).toBeInTheDocument();
+  });
+
+  it('gates Print action with confirmation dialog', () => {
+    const printSpy = vi.spyOn(window, 'print').mockImplementation(() => {});
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={baseData}
+        drugCategories={{ Cephalosporins: ['Cefazolin'] }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Print Now/i }));
+
+    expect(screen.getByText('Confirm Print: Testing Request Form')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Open Print Dialog/i }));
+
+    expect(printSpy).toHaveBeenCalledTimes(1);
   });
 });

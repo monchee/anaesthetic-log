@@ -39,6 +39,7 @@ export interface ScreenLayoutProps {
   showNav?: boolean;
   csvUploadSheetOpen?: boolean;
   onCSVUploadSheetOpenChange?: (open: boolean) => void;
+  onOpenHelp?: () => void;
 }
 
 export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
@@ -68,6 +69,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   showNav = true,
   csvUploadSheetOpen,
   onCSVUploadSheetOpenChange,
+  onOpenHelp,
 }) => {
   const [isCSVUploadSheetOpenLocal, setIsCSVUploadSheetOpenLocal] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -127,6 +129,10 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   };
 
   const handleOpenQuickStart = () => {
+    if (onOpenHelp) {
+      onOpenHelp();
+      return;
+    }
     const helpButton = document.querySelector('[data-help-modal-trigger]') as HTMLButtonElement;
     if (helpButton) {
       helpButton.click();

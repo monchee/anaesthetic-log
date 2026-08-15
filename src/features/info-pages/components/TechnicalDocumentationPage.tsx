@@ -2,6 +2,18 @@ import React from 'react';
 import { Card, CardContent, Button } from '@/components/ui';
 import { Lock, Smartphone, Home, Database, Globe, Code, Cpu } from 'lucide-react';
 import { Screen } from '@shared/types';
+import changelogData from '@shared/data/changelog.json';
+
+declare const __APP_VERSION__: string | undefined;
+
+const _changelog = changelogData as Array<{
+  version: string;
+  codename: string;
+  skipBanner?: boolean;
+}>;
+const LATEST_ENTRY = _changelog.find((e) => !e.skipBanner) ?? _changelog[0];
+const CURRENT_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : (LATEST_ENTRY?.version || '0.76.5');
+const CURRENT_CODENAME = LATEST_ENTRY?.codename || 'Headline';
 
 interface TechnicalDocumentationPageProps {
   setScreen: (screen: Screen) => void;
@@ -207,7 +219,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex justify-between py-2 border-b border-border">
                 <span className="text-foreground">Current Version</span>
-                <span className="font-mono text-foreground font-semibold">v0.58.0 (Headline)</span>
+                <span className="font-mono text-foreground font-semibold">v{CURRENT_VERSION} ({CURRENT_CODENAME})</span>
               </div>
               <p className="text-xs mt-2">
                 For detailed changelog information, see the{' '}

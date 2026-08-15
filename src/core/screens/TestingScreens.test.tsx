@@ -57,7 +57,7 @@ describe('TestingScreen clinical context and identity display', () => {
       },
     }));
 
-    const identityBar = await screen.findByLabelText('Patient identity');
+    const identityBar = await screen.findByLabelText('Current patient and encounter');
     const context = await screen.findByRole('region', { name: 'High-risk clinical context' });
     expect(identityBar.compareDocumentPosition(context) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(within(context).getByText('Beta-blocker')).toBeInTheDocument();
@@ -65,10 +65,11 @@ describe('TestingScreen clinical context and identity display', () => {
     expect(screen.getByTestId('testing-log-form')).toHaveAttribute('data-direct-entry', 'false');
   });
 
-  it('renders direct-entry testing form and omits read-only identity bar when no patient is selected', async () => {
+  it('renders direct-entry testing form when no patient is selected', async () => {
     renderTestingScreen(null);
 
-    expect(screen.queryByLabelText('Patient identity')).not.toBeInTheDocument();
+    const directBar = await screen.findByLabelText('Current patient and encounter');
+    expect(directBar).toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'High-risk clinical context' })).not.toBeInTheDocument();
     expect(screen.getByTestId('testing-log-form')).toHaveAttribute('data-direct-entry', 'true');
   });

@@ -61,6 +61,8 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
       <div
         role="switch"
         aria-checked={proceedToChallenge}
+        aria-label="Proceed with live drug challenge"
+        aria-describedby="legacy-challenge-proceed-desc"
         tabIndex={0}
         onClick={onToggleChallenge}
         onKeyDown={(e) => {
@@ -87,7 +89,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
             <h3 className="font-bold text-foreground">
               Drug Challenge
             </h3>
-            <p className="text-xs text-muted-foreground">Proceed with live drug challenge</p>
+            <p id="legacy-challenge-proceed-desc" className="text-xs text-muted-foreground">Proceed with live drug challenge</p>
           </div>
         </div>
 

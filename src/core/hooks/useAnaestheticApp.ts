@@ -1,18 +1,24 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { toast } from 'sonner';
 import { usePatientState } from '@features/patients/hooks/usePatientState';
 import { useTestingState } from '@features/testing/hooks/useTestingState';
 import { isTestingSessionDirty } from '@features/testing/utils/isTestingSessionDirty';
+import { isDifferentPatient, getPatientIdentitySignature } from '@features/patients/utils/patientIdentity';
 import { useAppNavigation } from './useAppNavigation';
 import { useDisclaimer } from '@shared/hooks/useDisclaimer';
 import { Patient, Screen } from '@/types';
+import { createClinicalWorkContext } from '@shared/types/clinicalWorkContext';
 
 export function useAnaestheticApp() {
   const patientState = usePatientState();
-  const { selectedPatient, handlePatientSelect, handleManualDetailChange: originalHandleManualDetailChange } = patientState;
+  const { selectedPatient, handleManualDetailChange: originalHandleManualDetailChange } = patientState;
   const testingState = useTestingState();
   const {
     setFormData,
+    workContext,
+    setWorkContext,
+    activeReportContext,
+    setActiveReportContext,
     handleSubmit: originalHandleSubmit,
     resetForm: originalResetForm,
     clearActiveReport: originalClearActiveReport,
@@ -34,24 +40,101 @@ export function useAnaestheticApp() {
   });
 
   const disclaimer = useDisclaimer();
-  const lastTryptasePrefillPatientId = useRef<string | null>(null);
+  const lastTryptasePrefillPatientSignature = useRef<string | null>(null);
+
+  const [pendingPatientSelection, setPendingPatientSelection] = useState<{ patient: Patient; targetScreen?: Screen } | null>(null);
+
+  const handleConfirmedPatientSelect = (patient: Patient, targetScreen?: Screen) => {
+    originalResetForm();
+    testingState.setTestingPlanData(null);
+    patientState.handlePatientSelect(patient);
+    setPendingPatientSelection(null);
+    if (targetScreen) {
+      navigation.navigate(targetScreen, { bypassGuard: true });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const requestPatientSelect = (
+    patient: Patient,
+    targetScreen?: Screen,
+    options?: { bypassGuard?: boolean }
+  ) => {
+    if (options?.bypassGuard) {
+      handleConfirmedPatientSelect(patient, targetScreen);
+      return;
+    }
+    if (isTestingDraftDirty && isDifferentPatient(selectedPatient, patient)) {
+      setPendingPatientSelection({ patient, targetScreen });
+      return;
+    }
+    patientState.handlePatientSelect(patient);
+    if (targetScreen) {
+      navigation.navigate(targetScreen);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const confirmPatientSelect = () => {
+    if (pendingPatientSelection) {
+      const { patient, targetScreen } = pendingPatientSelection;
+      handleConfirmedPatientSelect(patient, targetScreen);
+    }
+  };
+
+  const cancelPatientSelect = () => {
+    setPendingPatientSelection(null);
+  };
 
   // Compose handlers that need cross-concern coordination
   const handleDashboardPatientSelect = (patient: Patient) => {
-    handlePatientSelect(patient);
-    navigation.navigate(Screen.LOG);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    requestPatientSelect(patient, Screen.LOG);
+  };
+
+  const handlePatientSelect = (patient: Patient, options?: { bypassGuard?: boolean }) => {
+    requestPatientSelect(patient, undefined, options);
   };
 
   useEffect(() => {
     if (!selectedPatient) {
-      lastTryptasePrefillPatientId.current = null;
+      lastTryptasePrefillPatientSignature.current = null;
       return;
     }
 
-    const isNewPatientSelection = lastTryptasePrefillPatientId.current !== selectedPatient.id;
-    lastTryptasePrefillPatientId.current = selectedPatient.id;
+    const currentPatientSignature = getPatientIdentitySignature(selectedPatient);
+    const isNewPatientSelection = lastTryptasePrefillPatientSignature.current !== currentPatientSignature;
     const referralTryptases = selectedPatient.history.tryptases;
+
+    if (isNewPatientSelection) {
+      lastTryptasePrefillPatientSignature.current = currentPatientSignature;
+
+      // Create new workflow context with stable sessionId for this patient
+      const nextContext = createClinicalWorkContext({
+        source: selectedPatient.id === 'manual' ? 'manual' : 'database',
+        patient: selectedPatient,
+        firstName: selectedPatient.firstName || '',
+        lastName: selectedPatient.lastName || '',
+        mrn: selectedPatient.mrn || '',
+        dob: selectedPatient.dob || '',
+        reactionDate: selectedPatient.history?.date,
+        testingVisitDate: testingState.formData.visitDate,
+      });
+      setWorkContext(nextContext);
+    } else {
+      // Existing patient session: update identity/visitDate if changed, preserving sessionId
+      setWorkContext(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          firstName: selectedPatient.firstName || '',
+          lastName: selectedPatient.lastName || '',
+          mrn: selectedPatient.mrn || '',
+          dob: selectedPatient.dob || '',
+          patientSnapshot: selectedPatient,
+          testingVisitDate: testingState.formData.visitDate,
+        };
+      });
+    }
 
     setFormData(prev => ({
       ...prev,
@@ -71,7 +154,7 @@ export function useAnaestheticApp() {
           }
         : {}),
     }));
-  }, [selectedPatient, setFormData]);
+  }, [selectedPatient, setFormData, setWorkContext, testingState.formData.visitDate]);
 
   const handleManualDetailChange = (field: keyof Patient, value: string) => {
     originalHandleManualDetailChange(field, value);
@@ -80,11 +163,18 @@ export function useAnaestheticApp() {
         ...prev,
         [field]: value,
       }));
+      setWorkContext(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          [field]: value,
+        };
+      });
     }
   };
 
   const handleSubmit = () => {
-    const savedRecord = originalHandleSubmit();
+    const savedRecord = originalHandleSubmit(workContext);
     toast.success(`Record saved for ${savedRecord.lastName}, ${savedRecord.firstName}`, { duration: 4000 });
     navigation.navigate(Screen.SUMMARY, { bypassGuard: true });
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -95,6 +185,14 @@ export function useAnaestheticApp() {
     patientState.setSelectedPatient(null);
     testingState.setTestingPlanData(null);
     originalResetForm();
+
+    const directContext = createClinicalWorkContext({
+      source: 'direct',
+      patient: null,
+      testingVisitDate: testingState.INITIAL_FORM_STATE.visitDate,
+    });
+    setWorkContext(directContext);
+
     navigation.navigate(Screen.TESTING);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -102,6 +200,8 @@ export function useAnaestheticApp() {
   const resetForm = () => {
     originalResetForm();
     patientState.setSelectedPatient(null);
+    testingState.setTestingPlanData(null);
+    setWorkContext(null);
     navigation.navigate(Screen.LOG);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -109,7 +209,9 @@ export function useAnaestheticApp() {
   const clearActiveReport = () => {
     originalClearActiveReport();
     patientState.setSelectedPatient(null);
+    testingState.setTestingPlanData(null);
     originalResetForm();
+    setWorkContext(null);
     navigation.navigate(Screen.LOG);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -124,7 +226,11 @@ export function useAnaestheticApp() {
     confirmNavigation: navigation.confirmNavigation,
     cancelNavigation: navigation.cancelNavigation,
 
-    // Testing state
+    // Workflow & Testing state
+    workContext,
+    setWorkContext,
+    activeReportContext,
+    setActiveReportContext,
     formData: testingState.formData,
     setFormData: testingState.setFormData,
     lastSavedRecord: testingState.lastSavedRecord,
@@ -152,6 +258,13 @@ export function useAnaestheticApp() {
 
     // Disclaimer
     showDisclaimer: disclaimer.showDisclaimer,
+
+    // Patient switch guard
+    pendingPatientSelection,
+    confirmPatientSelect,
+    cancelPatientSelect,
+    requestPatientSelect,
+    handleConfirmedPatientSelect,
 
     // Handlers
     handleDismissDisclaimer: disclaimer.handleDismissDisclaimer,
