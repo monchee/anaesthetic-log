@@ -140,7 +140,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   };
 
   return (
-    <div className={`min-h-screen print:min-h-0 bg-background dark:bg-background flex flex-col lg:flex-row ${className || ''}`}>
+    <div className={`min-h-screen overflow-x-hidden print:min-h-0 bg-background dark:bg-background flex flex-col lg:flex-row ${className || ''}`}>
       {/* Skip to Main Content Link */}
       <a
         href="#main-content"

@@ -1,5 +1,15 @@
 [
   {
+    "version": "v0.77.3",
+    "codename": "Location-First Workflow Navigator",
+    "date": "16 August 2026",
+    "summary": "Redesigns the location-first workflow navigator with a shared desktop rail and mobile controller, readable full labels, an aggregate status summary, clear status semantics, and accessible section navigation.",
+    "highlight": false,
+    "changes": [
+      "Location-first workflow navigator \u2014 Unifies desktop and mobile section navigation while preserving clinical workflow and draft-safe behavior."
+    ]
+  },
+  {
     "version": "v0.77.2",
     "codename": "PIN Gate Redesign",
     "date": "16 August 2026",

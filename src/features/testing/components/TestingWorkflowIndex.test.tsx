@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { TestingWorkflowIndex, deriveSectionStatus, WORKFLOW_SECTIONS } from './TestingWorkflowIndex';
 import { LogFormData } from '@/types';
@@ -242,8 +242,8 @@ describe('TestingWorkflowIndex Component', () => {
       />
     );
 
-    expect(screen.getByText('Workflow Sections')).toBeInTheDocument();
-    expect(screen.getByText('Section 1 of 7')).toBeInTheDocument();
+    expect(screen.getByText('Workflow')).toBeInTheDocument();
+    expect(screen.getByText('1 of 7')).toBeInTheDocument();
 
     WORKFLOW_SECTIONS.forEach((section) => {
       expect(screen.getByText(section.label)).toBeInTheDocument();
@@ -264,5 +264,108 @@ describe('TestingWorkflowIndex Component', () => {
     fireEvent.click(sptButton);
 
     expect(onSelect).toHaveBeenCalledWith(1);
+  });
+
+  it('renders the aggregate status summary from the shared workflow model', () => {
+    const summaryForm = {
+      ...emptyForm,
+      mrn: 'MRN123',
+      firstName: 'Jane',
+      lastName: 'Doe',
+      visitDate: '2026-06-10',
+      plan: 'Proceed with observation.',
+      nurseNotes: { preTesting: 'Baseline recorded' },
+    };
+
+    render(
+      <TestingWorkflowIndex
+        activeIndex={0}
+        onSelectSection={vi.fn()}
+        formData={summaryForm}
+      />
+    );
+
+    expect(screen.getByText('2 ready')).toBeInTheDocument();
+    expect(screen.getByText('3 need attention')).toBeInTheDocument();
+    expect(screen.getByText('2 not included')).toBeInTheDocument();
+  });
+
+  it('uses the active step location cue and informational readiness styling', () => {
+    render(
+      <TestingWorkflowIndex
+        activeIndex={0}
+        onSelectSection={vi.fn()}
+        formData={completeForm}
+      />
+    );
+
+    const activeButton = screen.getByRole('button', { name: /1\. Patient and visit \(Ready for review\)/i });
+    expect(activeButton).toHaveAttribute('aria-current', 'step');
+
+    const readyButton = screen.getByRole('button', { name: /2\. SPT and IDT \(Ready for review\)/i });
+    const readyStatus = within(readyButton).getByText('Ready for review').parentElement;
+    expect(readyStatus).toHaveClass('text-primary');
+    expect(readyStatus).not.toHaveClass('text-status-success');
+  });
+
+  it('renders the mobile navigator with destination-aware controls and boundaries', () => {
+    const onSelect = vi.fn();
+    render(
+      <TestingWorkflowIndex
+        variant="mobile"
+        activeIndex={1}
+        onSelectSection={onSelect}
+        formData={emptyForm}
+      />
+    );
+
+    expect(screen.getByText('Section 2 of 7')).toBeInTheDocument();
+    expect(screen.getByText('SPT and IDT')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Previous section: Patient and visit' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Next section: Drug challenge' })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Next section: Drug challenge' }));
+    expect(onSelect).toHaveBeenCalledWith(2);
+
+    const { rerender } = render(
+      <TestingWorkflowIndex
+        variant="mobile"
+        activeIndex={0}
+        onSelectSection={onSelect}
+        formData={emptyForm}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Previous section' })).toBeDisabled();
+
+    rerender(
+      <TestingWorkflowIndex
+        variant="mobile"
+        activeIndex={WORKFLOW_SECTIONS.length - 1}
+        onSelectSection={onSelect}
+        formData={emptyForm}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Next section' })).toBeDisabled();
+  });
+
+  it('opens the mobile section Sheet, selects a section, and closes it', () => {
+    const onSelect = vi.fn();
+    render(
+      <TestingWorkflowIndex
+        variant="mobile"
+        activeIndex={1}
+        onSelectSection={onSelect}
+        formData={emptyForm}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'All sections' }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('All workflow sections')).toBeInTheDocument();
+    expect(screen.getByText('Drug challenge')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /3\. Drug challenge \(Not included\)/i }));
+    expect(onSelect).toHaveBeenCalledWith(2);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });

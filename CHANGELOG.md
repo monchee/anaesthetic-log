@@ -1,3 +1,10 @@
+## [0.77.3] — 2026-08-16 (Location-First Workflow Navigator)
+
+Summary: Redesigns the location-first workflow navigator with a shared desktop rail and mobile controller, readable full labels, an aggregate status summary, clear status semantics, and accessible section navigation.
+
+### Changed
+- **Location-first workflow navigator** — Unifies desktop and mobile section navigation while preserving clinical workflow and draft-safe behavior.
+
 ## [0.77.2] — 2026-08-16 (PIN Gate Redesign)
 
 Summary: Redesigns the clinical workstation screen lock with clearer PIN feedback, accessible status messaging, responsive entry controls, and subtle motion that respects reduced-motion preferences.

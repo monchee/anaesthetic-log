@@ -58,6 +58,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   const errorSummaryRef = useRef<HTMLDivElement>(null);
 
   const testingService = new TestingService();
+  const lastSectionIndex = WORKFLOW_SECTIONS.length - 1;
 
   const toValidationLink = (message: string): ValidationErrorLink => {
     const lower = message.toLowerCase();
@@ -128,45 +129,17 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     }
   };
 
-  const currentSection = WORKFLOW_SECTIONS[activeSectionIndex];
-
   return (
-    <div className="space-y-4 sm:space-y-6">
-      {/* Mobile Top Navigation Header */}
-      <div className="md:hidden flex items-center justify-between p-3 border border-border bg-card shadow-sm rounded-none no-print">
-        <div className="min-w-0">
-          <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Section {activeSectionIndex + 1} of 7
-          </div>
-          <div className="text-sm font-bold text-foreground truncate">
-            {currentSection.label}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-1.5 shrink-0">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setActiveSectionIndex(i => Math.max(0, i - 1))}
-            disabled={activeSectionIndex === 0}
-            className="min-h-[44px] min-w-[44px] p-0 rounded-none btn-press"
-            aria-label="Previous section"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setActiveSectionIndex(i => Math.min(6, i + 1))}
-            disabled={activeSectionIndex === 6}
-            className="min-h-[44px] min-w-[44px] p-0 rounded-none btn-press"
-            aria-label="Next section"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
+    <div className="min-w-0 max-w-full space-y-4 overflow-x-hidden sm:space-y-6">
+      {/* Mobile Workflow Navigator */}
+      <div className="md:hidden no-print">
+        <TestingWorkflowIndex
+          variant="mobile"
+          activeIndex={activeSectionIndex}
+          onSelectSection={setActiveSectionIndex}
+          formData={formData}
+          isDirectEntry={isDirectEntry}
+        />
       </div>
 
       {/* Main Indexed Grid */}
@@ -278,10 +251,10 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
               <ChevronLeft className="w-4 h-4 mr-1.5" /> Previous Section
             </Button>
 
-            {activeSectionIndex < 6 ? (
+            {activeSectionIndex < lastSectionIndex ? (
               <Button
                 type="button"
-                onClick={() => setActiveSectionIndex(i => Math.min(6, i + 1))}
+                onClick={() => setActiveSectionIndex(i => Math.min(lastSectionIndex, i + 1))}
                 className="min-h-[44px] px-4 rounded-none bg-primary text-primary-foreground font-semibold btn-press"
               >
                 Next Section <ChevronRight className="w-4 h-4 ml-1.5" />
