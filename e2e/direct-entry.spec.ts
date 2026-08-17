@@ -13,14 +13,14 @@ test.describe('Home quick-start entry points', () => {
   test('shows upload and direct Allergy Testing actions on Home', async ({ page }) => {
     await openHome(page);
 
-    await expect(page.getByRole('button', { name: 'Upload REDCap export & review records', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Open Allergy Testing', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Upload REDCap export & review cases', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Go straight to allergy testing', exact: true })).toBeVisible();
   });
 
   test('opens direct Allergy Testing with editable identity and required-field validation', async ({ page }) => {
     await openHome(page);
 
-    await page.getByRole('button', { name: 'Open Allergy Testing', exact: true }).click();
+    await page.getByRole('button', { name: 'Go straight to allergy testing', exact: true }).click();
     await expect(page).toHaveURL(/\/testing$/);
     await expect(page.getByRole('heading', { name: 'Allergy Testing', exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Patient Identity', exact: true })).toBeVisible();
@@ -51,7 +51,7 @@ test.describe('Home quick-start entry points', () => {
   test('routes a successful Home REDCap upload to Dashboard', async ({ page }) => {
     await openHome(page);
 
-    await page.getByRole('button', { name: 'Upload REDCap export & review records', exact: true }).click();
+    await page.getByRole('button', { name: 'Upload REDCap export & review cases', exact: true }).click();
     const uploadSheet = page.getByRole('dialog', { name: 'Update Database' });
     await expect(uploadSheet).toBeVisible();
     await uploadSheet.locator('input[type="file"]').setInputFiles(CSV_FIXTURE);

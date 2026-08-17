@@ -13,8 +13,8 @@ vi.mock('@features/research/hooks/useResearchSubmit', () => ({
   useResearchSubmit: () => ({ reset: vi.fn() }),
 }));
 
-vi.mock('@core/components/HelpModal', () => ({
-  HelpModal: () => null,
+vi.mock('@core/components/GetStartedModal', () => ({
+  GetStartedModal: () => null,
 }));
 
 const mockedUseAnaestheticApp = vi.mocked(useAnaestheticApp);
@@ -106,7 +106,7 @@ describe('AnaestheticLogApp guarded screens', () => {
 
     render(<AnaestheticLogApp />);
 
-    fireEvent.click(screen.getByRole('button', { name: /Open Allergy Testing/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Go straight to allergy testing/i }));
     expect(handleStartDirectTesting).toHaveBeenCalledOnce();
   });
 });

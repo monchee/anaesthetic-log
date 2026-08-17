@@ -18,11 +18,12 @@ async function dismissHelpModal(page: any) {
   const isDialogVisible = await dialog.isVisible().catch(() => false);
   if (!isDialogVisible) return;
 
-  // Try to click "Skip for now" (most reliable dismiss)
+  // Try to click "Close" or legacy dismiss
+  const closeBtn = dialog.locator('button', { hasText: /^close$/i });
   const skipBtn = dialog.locator('button', { hasText: /skip for now/i });
   const gotItBtn = dialog.locator('button', { hasText: /got it/i });
 
-  for (const btn of [skipBtn, gotItBtn]) {
+  for (const btn of [closeBtn, skipBtn, gotItBtn]) {
     const count = await btn.count();
     if (count > 0) {
       try {
@@ -161,12 +162,12 @@ test.describe('Accessibility Tests', () => {
   });
 
   test('focus management in modals', async ({ page }) => {
-    // Open help modal via desktop sidebar Quick Start Guide button
-    const quickStartBtn = page.locator('aside').getByRole('button', { name: 'Quick Start Guide' });
-    await expect(quickStartBtn).toBeVisible({ timeout: 10000 });
-    await quickStartBtn.click();
+    // Open Get Started modal via desktop sidebar Get Started button
+    const getStartedBtn = page.locator('aside').getByRole('button', { name: 'Get Started' });
+    await expect(getStartedBtn).toBeVisible({ timeout: 10000 });
+    await getStartedBtn.click();
 
-    // The HelpModal trigger (hidden button) gets clicked, opening the dialog
+    // The GetStartedModal dialog opens
     const modal = page.locator('[role="dialog"]');
     await expect(modal).toBeVisible({ timeout: 10000 });
 

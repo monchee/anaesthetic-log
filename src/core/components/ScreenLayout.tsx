@@ -9,8 +9,7 @@ import DisclaimerBanner from './DisclaimerBanner';
 import TTLExpiryBanner from './TTLExpiryBanner';
 import { useTTLExpiryWarning } from '@shared/hooks/useTTLExpiryWarning';
 import { CSVUploadInstructions } from '@features/dashboard/components/CSVUploadInstructions';
-import { parseRedcapCSV, decodeCsvBytes } from '@shared/utils';
-import { toast } from 'sonner';
+import { useRedcapCsvUpload } from '@shared/hooks/useRedcapCsvUpload';
 
 export interface ScreenLayoutProps {
   title: string;
@@ -39,7 +38,7 @@ export interface ScreenLayoutProps {
   showNav?: boolean;
   csvUploadSheetOpen?: boolean;
   onCSVUploadSheetOpenChange?: (open: boolean) => void;
-  onOpenHelp?: () => void;
+  onOpenGetStarted?: () => void;
 }
 
 export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
@@ -69,11 +68,10 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   showNav = true,
   csvUploadSheetOpen,
   onCSVUploadSheetOpenChange,
-  onOpenHelp,
+  onOpenGetStarted,
 }) => {
   const [isCSVUploadSheetOpenLocal, setIsCSVUploadSheetOpenLocal] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const ttlExpiryWarning = useTTLExpiryWarning();
 
@@ -82,61 +80,20 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
 
   const onNavigate = navigate || setScreen;
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-
-    if (file && onUploadPatients) {
-      setIsUploading(true);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const text = decodeCsvBytes(event.target?.result as ArrayBuffer);
-          const result = parseRedcapCSV(text);
-
-          if (result.success) {
-            onUploadPatients(result.data, file.lastModified);
-            toast.success('Database updated', {
-              description: `Imported ${result.data.length} record(s).${result.details ? ` ${result.details.join(' ')}` : ''}`,
-            });
-            setIsCSVUploadSheetOpen(false);
-            onUploadComplete?.();
-          } else {
-            toast.error('Failed to parse CSV', {
-              description: result.error || 'Please check the file format.',
-              duration: 8000,
-            });
-          }
-        } catch {
-          toast.error('Error reading file', { duration: 8000 });
-        } finally {
-          setIsUploading(false);
-        }
-      };
-      reader.onerror = () => {
-        toast.error('Error reading file', { duration: 8000 });
-        setIsUploading(false);
-      };
-      reader.readAsArrayBuffer(file);
-    }
-
-    if (e.target) {
-      e.target.value = '';
-    }
-  };
+  const { isUploading, handleFileChange: handleFileUpload } = useRedcapCsvUpload({
+    onParsed: onUploadPatients,
+    onComplete: () => {
+      setIsCSVUploadSheetOpen(false);
+      onUploadComplete?.();
+    },
+  });
 
   const handleOpenUploadCSV = () => {
     setIsCSVUploadSheetOpen(true);
   };
 
-  const handleOpenQuickStart = () => {
-    if (onOpenHelp) {
-      onOpenHelp();
-      return;
-    }
-    const helpButton = document.querySelector('[data-help-modal-trigger]') as HTMLButtonElement;
-    if (helpButton) {
-      helpButton.click();
-    }
+  const handleOpenGetStarted = () => {
+    onOpenGetStarted?.();
   };
 
   return (
@@ -158,7 +115,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
           isTestingDraftDirty={isTestingDraftDirty}
           hasActiveReport={hasActiveReport}
           onOpenUploadCSV={handleOpenUploadCSV}
-          onOpenQuickStart={handleOpenQuickStart}
+          onOpenGetStarted={handleOpenGetStarted}
           databaseDate={databaseDate}
           isCustomData={isCustomData}
         />
@@ -206,7 +163,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                         isTestingDraftDirty={isTestingDraftDirty}
                         hasActiveReport={hasActiveReport}
                         onOpenUploadCSV={handleOpenUploadCSV}
-                        onOpenQuickStart={handleOpenQuickStart}
+                        onOpenGetStarted={handleOpenGetStarted}
                         databaseDate={databaseDate}
                         isCustomData={isCustomData}
                       />

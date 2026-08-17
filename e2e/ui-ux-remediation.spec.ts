@@ -20,11 +20,11 @@ async function unlockAndSuppressVersionBanner(page: import('@playwright/test').P
 }
 
 test.describe('UI/UX remediation regressions', () => {
-  test('Quick Start closes from the close icon', async ({ page }) => {
+  test('Get Started closes from the close button', async ({ page }) => {
     await unlockAndSuppressVersionBanner(page);
     await page.goto(appPath('/'));
 
-    const dialog = page.getByRole('dialog', { name: 'Quick Start' });
+    const dialog = page.getByRole('dialog', { name: 'Get Started' });
     await expect(dialog).toBeVisible();
 
     await dialog.getByRole('button', { name: 'Close' }).click();
@@ -32,23 +32,11 @@ test.describe('UI/UX remediation regressions', () => {
     await expect(dialog).toBeHidden();
   });
 
-  test('Quick Start closes from Skip for now', async ({ page }) => {
+  test('Get Started closes with Escape', async ({ page }) => {
     await unlockAndSuppressVersionBanner(page);
     await page.goto(appPath('/'));
 
-    const dialog = page.getByRole('dialog', { name: 'Quick Start' });
-    await expect(dialog).toBeVisible();
-
-    await dialog.getByRole('button', { name: 'Skip for now' }).click();
-
-    await expect(dialog).toBeHidden();
-  });
-
-  test('Quick Start closes with Escape', async ({ page }) => {
-    await unlockAndSuppressVersionBanner(page);
-    await page.goto(appPath('/'));
-
-    const dialog = page.getByRole('dialog', { name: 'Quick Start' });
+    const dialog = page.getByRole('dialog', { name: 'Get Started' });
     await expect(dialog).toBeVisible();
 
     await page.keyboard.press('Escape');
@@ -56,7 +44,7 @@ test.describe('UI/UX remediation regressions', () => {
     await expect(dialog).toBeHidden();
   });
 
-  test('auto-open Quick Start does not redirect direct Dashboard route', async ({ page }) => {
+  test('auto-open Get Started does not redirect direct Dashboard route', async ({ page }) => {
     await unlockAndSuppressVersionBanner(page);
     await page.goto(appPath('/dashboard'));
 
@@ -64,7 +52,7 @@ test.describe('UI/UX remediation regressions', () => {
     await expect(page.locator('header h1')).toContainText('Clinical Dashboard');
   });
 
-  test('auto-open Quick Start does not redirect direct Research route', async ({ page }) => {
+  test('auto-open Get Started does not redirect direct Research route', async ({ page }) => {
     await unlockAndSuppressVersionBanner(page);
     await page.goto(appPath('/research'));
 
@@ -77,9 +65,9 @@ test.describe('UI/UX remediation regressions', () => {
     await unlockAndSuppressVersionBanner(page);
     await page.goto(appPath('/dashboard'));
 
-    const dialog = page.getByRole('dialog', { name: 'Quick Start' });
+    const dialog = page.getByRole('dialog', { name: 'Get Started' });
     if (await dialog.isVisible().catch(() => false)) {
-      await dialog.getByRole('button', { name: 'Skip for now' }).click();
+      await dialog.getByRole('button', { name: 'Close' }).click();
     }
 
     const menuTrigger = page.getByRole('button', { name: 'Open Navigation Menu' });

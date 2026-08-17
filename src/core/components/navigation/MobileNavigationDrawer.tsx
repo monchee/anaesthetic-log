@@ -4,7 +4,7 @@ import {
   X,
   Stethoscope,
   Upload,
-  HelpCircle,
+  PlayCircle,
   Sun,
   Moon,
 } from 'lucide-react';
@@ -27,7 +27,7 @@ interface MobileNavigationDrawerProps {
   isTestingDraftDirty: boolean;
   hasActiveReport: boolean;
   onOpenUploadCSV: () => void;
-  onOpenQuickStart: () => void;
+  onOpenGetStarted: () => void;
   databaseDate: string;
   isCustomData?: boolean;
 }
@@ -41,7 +41,7 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
   isTestingDraftDirty,
   hasActiveReport,
   onOpenUploadCSV,
-  onOpenQuickStart,
+  onOpenGetStarted,
   databaseDate,
   isCustomData = false,
 }) => {
@@ -260,11 +260,11 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
 
                 <button
                   type="button"
-                  onClick={() => handleActionClick(onOpenQuickStart)}
+                  onClick={() => handleActionClick(onOpenGetStarted)}
                   className="w-full min-h-[44px] px-3.5 py-2.5 text-left rounded-none flex items-center gap-2.5 text-sm font-medium text-foreground/90 hover:text-foreground hover:bg-muted/70 transition-colors border border-transparent btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
                 >
-                  <HelpCircle className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
-                  <span>Quick Start Guide</span>
+                  <PlayCircle className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
+                  <span>Get Started</span>
                 </button>
 
                 {UTILITY_NAV_ITEMS.map((item) => {

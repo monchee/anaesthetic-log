@@ -1,3 +1,15 @@
+## [0.77.4] — 2026-08-17 (Desktop Primary Navigation Redesign)
+
+Summary: Redesigns the desktop AppSidebar navigation rail with a scrollable primary area and pinned utility region, introduces the Get Started modal workflow and unified REDCap upload hook, and strengthens navigation accessibility.
+
+### Changed
+- **Desktop navigation rail redesign** — Structures `AppSidebar` with a scrollable upper region for primary and contextual navigation and a pinned lower region for utility actions, settings, theme toggle, and system metadata.
+- **Get Started modal and launcher** — Replaces legacy help modal with a streamlined `GetStartedModal` and `GetStartedActions` component offering direct action paths for REDCap import and bedside testing entry.
+- **Unified REDCap CSV upload handling** — Consolidates CSV file handling and validation into the `useRedcapCsvUpload` hook across navigation and home screen entry points.
+
+### Added
+- **Desktop navigation regression coverage** — Adds comprehensive tests for `AppSidebar` pinned layout, keyboard navigation, focus rings, minimum target sizing, and ResizeObserver scroll bounds.
+
 ## [0.77.3] — 2026-08-16 (Location-First Workflow Navigator)
 
 Summary: Redesigns the location-first workflow navigator with a shared desktop rail and mobile controller, readable full labels, an aggregate status summary, clear status semantics, and accessible section navigation.

@@ -15,7 +15,7 @@ describe('MobileNavigationDrawer', () => {
     isTestingDraftDirty: false,
     hasActiveReport: false,
     onOpenUploadCSV: vi.fn(),
-    onOpenQuickStart: vi.fn(),
+    onOpenGetStarted: vi.fn(),
     databaseDate: '2026-08-15',
     isCustomData: false,
   };

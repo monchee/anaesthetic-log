@@ -9,7 +9,7 @@ import { isReportActive } from '@core/navigation/navigationConfig';
 import { reportWebVitals } from './src/lib/analytics';
 import { initSentry } from './src/lib/sentry';
 import { findInfoPageRoute } from '@core/routes/infoPageConfig';
-import { HelpModal } from '@core/components/HelpModal';
+import { GetStartedModal } from '@core/components/GetStartedModal';
 import { useResearchSubmit } from '@features/research/hooks/useResearchSubmit';
 import { DashboardScreen } from '@core/screens/DashboardScreen';
 import { InfoPageScreen } from '@core/screens/InfoPageScreen';
@@ -21,6 +21,7 @@ import { ScreenUnavailable } from '@core/components/ScreenUnavailable';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
+const GET_STARTED_SEEN_KEY = 'dream:get_started_seen';
 
 type ReportTab = 'report' | 'handout' | 'letter';
 
@@ -63,8 +64,22 @@ export function AnaestheticLogApp() {
   const [activeReportTab, setActiveReportTab] = useState<ReportTab>('report');
   const [csvUploadSheetOpen, setCsvUploadSheetOpen] = useState(false);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
-  const [helpOpen, setHelpOpen] = useState(false);
+  const [getStartedOpen, setGetStartedOpen] = useState(false);
   const research = useResearchSubmit();
+
+  const hasCheckedGetStartedRef = React.useRef(false);
+  useEffect(() => {
+    if (hasCheckedGetStartedRef.current) return;
+    hasCheckedGetStartedRef.current = true;
+    if (screen !== Screen.LOG) return; // never interrupt a /testing or /dashboard deep link
+    try {
+      if (localStorage.getItem(GET_STARTED_SEEN_KEY)) return;
+    } catch {
+      return;
+    } // storage unavailable: stay closed
+    setGetStartedOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // mount only - do not add screen to the deps array
 
   const handleNavigate = navigate || setScreen;
   const hasActiveReport = isReportActive(lastSavedRecord, activeReportSavedAt);
@@ -133,7 +148,7 @@ export function AnaestheticLogApp() {
     onUploadComplete: screen === Screen.LOG ? handleHomeUploadComplete : undefined,
     csvUploadSheetOpen,
     onCSVUploadSheetOpenChange: setCsvUploadSheetOpen,
-    onOpenHelp: () => setHelpOpen(true),
+    onOpenGetStarted: () => setGetStartedOpen(true),
   };
 
   const renderScreenContent = () => {
@@ -270,13 +285,12 @@ export function AnaestheticLogApp() {
   return (
     <React.Suspense fallback={<div className="min-h-svh bg-background" />}>
       {renderScreenContent()}
-      <HelpModal
-        isOpen={helpOpen}
-        onOpenChange={setHelpOpen}
+      <GetStartedModal
+        isOpen={getStartedOpen}
+        onOpenChange={setGetStartedOpen}
         onUploadPatients={handleUploadPatients}
         onUploadComplete={screen === Screen.LOG ? handleHomeUploadComplete : undefined}
-        hideTrigger={true}
-        hasData={hasUploadedData}
+        onViewExportSteps={() => setCsvUploadSheetOpen(true)}
         setScreen={handleNavigate}
         onStartDirectTesting={handleStartDirectTesting}
         isTestingDraftDirty={isTestingDraftDirty}

@@ -8,10 +8,8 @@
  * 2. Seeds `localStorage['disclaimerDismissed'] = 'true'` so the demo-data
  *    banner doesn't overlap content during accessibility scans.
  * 3. Seeds `localStorage['dream:last_seen_version']` with the current version
- *    so the HelpModal "What's New" auto-open is suppressed.
- *
- * Note: The HelpModal ALSO auto-opens when `hasData === false` (demo mode).
- * We dismiss it after page load by clicking "Skip for now".
+ *    and `localStorage['dream:get_started_seen'] = '1'` so the GetStartedModal
+ *    auto-open is suppressed during standard test runs.
  *
  * All three spec files import `{ test, expect }` from here instead of
  * `@playwright/test`.
@@ -28,16 +26,19 @@ const CURRENT_VERSION = changelogData[0].version;
 
 export { expect };
 
-/** Dismiss the Quick Start / What's New modal when demo data opens it. */
-export async function dismissHelpModal(page: Page) {
+/** Dismiss the Get Started launcher modal if present. */
+export async function dismissGetStartedModal(page: Page) {
   const dialog = page.getByRole('dialog');
-  const dismissButton = dialog.getByRole('button', { name: /skip for now|got it/i });
+  const dismissButton = dialog.getByRole('button', { name: /close|skip for now|got it/i });
 
   if (await dismissButton.first().isVisible().catch(() => false)) {
     await dismissButton.first().click();
     await expect(dialog).toBeHidden({ timeout: 5_000 });
   }
 }
+
+/** Legacy alias for dismissGetStartedModal */
+export const dismissHelpModal = dismissGetStartedModal;
 
 export const test = base.extend<object>({
   page: async ({ page }, use) => {
@@ -49,22 +50,21 @@ export const test = base.extend<object>({
       }
       try {
         localStorage.setItem('disclaimerDismissed', 'true');
-        // Suppress the HelpModal "new version" banner by marking current version as seen
+        // Suppress the GetStartedModal auto-open by marking version and launcher as seen
         localStorage.setItem('dream:last_seen_version', version);
+        localStorage.setItem('dream:get_started_seen', '1');
       } catch {
         // ignore
       }
     }, CURRENT_VERSION);
 
-    // After every navigation, dismiss the HelpModal if it auto-opens (demo mode).
-    // It renders a "Skip for now" button in the dialog footer.
+    // After every navigation, dismiss the GetStartedModal if it auto-opens.
     page.on('load', async () => {
       try {
-        const skipBtn = page.locator('[role="dialog"] button', { hasText: /skip for now/i });
-        // Wait briefly for any auto-open dialog, then dismiss if present
-        const visible = await skipBtn.isVisible().catch(() => false);
+        const closeBtn = page.locator('[role="dialog"] button', { hasText: /close|skip for now/i });
+        const visible = await closeBtn.isVisible().catch(() => false);
         if (visible) {
-          await skipBtn.click().catch(() => {});
+          await closeBtn.click().catch(() => {});
         }
       } catch {
         // ignore — dialog may not be present

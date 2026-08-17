@@ -95,7 +95,7 @@ describe('LogScreen Home quick-start actions', () => {
     onCSVUploadSheetOpenChange: vi.fn(),
   };
 
-  it('renders quick-start actions with descriptions and distinctive semantic colour styling when no patient is selected', () => {
+  it('renders quick-start actions with descriptions and accessible names when no patient is selected', () => {
     render(
       <LogScreen
         layoutProps={defaultLayoutProps}
@@ -118,21 +118,21 @@ describe('LogScreen Home quick-start actions', () => {
       />
     );
 
-    const uploadBtn = screen.getByRole('button', { name: /Upload REDCap export & review records/i });
-    const testingBtn = screen.getByRole('button', { name: /Open Allergy Testing/i });
+    const uploadBtn = screen.getByRole('button', { name: /Upload REDCap export & review cases/i });
+    const testingBtn = screen.getByRole('button', { name: /Go straight to allergy testing/i });
 
     expect(uploadBtn).toBeInTheDocument();
     expect(testingBtn).toBeInTheDocument();
-    expect(uploadBtn).toHaveTextContent('Import patient records from a REDCap CSV export and review clinic analytics in the Dashboard.');
-    expect(testingBtn).toHaveTextContent('Start a fresh testing session directly without selecting a patient or creating a testing plan.');
-
-    // Cool blue/cyan treatment on REDCap upload
-    expect(uploadBtn).toHaveClass('bg-sky-500/[0.04]', 'border-sky-500/30', 'focus-visible:ring-sky-500');
-    // Warm amber/orange treatment on Allergy Testing
-    expect(testingBtn).toHaveClass('bg-amber-500/[0.04]', 'border-amber-500/30', 'focus-visible:ring-amber-500');
-    // Preserved shared button traits
-    expect(uploadBtn).toHaveClass('btn-press', 'rounded-none');
-    expect(testingBtn).toHaveClass('btn-press', 'rounded-none');
+    expect(
+      screen.getByText(
+        'Import patient records from a REDCap CSV export, then review the clinic worklist and analytics in the Dashboard.'
+      )
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Open a fresh testing session for bedside entry — no patient record or testing plan required.'
+      )
+    ).toBeInTheDocument();
   });
 
   it('does not render quick-start actions when a patient is selected', () => {
@@ -158,8 +158,8 @@ describe('LogScreen Home quick-start actions', () => {
       />
     );
 
-    expect(screen.queryByRole('button', { name: /Upload REDCap export & review records/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Open Allergy Testing/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Upload REDCap export & review cases/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Go straight to allergy testing/i })).not.toBeInTheDocument();
   });
 
   it('opens the CSV upload sheet when upload quick-action is clicked', () => {
@@ -189,11 +189,11 @@ describe('LogScreen Home quick-start actions', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /Upload REDCap export & review records/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Upload REDCap export & review cases/i }));
     expect(onCSVUploadSheetOpenChange).toHaveBeenCalledWith(true);
   });
 
-  it('calls onStartDirectTesting immediately when clicking Open Allergy Testing without unsaved draft', () => {
+  it('calls onStartDirectTesting immediately when clicking Go straight to allergy testing without unsaved draft', () => {
     const onStartDirectTesting = vi.fn();
     render(
       <LogScreen
@@ -218,11 +218,11 @@ describe('LogScreen Home quick-start actions', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /Open Allergy Testing/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Go straight to allergy testing/i }));
     expect(onStartDirectTesting).toHaveBeenCalledOnce();
   });
 
-  it('prompts confirmation when clicking Open Allergy Testing with an unsaved testing draft', () => {
+  it('prompts confirmation when clicking Go straight to allergy testing with an unsaved testing draft', () => {
     const onStartDirectTesting = vi.fn();
     render(
       <LogScreen
@@ -247,7 +247,7 @@ describe('LogScreen Home quick-start actions', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /Open Allergy Testing/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Go straight to allergy testing/i }));
 
     expect(onStartDirectTesting).not.toHaveBeenCalled();
     expect(screen.getByRole('dialog')).toHaveTextContent('Start fresh testing session?');
@@ -293,7 +293,7 @@ describe('LogScreen Home layout ordering', () => {
     render(<LogScreen {...baseProps} />);
 
     const patientCard = screen.getByText('Patient Selection');
-    const directAction = screen.getByRole('button', { name: /Open Allergy Testing/i });
+    const directAction = screen.getByRole('button', { name: /Go straight to allergy testing/i });
 
     // Compare document order
     expect(patientCard.compareDocumentPosition(directAction)).toBe(
