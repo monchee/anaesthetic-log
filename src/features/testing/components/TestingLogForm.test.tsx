@@ -121,6 +121,13 @@ describe('TestingLogForm (Indexed Workflow)', () => {
   });
 
   describe('Section 1: Patient and Visit', () => {
+    it('keeps Next Section on the initial section 1 visit', () => {
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+
+      expect(screen.getByRole('button', { name: /^Next Section/ })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /Save Clinical Record/i })).not.toBeInTheDocument();
+    });
+
     it('renders form with patient information', () => {
       render(<TestWrapper initialData={mockFormData} props={mockProps} />);
 
@@ -257,9 +264,14 @@ describe('TestingLogForm (Indexed Workflow)', () => {
       expect(mockProps.onSubmit).toHaveBeenCalled();
     });
 
-    it('automatically jumps to invalid section and displays error links on invalid save attempt', async () => {
-      const invalidData = { ...mockFormData, visitDate: '' };
-      render(<TestWrapper initialData={invalidData} props={mockProps} />);
+    it('redirects to section 1 and exposes a direct save action after missing patient details', async () => {
+      const invalidData = {
+        ...mockFormData,
+        mrn: '',
+        firstName: '',
+        lastName: '',
+      };
+      render(<TestWrapper initialData={invalidData} props={{ ...mockProps, isDirectEntry: true }} />);
 
       // Go to review & save section
       fireEvent.click(screen.getByRole('button', { name: /7\.\s*Review and save/i }));
@@ -267,9 +279,61 @@ describe('TestingLogForm (Indexed Workflow)', () => {
       const saveButtons = screen.getAllByRole('button', { name: /Save Clinical Record/i });
       fireEvent.click(saveButtons[0]);
 
-      // Should automatically jump to Section 0 (Patient and visit)
       await waitFor(() => {
-        expect(screen.getByText(/Visit date is required/i)).toBeInTheDocument();
+        expect(screen.getByText('Patient Identity')).toBeInTheDocument();
+      });
+      expect(screen.getByRole('button', { name: /Save Clinical Record/i })).toBeInTheDocument();
+      expect(mockProps.onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('saves immediately from section 1 after completing patient details', async () => {
+      const invalidData = {
+        ...mockFormData,
+        mrn: '',
+        firstName: '',
+        lastName: '',
+      };
+      render(<TestWrapper initialData={invalidData} props={{ ...mockProps, isDirectEntry: true }} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /7\.\s*Review and save/i }));
+      fireEvent.click(screen.getAllByRole('button', { name: /Save Clinical Record/i })[0]);
+
+      await waitFor(() => {
+        expect(screen.getByText('Patient Identity')).toBeInTheDocument();
+      });
+
+      fireEvent.change(screen.getByLabelText(/^MRN/i), { target: { value: 'MRN999' } });
+      fireEvent.change(screen.getByLabelText(/^First Name/i), { target: { value: 'Alice' } });
+      fireEvent.change(screen.getByLabelText(/^Last Name/i), { target: { value: 'Smith' } });
+      fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
+
+      expect(mockProps.onSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    it('redirects to the remaining invalid section from the direct save action', async () => {
+      const invalidData = {
+        ...mockFormData,
+        mrn: '',
+        firstName: '',
+        lastName: '',
+        testPanel: [],
+      };
+      render(<TestWrapper initialData={invalidData} props={{ ...mockProps, isDirectEntry: true }} />);
+
+      fireEvent.click(screen.getByRole('button', { name: /7\.\s*Review and save/i }));
+      fireEvent.click(screen.getAllByRole('button', { name: /Save Clinical Record/i })[0]);
+
+      await waitFor(() => {
+        expect(screen.getByText('Patient Identity')).toBeInTheDocument();
+      });
+
+      fireEvent.change(screen.getByLabelText(/^MRN/i), { target: { value: 'MRN999' } });
+      fireEvent.change(screen.getByLabelText(/^First Name/i), { target: { value: 'Alice' } });
+      fireEvent.change(screen.getByLabelText(/^Last Name/i), { target: { value: 'Smith' } });
+      fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText(/SPT & IDT Panel/i)).toBeInTheDocument();
       });
       expect(mockProps.onSubmit).not.toHaveBeenCalled();
     });

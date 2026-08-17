@@ -59,6 +59,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
   const testingService = new TestingService();
   const lastSectionIndex = WORKFLOW_SECTIONS.length - 1;
+  const showSectionOneSaveAction = activeSectionIndex === 0 && validationErrors.length > 0;
 
   const toValidationLink = (message: string): ValidationErrorLink => {
     const lower = message.toLowerCase();
@@ -251,7 +252,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
               <ChevronLeft className="w-4 h-4 mr-1.5" /> Previous Section
             </Button>
 
-            {activeSectionIndex < lastSectionIndex ? (
+            {activeSectionIndex < lastSectionIndex && !showSectionOneSaveAction ? (
               <Button
                 type="button"
                 onClick={() => setActiveSectionIndex(i => Math.min(lastSectionIndex, i + 1))}
