@@ -92,7 +92,7 @@ export const AppMasthead: React.FC<AppMastheadProps> = ({
           </a>
 
           {/* Primary navigation */}
-          <nav aria-label="Primary navigation" className="flex items-center gap-1 min-w-0 overflow-x-auto">
+          <nav aria-label="Primary navigation" className="hidden lg:flex items-center gap-1 min-w-0 overflow-x-auto">
             {PRIMARY_NAV_ITEMS.map((item) => {
               const isActive = currentScreen === item.screen;
               const Icon = item.icon;
@@ -123,48 +123,46 @@ export const AppMasthead: React.FC<AppMastheadProps> = ({
             })}
           </nav>
 
-          {/* Divider: rendered ONLY when contextualItems.length > 0 */}
+          {/* Contextual / Current work navigation with divider */}
           {contextualItems.length > 0 && (
-            <div className="w-px h-6 bg-masthead-border shrink-0" aria-hidden="true" />
-          )}
-
-          {/* Contextual / Current work navigation */}
-          {contextualItems.length > 0 && (
-            <nav aria-label="Current work navigation" className="flex items-center gap-1 min-w-0 overflow-x-auto">
-              {contextualItems.map((item) => {
-                const isActive = currentScreen === item.screen;
-                const Icon = item.icon;
-                return (
-                  <a
-                    key={item.screen}
-                    href={hrefFor(item.screen)}
-                    aria-current={isActive ? 'page' : undefined}
-                    aria-label={item.ariaLabel || item.label}
-                    onClick={(e) => {
-                      if (shouldHandleNavigation(e)) {
-                        e.preventDefault();
-                        onNavigate(item.screen);
-                      }
-                    }}
-                    className={cn(
-                      "flex items-center gap-2 px-3 min-h-[44px] text-sm rounded-none transition-colors shrink-0",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-masthead-accent focus-visible:ring-offset-2 focus-visible:ring-offset-masthead",
-                      isActive
-                        ? "text-masthead-foreground font-semibold border-b-2 border-masthead-accent"
-                        : "text-masthead-foreground/70 hover:text-masthead-foreground hover:bg-white/10 border-b-2 border-transparent"
-                    )}
-                  >
-                    <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-                    <span className="hidden lg:inline break-words">{item.label}</span>
-                    {item.badge && (
-                      <span className="bg-white/20 text-white border border-white/30 rounded-none px-1.5 py-0.5 text-xs font-medium shrink-0">
-                        {item.badge}
-                      </span>
-                    )}
-                  </a>
-                );
-              })}
-            </nav>
+            <div className="hidden lg:flex items-center gap-4 min-w-0">
+              <div className="w-px h-6 bg-masthead-border shrink-0" aria-hidden="true" />
+              <nav aria-label="Current work navigation" className="flex items-center gap-1 min-w-0 overflow-x-auto">
+                {contextualItems.map((item) => {
+                  const isActive = currentScreen === item.screen;
+                  const Icon = item.icon;
+                  return (
+                    <a
+                      key={item.screen}
+                      href={hrefFor(item.screen)}
+                      aria-current={isActive ? 'page' : undefined}
+                      aria-label={item.ariaLabel || item.label}
+                      onClick={(e) => {
+                        if (shouldHandleNavigation(e)) {
+                          e.preventDefault();
+                          onNavigate(item.screen);
+                        }
+                      }}
+                      className={cn(
+                        "flex items-center gap-2 px-3 min-h-[44px] text-sm rounded-none transition-colors shrink-0",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-masthead-accent focus-visible:ring-offset-2 focus-visible:ring-offset-masthead",
+                        isActive
+                          ? "text-masthead-foreground font-semibold border-b-2 border-masthead-accent"
+                          : "text-masthead-foreground/70 hover:text-masthead-foreground hover:bg-white/10 border-b-2 border-transparent"
+                      )}
+                    >
+                      <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      <span className="hidden lg:inline break-words">{item.label}</span>
+                      {item.badge && (
+                        <span className="bg-white/20 text-white border border-white/30 rounded-none px-1.5 py-0.5 text-xs font-medium shrink-0">
+                          {item.badge}
+                        </span>
+                      )}
+                    </a>
+                  );
+                })}
+              </nav>
+            </div>
           )}
 
           {/* Right cluster */}
