@@ -13,10 +13,10 @@ A private clinical Progressive Web App for the Royal Prince Alfred Hospital Depa
 ## Project Status
 
 - **Current version:** v0.77.2
-- **Live app:** [allergy.yuson.au](https://allergy.yuson.au)
+- **Live app:** [dream.yuson.au](https://dream.yuson.au)
 - **Repository:** private/internal clinical tooling
 - **Production host:** Cloudflare Pages
-- **Release notes:** [GitHub Releases](https://github.com/monchee/anaesthetic-log/releases)
+- **Release notes:** [GitHub Releases](https://github.com/monchee/dream/releases)
 - **Data model:** local-first browser processing, with optional deidentified Supabase research submission
 
 ## Features
@@ -71,8 +71,8 @@ The screen lock is a shoulder-surfing control only. It is not a substitute for d
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/monchee/anaesthetic-log.git
-   cd anaesthetic-log
+   git clone https://github.com/monchee/dream.git
+   cd dream
    ```
 
 2. **Install dependencies**
@@ -126,7 +126,7 @@ If port 3000 is already in use, Vite may choose the next available port. Check t
 
 ## Deployment
 
-Production is hosted on Cloudflare Pages at [allergy.yuson.au](https://allergy.yuson.au). GitHub Pages is intentionally not used for this project.
+Production is hosted on Cloudflare Pages at [dream.yuson.au](https://dream.yuson.au). GitHub Pages is intentionally not used for this project.
 
 The deploy script runs a production build and then publishes with:
 
