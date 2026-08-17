@@ -102,7 +102,7 @@ test.describe('Testing Day Flow', () => {
     // ── Step 10: Navigate back to the log, then to Dashboard ───────────────
     await page.getByRole('button', { name: /Start New Log/i }).click();
     await dismissHelpModal(page);
-    const dashboardLink = page.locator('nav[aria-label="Primary navigation"]').getByRole('link', { name: 'Dashboard' });
+    const dashboardLink = page.locator('a[href="/dashboard"]').first();
     await expect(dashboardLink).toBeVisible({ timeout: 5000 });
     await dashboardLink.click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });

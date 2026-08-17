@@ -178,11 +178,8 @@ test.describe('Accessibility Tests', () => {
   });
 
   test('focus management in modals', async ({ page }) => {
-    // Open Get Started modal via utility menu Get Started button
-    const utilityBtn = page.getByRole('button', { name: 'More navigation and reference links' });
-    await expect(utilityBtn).toBeVisible({ timeout: 10000 });
-    await utilityBtn.click();
-    const getStartedBtn = page.getByRole('menuitem', { name: 'Get Started' });
+    // Open Get Started modal via Get Started button
+    const getStartedBtn = page.getByRole('button', { name: 'Get Started' }).first();
     await expect(getStartedBtn).toBeVisible({ timeout: 10000 });
     await getStartedBtn.click();
 
@@ -261,8 +258,8 @@ test.describe('Accessibility Tests', () => {
   });
 
   test('data tables have proper headers', async ({ page }) => {
-    // Navigate to dashboard using the primary navigation link
-    const dashLink = page.locator('nav[aria-label="Primary navigation"]').getByRole('link', { name: 'Dashboard' });
+    // Navigate to dashboard using the dashboard link
+    const dashLink = page.locator('a[href="/dashboard"]').first();
     await expect(dashLink).toBeVisible({ timeout: 10000 });
     await dashLink.click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
@@ -351,8 +348,8 @@ test.describe('Accessibility Tests', () => {
       skipStyles.boxShadow !== 'none';
     expect(skipHasFocusIndicator).toBeTruthy();
 
-    // Check a nav link in primary navigation (Home, Dashboard)
-    const homeNavLink = page.locator('nav[aria-label="Primary navigation"] a').first();
+    // Check a nav link in workspace navigation (Home, Dashboard)
+    const homeNavLink = page.locator('aside a[href="/"]').first();
     await expect(homeNavLink).toBeVisible({ timeout: 10000 });
     await homeNavLink.focus();
     const navStyles = await homeNavLink.evaluate((el) => {
@@ -396,7 +393,7 @@ test.describe('Accessibility Tests', () => {
     await expect(mainContent).toBeVisible();
 
     // Check that mobile navigation drawer opens
-    const menuButton = page.getByRole('button', { name: 'Open Navigation Menu' });
+    const menuButton = page.getByRole('button', { name: 'Open navigation menu' });
     await expect(menuButton).toBeVisible({ timeout: 10000 });
     await menuButton.click();
 
@@ -492,7 +489,7 @@ test.describe('Automated Accessibility Scans', () => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
-    await page.locator('nav[aria-label="Primary navigation"]').getByRole('link', { name: 'Dashboard' }).click();
+    await page.locator('a[href="/dashboard"]').first().click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
     await injectAxe(page);
 
@@ -523,8 +520,7 @@ test.describe('Automated Accessibility Scans', () => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
-    await page.getByRole('button', { name: 'More navigation and reference links' }).click();
-    await page.getByRole('menuitem', { name: 'Research' }).click();
+    await page.locator('a[href="/research"]').first().click();
     await page.waitForLoadState('networkidle');
     await injectAxe(page);
 
@@ -552,8 +548,7 @@ test.describe('Automated Accessibility Scans', () => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
-    await page.getByRole('button', { name: 'More navigation and reference links' }).click();
-    await page.getByRole('menuitem', { name: 'Changelog' }).click();
+    await page.locator('a[href="/changelog"]').first().click();
     await page.waitForLoadState('networkidle');
     await injectAxe(page);
 

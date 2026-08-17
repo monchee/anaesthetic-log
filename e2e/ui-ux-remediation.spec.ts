@@ -70,7 +70,7 @@ test.describe('UI/UX remediation regressions', () => {
       await dialog.getByRole('button', { name: 'Close' }).click();
     }
 
-    const menuTrigger = page.getByRole('button', { name: 'Open Navigation Menu' });
+    const menuTrigger = page.getByRole('button', { name: 'Open navigation menu' });
     await expect(menuTrigger).toBeVisible({ timeout: 5000 });
     await menuTrigger.click();
 
@@ -78,7 +78,7 @@ test.describe('UI/UX remediation regressions', () => {
     await expect(drawer).toBeVisible({ timeout: 5000 });
 
     const activeDashboard = drawer
-      .locator('nav[aria-label="Primary mobile navigation"] a[aria-current="page"]')
+      .locator('nav[aria-label="Workspace mobile navigation"] a[aria-current="page"]')
       .filter({ hasText: 'Dashboard' });
 
     await expect(activeDashboard).toBeVisible();

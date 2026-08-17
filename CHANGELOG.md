@@ -1,3 +1,14 @@
+## [0.78.1] — 2026-08-18 (Responsive App Navigation)
+
+Summary: Introduces a responsive app-navigation shell with a persistent desktop sidebar, mobile navigation drawer, and page top bar, with focused accessibility coverage.
+
+### Changed
+- **Responsive app-navigation shell** — Replaces the horizontal masthead navigation with a persistent desktop sidebar, a compact mobile/tablet navigation drawer, and a contextual page top bar across the application shell.
+- **Navigation structure and responsive safeguards** — Consolidates workspace, current-work, reference, support, and action navigation sections while preserving draft and report status indicators and responsive no-overflow behavior.
+
+### Added
+- **Navigation regression coverage** — Adds focused unit coverage for the screen layout, sidebar, drawer, navigation sections, and page top bar, and updates end-to-end selectors for the responsive navigation surfaces.
+
 ## [0.78.0] — 2026-08-17 (Clinical Masthead Navigation)
 
 Summary: Redesigns primary navigation with a persistent horizontal masthead and unified measured sticky chrome stack, surfaces display text size settings, fixes dark-mode contrast with dedicated masthead tokens, restores navigation on Reports, and removes the legacy desktop sidebar.

@@ -58,12 +58,12 @@ test.describe('Baseline screenshots (Phase 0)', () => {
 
       // ── Dashboard ────────────────────────────────────────────────────────
       if (vp.name === 'mobile') {
-        await page.getByRole('button', { name: 'Open Navigation Menu' }).click();
+        await page.getByRole('button', { name: 'Open navigation menu' }).click();
         const drawer = page.getByRole('dialog', { name: 'Navigation Drawer' });
         await expect(drawer).toBeVisible({ timeout: 5000 });
         await drawer.getByRole('link', { name: 'Dashboard' }).click();
       } else {
-        await page.locator('nav[aria-label="Primary navigation"]').getByRole('link', { name: 'Dashboard' }).click();
+        await page.locator('a[href="/dashboard"]').first().click();
       }
       await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
       await dismissHelpModal(page);
@@ -71,12 +71,12 @@ test.describe('Baseline screenshots (Phase 0)', () => {
 
       // ── Back home, select seeded mock patient, proceed to testing ───────
       if (vp.name === 'mobile') {
-        await page.getByRole('button', { name: 'Open Navigation Menu' }).click();
+        await page.getByRole('button', { name: 'Open navigation menu' }).click();
         const drawer = page.getByRole('dialog', { name: 'Navigation Drawer' });
         await expect(drawer).toBeVisible({ timeout: 5000 });
         await drawer.getByRole('link', { name: 'Home' }).click();
       } else {
-        await page.locator('nav[aria-label="Primary navigation"]').getByRole('link', { name: 'Home' }).click();
+        await page.locator('aside a[href="/"]').first().click();
       }
       await dismissHelpModal(page);
       const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });

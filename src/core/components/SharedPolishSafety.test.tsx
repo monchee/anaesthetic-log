@@ -104,8 +104,8 @@ describe('Shared polish safety and semantic token regression tests', () => {
       expect(main).toHaveClass('max-w-6xl', 'px-4', 'sm:px-5', 'md:px-6');
 
       // Navigation links have focus rings, correct href, and trigger screen changes
-      const primaryNav = screen.getByRole('navigation', { name: 'Primary navigation' });
-      const dashboardLink = within(primaryNav).getByRole('link', { name: 'Dashboard' });
+      const primaryNav = screen.getByRole('navigation', { name: /Workspace navigation/i });
+      const dashboardLink = within(primaryNav).getByRole('link', { name: /Dashboard/i });
       expect(dashboardLink).toHaveAttribute('href', '/dashboard');
       expect(dashboardLink).toHaveClass('focus-visible:ring-2');
       fireEvent.click(dashboardLink);

@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { Screen, Patient } from '@/types';
 import { pathFromScreen } from '@core/navigation/navigationConfig';
-import { AppMasthead } from './navigation/AppMasthead';
-import { MobileNavigationDrawer } from './navigation/MobileNavigationDrawer';
+import { AppSidebar } from './navigation/AppSidebar';
+import { AppTopBar } from './navigation/AppTopBar';
+import { AppNavigationDrawer } from './navigation/AppNavigationDrawer';
 import { NavigationGuardDialog } from './navigation/NavigationGuardDialog';
 import Footer from './Footer';
 import DisclaimerBanner from './DisclaimerBanner';
@@ -11,6 +12,7 @@ import { useTTLExpiryWarning } from '@shared/hooks/useTTLExpiryWarning';
 import { useChromeHeight } from '@core/hooks/useChromeHeight';
 import { CSVUploadInstructions } from '@features/dashboard/components/CSVUploadInstructions';
 import { useRedcapCsvUpload } from '@shared/hooks/useRedcapCsvUpload';
+import { cn } from '@/lib/utils';
 
 export interface ScreenLayoutProps {
   title: string;
@@ -74,7 +76,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   onOpenGetStarted,
 }) => {
   const [isCSVUploadSheetOpenLocal, setIsCSVUploadSheetOpenLocal] = useState(false);
-  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const ttlExpiryWarning = useTTLExpiryWarning();
   const chromeRef = useChromeHeight<HTMLDivElement>();
@@ -101,144 +103,164 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   };
 
   return (
-    <div className={`min-h-screen overflow-x-hidden print:min-h-0 bg-background dark:bg-background flex flex-col ${className || ''}`}>
+    <div
+      className={cn(
+        'min-h-screen overflow-x-hidden print:min-h-0 bg-background dark:bg-background text-foreground flex flex-col',
+        showNav && 'xl:pl-64 print:xl:pl-0',
+        className
+      )}
+    >
       {/* Skip to Main Content Link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-none focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-none focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
       >
         Skip to main content
       </a>
 
-      {/* Sticky Unified Chrome Stack */}
-      <div ref={chromeRef} className="sticky top-0 z-40 no-print">
-        {showNav ? (
-          <AppMasthead
-            currentScreen={currentScreen}
-            onNavigate={onNavigate}
-            hrefFor={hrefFor}
-            isTestingDraftDirty={isTestingDraftDirty}
-            hasActiveReport={hasActiveReport}
-            onOpenUploadCSV={handleOpenUploadCSV}
-            onOpenGetStarted={handleOpenGetStarted}
-            databaseDate={databaseDate}
-            isCustomData={isCustomData}
-            title={title}
-            subtitle={subtitle}
-            icon={icon}
-            actions={actions}
-            mobileMenuTrigger={
-              <div className="lg:hidden">
-                <MobileNavigationDrawer
-                  isOpen={isMobileDrawerOpen}
-                  onOpenChange={setIsMobileDrawerOpen}
-                  currentScreen={currentScreen}
-                  onNavigate={onNavigate}
-                  hrefFor={hrefFor}
-                  isTestingDraftDirty={isTestingDraftDirty}
-                  hasActiveReport={hasActiveReport}
-                  onOpenUploadCSV={handleOpenUploadCSV}
-                  onOpenGetStarted={handleOpenGetStarted}
-                  databaseDate={databaseDate}
-                  isCustomData={isCustomData}
-                />
-              </div>
-            }
-          />
-        ) : (
-          <header role="banner" aria-label="Application header" className="bg-card text-card-foreground border-b border-border no-print">
-            <div className="max-w-6xl mx-auto px-4 sm:px-5 md:px-6 py-3 flex flex-row justify-between items-center gap-4 min-w-0">
-              {/* Title Area */}
-              <div className="flex items-center gap-3 min-w-0">
-                {icon && (
-                  <div className="bg-muted p-2 rounded-none border border-border shrink-0 text-foreground">
-                    {icon}
-                  </div>
-                )}
-                <div className="min-w-0">
-                  <h1 className="text-lg sm:text-xl font-bold tracking-tight leading-none truncate m-0 text-foreground">
-                    {title}
-                  </h1>
-                  {subtitle && (
-                    <div className="text-xs text-muted-foreground truncate font-normal mt-1">
-                      {subtitle}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Actions */}
-              {actions && (
-                <div className="flex items-center gap-2 shrink-0">
-                  {actions}
-                </div>
-              )}
-            </div>
-          </header>
-        )}
-
-        {/* Tier 3: Context Bar */}
-        {contextBar}
-
-        {/* Disclaimer Banner */}
-        {showDisclaimer && !isCustomData && onDismissDisclaimer && (
-          <div className="print:hidden">
-            <DisclaimerBanner
-              onClose={onDismissDisclaimer}
-              onUploadClick={() => setIsCSVUploadSheetOpen(true)}
-            />
-          </div>
-        )}
-
-        {/* TTL Expiry Warning Banner */}
-        {ttlExpiryWarning.isNearExpiry && !ttlExpiryWarning.isDismissed && ttlExpiryWarning.expiresAt !== null && (
-          <div className="print:hidden">
-            <TTLExpiryBanner
-              expiresAt={ttlExpiryWarning.expiresAt}
-              onKeepWorking={ttlExpiryWarning.keepWorking}
-              onDismiss={ttlExpiryWarning.dismiss}
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Main Content Area */}
-      <main
-        key={currentScreen}
-        id="main-content"
-        role="main"
-        aria-label="Main content"
-        tabIndex={-1}
-        className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-6 flex flex-col relative z-10 animate-screen-enter focus:outline-none"
-      >
-        <div className={`${contentClassName || ''} flex-1 flex flex-col`}>
-          <React.Suspense
-            fallback={
-              <div className="flex-1 flex flex-col items-center justify-center p-12 text-muted-foreground min-h-[50vh]">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="h-8 w-8 rounded-none border-2 border-primary/20 border-t-primary animate-spin" />
-                  <span className="text-sm font-medium animate-pulse">Loading content...</span>
-                </div>
-              </div>
-            }
-          >
-            {children}
-          </React.Suspense>
-        </div>
-      </main>
-
-      {/* Footer */}
-      {showFooter && (
-        <Footer
+      {/* Desktop Persistent Left Sidebar (xl: 1280px+) */}
+      {showNav && (
+        <AppSidebar
           currentScreen={currentScreen}
-          setScreen={onNavigate}
           onNavigate={onNavigate}
           hrefFor={hrefFor}
+          isTestingDraftDirty={isTestingDraftDirty}
+          hasActiveReport={hasActiveReport}
+          onOpenUploadCSV={handleOpenUploadCSV}
+          onOpenGetStarted={handleOpenGetStarted}
           databaseDate={databaseDate}
-          onUploadPatients={onUploadPatients}
           isCustomData={isCustomData}
         />
       )}
+
+      {/* Content Column: contains sticky measured chrome stack, main content, and footer */}
+      <div className="flex-1 flex flex-col min-w-0 w-full">
+        {/* Sticky Unified Chrome Stack in Content Column */}
+        <div ref={chromeRef} className="sticky top-0 z-40 no-print">
+          {showNav ? (
+            <AppTopBar
+              currentScreen={currentScreen}
+              onNavigate={onNavigate}
+              hrefFor={hrefFor}
+              isTestingDraftDirty={isTestingDraftDirty}
+              hasActiveReport={hasActiveReport}
+              title={title}
+              subtitle={subtitle}
+              icon={icon}
+              actions={actions}
+              drawerTrigger={
+                <div className="xl:hidden">
+                  <AppNavigationDrawer
+                    isOpen={isDrawerOpen}
+                    onOpenChange={setIsDrawerOpen}
+                    currentScreen={currentScreen}
+                    onNavigate={onNavigate}
+                    hrefFor={hrefFor}
+                    isTestingDraftDirty={isTestingDraftDirty}
+                    hasActiveReport={hasActiveReport}
+                    onOpenUploadCSV={handleOpenUploadCSV}
+                    onOpenGetStarted={handleOpenGetStarted}
+                    databaseDate={databaseDate}
+                    isCustomData={isCustomData}
+                  />
+                </div>
+              }
+            />
+          ) : (
+            <header role="banner" aria-label="Application header" className="bg-card text-card-foreground border-b border-border no-print">
+              <div className="max-w-6xl mx-auto px-4 sm:px-5 md:px-6 py-3 flex flex-row justify-between items-center gap-4 min-w-0 flex-wrap">
+                {/* Title Area */}
+                <div className="flex items-center gap-3 min-w-0">
+                  {icon && (
+                    <div className="bg-muted p-2 rounded-none border border-border shrink-0 text-foreground">
+                      {icon}
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <h1 className="text-lg sm:text-xl font-bold tracking-tight leading-snug break-words m-0 text-foreground">
+                      {title}
+                    </h1>
+                    {subtitle && (
+                      <div className="text-xs text-muted-foreground break-words font-normal mt-1 leading-normal">
+                        {subtitle}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                {actions && (
+                  <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                    {actions}
+                  </div>
+                )}
+              </div>
+            </header>
+          )}
+
+          {/* Tier 3: Context Bar */}
+          {contextBar}
+
+          {/* Disclaimer Banner */}
+          {showDisclaimer && !isCustomData && onDismissDisclaimer && (
+            <div className="print:hidden">
+              <DisclaimerBanner
+                onClose={onDismissDisclaimer}
+                onUploadClick={() => setIsCSVUploadSheetOpen(true)}
+              />
+            </div>
+          )}
+
+          {/* TTL Expiry Warning Banner */}
+          {ttlExpiryWarning.isNearExpiry && !ttlExpiryWarning.isDismissed && ttlExpiryWarning.expiresAt !== null && (
+            <div className="print:hidden">
+              <TTLExpiryBanner
+                expiresAt={ttlExpiryWarning.expiresAt}
+                onKeepWorking={ttlExpiryWarning.keepWorking}
+                onDismiss={ttlExpiryWarning.dismiss}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Main Content Area */}
+        <main
+          key={currentScreen}
+          id="main-content"
+          role="main"
+          aria-label="Main content"
+          tabIndex={-1}
+          className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-6 flex flex-col relative z-10 animate-screen-enter focus:outline-none min-w-0"
+        >
+          <div className={cn('flex-1 flex flex-col min-w-0', contentClassName)}>
+            <React.Suspense
+              fallback={
+                <div className="flex-1 flex flex-col items-center justify-center p-12 text-muted-foreground min-h-[50vh]">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="h-8 w-8 rounded-none border-2 border-primary/20 border-t-primary animate-spin" />
+                    <span className="text-sm font-medium animate-pulse">Loading content...</span>
+                  </div>
+                </div>
+              }
+            >
+              {children}
+            </React.Suspense>
+          </div>
+        </main>
+
+        {/* Footer */}
+        {showFooter && (
+          <Footer
+            currentScreen={currentScreen}
+            setScreen={onNavigate}
+            onNavigate={onNavigate}
+            hrefFor={hrefFor}
+            databaseDate={databaseDate}
+            onUploadPatients={onUploadPatients}
+            isCustomData={isCustomData}
+          />
+        )}
+      </div>
 
       {/* Hidden file input for CSV upload */}
       <input

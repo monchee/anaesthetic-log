@@ -14,7 +14,13 @@ import {
 } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
-export const DisplaySettingsMenu: React.FC = () => {
+export interface DisplaySettingsMenuProps {
+  variant?: 'masthead' | 'card';
+}
+
+export const DisplaySettingsMenu: React.FC<DisplaySettingsMenuProps> = ({
+  variant = 'masthead',
+}) => {
   const {
     fontSizePercent,
     increaseFontSize,
@@ -23,6 +29,8 @@ export const DisplaySettingsMenu: React.FC = () => {
     canIncrease,
     canDecrease,
   } = useFontSize();
+
+  const isCard = variant === 'card';
 
   return (
     <DropdownMenu>
@@ -33,9 +41,11 @@ export const DisplaySettingsMenu: React.FC = () => {
               type="button"
               aria-label="Display settings"
               className={cn(
-                "flex items-center justify-center min-h-[44px] min-w-[44px] p-2 rounded-none transition-colors",
-                "text-masthead-foreground/80 hover:text-masthead-foreground hover:bg-white/10",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-masthead-accent focus-visible:ring-offset-2 focus-visible:ring-offset-masthead"
+                'flex items-center justify-center min-h-[44px] min-w-[44px] p-2 rounded-none transition-colors',
+                isCard
+                  ? 'text-foreground/80 hover:text-foreground hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background'
+                  : 'text-masthead-foreground/80 hover:text-masthead-foreground hover:bg-white/10 focus-visible:ring-masthead-accent focus-visible:ring-offset-masthead',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
               )}
             >
               <Type className="h-5 w-5" aria-hidden="true" />
@@ -57,10 +67,10 @@ export const DisplaySettingsMenu: React.FC = () => {
             disabled={!canDecrease}
             aria-label="Decrease text size"
             className={cn(
-              "flex items-center justify-center min-h-[44px] min-w-[44px] font-semibold border border-input rounded-none transition-colors",
-              "hover:bg-accent hover:text-accent-foreground active:scale-95",
-              "disabled:opacity-40 disabled:pointer-events-none",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              'flex items-center justify-center min-h-[44px] min-w-[44px] font-semibold border border-input rounded-none transition-colors',
+              'hover:bg-accent hover:text-accent-foreground active:scale-95',
+              'disabled:opacity-40 disabled:pointer-events-none',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
             )}
           >
             A−
@@ -76,10 +86,10 @@ export const DisplaySettingsMenu: React.FC = () => {
             disabled={!canIncrease}
             aria-label="Increase text size"
             className={cn(
-              "flex items-center justify-center min-h-[44px] min-w-[44px] font-semibold border border-input rounded-none transition-colors",
-              "hover:bg-accent hover:text-accent-foreground active:scale-95",
-              "disabled:opacity-40 disabled:pointer-events-none",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              'flex items-center justify-center min-h-[44px] min-w-[44px] font-semibold border border-input rounded-none transition-colors',
+              'hover:bg-accent hover:text-accent-foreground active:scale-95',
+              'disabled:opacity-40 disabled:pointer-events-none',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
             )}
           >
             A+

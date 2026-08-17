@@ -55,16 +55,10 @@ test.describe('Smoke Tests', () => {
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
 
-    // Theme toggle is in the Masthead or mobile Drawer
+    // Theme toggle is in the AppTopBar across all viewports
     const themeButton = page.locator('button[aria-label^="Switch to"]').first();
-    if (await themeButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await themeButton.click();
-    } else {
-      const menuTrigger = page.locator('[aria-label="Open Navigation Menu"]').first();
-      await menuTrigger.click();
-      const drawerThemeButton = page.locator('#mobile-navigation-drawer button:has-text("Theme")').first();
-      await drawerThemeButton.click();
-    }
+    await expect(themeButton).toBeVisible({ timeout: 5000 });
+    await themeButton.click();
 
     // Verify theme changed (dark or light class on html)
     const htmlElement = page.locator('html');
