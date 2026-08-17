@@ -77,7 +77,8 @@ export const AppMasthead: React.FC<AppMastheadProps> = ({
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-masthead-accent focus-visible:ring-offset-2 focus-visible:ring-offset-masthead"
             )}
           >
-            <div className="p-1.5 bg-white/10 border border-white/20 rounded-none flex items-center justify-center">
+            {/* Logo chip drops below 360px so the wordmark and Menu trigger always fit. */}
+            <div className="p-1.5 bg-white/10 border border-white/20 rounded-none hidden min-[360px]:flex items-center justify-center">
               <Stethoscope className="h-5 w-5 text-white" aria-hidden="true" />
             </div>
             <div className="flex flex-col">
@@ -170,7 +171,9 @@ export const AppMasthead: React.FC<AppMastheadProps> = ({
           <div className="ml-auto flex items-center gap-1 shrink-0">
             <DisplaySettingsMenu />
 
-            {/* Dedicated Theme Toggle */}
+            {/* Dedicated Theme Toggle.
+                Hidden below lg: the mobile drawer already carries a theme control, and at
+                375px the brand + full icon cluster + Menu trigger overflow the bar. */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -178,7 +181,8 @@ export const AppMasthead: React.FC<AppMastheadProps> = ({
                   onClick={toggleTheme}
                   aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
                   className={cn(
-                    "flex items-center justify-center min-h-[44px] min-w-[44px] p-2 rounded-none transition-colors",
+                    "hidden lg:flex",
+                    "items-center justify-center min-h-[44px] min-w-[44px] p-2 rounded-none transition-colors",
                     "text-masthead-foreground/80 hover:text-masthead-foreground hover:bg-white/10",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-masthead-accent focus-visible:ring-offset-2 focus-visible:ring-offset-masthead"
                   )}
@@ -195,13 +199,17 @@ export const AppMasthead: React.FC<AppMastheadProps> = ({
               </TooltipContent>
             </Tooltip>
 
-            <UtilityMenu
-              currentScreen={currentScreen}
-              onNavigate={onNavigate}
-              hrefFor={hrefFor}
-              onOpenUploadCSV={onOpenUploadCSV}
-              onOpenGetStarted={onOpenGetStarted}
-            />
+            {/* Utility overflow. Hidden below lg: every entry is already reachable from
+                the mobile drawer, which carries the same utility links and actions. */}
+            <div className="hidden lg:flex">
+              <UtilityMenu
+                currentScreen={currentScreen}
+                onNavigate={onNavigate}
+                hrefFor={hrefFor}
+                onOpenUploadCSV={onOpenUploadCSV}
+                onOpenGetStarted={onOpenGetStarted}
+              />
+            </div>
 
             {/* Slot for the mobile Menu trigger */}
             {mobileMenuTrigger}

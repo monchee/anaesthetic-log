@@ -30,7 +30,7 @@ const ClinicalReport = React.lazy(() => import('@features/reports/components/Cli
 const PatientHandout = React.lazy(() => import('@features/reports/components/PatientHandout'));
 const PowerchartLetter = React.lazy(() => import('@features/reports/components/PowerchartLetter'));
 
-const BACK_BTN = "h-11 min-w-11 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-[color,background-color,border-color,transform,box-shadow] duration-200 group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary";
+const BACK_BTN = "h-11 min-w-11 px-4 bg-secondary hover:bg-muted text-secondary-foreground hover:text-foreground border border-border shadow-sm transition-[color,background-color,border-color,transform,box-shadow] duration-200 group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 const BACK_ICON = "w-4 h-4 opacity-90 group-hover:opacity-100 transition-opacity";
 
 export type ReportTab = 'report' | 'handout' | 'letter';
