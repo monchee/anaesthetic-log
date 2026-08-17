@@ -209,15 +209,11 @@ export default {
   				DEFAULT: 'hsl(var(--nsw-info))',
   				bg: 'hsl(var(--nsw-info-bg))'
   			},
-  			sidebar: {
-  				DEFAULT: 'hsl(var(--sidebar-background))',
-  				foreground: 'hsl(var(--sidebar-foreground))',
-  				primary: 'hsl(var(--sidebar-primary))',
-  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-  				accent: 'hsl(var(--sidebar-accent))',
-  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-  				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))'
+  			masthead: {
+  				DEFAULT: 'hsl(var(--masthead))',
+  				foreground: 'hsl(var(--masthead-foreground))',
+  				accent: 'hsl(var(--masthead-accent))',
+  				border: 'hsl(var(--masthead-border))',
   			}
   		},
   		keyframes: {

@@ -80,7 +80,7 @@ export { Toaster } from './sonner';
 // ============================================================================
 
 // Re-export dropdown menu (custom implementation that works well)
-export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from './dropdown-menu';
+export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from './dropdown-menu';
 
 // Custom Badge with medical grade variants (grade1-4, ungraded)
 export { Badge } from './badge';

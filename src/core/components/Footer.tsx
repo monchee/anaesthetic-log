@@ -2,7 +2,7 @@ import React from 'react';
 import { Screen, Patient } from '@/types';
 import { Database } from 'lucide-react';
 import { FOOTER_LEGAL_ITEMS, pathFromScreen } from '@core/navigation/navigationConfig';
-import { shouldHandleNavigation } from './navigation/AppSidebar';
+import { shouldHandleNavigation } from '@core/navigation/shouldHandleNavigation';
 
 const APP_VERSION = __APP_VERSION__;
 

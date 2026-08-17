@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Toaster } from '@/components/ui';
+import { Toaster, TooltipProvider } from '@/components/ui';
 import ErrorBoundary from './ErrorBoundary';
 import { FontSizeProvider } from './FontSizeProvider';
 import PasswordGate from './PasswordGate';
@@ -15,14 +15,16 @@ export function AppProviders({ children }: AppProvidersProps) {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" storageKey={APP_CONFIG.LOCAL_STORAGE_KEYS.THEME}>
         <FontSizeProvider>
-          <PasswordGate>{children}</PasswordGate>
-          <Toaster position="top-center" expand={false} richColors closeButton duration={5000}
-            toastOptions={{ classNames: {
-              toast: 'border border-border rounded-none shadow-sm',
-              actionButton: 'bg-primary text-white hover:bg-primary/90 transition-colors',
-              description: 'text-muted-foreground',
-            }}}
-          />
+          <TooltipProvider delayDuration={300}>
+            <PasswordGate>{children}</PasswordGate>
+            <Toaster position="top-center" expand={false} richColors closeButton duration={5000}
+              toastOptions={{ classNames: {
+                toast: 'border border-border rounded-none shadow-sm',
+                actionButton: 'bg-primary text-white hover:bg-primary/90 transition-colors',
+                description: 'text-muted-foreground',
+              }}}
+            />
+          </TooltipProvider>
         </FontSizeProvider>
       </ThemeProvider>
     </ErrorBoundary>

@@ -1,3 +1,20 @@
+## [0.78.0] — 2026-08-17 (Clinical Masthead Navigation)
+
+Summary: Redesigns primary navigation with a persistent horizontal masthead and unified measured sticky chrome stack, surfaces display text size settings, fixes dark-mode contrast with dedicated masthead tokens, restores navigation on Reports, and removes the legacy desktop sidebar.
+
+### Changed
+- **Horizontal clinical masthead** — Primary navigation moves from a 288px desktop sidebar to a horizontal masthead (`AppMasthead`), freeing horizontal viewport width for dense clinical data grids and consultation letters.
+- **Consolidated utility overflow menu** — Utility and reference links (`Research`, `About`, `FAQ`, `Drug Reference`, `Contact`, `Resources`, `Changelog`, `Upload CSV`, `Get Started`) are consolidated into a clean, accessible dropdown menu in the masthead right cluster.
+- **Unified measured sticky chrome stack** — Replaces three competing sticky headers with a single sticky container measuring its combined height via `useChromeHeight` and publishing `--app-chrome-height` to manage scroll margins and anchor offsets without layout shift.
+- **Dedicated masthead colour tokens** — Introduces `--masthead`, `--masthead-foreground`, `--masthead-accent`, and `--masthead-border` tokens that remain deep NSW Health navy in both light and dark themes, guaranteeing accessible WCAG AA contrast (≥12:1) across themes.
+
+### Added
+- **Display text-size controls** — Surfaces root font-scaling controls (85% to 125% in 5% increments with reset) via the masthead display settings menu, powered by `FontSizeProvider`.
+- **Restored navigation on Reports screen** — Full application navigation is now accessible on the Reports view (`Screen.SUMMARY`), resolving a previous layout constraint.
+
+### Removed
+- **Legacy sidebar and unused primitives** — Completely removes `AppSidebar` and the unused shadcn sidebar primitive, pruning dead navigation code and unused styles.
+
 ## [0.77.5] — 2026-08-17 (Guided REDCap Import)
 
 Summary: Turns the Get Started upload path into a guided two-step flow that shows the REDCap export instructions before the file picker, and gives the two onboarding paths distinct semantic colours.

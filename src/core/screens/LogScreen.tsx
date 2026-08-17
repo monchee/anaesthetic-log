@@ -387,6 +387,16 @@ export function LogScreen({
       isTestingDraftDirty={isTestingDraftDirty}
       hasActiveReport={Boolean(lastSavedRecord && activeReportSavedAt && Date.now() - activeReportSavedAt < ACTIVE_REPORT_TTL_MS)}
       onOpenGetStarted={layoutProps.onOpenGetStarted ?? (() => {})}
+      contextBar={selectedPatient ? (
+        <ClinicalContextBar
+          firstName={selectedPatient.firstName}
+          lastName={selectedPatient.lastName}
+          mrn={selectedPatient.mrn}
+          dob={selectedPatient.dob}
+          reactionDate={selectedPatient.history?.date}
+          source={selectedPatient.id === 'manual' ? 'manual' : 'database'}
+        />
+      ) : undefined}
       {...layoutProps}
       contentClassName="py-3 space-y-4"
       className="pb-10"
@@ -581,14 +591,6 @@ export function LogScreen({
       {/* Selected Patient History & Plan Generator */}
       {selectedPatient && (
         <div key={selectedPatient.id} className="space-y-8">
-          <ClinicalContextBar
-            firstName={selectedPatient.firstName}
-            lastName={selectedPatient.lastName}
-            mrn={selectedPatient.mrn}
-            dob={selectedPatient.dob}
-            reactionDate={selectedPatient.history?.date}
-            source={selectedPatient.id === 'manual' ? 'manual' : 'database'}
-          />
           {selectedPatient.id !== 'manual' && (
             <div style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
               <PatientHistory

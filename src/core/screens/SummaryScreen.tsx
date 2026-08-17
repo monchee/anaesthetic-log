@@ -30,7 +30,7 @@ const ClinicalReport = React.lazy(() => import('@features/reports/components/Cli
 const PatientHandout = React.lazy(() => import('@features/reports/components/PatientHandout'));
 const PowerchartLetter = React.lazy(() => import('@features/reports/components/PowerchartLetter'));
 
-const BACK_BTN = "h-11 min-w-11 px-4 bg-white/10 hover:bg-white/30 text-white hover:text-white border border-white/20 shadow-sm transition-[color,background-color,border-color,transform,box-shadow] duration-200 group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary";
+const BACK_BTN = "h-11 min-w-11 px-4 bg-secondary hover:bg-muted text-secondary-foreground hover:text-foreground border border-border shadow-sm transition-[color,background-color,border-color,transform,box-shadow] duration-200 group rounded-none btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 const BACK_ICON = "w-4 h-4 opacity-90 group-hover:opacity-100 transition-opacity";
 
 export type ReportTab = 'report' | 'handout' | 'letter';
@@ -137,9 +137,18 @@ function SummaryScreenContent({
       title="Reports"
       icon={<FileText className="w-5 h-5" />}
       {...layoutProps}
-      showNav={false}
       showFooter={false}
       actions={<Button onClick={onExit} variant="ghost" className={BACK_BTN}><LogOut className={BACK_ICON} /> Exit</Button>}
+      contextBar={
+        <ClinicalContextBar
+          context={workContext}
+          firstName={lastSavedRecord.firstName}
+          lastName={lastSavedRecord.lastName}
+          mrn={lastSavedRecord.mrn}
+          dob={lastSavedRecord.dob}
+          visitDate={lastSavedRecord.visitDate}
+        />
+      }
       contentClassName="py-4 space-y-4"
     >
       <div className="flex overflow-x-auto border-b border-border no-print -mx-1 px-1" role="tablist" aria-label="Report type">
@@ -167,14 +176,6 @@ function SummaryScreenContent({
         ))}
       </div>
 
-      <ClinicalContextBar
-        context={workContext}
-        firstName={lastSavedRecord.firstName}
-        lastName={lastSavedRecord.lastName}
-        mrn={lastSavedRecord.mrn}
-        dob={lastSavedRecord.dob}
-        visitDate={lastSavedRecord.visitDate}
-      />
       <RedactToggle />
       <div id={`report-panel-${activeReportTab}`} role="tabpanel" aria-labelledby={`report-tab-${activeReportTab}`}>
         {activeReportTab === 'report' && <ClinicalReport data={lastSavedRecord} activeReportSavedAt={activeReportSavedAt} />}

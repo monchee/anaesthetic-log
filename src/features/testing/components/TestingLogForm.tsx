@@ -146,7 +146,10 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
       {/* Main Indexed Grid */}
       <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] lg:grid-cols-[260px_1fr] gap-6 items-start">
         {/* Desktop Sticky Workflow Index */}
-        <div className="hidden md:block sticky top-12 z-20">
+        <div
+          className="hidden md:block sticky z-10"
+          style={{ top: 'calc(var(--app-chrome-height, 0px) + 1rem)' }}
+        >
           <div className="p-3 border border-border bg-card shadow-sm rounded-none">
             <TestingWorkflowIndex
               activeIndex={activeSectionIndex}
@@ -158,7 +161,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
         </div>
 
         {/* Active Section View */}
-        <div className="min-w-0 space-y-6">
+        <div className="min-w-0 space-y-6 chrome-anchor">
           {/* Section 1: Patient and visit */}
           {activeSectionIndex === 0 && (
             <VisitDetailsSection

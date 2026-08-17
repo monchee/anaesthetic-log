@@ -12,7 +12,7 @@ const TTLExpiryBanner = ({ expiresAt, onKeepWorking, onDismiss }: TTLExpiryBanne
     role="alert"
     className="w-full bg-status-warning/15 border-b border-status-warning/30 animate-in slide-in-from-top-2 duration-150"
   >
-    <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between gap-3">
+    <div className="max-w-6xl mx-auto px-4 sm:px-5 md:px-6 py-2 flex items-center justify-between gap-3">
       <div className="flex items-center gap-2 flex-1 justify-center sm:justify-start flex-wrap">
         <AlertTriangle className="w-4 h-4 text-status-warning shrink-0" />
         <p className="text-xs text-foreground leading-tight text-center sm:text-left">

@@ -38,7 +38,7 @@ test.describe('Smoke Tests', () => {
 
   test('can navigate to dashboard', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('[role="banner"], aside', { timeout: 15000 });
+    await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
 
     // Click dashboard link via primary nav
@@ -52,11 +52,11 @@ test.describe('Smoke Tests', () => {
 
   test('theme toggle works', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('[role="banner"], aside', { timeout: 15000 });
+    await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
 
-    // Theme toggle is in the Sidebar or mobile Drawer
-    const themeButton = page.locator('button:has-text("Theme")').first();
+    // Theme toggle is in the Masthead or mobile Drawer
+    const themeButton = page.locator('button[aria-label^="Switch to"]').first();
     if (await themeButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await themeButton.click();
     } else {
