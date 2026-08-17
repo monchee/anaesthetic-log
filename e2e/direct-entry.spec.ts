@@ -30,10 +30,14 @@ test.describe('Home quick-start entry points', () => {
     await expect(page.getByLabel(/Date of Birth/i)).toBeEditable();
     await expect(page.getByLabel(/Patient identity/i)).toHaveCount(0);
 
-    await page.getByRole('button', { name: 'Save Clinical Record', exact: true }).click();
-    await expect(page.getByRole('link', { name: /MRN is required/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /First name is required/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /Last name is required/i })).toBeVisible();
+    // Save is not rendered on section 0 for a first attempt — jump to Review and save
+    // to trigger it. The failed validation (empty required fields) redirects back to
+    // section 0, where each field shows its own inline error message (not a link).
+    await page.getByRole('button', { name: /7\.\s*Review and save/i }).click();
+    await page.getByRole('button', { name: 'Save Clinical Record', exact: true }).first().click();
+    await expect(page.getByText('MRN is required')).toBeVisible();
+    await expect(page.getByText('First name is required')).toBeVisible();
+    await expect(page.getByText('Last name is required')).toBeVisible();
   });
 
   test('supports the /testing deep link as a direct session', async ({ page }) => {

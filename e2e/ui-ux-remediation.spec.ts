@@ -27,7 +27,7 @@ test.describe('UI/UX remediation regressions', () => {
     const dialog = page.getByRole('dialog', { name: 'Get Started' });
     await expect(dialog).toBeVisible();
 
-    await dialog.getByRole('button', { name: 'Close' }).click();
+    await dialog.getByRole('button', { name: 'Close Get Started' }).click();
 
     await expect(dialog).toBeHidden();
   });

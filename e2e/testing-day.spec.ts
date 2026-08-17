@@ -57,14 +57,16 @@ test.describe('Testing Day Flow', () => {
     await weiOption.click();
 
     // ── Step 3: Start Testing Session ──────────────────────────────────
+    await page.getByText('Metoclopramide', { exact: true }).first().click();
     const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
     await page.waitForLoadState('networkidle');
     await dismissHelpModal(page);
 
-    // ── Step 4: Testing form loaded ────────────────────────────────────────
-    await expect(page.getByText('Save Clinical Record')).toBeVisible({ timeout: 10000 });
+    // ── Step 4: Advance to SPT and IDT section ─────────────────────────
+    await page.getByRole('button', { name: 'Next Section', exact: true }).click();
+    await expect(page.getByLabel(/histamine/i).first()).toBeVisible({ timeout: 10000 });
 
     // ── Step 5: Fill histamine control ────────────────────────────────────
     // Input found by label text instead (the placeholder approach is less reliable)
@@ -82,7 +84,11 @@ test.describe('Testing Day Flow', () => {
     await expect(page.getByText('+POS').first()).toBeVisible();
 
     // ── Step 7: Save clinical record ──────────────────────────────────────
-    const saveBtn = page.getByRole('button', { name: /Save Clinical Record/i });
+    // Two buttons share this accessible name on this section (the footer strip's
+    // swapped-in Next-to-Save button, and ReviewSaveSection's own save button) — use .first().
+    await page.getByRole('button', { name: /7\.\s*Review and save/i }).click();
+    const saveBtn = page.getByRole('button', { name: /Save Clinical Record/i }).first();
+    await expect(saveBtn).toBeVisible({ timeout: 10000 });
     await saveBtn.click();
     await dismissHelpModal(page);
 
@@ -107,22 +113,15 @@ test.describe('Testing Day Flow', () => {
   });
 
   test('restores in-progress testing draft after reload', async ({ page }) => {
-    const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
-    await expect(patientSelector).toBeVisible({ timeout: 10000 });
-
-    await patientSelector.click();
-    const patientSearch = page.getByRole('textbox', { name: /Filter patients by ID or name/i });
-    await expect(patientSearch).toBeVisible({ timeout: 5000 });
-    await patientSearch.fill('Wei');
-    await page.waitForTimeout(300);
-    await page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first().click();
-
-    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
-    await expect(proceedBtn).toBeVisible({ timeout: 5000 });
-    await proceedBtn.click();
+    await page.goto('/testing');
+    await page.waitForLoadState('networkidle');
     await dismissHelpModal(page);
-    await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
 
+    await page.getByLabel(/^mrn/i).fill('1');
+    await page.getByLabel(/first name/i).fill('Wei');
+    await page.getByLabel(/last name/i).fill('Chen');
+
+    await page.getByRole('button', { name: 'Next Section', exact: true }).click();
     const histamineField = page.getByLabel(/histamine/i).first();
     await expect(histamineField).toBeVisible({ timeout: 5000 });
     await histamineField.fill('5');
@@ -130,16 +129,20 @@ test.describe('Testing Day Flow', () => {
     // Draft autosave is debounced by 500ms.
     await page.waitForTimeout(700);
     await expect(page.getByText(/Draft saved/)).toBeVisible({ timeout: 5000 });
+
     await page.reload();
     await page.waitForLoadState('networkidle');
     await dismissHelpModal(page);
 
-    await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
-    await expect(page.getByLabel(/histamine/i).first()).toHaveValue('5');
+    // Reload resets to Section 0; identity fields and the draft indicator restore immediately.
+    await expect(page.getByText(/Draft saved/)).toBeVisible({ timeout: 5000 });
     await expect(page.getByLabel(/first name/i)).toHaveValue('Wei');
     await expect(page.getByLabel(/last name/i)).toHaveValue('Chen');
-    await expect(page.getByLabel(/mrn/i)).toHaveValue('1');
-    await expect(page.getByText(/Draft saved/)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByLabel(/^mrn/i)).toHaveValue('1');
+
+    // Section 1's field values are also preserved in the draft.
+    await page.getByRole('button', { name: 'Next Section', exact: true }).click();
+    await expect(page.getByLabel(/histamine/i).first()).toHaveValue('5');
   });
 
   test('marks only required manual patient fields with asterisks', async ({ page }) => {

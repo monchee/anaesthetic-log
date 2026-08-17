@@ -180,7 +180,7 @@ const getStatusPresentation = (
   isActive: boolean
 ): StatusPresentation => {
   if (isActive) {
-    return { Icon: getStatusIcon(status), className: 'text-primary-foreground' };
+    return { Icon: getStatusIcon(status), className: 'text-workflow-active-foreground' };
   }
 
   switch (status) {
@@ -265,14 +265,14 @@ const WorkflowSectionList: React.FC<WorkflowSectionListProps> = ({
             className={cn(
               'group flex w-full min-h-[44px] items-start gap-3 px-3 py-3 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
               isActive
-                ? 'bg-primary text-primary-foreground'
+                ? 'bg-workflow-active text-workflow-active-foreground'
                 : 'bg-card text-foreground hover:bg-muted/60'
             )}
           >
             <span
               className={cn(
                 'w-5 shrink-0 pt-0.5 font-mono text-sm tabular-nums leading-5',
-                isActive ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-foreground'
+                isActive ? 'text-workflow-active-foreground' : 'text-muted-foreground group-hover:text-foreground'
               )}
             >
               {section.number}
@@ -280,7 +280,7 @@ const WorkflowSectionList: React.FC<WorkflowSectionListProps> = ({
             <Icon
               className={cn(
                 'mt-0.5 h-5 w-5 shrink-0',
-                isActive ? 'text-primary-foreground' : 'text-primary'
+                isActive ? 'text-workflow-active-foreground' : 'text-primary'
               )}
               aria-hidden="true"
             />

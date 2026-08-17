@@ -87,6 +87,10 @@ test.describe('Baseline screenshots (Phase 0)', () => {
       await patientSearch.fill('Wei');
       await page.waitForTimeout(300); // debounce
       await page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first().click();
+
+      // Select at least one drug so the test panel is non-empty (required to save later).
+      await page.getByText('Metoclopramide', { exact: true }).first().click();
+
       const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
       await expect(proceedBtn).toBeVisible({ timeout: 5000 });
       await proceedBtn.click();
@@ -94,15 +98,23 @@ test.describe('Baseline screenshots (Phase 0)', () => {
       await dismissHelpModal(page);
 
       // ── Testing screen ───────────────────────────────────────────────────
-      await expect(page.getByText('Save Clinical Record')).toBeVisible({ timeout: 10000 });
+      await page.getByRole('button', { name: 'Next Section', exact: true }).click();
+      await expect(page.getByLabel(/histamine/i).first()).toBeVisible({ timeout: 10000 });
       await page.screenshot({ path: path.join(OUTPUT_DIR, `testing-${vp.name}.png`), fullPage: true });
 
       // ── Save and capture Summary ──────────────────────────────────────────
-      const histamineField = page.getByLabel(/histamine/i).first();
-      if (await histamineField.isVisible()) {
-        await histamineField.fill('5');
+      await page.getByLabel(/histamine/i).first().fill('5');
+      // At mobile the workflow rail is a compact strip; the full section list only
+      // becomes clickable inside the "All sections" sheet.
+      if (vp.name === 'mobile') {
+        await page.getByRole('button', { name: 'All sections' }).click();
       }
-      await page.getByRole('button', { name: /Save Clinical Record/i }).click();
+      // Two buttons share this accessible name on this section (the footer strip's
+      // swapped-in Next-to-Save button, and ReviewSaveSection's own save button) — use .first().
+      await page.getByRole('button', { name: /7\.\s*Review and save/i }).click();
+      const saveBtn = page.getByRole('button', { name: /Save Clinical Record/i }).first();
+      await expect(saveBtn).toBeVisible({ timeout: 10000 });
+      await saveBtn.click();
       await dismissHelpModal(page);
       await expect(page.getByRole('tab', { name: 'Clinical Report' })).toBeVisible({ timeout: 10000 });
       await page.screenshot({ path: path.join(OUTPUT_DIR, `summary-${vp.name}.png`), fullPage: true });

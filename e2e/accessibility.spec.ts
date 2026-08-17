@@ -1,9 +1,12 @@
 import { test as base } from '@playwright/test';
 import { test, expect } from './fixtures';
 import path from 'path';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 async function injectAxe(page: any) {
-  await page.addScriptTag({ path: path.resolve('node_modules/axe-core/axe.min.js') });
+  await page.addScriptTag({ path: require.resolve('axe-core/axe.min.js') });
 }
 
 /**
@@ -59,10 +62,17 @@ async function selectMockPatient(page: any) {
 async function startPopulatedTestingSession(page: any) {
   await selectMockPatient(page);
 
+  // Select at least one drug so the test panel is non-empty (required to save later).
+  await page.getByText('Metoclopramide', { exact: true }).first().click();
+
   const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
   await expect(proceedBtn).toBeVisible({ timeout: 5000 });
   await proceedBtn.click();
-  await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10000 });
+
+  // Section 0 (Patient and visit) is pre-populated and valid for a database-selected
+  // patient; advance to Section 1 (SPT and IDT) where the control fields live.
+  await page.getByRole('button', { name: 'Next Section', exact: true }).click();
+  await expect(page.getByLabel('Histamine (SPT)')).toBeVisible({ timeout: 10000 });
 
   await page.getByLabel('Histamine (SPT)').fill('5');
   await page.getByLabel('Saline (SPT)').fill('0');
@@ -73,6 +83,12 @@ async function startPopulatedTestingSession(page: any) {
   await sptWhealField.fill('3');
   await expect(page.getByText('+POS').first()).toBeVisible();
   await expect(page.getByText(/Draft saved/)).toBeVisible({ timeout: 5000 });
+
+  // Jump to Review and save so callers can find "Save Clinical Record".
+  // Two buttons share this accessible name on this section (the footer strip's
+  // swapped-in Next-to-Save button, and ReviewSaveSection's own save button) — use .first().
+  await page.getByRole('button', { name: /7\.\s*Review and save/i }).click();
+  await expect(page.getByRole('button', { name: /Save Clinical Record/i }).first()).toBeVisible({ timeout: 10000 });
 }
 
 test.describe('Accessibility Tests', () => {
@@ -299,8 +315,10 @@ test.describe('Accessibility Tests', () => {
     await expect(proceedBtn).toBeVisible({ timeout: 5000 });
     await proceedBtn.click();
 
-    // Try to save without filling required fields — triggers validation error summary
-    const saveBtn = page.getByRole('button', { name: /Save Clinical Record/i });
+    // Deliberately do not select a drug — jump straight to Review and save so the
+    // empty test panel triggers a validation error summary on save.
+    await page.getByRole('button', { name: /7\.\s*Review and save/i }).click();
+    const saveBtn = page.getByRole('button', { name: /Save Clinical Record/i }).first();
     await expect(saveBtn).toBeVisible({ timeout: 10000 });
     await saveBtn.click();
 
@@ -684,7 +702,7 @@ test.describe('Automated Accessibility Scans', () => {
     await dismissHelpModal(page);
     await startPopulatedTestingSession(page);
 
-    await page.getByRole('button', { name: /Save Clinical Record/i }).click();
+    await page.getByRole('button', { name: /Save Clinical Record/i }).first().click();
     await dismissHelpModal(page);
     await expect(page.getByRole('tab', { name: 'Clinical Report' })).toBeVisible({ timeout: 10000 });
     await injectAxe(page);

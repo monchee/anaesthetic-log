@@ -110,8 +110,9 @@ test.describe('Phase 3 clinical workflows', () => {
   test('carries referral tryptase values into the Powerchart letter', async ({ page }) => {
     await selectMockPatient(page, 'Fatima', /Al-Sayed, Fatima|Fatima Al-Sayed/i);
     await page.getByRole('button', { name: /Start Testing Session/i }).click();
-    await expect(page.getByRole('button', { name: /Save Clinical Record/i })).toBeVisible({ timeout: 10_000 });
 
+    // Navigate to the Serial serum tryptase section to view the imported values.
+    await page.getByRole('button', { name: /4\.\s*Serial serum tryptase/i }).click();
     const tryptaseSection = page.getByText('Serial Serum Tryptase').locator('..').locator('..');
     await expect(tryptaseSection.getByText('Imported from referral — verify')).toBeVisible();
     await expect(page.getByPlaceholder('Time (e.g. 15:30)').nth(0)).toHaveValue('12:45');
@@ -121,7 +122,11 @@ test.describe('Phase 3 clinical workflows', () => {
     await expect(page.getByPlaceholder('Time (e.g. 15:30)').nth(2)).toHaveValue('08:00');
     await expect(page.getByPlaceholder('Result').nth(2)).toHaveValue('8 ng/mL');
 
-    await page.getByRole('button', { name: /Save Clinical Record/i }).click();
+    // Jump to Review and save, where Save Clinical Record renders.
+    await page.getByRole('button', { name: /7\.\s*Review and save/i }).click();
+    const saveBtn = page.getByRole('button', { name: /Save Clinical Record/i }).first();
+    await expect(saveBtn).toBeVisible({ timeout: 10_000 });
+    await saveBtn.click();
     await expect(page.getByRole('tab', { name: 'Powerchart Letter' })).toBeVisible({ timeout: 10_000 });
     await page.getByRole('tab', { name: 'Powerchart Letter' }).click();
 

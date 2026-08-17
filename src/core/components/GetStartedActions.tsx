@@ -4,7 +4,7 @@ import { Upload, Loader2, TestTube2, ChevronRight } from 'lucide-react';
 const StepTrail: React.FC<{ steps: string[] }> = ({ steps }) => (
   <div
     aria-hidden="true"
-    className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground/80 mt-3"
+    className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-xs font-bold uppercase tracking-[0.05em] text-muted-foreground mt-3"
   >
     {steps.map((step, idx) => (
       <React.Fragment key={step}>

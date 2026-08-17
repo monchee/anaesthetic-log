@@ -214,6 +214,10 @@ export default {
   				foreground: 'hsl(var(--masthead-foreground))',
   				accent: 'hsl(var(--masthead-accent))',
   				border: 'hsl(var(--masthead-border))',
+  			},
+  			'workflow-active': {
+  				DEFAULT: 'hsl(var(--workflow-active))',
+  				foreground: 'hsl(var(--workflow-active-foreground))',
   			}
   		},
   		keyframes: {

@@ -218,6 +218,7 @@ export const GetStartedModal: React.FC<GetStartedModalProps> = ({
             <Button
               variant="ghost"
               size="sm"
+              aria-label="Close Get Started"
               onClick={() => {
                 markSeen();
                 setStep('choose');
