@@ -36,3 +36,11 @@ e2e/screenshots/
 
 # Patient data / PII — must never be committed
 /data/
+
+# AI tooling config and ephemeral debug output
+.agents/
+.claude/skills/
+.roo/skills/
+.codex/
+.playwright-mcp/
+skills-lock.json
