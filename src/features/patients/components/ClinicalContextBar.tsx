@@ -51,52 +51,54 @@ export function ClinicalContextBar({
     <aside
       aria-label={accessibleLabel}
       className={cn(
-        'w-full overflow-x-auto border border-primary/30 bg-card/95 px-3 py-2 shadow-sm backdrop-blur-sm print:hidden',
+        'w-full overflow-x-auto border border-primary/30 bg-card/95 py-2 shadow-sm backdrop-blur-sm print:hidden',
         className,
       )}
     >
-      <div className="flex min-w-max items-center gap-2 whitespace-nowrap text-sm font-medium text-foreground dark:text-primary">
-        <span className="font-semibold">{formattedName}</span>
+      <div className="max-w-6xl mx-auto px-4 sm:px-5 md:px-6">
+        <div className="flex min-w-max items-center gap-2 whitespace-nowrap text-sm font-medium text-foreground dark:text-primary">
+          <span className="font-semibold">{formattedName}</span>
 
-        <span aria-hidden="true" className="text-muted-foreground">·</span>
-        <span>
-          MRN <span className="font-mono font-semibold">{mrn ? redact(mrn) : '—'}</span>
-        </span>
+          <span aria-hidden="true" className="text-muted-foreground">·</span>
+          <span>
+            MRN <span className="font-mono font-semibold">{mrn ? redact(mrn) : '—'}</span>
+          </span>
 
-        <span aria-hidden="true" className="text-muted-foreground">·</span>
-        <span>DOB {dob ? redact(formatDate(dob)) : 'not recorded'}</span>
+          <span aria-hidden="true" className="text-muted-foreground">·</span>
+          <span>DOB {dob ? redact(formatDate(dob)) : 'not recorded'}</span>
 
-        {reactionDate ? (
-          <>
-            <span aria-hidden="true" className="text-muted-foreground">·</span>
-            <span>Reaction {redact(formatDate(reactionDate))}</span>
-          </>
-        ) : null}
+          {reactionDate ? (
+            <>
+              <span aria-hidden="true" className="text-muted-foreground">·</span>
+              <span>Reaction {redact(formatDate(reactionDate))}</span>
+            </>
+          ) : null}
 
-        {visitDate ? (
-          <>
-            <span aria-hidden="true" className="text-muted-foreground">·</span>
-            <span>Visit {formatDate(visitDate)}</span>
-          </>
-        ) : null}
+          {visitDate ? (
+            <>
+              <span aria-hidden="true" className="text-muted-foreground">·</span>
+              <span>Visit {formatDate(visitDate)}</span>
+            </>
+          ) : null}
 
-        {source === 'direct' && (
-          <>
-            <span aria-hidden="true" className="text-muted-foreground">·</span>
-            <span className="border border-status-info/40 bg-status-info/10 text-status-info text-xs px-1.5 py-0.5 rounded-none font-semibold uppercase tracking-wider">
-              Direct Entry
-            </span>
-          </>
-        )}
+          {source === 'direct' && (
+            <>
+              <span aria-hidden="true" className="text-muted-foreground">·</span>
+              <span className="border border-status-info/40 bg-status-info/10 text-status-info text-xs px-1.5 py-0.5 rounded-none font-semibold uppercase tracking-wider">
+                Direct Entry
+              </span>
+            </>
+          )}
 
-        {source === 'manual' && (
-          <>
-            <span aria-hidden="true" className="text-muted-foreground">·</span>
-            <span className="border border-border bg-muted text-muted-foreground text-xs px-1.5 py-0.5 rounded-none font-semibold uppercase tracking-wider">
-              Manual Entry
-            </span>
-          </>
-        )}
+          {source === 'manual' && (
+            <>
+              <span aria-hidden="true" className="text-muted-foreground">·</span>
+              <span className="border border-border bg-muted text-muted-foreground text-xs px-1.5 py-0.5 rounded-none font-semibold uppercase tracking-wider">
+                Manual Entry
+              </span>
+            </>
+          )}
+        </div>
       </div>
     </aside>
   );

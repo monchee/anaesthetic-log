@@ -81,7 +81,7 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
     }
   };
 
-  if (unlocked) return <div className="animate-screen-enter">{children}</div>;
+  if (unlocked) return <>{children}</>;
 
   return (
     <main

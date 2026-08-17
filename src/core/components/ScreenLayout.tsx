@@ -105,7 +105,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   return (
     <div
       className={cn(
-        'min-h-screen overflow-x-hidden print:min-h-0 bg-background dark:bg-background text-foreground flex flex-col',
+        'min-h-screen print:min-h-0 bg-background dark:bg-background text-foreground flex flex-col',
         showNav && 'xl:pl-64 print:xl:pl-0',
         className
       )}
@@ -134,7 +134,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
       )}
 
       {/* Content Column: contains sticky measured chrome stack, main content, and footer */}
-      <div className="flex-1 flex flex-col min-w-0 w-full">
+      <div className="flex-1 flex flex-col min-w-0 w-full overflow-x-hidden">
         {/* Sticky Unified Chrome Stack in Content Column */}
         <div ref={chromeRef} className="sticky top-0 z-40 no-print">
           {showNav ? (
