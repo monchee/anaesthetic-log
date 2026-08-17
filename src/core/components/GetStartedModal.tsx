@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -8,9 +8,10 @@ import {
   Button,
 } from '@/components/ui';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { PlayCircle, Sparkles } from 'lucide-react';
+import { ChevronLeft, PlayCircle, Sparkles } from 'lucide-react';
 import { useRedcapCsvUpload } from '@shared/hooks/useRedcapCsvUpload';
 import { GetStartedActions } from './GetStartedActions';
+import { RedcapExportSteps } from '@features/dashboard/components/RedcapExportSteps';
 import { Patient, Screen } from '@/types';
 import changelogData from '@shared/data/changelog.json';
 
@@ -31,12 +32,13 @@ const CURRENT_CODENAME = DISPLAY_ENTRY.codename;
 const LAST_SEEN_KEY = 'dream:last_seen_version';
 const GET_STARTED_SEEN_KEY = 'dream:get_started_seen';
 
+type GetStartedStep = 'choose' | 'import';
+
 export interface GetStartedModalProps {
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   onUploadPatients?: (patients: Patient[], fileLastModified?: number) => void;
   onUploadComplete?: () => void;
-  onViewExportSteps: () => void;
   setScreen?: (screen: Screen) => void;
   onStartDirectTesting?: () => void;
   isTestingDraftDirty?: boolean;
@@ -47,12 +49,12 @@ export const GetStartedModal: React.FC<GetStartedModalProps> = ({
   onOpenChange,
   onUploadPatients,
   onUploadComplete,
-  onViewExportSteps,
   setScreen,
   onStartDirectTesting,
   isTestingDraftDirty = false,
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const [step, setStep] = useState<GetStartedStep>('choose');
   const isControlled = typeof controlledIsOpen === 'boolean';
   const open = isControlled ? controlledIsOpen : internalIsOpen;
 
@@ -65,7 +67,6 @@ export const GetStartedModal: React.FC<GetStartedModalProps> = ({
   };
 
   const [confirmDiscardDraftOpen, setConfirmDiscardDraftOpen] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isNewVersion, setIsNewVersion] = useState(() => {
     try {
       return localStorage.getItem(LAST_SEEN_KEY) !== CURRENT_VERSION;
@@ -85,13 +86,23 @@ export const GetStartedModal: React.FC<GetStartedModalProps> = ({
   };
 
   const handleClose = (newOpen: boolean) => {
-    if (!newOpen) markSeen();
+    if (!newOpen) {
+      markSeen();
+      setStep('choose');
+    }
     setOpen(newOpen);
   };
+
+  React.useEffect(() => {
+    if (!open) {
+      setStep('choose');
+    }
+  }, [open]);
 
   const { isUploading, handleFileChange } = useRedcapCsvUpload({
     onParsed: (patients, lastModified) => {
       markSeen();
+      setStep('choose');
       onUploadPatients?.(patients, lastModified);
       setOpen(false);
     },
@@ -105,6 +116,7 @@ export const GetStartedModal: React.FC<GetStartedModalProps> = ({
       setConfirmDiscardDraftOpen(true);
     } else {
       markSeen();
+      setStep('choose');
       setOpen(false);
       onStartDirectTesting?.();
     }
@@ -113,60 +125,65 @@ export const GetStartedModal: React.FC<GetStartedModalProps> = ({
   const handleConfirmDirectTesting = () => {
     setConfirmDiscardDraftOpen(false);
     markSeen();
+    setStep('choose');
     setOpen(false);
     onStartDirectTesting?.();
   };
 
-  const handleViewExportSteps = () => {
-    markSeen();
-    setOpen(false);
-    onViewExportSteps();
-  };
-
   return (
     <>
-      {/* Hidden file input */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".csv"
-        aria-label="Upload CSV file"
-        onChange={handleFileChange}
-        disabled={isUploading}
-        className="hidden"
-      />
-
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent className="max-w-full sm:!max-w-2xl max-h-[90vh] overflow-y-auto p-6 rounded-none">
-          <DialogHeader className="pb-2">
-            <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-foreground">
-              <PlayCircle className="w-5 h-5 text-primary" aria-hidden="true" />
-              Get Started
-            </DialogTitle>
-            <DialogDescription className="text-sm text-muted-foreground">
-              Choose how to begin. All patient data stays on this device.
-            </DialogDescription>
-          </DialogHeader>
+          {step === 'choose' ? (
+            <>
+              <DialogHeader className="pb-2">
+                <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-foreground">
+                  <PlayCircle className="w-5 h-5 text-primary" aria-hidden="true" />
+                  Get Started
+                </DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground">
+                  Choose how to begin. All patient data stays on this device.
+                </DialogDescription>
+              </DialogHeader>
 
-          {/* Action grid */}
-          <GetStartedActions
-            variant="modal"
-            isUploading={isUploading}
-            onUpload={() => fileInputRef.current?.click()}
-            onStartTesting={handleDirectTestingClick}
-          />
+              {/* Action grid */}
+              <GetStartedActions
+                variant="modal"
+                isUploading={isUploading}
+                onUpload={() => setStep('import')}
+                onStartTesting={handleDirectTestingClick}
+              />
+            </>
+          ) : (
+            <>
+              <DialogHeader className="pb-2">
+                <DialogTitle className="flex items-center gap-2 text-lg font-semibold text-foreground">
+                  <PlayCircle className="w-5 h-5 text-primary" aria-hidden="true" />
+                  Import REDCap export
+                </DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground">
+                  Follow these steps to export from REDCap, then upload the CSV file.
+                </DialogDescription>
+              </DialogHeader>
 
-          {/* Export steps helper link */}
-          <div className="mt-3 text-xs text-muted-foreground">
-            First time exporting from REDCap?{' '}
-            <button
-              type="button"
-              onClick={handleViewExportSteps}
-              className="text-primary underline hover:text-primary/80 transition-colors font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            >
-              View the export steps
-            </button>
-          </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-start">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setStep('choose')}
+                    className="rounded-none min-h-[44px] text-muted-foreground hover:text-foreground text-xs flex items-center gap-1.5 px-2"
+                  >
+                    <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+                    Back
+                  </Button>
+                </div>
+
+                <RedcapExportSteps onUpload={handleFileChange} isUploading={isUploading} />
+              </div>
+            </>
+          )}
 
           {/* Footer row */}
           <div className="mt-4 pt-3 border-t border-border flex flex-col items-start gap-2 min-w-0 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
@@ -188,6 +205,7 @@ export const GetStartedModal: React.FC<GetStartedModalProps> = ({
                 type="button"
                 onClick={() => {
                   markSeen();
+                  setStep('choose');
                   setOpen(false);
                   setScreen?.(Screen.CHANGELOG);
                 }}
@@ -202,6 +220,7 @@ export const GetStartedModal: React.FC<GetStartedModalProps> = ({
               size="sm"
               onClick={() => {
                 markSeen();
+                setStep('choose');
                 setOpen(false);
               }}
               className="rounded-none min-h-[44px] text-muted-foreground hover:text-foreground text-xs"

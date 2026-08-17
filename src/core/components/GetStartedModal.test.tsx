@@ -13,7 +13,7 @@ describe('GetStartedModal launcher behaviour', () => {
   });
 
   it('renders correctly when isOpen is true', () => {
-    render(<GetStartedModal isOpen={true} onViewExportSteps={vi.fn()} />);
+    render(<GetStartedModal isOpen={true} />);
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /Get Started/i })).toBeInTheDocument();
@@ -28,7 +28,6 @@ describe('GetStartedModal launcher behaviour', () => {
       <GetStartedModal
         isOpen={true}
         onOpenChange={onOpenChange}
-        onViewExportSteps={vi.fn()}
       />
     );
 
@@ -49,7 +48,6 @@ describe('GetStartedModal launcher behaviour', () => {
         isOpen={true}
         onOpenChange={onOpenChange}
         setScreen={setScreen}
-        onViewExportSteps={vi.fn()}
       />
     );
 
@@ -62,34 +60,14 @@ describe('GetStartedModal launcher behaviour', () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
-  it('calls onViewExportSteps, marks seen, and closes when "View the export steps" is clicked', () => {
-    const onViewExportSteps = vi.fn();
-    const onOpenChange = vi.fn();
-    render(
-      <GetStartedModal
-        isOpen={true}
-        onOpenChange={onOpenChange}
-        onViewExportSteps={onViewExportSteps}
-      />
-    );
-
-    const exportStepsBtn = screen.getByRole('button', { name: /View the export steps/i });
-    fireEvent.click(exportStepsBtn);
-
-    expect(onViewExportSteps).toHaveBeenCalledOnce();
-    expect(localStorage.setItem).toHaveBeenCalledWith('dream:last_seen_version', currentVersion);
-    expect(localStorage.setItem).toHaveBeenCalledWith('dream:get_started_seen', '1');
-    expect(onOpenChange).toHaveBeenCalledWith(false);
-  });
-
   it('does not display dialog when isOpen is false', () => {
-    render(<GetStartedModal isOpen={false} onViewExportSteps={vi.fn()} />);
+    render(<GetStartedModal isOpen={false} />);
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('renders both action choices with accessible button names and descriptions', () => {
-    render(<GetStartedModal isOpen={true} onViewExportSteps={vi.fn()} />);
+    render(<GetStartedModal isOpen={true} />);
 
     const uploadAction = screen.getByRole('button', {
       name: 'Upload REDCap export & review cases',
@@ -112,18 +90,70 @@ describe('GetStartedModal launcher behaviour', () => {
     ).toBeInTheDocument();
   });
 
-  it('triggers file input when "Upload REDCap export & review cases" is clicked', () => {
-    render(<GetStartedModal isOpen={true} onViewExportSteps={vi.fn()} />);
-
-    const fileInput = screen.getByLabelText(/Upload CSV file/i) as HTMLInputElement;
-    const clickSpy = vi.spyOn(fileInput, 'click');
+  it('clicking "Upload REDCap export & review cases" reveals export steps, Back button, and changes title', () => {
+    render(<GetStartedModal isOpen={true} />);
 
     const uploadAction = screen.getByRole('button', {
       name: 'Upload REDCap export & review cases',
     });
     fireEvent.click(uploadAction);
 
-    expect(clickSpy).toHaveBeenCalled();
+    expect(screen.getByRole('heading', { name: /Import REDCap export/i })).toBeInTheDocument();
+    expect(
+      screen.getByText('Follow these steps to export from REDCap, then upload the CSV file.')
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Back/i })).toBeInTheDocument();
+    expect(screen.getByText(/Data Exports, Reports, and Stats/i)).toBeInTheDocument();
+    expect(screen.getByText(/Ready!/i)).toBeInTheDocument();
+  });
+
+  it('"Back" button returns to the chooser view', () => {
+    render(<GetStartedModal isOpen={true} />);
+
+    const uploadAction = screen.getByRole('button', {
+      name: 'Upload REDCap export & review cases',
+    });
+    fireEvent.click(uploadAction);
+
+    expect(screen.getByRole('heading', { name: /Import REDCap export/i })).toBeInTheDocument();
+
+    const backBtn = screen.getByRole('button', { name: /Back/i });
+    fireEvent.click(backBtn);
+
+    expect(screen.getByRole('heading', { name: /Get Started/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Upload REDCap export & review cases' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Go straight to allergy testing' })
+    ).toBeInTheDocument();
+  });
+
+  it('resets step back to chooser after close and reopen', () => {
+    let isOpen = true;
+    const { rerender } = render(
+      <GetStartedModal isOpen={isOpen} onOpenChange={(open) => { isOpen = open; }} />
+    );
+
+    // Navigate to import step
+    const uploadAction = screen.getByRole('button', {
+      name: 'Upload REDCap export & review cases',
+    });
+    fireEvent.click(uploadAction);
+    expect(screen.getByRole('heading', { name: /Import REDCap export/i })).toBeInTheDocument();
+
+    // Close the dialog via footer close button
+    const closeButtons = screen.getAllByRole('button', { name: 'Close' });
+    fireEvent.click(closeButtons[0]);
+
+    // Rerender with closed state then reopened
+    rerender(<GetStartedModal isOpen={false} onOpenChange={(open) => { isOpen = open; }} />);
+    rerender(<GetStartedModal isOpen={true} onOpenChange={(open) => { isOpen = open; }} />);
+
+    expect(screen.getByRole('heading', { name: /Get Started/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Upload REDCap export & review cases' })
+    ).toBeInTheDocument();
   });
 
   it('clean direct testing: invokes onStartDirectTesting, marks seen, and closes modal', () => {
@@ -135,7 +165,6 @@ describe('GetStartedModal launcher behaviour', () => {
         onOpenChange={onOpenChange}
         onStartDirectTesting={onStartDirectTesting}
         isTestingDraftDirty={false}
-        onViewExportSteps={vi.fn()}
       />
     );
 
@@ -159,7 +188,6 @@ describe('GetStartedModal launcher behaviour', () => {
         onOpenChange={onOpenChange}
         onStartDirectTesting={onStartDirectTesting}
         isTestingDraftDirty={true}
-        onViewExportSteps={vi.fn()}
       />
     );
 
@@ -208,11 +236,18 @@ describe('GetStartedModal launcher behaviour', () => {
         onOpenChange={onOpenChange}
         onUploadPatients={onUploadPatients}
         onUploadComplete={onUploadComplete}
-        onViewExportSteps={vi.fn()}
       />
     );
 
-    const fileInput = screen.getByLabelText(/Upload CSV file/i) as HTMLInputElement;
+    // Step into import view
+    const uploadAction = screen.getByRole('button', {
+      name: 'Upload REDCap export & review cases',
+    });
+    fireEvent.click(uploadAction);
+
+    const fileInput = document.querySelector('input[type="file"][accept=".csv"]') as HTMLInputElement;
+    expect(fileInput).toBeInTheDocument();
+
     const csvContent =
       'Record ID,First Name,Last Name,Date of Reaction:\n101,John,Doe,2023-01-01';
     const testLastModified = 1705000000000;

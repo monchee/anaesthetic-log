@@ -28,6 +28,8 @@ colors:
   status-danger: "hsl(0, 84.2%, 60.2%)"
   status-info: "hsl(220, 54%, 39%)"
   status-neutral: "hsl(215.4, 16.3%, 44%)"
+  path-testing: "hsl(174, 72%, 28%)"
+  path-testing-foreground: "hsl(0, 0%, 100%)"
   nsw-blue: "hsl(218, 98%, 54%)"
   nsw-blue-light: "hsl(199, 92%, 89%)"
   nsw-info: "hsl(220, 54%, 39%)"
@@ -126,6 +128,7 @@ The palette combines authoritative NSW Health clinical navy with functional aler
 - **Status Danger** (`--status-danger`): Feedback state for positive test wheals (≥3mm), adverse challenge reactions, and suspected culprit agents.
 - **Status Info** (`--status-info`): Informational state for drafted plans and guidance callouts.
 - **Status Neutral** (`--status-neutral`): Neutral baseline state for referral worklist items and unflagged records.
+- **Direct Testing Path** (`--path-testing`): Dedicated deep teal token (`hsl(174 72% 28%)` in Light, `hsl(174 58% 46%)` in Dark) for the direct-testing onboarding path card. It is deliberately NOT a clinical status colour, preserving the integrity of clinical severity feedback.
 
 ### Drug Category Tokens
 All 10 clinical drug categories and default categories consume semantic CSS tokens (`--cat-<category>-*`) mapped through Tailwind namespaces (`bg-category-...`, `text-category-...`, `border-l-category-...`):

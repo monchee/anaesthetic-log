@@ -85,6 +85,10 @@ export default {
 					foreground: 'hsl(var(--status-neutral-foreground))',
 				},
 			},
+			'path-testing': {
+				DEFAULT: 'hsl(var(--path-testing))',
+				foreground: 'hsl(var(--path-testing-foreground))',
+			},
 			category: {
 				'muscle-relaxants': {
 					bg: 'hsl(var(--cat-muscle-relaxants-bg))',

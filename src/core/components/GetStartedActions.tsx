@@ -84,20 +84,20 @@ export const GetStartedActions: React.FC<GetStartedActionsProps> = ({
         type="button"
         onClick={onStartTesting}
         aria-label="Go straight to allergy testing"
-        className={`flex flex-col text-left min-w-0 ${cardPadding} bg-card hover:bg-muted/50 dark:bg-card dark:hover:bg-muted/30 border border-border hover:border-status-info transition-all duration-150 rounded-none group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-info focus-visible:ring-offset-2 min-h-[44px] justify-between`}
+        className={`flex flex-col text-left min-w-0 ${cardPadding} bg-path-testing/5 hover:bg-path-testing/10 dark:bg-path-testing/10 dark:hover:bg-path-testing/15 border border-path-testing/30 hover:border-path-testing transition-all duration-150 rounded-none group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-path-testing focus-visible:ring-offset-2 min-h-[44px] justify-between`}
       >
         <div className="w-full min-w-0">
           <div className="flex items-center justify-between gap-3 mb-2 w-full min-w-0">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="p-2.5 bg-status-info text-status-info-foreground shrink-0 rounded-none">
+              <div className="p-2.5 bg-path-testing text-path-testing-foreground shrink-0 rounded-none">
                 <TestTube2 className="w-5 h-5" aria-hidden="true" />
               </div>
-              <span className={`font-bold ${labelSize} text-foreground group-hover:text-status-info transition-colors leading-snug min-w-0 break-words`}>
+              <span className={`font-bold ${labelSize} text-foreground group-hover:text-path-testing transition-colors leading-snug min-w-0 break-words`}>
                 Go straight to allergy testing
               </span>
             </div>
             <ChevronRight
-              className="w-4 h-4 text-muted-foreground group-hover:text-status-info shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+              className="w-4 h-4 text-path-testing/70 group-hover:text-path-testing shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
               aria-hidden="true"
             />
           </div>

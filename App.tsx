@@ -290,7 +290,6 @@ export function AnaestheticLogApp() {
         onOpenChange={setGetStartedOpen}
         onUploadPatients={handleUploadPatients}
         onUploadComplete={screen === Screen.LOG ? handleHomeUploadComplete : undefined}
-        onViewExportSteps={() => setCsvUploadSheetOpen(true)}
         setScreen={handleNavigate}
         onStartDirectTesting={handleStartDirectTesting}
         isTestingDraftDirty={isTestingDraftDirty}

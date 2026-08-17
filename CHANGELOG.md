@@ -1,3 +1,17 @@
+## [0.77.5] — 2026-08-17 (Guided REDCap Import)
+
+Summary: Turns the Get Started upload path into a guided two-step flow that shows the REDCap export instructions before the file picker, and gives the two onboarding paths distinct semantic colours.
+
+### Changed
+- **Guided REDCap import step** — `GetStartedModal` becomes a two-step flow: choosing "Upload REDCap export & review cases" now opens an in-modal *Import REDCap export* step presenting the full REDCap export instructions with the file input at the end, plus a Back control returning to the chooser. Replaces the previous immediate file picker and its separate export-steps link.
+- **Distinct onboarding path colours** — The direct-testing card adopts a dedicated `--path-testing` teal token instead of `--status-info`, which was visually indistinguishable from the navy primary used by the import card. The token is deliberately outside the clinical `--status-*` family so severity semantics stay unambiguous.
+
+### Added
+- **Shared REDCap export steps component** — Extracts the export instructions and upload control into `RedcapExportSteps`, now shared by the Get Started modal and the Update Database sheet, with unit coverage.
+
+### Fixed
+- **Modal dialog overflow on narrow viewports** — The Get Started footer no longer forces the dialog past the viewport at 375px; the version line and dismiss control stack below the `sm` breakpoint.
+
 ## [0.77.4] — 2026-08-17 (Desktop Primary Navigation Redesign)
 
 Summary: Redesigns the desktop AppSidebar navigation rail with a scrollable primary area and pinned utility region, introduces the Get Started modal workflow and unified REDCap upload hook, and strengthens navigation accessibility.
