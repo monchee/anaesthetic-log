@@ -144,6 +144,13 @@ All 10 clinical drug categories and default categories consume semantic CSS toke
 - `Proton Pump Inhibitors` (`--cat-proton-pump-inhibitors-*`): Cyan semantic namespace.
 - `Default Category` (`--cat-default-*`): Muted slate fallback.
 
+### Masthead Navigation Tokens
+The masthead uses a dedicated semantic token namespace (`--masthead-*`) that intentionally stays deep navy in BOTH light and dark themes to ensure accessible contrast (white-on-navy ≥12:1 and accent-on-navy ≥9:1) while allowing the main viewport canvas to transition into deep dark mode:
+- `--masthead` (`hsl(217 100% 19.6%)` in Light, `hsl(217 100% 14%)` in Dark): Application masthead background.
+- `--masthead-foreground` (`hsl(0 0% 100%)` in Light and Dark): Pure white masthead text and icons.
+- `--masthead-accent` (`hsl(199 92% 89%)` in Light, `hsl(199 92% 85%)` in Dark): Pale NSW blue border underline and focus ring indicator for active horizontal masthead navigation.
+- `--masthead-border` (`hsl(217 100% 30%)` in Light, `hsl(217 60% 26%)` in Dark): Divider and border framing within the masthead chrome.
+
 ### Neutral
 - **Background** (`hsl(210 40% 98%)` / `#f8fafc` Light, `hsl(0 0% 10%)` / `#1a1a1a` Dark): Main viewport canvas.
 - **Card / Surface** (`hsl(0 0% 100%)` / `#ffffff` Light, `hsl(0 0% 14%)` / `#242424` Dark): Elevated clinical cards, tables, and dialog sheets.
@@ -156,7 +163,7 @@ All 10 clinical drug categories and default categories consume semantic CSS toke
 
 **The Semantic Status Rule.** Feedback and alert states must use semantic status tokens (`--status-success`, `--status-warning`, `--status-danger`, `--status-info`, `--status-neutral`) rather than raw color utilities (`bg-red-600`, `bg-amber-50`, `text-green-600`).
 
-**The Semantic Token Rule.** All UI components must consume semantic theme tokens (`--background`, `--foreground`, `--border`, `--muted`, `--primary`, `--status-*`, `--cat-*`) rather than hardcoding static Tailwind slate or zinc values.
+**The Semantic Token Rule.** All UI components must consume semantic theme tokens (`--background`, `--foreground`, `--border`, `--muted`, `--primary`, `--status-*`, `--cat-*`, `--masthead-*`) rather than hardcoding static Tailwind slate or zinc values.
 
 ## Typography
 
@@ -185,15 +192,19 @@ All 10 clinical drug categories and default categories consume semantic CSS toke
 ## Layout
 
 The DREAM layout is structured around a single-page clinical workstation model:
-- **Header Bar:** Persistent top navigation bar in NSW Health Navy (`--primary`) spanning full viewport width, housing the DREAM brand mark, active section navigation, theme switcher, and utility menu.
-- **Container Max-Width:** Content container constrained to `max-w-6xl` (1152px) with responsive horizontal padding (`px-3 sm:px-5 md:px-6`) ensuring dense readability on both 1080p+ desktop monitors and clinical tablets.
+- **Masthead & Page Bar:** Persistent horizontal top navigation masthead housing the brand lockup, primary navigation links (`Home`, `Dashboard`), contextual work links (`Reports`, `Testing Session`), display settings stepper, theme toggle, and utility menu. Beneath it, a dedicated Page Bar presents view-specific titles, subtitles, and primary action controls.
+- **Unified Sticky Chrome Stack:** A single measured sticky chrome stack containing the masthead, page bar, optional clinical context bar, and disclaimer/warning banners. It measures its total rendered height and publishes `--app-chrome-height` to the root element, powering smooth scroll margins and sticky offsets without layout jank or competing sticky layers.
+- **Container Max-Width:** Content container constrained to `max-w-6xl` (1152px) with responsive horizontal padding (`px-4 sm:px-5 md:px-6`) ensuring dense readability on desktop monitors and clinical tablets.
 - **Spacing Rhythm:** Based on an 8px modular baseline (4px / 8px / 16px / 24px / 32px). Dense data grids use 4px–8px internal cell padding; card sections use 16px–24px gaps.
 - **Responsive Adaptability & Table Safeguards:**
+  - On mobile viewports (<1024px), the masthead collapses navigation into an accessible slide-over `MobileNavigationDrawer`.
   - In intermediate viewports (768px–1024px), table columns for patient names, procedures, and suspect agents enforce safe width constraints (`max-w-[130px] md:max-w-[150px] lg:max-w-[180px] truncate`) with full-value accessible `title` attributes.
   - Mobile card views and pagination touch controls enforce a minimum 44px tap target height.
 
 ### Named Rules
-**The Responsive Header & No-Overflow Rule.** The persistent top navigation bar must adapt responsively between a horizontal button group and a compact dropdown navigation menu, preventing horizontal scrolling, line breaking, or title truncation across viewports. Content containers strictly enforce `max-w-6xl` with `px-3 sm:px-5 md:px-6` responsive padding, and dense data tables must use bounded column widths with accessible text truncation.
+**The Responsive Header & No-Overflow Rule.** The horizontal masthead, page bar, and clinical context layers stack within a single measured sticky chrome container that publishes `--app-chrome-height`. The navigation and header chrome must adapt responsively across viewports without horizontal scrolling, line breaking, or title truncation, holding robustly even at 125% root font scaling. Content containers strictly enforce `max-w-6xl` with `px-4 sm:px-5 md:px-6` responsive padding, and dense data tables must use bounded column widths with accessible text truncation.
+
+**The Single-Axis Navigation Rule.** App-level navigation is horizontal and lives in the masthead. In-page and step navigation is vertical and lives in the content column. No two navigation surfaces may share both an axis and an active-state treatment. The filled `bg-primary` active row is reserved exclusively for in-page step navigation.
 
 ## Browser Surfaces & Interaction
 

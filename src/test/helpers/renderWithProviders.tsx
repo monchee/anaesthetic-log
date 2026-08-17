@@ -3,6 +3,8 @@ import { render, RenderOptions } from '@testing-library/react';
 import { ThemeProvider } from '@core/components/ThemeProvider';
 import { FontSizeProvider } from '@core/components/FontSizeProvider';
 
+import { TooltipProvider } from '@/components/ui';
+
 /**
  * Custom render function that wraps components with all necessary providers
  */
@@ -10,7 +12,9 @@ function AllTheProviders({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider defaultTheme="light" storageKey="test-theme">
       <FontSizeProvider>
-        {children}
+        <TooltipProvider delayDuration={0}>
+          {children}
+        </TooltipProvider>
       </FontSizeProvider>
     </ThemeProvider>
   );

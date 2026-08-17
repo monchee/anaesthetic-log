@@ -162,8 +162,11 @@ test.describe('Accessibility Tests', () => {
   });
 
   test('focus management in modals', async ({ page }) => {
-    // Open Get Started modal via desktop sidebar Get Started button
-    const getStartedBtn = page.locator('aside').getByRole('button', { name: 'Get Started' });
+    // Open Get Started modal via utility menu Get Started button
+    const utilityBtn = page.getByRole('button', { name: 'More navigation and reference links' });
+    await expect(utilityBtn).toBeVisible({ timeout: 10000 });
+    await utilityBtn.click();
+    const getStartedBtn = page.getByRole('menuitem', { name: 'Get Started' });
     await expect(getStartedBtn).toBeVisible({ timeout: 10000 });
     await getStartedBtn.click();
 
@@ -196,15 +199,15 @@ test.describe('Accessibility Tests', () => {
 
   test('color contrast meets WCAG AA standards', async ({ page }) => {
     // Use axe-core to check color contrast.
-    // The primary-blue header uses CSS custom property backgrounds (--primary, bg-white/10)
-    // that axe-core cannot resolve through the CSS variable chain. Those elements have been
-    // manually verified: white on #002664 = 12.6:1, white/80 on #002664 = 9.6:1, all pass.
-    // We exclude [role="banner"] from the scan to avoid those false positives.
+    // The masthead is scanned like any other surface: --masthead stays deep navy in BOTH
+    // themes (light 217 100% 19.6%, dark 217 100% 14%), so white-on-masthead passes AA in
+    // both. The previous [role="banner"] exclusion hid a real dark-mode failure and has
+    // been removed deliberately — do not reinstate it.
     await injectAxe(page);
     const violations = await page.evaluate(() => {
       return new Promise((resolve) => {
         (window as any).axe.run(
-          { exclude: [['[role="banner"]'], ['[data-sonner-toaster]']] },
+          { exclude: [['[data-sonner-toaster]']] },
           { rules: { 'color-contrast': { enabled: true } } },
           (err: any, results: any) => {
             if (err) resolve([]);
@@ -242,8 +245,8 @@ test.describe('Accessibility Tests', () => {
   });
 
   test('data tables have proper headers', async ({ page }) => {
-    // Navigate to dashboard using the primary sidebar navigation link
-    const dashLink = page.locator('nav[aria-label="Primary sidebar navigation"]').getByRole('link', { name: 'Dashboard' });
+    // Navigate to dashboard using the primary navigation link
+    const dashLink = page.locator('nav[aria-label="Primary navigation"]').getByRole('link', { name: 'Dashboard' });
     await expect(dashLink).toBeVisible({ timeout: 10000 });
     await dashLink.click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
@@ -330,8 +333,8 @@ test.describe('Accessibility Tests', () => {
       skipStyles.boxShadow !== 'none';
     expect(skipHasFocusIndicator).toBeTruthy();
 
-    // Check a nav link in primary sidebar (Home, Dashboard, Research)
-    const homeNavLink = page.locator('nav[aria-label="Primary sidebar navigation"] a').first();
+    // Check a nav link in primary navigation (Home, Dashboard)
+    const homeNavLink = page.locator('nav[aria-label="Primary navigation"] a').first();
     await expect(homeNavLink).toBeVisible({ timeout: 10000 });
     await homeNavLink.focus();
     const navStyles = await homeNavLink.evaluate((el) => {
@@ -386,13 +389,11 @@ test.describe('Accessibility Tests', () => {
 });
 
 /**
- * Axe context that excludes elements with CSS-variable-based colors that
- * axe-core cannot resolve. These have been manually verified to pass WCAG AA:
- *   - [role="banner"]: white/80-on-primary (#002664) = 9.6:1; white-on-primary = 12.6:1; all pass.
+ * Axe context that excludes elements that cannot be statically scanned:
  *   - [data-sonner-toaster]: Sonner renders toast colours at runtime, not statically scannable.
  */
 const AXE_EXCLUDE_CONTEXT = {
-  exclude: [['[role="banner"]'], ['[data-sonner-toaster]']],
+  exclude: [['[data-sonner-toaster]']],
 };
 
 /**
@@ -473,7 +474,7 @@ test.describe('Automated Accessibility Scans', () => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
-    await page.locator('nav[aria-label="Primary sidebar navigation"]').getByRole('link', { name: 'Dashboard' }).click();
+    await page.locator('nav[aria-label="Primary navigation"]').getByRole('link', { name: 'Dashboard' }).click();
     await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
     await injectAxe(page);
 
@@ -504,7 +505,8 @@ test.describe('Automated Accessibility Scans', () => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
-    await page.locator('aside').getByRole('link', { name: 'Research' }).click();
+    await page.getByRole('button', { name: 'More navigation and reference links' }).click();
+    await page.getByRole('menuitem', { name: 'Research' }).click();
     await page.waitForLoadState('networkidle');
     await injectAxe(page);
 
@@ -532,7 +534,8 @@ test.describe('Automated Accessibility Scans', () => {
     await page.goto('/');
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
-    await page.locator('aside').getByRole('link', { name: 'Changelog' }).click();
+    await page.getByRole('button', { name: 'More navigation and reference links' }).click();
+    await page.getByRole('menuitem', { name: 'Changelog' }).click();
     await page.waitForLoadState('networkidle');
     await injectAxe(page);
 

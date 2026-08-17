@@ -1,11 +1,11 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Badge } from '@/components/ui/badge';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import DisclaimerBanner from './DisclaimerBanner';
 import { ScreenLayout } from './ScreenLayout';
-import { ThemeProvider } from './ThemeProvider';
 import { Screen } from '@/types';
+import { renderWithProviders } from '../../test/helpers/renderWithProviders';
 
 describe('Shared polish safety and semantic token regression tests', () => {
   describe('Badge semantic status variants', () => {
@@ -83,17 +83,15 @@ describe('Shared polish safety and semantic token regression tests', () => {
     it('includes skip link and responsive container styling with accessible navigation', () => {
       const setScreen = vi.fn();
 
-      render(
-        <ThemeProvider>
-          <ScreenLayout
-            title="DREAM Workbench"
-            setScreen={setScreen}
-            currentScreen={Screen.LOG}
-            databaseDate="2026-08-15"
-          >
-            <div>Workspace Content</div>
-          </ScreenLayout>
-        </ThemeProvider>
+      renderWithProviders(
+        <ScreenLayout
+          title="DREAM Workbench"
+          setScreen={setScreen}
+          currentScreen={Screen.LOG}
+          databaseDate="2026-08-15"
+        >
+          <div>Workspace Content</div>
+        </ScreenLayout>
       );
 
       // Skip to main content link
@@ -103,10 +101,11 @@ describe('Shared polish safety and semantic token regression tests', () => {
 
       // Main container responsive padding
       const main = screen.getByRole('main', { name: 'Main content' });
-      expect(main).toHaveClass('max-w-6xl', 'px-3', 'sm:px-5', 'md:px-6');
+      expect(main).toHaveClass('max-w-6xl', 'px-4', 'sm:px-5', 'md:px-6');
 
       // Navigation links have focus rings, correct href, and trigger screen changes
-      const dashboardLink = screen.getByRole('link', { name: 'Dashboard' });
+      const primaryNav = screen.getByRole('navigation', { name: 'Primary navigation' });
+      const dashboardLink = within(primaryNav).getByRole('link', { name: 'Dashboard' });
       expect(dashboardLink).toHaveAttribute('href', '/dashboard');
       expect(dashboardLink).toHaveClass('focus-visible:ring-2');
       fireEvent.click(dashboardLink);

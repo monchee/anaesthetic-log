@@ -51,7 +51,7 @@ export function ClinicalContextBar({
     <aside
       aria-label={accessibleLabel}
       className={cn(
-        'sticky top-0 z-30 w-full overflow-x-auto border border-primary/30 bg-card/95 px-3 py-2 shadow-sm backdrop-blur-sm print:hidden',
+        'w-full overflow-x-auto border border-primary/30 bg-card/95 px-3 py-2 shadow-sm backdrop-blur-sm print:hidden',
         className,
       )}
     >

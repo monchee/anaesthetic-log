@@ -137,9 +137,18 @@ function SummaryScreenContent({
       title="Reports"
       icon={<FileText className="w-5 h-5" />}
       {...layoutProps}
-      showNav={false}
       showFooter={false}
       actions={<Button onClick={onExit} variant="ghost" className={BACK_BTN}><LogOut className={BACK_ICON} /> Exit</Button>}
+      contextBar={
+        <ClinicalContextBar
+          context={workContext}
+          firstName={lastSavedRecord.firstName}
+          lastName={lastSavedRecord.lastName}
+          mrn={lastSavedRecord.mrn}
+          dob={lastSavedRecord.dob}
+          visitDate={lastSavedRecord.visitDate}
+        />
+      }
       contentClassName="py-4 space-y-4"
     >
       <div className="flex overflow-x-auto border-b border-border no-print -mx-1 px-1" role="tablist" aria-label="Report type">
@@ -167,14 +176,6 @@ function SummaryScreenContent({
         ))}
       </div>
 
-      <ClinicalContextBar
-        context={workContext}
-        firstName={lastSavedRecord.firstName}
-        lastName={lastSavedRecord.lastName}
-        mrn={lastSavedRecord.mrn}
-        dob={lastSavedRecord.dob}
-        visitDate={lastSavedRecord.visitDate}
-      />
       <RedactToggle />
       <div id={`report-panel-${activeReportTab}`} role="tabpanel" aria-labelledby={`report-tab-${activeReportTab}`}>
         {activeReportTab === 'report' && <ClinicalReport data={lastSavedRecord} activeReportSavedAt={activeReportSavedAt} />}

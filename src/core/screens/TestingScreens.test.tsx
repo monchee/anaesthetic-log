@@ -7,8 +7,8 @@ import { createMockLogFormData } from '@/src/test/factories/testingDataFactory';
 import { TestingScreen } from './TestingScreens';
 
 vi.mock('@core/components/ScreenLayout', () => ({
-  ScreenLayout: ({ children }: { children: React.ReactNode }) => (
-    <React.Suspense fallback={<div>Loading</div>}>{children}</React.Suspense>
+  ScreenLayout: ({ children, contextBar }: { children: React.ReactNode; contextBar?: React.ReactNode }) => (
+    <React.Suspense fallback={<div>Loading</div>}>{contextBar}{children}</React.Suspense>
   ),
 }));
 

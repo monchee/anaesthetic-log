@@ -16,7 +16,7 @@ import {
   NavigationItem,
 } from '@core/navigation/navigationConfig';
 import { useTheme } from '@core/components/ThemeProvider';
-import { shouldHandleNavigation } from './AppSidebar';
+import { shouldHandleNavigation } from '@core/navigation/shouldHandleNavigation';
 
 interface MobileNavigationDrawerProps {
   isOpen: boolean;
@@ -144,13 +144,13 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
           isActive
             ? 'bg-primary text-primary-foreground border-primary shadow-sm'
             : isContextual
-            ? 'bg-amber-500/10 dark:bg-amber-500/15 text-foreground hover:bg-amber-500/20 border-amber-500/30'
+            ? 'bg-status-warning/15 text-foreground hover:bg-status-warning/20 border-status-warning/30'
             : 'text-foreground/90 hover:text-foreground hover:bg-muted/70'
         }`}
       >
         <div className="flex items-center gap-2.5 min-w-0">
           <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-primary-foreground' : 'text-primary'}`} aria-hidden="true" />
-          <span className="truncate">{item.label}</span>
+          <span className="break-words">{item.label}</span>
         </div>
         {item.badge && (
           <span
@@ -235,7 +235,7 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
               {/* Contextual Current Work */}
               {contextualItems.length > 0 && (
                 <nav aria-label="Current work mobile navigation" className="space-y-1">
-                  <div className="px-1 text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-1.5 flex items-center justify-between">
+                  <div className="px-1 text-xs font-bold uppercase tracking-wider text-status-warning mb-1.5 flex items-center justify-between">
                     <span>Current Work</span>
                     <span className="text-xs lowercase font-normal opacity-80">contextual</span>
                   </div>
@@ -255,7 +255,7 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
                   className="w-full min-h-[44px] px-3.5 py-2.5 text-left rounded-none flex items-center gap-2.5 text-sm font-medium text-foreground/90 hover:text-foreground hover:bg-muted/70 transition-colors border border-transparent btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
                 >
                   <Upload className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
-                  <span>Upload CSV</span>
+                  <span className="break-words">Upload CSV</span>
                 </button>
 
                 <button
@@ -264,7 +264,7 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
                   className="w-full min-h-[44px] px-3.5 py-2.5 text-left rounded-none flex items-center gap-2.5 text-sm font-medium text-foreground/90 hover:text-foreground hover:bg-muted/70 transition-colors border border-transparent btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
                 >
                   <PlayCircle className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />
-                  <span>Get Started</span>
+                  <span className="break-words">Get Started</span>
                 </button>
 
                 {UTILITY_NAV_ITEMS.map((item) => {
@@ -284,7 +284,7 @@ export const MobileNavigationDrawer: React.FC<MobileNavigationDrawerProps> = ({
                       }`}
                     >
                       <Icon className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
-                      <span className="truncate">{item.label}</span>
+                      <span className="break-words">{item.label}</span>
                     </a>
                   );
                 })}

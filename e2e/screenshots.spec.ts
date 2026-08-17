@@ -63,7 +63,7 @@ test.describe('Baseline screenshots (Phase 0)', () => {
         await expect(drawer).toBeVisible({ timeout: 5000 });
         await drawer.getByRole('link', { name: 'Dashboard' }).click();
       } else {
-        await page.locator('nav[aria-label="Primary sidebar navigation"]').getByRole('link', { name: 'Dashboard' }).click();
+        await page.locator('nav[aria-label="Primary navigation"]').getByRole('link', { name: 'Dashboard' }).click();
       }
       await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
       await dismissHelpModal(page);
@@ -76,7 +76,7 @@ test.describe('Baseline screenshots (Phase 0)', () => {
         await expect(drawer).toBeVisible({ timeout: 5000 });
         await drawer.getByRole('link', { name: 'Home' }).click();
       } else {
-        await page.locator('nav[aria-label="Primary sidebar navigation"]').getByRole('link', { name: 'Home' }).click();
+        await page.locator('nav[aria-label="Primary navigation"]').getByRole('link', { name: 'Home' }).click();
       }
       await dismissHelpModal(page);
       const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });

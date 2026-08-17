@@ -205,14 +205,12 @@
     /* Override --accent with NSW Brand Light (replaces slate-100) */
     --accent: 199 92% 89%;         /* #CBEDFD — pale NSW blue for hover states */
     --accent-foreground: 218 100% 20%; /* Dark navy on light blue */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* ── Masthead ────────────────────────────────────────────── */
+    --masthead: 217 100% 19.6%;
+    --masthead-foreground: 0 0% 100%;
+    --masthead-accent: 199 92% 89%;
+    --masthead-border: 217 100% 30%;
   }
   .dark {
     /* ── Core Surfaces ────────────────────────────────────────── */
@@ -382,15 +380,11 @@
     --nsw-info:       220 70% 62%;
     --nsw-info-bg:    220 10% 16%;
 
-    /* ── Sidebar ─────────────────────────────────────────────── */
-    --sidebar-background:         0 0% 10%;
-    --sidebar-foreground:         0 0% 95%;
-    --sidebar-primary:            217 90% 62%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent:             0 0% 18%;
-    --sidebar-accent-foreground:  0 0% 95%;
-    --sidebar-border:             0 0% 22%;
-    --sidebar-ring:               217 90% 62%;
+    /* ── Masthead ────────────────────────────────────────────── */
+    --masthead: 217 100% 14%;
+    --masthead-foreground: 0 0% 100%;
+    --masthead-accent: 199 92% 85%;
+    --masthead-border: 217 60% 26%;
   }
 }
 
@@ -580,7 +574,8 @@
   .animate-content-enter-subtle,
   .animate-gate-exit,
   .ambient-light-field-1,
-  .ambient-light-field-2 {
+  .ambient-light-field-2,
+  .animate-in {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
@@ -594,10 +589,13 @@
   }
 }
 
-/* Smooth Scroll */
+/* Smooth Scroll & Chrome Anchor Offsets */
 html {
   scroll-behavior: smooth;
 }
+
+#main-content { scroll-margin-top: var(--app-chrome-height, 0px); }
+.chrome-anchor { scroll-margin-top: calc(var(--app-chrome-height, 0px) + 1rem); }
 
 @layer base {
   * {

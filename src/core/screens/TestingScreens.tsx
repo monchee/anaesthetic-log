@@ -42,17 +42,19 @@ export function PrintPlanScreen({
       {...layoutProps}
       showFooter={false}
       actions={<Button onClick={onBack} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
+      contextBar={
+        <ClinicalContextBar
+          context={workContext}
+          firstName={workContext?.firstName || selectedPatient.firstName}
+          lastName={workContext?.lastName || selectedPatient.lastName}
+          mrn={workContext?.mrn || selectedPatient.mrn}
+          dob={workContext?.dob || selectedPatient.dob}
+          reactionDate={workContext?.reactionDate || selectedPatient.history?.date}
+          source={workContext?.source || (selectedPatient.id === 'manual' ? 'manual' : 'database')}
+        />
+      }
       contentClassName="py-4 space-y-4"
     >
-      <ClinicalContextBar
-        context={workContext}
-        firstName={workContext?.firstName || selectedPatient.firstName}
-        lastName={workContext?.lastName || selectedPatient.lastName}
-        mrn={workContext?.mrn || selectedPatient.mrn}
-        dob={workContext?.dob || selectedPatient.dob}
-        reactionDate={workContext?.reactionDate || selectedPatient.history?.date}
-        source={workContext?.source || (selectedPatient.id === 'manual' ? 'manual' : 'database')}
-      />
       <TestingPlanPrintView patient={selectedPatient} data={testingPlanData} drugCategories={DRUG_CATEGORIES} onProceed={onProceed} />
     </ScreenLayout>
   );
@@ -93,20 +95,22 @@ export function TestingScreen({
       icon={<TestTube2 className="w-5 h-5" />}
       {...layoutProps}
       actions={<Button onClick={onBack} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
+      contextBar={
+        <ClinicalContextBar
+          context={workContext}
+          firstName={workContext?.firstName ?? (selectedPatient?.firstName || formData.firstName)}
+          lastName={workContext?.lastName ?? (selectedPatient?.lastName || formData.lastName)}
+          mrn={workContext?.mrn ?? (selectedPatient?.mrn || formData.mrn)}
+          dob={workContext?.dob ?? (selectedPatient?.dob || formData.dob)}
+          reactionDate={workContext?.reactionDate ?? patientHistory?.date}
+          visitDate={formData.visitDate || workContext?.testingVisitDate}
+          source={workContext?.source ?? (selectedPatient ? (selectedPatient.id === 'manual' ? 'manual' : 'database') : 'direct')}
+          className={highRiskChips.length > 0 ? 'mb-2' : 'mb-3'}
+        />
+      }
       contentClassName="py-4 space-y-3"
       className="pb-32"
     >
-      <ClinicalContextBar
-        context={workContext}
-        firstName={workContext?.firstName ?? (selectedPatient?.firstName || formData.firstName)}
-        lastName={workContext?.lastName ?? (selectedPatient?.lastName || formData.lastName)}
-        mrn={workContext?.mrn ?? (selectedPatient?.mrn || formData.mrn)}
-        dob={workContext?.dob ?? (selectedPatient?.dob || formData.dob)}
-        reactionDate={workContext?.reactionDate ?? patientHistory?.date}
-        visitDate={formData.visitDate || workContext?.testingVisitDate}
-        source={workContext?.source ?? (selectedPatient ? (selectedPatient.id === 'manual' ? 'manual' : 'database') : 'direct')}
-        className={highRiskChips.length > 0 ? 'mb-2' : 'mb-3'}
-      />
       {highRiskChips.length > 0 && (
         <HighRiskContextChips
           chips={highRiskChips}
