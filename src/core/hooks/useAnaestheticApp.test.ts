@@ -87,14 +87,6 @@ describe('useAnaestheticApp tryptase prefill', () => {
       confirmNavigation: vi.fn(),
       cancelNavigation: vi.fn(),
       navigateTo: vi.fn(),
-      navigateToLog: vi.fn(),
-      navigateToDashboard: vi.fn(),
-      navigateToResearch: vi.fn(),
-      navigateToSummary: vi.fn(),
-      navigateToPatientSummary: vi.fn(),
-      navigateToTesting: vi.fn(),
-      navigateToPrintPlan: vi.fn(),
-      navigateToChangelog: vi.fn(),
     });
     vi.mocked(useDisclaimer).mockReturnValue({
       showDisclaimer: false,
@@ -292,14 +284,6 @@ describe('useAnaestheticApp direct testing session', () => {
       confirmNavigation: vi.fn(),
       cancelNavigation: vi.fn(),
       navigateTo: vi.fn(),
-      navigateToLog: vi.fn(),
-      navigateToDashboard: vi.fn(),
-      navigateToResearch: vi.fn(),
-      navigateToSummary: vi.fn(),
-      navigateToPatientSummary: vi.fn(),
-      navigateToTesting: vi.fn(),
-      navigateToPrintPlan: vi.fn(),
-      navigateToChangelog: vi.fn(),
     });
 
     const { result } = renderHook(() => useAnaestheticApp());
@@ -359,14 +343,6 @@ describe('useAnaestheticApp handleSubmit', () => {
       confirmNavigation: vi.fn(),
       cancelNavigation: vi.fn(),
       navigateTo: vi.fn(),
-      navigateToLog: vi.fn(),
-      navigateToDashboard: vi.fn(),
-      navigateToResearch: vi.fn(),
-      navigateToSummary: vi.fn(),
-      navigateToPatientSummary: vi.fn(),
-      navigateToTesting: vi.fn(),
-      navigateToPrintPlan: vi.fn(),
-      navigateToChangelog: vi.fn(),
     });
 
     const { result } = renderHook(() => useAnaestheticApp());
@@ -519,14 +495,6 @@ describe('useAnaestheticApp patient switch guard', () => {
       confirmNavigation: vi.fn(),
       cancelNavigation: vi.fn(),
       navigateTo: vi.fn(),
-      navigateToLog: vi.fn(),
-      navigateToDashboard: vi.fn(),
-      navigateToResearch: vi.fn(),
-      navigateToSummary: vi.fn(),
-      navigateToPatientSummary: vi.fn(),
-      navigateToTesting: vi.fn(),
-      navigateToPrintPlan: vi.fn(),
-      navigateToChangelog: vi.fn(),
     });
 
     const { result } = renderHook(() => useAnaestheticApp());

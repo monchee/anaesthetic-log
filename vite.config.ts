@@ -180,6 +180,7 @@ export default defineConfig(() => {
                 return 'react-vendor';
               }
             }
+            return undefined;
           },
         },
       },

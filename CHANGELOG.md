@@ -1,3 +1,18 @@
+## [0.78.8] — 2026-08-19 (Strict Housekeeping)
+
+Summary: Zero-behaviour-change cleanup — removes dead duplicate code, enables TypeScript strict mode across the codebase, and adds a global test coverage floor, closing the gap between this codebase's actual quality and its type-checking rigor ahead of the architecture work that follows.
+
+### Removed
+- **Dead duplicate dashboard components** — `components/dashboard/PatientTable.tsx`, `SkinTestBreakdown.tsx`, and `CSVUploadInstructions.tsx` were diverged, zero-importer duplicates of the live `src/features/dashboard/components/` versions.
+- **Unreferenced files** — `hooks/use-mobile.ts` and the root `data/changelog.json` (the app reads `src/shared/data/changelog.json`).
+- **8 unused navigation helpers** — `navigateToLog`/`navigateToDashboard`/`navigateToResearch`/`navigateToSummary`/`navigateToPatientSummary`/`navigateToTesting`/`navigateToPrintPlan`/`navigateToChangelog` in `useAppNavigation.ts`; all call sites already used the general `navigateTo`.
+- **`Screen.POWERCHART_LETTER`** — an unused enum member with zero references (distinct from the still-live Powerchart Letter report tab).
+- Stray untracked root artifacts (`build.log`, `test-results*.json`).
+
+### Changed
+- **TypeScript strict mode** — Enabled `strict`, `noImplicitReturns`, and `noFallthroughCasesInSwitch` in `tsconfig.json`. Fixed the ~7 resulting errors in place (no `any`/`@ts-expect-error` suppressions): explicit `ConfirmDialogConfig` interface, React 19 `RefObject<T | null>` typing, an explicit `PerformanceEntryMap` parameter type, and clean explicit returns in a couple of effects and `manualChunks`.
+- **Global coverage floor** — `vitest.config.ts` now enforces a baseline coverage floor (statements 76% / branches 67% / functions 67% / lines 79%) across the whole codebase, alongside the existing higher per-path thresholds.
+
 ## [0.78.7] — 2026-08-19 (Regression Net)
 
 Summary: Adds the Phase 0 regression net ahead of a broader architecture/correctness/performance pass — e2e wired into CI, characterization tests for the previously-untested navigation guard, prop-forwarding tests for ScreenLayout's chrome props, screenshot baselines for the nav chrome, and a temporary prop-key tripwire ahead of an upcoming layout-type refactor.

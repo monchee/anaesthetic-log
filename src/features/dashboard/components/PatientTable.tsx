@@ -41,7 +41,7 @@ interface PatientTableProps {
   isSheetOpen: boolean;
   setIsSheetOpen: (open: boolean) => void;
   isUploading: boolean;
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
   handleNextPage: () => void;
   handlePrevPage: () => void;
   resetPage: () => void;

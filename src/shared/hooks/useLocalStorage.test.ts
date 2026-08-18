@@ -64,7 +64,7 @@ describe('useLocalStorage', () => {
 
     it('stores complex objects', () => {
       const { result } = renderHook(() =>
-        useLocalStorage(mockKey, { items: [] })
+        useLocalStorage<{ items: string[] }>(mockKey, { items: [] })
       );
 
       const newValue = { items: ['item1', 'item2'] };

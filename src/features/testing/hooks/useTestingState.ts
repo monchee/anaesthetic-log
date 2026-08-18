@@ -152,20 +152,20 @@ export function useTestingState() {
       }
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('storage', handleStorage);
-      window.addEventListener('focus', handleVisibilityOrFocus);
-      document.addEventListener('visibilitychange', handleVisibilityOrFocus);
+    if (typeof window === 'undefined') return;
 
-      const intervalId = window.setInterval(checkExpiry, 60_000);
+    window.addEventListener('storage', handleStorage);
+    window.addEventListener('focus', handleVisibilityOrFocus);
+    document.addEventListener('visibilitychange', handleVisibilityOrFocus);
 
-      return () => {
-        window.removeEventListener('storage', handleStorage);
-        window.removeEventListener('focus', handleVisibilityOrFocus);
-        document.removeEventListener('visibilitychange', handleVisibilityOrFocus);
-        window.clearInterval(intervalId);
-      };
-    }
+    const intervalId = window.setInterval(checkExpiry, 60_000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+      window.removeEventListener('focus', handleVisibilityOrFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityOrFocus);
+      window.clearInterval(intervalId);
+    };
   }, [checkExpiry]);
 
   // Debounced autosave of the in-progress session.

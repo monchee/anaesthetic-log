@@ -27,6 +27,9 @@
       "@core/*": ["./src/core/*"]
     },
     "allowImportingTsExtensions": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "noEmit": true
   },
   "exclude": [

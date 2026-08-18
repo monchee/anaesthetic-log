@@ -179,12 +179,12 @@ describe('useAppNavigation', () => {
     expect(event.preventDefault).toHaveBeenCalled();
   });
 
-  it('should navigate via helper functions', () => {
+  it('should navigate via navigateTo compatibility helper', () => {
     const pushStateSpy = vi.spyOn(window.history, 'pushState');
     const { result } = renderHook(() => useAppNavigation());
 
     act(() => {
-      result.current.navigateToDashboard();
+      result.current.navigateTo(Screen.DASHBOARD);
     });
 
     expect(result.current.screen).toBe(Screen.DASHBOARD);
@@ -217,7 +217,7 @@ describe('useAppNavigation', () => {
     );
   });
 
-  it('should bypass dirty guard when navigateToSummary is called with bypassGuard', () => {
+  it('should bypass dirty guard when navigateTo is called with bypassGuard', () => {
     const pushStateSpy = vi.spyOn(window.history, 'pushState');
     vi.stubGlobal('location', {
       ...originalLocation,
@@ -227,7 +227,7 @@ describe('useAppNavigation', () => {
     const { result } = renderHook(() => useAppNavigation({ isDirty: true }));
 
     act(() => {
-      result.current.navigateToSummary({ bypassGuard: true });
+      result.current.navigateTo(Screen.SUMMARY, { bypassGuard: true });
     });
 
     expect(result.current.screen).toBe(Screen.SUMMARY);

@@ -47,7 +47,11 @@ export function withVisibilityStateGuard<T>(callback: () => T): T {
       if (type === 'visibility-state') {
         return [];
       }
-      return originalGetEntriesByType.apply(this ?? perf, [type, ...rest] as [string]);
+      type PerfTypeParam = Parameters<Performance['getEntriesByType']>[0];
+      return originalGetEntriesByType.apply(
+        this ?? perf,
+        [type as PerfTypeParam, ...rest] as Parameters<Performance['getEntriesByType']>
+      );
     };
   } catch {
     // Non-writable property handling

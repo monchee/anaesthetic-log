@@ -64,19 +64,21 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   );
 };
 
+export interface ConfirmDialogConfig {
+  title: string;
+  message: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  variant?: 'danger' | 'warning' | 'info';
+  onConfirm: () => void;
+}
+
 // Hook for easier usage
 export const useConfirmDialog = () => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [config, setConfig] = React.useState<{
-    title: string;
-    message: string;
-    confirmLabel?: string;
-    cancelLabel?: string;
-    variant?: 'danger' | 'warning' | 'info';
-    onConfirm: () => void;
-  } | null>(null);
+  const [config, setConfig] = React.useState<ConfirmDialogConfig | null>(null);
 
-  const confirm = (params: Omit<typeof config, 'onConfirm'> & { onConfirm: () => void }) => {
+  const confirm = (params: ConfirmDialogConfig) => {
     setConfig(params);
     setIsOpen(true);
   };

@@ -19,6 +19,10 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       thresholds: {
+        statements: 76,
+        branches: 67,
+        functions: 67,
+        lines: 79,
         'src/features/testing/**/*.{ts,tsx}': {
           statements: 69,
           branches: 69,

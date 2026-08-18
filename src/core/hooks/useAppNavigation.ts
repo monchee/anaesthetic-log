@@ -25,14 +25,6 @@ export interface AppNavigation {
   // Compatibility helpers for existing callers/tests
   setScreen: (newScreen: Screen | ((prev: Screen) => Screen), options?: NavigateOptions) => void;
   navigateTo: (screen: Screen, options?: NavigateOptions) => void;
-  navigateToLog: (options?: NavigateOptions) => void;
-  navigateToDashboard: (options?: NavigateOptions) => void;
-  navigateToResearch: (options?: NavigateOptions) => void;
-  navigateToSummary: (options?: NavigateOptions) => void;
-  navigateToPatientSummary: (options?: NavigateOptions) => void;
-  navigateToTesting: (options?: NavigateOptions) => void;
-  navigateToPrintPlan: (options?: NavigateOptions) => void;
-  navigateToChangelog: (options?: NavigateOptions) => void;
 }
 
 interface DreamHistoryState {
@@ -260,14 +252,6 @@ export function useAppNavigation(options: UseAppNavigationOptions = {}): AppNavi
     cancelNavigation,
     setScreen,
     navigateTo: navigate,
-    navigateToLog: (opts?: NavigateOptions) => navigate(Screen.LOG, opts),
-    navigateToDashboard: (opts?: NavigateOptions) => navigate(Screen.DASHBOARD, opts),
-    navigateToResearch: (opts?: NavigateOptions) => navigate(Screen.RESEARCH, opts),
-    navigateToSummary: (opts?: NavigateOptions) => navigate(Screen.SUMMARY, opts),
-    navigateToPatientSummary: (opts?: NavigateOptions) => navigate(Screen.PATIENT_SUMMARY, opts),
-    navigateToTesting: (opts?: NavigateOptions) => navigate(Screen.TESTING, opts),
-    navigateToPrintPlan: (opts?: NavigateOptions) => navigate(Screen.PRINT_PLAN, opts),
-    navigateToChangelog: (opts?: NavigateOptions) => navigate(Screen.CHANGELOG, opts),
   };
 }
 
