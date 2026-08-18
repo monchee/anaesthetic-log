@@ -168,4 +168,29 @@ describe('usePatientState', () => {
       hasUploadedData: true,
     });
   });
+
+  it('handles chunk-load / dynamic import failure gracefully without hanging in loading state', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const chunkError = new Error('Chunk load failed: mockPatients');
+    mockPatientsRead.mockImplementationOnce(() => {
+      throw chunkError;
+    });
+
+    const { result } = renderHook(() => usePatientState());
+
+    await waitFor(() => expect(result.current.isLoadingPatients).toBe(false));
+    expect(warnSpy).toHaveBeenCalledWith('Unable to load mock patients:', chunkError);
+    expect(result.current.patients).toEqual([]);
+    expect(result.current.hasUploadedData).toBe(false);
+  });
+
+  it('respects the cancelled guard when unmounted before dynamic import resolves', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const { unmount } = renderHook(() => usePatientState());
+    unmount();
+
+    // Ensure no unhandled rejection or state update warnings
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
 });

@@ -1,5 +1,18 @@
 [
   {
+    "version": "v0.79.1",
+    "codename": "Degrade Gracefully",
+    "date": "19 August 2026",
+    "summary": "Defensive-only hardening \u2014 every change here adds a fallback for a scenario the app didn't handle before (storage-blocked browsers, a failed chunk load, a stale deployment), none of it changes normal-path behaviour.",
+    "highlight": false,
+    "changes": [
+      "Storage-blocked browsers no longer crash the app. `FontSizeProvider` and `ThemeProvider` read/write `localStorage` directly with no guard \u2014 in Safari private mode or a storage-blocked iframe this threw during render, and since both sit inside the app's top-level `ErrorBoundary`, the result was the full-screen error page instead of a degraded-but-working app. Both are now wrapped in try/catch with sane in-memory fallbacks; `FontSizeProvider` also validates the parsed value (a corrupt stored value no longer produces `font-size: NaN%`).",
+      "A failed patient-data chunk load no longer hangs forever. `usePatientState`'s dynamic `import()` of the mock patient dataset had no `.catch` \u2014 a chunk-load failure left the loading skeleton showing permanently. It now clears the loading state and logs a warning on rejection, matching the pattern already used elsewhere in the codebase.",
+      "Raw stack traces no longer render in production. The top-level `ErrorBoundary`'s on-page error details unconditionally included `error.stack` \u2014 an information-disclosure surface. Now gated behind `import.meta.env.DEV`; console logging (for Sentry/support) is unchanged.",
+      "Scoped chunk-load error boundary. A failed dynamic `import()` (stale chunk after a deploy, flaky hospital wifi) previously unmounted the entire app via the top-level boundary, with no retry. A new `ChunkErrorBoundary` wraps just the two `Suspense` boundaries around lazy-loaded route/screen chunks (`App.tsx`, `ScreenLayout.tsx`) and offers Retry / Reload affordances without touching the top-level boundary's deliberate all-or-nothing clinical-data-safety behaviour."
+    ]
+  },
+  {
     "version": "v0.79.0",
     "codename": "One Layout Chrome",
     "date": "19 August 2026",

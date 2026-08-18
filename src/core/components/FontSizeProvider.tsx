@@ -19,19 +19,34 @@ const MIN_SIZE = 85;
 const MAX_SIZE = 125;
 const STEP = 5;
 
+const DEFAULT_SIZE = 100;
+
 export function FontSizeProvider({ children }: FontSizeProviderProps) {
   const [fontSizePercent, setFontSizePercent] = useState<number>(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("app-font-size-pct");
-      return saved ? parseInt(saved, 10) : 100;
+      try {
+        const saved = localStorage.getItem("app-font-size-pct");
+        if (saved) {
+          const parsed = parseInt(saved, 10);
+          if (!Number.isNaN(parsed) && parsed >= MIN_SIZE && parsed <= MAX_SIZE) {
+            return parsed;
+          }
+        }
+      } catch {
+        /* Safari private mode or storage-blocked iframe */
+      }
     }
-    return 100;
+    return DEFAULT_SIZE;
   });
 
   useEffect(() => {
     const root = document.documentElement;
     root.style.fontSize = `${fontSizePercent}%`;
-    localStorage.setItem("app-font-size-pct", fontSizePercent.toString());
+    try {
+      localStorage.setItem("app-font-size-pct", fontSizePercent.toString());
+    } catch {
+      /* Safari private mode or quota exceeded */
+    }
   }, [fontSizePercent]);
 
   const increaseFontSize = () => {
@@ -43,7 +58,7 @@ export function FontSizeProvider({ children }: FontSizeProviderProps) {
   };
 
   const resetFontSize = () => {
-    setFontSizePercent(100);
+    setFontSizePercent(DEFAULT_SIZE);
   };
 
   return (

@@ -37,11 +37,17 @@ export function usePatientState() {
     if (storedPatientDb !== null) removeStored(PATIENT_DB_KEY);
 
     let cancelled = false;
-    import('@shared/data/mockPatients').then(({ MOCK_PATIENTS }) => {
-      if (cancelled) return;
-      setPatients(prev => prev.length === 0 ? MOCK_PATIENTS : prev);
-      setIsLoadingPatients(false);
-    });
+    import('@shared/data/mockPatients')
+      .then(({ MOCK_PATIENTS }) => {
+        if (cancelled) return;
+        setPatients(prev => prev.length === 0 ? MOCK_PATIENTS : prev);
+        setIsLoadingPatients(false);
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        console.warn('Unable to load mock patients:', error);
+        setIsLoadingPatients(false);
+      });
 
     return () => {
       cancelled = true;

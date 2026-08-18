@@ -12,6 +12,7 @@ import { useTTLExpiryWarning } from '@shared/hooks/useTTLExpiryWarning';
 import { useChromeHeight } from '@core/hooks/useChromeHeight';
 import { CSVUploadInstructions } from '@features/dashboard/components/CSVUploadInstructions';
 import { useRedcapCsvUpload } from '@shared/hooks/useRedcapCsvUpload';
+import { ChunkErrorBoundary } from './ChunkErrorBoundary';
 import { cn } from '@/lib/utils';
 
 export interface ScreenChrome {
@@ -245,18 +246,20 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
           className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-5 md:px-6 py-3 sm:py-4 md:py-6 flex flex-col relative z-10 animate-screen-enter focus:outline-none min-w-0"
         >
           <div className={cn('flex-1 flex flex-col min-w-0', contentClassName)}>
-            <React.Suspense
-              fallback={
-                <div className="flex-1 flex flex-col items-center justify-center p-12 text-muted-foreground min-h-[50vh]">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="h-8 w-8 rounded-none border-2 border-primary/20 border-t-primary animate-spin" />
-                    <span className="text-sm font-medium animate-pulse">Loading content...</span>
+            <ChunkErrorBoundary>
+              <React.Suspense
+                fallback={
+                  <div className="flex-1 flex flex-col items-center justify-center p-12 text-muted-foreground min-h-[50vh]">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="h-8 w-8 rounded-none border-2 border-primary/20 border-t-primary animate-spin" />
+                      <span className="text-sm font-medium animate-pulse">Loading content...</span>
+                    </div>
                   </div>
-                </div>
-              }
-            >
-              {children}
-            </React.Suspense>
+                }
+              >
+                {children}
+              </React.Suspense>
+            </ChunkErrorBoundary>
           </div>
         </main>
 

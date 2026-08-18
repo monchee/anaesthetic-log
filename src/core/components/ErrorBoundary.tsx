@@ -87,7 +87,7 @@ class ErrorBoundary extends Component<Props, State> {
                   Reload Page
                 </Button>
               </div>
-              {this.state.error && (
+              {this.state.error && import.meta.env.DEV && (
                 <details className="mt-4 text-left">
                   <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
                     Error Details (for IT support)

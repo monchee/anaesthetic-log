@@ -19,6 +19,7 @@ import { ResearchScreen } from '@core/screens/ResearchScreen';
 import { SummaryScreen } from '@core/screens/SummaryScreen';
 import { PrintPlanScreen, TestingScreen } from '@core/screens/TestingScreens';
 import { ScreenUnavailable } from '@core/components/ScreenUnavailable';
+import { ChunkErrorBoundary } from '@core/components/ChunkErrorBoundary';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 const APP_SUBTITLE = APP_CONFIG.APP_SUBTITLE;
@@ -303,30 +304,32 @@ export function AnaestheticLogApp() {
   };
 
   return (
-    <React.Suspense fallback={<div className="min-h-svh bg-background" />}>
-      {renderScreenContent()}
-      <GetStartedModal
-        isOpen={getStartedOpen}
-        onOpenChange={setGetStartedOpen}
-        onUploadPatients={handleUploadPatients}
-        onUploadComplete={screen === Screen.LOG ? handleHomeUploadComplete : undefined}
-        setScreen={handleNavigate}
-        onStartDirectTesting={handleStartDirectTesting}
-        isTestingDraftDirty={isTestingDraftDirty}
-      />
-      <ConfirmDialog
-        open={Boolean(pendingPatientSelection)}
-        onOpenChange={(open) => {
-          if (!open) cancelPatientSelect();
-        }}
-        title="Switch patient?"
-        message={`You have unsaved changes in your current testing session.${selectedPatient ? ` Current: ${selectedPatient.lastName ? `${selectedPatient.lastName.toUpperCase()}, ${selectedPatient.firstName}` : selectedPatient.firstName} (MRN: ${selectedPatient.mrn || '—'}, DOB: ${selectedPatient.dob || 'not recorded'}).` : ''}${pendingPatientSelection ? ` Target: ${pendingPatientSelection.patient.lastName ? `${pendingPatientSelection.patient.lastName.toUpperCase()}, ${pendingPatientSelection.patient.firstName}` : pendingPatientSelection.patient.firstName} (MRN: ${pendingPatientSelection.patient.mrn || '—'}, DOB: ${pendingPatientSelection.patient.dob || 'not recorded'}).` : ''} Switching patients will discard these changes. This cannot be undone.`}
-        confirmLabel="Switch patient"
-        cancelLabel="Cancel"
-        variant="danger"
-        onConfirm={confirmPatientSelect}
-      />
-    </React.Suspense>
+    <ChunkErrorBoundary>
+      <React.Suspense fallback={<div className="min-h-svh bg-background" />}>
+        {renderScreenContent()}
+        <GetStartedModal
+          isOpen={getStartedOpen}
+          onOpenChange={setGetStartedOpen}
+          onUploadPatients={handleUploadPatients}
+          onUploadComplete={screen === Screen.LOG ? handleHomeUploadComplete : undefined}
+          setScreen={handleNavigate}
+          onStartDirectTesting={handleStartDirectTesting}
+          isTestingDraftDirty={isTestingDraftDirty}
+        />
+        <ConfirmDialog
+          open={Boolean(pendingPatientSelection)}
+          onOpenChange={(open) => {
+            if (!open) cancelPatientSelect();
+          }}
+          title="Switch patient?"
+          message={`You have unsaved changes in your current testing session.${selectedPatient ? ` Current: ${selectedPatient.lastName ? `${selectedPatient.lastName.toUpperCase()}, ${selectedPatient.firstName}` : selectedPatient.firstName} (MRN: ${selectedPatient.mrn || '—'}, DOB: ${selectedPatient.dob || 'not recorded'}).` : ''}${pendingPatientSelection ? ` Target: ${pendingPatientSelection.patient.lastName ? `${pendingPatientSelection.patient.lastName.toUpperCase()}, ${pendingPatientSelection.patient.firstName}` : pendingPatientSelection.patient.firstName} (MRN: ${pendingPatientSelection.patient.mrn || '—'}, DOB: ${pendingPatientSelection.patient.dob || 'not recorded'}).` : ''} Switching patients will discard these changes. This cannot be undone.`}
+          confirmLabel="Switch patient"
+          cancelLabel="Cancel"
+          variant="danger"
+          onConfirm={confirmPatientSelect}
+        />
+      </React.Suspense>
+    </ChunkErrorBoundary>
   );
 }
 

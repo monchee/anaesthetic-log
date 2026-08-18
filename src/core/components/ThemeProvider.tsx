@@ -30,9 +30,13 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem(storageKey) as Theme | null
-      if (stored === "light" || stored === "dark") return stored
-      return "light"
+      try {
+        const stored = localStorage.getItem(storageKey) as Theme | null
+        if (stored === "light" || stored === "dark") return stored
+      } catch {
+        /* Safari private mode or storage-blocked iframe */
+      }
+      return defaultTheme
     }
     return defaultTheme
   })
@@ -50,17 +54,25 @@ export function ThemeProvider({
     }
   }, [theme])
 
-const toggleTheme = () => {
+  const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light"
     setTheme(newTheme)
-    localStorage.setItem(storageKey, newTheme)
+    try {
+      localStorage.setItem(storageKey, newTheme)
+    } catch {
+      /* Safari private mode or storage-blocked */
+    }
   }
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme)
-      setTheme(theme)
+    setTheme: (newTheme: Theme) => {
+      try {
+        localStorage.setItem(storageKey, newTheme)
+      } catch {
+        /* Safari private mode or storage-blocked */
+      }
+      setTheme(newTheme)
     },
     toggleTheme,
   }
