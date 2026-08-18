@@ -305,7 +305,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             ))}
           </div>
 
-          <table className="w-full border-collapse border border-border print:border-black text-xs print:text-[9px]">
+          <table className="w-full border-collapse border border-border print:border-black text-xs print:text-[9px] print:break-inside-auto">
             <thead>
               <tr>
                 <th

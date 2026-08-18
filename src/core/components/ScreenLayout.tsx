@@ -27,6 +27,7 @@ export interface ScreenLayoutProps {
   pendingNavigation?: Screen | null;
   confirmNavigation?: () => void;
   cancelNavigation?: () => void;
+  onDeleteTestingDraft?: () => void;
   currentScreen?: Screen;
   isTestingDraftDirty?: boolean;
   hasActiveReport?: boolean;
@@ -58,6 +59,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
   pendingNavigation = null,
   confirmNavigation,
   cancelNavigation,
+  onDeleteTestingDraft,
   currentScreen = Screen.LOG,
   isTestingDraftDirty = false,
   hasActiveReport = false,
@@ -130,6 +132,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
           onOpenGetStarted={handleOpenGetStarted}
           databaseDate={databaseDate}
           isCustomData={isCustomData}
+          onDeleteTestingDraft={onDeleteTestingDraft}
         />
       )}
 
@@ -162,6 +165,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                     onOpenGetStarted={handleOpenGetStarted}
                     databaseDate={databaseDate}
                     isCustomData={isCustomData}
+                    onDeleteTestingDraft={onDeleteTestingDraft}
                   />
                 </div>
               }
@@ -288,6 +292,10 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
           isOpen={pendingNavigation !== null}
           onConfirm={confirmNavigation}
           onCancel={cancelNavigation}
+          onDelete={onDeleteTestingDraft ? () => {
+            cancelNavigation();
+            onDeleteTestingDraft();
+          } : undefined}
         />
       )}
     </div>

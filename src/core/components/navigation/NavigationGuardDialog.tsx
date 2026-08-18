@@ -14,12 +14,14 @@ interface NavigationGuardDialogProps {
   isOpen: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  onDelete?: () => void;
 }
 
 export const NavigationGuardDialog: React.FC<NavigationGuardDialogProps> = ({
   isOpen,
   onConfirm,
   onCancel,
+  onDelete,
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onCancel(); }}>
@@ -45,6 +47,16 @@ export const NavigationGuardDialog: React.FC<NavigationGuardDialogProps> = ({
         </DialogHeader>
 
         <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 pt-4">
+          {onDelete && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onDelete}
+              className="rounded-none min-h-[44px] sm:min-h-[40px] px-4 text-sm border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive mr-auto"
+            >
+              Delete draft
+            </Button>
+          )}
           <Button
             type="button"
             variant="outline"

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Upload, PlayCircle, Database } from 'lucide-react';
+import React, { useState } from 'react';
+import { Upload, PlayCircle, Database, Trash2 } from 'lucide-react';
 import { Screen } from '@/types';
 import {
   PRIMARY_NAV_ITEMS,
@@ -8,6 +8,7 @@ import {
   NavigationItem,
 } from '@core/navigation/navigationConfig';
 import { shouldHandleNavigation } from '@core/navigation/shouldHandleNavigation';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { cn } from '@/lib/utils';
 
 export interface AppNavigationSectionsProps {
@@ -22,6 +23,7 @@ export interface AppNavigationSectionsProps {
   databaseDate: string;
   isCustomData?: boolean;
   onItemClick?: () => void;
+  onDeleteTestingDraft?: () => void;
 }
 
 export const AppNavigationSections: React.FC<AppNavigationSectionsProps> = ({
@@ -36,7 +38,9 @@ export const AppNavigationSections: React.FC<AppNavigationSectionsProps> = ({
   databaseDate,
   isCustomData = false,
   onItemClick,
+  onDeleteTestingDraft,
 }) => {
+  const [deleteDraftConfirmOpen, setDeleteDraftConfirmOpen] = useState(false);
   const isSidebar = variant === 'sidebar';
 
   const contextualItems = getContextualNavItems({
@@ -179,7 +183,28 @@ export const AppNavigationSections: React.FC<AppNavigationSectionsProps> = ({
             Current Work
           </div>
           <div className="space-y-0.5">
-            {contextualItems.map((item) => renderNavLink(item))}
+            {contextualItems.map((item) =>
+              item.screen === Screen.TESTING && isTestingDraftDirty && onDeleteTestingDraft ? (
+                <div key={item.screen} className="flex items-center gap-1">
+                  <div className="flex-1 min-w-0">{renderNavLink(item)}</div>
+                  <button
+                    type="button"
+                    aria-label="Delete testing draft"
+                    onClick={() => setDeleteDraftConfirmOpen(true)}
+                    className={cn(
+                      'shrink-0 flex items-center justify-center min-h-[44px] min-w-[44px] rounded-none transition-colors',
+                      isSidebar
+                        ? 'text-masthead-foreground/60 hover:text-white hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-masthead-accent focus-visible:ring-offset-2 focus-visible:ring-offset-masthead'
+                        : 'text-muted-foreground hover:text-destructive hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card'
+                    )}
+                  >
+                    <Trash2 className="w-4 h-4" aria-hidden="true" />
+                  </button>
+                </div>
+              ) : (
+                renderNavLink(item)
+              )
+            )}
           </div>
         </nav>
       )}
@@ -236,6 +261,19 @@ export const AppNavigationSections: React.FC<AppNavigationSectionsProps> = ({
           <span className="font-mono">{isCustomData ? databaseDate : 'Demo'}</span>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={deleteDraftConfirmOpen}
+        onOpenChange={setDeleteDraftConfirmOpen}
+        variant="danger"
+        title="Delete testing draft?"
+        message="This will permanently discard your in-progress testing session — all entered results, notes, and drug selections. This cannot be undone."
+        confirmLabel="Delete draft"
+        onConfirm={() => {
+          onItemClick?.();
+          onDeleteTestingDraft?.();
+        }}
+      />
     </div>
   );
 };

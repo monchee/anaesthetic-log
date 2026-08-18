@@ -137,6 +137,7 @@ export function AnaestheticLogApp() {
     pendingNavigation,
     confirmNavigation,
     cancelNavigation,
+    onDeleteTestingDraft: resetForm,
     isTestingDraftDirty,
     hasActiveReport,
     currentScreen: screen,

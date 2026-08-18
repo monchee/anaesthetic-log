@@ -15,6 +15,7 @@ export interface AppSidebarProps {
   onOpenGetStarted: () => void;
   databaseDate: string;
   isCustomData?: boolean;
+  onDeleteTestingDraft?: () => void;
 }
 
 export const AppSidebar: React.FC<AppSidebarProps> = ({
@@ -27,6 +28,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   onOpenGetStarted,
   databaseDate,
   isCustomData = false,
+  onDeleteTestingDraft,
 }) => {
   return (
     <aside
@@ -81,6 +83,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           onOpenGetStarted={onOpenGetStarted}
           databaseDate={databaseDate}
           isCustomData={isCustomData}
+          onDeleteTestingDraft={onDeleteTestingDraft}
         />
       </div>
     </aside>

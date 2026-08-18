@@ -49,24 +49,24 @@ export const GetStartedActions: React.FC<GetStartedActionsProps> = ({
         onClick={onUpload}
         disabled={isUploading}
         aria-label="Upload REDCap export & review cases"
-        className={`flex flex-col text-left min-w-0 ${cardPadding} bg-primary/5 hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/15 border border-primary/30 hover:border-primary transition-all duration-150 rounded-none group cursor-pointer disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[44px] justify-between`}
+        className={`flex flex-col text-left min-w-0 ${cardPadding} bg-status-danger/5 hover:bg-status-danger/10 dark:bg-status-danger/10 dark:hover:bg-status-danger/15 border border-status-danger/30 hover:border-status-danger transition-all duration-150 rounded-none group cursor-pointer disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-danger focus-visible:ring-offset-2 min-h-[44px] justify-between`}
       >
         <div className="w-full min-w-0">
           <div className="flex items-center justify-between gap-3 mb-2 w-full min-w-0">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="p-2.5 bg-primary text-primary-foreground shrink-0 rounded-none">
+              <div className="p-2.5 bg-status-danger text-status-danger-foreground shrink-0 rounded-none">
                 {isUploading ? (
                   <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
                 ) : (
                   <Upload className="w-5 h-5" aria-hidden="true" />
                 )}
               </div>
-              <span className={`font-bold ${labelSize} text-foreground group-hover:text-primary transition-colors leading-snug min-w-0 break-words`}>
+              <span className={`font-bold ${labelSize} text-foreground group-hover:text-status-danger transition-colors leading-snug min-w-0 break-words`}>
                 Upload REDCap export & review cases
               </span>
             </div>
             <ChevronRight
-              className="w-4 h-4 text-primary/70 group-hover:text-primary shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
+              className="w-4 h-4 text-status-danger/70 group-hover:text-status-danger shrink-0 transition-transform duration-150 group-hover:translate-x-0.5"
               aria-hidden="true"
             />
           </div>

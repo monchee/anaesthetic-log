@@ -16,6 +16,7 @@ export interface AppNavigationDrawerProps {
   onOpenGetStarted: () => void;
   databaseDate: string;
   isCustomData?: boolean;
+  onDeleteTestingDraft?: () => void;
 }
 
 export const AppNavigationDrawer: React.FC<AppNavigationDrawerProps> = ({
@@ -30,6 +31,7 @@ export const AppNavigationDrawer: React.FC<AppNavigationDrawerProps> = ({
   onOpenGetStarted,
   databaseDate,
   isCustomData = false,
+  onDeleteTestingDraft,
 }) => {
   const drawerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -174,6 +176,7 @@ export const AppNavigationDrawer: React.FC<AppNavigationDrawerProps> = ({
                 databaseDate={databaseDate}
                 isCustomData={isCustomData}
                 onItemClick={() => onOpenChange(false)}
+                onDeleteTestingDraft={onDeleteTestingDraft}
               />
             </div>
           </div>

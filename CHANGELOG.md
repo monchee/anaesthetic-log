@@ -1,3 +1,21 @@
+## [0.78.2] — 2026-08-18 (Testing Draft Deletion)
+
+Summary: Adds an explicit way to discard an in-progress testing draft, restores sticky positioning for the chrome header and Testing screen workflow index, fixes print output showing the print-confirmation dialog and wasting a page on the SPT/IDT protocol table, aligns the patient identity bar, and gives the top bar and identity bar a navy chrome-cohesion accent.
+
+### Added
+- **Delete testing draft** — Adds an explicit way to discard an in-progress testing session draft, from the sidebar's Testing Session nav item (with a confirmation dialog) and from the "Leave testing session?" dialog (a new "Delete draft" option), reusing the existing draft-reset logic.
+
+### Fixed
+- **Sticky chrome header and Testing workflow index** — Restores `position: sticky` for the top chrome header and the Testing screen's step index, both of which had regressed after an earlier `overflow-x-hidden` fix; also removes a lingering CSS transform left behind by the screen-entrance animation that was breaking sticky/fixed positioning for elements inside `<main>`.
+- **Desktop sidebar clipping while scrolling** — The persistent sidebar no longer gets visually clipped during scroll; root cause was a permanent transform left on an ancestor by the screen-entrance animation.
+- **Patient identity bar alignment** — The bar now aligns to the same content container as the header and page content, instead of using its own narrower padding.
+- **Print preview showing the confirmation dialog** — The print-confirmation dialog is now hidden from print output instead of covering the printed testing plan.
+- **SPT/IDT table print pagination** — The testing plan's protocol table can now paginate across pages instead of being forced entirely onto page 2, eliminating a page of wasted blank space above it.
+
+### Changed
+- **Top bar and patient identity bar chrome cohesion** — Extends the NSW Health Navy accent to the top bar's page icon and a desktop-only top edge stripe, and replaces the identity bar's diffuse border with a single left accent stripe, tying both more closely to the navy sidebar.
+- **Upload REDCap card recoloured** — The front-page "Upload REDCap export & review cases" card now uses the red/danger accent instead of navy.
+
 ## [0.78.1] — 2026-08-18 (Responsive App Navigation)
 
 Summary: Introduces a responsive app-navigation shell with a persistent desktop sidebar, mobile navigation drawer, and page top bar, with focused accessibility coverage.
