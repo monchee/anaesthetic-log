@@ -50,16 +50,53 @@ export function formatClinicalReportAsText(data: LogFormData, redact?: (value: s
   // Test Panel
   if (data.testPanel && data.testPanel.length > 0) {
     lines.push('Skin & Intradermal Testing:');
-    lines.push('Drug | SPT | IDT Results | Notes');
-    lines.push('-'.repeat(70));
-    data.testPanel.forEach(row => {
+    data.testPanel.forEach((row, index) => {
+      if (index > 0) {
+        lines.push('');
+      }
       const name = row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName;
-      const positive = isSkinTestPositive(row) ? ' *POSITIVE*' : '';
-      const notes = row.notes ? ` | ${row.notes}` : '';
-      const idtStr = row.idtResults?.length
-        ? row.idtResults.map((v, i) => v ? `IDT${i + 1}:${v}mm` : null).filter(Boolean).join(' ')
-        : [row.idt100 && `1:100:${row.idt100}mm`, row.idt10 && `1:10:${row.idt10}mm`, row.idtNeat && `Neat:${row.idtNeat}mm`].filter(Boolean).join(' ') || '-';
-      lines.push(`${name} | ${row.sptWheal || '-'}mm | ${idtStr || '-'}${notes}${positive}`);
+      const result = isSkinTestPositive(row) ? 'Positive' : 'Negative';
+      const spt = row.sptWheal && row.sptWheal !== '-'
+        ? (row.sptWheal.endsWith('mm') ? row.sptWheal : `${row.sptWheal}mm`)
+        : '-';
+
+      lines.push(`  Drug: ${name}`);
+      lines.push(`  Result: ${result}`);
+      lines.push(`  SPT: ${spt}`);
+
+      const idtLines: string[] = [];
+      if (row.idtResults && row.idtResults.length > 0) {
+        row.idtResults.forEach((v, idx) => {
+          if (v !== undefined && v !== '' && v !== '-') {
+            const val = v.endsWith('mm') ? v : `${v}mm`;
+            idtLines.push(`IDT ${idx + 1}: ${val}`);
+          }
+        });
+      } else {
+        if (row.idt100 && row.idt100 !== '-') {
+          const val = row.idt100.endsWith('mm') ? row.idt100 : `${row.idt100}mm`;
+          idtLines.push(`1:100: ${val}`);
+        }
+        if (row.idt10 && row.idt10 !== '-') {
+          const val = row.idt10.endsWith('mm') ? row.idt10 : `${row.idt10}mm`;
+          idtLines.push(`1:10: ${val}`);
+        }
+        if (row.idtNeat && row.idtNeat !== '-') {
+          const val = row.idtNeat.endsWith('mm') ? row.idtNeat : `${row.idtNeat}mm`;
+          idtLines.push(`Neat: ${val}`);
+        }
+      }
+
+      if (idtLines.length > 0) {
+        lines.push('  IDT:');
+        idtLines.forEach(line => lines.push(`    ${line}`));
+      } else {
+        lines.push('  IDT: -');
+      }
+
+      if (row.notes && row.notes.trim()) {
+        lines.push(`  Notes: ${row.notes.trim()}`);
+      }
     });
     lines.push('');
   }

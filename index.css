@@ -463,6 +463,11 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
+    opacity: 0.28;
+    animation:
+      lock-grid-drift 42s ease-in-out infinite alternate,
+      lock-grid-pulse 18s ease-in-out infinite alternate;
+    will-change: transform, opacity;
   }
 
   /* Ambient light fields for the clinical lock station */
@@ -475,7 +480,7 @@
     max-width: 700px;
     max-height: 700px;
     border-radius: 50%;
-    background: radial-gradient(circle at center, hsl(var(--nsw-blue) / 0.14) 0%, hsl(var(--masthead-accent) / 0.08) 45%, transparent 70%);
+    background: radial-gradient(circle at center, hsl(var(--nsw-blue) / 0.22) 0%, hsl(var(--masthead-accent) / 0.14) 45%, transparent 70%);
     filter: blur(60px);
     pointer-events: none;
     animation: ambient-drift-1 24s ease-in-out infinite alternate;
@@ -491,7 +496,7 @@
     max-width: 650px;
     max-height: 650px;
     border-radius: 50%;
-    background: radial-gradient(circle at center, hsl(var(--masthead-accent) / 0.12) 0%, hsl(var(--nsw-blue) / 0.07) 50%, transparent 70%);
+    background: radial-gradient(circle at center, hsl(var(--masthead-accent) / 0.18) 0%, hsl(var(--nsw-blue) / 0.12) 50%, transparent 70%);
     filter: blur(60px);
     pointer-events: none;
     animation: ambient-drift-2 30s ease-in-out infinite alternate;
@@ -499,11 +504,35 @@
   }
 
   .dark .ambient-light-field-1 {
-    background: radial-gradient(circle at center, hsl(var(--nsw-blue) / 0.12) 0%, hsl(var(--masthead-accent) / 0.06) 45%, transparent 70%);
+    background: radial-gradient(circle at center, hsl(var(--nsw-blue) / 0.20) 0%, hsl(var(--masthead-accent) / 0.12) 45%, transparent 70%);
   }
 
   .dark .ambient-light-field-2 {
-    background: radial-gradient(circle at center, hsl(var(--masthead-accent) / 0.09) 0%, hsl(var(--nsw-blue) / 0.05) 50%, transparent 70%);
+    background: radial-gradient(circle at center, hsl(var(--masthead-accent) / 0.16) 0%, hsl(var(--nsw-blue) / 0.10) 50%, transparent 70%);
+  }
+}
+
+@keyframes lock-grid-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.5%, 2%, 0) scale(1.025);
+  }
+  100% {
+    transform: translate3d(-1.5%, 1%, 0) scale(0.985);
+  }
+}
+
+@keyframes lock-grid-pulse {
+  0% {
+    opacity: 0.24;
+  }
+  50% {
+    opacity: 0.34;
+  }
+  100% {
+    opacity: 0.28;
   }
 }
 
@@ -592,6 +621,12 @@
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .lock-station-grid {
+    animation: none !important;
+    transform: none !important;
+    opacity: 0.28 !important;
   }
 
   .btn-press,

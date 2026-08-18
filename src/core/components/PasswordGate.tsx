@@ -90,18 +90,23 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
       }`}
       aria-label="Screen lock"
     >
+      {/* Decorative ambient background light fields */}
+      <div className="ambient-light-field-1" aria-hidden="true" />
+      <div className="ambient-light-field-2" aria-hidden="true" />
+
       {/* Decorative architectural hairline grid */}
       <svg
-        className="lock-station-grid absolute inset-0 w-full h-full pointer-events-none opacity-20"
+        className="lock-station-grid absolute inset-0 w-full h-full pointer-events-none"
         aria-hidden="true"
       >
         <defs>
           <pattern id="lock-grid-pattern" width="48" height="48" patternUnits="userSpaceOnUse">
             <path d="M 48 0 L 0 0 0 48" fill="none" stroke="currentColor" strokeWidth="1" className="text-masthead-border" />
           </pattern>
-          <radialGradient id="lock-grid-mask" cx="50%" cy="50%" r="50%">
-            <stop offset="30%" stopColor="white" stopOpacity="1" />
-            <stop offset="85%" stopColor="white" stopOpacity="0" />
+          <radialGradient id="lock-grid-mask" cx="50%" cy="50%" r="75%">
+            <stop offset="40%" stopColor="white" stopOpacity="1" />
+            <stop offset="80%" stopColor="white" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="white" stopOpacity="0" />
           </radialGradient>
           <mask id="lock-station-mask">
             <rect width="100%" height="100%" fill="url(#lock-grid-mask)" />
@@ -109,10 +114,6 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
         </defs>
         <rect width="100%" height="100%" fill="url(#lock-grid-pattern)" mask="url(#lock-station-mask)" />
       </svg>
-
-      {/* Decorative ambient background light fields */}
-      <div className="ambient-light-field-1" aria-hidden="true" />
-      <div className="ambient-light-field-2" aria-hidden="true" />
 
       {/* Authored responsive lock-station frame */}
       <div className="relative z-10 w-full max-w-4xl animate-content-enter">

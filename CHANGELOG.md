@@ -1,3 +1,14 @@
+## [0.78.4] — 2026-08-18 (Report Clarity)
+
+Summary: Makes copied and emailed Clinical Reports readable as plain text with separated per-drug result blocks, and makes the PIN gate's architectural background pattern visibly animate while preserving reduced-motion support.
+
+### Changed
+- **Readable plain-text Clinical Report output** — Replaces the pipe-separated skin-testing table in Copy as Text and email output with blank-line-separated drug records containing labelled result, SPT, IDT, and optional notes fields. The on-screen and printed report tables remain unchanged.
+- **Visible PIN gate motion** — Layers the architectural grid above the ambient light fields, relaxes its mask, and adds restrained drift and pulse motion so the pattern is visibly present without overwhelming the lock station.
+
+### Added
+- **Plain-text report regression coverage** — Covers current and legacy IDT formats, positive/negative result labels, missing values, notes, custom drugs, and preserved challenge and nursing-note output.
+
 ## [0.78.3] — 2026-08-18 (Clinical Lock Station)
 
 Summary: Redesigns the PIN screen lock as a responsive clinical workstation lock station with an architectural hairline grid, restrained ambient lighting, preserved 4-digit PIN and session storage semantics, robust accessibility attributes, and reduced-motion support.

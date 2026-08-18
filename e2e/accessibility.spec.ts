@@ -650,16 +650,47 @@ test.describe('Automated Accessibility Scans', () => {
     await expect(ambient2).toHaveAttribute('aria-hidden', 'true');
   });
 
-  base('password gate ambient background layers respect prefers-reduced-motion', async ({ page, baseURL }) => {
+  base('password gate background layers have active animations under normal motion', async ({ page, baseURL }) => {
+    await page.goto(baseURL ?? '/');
+    await page.waitForSelector('h1', { timeout: 15000 });
+
+    const grid = page.locator('.lock-station-grid');
+    const ambient1 = page.locator('.ambient-light-field-1');
+    const ambient2 = page.locator('.ambient-light-field-2');
+
+    await expect(grid).toBeAttached();
+    await expect(ambient1).toBeAttached();
+    await expect(ambient2).toBeAttached();
+
+    const gridAnimation = await grid.evaluate((el) => window.getComputedStyle(el).animationName);
+    const ambient1Animation = await ambient1.evaluate((el) => window.getComputedStyle(el).animationName);
+    const ambient2Animation = await ambient2.evaluate((el) => window.getComputedStyle(el).animationName);
+
+    expect(gridAnimation).not.toBe('none');
+    expect(ambient1Animation).not.toBe('none');
+    expect(ambient2Animation).not.toBe('none');
+  });
+
+  base('password gate ambient and grid background layers respect prefers-reduced-motion', async ({ page, baseURL }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(baseURL ?? '/');
     await page.waitForSelector('h1', { timeout: 15000 });
 
+    const grid = page.locator('.lock-station-grid');
     const ambient1 = page.locator('.ambient-light-field-1');
-    await expect(ambient1).toBeAttached();
+    const ambient2 = page.locator('.ambient-light-field-2');
 
-    const animation = await ambient1.evaluate((el) => window.getComputedStyle(el).animationName);
-    expect(animation).toBe('none');
+    await expect(grid).toBeAttached();
+    await expect(ambient1).toBeAttached();
+    await expect(ambient2).toBeAttached();
+
+    const gridAnimation = await grid.evaluate((el) => window.getComputedStyle(el).animationName);
+    const ambient1Animation = await ambient1.evaluate((el) => window.getComputedStyle(el).animationName);
+    const ambient2Animation = await ambient2.evaluate((el) => window.getComputedStyle(el).animationName);
+
+    expect(gridAnimation).toBe('none');
+    expect(ambient1Animation).toBe('none');
+    expect(ambient2Animation).toBe('none');
   });
 
   test('axe-core scan on populated testing session', async ({ page }) => {
