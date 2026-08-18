@@ -51,12 +51,12 @@ export function ClinicalContextBar({
     <aside
       aria-label={accessibleLabel}
       className={cn(
-        'w-full overflow-x-auto border border-primary/30 bg-card/95 py-2 shadow-sm backdrop-blur-sm print:hidden',
+        'w-full overflow-x-auto border border-border border-l-[6px] border-l-primary bg-card/95 py-2 shadow-sm backdrop-blur-sm print:hidden',
         className,
       )}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-5 md:px-6">
-        <div className="flex min-w-max items-center gap-2 whitespace-nowrap text-sm font-medium text-foreground dark:text-primary">
+        <div className="flex min-w-max items-center gap-2 whitespace-nowrap text-sm font-medium text-foreground">
           <span className="font-semibold">{formattedName}</span>
 
           <span aria-hidden="true" className="text-muted-foreground">·</span>

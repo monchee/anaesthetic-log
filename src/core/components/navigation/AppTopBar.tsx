@@ -36,12 +36,12 @@ export const AppTopBar: React.FC<AppTopBarProps> = ({
   const renderIcon = () => {
     if (!icon) return null;
     return (
-      <div className="bg-muted p-2 rounded-none border border-border shrink-0 text-foreground flex items-center justify-center">
+      <div className="bg-primary/6 dark:bg-primary/15 p-2 rounded-none border border-primary/25 dark:border-primary/35 shrink-0 text-primary flex items-center justify-center">
         {React.isValidElement(icon)
           ? icon
           : typeof icon === 'function' || (typeof icon === 'object' && icon !== null)
           ? React.createElement(icon as React.ComponentType<{ className?: string }>, {
-              className: 'h-5 w-5 text-foreground',
+              className: 'h-5 w-5 text-primary',
             })
           : null}
       </div>
@@ -52,7 +52,7 @@ export const AppTopBar: React.FC<AppTopBarProps> = ({
     <header
       role="banner"
       aria-label="Application header"
-      className="bg-card text-card-foreground border-b border-border no-print"
+      className="bg-card text-card-foreground border-b border-border xl:border-t-[3px] xl:border-t-primary no-print"
     >
       {/* Tablet / Mobile view (<1280px, xl:hidden) */}
       <div className="xl:hidden flex flex-col">

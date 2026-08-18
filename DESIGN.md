@@ -151,6 +151,9 @@ App navigation chrome uses a dedicated semantic token namespace (`--masthead-*`)
 - `--masthead-accent` (`hsl(199 92% 89%)` in Light, `hsl(199 92% 85%)` in Dark): Pale NSW blue leading indicator and focus ring indicator for active sidebar navigation.
 - `--masthead-border` (`hsl(217 100% 30%)` in Light, `hsl(217 60% 26%)` in Dark): Divider and border framing within navigation chrome.
 
+### Chrome Cohesion
+**Chrome Cohesion.** `AppTopBar`'s page-icon chip (light `--primary` tint + border, solid `--primary` icon) and its `xl:`-only 3px top border extend `--primary` beyond the "Report active" badge to visually tether the top bar to the navy sidebar/masthead system, without tinting body text or backgrounds. `ClinicalContextBar` (the patient identity bar) uses a single 6px `border-l-primary` accent stripe — reusing `--primary` rather than a dedicated token, since the stripe signals "verified institutional chrome," the same meaning `--primary` already carries elsewhere, not a new clinical category. Patient name/MRN/DOB text in this bar is always `text-foreground` in both themes — never `--primary` — because `--primary` on `--card` measures only ~4.6:1 in dark mode, too close to the AA floor for the app's single highest-stakes anti-mix-up string.
+
 ### Neutral
 - **Background** (`hsl(210 40% 98%)` / `#f8fafc` Light, `hsl(0 0% 10%)` / `#1a1a1a` Dark): Main viewport canvas.
 - **Card / Surface** (`hsl(0 0% 100%)` / `#ffffff` Light, `hsl(0 0% 14%)` / `#242424` Dark): Elevated clinical cards, tables, and dialog sheets.
