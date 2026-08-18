@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Dashboard from './Dashboard';
-import { Patient, LogFormData } from '@/types';
+import { Patient, LogFormData } from '@shared/types';
 
 vi.mock('@shared/utils', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@shared/utils')>();

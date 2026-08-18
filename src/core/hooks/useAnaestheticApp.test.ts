@@ -7,8 +7,8 @@ import { useDisclaimer } from '@shared/hooks/useDisclaimer';
 import { generateLetterText } from '@shared/utils/reportExporter';
 import { createMockLogFormData } from '@/src/test/factories/testingDataFactory';
 import { createMockPatient } from '@/src/test/factories/patientFactory';
-import type { LogFormData, Patient } from '@/types';
-import { Screen } from '@/types';
+import type { LogFormData, Patient } from '@shared/types';
+import { Screen } from '@shared/types';
 import { useAppNavigation } from './useAppNavigation';
 import { useAnaestheticApp } from './useAnaestheticApp';
 

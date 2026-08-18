@@ -1,4 +1,4 @@
-import { LogFormData, DrugTestRow } from '../../../../types';
+import { LogFormData, DrugTestRow } from '@shared/types';
 import { SKIN_TEST_POSITIVE_THRESHOLD } from '@shared/utils/constants';
 
 /**

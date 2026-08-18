@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { TestingWorkflowIndex, deriveSectionStatus, WORKFLOW_SECTIONS } from './TestingWorkflowIndex';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 
 const emptyForm: LogFormData = {
   mrn: '',

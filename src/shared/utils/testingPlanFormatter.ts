@@ -1,4 +1,4 @@
-import { Patient, TestingPlanData } from '@/types';
+import { Patient, TestingPlanData } from '@shared/types';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 
 export function formatTestingPlanAsText(

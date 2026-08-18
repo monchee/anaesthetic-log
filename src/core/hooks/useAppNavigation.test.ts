@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useAppNavigation } from './useAppNavigation';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 
 describe('useAppNavigation', () => {
   const originalLocation = window.location;

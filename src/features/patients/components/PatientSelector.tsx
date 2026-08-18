@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Patient } from '@/types';
+import { Patient } from '@shared/types';
 import { formatDate } from '@shared/utils';
 import { Search, ChevronDown, Check, UserPlus } from 'lucide-react';
 

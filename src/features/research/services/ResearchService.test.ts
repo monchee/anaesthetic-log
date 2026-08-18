@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { deidentify } from './ResearchService';
-import { LogFormData } from '../../../../types';
+import { LogFormData } from '@shared/types';
 
 function makeData(overrides: Partial<LogFormData> = {}): LogFormData {
   return {

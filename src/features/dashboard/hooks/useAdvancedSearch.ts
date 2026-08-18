@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from 'react';
-import { Patient } from '../../../../types';
+import { Patient } from '@shared/types';
 
 export interface AdvancedSearchFilters {
   textQuery: string;

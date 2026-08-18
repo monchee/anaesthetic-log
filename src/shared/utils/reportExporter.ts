@@ -1,5 +1,5 @@
 import { LogFormData, TryptaseData } from '@features/testing/types';
-import { Patient } from '@/types';
+import { Patient } from '@shared/types';
 import { isSkinTestPositive, getPositiveResults, getNegativeResults, getCrossSensitizationNotes, getCrossSensitizedDrugs, buildRecommendations } from './testingUtils';
 import { formatDate } from './dateUtils';
 

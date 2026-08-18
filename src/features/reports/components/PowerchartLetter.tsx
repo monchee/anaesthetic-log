@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRedact } from '../hooks/useRedact';
 import { Card, CardContent } from '@/components/ui';
-import { LogFormData, Patient } from '@/types';
+import { LogFormData, Patient } from '@shared/types';
 import { formatDate, getPositiveResults, getNegativeResults } from '@shared/utils';
 import { getCrossSensitizationNotes, getCrossSensitizedDrugs, buildRecommendations } from '@shared/utils/testingUtils';
 import {

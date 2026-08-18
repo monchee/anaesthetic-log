@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { LogFormData } from '../../../../types';
+import { LogFormData } from '@shared/types';
 import { isSupabaseConfigured } from '../../../lib/supabase';
 import { deidentify, submitResult } from '../services/ResearchService';
 

@@ -2,7 +2,7 @@
 import React from 'react';
 import { useRedact } from '../hooks/useRedact';
 import { Card, CardContent } from '@/components/ui';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 import { formatDate } from '@shared/utils';
 import { getPositiveResults } from '@shared/utils/testingUtils';
 import { getCrossSensitizationNotes, getCrossSensitizedDrugs, buildRecommendations } from '@shared/utils/testingUtils';

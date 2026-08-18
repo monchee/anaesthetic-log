@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { createMockLogFormData } from '@/src/test/factories/testingDataFactory';
-import type { LogFormData } from '@/types';
+import type { LogFormData } from '@shared/types';
 import { TryptaseSection } from './TryptaseSection';
 
 interface HarnessProps {

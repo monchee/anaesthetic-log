@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Patient } from '@/types';
+import { Patient } from '@shared/types';
 import { decodeCsvBytes, parseRedcapCSV } from '@shared/utils';
 import { toast } from 'sonner';
 

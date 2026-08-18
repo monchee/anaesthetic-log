@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Patient } from '@/types';
+import type { Patient } from '@shared/types';
 import { INITIAL_FILTERS } from '../hooks/useAdvancedSearch';
 import PatientTable from './PatientTable';
 

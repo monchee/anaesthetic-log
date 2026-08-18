@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { parseRedcapCSV, decodeCsvBytes } from '@shared/utils';
-import { Screen, Patient, LogFormData } from '@/types';
+import { Screen, Patient, LogFormData } from '@shared/types';
 import { toast } from 'sonner';
 import { useCountUp } from '@shared/hooks/useCountUp';
 import { useDashboardAnalytics } from '../hooks/useDashboardAnalytics';

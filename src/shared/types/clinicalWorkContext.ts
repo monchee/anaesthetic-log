@@ -1,4 +1,4 @@
-import { Patient, LogFormData } from '@/types';
+import { Patient, LogFormData } from '@shared/types';
 
 export type ClinicalWorkSource = 'database' | 'manual' | 'direct';
 

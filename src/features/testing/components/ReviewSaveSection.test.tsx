@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ReviewSaveSection } from './ReviewSaveSection';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 
 const baseForm: LogFormData = {
   mrn: 'MRN-REV-01',

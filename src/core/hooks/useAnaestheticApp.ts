@@ -6,7 +6,7 @@ import { isTestingSessionDirty } from '@features/testing/utils/isTestingSessionD
 import { isDifferentPatient, getPatientIdentitySignature } from '@features/patients/utils/patientIdentity';
 import { useAppNavigation } from './useAppNavigation';
 import { useDisclaimer } from '@shared/hooks/useDisclaimer';
-import { Patient, Screen } from '@/types';
+import { Patient, Screen } from '@shared/types';
 import { createClinicalWorkContext } from '@shared/types/clinicalWorkContext';
 
 export function useAnaestheticApp() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import { useTheme } from '@core/components/ThemeProvider';
 import { shouldHandleNavigation } from '@core/navigation/shouldHandleNavigation';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui';

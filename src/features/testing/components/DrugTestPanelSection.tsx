@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@/components/ui';
 import { Activity, Check, Plus, Search, X } from 'lucide-react';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 import { DrugTestGrid } from './DrugTestGrid';
 import { preventNegativeInput } from './TestingLogFormSectionShared';

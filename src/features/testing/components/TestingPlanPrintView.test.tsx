@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import TestingPlanPrintView from './TestingPlanPrintView';
-import { TestingPlanData } from '@/types';
+import { TestingPlanData } from '@shared/types';
 import { createMockPatient } from '@/src/test/factories/patientFactory';
 import { formatTestingPlanAsText } from '@shared/utils/testingPlanFormatter';
 import { showToast } from '@shared/utils';

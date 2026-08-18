@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ScreenLayout, ScreenLayoutProps } from './ScreenLayout';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import { renderWithProviders } from '../../test/helpers/renderWithProviders';
 
 let recordedSidebarProps: any = null;

@@ -11,7 +11,7 @@ import {
   ClipboardList,
   Edit3,
 } from 'lucide-react';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 import { SKIN_TEST_POSITIVE_THRESHOLD } from '@shared/utils/constants';
 import { ValidationErrorLink } from './SaveActionSection';
 

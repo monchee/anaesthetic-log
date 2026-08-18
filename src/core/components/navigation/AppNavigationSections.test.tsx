@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { screen, fireEvent, within } from '@testing-library/react';
 import { AppNavigationSections, AppNavigationSectionsProps } from './AppNavigationSections';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import { renderWithProviders } from '../../../test/helpers/renderWithProviders';
 
 describe('AppNavigationSections', () => {

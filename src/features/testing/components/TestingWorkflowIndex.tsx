@@ -14,7 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 import { cn } from '@shared/utils';
 import {
   Button,

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { GetStartedModal } from './GetStartedModal';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import changelogData from '@shared/data/changelog.json';
 
 const currentVersion = changelogData[0].version;

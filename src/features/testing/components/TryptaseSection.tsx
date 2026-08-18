@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@/components/ui';
 import { Activity, FileInput, Plus, X } from 'lucide-react';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 import { EMPTY_TRYPTASE } from './TestingLogFormSectionShared';
 
 interface TryptaseSectionProps {

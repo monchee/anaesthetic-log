@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stethoscope } from 'lucide-react';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import { shouldHandleNavigation } from '@core/navigation/shouldHandleNavigation';
 import { AppNavigationSections } from './AppNavigationSections';
 import { cn } from '@/lib/utils';

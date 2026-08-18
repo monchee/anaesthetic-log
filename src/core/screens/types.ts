@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Patient, Screen } from '@/types';
+import { Patient, Screen } from '@shared/types';
 
 export interface CommonScreenLayoutProps {
   setScreen: (screen: Screen) => void;

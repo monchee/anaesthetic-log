@@ -1,5 +1,16 @@
 [
   {
+    "version": "v0.78.9",
+    "codename": "One Types Barrel",
+    "date": "19 August 2026",
+    "summary": "Unifies the type import path \u2014 the same `Screen`/`Patient`/etc. types were reachable via two different aliases (`@/types` and `@shared/types`) in files that talk directly to each other, which is exactly the kind of drift that produces \"which one is the real one\" bugs. Pure import-path codemod, zero behaviour change.",
+    "highlight": false,
+    "changes": [
+      "Single canonical types barrel \u2014 Every `@/types` import across the codebase (76 files) now goes through `@shared/types`. `src/shared/types/index.ts` now re-exports patient and testing feature types alongside `common` and `clinicalWorkContext`, completing it as the one barrel the old root shim used to be.",
+      "Deleted the migration shim \u2014 Root `types.ts` (explicitly a \"backward compatibility during migration\" re-export) is gone now that nothing imports through it."
+    ]
+  },
+  {
     "version": "v0.78.8",
     "codename": "Strict Housekeeping",
     "date": "19 August 2026",

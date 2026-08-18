@@ -16,7 +16,7 @@ import {
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Progress, Skeleton } from '../../../../components/ui';
 import { fetchAllResults, exportToCsv, deleteResult } from '../services/ResearchService';
 import { ResearchRecord } from '../types';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import { toast } from 'sonner';
 
 function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDelete: () => void }) {

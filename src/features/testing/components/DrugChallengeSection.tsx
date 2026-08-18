@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { Activity, AlertOctagon, CheckCircle2, Syringe, ThumbsDown, ThumbsUp } from 'lucide-react';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 import { InputChangeHandler } from './TestingLogFormSectionShared';
 import { DrugChallengeReactionFields } from './DrugChallengeReactionFields';
 

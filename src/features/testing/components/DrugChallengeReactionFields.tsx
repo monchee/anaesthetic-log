@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { Activity, Clock, Stethoscope } from 'lucide-react';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 import { InputChangeHandler, preventNegativeInput } from './TestingLogFormSectionShared';
 
 interface DrugChallengeReactionFieldsProps {

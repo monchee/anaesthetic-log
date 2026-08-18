@@ -2,7 +2,7 @@ import React from 'react';
 import { LayoutDashboard } from 'lucide-react';
 import { ScreenLayout } from '@core/components/ScreenLayout';
 import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS } from '@shared/utils/constants';
-import { LogFormData, Patient, Screen } from '@/types';
+import { LogFormData, Patient, Screen } from '@shared/types';
 import { CommonScreenLayoutProps } from './types';
 
 const Dashboard = React.lazy(() => import('@features/dashboard/components/Dashboard'));

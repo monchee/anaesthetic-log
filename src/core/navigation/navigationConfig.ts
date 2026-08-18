@@ -17,7 +17,7 @@ import {
   AlertTriangle,
   LucideIcon,
 } from 'lucide-react';
-import { Screen, LogFormData } from '@/types';
+import { Screen, LogFormData } from '@shared/types';
 import { ACTIVE_REPORT_TTL_MS } from '@shared/utils';
 
 export interface NavigationItem {

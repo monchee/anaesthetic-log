@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Input, Label } from '@/components/ui';
 import { ChevronDown, ChevronUp, ClipboardList } from 'lucide-react';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 
 interface NurseNotesSectionProps {
   formData: LogFormData;

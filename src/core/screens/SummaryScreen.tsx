@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { ScreenLayout } from '@core/components/ScreenLayout';
-import { Patient, LogFormData } from '@/types';
+import { Patient, LogFormData } from '@shared/types';
 import { showToast } from '@shared/utils';
 import { formatClinicalReportAsText, formatPatientHandoutAsText, generateLetterText } from '@shared/utils/reportExporter';
 import { RedactProvider, useRedact } from '@features/reports/hooks/useRedact';

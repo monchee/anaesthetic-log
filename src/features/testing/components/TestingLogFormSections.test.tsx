@@ -5,7 +5,7 @@ import { AssessmentPlanSection } from './AssessmentPlanSection';
 import { NurseNotesSection } from './NurseNotesSection';
 import { SaveActionSection } from './SaveActionSection';
 import { VisitDetailsSection } from './VisitDetailsSection';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 
 describe('AssessmentPlanSection', () => {
   it('renders plan text and triggers onInputChange on change', () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRedact } from '../hooks/useRedact';
 import { Card, CardContent } from '@/components/ui';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 import { formatDate, getPositiveResults, getNegativeResults } from '@shared/utils';
 import { getCrossSensitizedDrugs, buildRecommendations } from '@shared/utils/testingUtils';
 import { Ban, ShieldCheck } from 'lucide-react';

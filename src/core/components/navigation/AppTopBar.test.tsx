@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { screen, fireEvent } from '@testing-library/react';
 import { AppTopBar, AppTopBarProps } from './AppTopBar';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import { renderWithProviders } from '../../../test/helpers/renderWithProviders';
 
 describe('AppTopBar', () => {

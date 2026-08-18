@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Screen, Patient } from '@/types';
+import { Screen, Patient } from '@shared/types';
 import { pathFromScreen } from '@core/navigation/navigationConfig';
 import { AppSidebar } from './navigation/AppSidebar';
 import { AppTopBar } from './navigation/AppTopBar';

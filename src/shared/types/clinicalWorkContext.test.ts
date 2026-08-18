@@ -8,7 +8,7 @@ import {
   migrateLegacyRecordToEnvelope,
   migrateLegacyDraftToEnvelope,
 } from './clinicalWorkContext';
-import { Patient, LogFormData } from '@/types';
+import { Patient, LogFormData } from '@shared/types';
 
 const mockPatient: Patient = {
   id: '101',

@@ -3,7 +3,7 @@ import { ArrowLeft, ClipboardList, TestTube2 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { ScreenLayout } from '@core/components/ScreenLayout';
 import { APP_CONFIG, DRUG_CATEGORIES } from '@shared/utils/constants';
-import { LogFormData, Patient, TestingPlanData } from '@/types';
+import { LogFormData, Patient, TestingPlanData } from '@shared/types';
 import { CommonScreenLayoutProps } from './types';
 import { ClinicalContextBar } from '@features/patients/components/ClinicalContextBar';
 import { HighRiskContextChips } from '@features/patients/components/HighRiskContextChips';

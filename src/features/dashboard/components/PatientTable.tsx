@@ -13,7 +13,7 @@ import {
   type PatientStatusResult,
   type PatientWorkflowStatus,
 } from '@shared/utils/patientStatus';
-import { Patient } from '@/types';
+import { Patient } from '@shared/types';
 import { AdvancedSearchFilters, AdvancedSearchPanel } from './AdvancedSearchFilters';
 import { CSVUploadInstructions } from './CSVUploadInstructions';
 import { exportDeidentifiedCSV, downloadFile } from '@shared/utils/auditExporter';

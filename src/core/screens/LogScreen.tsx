@@ -33,7 +33,7 @@ import TestingPlanGenerator from '@features/testing/components/TestingPlanGenera
 import { ACTIVE_REPORT_TTL_MS } from '@shared/utils';
 import { DRUG_CATEGORIES } from '@shared/utils/constants';
 import { isDifferentPatient } from '@features/patients/utils/patientIdentity';
-import { Patient, LogFormData, Screen, TestingPlanData } from '@/types';
+import { Patient, LogFormData, Screen, TestingPlanData } from '@shared/types';
 import { CommonScreenLayoutProps } from './types';
 import { ScreenLayout } from '@core/components/ScreenLayout';
 import { GetStartedActions } from '@core/components/GetStartedActions';

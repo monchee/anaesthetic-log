@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 import { useTestingLogLogic } from '../hooks/useTestingLogLogic';
 import { TestingService } from '../services/TestingService';
 import {

@@ -1,5 +1,5 @@
 import { supabase } from '../../../lib/supabase';
-import { LogFormData, DrugTestRow } from '../../../../types';
+import { LogFormData, DrugTestRow } from '@shared/types';
 import { ResearchSubmission, ResearchRecord } from '../types';
 import { SKIN_TEST_POSITIVE_THRESHOLD } from '@shared/utils/constants';
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import {
   screenFromPath,
   pathFromScreen,

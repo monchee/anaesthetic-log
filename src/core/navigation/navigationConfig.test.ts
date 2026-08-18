@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import {
   screenFromPath,
   pathFromScreen,

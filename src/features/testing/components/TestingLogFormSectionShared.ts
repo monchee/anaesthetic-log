@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 
 export const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
   if (['-', 'e', 'E', '+'].includes(e.key)) e.preventDefault();

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import { ScreenLayout, ScreenLayoutProps } from './ScreenLayout';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import { renderWithProviders } from '../../test/helpers/renderWithProviders';
 
 describe('ScreenLayout', () => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Card, CardContent, Badge } from '@/components/ui';
-import { Patient, TestingPlanData } from '@/types';
+import { Patient, TestingPlanData } from '@shared/types';
 import { formatDate, showToast } from '@shared/utils';
 import { Printer, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText, Copy } from 'lucide-react';
 import { formatTestingPlanAsText } from '@shared/utils/testingPlanFormatter';

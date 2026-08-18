@@ -1,5 +1,5 @@
 import React from 'react';
-import { Screen, Patient } from '@/types';
+import { Screen, Patient } from '@shared/types';
 import { Database } from 'lucide-react';
 import { FOOTER_LEGAL_ITEMS, pathFromScreen } from '@core/navigation/navigationConfig';
 import { shouldHandleNavigation } from '@core/navigation/shouldHandleNavigation';

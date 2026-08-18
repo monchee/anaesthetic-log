@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Input, Label } from '@/components/ui';
 import { Activity, Calendar, User } from 'lucide-react';
-import { LogFormData } from '@/types';
+import { LogFormData } from '@shared/types';
 import { InputChangeHandler } from './TestingLogFormSectionShared';
 import { ValidationErrorLink } from './SaveActionSection';
 

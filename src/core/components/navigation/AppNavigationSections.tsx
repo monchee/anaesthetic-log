@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, PlayCircle, Database, Trash2 } from 'lucide-react';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import {
   PRIMARY_NAV_ITEMS,
   getContextualNavItems,

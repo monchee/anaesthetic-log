@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Footer from './Footer';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 
 describe('Footer', () => {
   it('renders reduced footer with legal links, clinic identity, and version', () => {

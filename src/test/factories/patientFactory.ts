@@ -1,4 +1,4 @@
-import { Patient, PatientHistory } from '../../../types';
+import { Patient, PatientHistory } from '@shared/types';
 
 /**
  * Factory function to create mock patients for testing

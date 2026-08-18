@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
 } from '../../../../components/ui';
 import { X, Plus, Check, ChevronDown } from 'lucide-react';
-import { DrugTestRow, DrugProtocol } from '../../../../types';
+import { DrugTestRow, DrugProtocol } from '@shared/types';
 import { CATEGORY_THEMES, DEFAULT_THEME, SKIN_TEST_POSITIVE_THRESHOLD } from '@shared/utils/constants';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
 

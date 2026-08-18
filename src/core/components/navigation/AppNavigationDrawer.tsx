@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Menu, X, Stethoscope } from 'lucide-react';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import { AppNavigationSections } from './AppNavigationSections';
 import { cn } from '@/lib/utils';
 

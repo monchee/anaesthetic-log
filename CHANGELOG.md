@@ -1,3 +1,11 @@
+## [0.78.9] — 2026-08-19 (One Types Barrel)
+
+Summary: Unifies the type import path — the same `Screen`/`Patient`/etc. types were reachable via two different aliases (`@/types` and `@shared/types`) in files that talk directly to each other, which is exactly the kind of drift that produces "which one is the real one" bugs. Pure import-path codemod, zero behaviour change.
+
+### Changed
+- **Single canonical types barrel** — Every `@/types` import across the codebase (76 files) now goes through `@shared/types`. `src/shared/types/index.ts` now re-exports patient and testing feature types alongside `common` and `clinicalWorkContext`, completing it as the one barrel the old root shim used to be.
+- **Deleted the migration shim** — Root `types.ts` (explicitly a "backward compatibility during migration" re-export) is gone now that nothing imports through it.
+
 ## [0.78.8] — 2026-08-19 (Strict Housekeeping)
 
 Summary: Zero-behaviour-change cleanup — removes dead duplicate code, enables TypeScript strict mode across the codebase, and adds a global test coverage floor, closing the gap between this codebase's actual quality and its type-checking rigor ahead of the architecture work that follows.

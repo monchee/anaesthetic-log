@@ -12,7 +12,7 @@ import { ChevronLeft, PlayCircle, Sparkles } from 'lucide-react';
 import { useRedcapCsvUpload } from '@shared/hooks/useRedcapCsvUpload';
 import { GetStartedActions } from './GetStartedActions';
 import { RedcapExportSteps } from '@features/dashboard/components/RedcapExportSteps';
-import { Patient, Screen } from '@/types';
+import { Patient, Screen } from '@shared/types';
 import changelogData from '@shared/data/changelog.json';
 
 const _changelog = changelogData as Array<{

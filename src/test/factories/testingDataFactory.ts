@@ -1,4 +1,4 @@
-import { LogFormData, DrugTestRow, TestingPlanData } from '../../../types';
+import { LogFormData, DrugTestRow, TestingPlanData } from '@shared/types';
 
 /**
  * Factory function to create mock LogFormData for testing

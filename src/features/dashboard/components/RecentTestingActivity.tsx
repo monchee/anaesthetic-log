@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, Badge } from '../../../../components/ui';
 import { Clock } from 'lucide-react';
-import { LogFormData } from '../../../../types';
+import { LogFormData } from '@shared/types';
 import { formatDate, isSkinTestPositive } from '@shared/utils';
 
 interface RecentTestingActivityProps {

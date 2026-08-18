@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import DisclaimerBanner from './DisclaimerBanner';
 import { ScreenLayout } from './ScreenLayout';
-import { Screen } from '@/types';
+import { Screen } from '@shared/types';
 import { renderWithProviders } from '../../test/helpers/renderWithProviders';
 
 describe('Shared polish safety and semantic token regression tests', () => {

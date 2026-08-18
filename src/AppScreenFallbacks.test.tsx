@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from './test/helpers';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Screen } from '@shared/types';
-import type { Patient, TestingPlanData } from '@/types';
+import type { Patient, TestingPlanData } from '@shared/types';
 import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
 import { AnaestheticLogApp } from '../App';
 

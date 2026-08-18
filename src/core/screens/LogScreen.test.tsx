@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Screen, Patient } from '@/types';
+import { Screen, Patient } from '@shared/types';
 import { createMockLogFormData } from '@/src/test/factories/testingDataFactory';
 import { createMockPatient } from '@/src/test/factories/patientFactory';
 import { LogScreen } from './LogScreen';

@@ -1,4 +1,4 @@
-import { Patient } from '../../types';
+import { Patient } from '@shared/types';
 
 export function searchPatients(patients: Patient[] | null | undefined, searchTerm: string): Patient[] {
   if (!patients) return [];

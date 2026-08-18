@@ -1,7 +1,7 @@
 
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Badge, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
-import { Patient } from '@/types';
+import { Patient } from '@shared/types';
 import { Activity, Syringe, FileText, History, Clock, Building2, AlertTriangle, User, Phone, CheckCircle2, AlertCircle, HelpCircle, Info, MessageSquare, MonitorCheck, FlaskConical, Flag } from 'lucide-react';
 import { formatDate, getGradeVariant, parsePatientTimeline, calculateTimeDifference, getOutstandingDocuments } from '@shared/utils';
 import { deriveHighRiskChips } from '@shared/utils/highRiskContext';
