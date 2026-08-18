@@ -1,5 +1,19 @@
 [
   {
+    "version": "v0.78.7",
+    "codename": "Regression Net",
+    "date": "19 August 2026",
+    "summary": "Adds the Phase 0 regression net ahead of a broader architecture/correctness/performance pass \u2014 e2e wired into CI, characterization tests for the previously-untested navigation guard, prop-forwarding tests for ScreenLayout's chrome props, screenshot baselines for the nav chrome, and a temporary prop-key tripwire ahead of an upcoming layout-type refactor.",
+    "highlight": false,
+    "changes": [
+      "E2E in CI \u2014 Adds a Playwright/Chromium job to `.github/workflows/ci.yml`, running the non-visual suite on every push.",
+      "Navigation guard test coverage \u2014 Unit tests (`AppScreenFallbacks.test.tsx`) and a new e2e scenario (`e2e/testing-day.spec.ts`) covering the \"leave testing session\" dialog: dialog visibility, each button's callback, and the delete-draft cancel-then-reset ordering.",
+      "ScreenLayout prop-forwarding tests \u2014 New `ScreenLayout.forwarding.test.tsx` asserting chrome and navigation props actually reach `AppSidebar`, `AppTopBar`, `AppNavigationDrawer`, and `Footer`.",
+      "Navigation chrome screenshot baselines \u2014 `e2e/visual-chrome.spec.ts` now asserts real screenshot diffs (desktop/mobile, root/dashboard) instead of save-only capture.",
+      "Temporary prop-key tripwire \u2014 `AppLayoutProps.test.tsx` pins the exact prop-key set `App.tsx` forwards to `ScreenLayout` via an inline snapshot, to be deleted once the layout-type refactor lands."
+    ]
+  },
+  {
     "version": "v0.78.6",
     "codename": "Safe PWA Updates",
     "date": "18 August 2026",

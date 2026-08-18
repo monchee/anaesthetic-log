@@ -1,3 +1,14 @@
+## [0.78.7] — 2026-08-19 (Regression Net)
+
+Summary: Adds the Phase 0 regression net ahead of a broader architecture/correctness/performance pass — e2e wired into CI, characterization tests for the previously-untested navigation guard, prop-forwarding tests for ScreenLayout's chrome props, screenshot baselines for the nav chrome, and a temporary prop-key tripwire ahead of an upcoming layout-type refactor.
+
+### Added
+- **E2E in CI** — Adds a Playwright/Chromium job to `.github/workflows/ci.yml`, running the non-visual suite on every push.
+- **Navigation guard test coverage** — Unit tests (`AppScreenFallbacks.test.tsx`) and a new e2e scenario (`e2e/testing-day.spec.ts`) covering the "leave testing session" dialog: dialog visibility, each button's callback, and the delete-draft cancel-then-reset ordering.
+- **ScreenLayout prop-forwarding tests** — New `ScreenLayout.forwarding.test.tsx` asserting chrome and navigation props actually reach `AppSidebar`, `AppTopBar`, `AppNavigationDrawer`, and `Footer`.
+- **Navigation chrome screenshot baselines** — `e2e/visual-chrome.spec.ts` now asserts real screenshot diffs (desktop/mobile, root/dashboard) instead of save-only capture.
+- **Temporary prop-key tripwire** — `AppLayoutProps.test.tsx` pins the exact prop-key set `App.tsx` forwards to `ScreenLayout` via an inline snapshot, to be deleted once the layout-type refactor lands.
+
 ## [0.78.6] — 2026-08-18 (Safe PWA Updates)
 
 Summary: Implements a safe PWA update policy that automatically refreshes waiting service workers at the PIN gate, protects active unlocked clinical sessions with persistent update prompts, coordinates explicit skipWaiting without clientsClaim to avoid reload loops, and cleans up outdated caches.
