@@ -4,7 +4,7 @@ import { Button } from '@/components/ui';
 import { ScreenLayout } from '@core/components/ScreenLayout';
 import { APP_CONFIG, DRUG_CATEGORIES } from '@shared/utils/constants';
 import { LogFormData, Patient, TestingPlanData } from '@shared/types';
-import { CommonScreenLayoutProps } from './types';
+import { ScreenChrome } from './types';
 import { ClinicalContextBar } from '@features/patients/components/ClinicalContextBar';
 import { HighRiskContextChips } from '@features/patients/components/HighRiskContextChips';
 import { DraftSaveIndicator } from '@features/testing/components/DraftSaveIndicator';
@@ -19,7 +19,7 @@ const BACK_ICON = "w-4 h-4 opacity-90 group-hover:opacity-100 transition-opacity
 import { ClinicalWorkContext } from '@shared/types/clinicalWorkContext';
 
 interface PrintPlanScreenProps {
-  layoutProps: CommonScreenLayoutProps;
+  chrome: ScreenChrome;
   selectedPatient: Patient;
   testingPlanData: TestingPlanData;
   workContext?: ClinicalWorkContext | null;
@@ -28,7 +28,7 @@ interface PrintPlanScreenProps {
 }
 
 export function PrintPlanScreen({
-  layoutProps,
+  chrome,
   selectedPatient,
   testingPlanData,
   workContext,
@@ -37,9 +37,9 @@ export function PrintPlanScreen({
 }: PrintPlanScreenProps) {
   return (
     <ScreenLayout
+      chrome={chrome}
       title="Testing Request Form"
       icon={<ClipboardList className="w-5 h-5" />}
-      {...layoutProps}
       showFooter={false}
       actions={<Button onClick={onBack} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
       contextBar={
@@ -61,7 +61,7 @@ export function PrintPlanScreen({
 }
 
 interface TestingScreenProps {
-  layoutProps: CommonScreenLayoutProps;
+  chrome: ScreenChrome;
   selectedPatient: Patient | null;
   workContext?: ClinicalWorkContext | null;
   formData: LogFormData;
@@ -74,7 +74,7 @@ interface TestingScreenProps {
 }
 
 export function TestingScreen({
-  layoutProps,
+  chrome,
   selectedPatient,
   workContext,
   formData,
@@ -91,9 +91,9 @@ export function TestingScreen({
 
   return (
     <ScreenLayout
+      chrome={chrome}
       title={isDirectEntry ? 'Allergy Testing' : 'Testing Session'}
       icon={<TestTube2 className="w-5 h-5" />}
-      {...layoutProps}
       actions={<Button onClick={onBack} variant="ghost" className={BACK_BTN}><ArrowLeft className={BACK_ICON} /> Back</Button>}
       contextBar={
         <ClinicalContextBar

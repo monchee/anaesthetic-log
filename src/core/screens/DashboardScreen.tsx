@@ -3,12 +3,12 @@ import { LayoutDashboard } from 'lucide-react';
 import { ScreenLayout } from '@core/components/ScreenLayout';
 import { DRUG_CATEGORIES, FLAT_DRUG_OPTIONS } from '@shared/utils/constants';
 import { LogFormData, Patient, Screen } from '@shared/types';
-import { CommonScreenLayoutProps } from './types';
+import { ScreenChrome } from './types';
 
 const Dashboard = React.lazy(() => import('@features/dashboard/components/Dashboard'));
 
 interface DashboardScreenProps {
-  layoutProps: CommonScreenLayoutProps;
+  chrome: ScreenChrome;
   patients: Patient[];
   recentLogs: LogFormData[];
   isLoadingPatients: boolean;
@@ -20,7 +20,7 @@ interface DashboardScreenProps {
 }
 
 export function DashboardScreen({
-  layoutProps,
+  chrome,
   patients,
   recentLogs,
   isLoadingPatients,
@@ -31,7 +31,11 @@ export function DashboardScreen({
   onUploadPatients,
 }: DashboardScreenProps) {
   return (
-    <ScreenLayout title="Clinical Dashboard" icon={<LayoutDashboard className="w-5 h-5" />} {...layoutProps}>
+    <ScreenLayout
+      chrome={chrome}
+      title="Clinical Dashboard"
+      icon={<LayoutDashboard className="w-5 h-5" />}
+    >
       <h2 className="sr-only">Dashboard analytics and patient records</h2>
       <Dashboard
         setScreen={onSetScreen}
@@ -42,8 +46,8 @@ export function DashboardScreen({
         onViewLog={onViewLog}
         onSelectPatient={onSelectPatient}
         onUploadPatients={onUploadPatients}
-        databaseDate={layoutProps.databaseDate}
-        isCustomData={layoutProps.isCustomData}
+        databaseDate={chrome.databaseDate}
+        isCustomData={chrome.isCustomData}
         isLoadingPatients={isLoadingPatients}
         patientDbSavedAt={patientDbSavedAt}
       />

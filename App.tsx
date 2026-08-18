@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { AppProviders } from '@core/components/AppProviders';
 import { Screen } from '@shared/types';
+import { ScreenChrome } from '@core/components/ScreenLayout';
 import { APP_CONFIG } from '@shared/utils/constants';
 import { purgeStale } from '@shared/utils/ttlStorage';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
@@ -125,12 +126,12 @@ export function AnaestheticLogApp() {
     handleNavigate(Screen.LOG);
   };
 
-  const handleHomeUploadComplete = () => {
+  const handleHomeUploadComplete = React.useCallback(() => {
     handleNavigate(Screen.DASHBOARD);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, [handleNavigate]);
 
-  const layoutProps = {
+  const chrome: ScreenChrome = useMemo(() => ({
     setScreen: handleNavigate,
     navigate: handleNavigate,
     hrefFor,
@@ -150,7 +151,25 @@ export function AnaestheticLogApp() {
     csvUploadSheetOpen,
     onCSVUploadSheetOpenChange: setCsvUploadSheetOpen,
     onOpenGetStarted: () => setGetStartedOpen(true),
-  };
+  }), [
+    handleNavigate,
+    hrefFor,
+    pendingNavigation,
+    confirmNavigation,
+    cancelNavigation,
+    resetForm,
+    isTestingDraftDirty,
+    hasActiveReport,
+    screen,
+    databaseDate,
+    showDisclaimer,
+    hasUploadedData,
+    handleDismissDisclaimer,
+    handleUploadPatients,
+    handleHomeUploadComplete,
+    csvUploadSheetOpen,
+    setCsvUploadSheetOpen,
+  ]);
 
   const renderScreenContent = () => {
     const infoRoute = findInfoPageRoute(screen);
@@ -158,7 +177,7 @@ export function AnaestheticLogApp() {
       return (
         <InfoPageScreen
           route={infoRoute}
-          layoutProps={layoutProps}
+          chrome={chrome}
           onBack={() => handleNavigate(Screen.LOG)}
         />
       );
@@ -167,7 +186,7 @@ export function AnaestheticLogApp() {
     if (screen === Screen.DASHBOARD) {
       return (
         <DashboardScreen
-          layoutProps={layoutProps}
+          chrome={chrome}
           patients={patients}
           recentLogs={recentLogs}
           isLoadingPatients={isLoadingPatients}
@@ -188,7 +207,7 @@ export function AnaestheticLogApp() {
       if (lastSavedRecord && hasActiveReport) {
         return (
           <SummaryScreen
-            layoutProps={layoutProps}
+            chrome={chrome}
             lastSavedRecord={lastSavedRecord}
             workContext={activeReportContext}
             selectedPatient={selectedPatient}
@@ -216,7 +235,7 @@ export function AnaestheticLogApp() {
       if (selectedPatient && testingPlanData) {
         return (
           <PrintPlanScreen
-            layoutProps={layoutProps}
+            chrome={chrome}
             selectedPatient={selectedPatient}
             testingPlanData={testingPlanData}
             workContext={workContext}
@@ -239,7 +258,7 @@ export function AnaestheticLogApp() {
     if (screen === Screen.TESTING) {
       return (
         <TestingScreen
-          layoutProps={layoutProps}
+          chrome={chrome}
           selectedPatient={selectedPatient}
           workContext={workContext}
           formData={formData}
@@ -254,12 +273,12 @@ export function AnaestheticLogApp() {
     }
 
     if (screen === Screen.RESEARCH) {
-      return <ResearchScreen layoutProps={layoutProps} />;
+      return <ResearchScreen chrome={chrome} />;
     }
 
     return (
       <LogScreen
-        layoutProps={layoutProps}
+        chrome={chrome}
         appSubtitle={APP_SUBTITLE}
         selectedPatient={selectedPatient}
         lastSavedRecord={lastSavedRecord}

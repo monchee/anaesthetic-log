@@ -85,10 +85,12 @@ describe('Shared polish safety and semantic token regression tests', () => {
 
       renderWithProviders(
         <ScreenLayout
+          chrome={{
+            setScreen,
+            currentScreen: Screen.LOG,
+            databaseDate: '2026-08-15',
+          }}
           title="DREAM Workbench"
-          setScreen={setScreen}
-          currentScreen={Screen.LOG}
-          databaseDate="2026-08-15"
         >
           <div>Workspace Content</div>
         </ScreenLayout>

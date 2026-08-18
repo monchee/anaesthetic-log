@@ -19,7 +19,7 @@ import { Patient, LogFormData } from '@shared/types';
 import { showToast } from '@shared/utils';
 import { formatClinicalReportAsText, formatPatientHandoutAsText, generateLetterText } from '@shared/utils/reportExporter';
 import { RedactProvider, useRedact } from '@features/reports/hooks/useRedact';
-import { CommonScreenLayoutProps } from './types';
+import { ScreenChrome } from './types';
 import { useResearchSubmit } from '@features/research/hooks/useResearchSubmit';
 import { ClinicalContextBar } from '@features/patients/components/ClinicalContextBar';
 import { OutboundActionDialog, OutboundActionType } from '@features/reports/components/OutboundActionDialog';
@@ -57,7 +57,7 @@ function RedactToggle() {
 }
 
 export interface SummaryScreenProps {
-  layoutProps: CommonScreenLayoutProps;
+  chrome: ScreenChrome;
   lastSavedRecord: LogFormData;
   workContext?: ClinicalWorkContext | null;
   selectedPatient?: Patient | null;
@@ -70,7 +70,7 @@ export interface SummaryScreenProps {
 }
 
 function SummaryScreenContent({
-  layoutProps,
+  chrome,
   lastSavedRecord,
   workContext,
   selectedPatient: _selectedPatient,
@@ -134,9 +134,9 @@ function SummaryScreenContent({
 
   return (
     <ScreenLayout
+      chrome={chrome}
       title="Reports"
       icon={<FileText className="w-5 h-5" />}
-      {...layoutProps}
       showFooter={false}
       actions={<Button onClick={onExit} variant="ghost" className={BACK_BTN}><LogOut className={BACK_ICON} /> Exit</Button>}
       contextBar={

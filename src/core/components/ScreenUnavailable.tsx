@@ -1,5 +1,6 @@
 import { FileQuestion } from 'lucide-react';
 import { Button } from '@/components/ui';
+import { Screen } from '@shared/types';
 import { ScreenLayout } from './ScreenLayout';
 
 interface ScreenUnavailableProps {
@@ -19,10 +20,13 @@ export function ScreenUnavailable({
 }: ScreenUnavailableProps) {
   return (
     <ScreenLayout
+      chrome={{
+        setScreen: ignoreScreenChange,
+        currentScreen: Screen.LOG,
+        databaseDate: '',
+      }}
       title="DREAM"
       icon={<FileQuestion className="h-5 w-5" />}
-      setScreen={ignoreScreenChange}
-      databaseDate=""
       showNav={false}
       showFooter={false}
       contentClassName="justify-center"

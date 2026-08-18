@@ -1,3 +1,15 @@
+## [0.79.0] — 2026-08-19 (One Layout Chrome)
+
+Summary: Collapses the app's duplicated screen-layout prop type into one canonical `ScreenChrome` object, passed as a named `chrome={}` prop rather than spread — closing the exact hole that let a live prop-shadowing bug slip in undetected. This is the main structural fix in the current hardening pass; everything from here builds on it.
+
+### Fixed
+- **Prop-shadowing bug eliminated by construction.** `LogScreen.tsx` was setting `isTestingDraftDirty`, `hasActiveReport`, and `onOpenGetStarted` explicitly on `<ScreenLayout>` and then spreading `{...layoutProps}` after them — silently discarding all three. It was harmless only by coincidence (the inline expression happened to match what the spread carried). The three shadowed props are removed; the bug class itself can no longer occur, because `chrome` is a nested object — a sibling prop and a chrome field can't collide on assignment order anymore.
+
+### Changed
+- **One `ScreenChrome` type, not two.** `CommonScreenLayoutProps` and `ScreenLayoutProps` were the same ~19-field shape declared twice and had drifted (a dead `onOpenHelp`, a missing `onDeleteTestingDraft`/`onOpenGetStarted`). `ScreenChrome` is now defined once in `ScreenLayout.tsx`; `ScreenLayoutProps = { chrome: ScreenChrome } & ScreenPresentation`; `src/core/screens/types.ts` is a thin re-export.
+- **All 8 screen call sites** (`LogScreen`, `TestingScreen`, `PrintPlanScreen`, `InfoPageScreen`, `DashboardScreen`, `SummaryScreen`, `ResearchScreen`, `ScreenUnavailable`) now pass `chrome={chrome}` as a named object prop instead of spreading `{...layoutProps}`.
+- **Memoized the chrome object** in `App.tsx` with `useMemo`, so it no longer gets a fresh identity — and fresh `onDeleteTestingDraft`/`onOpenGetStarted` closures — on every render.
+
 ## [0.78.9] — 2026-08-19 (One Types Barrel)
 
 Summary: Unifies the type import path — the same `Screen`/`Patient`/etc. types were reachable via two different aliases (`@/types` and `@shared/types`) in files that talk directly to each other, which is exactly the kind of drift that produces "which one is the real one" bugs. Pure import-path codemod, zero behaviour change.

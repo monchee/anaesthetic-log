@@ -20,7 +20,7 @@ vi.mock('@features/testing/components/TestingLogForm', () => ({
   ),
 }));
 
-const layoutProps = {
+const chrome = {
   setScreen: vi.fn(),
   currentScreen: Screen.TESTING,
   databaseDate: '',
@@ -35,7 +35,7 @@ const layoutProps = {
 function renderTestingScreen(selectedPatient: ReturnType<typeof createMockPatient> | null) {
   render(
     <TestingScreen
-      layoutProps={layoutProps}
+      chrome={chrome}
       selectedPatient={selectedPatient}
       formData={createMockLogFormData({ firstName: 'Manual', lastName: 'Patient', mrn: 'M-001' })}
       setFormData={vi.fn()}

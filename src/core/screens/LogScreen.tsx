@@ -34,12 +34,12 @@ import { ACTIVE_REPORT_TTL_MS } from '@shared/utils';
 import { DRUG_CATEGORIES } from '@shared/utils/constants';
 import { isDifferentPatient } from '@features/patients/utils/patientIdentity';
 import { Patient, LogFormData, Screen, TestingPlanData } from '@shared/types';
-import { CommonScreenLayoutProps } from './types';
+import { ScreenChrome } from './types';
 import { ScreenLayout } from '@core/components/ScreenLayout';
 import { GetStartedActions } from '@core/components/GetStartedActions';
 
 export interface LogScreenProps {
-  layoutProps: CommonScreenLayoutProps & { onOpenGetStarted?: () => void };
+  chrome: ScreenChrome;
   appSubtitle: string;
   selectedPatient: Patient | null;
   lastSavedRecord: LogFormData | null;
@@ -62,7 +62,7 @@ export interface LogScreenProps {
 }
 
 export function LogScreen({
-  layoutProps,
+  chrome,
   appSubtitle,
   selectedPatient,
   lastSavedRecord,
@@ -168,7 +168,7 @@ export function LogScreen({
           <Button
             size="sm"
             variant="outline"
-            onClick={() => (layoutProps.navigate ? layoutProps.navigate(Screen.SUMMARY) : layoutProps.setScreen(Screen.SUMMARY))}
+            onClick={() => (chrome.navigate ? chrome.navigate(Screen.SUMMARY) : chrome.setScreen(Screen.SUMMARY))}
             className="rounded-none h-9 text-xs btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Open Report
@@ -203,7 +203,7 @@ export function LogScreen({
         <div className="flex gap-2 shrink-0">
           <Button
             size="sm"
-            onClick={() => (layoutProps.navigate ? layoutProps.navigate(Screen.TESTING) : layoutProps.setScreen(Screen.TESTING))}
+            onClick={() => (chrome.navigate ? chrome.navigate(Screen.TESTING) : chrome.setScreen(Screen.TESTING))}
             className="rounded-none h-9 text-xs bg-amber-600 hover:bg-amber-700 text-white font-semibold btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
           >
             Resume Testing
@@ -224,7 +224,7 @@ export function LogScreen({
   const renderQuickStartActions = () => (
     <GetStartedActions
       variant="page"
-      onUpload={() => (layoutProps.onCSVUploadSheetOpenChange ? layoutProps.onCSVUploadSheetOpenChange(true) : undefined)}
+      onUpload={() => (chrome.onCSVUploadSheetOpenChange ? chrome.onCSVUploadSheetOpenChange(true) : undefined)}
       onStartTesting={handleDirectTestingClick}
     />
   );
@@ -291,7 +291,7 @@ export function LogScreen({
                   <span>
                     If your patient database isn't loaded yet,{' '}
                     <button
-                      onClick={() => (layoutProps.onCSVUploadSheetOpenChange ? layoutProps.onCSVUploadSheetOpenChange(true) : undefined)}
+                      onClick={() => (chrome.onCSVUploadSheetOpenChange ? chrome.onCSVUploadSheetOpenChange(true) : undefined)}
                       className="underline text-primary hover:text-primary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       upload a patient CSV
@@ -381,12 +381,10 @@ export function LogScreen({
 
   return (
     <ScreenLayout
+      chrome={chrome}
       title="DREAM"
       subtitle={appSubtitle}
       icon={<Stethoscope className="w-5 h-5" />}
-      isTestingDraftDirty={isTestingDraftDirty}
-      hasActiveReport={Boolean(lastSavedRecord && activeReportSavedAt && Date.now() - activeReportSavedAt < ACTIVE_REPORT_TTL_MS)}
-      onOpenGetStarted={layoutProps.onOpenGetStarted ?? (() => {})}
       contextBar={selectedPatient ? (
         <ClinicalContextBar
           firstName={selectedPatient.firstName}
@@ -397,7 +395,6 @@ export function LogScreen({
           source={selectedPatient.id === 'manual' ? 'manual' : 'database'}
         />
       ) : undefined}
-      {...layoutProps}
       contentClassName="py-3 space-y-4"
       className="pb-10"
     >
@@ -605,10 +602,10 @@ export function LogScreen({
               drugCategories={DRUG_CATEGORIES}
               onPreview={(data) => {
                 onSetTestingPlanData(data);
-                if (layoutProps.navigate) {
-                  layoutProps.navigate(Screen.PRINT_PLAN);
+                if (chrome.navigate) {
+                  chrome.navigate(Screen.PRINT_PLAN);
                 } else {
-                  layoutProps.setScreen(Screen.PRINT_PLAN);
+                  chrome.setScreen(Screen.PRINT_PLAN);
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}

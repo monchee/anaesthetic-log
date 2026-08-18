@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ScreenLayout, ScreenLayoutProps } from './ScreenLayout';
+import { ScreenLayout, ScreenChrome, ScreenPresentation } from './ScreenLayout';
 import { Screen } from '@shared/types';
 import { renderWithProviders } from '../../test/helpers/renderWithProviders';
 
@@ -49,10 +49,7 @@ describe('ScreenLayout prop forwarding to navigation chrome', () => {
     recordedFooterProps = null;
   });
 
-  const baseProps: ScreenLayoutProps = {
-    title: 'Clinical Workspace',
-    subtitle: 'Anaesthetic allergy session',
-    children: <div data-testid="workspace-content">Workspace Content</div>,
+  const baseChrome: ScreenChrome = {
     setScreen: vi.fn(),
     navigate: vi.fn(),
     hrefFor: (screen: Screen) => (screen === Screen.LOG ? '/' : `/${screen}`),
@@ -63,11 +60,17 @@ describe('ScreenLayout prop forwarding to navigation chrome', () => {
     isCustomData: false,
   };
 
+  const basePresentation: ScreenPresentation = {
+    title: 'Clinical Workspace',
+    subtitle: 'Anaesthetic allergy session',
+    children: <div data-testid="workspace-content">Workspace Content</div>,
+  };
+
   it('forwards chrome and navigation props to AppSidebar, AppTopBar, AppNavigationDrawer, and Footer', () => {
     const onDeleteTestingDraft = vi.fn();
     const onUploadPatients = vi.fn();
-    const customProps: ScreenLayoutProps = {
-      ...baseProps,
+    const customChrome: ScreenChrome = {
+      ...baseChrome,
       currentScreen: Screen.TESTING,
       isTestingDraftDirty: true,
       hasActiveReport: true,
@@ -77,7 +80,14 @@ describe('ScreenLayout prop forwarding to navigation chrome', () => {
       onUploadPatients,
     };
 
-    renderWithProviders(<ScreenLayout {...customProps} showNav={true} showFooter={true} />);
+    renderWithProviders(
+      <ScreenLayout
+        chrome={customChrome}
+        {...basePresentation}
+        showNav={true}
+        showFooter={true}
+      />
+    );
 
     // AppSidebar props
     expect(recordedSidebarProps).toMatchObject({
@@ -88,7 +98,7 @@ describe('ScreenLayout prop forwarding to navigation chrome', () => {
       isCustomData: true,
       onDeleteTestingDraft,
     });
-    expect(recordedSidebarProps.hrefFor).toBe(customProps.hrefFor);
+    expect(recordedSidebarProps.hrefFor).toBe(customChrome.hrefFor);
     expect(typeof recordedSidebarProps.onNavigate).toBe('function');
     expect(typeof recordedSidebarProps.onOpenUploadCSV).toBe('function');
     expect(typeof recordedSidebarProps.onOpenGetStarted).toBe('function');
@@ -101,7 +111,7 @@ describe('ScreenLayout prop forwarding to navigation chrome', () => {
       title: 'Clinical Workspace',
       subtitle: 'Anaesthetic allergy session',
     });
-    expect(recordedTopBarProps.hrefFor).toBe(customProps.hrefFor);
+    expect(recordedTopBarProps.hrefFor).toBe(customChrome.hrefFor);
     expect(typeof recordedTopBarProps.onNavigate).toBe('function');
 
     // AppNavigationDrawer props (rendered inside AppTopBar drawerTrigger)
@@ -113,7 +123,7 @@ describe('ScreenLayout prop forwarding to navigation chrome', () => {
       isCustomData: true,
       onDeleteTestingDraft,
     });
-    expect(recordedDrawerProps.hrefFor).toBe(customProps.hrefFor);
+    expect(recordedDrawerProps.hrefFor).toBe(customChrome.hrefFor);
     expect(typeof recordedDrawerProps.onNavigate).toBe('function');
     expect(typeof recordedDrawerProps.onOpenUploadCSV).toBe('function');
     expect(typeof recordedDrawerProps.onOpenGetStarted).toBe('function');
@@ -125,7 +135,7 @@ describe('ScreenLayout prop forwarding to navigation chrome', () => {
       isCustomData: true,
       onUploadPatients,
     });
-    expect(recordedFooterProps.hrefFor).toBe(customProps.hrefFor);
+    expect(recordedFooterProps.hrefFor).toBe(customChrome.hrefFor);
     expect(typeof recordedFooterProps.onNavigate).toBe('function');
     expect(typeof recordedFooterProps.setScreen).toBe('function');
   });
@@ -134,7 +144,13 @@ describe('ScreenLayout prop forwarding to navigation chrome', () => {
     const navigate = vi.fn();
     const setScreen = vi.fn();
 
-    renderWithProviders(<ScreenLayout {...baseProps} navigate={navigate} setScreen={setScreen} showNav={true} />);
+    renderWithProviders(
+      <ScreenLayout
+        chrome={{ ...baseChrome, navigate, setScreen }}
+        {...basePresentation}
+        showNav={true}
+      />
+    );
 
     recordedSidebarProps.onNavigate(Screen.DASHBOARD);
     expect(navigate).toHaveBeenCalledWith(Screen.DASHBOARD);
@@ -143,7 +159,13 @@ describe('ScreenLayout prop forwarding to navigation chrome', () => {
     navigate.mockClear();
     setScreen.mockClear();
 
-    renderWithProviders(<ScreenLayout {...baseProps} navigate={undefined} setScreen={setScreen} showNav={true} />);
+    renderWithProviders(
+      <ScreenLayout
+        chrome={{ ...baseChrome, navigate: undefined, setScreen }}
+        {...basePresentation}
+        showNav={true}
+      />
+    );
 
     recordedSidebarProps.onNavigate(Screen.SUMMARY);
     expect(setScreen).toHaveBeenCalledWith(Screen.SUMMARY);

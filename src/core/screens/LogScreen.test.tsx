@@ -35,7 +35,7 @@ describe('LogScreen clear-report confirmation', () => {
 
       return (
         <LogScreen
-          layoutProps={{
+          chrome={{
             setScreen: vi.fn(),
             currentScreen: Screen.LOG,
             databaseDate: '',
@@ -83,7 +83,7 @@ describe('LogScreen clear-report confirmation', () => {
 });
 
 describe('LogScreen Home quick-start actions', () => {
-  const defaultLayoutProps = {
+  const defaultChrome = {
     setScreen: vi.fn(),
     currentScreen: Screen.LOG,
     databaseDate: '',
@@ -98,7 +98,7 @@ describe('LogScreen Home quick-start actions', () => {
   it('renders quick-start actions with descriptions and accessible names when no patient is selected', () => {
     render(
       <LogScreen
-        layoutProps={defaultLayoutProps}
+        chrome={defaultChrome}
         appSubtitle=""
         selectedPatient={null}
         lastSavedRecord={null}
@@ -138,7 +138,7 @@ describe('LogScreen Home quick-start actions', () => {
   it('does not render quick-start actions when a patient is selected', () => {
     render(
       <LogScreen
-        layoutProps={defaultLayoutProps}
+        chrome={defaultChrome}
         appSubtitle=""
         selectedPatient={createMockPatient({ id: '1', firstName: 'Jane', lastName: 'Doe', mrn: '12345' })}
         lastSavedRecord={null}
@@ -166,8 +166,8 @@ describe('LogScreen Home quick-start actions', () => {
     const onCSVUploadSheetOpenChange = vi.fn();
     render(
       <LogScreen
-        layoutProps={{
-          ...defaultLayoutProps,
+        chrome={{
+          ...defaultChrome,
           onCSVUploadSheetOpenChange,
         }}
         appSubtitle=""
@@ -197,7 +197,7 @@ describe('LogScreen Home quick-start actions', () => {
     const onStartDirectTesting = vi.fn();
     render(
       <LogScreen
-        layoutProps={defaultLayoutProps}
+        chrome={defaultChrome}
         appSubtitle=""
         selectedPatient={null}
         lastSavedRecord={null}
@@ -226,7 +226,7 @@ describe('LogScreen Home quick-start actions', () => {
     const onStartDirectTesting = vi.fn();
     render(
       <LogScreen
-        layoutProps={defaultLayoutProps}
+        chrome={defaultChrome}
         appSubtitle=""
         selectedPatient={null}
         lastSavedRecord={null}
@@ -260,7 +260,7 @@ describe('LogScreen Home quick-start actions', () => {
 
 describe('LogScreen Home layout ordering', () => {
   const baseProps = {
-    layoutProps: {
+    chrome: {
       setScreen: vi.fn(),
       currentScreen: Screen.LOG,
       databaseDate: '',
@@ -304,7 +304,7 @@ describe('LogScreen Home layout ordering', () => {
 
 describe('LogScreen active work banners', () => {
   const baseProps = {
-    layoutProps: {
+    chrome: {
       setScreen: vi.fn(),
       currentScreen: Screen.LOG,
       databaseDate: '',
@@ -347,7 +347,7 @@ describe('LogScreen active work banners', () => {
 });
 
 describe('LogScreen dirty patient switch confirmation', () => {
-  const baseLayoutProps = {
+  const baseChrome = {
     setScreen: vi.fn(),
     currentScreen: Screen.LOG,
     databaseDate: '',
@@ -366,7 +366,7 @@ describe('LogScreen dirty patient switch confirmation', () => {
 
     render(
       <LogScreen
-        layoutProps={baseLayoutProps}
+        chrome={baseChrome}
         appSubtitle=""
         selectedPatient={createMockPatient({ id: 'current-patient-1', firstName: 'John', lastName: 'Doe' })}
         lastSavedRecord={null}
@@ -417,7 +417,7 @@ describe('LogScreen dirty patient switch confirmation', () => {
 
     render(
       <LogScreen
-        layoutProps={baseLayoutProps}
+        chrome={baseChrome}
         appSubtitle=""
         selectedPatient={createMockPatient({ id: 'current-patient-1', firstName: 'John', lastName: 'Doe' })}
         lastSavedRecord={null}
@@ -459,7 +459,7 @@ describe('LogScreen dirty patient switch confirmation', () => {
 
     render(
       <LogScreen
-        layoutProps={baseLayoutProps}
+        chrome={baseChrome}
         appSubtitle=""
         selectedPatient={createMockPatient({ id: 'current-patient-1', firstName: 'John', lastName: 'Doe' })}
         lastSavedRecord={null}
@@ -503,7 +503,7 @@ describe('LogScreen dirty patient switch confirmation', () => {
 
     render(
       <LogScreen
-        layoutProps={baseLayoutProps}
+        chrome={baseChrome}
         appSubtitle=""
         selectedPatient={createMockPatient({ id: 'current-patient-1', firstName: 'John', lastName: 'Doe' })}
         lastSavedRecord={null}

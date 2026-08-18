@@ -1,14 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 import { screen } from '@testing-library/react';
-import { ScreenLayout, ScreenLayoutProps } from './ScreenLayout';
+import { ScreenLayout, ScreenChrome, ScreenPresentation } from './ScreenLayout';
 import { Screen } from '@shared/types';
 import { renderWithProviders } from '../../test/helpers/renderWithProviders';
 
 describe('ScreenLayout', () => {
-  const defaultProps: ScreenLayoutProps = {
-    title: 'Clinical Workspace',
-    subtitle: 'Anaesthetic allergy session',
-    children: <div data-testid="workspace-content">Workspace Content</div>,
+  const defaultChrome: ScreenChrome = {
     setScreen: vi.fn(),
     navigate: vi.fn(),
     hrefFor: (screen: Screen) => (screen === Screen.LOG ? '/' : `/${screen}`),
@@ -19,8 +16,16 @@ describe('ScreenLayout', () => {
     isCustomData: false,
   };
 
+  const defaultPresentation: ScreenPresentation = {
+    title: 'Clinical Workspace',
+    subtitle: 'Anaesthetic allergy session',
+    children: <div data-testid="workspace-content">Workspace Content</div>,
+  };
+
   it('renders persistent sidebar and topbar when showNav=true', () => {
-    const { container } = renderWithProviders(<ScreenLayout {...defaultProps} showNav={true} />);
+    const { container } = renderWithProviders(
+      <ScreenLayout chrome={defaultChrome} {...defaultPresentation} showNav={true} />
+    );
 
     // Sidebar landmark
     const sidebar = screen.getByRole('complementary', { name: /Application sidebar/i });
@@ -47,7 +52,9 @@ describe('ScreenLayout', () => {
   });
 
   it('renders standalone header without sidebar or drawer trigger when showNav=false', () => {
-    const { container } = renderWithProviders(<ScreenLayout {...defaultProps} showNav={false} />);
+    const { container } = renderWithProviders(
+      <ScreenLayout chrome={defaultChrome} {...defaultPresentation} showNav={false} />
+    );
 
     // No sidebar
     expect(screen.queryByRole('complementary', { name: /Application sidebar/i })).not.toBeInTheDocument();
@@ -65,7 +72,9 @@ describe('ScreenLayout', () => {
   });
 
   it('renders skip to main content link targeting #main-content', () => {
-    renderWithProviders(<ScreenLayout {...defaultProps} />);
+    renderWithProviders(
+      <ScreenLayout chrome={defaultChrome} {...defaultPresentation} />
+    );
 
     const skipLink = screen.getByText(/Skip to main content/i);
     expect(skipLink).toBeInTheDocument();
@@ -73,10 +82,14 @@ describe('ScreenLayout', () => {
   });
 
   it('renders footer when showFooter=true and hides when showFooter=false', () => {
-    const { rerender } = renderWithProviders(<ScreenLayout {...defaultProps} showFooter={true} />);
+    const { rerender } = renderWithProviders(
+      <ScreenLayout chrome={defaultChrome} {...defaultPresentation} showFooter={true} />
+    );
     expect(screen.getByRole('contentinfo', { name: /Application footer/i })).toBeInTheDocument();
 
-    rerender(<ScreenLayout {...defaultProps} showFooter={false} />);
+    rerender(
+      <ScreenLayout chrome={defaultChrome} {...defaultPresentation} showFooter={false} />
+    );
     expect(screen.queryByRole('contentinfo', { name: /Application footer/i })).not.toBeInTheDocument();
   });
 
@@ -86,10 +99,13 @@ describe('ScreenLayout', () => {
 
     renderWithProviders(
       <ScreenLayout
-        {...defaultProps}
-        pendingNavigation={Screen.DASHBOARD}
-        confirmNavigation={confirmNavigation}
-        cancelNavigation={cancelNavigation}
+        chrome={{
+          ...defaultChrome,
+          pendingNavigation: Screen.DASHBOARD,
+          confirmNavigation,
+          cancelNavigation,
+        }}
+        {...defaultPresentation}
       />
     );
 

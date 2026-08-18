@@ -14,13 +14,7 @@ import { CSVUploadInstructions } from '@features/dashboard/components/CSVUploadI
 import { useRedcapCsvUpload } from '@shared/hooks/useRedcapCsvUpload';
 import { cn } from '@/lib/utils';
 
-export interface ScreenLayoutProps {
-  title: string;
-  subtitle?: string;
-  icon?: React.ReactNode;
-  actions?: React.ReactNode;
-  contextBar?: React.ReactNode;
-  children: React.ReactNode;
+export interface ScreenChrome {
   setScreen: (screen: Screen) => void;
   navigate?: (screen: Screen) => void;
   hrefFor?: (screen: Screen) => string;
@@ -28,55 +22,69 @@ export interface ScreenLayoutProps {
   confirmNavigation?: () => void;
   cancelNavigation?: () => void;
   onDeleteTestingDraft?: () => void;
-  currentScreen?: Screen;
+  currentScreen: Screen;
   isTestingDraftDirty?: boolean;
   hasActiveReport?: boolean;
   databaseDate: string;
-  showFooter?: boolean;
-  className?: string;
-  contentClassName?: string;
   showDisclaimer?: boolean;
   isCustomData?: boolean;
   onDismissDisclaimer?: () => void;
   onUploadPatients?: (patients: Patient[], fileLastModified?: number) => void;
   onUploadComplete?: () => void;
-  showNav?: boolean;
   csvUploadSheetOpen?: boolean;
-  onCSVUploadSheetOpenChange?: (open: boolean) => void;
+  onCSVUploadSheetOpenChange?: ((open: boolean) => void) | React.Dispatch<React.SetStateAction<boolean>>;
   onOpenGetStarted?: () => void;
 }
 
+export interface ScreenPresentation {
+  title: string;
+  subtitle?: string;
+  icon?: React.ReactNode;
+  actions?: React.ReactNode;
+  contextBar?: React.ReactNode;
+  children: React.ReactNode;
+  showFooter?: boolean;
+  showNav?: boolean;
+  className?: string;
+  contentClassName?: string;
+}
+
+export type ScreenLayoutProps = { chrome: ScreenChrome } & ScreenPresentation;
+
 export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
+  chrome,
   title,
   subtitle,
   icon,
   actions,
   contextBar,
   children,
-  setScreen,
-  navigate,
-  hrefFor = pathFromScreen,
-  pendingNavigation = null,
-  confirmNavigation,
-  cancelNavigation,
-  onDeleteTestingDraft,
-  currentScreen = Screen.LOG,
-  isTestingDraftDirty = false,
-  hasActiveReport = false,
-  databaseDate,
   showFooter = true,
   className,
   contentClassName,
-  showDisclaimer,
-  isCustomData = false,
-  onDismissDisclaimer,
-  onUploadPatients,
-  onUploadComplete,
   showNav = true,
-  csvUploadSheetOpen,
-  onCSVUploadSheetOpenChange,
-  onOpenGetStarted,
 }) => {
+  const {
+    setScreen,
+    navigate,
+    hrefFor = pathFromScreen,
+    pendingNavigation = null,
+    confirmNavigation,
+    cancelNavigation,
+    onDeleteTestingDraft,
+    currentScreen = Screen.LOG,
+    isTestingDraftDirty = false,
+    hasActiveReport = false,
+    databaseDate,
+    showDisclaimer,
+    isCustomData = false,
+    onDismissDisclaimer,
+    onUploadPatients,
+    onUploadComplete,
+    csvUploadSheetOpen,
+    onCSVUploadSheetOpenChange,
+    onOpenGetStarted,
+  } = chrome;
   const [isCSVUploadSheetOpenLocal, setIsCSVUploadSheetOpenLocal] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

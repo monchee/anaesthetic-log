@@ -1,5 +1,18 @@
 [
   {
+    "version": "v0.79.0",
+    "codename": "One Layout Chrome",
+    "date": "19 August 2026",
+    "summary": "Collapses the app's duplicated screen-layout prop type into one canonical `ScreenChrome` object, passed as a named `chrome={}` prop rather than spread \u2014 closing the exact hole that let a live prop-shadowing bug slip in undetected. This is the main structural fix in the current hardening pass; everything from here builds on it.",
+    "highlight": false,
+    "changes": [
+      "Prop-shadowing bug eliminated by construction. `LogScreen.tsx` was setting `isTestingDraftDirty`, `hasActiveReport`, and `onOpenGetStarted` explicitly on `<ScreenLayout>` and then spreading `{...layoutProps}` after them \u2014 silently discarding all three. It was harmless only by coincidence (the inline expression happened to match what the spread carried). The three shadowed props are removed; the bug class itself can no longer occur, because `chrome` is a nested object \u2014 a sibling prop and a chrome field can't collide on assignment order anymore.",
+      "One `ScreenChrome` type, not two. `CommonScreenLayoutProps` and `ScreenLayoutProps` were the same ~19-field shape declared twice and had drifted (a dead `onOpenHelp`, a missing `onDeleteTestingDraft`/`onOpenGetStarted`). `ScreenChrome` is now defined once in `ScreenLayout.tsx`; `ScreenLayoutProps = { chrome: ScreenChrome } & ScreenPresentation`; `src/core/screens/types.ts` is a thin re-export.",
+      "All 8 screen call sites (`LogScreen`, `TestingScreen`, `PrintPlanScreen`, `InfoPageScreen`, `DashboardScreen`, `SummaryScreen`, `ResearchScreen`, `ScreenUnavailable`) now pass `chrome={chrome}` as a named object prop instead of spreading `{...layoutProps}`.",
+      "Memoized the chrome object in `App.tsx` with `useMemo`, so it no longer gets a fresh identity \u2014 and fresh `onDeleteTestingDraft`/`onOpenGetStarted` closures \u2014 on every render."
+    ]
+  },
+  {
     "version": "v0.78.9",
     "codename": "One Types Barrel",
     "date": "19 August 2026",
