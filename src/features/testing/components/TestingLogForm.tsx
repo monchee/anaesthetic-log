@@ -131,7 +131,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   };
 
   return (
-    <div className="min-w-0 max-w-full space-y-4 overflow-x-hidden sm:space-y-6">
+    <div className="min-w-0 max-w-full space-y-4 sm:space-y-6">
       {/* Mobile Workflow Navigator */}
       <div className="md:hidden no-print">
         <TestingWorkflowIndex

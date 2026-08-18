@@ -280,7 +280,7 @@ export default {
   			'content-enter': 'content-enter 0.2s ease-out forwards',
   			'content-enter-subtle': 'content-enter-subtle 0.15s ease-out forwards',
   			shimmer: 'shimmer 2s linear infinite',
-  			'screen-enter': 'screen-enter 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+  			'screen-enter': 'screen-enter 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   			'row-enter': 'row-enter 0.2s cubic-bezier(0.4, 0, 0.2, 1) both',
   			'section-reveal': 'section-reveal 0.25s cubic-bezier(0.4, 0, 0.2, 1) both',
   			'gate-exit': 'gate-exit 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',

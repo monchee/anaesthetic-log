@@ -436,7 +436,7 @@
 
   /* Screen-level entrance animation */
   .animate-screen-enter {
-    animation: screen-enter 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: screen-enter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Staggered row entrance — set --row-index inline on each <tr> or list item */
@@ -606,7 +606,7 @@ html {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground leading-relaxed;
+    @apply bg-background text-foreground leading-relaxed overflow-x-hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {

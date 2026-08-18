@@ -37,14 +37,13 @@ describe('ScreenLayout', () => {
     const main = screen.getByRole('main', { name: /Main content/i });
     expect(main).toHaveClass('max-w-6xl');
 
-    // Layout container has xl:pl-64 (overflow-x-hidden lives on the content
-    // column, not here, so it doesn't clip the fixed sidebar while scrolling)
+    // Layout container has xl:pl-64 and neither container nor content column carries overflow-x-hidden
     expect(container.firstChild).toHaveClass('xl:pl-64');
     expect(container.firstChild).not.toHaveClass('overflow-x-hidden');
 
-    // Content column carries overflow-x-hidden instead
+    // Content column does not have overflow-x-hidden (overflow-x containment lives on body)
     const contentColumn = container.querySelector('div.flex-1.flex.flex-col.min-w-0.w-full');
-    expect(contentColumn).toHaveClass('overflow-x-hidden');
+    expect(contentColumn).not.toHaveClass('overflow-x-hidden');
   });
 
   it('renders standalone header without sidebar or drawer trigger when showNav=false', () => {
