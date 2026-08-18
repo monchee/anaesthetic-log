@@ -401,6 +401,88 @@ test.describe('Accessibility Tests', () => {
     const drawer = page.getByRole('dialog', { name: 'Navigation Drawer' });
     await expect(drawer).toBeVisible();
   });
+
+  test('mobile 390px renders compact sticky chrome, Details popover access, and no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await selectMockPatient(page);
+
+    // Compact header presence (<md single row)
+    const header = page.locator('header[role="banner"]');
+    await expect(header).toBeVisible();
+
+    const mobileTopBar = header.locator('.md\\:hidden');
+    await expect(mobileTopBar).toBeVisible();
+
+    // Menu trigger, title, display settings, and theme toggle are visible
+    await expect(mobileTopBar.getByRole('button', { name: /navigation menu/i })).toBeVisible();
+    await expect(mobileTopBar.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(mobileTopBar.getByRole('button', { name: /display settings/i })).toBeVisible();
+    await expect(mobileTopBar.getByRole('button', { name: /switch to/i })).toBeVisible();
+
+    // Page icon and subtitle are hidden in mobile top bar
+    const tabletTopBar = header.locator('.hidden.md\\:flex');
+    await expect(tabletTopBar).toBeHidden();
+
+    // Compact patient context strip
+    const contextBar = page.locator('aside[aria-label="Current patient and encounter"]');
+    await expect(contextBar).toBeVisible();
+
+    const mobileContextStrip = contextBar.locator('.md\\:hidden');
+    await expect(mobileContextStrip).toBeVisible();
+    await expect(mobileContextStrip).toContainText('CHEN');
+
+    // Details button access and Popover interaction
+    const detailsBtn = mobileContextStrip.getByRole('button', { name: /view patient details|details/i });
+    await expect(detailsBtn).toBeVisible();
+    await detailsBtn.click();
+
+    // Popover content is visible with full patient context
+    const popoverContent = page.locator('[role="dialog"]');
+    await expect(popoverContent).toBeVisible();
+    await expect(popoverContent).toContainText('Patient Details');
+    await expect(popoverContent).toContainText('CHEN');
+
+    // Verify popover does not increase sticky stack height
+    const stickyChrome = page.locator('.sticky.top-0');
+    const chromeBox = await stickyChrome.boundingBox();
+    expect(chromeBox).not.toBeNull();
+    expect(chromeBox!.height).toBeLessThan(120);
+
+    // Close popover with Escape
+    await page.keyboard.press('Escape');
+    await expect(popoverContent).toBeHidden();
+
+    // Verify no horizontal overflow at 390px
+    const hasHorizontalOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+    });
+    expect(hasHorizontalOverflow).toBeFalsy();
+  });
+
+  test('tablet viewport (820px) preserves richer two-row header layout and inline context bar', async ({ page }) => {
+    await page.setViewportSize({ width: 820, height: 1180 });
+    await selectMockPatient(page);
+
+    const header = page.locator('header[role="banner"]');
+    await expect(header).toBeVisible();
+
+    // Phone single row is hidden, tablet two-row is visible
+    const mobileTopBar = header.locator('.md\\:hidden');
+    await expect(mobileTopBar).toBeHidden();
+
+    const tabletTopBar = header.locator('.hidden.md\\:flex');
+    await expect(tabletTopBar).toBeVisible();
+
+    // Tablet masthead brand link and subtitle are visible
+    await expect(tabletTopBar.getByRole('link', { name: 'DREAM Home' })).toBeVisible();
+    await expect(tabletTopBar.locator('.text-muted-foreground').first()).toBeVisible();
+
+    // Context bar full inline row is visible
+    const contextBar = page.locator('aside[aria-label="Current patient and encounter"]');
+    await expect(contextBar).toBeVisible();
+    const desktopContextRow = contextBar.locator('.hidden.md\\:block');
+    await expect(desktopContextRow).toBeVisible();
+  });
 });
 
 /**

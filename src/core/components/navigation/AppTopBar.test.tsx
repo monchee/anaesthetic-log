@@ -102,7 +102,7 @@ describe('AppTopBar', () => {
     expect(screen.getAllByRole('button', { name: /Switch to light theme/i }).length).toBeGreaterThan(0);
   });
 
-  it('renders drawer trigger slot in mobile identity row when provided', () => {
+  it('renders drawer trigger slot in mobile and tablet identity rows when provided', () => {
     renderWithProviders(
       <AppTopBar
         {...defaultProps}
@@ -110,6 +110,51 @@ describe('AppTopBar', () => {
       />
     );
 
-    expect(screen.getByRole('button', { name: /Open mobile menu/i })).toBeInTheDocument();
+    const menuButtons = screen.getAllByRole('button', { name: /Open mobile menu/i });
+    expect(menuButtons.length).toBeGreaterThan(0);
+  });
+
+  it('renders phone compact row (<md) without icon and subtitle to prevent wrapping', () => {
+    const DummyIcon = ({ className }: { className?: string }) => (
+      <span data-testid="page-icon" className={className} />
+    );
+
+    const { container } = renderWithProviders(
+      <AppTopBar
+        {...defaultProps}
+        icon={DummyIcon}
+        subtitle="Clinical assessment form"
+      />
+    );
+
+    const phoneSection = container.querySelector('.md\\:hidden');
+    expect(phoneSection).toBeInTheDocument();
+    expect(phoneSection).toHaveClass('bg-masthead');
+    expect(phoneSection?.querySelector('.min-h-\\[56px\\]')).toBeInTheDocument();
+
+    // Phone section contains the title but NOT the icon or subtitle
+    expect(phoneSection).toHaveTextContent('Patient Allergy Log');
+    expect(phoneSection?.querySelector('[data-testid="page-icon"]')).toBeNull();
+    expect(phoneSection?.querySelector('.text-muted-foreground')).toBeNull();
+  });
+
+  it('renders richer layout for tablet (md-xl) with icon and subtitle', () => {
+    const DummyIcon = ({ className }: { className?: string }) => (
+      <span data-testid="page-icon" className={className} />
+    );
+
+    const { container } = renderWithProviders(
+      <AppTopBar
+        {...defaultProps}
+        icon={DummyIcon}
+        subtitle="Clinical assessment form"
+      />
+    );
+
+    const tabletSection = container.querySelector('.hidden.md\\:flex.md\\:flex-col.xl\\:hidden');
+    expect(tabletSection).toBeInTheDocument();
+    expect(tabletSection).toHaveTextContent('Patient Allergy Log');
+    expect(tabletSection).toHaveTextContent('Clinical assessment form');
+    expect(tabletSection?.querySelector('[data-testid="page-icon"]')).toBeInTheDocument();
   });
 });

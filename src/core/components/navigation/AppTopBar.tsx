@@ -54,8 +54,76 @@ export const AppTopBar: React.FC<AppTopBarProps> = ({
       aria-label="Application header"
       className="bg-card text-card-foreground border-b border-border xl:border-t-[3px] xl:border-t-primary no-print"
     >
-      {/* Tablet / Mobile view (<1280px, xl:hidden) */}
-      <div className="xl:hidden flex flex-col">
+      {/* Phone view (<768px, md:hidden): Single compact row of ~56px */}
+      <div className="md:hidden bg-masthead text-masthead-foreground border-b border-masthead-border pt-[env(safe-area-inset-top)]">
+        <div className="px-3 sm:px-4 min-h-[56px] flex items-center justify-between gap-2 min-w-0">
+          {/* Left: Drawer trigger + Page Title + Status badges */}
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            {drawerTrigger}
+            <div className="flex items-center gap-1.5 min-w-0 flex-1 overflow-hidden">
+              {title && (
+                <h1 className="text-base font-bold tracking-tight text-white leading-tight break-words truncate m-0">
+                  {title}
+                </h1>
+              )}
+              {isTestingDraftDirty && (
+                <span
+                  role="status"
+                  aria-label="Testing draft with unsaved changes"
+                  className="px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider bg-status-warning/15 text-status-warning border border-status-warning/30 rounded-none shrink-0"
+                >
+                  Testing draft
+                </span>
+              )}
+              {hasActiveReport && (
+                <span
+                  role="status"
+                  aria-label="Report active"
+                  className="px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider bg-primary/15 text-primary border border-primary/20 dark:bg-primary/30 dark:text-primary-foreground rounded-none shrink-0"
+                >
+                  Report active
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Right: Actions + Display Settings + Theme Toggle */}
+          <div className="flex items-center gap-1 shrink-0">
+            {actions && (
+              <div className="flex items-center gap-1 shrink-0">
+                {actions}
+              </div>
+            )}
+            <DisplaySettingsMenu variant="masthead" />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+                  className={cn(
+                    'flex items-center justify-center min-h-[44px] min-w-[44px] p-2 rounded-none transition-colors',
+                    'text-masthead-foreground/80 hover:text-masthead-foreground hover:bg-white/10',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-masthead-accent focus-visible:ring-offset-2 focus-visible:ring-offset-masthead'
+                  )}
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <Moon className="h-5 w-5" aria-hidden="true" />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </div>
+      </div>
+
+      {/* Tablet view (768px - 1279px, hidden md:flex md:flex-col xl:hidden): Richer 2-row layout */}
+      <div className="hidden md:flex md:flex-col xl:hidden">
         {/* Row 1: Mobile Identity & Chrome Row (using masthead tokens) */}
         <div className="bg-masthead text-masthead-foreground border-b border-masthead-border pt-[env(safe-area-inset-top)]">
           <div className="px-4 sm:px-5 py-1.5 flex items-center justify-between gap-3 min-w-0">

@@ -1,3 +1,15 @@
+## [0.78.5] — 2026-08-18 (Mobile Clinical Chrome)
+
+Summary: Optimises phone viewports with a compact single-row top bar and 36px patient context strip featuring an accessible details popover, while preserving full layouts on tablet and desktop viewports.
+
+### Changed
+- **Compact phone header** — Streamlines the top bar on viewports below 768px (`md:hidden`) into a single compact ~56px row with drawer trigger, truncated title, active badges, actions, display settings, and theme toggle, omitting large icons and subtitles to avoid multi-row wrapping.
+- **Compact phone patient context strip** — Condenses the patient context bar on mobile into a single ~36px strip displaying patient name and MRN with a popover trigger for full DOB, reaction date, visit date, and data source details.
+- **Preserved tablet and desktop layouts** — Retains full multi-item inline context strips and rich masthead/top-bar headers with page icons and subtitles on tablet (`md` to `xl`) and desktop (`xl+`) viewports.
+
+### Added
+- **Mobile chrome regression coverage** — Adds unit and accessibility test coverage for compact phone header elements, popover patient details, fallback values, redaction support, and tablet/desktop responsive preservation.
+
 ## [0.78.4] — 2026-08-18 (Report Clarity)
 
 Summary: Makes copied and emailed Clinical Reports readable as plain text with separated per-drug result blocks, and makes the PIN gate's architectural background pattern visibly animate while preserving reduced-motion support.

@@ -43,7 +43,7 @@ test.describe('After screenshots (Phases 1-3)', () => {
       } else {
         await page.locator('a[href="/dashboard"]').first().click();
       }
-      await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10_000 });
+      await expect(page.locator('header[role="banner"] h1:visible')).toHaveText('Clinical Dashboard', { timeout: 10_000 });
       await expect(page.getByRole('group', { name: 'Worklist filters' })).toBeVisible({ timeout: 10_000 });
       await expect(page.getByRole('button', { name: /View details for patient:/ }).first()).toBeVisible({ timeout: 10_000 });
       await dismissHelpModal(page);
