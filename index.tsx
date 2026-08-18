@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { registerSW } from 'virtual:pwa-register';
 import { purgeStale } from '@shared/utils/ttlStorage';
-import { showToast } from './src/shared/utils/toast-config';
+import { initPwaUpdatePolicy } from '@shared/utils/pwaUpdatePolicy';
 
 // Sweep any expired patient/clinical data before the app mounts, so stale
 // data never lingers on a shared workstation even if the relevant screen is
@@ -23,54 +23,8 @@ root.render(
   </React.StrictMode>
 );
 
-const UNLOCK_KEY = 'dream:unlocked';
-
-function isUnlocked(): boolean {
-  try { return sessionStorage.getItem(UNLOCK_KEY) === 'true'; }
-  catch { return false; }
-}
-
-// Sends skipWaiting to the waiting SW, then reloads once it activates.
-// We avoid clientsClaim (which causes an infinite reload loop on first install)
-// and instead call window.location.reload() explicitly after a short pause
-// so the new SW has time to activate before we navigate away.
-const doSwUpdateAndReload = async (sw: ReturnType<typeof registerSW>) => {
-  await sw(false); // send SKIP_WAITING without setting up a controllerchange listener
-  setTimeout(() => window.location.reload(), 200);
-};
-
-// Register Service Worker with improved update flow
-const updateSW = registerSW({
-  onNeedRefresh() {
-    if (!isUnlocked()) {
-      // Gate is showing — no work to lose, activate silently
-      doSwUpdateAndReload(updateSW);
-    } else {
-      // User is in the app — show persistent toast
-      showToast.update(() => doSwUpdateAndReload(updateSW));
-    }
-  },
-  onOfflineReady() {
-    console.log('App ready to work offline');
-  },
-  onRegistered(registration) {
-    console.log('Service Worker registered:', registration?.scope);
-
-    // Check for updates every 5 minutes
-    if (registration) {
-      setInterval(() => {
-        registration.update();
-      }, 5 * 60 * 1000);
-
-      // Visibility change — catch "back from lunch" faster than 5-min poll
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          registration.update();
-        }
-      });
-    }
-  },
-  onRegisterError(error) {
-    console.log('Service Worker registration error:', error);
-  }
-});
+// Register Service Worker with safer update policy:
+// - Silently auto-activates waiting SW and reloads once when at the PIN gate / locked state.
+// - Retains persistent update prompt toast when unlocked to preserve clinical drafts and workflows.
+// - Uses explicit skipWaiting without clientsClaim to avoid infinite reload loops.
+initPwaUpdatePolicy(registerSW);

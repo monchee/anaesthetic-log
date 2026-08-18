@@ -1,3 +1,16 @@
+## [0.78.6] — 2026-08-18 (Safe PWA Updates)
+
+Summary: Implements a safe PWA update policy that automatically refreshes waiting service workers at the PIN gate, protects active unlocked clinical sessions with persistent update prompts, coordinates explicit skipWaiting without clientsClaim to avoid reload loops, and cleans up outdated caches.
+
+### Changed
+- **Automatic refresh at PIN gate** — Silently activates waiting service workers and reloads the application when at the PIN screen lock, ensuring shared workstation devices stay up to date without clinician intervention.
+- **Protected unlocked clinical sessions** — Preserves in-progress clinical drafts and workflows during active sessions by replacing automatic reloads with a non-disruptive persistent update prompt toast.
+- **Explicit skipWaiting without clientsClaim** — Coordinates service worker activation explicitly via `updateSW(false)` and bounded reloads instead of `clientsClaim`, eliminating infinite reload loops on initial install.
+- **Cache cleanup** — Cleans up outdated runtime and precache entries immediately upon service worker activation to prevent stale assets from lingering.
+
+### Added
+- **PWA update policy test coverage** — Adds unit test coverage for unlocked session detection, bounded idempotent update execution, PIN gate vs unlocked refresh routing, 5-minute background polling, and visibility-change update triggers.
+
 ## [0.78.5] — 2026-08-18 (Mobile Clinical Chrome)
 
 Summary: Optimises phone viewports with a compact single-row top bar and 36px patient context strip featuring an accessible details popover, while preserving full layouts on tablet and desktop viewports.

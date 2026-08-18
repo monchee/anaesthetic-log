@@ -1,5 +1,19 @@
 [
   {
+    "version": "v0.78.6",
+    "codename": "Safe PWA Updates",
+    "date": "18 August 2026",
+    "summary": "Implements a safe PWA update policy that automatically refreshes waiting service workers at the PIN gate, protects active unlocked clinical sessions with persistent update prompts, coordinates explicit skipWaiting without clientsClaim to avoid reload loops, and cleans up outdated caches.",
+    "highlight": false,
+    "changes": [
+      "Automatic refresh at PIN gate \u2014 Silently activates waiting service workers and reloads the application when at the PIN screen lock, ensuring shared workstation devices stay up to date without clinician intervention.",
+      "Protected unlocked clinical sessions \u2014 Preserves in-progress clinical drafts and workflows during active sessions by replacing automatic reloads with a non-disruptive persistent update prompt toast.",
+      "Explicit skipWaiting without clientsClaim \u2014 Coordinates service worker activation explicitly via `updateSW(false)` and bounded reloads instead of `clientsClaim`, eliminating infinite reload loops on initial install.",
+      "Cache cleanup \u2014 Cleans up outdated runtime and precache entries immediately upon service worker activation to prevent stale assets from lingering.",
+      "PWA update policy test coverage \u2014 Adds unit test coverage for unlocked session detection, bounded idempotent update execution, PIN gate vs unlocked refresh routing, 5-minute background polling, and visibility-change update triggers."
+    ]
+  },
+  {
     "version": "v0.78.5",
     "codename": "Mobile Clinical Chrome",
     "date": "18 August 2026",

@@ -2,15 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Lock, AlertCircle, KeyRound } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
 
+import { UNLOCK_KEY, isAppUnlocked } from '@shared/utils/pwaUpdatePolicy';
+
 const APP_VERSION = __APP_VERSION__;
 
 const HARDCODED_PIN = '2050';
-const UNLOCK_KEY = 'dream:unlocked';
-
-function getStoredUnlock(): boolean {
-  try { return sessionStorage.getItem(UNLOCK_KEY) === 'true'; }
-  catch { return false; }
-}
 
 function setStoredUnlock(val: boolean) {
   try { if (val) sessionStorage.setItem(UNLOCK_KEY, 'true'); else sessionStorage.removeItem(UNLOCK_KEY); }
@@ -22,7 +18,7 @@ interface PasswordGateProps {
 }
 
 const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
-  const [unlocked, setUnlocked] = useState(getStoredUnlock);
+  const [unlocked, setUnlocked] = useState(isAppUnlocked);
   const [isExiting, setIsExiting] = useState(false);
   const [digits, setDigits] = useState(['', '', '', '']);
   const [error, setError] = useState('');
