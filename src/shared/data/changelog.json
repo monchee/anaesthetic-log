@@ -1,5 +1,18 @@
 [
   {
+    "version": "v0.78.3",
+    "codename": "Clinical Lock Station",
+    "date": "18 August 2026",
+    "summary": "Redesigns the PIN screen lock as a responsive clinical workstation lock station with an architectural hairline grid, restrained ambient lighting, preserved 4-digit PIN and session storage semantics, robust accessibility attributes, and reduced-motion support.",
+    "highlight": false,
+    "changes": [
+      "Clinical workstation lock station layout \u2014 Replaces the single-column centered card with a responsive two-column workstation frame (`PasswordGate`), featuring a NSW Health navy branding rail on the left and a structured PIN entry module on the right.",
+      "Ambient lighting and palette alignment \u2014 Replaces the previous diffuse glow with refined ambient light fields tuned to masthead navy and accent tokens, creating visual depth without distraction.",
+      "Architectural hairline grid \u2014 Integrates a subtle, radial-masked SVG hairline grid behind the lock station frame.",
+      "Accessibility and reduced-motion safeguards \u2014 Ensures decorative grid and ambient lighting elements are explicitly `aria-hidden`, maintains tabular-num font alignment for PIN digit inputs, and preserves all existing keyboard, autofocus, and session unlock semantics under reduced-motion preferences."
+    ]
+  },
+  {
     "version": "v0.78.2",
     "codename": "Testing Draft Deletion",
     "date": "18 August 2026",

@@ -85,111 +85,152 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
 
   return (
     <main
-      className={`relative flex min-h-svh flex-col items-center justify-center overflow-hidden bg-background p-6 md:p-10 ${
+      className={`relative flex min-h-svh flex-col items-center justify-center overflow-x-hidden bg-masthead p-4 sm:p-6 md:p-8 lg:p-12 text-masthead-foreground ${
         isExiting ? 'animate-gate-exit pointer-events-none' : ''
       }`}
       aria-label="Screen lock"
     >
+      {/* Decorative architectural hairline grid */}
+      <svg
+        className="lock-station-grid absolute inset-0 w-full h-full pointer-events-none opacity-20"
+        aria-hidden="true"
+      >
+        <defs>
+          <pattern id="lock-grid-pattern" width="48" height="48" patternUnits="userSpaceOnUse">
+            <path d="M 48 0 L 0 0 0 48" fill="none" stroke="currentColor" strokeWidth="1" className="text-masthead-border" />
+          </pattern>
+          <radialGradient id="lock-grid-mask" cx="50%" cy="50%" r="50%">
+            <stop offset="30%" stopColor="white" stopOpacity="1" />
+            <stop offset="85%" stopColor="white" stopOpacity="0" />
+          </radialGradient>
+          <mask id="lock-station-mask">
+            <rect width="100%" height="100%" fill="url(#lock-grid-mask)" />
+          </mask>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#lock-grid-pattern)" mask="url(#lock-station-mask)" />
+      </svg>
+
       {/* Decorative ambient background light fields */}
       <div className="ambient-light-field-1" aria-hidden="true" />
       <div className="ambient-light-field-2" aria-hidden="true" />
 
-      <div className="relative z-10 flex w-full max-w-sm flex-col gap-6 animate-content-enter">
-        <div className="flex flex-col items-center gap-1.5 text-center">
-          <h1 className="app-wordmark text-4xl sm:text-5xl font-bold text-primary">DREAM</h1>
-          <p className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
-            Drug Reaction Evaluation &amp; Anaesthetic Management
-          </p>
-        </div>
-
-        <Card className="border-border bg-card shadow-sm">
-          <CardHeader className="text-center pb-4 sm:pb-5">
-            <div className="flex items-center justify-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
-              <Lock className="size-3.5 text-primary shrink-0" aria-hidden="true" />
-              <span>Clinical Workstation</span>
-            </div>
-            <CardTitle className="text-xl sm:text-2xl font-semibold tracking-tight text-primary dark:text-foreground">
-              Screen Lock
-            </CardTitle>
-            <CardDescription id="pin-instructions" className="text-sm text-muted-foreground">
-              Enter PIN to continue
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-3 items-center">
-                <div
-                  className="flex gap-2.5 sm:gap-3"
-                  role="group"
-                  aria-label="PIN entry"
-                  aria-describedby="pin-instructions pin-status"
-                >
-                  {[0, 1, 2, 3].map(i => (
-                    <input
-                      key={i}
-                      ref={el => { inputRefs.current[i] = el; }}
-                      type="password"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      maxLength={1}
-                      value={digits[i]}
-                      autoFocus={i === 0}
-                      autoComplete={i === 0 ? 'one-time-code' : 'off'}
-                      aria-label={`PIN digit ${i + 1} of 4`}
-                      aria-describedby="pin-instructions pin-status"
-                      aria-invalid={error ? 'true' : 'false'}
-                      onChange={e => handleDigitChange(i, e.target.value)}
-                      onKeyDown={e => handleKeyDown(i, e)}
-                      onPaste={i === 0 ? handlePaste : undefined}
-                      className={`w-12 h-14 sm:w-14 sm:h-14 text-center text-2xl font-mono rounded-none border transition-colors ${
-                        error
-                          ? 'border-destructive text-destructive bg-destructive/5 focus:outline-none focus:ring-2 focus:ring-destructive focus:border-destructive'
-                          : digits[i]
-                            ? 'border-primary/60 bg-primary/[0.03] text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring'
-                            : 'border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring'
-                      }`}
-                    />
-                  ))}
-                </div>
+      {/* Authored responsive lock-station frame */}
+      <div className="relative z-10 w-full max-w-4xl animate-content-enter">
+        <div className="grid grid-cols-1 md:grid-cols-12 border border-masthead-border shadow-2xl bg-masthead">
+          {/* Left Rail / Lock Station Branding (Desktop side rail, Mobile top brand header) */}
+          <div className="md:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between border-b md:border-b-0 md:border-r border-masthead-border bg-masthead">
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-1.5">
+                <h1 className="app-wordmark text-3xl sm:text-4xl lg:text-5xl font-bold tracking-widest text-masthead-foreground leading-none">
+                  DREAM
+                </h1>
+                <p className="text-xs font-medium tracking-wider text-masthead-foreground/70 uppercase leading-relaxed">
+                  Drug Reaction Evaluation &amp; Anaesthetic Management
+                </p>
               </div>
 
-              {error ? (
-                <div
-                  id="pin-status"
-                  role="alert"
-                  aria-live="assertive"
-                  className="flex items-center justify-center gap-1.5 text-destructive text-sm font-medium text-center"
-                >
-                  <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
-                  <span>{error}</span>
+              {/* Lock Rail indicator */}
+              <div className="pt-6 border-t border-masthead-border flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-masthead-accent">
+                  <Lock className="size-4 shrink-0" aria-hidden="true" />
+                  <span>Clinical Workstation</span>
                 </div>
-              ) : (
-                <div id="pin-status" role="status" aria-live="polite" className="sr-only">
-                  <span>Screen locked. Enter 4-digit PIN.</span>
-                </div>
-              )}
-
-              <Button
-                type="button"
-                onClick={() => handleUnlock()}
-                className="w-full h-11 text-sm font-semibold rounded-none btn-press"
-              >
-                <KeyRound className="size-4 shrink-0" aria-hidden="true" />
-                Unlock
-              </Button>
-
-              <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                This is a screen lock to prevent shoulder-surfing on shared workstations. Patient data security is governed separately by the database access controls.
-              </p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
 
-        <div className="text-xs tracking-wide text-muted-foreground text-center">
-          <span>RPAH Department of Clinical Immunology &amp; Allergy</span>
+            {/* Institutional attribution */}
+            <div className="pt-6 border-t border-masthead-border mt-6 md:mt-0 text-xs tracking-wide text-masthead-foreground/60">
+              <span>RPAH Department of Clinical Immunology &amp; Allergy</span>
+            </div>
+          </div>
+
+          {/* Right Column / Rectangular PIN Module */}
+          <div className="md:col-span-7 bg-card text-card-foreground p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
+            <Card className="border-0 bg-transparent shadow-none p-0">
+              <CardHeader className="p-0 pb-6 text-left">
+                <CardTitle className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+                  Screen Lock
+                </CardTitle>
+                <CardDescription id="pin-instructions" className="text-sm text-muted-foreground mt-1">
+                  Enter PIN to continue
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="p-0 flex flex-col gap-6">
+                <div className="flex flex-col gap-3">
+                  <div
+                    className="flex gap-2.5 sm:gap-3 justify-center sm:justify-start"
+                    role="group"
+                    aria-label="PIN entry"
+                    aria-describedby="pin-instructions pin-status"
+                  >
+                    {[0, 1, 2, 3].map(i => (
+                      <input
+                        key={i}
+                        ref={el => { inputRefs.current[i] = el; }}
+                        type="password"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={1}
+                        value={digits[i]}
+                        autoFocus={i === 0}
+                        autoComplete={i === 0 ? 'one-time-code' : 'off'}
+                        aria-label={`PIN digit ${i + 1} of 4`}
+                        aria-describedby="pin-instructions pin-status"
+                        aria-invalid={error ? 'true' : 'false'}
+                        onChange={e => handleDigitChange(i, e.target.value)}
+                        onKeyDown={e => handleKeyDown(i, e)}
+                        onPaste={i === 0 ? handlePaste : undefined}
+                        className={`w-12 h-14 sm:w-14 sm:h-14 text-center text-2xl font-mono tabular-nums rounded-none border transition-colors ${
+                          error
+                            ? 'border-destructive text-destructive bg-destructive/10 focus:outline-none focus:ring-2 focus:ring-destructive focus:border-destructive'
+                            : digits[i]
+                              ? 'border-primary bg-primary/[0.04] text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring'
+                              : 'border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  {error ? (
+                    <div
+                      id="pin-status"
+                      role="alert"
+                      aria-live="assertive"
+                      className="flex items-center gap-1.5 text-destructive text-sm font-medium pt-1"
+                    >
+                      <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
+                      <span>{error}</span>
+                    </div>
+                  ) : (
+                    <div id="pin-status" role="status" aria-live="polite" className="sr-only">
+                      <span>Screen locked. Enter 4-digit PIN.</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <Button
+                    type="button"
+                    onClick={() => handleUnlock()}
+                    className="w-full h-11 sm:h-12 text-sm font-semibold rounded-none btn-press flex items-center justify-center gap-2"
+                  >
+                    <KeyRound className="size-4 shrink-0" aria-hidden="true" />
+                    <span>Unlock</span>
+                  </Button>
+
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    This is a screen lock to prevent shoulder-surfing on shared workstations. Patient data security is governed separately by the database access controls.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-      <span className="fixed bottom-4 right-4 md:bottom-6 md:right-6 text-xs font-mono text-muted-foreground">
+
+      {/* Version identifier */}
+      <span className="fixed bottom-4 right-4 md:bottom-6 md:right-6 text-xs font-mono text-masthead-foreground/50">
         v{APP_VERSION}
       </span>
     </main>

@@ -25,9 +25,12 @@ describe('PasswordGate', () => {
     const mainElement = screen.getByRole('main', { name: 'Screen lock' });
     expect(mainElement).toBeInTheDocument();
 
-    // Decorative ambient layers exist and are hidden from assistive technologies
+    // Decorative architectural grid and ambient layers exist and are hidden from assistive technologies
+    const grid = container.querySelector('.lock-station-grid');
     const ambient1 = container.querySelector('.ambient-light-field-1');
     const ambient2 = container.querySelector('.ambient-light-field-2');
+    expect(grid).toBeInTheDocument();
+    expect(grid).toHaveAttribute('aria-hidden', 'true');
     expect(ambient1).toBeInTheDocument();
     expect(ambient1).toHaveAttribute('aria-hidden', 'true');
     expect(ambient2).toBeInTheDocument();

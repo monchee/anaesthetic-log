@@ -262,7 +262,7 @@ test.describe('Accessibility Tests', () => {
     const dashLink = page.locator('a[href="/dashboard"]').first();
     await expect(dashLink).toBeVisible({ timeout: 10000 });
     await dashLink.click();
-    await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: 'Clinical Dashboard' })).toBeVisible({ timeout: 10000 });
 
     const tables = page.locator('table');
     const count = await tables.count();
@@ -490,7 +490,7 @@ test.describe('Automated Accessibility Scans', () => {
     await page.waitForSelector('[role="banner"]', { timeout: 15000 });
     await dismissHelpModal(page);
     await page.locator('a[href="/dashboard"]').first().click();
-    await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: 'Clinical Dashboard' })).toBeVisible({ timeout: 10000 });
     await injectAxe(page);
 
     const violations = await page.evaluate(([ctx, opts]) => {
@@ -641,9 +641,11 @@ test.describe('Automated Accessibility Scans', () => {
     await page.goto(baseURL ?? '/');
     await page.waitForSelector('h1', { timeout: 15000 });
 
+    const grid = page.locator('.lock-station-grid');
     const ambient1 = page.locator('.ambient-light-field-1');
     const ambient2 = page.locator('.ambient-light-field-2');
 
+    await expect(grid).toHaveAttribute('aria-hidden', 'true');
     await expect(ambient1).toHaveAttribute('aria-hidden', 'true');
     await expect(ambient2).toHaveAttribute('aria-hidden', 'true');
   });

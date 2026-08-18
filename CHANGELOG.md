@@ -1,3 +1,15 @@
+## [0.78.3] — 2026-08-18 (Clinical Lock Station)
+
+Summary: Redesigns the PIN screen lock as a responsive clinical workstation lock station with an architectural hairline grid, restrained ambient lighting, preserved 4-digit PIN and session storage semantics, robust accessibility attributes, and reduced-motion support.
+
+### Changed
+- **Clinical workstation lock station layout** — Replaces the single-column centered card with a responsive two-column workstation frame (`PasswordGate`), featuring a NSW Health navy branding rail on the left and a structured PIN entry module on the right.
+- **Ambient lighting and palette alignment** — Replaces the previous diffuse glow with refined ambient light fields tuned to masthead navy and accent tokens, creating visual depth without distraction.
+
+### Added
+- **Architectural hairline grid** — Integrates a subtle, radial-masked SVG hairline grid behind the lock station frame.
+- **Accessibility and reduced-motion safeguards** — Ensures decorative grid and ambient lighting elements are explicitly `aria-hidden`, maintains tabular-num font alignment for PIN digit inputs, and preserves all existing keyboard, autofocus, and session unlock semantics under reduced-motion preferences.
+
 ## [0.78.2] — 2026-08-18 (Testing Draft Deletion)
 
 Summary: Adds an explicit way to discard an in-progress testing draft, restores sticky positioning for the chrome header and Testing screen workflow index, fixes print output showing the print-confirmation dialog and wasting a page on the SPT/IDT protocol table, aligns the patient identity bar, and gives the top bar and identity bar a navy chrome-cohesion accent.
