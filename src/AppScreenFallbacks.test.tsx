@@ -110,3 +110,113 @@ describe('AnaestheticLogApp guarded screens', () => {
     expect(handleStartDirectTesting).toHaveBeenCalledOnce();
   });
 });
+
+describe('navigation guard', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('does not show dialog when pendingNavigation is null', () => {
+    const confirmNavigation = vi.fn();
+    const cancelNavigation = vi.fn();
+    const appState = createAppState(Screen.LOG, {
+      pendingNavigation: null,
+      confirmNavigation,
+      cancelNavigation,
+      isTestingDraftDirty: true,
+    });
+    mockedUseAnaestheticApp.mockReturnValue(appState);
+
+    render(<AnaestheticLogApp />);
+
+    expect(screen.queryByText('Leave testing session?')).not.toBeInTheDocument();
+  });
+
+  it('shows dialog when pendingNavigation is set to a Screen with confirm/cancel navigation handlers', () => {
+    const confirmNavigation = vi.fn();
+    const cancelNavigation = vi.fn();
+    const appState = createAppState(Screen.LOG, {
+      pendingNavigation: Screen.DASHBOARD,
+      confirmNavigation,
+      cancelNavigation,
+      isTestingDraftDirty: true,
+    });
+    mockedUseAnaestheticApp.mockReturnValue(appState);
+
+    render(<AnaestheticLogApp />);
+
+    expect(screen.getByText('Leave testing session?')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Leave and keep draft' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Stay in session' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Delete draft' })).toBeInTheDocument();
+  });
+
+  it('calls confirmNavigation exactly once when clicking "Leave and keep draft"', () => {
+    const confirmNavigation = vi.fn();
+    const cancelNavigation = vi.fn();
+    const appState = createAppState(Screen.LOG, {
+      pendingNavigation: Screen.DASHBOARD,
+      confirmNavigation,
+      cancelNavigation,
+      isTestingDraftDirty: true,
+    });
+    mockedUseAnaestheticApp.mockReturnValue(appState);
+
+    render(<AnaestheticLogApp />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Leave and keep draft' }));
+    expect(confirmNavigation).toHaveBeenCalledOnce();
+    expect(cancelNavigation).not.toHaveBeenCalled();
+  });
+
+  it('calls cancelNavigation exactly once when clicking "Stay in session"', () => {
+    const confirmNavigation = vi.fn();
+    const cancelNavigation = vi.fn();
+    const appState = createAppState(Screen.LOG, {
+      pendingNavigation: Screen.DASHBOARD,
+      confirmNavigation,
+      cancelNavigation,
+      isTestingDraftDirty: true,
+    });
+    mockedUseAnaestheticApp.mockReturnValue(appState);
+
+    render(<AnaestheticLogApp />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Stay in session' }));
+    expect(cancelNavigation).toHaveBeenCalledOnce();
+    expect(confirmNavigation).not.toHaveBeenCalled();
+  });
+
+  it('calls cancelNavigation first and resetForm second when clicking "Delete draft"', () => {
+    const callOrder: string[] = [];
+    const cancelNavigation = vi.fn(() => {
+      callOrder.push('cancel');
+    });
+    const resetForm = vi.fn(() => {
+      callOrder.push('reset');
+    });
+    const confirmNavigation = vi.fn();
+
+    const appState = createAppState(Screen.LOG, {
+      pendingNavigation: Screen.DASHBOARD,
+      confirmNavigation,
+      cancelNavigation,
+      resetForm,
+      isTestingDraftDirty: true,
+    });
+    mockedUseAnaestheticApp.mockReturnValue(appState);
+
+    render(<AnaestheticLogApp />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Delete draft' }));
+
+    expect(cancelNavigation).toHaveBeenCalledOnce();
+    expect(resetForm).toHaveBeenCalledOnce();
+    expect(callOrder).toEqual(['cancel', 'reset']);
+
+    const cancelCallOrder = cancelNavigation.mock.invocationCallOrder[0];
+    const resetCallOrder = resetForm.mock.invocationCallOrder[0];
+    expect(cancelCallOrder).toBeLessThan(resetCallOrder);
+  });
+});
+

@@ -97,3 +97,4 @@ describe('ScreenLayout', () => {
     expect(screen.getByText(/Leave testing session\?/i)).toBeInTheDocument();
   });
 });
+

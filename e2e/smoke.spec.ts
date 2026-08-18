@@ -33,7 +33,7 @@ test.describe('Smoke Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // The app title is DREAM — check the h1 in the header
-    await expect(page.locator('header h1')).toContainText('DREAM');
+    await expect(page.getByRole('heading', { name: 'DREAM' })).toBeVisible();
   });
 
   test('can navigate to dashboard', async ({ page }) => {
@@ -47,7 +47,7 @@ test.describe('Smoke Tests', () => {
     await dashboardLink.click();
 
     // Verify dashboard loads
-    await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: 'Clinical Dashboard' })).toBeVisible({ timeout: 10000 });
   });
 
   test('theme toggle works', async ({ page }) => {
@@ -56,7 +56,7 @@ test.describe('Smoke Tests', () => {
     await dismissHelpModal(page);
 
     // Theme toggle is in the AppTopBar across all viewports
-    const themeButton = page.locator('button[aria-label^="Switch to"]').first();
+    const themeButton = page.getByRole('button', { name: /Switch to (dark|light) theme/i });
     await expect(themeButton).toBeVisible({ timeout: 5000 });
     await themeButton.click();
 

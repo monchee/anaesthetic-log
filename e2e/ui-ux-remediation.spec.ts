@@ -49,7 +49,7 @@ test.describe('UI/UX remediation regressions', () => {
     await page.goto(appPath('/dashboard'));
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.locator('header h1')).toContainText('Clinical Dashboard');
+    await expect(page.getByRole('heading', { name: 'Clinical Dashboard' })).toBeVisible();
   });
 
   test('auto-open Get Started does not redirect direct Research route', async ({ page }) => {
@@ -57,7 +57,7 @@ test.describe('UI/UX remediation regressions', () => {
     await page.goto(appPath('/research'));
 
     await expect(page).toHaveURL(/\/research$/);
-    await expect(page.locator('header h1')).toContainText('Research Database');
+    await expect(page.getByRole('heading', { name: 'Research Database', exact: true })).toBeVisible();
   });
 
   test('mobile primary nav exposes the active route label', async ({ page }) => {

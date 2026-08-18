@@ -65,7 +65,7 @@ test.describe('Baseline screenshots (Phase 0)', () => {
       } else {
         await page.locator('a[href="/dashboard"]').first().click();
       }
-      await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
+      await expect(page.getByRole('heading', { name: 'Clinical Dashboard' })).toBeVisible({ timeout: 10000 });
       await dismissHelpModal(page);
       await page.screenshot({ path: path.join(OUTPUT_DIR, `dashboard-${vp.name}.png`), fullPage: true });
 

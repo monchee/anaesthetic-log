@@ -105,7 +105,7 @@ test.describe('Testing Day Flow', () => {
     const dashboardLink = page.locator('a[href="/dashboard"]').first();
     await expect(dashboardLink).toBeVisible({ timeout: 5000 });
     await dashboardLink.click();
-    await expect(page.getByText('Clinical Dashboard')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: 'Clinical Dashboard' })).toBeVisible({ timeout: 10000 });
 
     // ── Step 11: Recent Testing Activity shows sessions ────────────────────
     // Mock logs are seeded — the dashboard should show at least one recent session
@@ -180,7 +180,7 @@ test.describe('Testing Day Flow', () => {
     await proceedBtn.click();
     await dismissHelpModal(page);
 
-    const identityBar = page.locator('[aria-label="Patient identity"]');
+    const identityBar = page.locator('[aria-label="Current patient and encounter"]');
     await expect(identityBar).toBeVisible({ timeout: 10000 });
     await expect(identityBar).toContainText(/Chen, Wei|Wei Chen/i);
 
@@ -188,5 +188,61 @@ test.describe('Testing Day Flow', () => {
     await page.mouse.wheel(0, 1500);
     await expect(identityBar).toBeInViewport();
     await expect(identityBar).toContainText(/Chen, Wei|Wei Chen/i);
+  });
+
+  test('navigation guard prevents accidental loss of dirty testing draft', async ({ page }) => {
+    // 1. Click the button named /Select Patient from Database/i
+    const patientSelector = page.getByRole('button', { name: /Select Patient from Database/i });
+    await expect(patientSelector).toBeVisible({ timeout: 10000 });
+    await patientSelector.click();
+
+    // 2. Fill the textbox named /Filter patients by ID or name/i with 'Wei', wait 300ms for debounce
+    const patientSearch = page.getByRole('textbox', { name: /Filter patients by ID or name/i });
+    await expect(patientSearch).toBeVisible({ timeout: 5000 });
+    await patientSearch.fill('Wei');
+    await page.waitForTimeout(300);
+
+    // 3. Click the option matching /Chen, Wei|Wei Chen/i
+    const weiOption = page.getByRole('option').filter({ hasText: /Chen, Wei|Wei Chen/i }).first();
+    await expect(weiOption).toBeVisible({ timeout: 5000 });
+    await weiOption.click();
+
+    // 4. Click text 'Metoclopramide' (exact) to select a drug
+    await page.getByText('Metoclopramide', { exact: true }).first().click();
+
+    // 5. Click the button /Start Testing Session/i, then waitForLoadState('networkidle'), then dismissHelpModal(page)
+    const proceedBtn = page.getByRole('button', { name: /Start Testing Session/i });
+    await expect(proceedBtn).toBeVisible({ timeout: 5000 });
+    await proceedBtn.click();
+    await page.waitForLoadState('networkidle');
+    await dismissHelpModal(page);
+
+    // 6. Click the button named 'Next Section' (exact), then fill the field getByLabel(/histamine/i).first() with '5' — this dirties the draft
+    await page.getByRole('button', { name: 'Next Section', exact: true }).click();
+    const histamineField = page.getByLabel(/histamine/i).first();
+    await expect(histamineField).toBeVisible({ timeout: 10000 });
+    await histamineField.fill('5');
+
+    // 7. Click a dashboard nav link to attempt navigation away
+    const dashboardLink = page.locator('a[href="/dashboard"]').first();
+    await expect(dashboardLink).toBeVisible({ timeout: 5000 });
+    await dashboardLink.click();
+
+    // 8. Assert a dialog containing /Leave testing session\?/i becomes visible
+    const guardDialog = page.getByRole('dialog', { name: /Leave testing session\?/i });
+    await expect(guardDialog).toBeVisible({ timeout: 5000 });
+
+    // 9. Click its 'Stay in session' button; assert the dialog hides AND page.url() still contains '/testing'
+    await guardDialog.getByRole('button', { name: 'Stay in session' }).click();
+    await expect(guardDialog).toBeHidden({ timeout: 5000 });
+    expect(page.url()).toContain('/testing');
+
+    // 10. Click the dashboard link again; assert the dialog reappears; click 'Leave and keep draft'; assert the dialog hides AND page.url() contains '/dashboard'
+    await dashboardLink.click();
+    await expect(guardDialog).toBeVisible({ timeout: 5000 });
+    await guardDialog.getByRole('button', { name: 'Leave and keep draft' }).click();
+    await expect(guardDialog).toBeHidden({ timeout: 5000 });
+    expect(page.url()).toContain('/dashboard');
+    await expect(page.getByRole('heading', { name: 'Clinical Dashboard' })).toBeVisible({ timeout: 10000 });
   });
 });
