@@ -126,6 +126,37 @@ describe('ErrorBoundary', () => {
     expect(reloadMock).toHaveBeenCalledTimes(1);
   });
 
+  it('always displays a support-friendly error ID, and includes it in the Sentry report', () => {
+    const captureSpy = vi.spyOn(sentry, 'captureException');
+
+    render(
+      <ErrorBoundary>
+        <ProblemChild shouldThrow={true} errorMessage="Error ID test" />
+      </ErrorBoundary>
+    );
+
+    const errorIdText = screen.getByText(/Error ID:/);
+    expect(errorIdText).toBeInTheDocument();
+    expect(errorIdText.textContent).toMatch(/Error ID: \S+/);
+    expect(captureSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Error ID test' }),
+      expect.objectContaining({
+        extra: expect.objectContaining({ errorId: expect.any(String) }),
+      })
+    );
+  });
+
+  it('clears the error ID when Try Again is clicked', () => {
+    render(<ResettableApp />);
+
+    expect(screen.getByText(/Error ID:/)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /disable error/i }));
+    fireEvent.click(screen.getByRole('button', { name: /try again/i }));
+
+    expect(screen.queryByText(/Error ID:/)).not.toBeInTheDocument();
+  });
+
   it('renders stack trace in details block in development mode', () => {
     render(
       <ErrorBoundary>
@@ -133,7 +164,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
-    expect(screen.getByText('Error Details (for IT support)')).toBeInTheDocument();
+    expect(screen.getByText('Error Details (development only)')).toBeInTheDocument();
     expect(screen.getByText(/Message:/)).toBeInTheDocument();
     expect(screen.getByText('Stack:')).toBeInTheDocument();
     expect(screen.getAllByText(/Dev mode error message/).length).toBeGreaterThan(0);

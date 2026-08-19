@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.7",
+    "codename": "Review Follow-Through"
+  },
+  {
     "version": "v0.79.6",
     "codename": "No More Sideways Scrolling"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.3",
     "codename": "Regression Net, Widened"
-  },
-  {
-    "version": "v0.79.2",
-    "codename": "Lean and Locked Down"
   }
 ]

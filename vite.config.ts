@@ -109,6 +109,9 @@ export default defineConfig(() => {
         org: 'monchee',
         project: 'dream',
         telemetry: false,
+        sourcemaps: {
+          filesToDeleteAfterUpload: ['**/*.map'],
+        },
       })
     );
   }

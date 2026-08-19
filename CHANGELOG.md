@@ -1,3 +1,12 @@
+## [0.79.7] — 2026-08-19 (Review Follow-Through)
+
+Summary: Fixes 3 should-fix findings from an independent review of the whole v0.78.6→v0.79.6 hardening pass (Phases 0-8). The review's verdict was "safe to deploy, zero blockers" — these close real but non-blocking gaps before shipping.
+
+### Fixed
+- **Source maps are now actually deleted from the public bundle after Sentry upload.** `sourcemap: 'hidden'` (v0.79.2) only removed the `sourceMappingURL` comment — the 34 `.map` files (7 MB) were still shipping to `dist/` and served at guessable URLs. `sentryVitePlugin` now deletes them (`filesToDeleteAfterUpload`) once Sentry has what it needs.
+- **CSP `connect-src` now allows the Google Fonts domains the service worker fetches.** The now-enforcing CSP (v0.79.2) allowed Google Fonts under `style-src`/`font-src` for the page's own font loading, but not `connect-src` — and the PWA's Workbox `runtimeCaching` fetches those same domains from inside the service worker, which is evaluated against `connect-src`. Uncaught, this would have silently degraded to system fonts on cache misses in production.
+- **Error boundary now always shows a support-friendly error ID.** Gating the full stack trace behind dev-mode (v0.79.1) left the "contact IT support with the error details below" instruction pointing at nothing in production. A short error ID is now generated on every crash, shown regardless of environment, and included in the Sentry report — the full message/stack stays dev-only.
+
 ## [0.79.6] — 2026-08-19 (No More Sideways Scrolling)
 
 Summary: Final phase of the current hardening pass — fixes the one confirmed responsive gap in the Dashboard, and closes out with two other items checked live and found already sound.

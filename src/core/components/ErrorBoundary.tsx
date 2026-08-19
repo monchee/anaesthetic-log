@@ -10,6 +10,11 @@ interface Props {
 interface State {
   hasError: boolean;
   error?: Error;
+  errorId?: string;
+}
+
+function generateErrorId(): string {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 /**
@@ -28,11 +33,12 @@ class ErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+    return { hasError: true, error, errorId: generateErrorId() };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error);
+    console.error('Error ID:', this.state.errorId);
     console.error('Error message:', error.message);
     console.error('Error stack:', error.stack);
     console.error('Error info:', errorInfo);
@@ -40,12 +46,13 @@ class ErrorBoundary extends Component<Props, State> {
     void captureException(error, {
       extra: {
         componentStack: errorInfo.componentStack,
+        errorId: this.state.errorId,
       },
     });
   }
 
   private handleReset = () => {
-    this.setState({ hasError: false, error: undefined });
+    this.setState({ hasError: false, error: undefined, errorId: undefined });
   };
 
   public render() {
@@ -70,7 +77,7 @@ class ErrorBoundary extends Component<Props, State> {
                 <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
                   <li>Click <strong>"Try Again"</strong> to reset the current screen</li>
                   <li>Click <strong>"Reload Page"</strong> to refresh the application</li>
-                  <li>If the issue persists, contact IT support with the error details below</li>
+                  <li>If the issue persists, contact IT support and quote the error ID below</li>
                 </ol>
               </div>
               <div className="space-y-3">
@@ -87,10 +94,15 @@ class ErrorBoundary extends Component<Props, State> {
                   Reload Page
                 </Button>
               </div>
+              {this.state.errorId && (
+                <p className="mt-4 text-xs text-muted-foreground font-mono">
+                  Error ID: {this.state.errorId}
+                </p>
+              )}
               {this.state.error && import.meta.env.DEV && (
                 <details className="mt-4 text-left">
                   <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
-                    Error Details (for IT support)
+                    Error Details (development only)
                   </summary>
                   <div className="mt-2 text-xs bg-muted p-3 rounded overflow-auto space-y-2">
                     <div><strong>Message:</strong> {this.state.error.message}</div>
