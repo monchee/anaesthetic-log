@@ -1,3 +1,10 @@
+## [0.79.8] — 2026-08-19 (Actually Deleted This Time)
+
+Summary: Closes a gap the v0.79.7 sourcemap fix didn't fully cover — this project has no CI/CD pipeline, so `npm run deploy` run locally (the only deploy path that exists) doesn't have `SENTRY_AUTH_TOKEN` set unless the person deploying has it in their shell, meaning the Sentry-upload-triggered deletion never ran and source maps were still shipping to production.
+
+### Fixed
+- **Source maps are stripped from `dist/` before every deploy, unconditionally.** `deploy` and `deploy:preview` now run `find dist -name '*.map' -delete` after the build and before the Cloudflare Pages upload — independent of whether Sentry's upload step ran. If it did, this is a no-op (already deleted); if it didn't (no token in the deploying shell), this is what actually closes the gap.
+
 ## [0.79.7] — 2026-08-19 (Review Follow-Through)
 
 Summary: Fixes 3 should-fix findings from an independent review of the whole v0.78.6→v0.79.6 hardening pass (Phases 0-8). The review's verdict was "safe to deploy, zero blockers" — these close real but non-blocking gaps before shipping.

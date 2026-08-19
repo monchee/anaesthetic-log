@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.8",
+    "codename": "Actually Deleted This Time"
+  },
+  {
     "version": "v0.79.7",
     "codename": "Review Follow-Through"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.4",
     "codename": "Testable Test Panel"
-  },
-  {
-    "version": "v0.79.3",
-    "codename": "Regression Net, Widened"
   }
 ]
