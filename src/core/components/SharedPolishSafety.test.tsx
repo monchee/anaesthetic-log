@@ -68,7 +68,7 @@ describe('Shared polish safety and semantic token regression tests', () => {
 
       render(<DisclaimerBanner onClose={onClose} onUploadClick={onUpload} />);
 
-      expect(screen.getByText('Demo System:')).toHaveClass('text-status-warning');
+      expect(screen.getByText('Demo System:')).toHaveClass('text-status-warning-foreground');
       const uploadButton = screen.getByRole('button', { name: /Upload a REDCap CSV export/i });
       fireEvent.click(uploadButton);
       expect(onUpload).toHaveBeenCalledOnce();
@@ -76,6 +76,35 @@ describe('Shared polish safety and semantic token regression tests', () => {
       const dismissButton = screen.getByRole('button', { name: 'Dismiss' });
       fireEvent.click(dismissButton);
       expect(onClose).toHaveBeenCalledOnce();
+    });
+
+    it('automatically dismisses after 10s and pauses countdown during interaction', () => {
+      vi.useFakeTimers();
+      try {
+        const onClose = vi.fn();
+        const { container } = render(<DisclaimerBanner onClose={onClose} />);
+
+        // Advance 5 seconds - timer has not expired
+        vi.advanceTimersByTime(5000);
+        expect(onClose).not.toHaveBeenCalled();
+
+        // Hover pauses the countdown
+        const banner = container.firstElementChild as HTMLElement;
+        fireEvent.mouseEnter(banner);
+        vi.advanceTimersByTime(10000);
+        expect(onClose).not.toHaveBeenCalled();
+
+        // Mouse leave restarts fresh 10s countdown
+        fireEvent.mouseLeave(banner);
+        vi.advanceTimersByTime(5000);
+        expect(onClose).not.toHaveBeenCalled();
+
+        // Advance remaining 5 seconds
+        vi.advanceTimersByTime(5000);
+        expect(onClose).toHaveBeenCalledOnce();
+      } finally {
+        vi.useRealTimers();
+      }
     });
   });
 

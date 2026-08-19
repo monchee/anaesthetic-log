@@ -1,3 +1,15 @@
+## [0.79.15] — 2026-08-20 (Solid, Slim, Self-Clearing)
+
+Summary: A polish pass on the "Demo System" disclaimer banner shown above real content until dismissed. It was translucent, sized for a 44px touch target on every viewport including desktop, and stayed on screen indefinitely. No copy, props, or dismiss-persistence logic changed.
+
+### Changed
+- **Opaque background.** `bg-status-warning/15` (a 15%-opacity tint) is now solid `bg-status-warning`, paired with `text-status-warning-foreground` — the same token pairing this app already uses for solid warning surfaces elsewhere, not a new color. Verified by computed style, not by eye: light mode renders `rgb(206,132,8)` background; dark mode `rgb(243,184,22)` background against `rgb(26,26,26)` text, ~10.8:1 contrast.
+- **Slimmer on desktop.** Banner height dropped from ~60px to 41px at desktop widths. The dismiss button — which was the actual height bottleneck, since a flex row's height follows its tallest child — shrinks to 28×28 at the `xl:` breakpoint and above, reusing the same desktop-is-mouse-only reasoning already shipped for the sidebar in v0.79.14. Mobile and tablet keep the full 44×44 touch target unchanged (measured live: 67px tall, 44×44 button at 390px).
+- **Auto-dismisses after 10 seconds**, calling the same `onClose` the manual dismiss button already uses, so it persists identically and won't reappear. Pauses on hover or keyboard focus and restarts a fresh 10-second window on disengagement, per WCAG 2.2 SC 2.2.1 (Timing Adjustable) — a bare unpausable timer would be a real accessibility regression for anyone who takes longer than 10s to read or act on it. Verified with real timers: present at idle, gone within ~10-12s; held continuously present across an 11s hover; cleared shortly after the pointer moved away.
+
+### Checked, no change needed
+- **`TTLExpiryBanner.tsx`**, a near-identical sibling component, was deliberately left on the old translucent treatment. The two banners now visually diverge if shown back to back — whether to bring it in line is a follow-up decision, not made here.
+
 ## [0.79.14] — 2026-08-20 (Room to Breathe, Room to Grow)
 
 Summary: A polish pass on the desktop sidebar. It shares its nav content with the mobile drawer through one component keyed by a `variant` prop, and every row in both variants was hard-coded to the same 44px touch-target height — including on the sidebar, which is `hidden xl:flex` and never rendered on a touch device. At 1280×800, a standard laptop and the exact viewport this repo's own visual-regression suite uses, the nav list overflowed by 12px and clipped the footer. No navigation logic, copy, or drawer behaviour changed.

@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.15",
+    "codename": "Solid, Slim, Self-Clearing"
+  },
+  {
     "version": "v0.79.14",
     "codename": "Room to Breathe, Room to Grow"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.11",
     "codename": "A Background With a Job"
-  },
-  {
-    "version": "v0.79.10",
-    "codename": "Primitives That Stop Fighting Back"
   }
 ]
