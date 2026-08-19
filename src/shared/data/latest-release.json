@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.12",
+    "codename": "Micrograms, Not Milligrams"
+  },
+  {
     "version": "v0.79.11",
     "codename": "A Background With a Job"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.8",
     "codename": "Actually Deleted This Time"
-  },
-  {
-    "version": "v0.79.7",
-    "codename": "Review Follow-Through"
   }
 ]

@@ -1,3 +1,23 @@
+## [0.79.12] — 2026-08-20 (Micrograms, Not Milligrams)
+
+Summary: A design polish pass on the Reaction History card that turned up a clinical units defect. The card was also rendering with roughly half its right-hand column empty, and had accumulated enough local drift — nested shadows, four different panel backgrounds, three shades of "secondary text" — that nothing on it carried visual hierarchy. No behaviour, data, or clinical logic changes.
+
+### Fixed
+- **Serum tryptase was displaying as "mg/L" when the value is in μg/L.** The header text is written `Result (μg/L)`, but `text-transform: uppercase` maps Greek small mu (U+03BC) to Greek capital Mu (U+039C) — a glyph visually identical to a Latin "M" — so the rendered header read `RESULT (MG/L)`. Tryptase reference range is roughly 0–11 μg/L, making this a 1000× unit misstatement on a clinical record. The unit is now excluded from the uppercase transform in both the Reaction History table and the Tryptase entry section, which carried the identical bug.
+- **The card rendered with ~384px of dead space.** At 1440px with a populated patient the left column measured 784px against the right column's 400px, leaving the right side half empty. Rebalanced by relocating content rather than stretching containers: Serum Tryptase now sits under the timeline (T1/T2/T3 are timestamped serial measurements, so they belong with the chronology rather than among the narrative text blocks), and the Referring Doctor / Hospital bar became a full-width footer, since referral provenance is the lowest-priority content on the card. Columns now measure 543 / 511. Mobile reading order improved as a side effect — tryptase follows the timeline instead of preceding it.
+
+### Changed
+- **Nested shadows removed.** Seven `shadow-sm` instances sat inside a card that is already `elevation="raised"`, contradicting the Flat-By-Default Rule established in v0.79.10.
+- **One panel treatment instead of four.** The card mixed `bg-background` (×7), `bg-card` (×6), `bg-muted` (×6) and four muted alpha variants. Content panels now use one recessed treatment and internal chrome strips one muted fill. This also fixes Additional Comments and Differential Diagnosis, which used `bg-card` — the same colour as the card behind them — and so rendered as fill-less outlines.
+- **Secondary text uses real tokens.** Ten `text-foreground/70|80|90` alpha overrides produced three near-identical greys where the system defines exactly two roles; each now resolves to `text-foreground` or `text-muted-foreground`.
+- **Icon sizing collapsed from five sizes to two**, including an 8px phone icon that was effectively invisible.
+- **Decorative italics removed** from four sites — italic body text at `text-xs` costs legibility in a clinical UI, and the v0.79.10 pass had already removed ad-hoc italics elsewhere.
+- **Header row tidied.** The date and procedure now share a type size and read as peers, and the divider is a 1px rule rather than a literal `|` glyph set at `text-xl` with a stray alpha.
+
+### Checked, no change needed
+- **Accessibility.** All 31 accessibility e2e checks pass, run specifically because the refactor touched heading structure, labels, and table semantics. Every `aria-label`, `aria-pressed`, `aria-labelledby`, `scope`, and `data-state` relationship is preserved.
+- **Unit-label legibility tradeoff.** The tryptase unit now renders in normal case beside an uppercase label, which is marginally less uniform than the sibling column headers. Kept deliberately: correctness of a clinical unit outranks header typography.
+
 ## [0.79.11] — 2026-08-19 (A Background With a Job)
 
 Summary: The PIN gate's ambient background — two drifting light blobs and a hairline architectural grid — was pure decoration with no connection to what the screen actually does. Gives it two authored, state-tied moments instead: a brief warning-tinted pulse on a wrong PIN, and a chrome-accent convergence glow on a correct one, both built on the existing `error`/`isExiting` state with no new logic.

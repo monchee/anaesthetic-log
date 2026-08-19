@@ -71,7 +71,7 @@ export function TryptaseSection({ tryptase, onChange }: TryptaseSectionProps) {
             </div>
 
             <div className="space-y-3">
-              <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">Sample Values (μg/L)</Label>
+              <Label className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">Sample Values <span className="normal-case">(μg/L)</span></Label>
               {(tryptase.values.length === 0 ? [{ time: '', result: '' }] : tryptase.values).map((_, idx) => (
                 <div key={idx} className="flex items-center gap-3">
                   <div className="flex-1 flex items-center gap-2">
