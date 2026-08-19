@@ -1,3 +1,12 @@
+## [0.79.3] — 2026-08-19 (Regression Net, Widened)
+
+Summary: Adds unit test coverage for 12 previously-untested files with real clinical/data consequences — skin-test grading, PHI de-identification for audit export, and all 4 clinical report renderers. Purely additive; zero existing test or source file touched.
+
+### Added
+- **87 new tests, 686 total.** New coverage for `gradingUtils` (skin-test grade classification), `testingPlanFormatter`, `auditExporter` (PHI de-identification and audit-ID generation for exports — the highest-stakes gap per the plan), `timelineUtils`, `dateUtils`, `patientRepository` (search/filter/sort), and the `useDashboardAnalytics`/`useAdvancedSearch` hooks.
+- **Report renderer coverage.** `ClinicalReport`, `PatientHandout`, `PowerchartLetter`, and `ReportPrintIdentity` — previously only the print-safety wrapper was tested, not the renderers a clinician actually reads (positive/negative outcomes, cross-sensitization warnings, tolerated-drug badges).
+- **Unit-level accessibility matcher.** `axe-core` was already wired into 7 e2e scans but had no unit-level equivalent. New `src/test/helpers/axe.ts` runs axe-core directly under Vitest+JSDOM (no new dependency), used across the new report-renderer tests. `color-contrast` is disabled to match the existing e2e scan config — JSDOM can't resolve this app's `hsl(var(--token))` custom properties, a documented pre-existing limitation, not a new one.
+
 ## [0.79.2] — 2026-08-19 (Lean and Locked Down)
 
 Summary: Performance and hardening pass on the production bundle and headers — smaller eager JS, no publicly-discoverable source maps, and the CSP finally enforcing instead of report-only.

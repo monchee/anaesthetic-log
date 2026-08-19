@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.3",
+    "codename": "Regression Net, Widened"
+  },
+  {
     "version": "v0.79.2",
     "codename": "Lean and Locked Down"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.78.9",
     "codename": "One Types Barrel"
-  },
-  {
-    "version": "v0.78.8",
-    "codename": "Strict Housekeeping"
   }
 ]
