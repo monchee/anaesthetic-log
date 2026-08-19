@@ -6,9 +6,9 @@ import { CATEGORY_THEMES, DEFAULT_THEME } from '@shared/utils/constants';
 import { DrugTestGrid } from './DrugTestGrid';
 import { preventNegativeInput } from './TestingLogFormSectionShared';
 
-interface DrugTestPanelSectionProps {
+export interface DrugTestPanelSectionProps {
   formData: LogFormData;
-  setFormData: React.Dispatch<React.SetStateAction<LogFormData>>;
+  onClearPanel: () => void;
   drugCategories: Record<string, string[]>;
   drugFilter: string;
   setDrugFilter: (value: string) => void;
@@ -26,7 +26,7 @@ interface DrugTestPanelSectionProps {
 
 export function DrugTestPanelSection({
   formData,
-  setFormData,
+  onClearPanel,
   drugCategories,
   drugFilter,
   setDrugFilter,
@@ -62,7 +62,7 @@ export function DrugTestPanelSection({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setFormData(prev => ({ ...prev, testPanel: [] }))}
+              onClick={onClearPanel}
               className="text-xs text-muted-foreground hover:text-destructive h-6 px-2 rounded-none font-normal"
               title="Clear all selected drugs"
             >

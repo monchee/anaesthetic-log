@@ -1,16 +1,16 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Input, Label } from '@/components/ui';
 import { ChevronDown, ChevronUp, ClipboardList } from 'lucide-react';
-import { LogFormData } from '@shared/types';
+import { NurseNotes } from '@shared/types';
 
-interface NurseNotesSectionProps {
-  formData: LogFormData;
-  setFormData: React.Dispatch<React.SetStateAction<LogFormData>>;
+export interface NurseNotesSectionProps {
+  nurseNotes?: NurseNotes;
+  onChange: (nurseNotes: NurseNotes) => void;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function NurseNotesSection({ formData, setFormData, isOpen, setIsOpen }: NurseNotesSectionProps) {
+export function NurseNotesSection({ nurseNotes, onChange, isOpen, setIsOpen }: NurseNotesSectionProps) {
   return (
     <Card style={{ '--section-index': 5 } as React.CSSProperties} className="animate-section-reveal rounded-none border-border">
       <CardHeader className="pb-3 border-b border-border bg-card">
@@ -38,8 +38,8 @@ export function NurseNotesSection({ formData, setFormData, isOpen, setIsOpen }: 
                 id={id}
                 className="flex min-h-[80px] w-full rounded-none border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 placeholder={placeholder}
-                value={formData.nurseNotes?.[field] || ''}
-                onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, [field]: e.target.value } }))}
+                value={nurseNotes?.[field] || ''}
+                onChange={e => onChange({ ...nurseNotes, [field]: e.target.value })}
               />
             </div>
           ))}
@@ -49,8 +49,8 @@ export function NurseNotesSection({ formData, setFormData, isOpen, setIsOpen }: 
               id="nurse-signed"
               className="border-input focus-visible:ring-2 focus-visible:ring-ring rounded-none bg-background text-foreground"
               placeholder="Nurse name..."
-              value={formData.nurseNotes?.signedBy || ''}
-              onChange={e => setFormData(prev => ({ ...prev, nurseNotes: { ...prev.nurseNotes, signedBy: e.target.value } }))}
+              value={nurseNotes?.signedBy || ''}
+              onChange={e => onChange({ ...nurseNotes, signedBy: e.target.value })}
             />
           </div>
         </CardContent>

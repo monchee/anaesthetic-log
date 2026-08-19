@@ -22,7 +22,10 @@ function TryptaseHarness({ onSave }: HarnessProps) {
 
   return (
     <>
-      <TryptaseSection formData={formData} setFormData={setFormData} />
+      <TryptaseSection
+        tryptase={formData.tryptase}
+        onChange={tryptase => setFormData(prev => ({ ...prev, tryptase }))}
+      />
       <button type="button" onClick={() => onSave(formData)}>Save record</button>
     </>
   );

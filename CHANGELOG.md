@@ -1,3 +1,10 @@
+## [0.79.5] — 2026-08-19 (Sections That Can't Cross-Write)
+
+Summary: Narrows three testing-form sections' write access from the entire clinical record down to only the field each one actually owns — encoding "the tryptase section cannot write the challenge panel" as a type-system guarantee instead of a convention.
+
+### Changed
+- **`TryptaseSection`, `NurseNotesSection`, `DrugTestPanelSection`** no longer receive the raw `setFormData` dispatcher for the whole form. Each now takes only its own data slice (`tryptase`, `nurseNotes`) plus a scoped `onChange`/`onClearPanel` callback owned by `TestingLogForm`. The other four sections in this form already worked this way — this closes the gap on the three that didn't. Purely a prop-narrowing refactor: every interaction (toggling tryptase obtained/significant-elevation, editing sample values, editing nurse notes, clearing the drug panel) behaves identically to before.
+
 ## [0.79.4] — 2026-08-19 (Testable Test Panel)
 
 Summary: Extracts the domain logic that builds a testing session's drug panel out of `App.tsx` and into a pure, directly-unit-tested function — no behaviour change, just moving untested logic out of a routing component.

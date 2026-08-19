@@ -211,6 +211,24 @@ describe('TestingLogForm (Indexed Workflow)', () => {
 
       expect(screen.getAllByText('+POS').length).toBeGreaterThan(0);
     });
+
+    it('clears all selected drugs when Clear All is clicked', async () => {
+      render(<TestWrapper initialData={mockFormData} props={mockProps} />);
+      fireEvent.click(screen.getByRole('button', { name: /2\.\s*SPT and IDT/i }));
+
+      const rocuroniumBtn = screen.getByRole('button', { name: /Rocuronium/i });
+      expect(rocuroniumBtn).toHaveAttribute('aria-pressed', 'true');
+
+      const clearAllButton = screen.getByRole('button', { name: /Clear All/i });
+      fireEvent.click(clearAllButton);
+
+      await waitFor(() => {
+        expect(rocuroniumBtn).toHaveAttribute('aria-pressed', 'false');
+      });
+      expect(mockProps.setFormData).toHaveBeenCalledWith(expect.objectContaining({
+        testPanel: [],
+      }));
+    });
   });
 
   describe('Section 3: Drug Challenge', () => {

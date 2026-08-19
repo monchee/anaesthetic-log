@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { LogFormData } from '@shared/types';
+import React, { useCallback, useRef, useState } from 'react';
+import { LogFormData, NurseNotes, TryptaseData } from '@shared/types';
 import { useTestingLogLogic } from '../hooks/useTestingLogLogic';
 import { TestingService } from '../services/TestingService';
 import {
@@ -50,6 +50,18 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
     toggleSymptom,
     challengeOptions,
   } = useTestingLogLogic({ formData, setFormData, drugCategories });
+
+  const handleTryptaseChange = useCallback((tryptase: TryptaseData) => {
+    setFormData(prev => ({ ...prev, tryptase }));
+  }, [setFormData]);
+
+  const handleNurseNotesChange = useCallback((nurseNotes: NurseNotes) => {
+    setFormData(prev => ({ ...prev, nurseNotes }));
+  }, [setFormData]);
+
+  const handleClearTestPanel = useCallback(() => {
+    setFormData(prev => ({ ...prev, testPanel: [] }));
+  }, [setFormData]);
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const [validationErrors, setValidationErrors] = useState<ValidationErrorLink[]>([]);
@@ -176,7 +188,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
           {activeSectionIndex === 1 && (
             <DrugTestPanelSection
               formData={formData}
-              setFormData={setFormData}
+              onClearPanel={handleClearTestPanel}
               drugCategories={drugCategories}
               drugFilter={drugFilter}
               setDrugFilter={setDrugFilter}
@@ -208,8 +220,8 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
           {/* Section 4: Serial serum tryptase */}
           {activeSectionIndex === 3 && (
             <TryptaseSection
-              formData={formData}
-              setFormData={setFormData}
+              tryptase={formData.tryptase}
+              onChange={handleTryptaseChange}
             />
           )}
 
@@ -224,8 +236,8 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
           {/* Section 6: Nursing notes */}
           {activeSectionIndex === 5 && (
             <NurseNotesSection
-              formData={formData}
-              setFormData={setFormData}
+              nurseNotes={formData.nurseNotes}
+              onChange={handleNurseNotesChange}
               isOpen={nurseNotesOpen}
               setIsOpen={setNurseNotesOpen}
             />

@@ -5,7 +5,6 @@ import { AssessmentPlanSection } from './AssessmentPlanSection';
 import { NurseNotesSection } from './NurseNotesSection';
 import { SaveActionSection } from './SaveActionSection';
 import { VisitDetailsSection } from './VisitDetailsSection';
-import { LogFormData } from '@shared/types';
 
 describe('AssessmentPlanSection', () => {
   it('renders plan text and triggers onInputChange on change', () => {
@@ -23,19 +22,17 @@ describe('AssessmentPlanSection', () => {
 describe('NurseNotesSection', () => {
   it('renders collapsed state and toggles open on click', () => {
     const setIsOpen = vi.fn();
-    const formData = {
-      nurseNotes: {
-        preTesting: 'Pre notes',
-        duringTesting: 'During notes',
-        postTesting: 'Post notes',
-        signedBy: 'RN Tester',
-      },
-    } as unknown as LogFormData;
+    const nurseNotes = {
+      preTesting: 'Pre notes',
+      duringTesting: 'During notes',
+      postTesting: 'Post notes',
+      signedBy: 'RN Tester',
+    };
 
     const { rerender } = render(
       <NurseNotesSection
-        formData={formData}
-        setFormData={vi.fn()}
+        nurseNotes={nurseNotes}
+        onChange={vi.fn()}
         isOpen={false}
         setIsOpen={setIsOpen}
       />
@@ -49,8 +46,8 @@ describe('NurseNotesSection', () => {
 
     rerender(
       <NurseNotesSection
-        formData={formData}
-        setFormData={vi.fn()}
+        nurseNotes={nurseNotes}
+        onChange={vi.fn()}
         isOpen={true}
         setIsOpen={setIsOpen}
       />
@@ -63,13 +60,13 @@ describe('NurseNotesSection', () => {
   });
 
   it('updates form data when fields are edited in open state', () => {
-    const setFormData = vi.fn();
-    const formData = {} as LogFormData;
+    const onChange = vi.fn();
+    const nurseNotes = {};
 
     render(
       <NurseNotesSection
-        formData={formData}
-        setFormData={setFormData}
+        nurseNotes={nurseNotes}
+        onChange={onChange}
         isOpen={true}
         setIsOpen={vi.fn()}
       />
@@ -77,11 +74,11 @@ describe('NurseNotesSection', () => {
 
     const preInput = screen.getByLabelText(/Pre-Testing Observations/i);
     fireEvent.change(preInput, { target: { value: 'Vitals stable' } });
-    expect(setFormData).toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ preTesting: 'Vitals stable' }));
 
     const signedInput = screen.getByLabelText(/Signed by \(RN\)/i);
     fireEvent.change(signedInput, { target: { value: 'Nurse Joy' } });
-    expect(setFormData).toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ signedBy: 'Nurse Joy' }));
   });
 });
 

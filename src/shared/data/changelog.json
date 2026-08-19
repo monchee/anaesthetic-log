@@ -1,5 +1,15 @@
 [
   {
+    "version": "v0.79.5",
+    "codename": "Sections That Can't Cross-Write",
+    "date": "19 August 2026",
+    "summary": "Narrows three testing-form sections' write access from the entire clinical record down to only the field each one actually owns \u2014 encoding \"the tryptase section cannot write the challenge panel\" as a type-system guarantee instead of a convention.",
+    "highlight": false,
+    "changes": [
+      "`TryptaseSection`, `NurseNotesSection`, `DrugTestPanelSection` no longer receive the raw `setFormData` dispatcher for the whole form. Each now takes only its own data slice (`tryptase`, `nurseNotes`) plus a scoped `onChange`/`onClearPanel` callback owned by `TestingLogForm`. The other four sections in this form already worked this way \u2014 this closes the gap on the three that didn't. Purely a prop-narrowing refactor: every interaction (toggling tryptase obtained/significant-elevation, editing sample values, editing nurse notes, clearing the drug panel) behaves identically to before."
+    ]
+  },
+  {
     "version": "v0.79.4",
     "codename": "Testable Test Panel",
     "date": "19 August 2026",

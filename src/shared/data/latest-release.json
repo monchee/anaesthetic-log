@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.5",
+    "codename": "Sections That Can't Cross-Write"
+  },
+  {
     "version": "v0.79.4",
     "codename": "Testable Test Panel"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.1",
     "codename": "Degrade Gracefully"
-  },
-  {
-    "version": "v0.79.0",
-    "codename": "One Layout Chrome"
   }
 ]
