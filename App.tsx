@@ -4,7 +4,7 @@ import { Screen } from '@shared/types';
 import { ScreenChrome } from '@core/components/ScreenLayout';
 import { APP_CONFIG } from '@shared/utils/constants';
 import { purgeStale } from '@shared/utils/ttlStorage';
-import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
+import { buildTestPanelFromPlan } from '@features/testing/utils/buildTestPanelFromPlan';
 import { useAnaestheticApp } from '@core/hooks/useAnaestheticApp';
 import { isReportActive } from '@core/navigation/navigationConfig';
 import { reportWebVitals } from './src/lib/analytics';
@@ -88,34 +88,10 @@ export function AnaestheticLogApp() {
 
   const handleProceedToTesting = () => {
     if (testingPlanData?.selectedDrugs?.length || testingPlanData?.customDrugs?.length) {
-      const { selectedDrugs = [], selectedProtocols, customDrugs = [] } = testingPlanData;
-      const standardRows = selectedDrugs.map(drug => {
-        const protocolIndex = selectedProtocols?.[drug] ?? 0;
-        const protocols = getSkinProtocolsForDrug(drug);
-        const protocol = protocols[protocolIndex];
-        return {
-          drugName: drug,
-          sptWheal: '',
-          idtResults: Array(protocol?.idtSteps.length ?? 0).fill(''),
-          protocolIndex,
-          customName: '',
-        };
-      });
-      const customRows = customDrugs.map(c => ({
-        drugName: 'Other',
-        customName: c.name,
-        sptWheal: '',
-        idtResults: Array(c.idtSteps?.length ?? 0).fill(''),
-        protocolIndex: 0,
-        customSptConcentration: c.sptConcentration,
-        customIdtSteps: c.idtSteps,
-        includeInChallenge: c.includeInChallenge,
-      }));
-      const challengeDrugCustom = customDrugs.find(c => c.includeInChallenge)?.name;
+      const planUpdate = buildTestPanelFromPlan(testingPlanData);
       setFormData(prev => ({
         ...prev,
-        testPanel: [...standardRows, ...customRows],
-        ...(challengeDrugCustom ? { proceedToChallenge: true, challengeDrug: 'Other', challengeDrugCustom } : {}),
+        ...planUpdate,
       }));
     }
     handleNavigate(Screen.TESTING);

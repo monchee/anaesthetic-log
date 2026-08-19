@@ -1,3 +1,10 @@
+## [0.79.4] — 2026-08-19 (Testable Test Panel)
+
+Summary: Extracts the domain logic that builds a testing session's drug panel out of `App.tsx` and into a pure, directly-unit-tested function — no behaviour change, just moving untested logic out of a routing component.
+
+### Changed
+- **`buildTestPanelFromPlan` extracted.** `App.tsx`'s `handleProceedToTesting` built the entire test panel inline — protocol lookup, IDT step arrays, custom-drug mapping, and the challenge-drug-from-custom-drug branch — with zero direct test coverage. That logic now lives in `src/features/testing/utils/buildTestPanelFromPlan.ts` as a pure function (plan in, panel out — no React state), with 17 new unit tests covering standard drugs, custom drugs, protocol-index edge cases, and the multi-custom-drug "first one wins" challenge selection. `App.tsx` now just calls it.
+
 ## [0.79.3] — 2026-08-19 (Regression Net, Widened)
 
 Summary: Adds unit test coverage for 12 previously-untested files with real clinical/data consequences — skin-test grading, PHI de-identification for audit export, and all 4 clinical report renderers. Purely additive; zero existing test or source file touched.
