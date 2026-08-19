@@ -1,5 +1,17 @@
 [
   {
+    "version": "v0.79.6",
+    "codename": "No More Sideways Scrolling",
+    "date": "19 August 2026",
+    "summary": "Final phase of the current hardening pass \u2014 fixes the one confirmed responsive gap in the Dashboard, and closes out with two other items checked live and found already sound.",
+    "highlight": false,
+    "changes": [
+      "Skin test breakdown table no longer forces horizontal scroll on phones. `SkinTestBreakdown`'s table had a hard `min-w-[760px]` floor against a `md:` (768px) breakpoint just 8px above it \u2014 every phone hit the scroll. Now uses the same dual-render pattern already established by `PatientTable`: the table stays desktop-only (`hidden md:block`), and phones get a stacked category-accordion card list showing the identical data (SPT / IDT 1:100 / IDT 1:10 / IDT Neat / Challenge / Total per drug) \u2014 verified live in a real rendered browser at 390px width.",
+      "768\u20131279px tablet band (iPad landscape gets the nav drawer, not the sidebar) \u2014 verified live at 1024\u00d7768, renders cleanly.",
+      "Large-monitor layout above 1536px \u2014 verified with exact bounding-box measurements at 2560\u00d71440: the content area is genuinely centered within the space available after the fixed sidebar (not lopsided as it first appeared), a deliberate readable-width constraint rather than a bug."
+    ]
+  },
+  {
     "version": "v0.79.5",
     "codename": "Sections That Can't Cross-Write",
     "date": "19 August 2026",

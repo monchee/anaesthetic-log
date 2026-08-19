@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.6",
+    "codename": "No More Sideways Scrolling"
+  },
+  {
     "version": "v0.79.5",
     "codename": "Sections That Can't Cross-Write"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.2",
     "codename": "Lean and Locked Down"
-  },
-  {
-    "version": "v0.79.1",
-    "codename": "Degrade Gracefully"
   }
 ]

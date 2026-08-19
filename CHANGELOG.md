@@ -1,3 +1,14 @@
+## [0.79.6] — 2026-08-19 (No More Sideways Scrolling)
+
+Summary: Final phase of the current hardening pass — fixes the one confirmed responsive gap in the Dashboard, and closes out with two other items checked live and found already sound.
+
+### Fixed
+- **Skin test breakdown table no longer forces horizontal scroll on phones.** `SkinTestBreakdown`'s table had a hard `min-w-[760px]` floor against a `md:` (768px) breakpoint just 8px above it — every phone hit the scroll. Now uses the same dual-render pattern already established by `PatientTable`: the table stays desktop-only (`hidden md:block`), and phones get a stacked category-accordion card list showing the identical data (SPT / IDT 1:100 / IDT 1:10 / IDT Neat / Challenge / Total per drug) — verified live in a real rendered browser at 390px width.
+
+### Checked, no change needed
+- **768–1279px tablet band** (iPad landscape gets the nav drawer, not the sidebar) — verified live at 1024×768, renders cleanly.
+- **Large-monitor layout above 1536px** — verified with exact bounding-box measurements at 2560×1440: the content area is genuinely centered within the space available after the fixed sidebar (not lopsided as it first appeared), a deliberate readable-width constraint rather than a bug.
+
 ## [0.79.5] — 2026-08-19 (Sections That Can't Cross-Write)
 
 Summary: Narrows three testing-form sections' write access from the entire clinical record down to only the field each one actually owns — encoding "the tryptase section cannot write the challenge panel" as a type-system guarantee instead of a convention.
