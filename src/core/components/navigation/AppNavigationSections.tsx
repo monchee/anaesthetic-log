@@ -79,7 +79,7 @@ export const AppNavigationSections: React.FC<AppNavigationSectionsProps> = ({
           aria-label={item.ariaLabel || item.label}
           onClick={(e) => handleLinkClick(e, item.screen)}
           className={cn(
-            'group flex items-center justify-between gap-3 px-3 py-2.5 min-h-[44px] text-sm rounded-none transition-colors border-l-2',
+            'group flex items-center justify-between gap-3 px-3 py-2.5 min-h-[38px] text-sm rounded-none transition-colors border-l-2',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-masthead-accent focus-visible:ring-offset-2 focus-visible:ring-offset-masthead',
             isActive
               ? 'bg-white/10 text-white font-semibold border-masthead-accent'
@@ -159,7 +159,7 @@ export const AppNavigationSections: React.FC<AppNavigationSectionsProps> = ({
     : 'px-3 text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5';
 
   const actionButtonClass = isSidebar
-    ? 'w-full text-left min-h-[44px] px-3 py-2.5 text-sm font-medium text-masthead-foreground/75 hover:text-white hover:bg-white/5 border-l-2 border-transparent flex items-center gap-2.5 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-masthead-accent focus-visible:ring-offset-2 focus-visible:ring-offset-masthead'
+    ? 'w-full text-left min-h-[38px] px-3 py-2.5 text-sm font-medium text-masthead-foreground/75 hover:text-white hover:bg-white/5 border-l-2 border-transparent flex items-center gap-2.5 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-masthead-accent focus-visible:ring-offset-2 focus-visible:ring-offset-masthead'
     : 'w-full text-left min-h-[44px] px-3 py-2.5 text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-muted/70 border-l-2 border-transparent flex items-center gap-2.5 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card';
 
   const actionIconClass = isSidebar
@@ -167,7 +167,7 @@ export const AppNavigationSections: React.FC<AppNavigationSectionsProps> = ({
     : 'w-4 h-4 shrink-0 text-primary';
 
   return (
-    <div className="flex flex-col gap-6 flex-1 min-h-0">
+    <div className={cn('flex flex-col flex-1 min-h-0', isSidebar ? 'gap-4' : 'gap-6')}>
       {/* 1. Workspace Navigation */}
       <nav aria-label={isSidebar ? 'Workspace navigation' : 'Workspace mobile navigation'} className="space-y-1">
         <div className={sectionLabelClass}>Workspace</div>

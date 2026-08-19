@@ -80,12 +80,47 @@ describe('AppNavigationSections', () => {
     expect(homeLink).not.toHaveClass('bg-primary');
   });
 
-  it('ensures every link and button in sections has min-h-[44px], rounded-none, and visible focus rings', () => {
+  it('ensures sidebar links and action buttons have min-h-[38px], delete button has min-h-[44px], rounded-none, and visible focus rings', () => {
     renderWithProviders(
       <AppNavigationSections
         {...defaultProps}
         hasActiveReport={true}
         isTestingDraftDirty={true}
+        onDeleteTestingDraft={vi.fn()}
+      />
+    );
+
+    const links = screen.getAllByRole('link');
+    expect(links.length).toBeGreaterThan(0);
+    links.forEach((link) => {
+      expect(link).toHaveClass('min-h-[38px]');
+      expect(link).toHaveClass('rounded-none');
+      expect(link).toHaveClass('focus-visible:ring-2');
+      expect(link).toHaveClass('focus-visible:outline-none');
+    });
+
+    const uploadBtn = screen.getByRole('button', { name: /^Upload CSV/i });
+    const getStartedBtn = screen.getByRole('button', { name: /^Get Started/i });
+    const deleteBtn = screen.getByRole('button', { name: /Delete testing draft/i });
+
+    [uploadBtn, getStartedBtn].forEach((button) => {
+      expect(button).toHaveClass('min-h-[38px]');
+      expect(button).toHaveClass('rounded-none');
+      expect(button).toHaveClass('focus-visible:ring-2');
+      expect(button).toHaveClass('focus-visible:outline-none');
+    });
+
+    expect(deleteBtn).toHaveClass('min-h-[44px]', 'min-w-[44px]', 'rounded-none', 'focus-visible:ring-2', 'focus-visible:outline-none');
+  });
+
+  it('ensures every link and button in drawer variant has min-h-[44px], rounded-none, and visible focus rings', () => {
+    renderWithProviders(
+      <AppNavigationSections
+        {...defaultProps}
+        variant="drawer"
+        hasActiveReport={true}
+        isTestingDraftDirty={true}
+        onDeleteTestingDraft={vi.fn()}
       />
     );
 

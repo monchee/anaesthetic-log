@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.14",
+    "codename": "Room to Breathe, Room to Grow"
+  },
+  {
     "version": "v0.79.13",
     "codename": "The Padding That Wasn't There"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.10",
     "codename": "Primitives That Stop Fighting Back"
-  },
-  {
-    "version": "v0.79.9",
-    "codename": "Desktop Sidebar Identity Rail"
   }
 ]

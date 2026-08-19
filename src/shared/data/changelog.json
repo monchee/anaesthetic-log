@@ -1,5 +1,19 @@
 [
   {
+    "version": "v0.79.14",
+    "codename": "Room to Breathe, Room to Grow",
+    "date": "20 August 2026",
+    "summary": "A polish pass on the desktop sidebar. It shares its nav content with the mobile drawer through one component keyed by a `variant` prop, and every row in both variants was hard-coded to the same 44px touch-target height \u2014 including on the sidebar, which is `hidden xl:flex` and never rendered on a touch device. At 1280\u00d7800, a standard laptop and the exact viewport this repo's own visual-regression suite uses, the nav list overflowed by 12px and clipped the footer. No navigation logic, copy, or drawer behaviour changed.",
+    "highlight": false,
+    "changes": [
+      "The sidebar overflowed at 1280\u00d7800 and clipped its own footer. 9 nav rows plus 2 action buttons at 44px, with three 24px section gaps, totalled 715px against 703px of available height. Rows in the sidebar variant only are now 38px \u2014 WCAG 2.2 AA's target-size minimum is 24\u00d724px, and 44px is specifically the comfortable-touch figure this codebase already reserves correctly for the drawer, the only touch surface below `xl`. Section gaps tightened from 24px to 16px on the sidebar variant. Nav content height dropped from 715px to 601px, leaving 102px of genuine slack rather than a marginal fit.",
+      "The drawer variant is untouched. Its rows stay 44px; a new test guards this explicitly so a future edit can't silently regress the one touch surface in the app below 1280px.",
+      "The delete-testing-draft icon button keeps its 44px tap target in both variants \u2014 it's a precision icon-only control, not a text nav row, and stayed out of scope even inside the sidebar branch.",
+      "The brand lockup row in the sidebar header was left at its existing size after visual comparison; it reads as a distinct header anchor rather than a nav row, and tightening it did not clearly improve the result.",
+      "Accessibility. All 31 accessibility e2e checks pass. The two sidebar visual-regression baselines were re-recorded to reflect the intentional layout change; the two topbar baselines are unchanged."
+    ]
+  },
+  {
     "version": "v0.79.13",
     "codename": "The Padding That Wasn't There",
     "date": "20 August 2026",

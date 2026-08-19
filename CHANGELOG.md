@@ -1,3 +1,16 @@
+## [0.79.14] — 2026-08-20 (Room to Breathe, Room to Grow)
+
+Summary: A polish pass on the desktop sidebar. It shares its nav content with the mobile drawer through one component keyed by a `variant` prop, and every row in both variants was hard-coded to the same 44px touch-target height — including on the sidebar, which is `hidden xl:flex` and never rendered on a touch device. At 1280×800, a standard laptop and the exact viewport this repo's own visual-regression suite uses, the nav list overflowed by 12px and clipped the footer. No navigation logic, copy, or drawer behaviour changed.
+
+### Fixed
+- **The sidebar overflowed at 1280×800 and clipped its own footer.** 9 nav rows plus 2 action buttons at 44px, with three 24px section gaps, totalled 715px against 703px of available height. Rows in the sidebar variant only are now 38px — WCAG 2.2 AA's target-size minimum is 24×24px, and 44px is specifically the comfortable-touch figure this codebase already reserves correctly for the drawer, the only touch surface below `xl`. Section gaps tightened from 24px to 16px on the sidebar variant. Nav content height dropped from 715px to 601px, leaving 102px of genuine slack rather than a marginal fit.
+- **The drawer variant is untouched.** Its rows stay 44px; a new test guards this explicitly so a future edit can't silently regress the one touch surface in the app below 1280px.
+
+### Checked, no change needed
+- **The delete-testing-draft icon button** keeps its 44px tap target in both variants — it's a precision icon-only control, not a text nav row, and stayed out of scope even inside the sidebar branch.
+- **The brand lockup row** in the sidebar header was left at its existing size after visual comparison; it reads as a distinct header anchor rather than a nav row, and tightening it did not clearly improve the result.
+- **Accessibility.** All 31 accessibility e2e checks pass. The two sidebar visual-regression baselines were re-recorded to reflect the intentional layout change; the two topbar baselines are unchanged.
+
 ## [0.79.13] — 2026-08-20 (The Padding That Wasn't There)
 
 Summary: A polish pass on the PIN gate, the first surface anyone meets and one they hit many times a day on a shared terminal. Turned up a padding bug that is invisible in code review, 134px of dead space in the branding rail, and an 18px layout jolt on every mistyped PIN. No behaviour, copy, or PIN logic changes.
