@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.13",
+    "codename": "The Padding That Wasn't There"
+  },
+  {
     "version": "v0.79.12",
     "codename": "Micrograms, Not Milligrams"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.9",
     "codename": "Desktop Sidebar Identity Rail"
-  },
-  {
-    "version": "v0.79.8",
-    "codename": "Actually Deleted This Time"
   }
 ]

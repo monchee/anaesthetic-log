@@ -1,5 +1,21 @@
 [
   {
+    "version": "v0.79.13",
+    "codename": "The Padding That Wasn't There",
+    "date": "20 August 2026",
+    "summary": "A polish pass on the PIN gate, the first surface anyone meets and one they hit many times a day on a shared terminal. Turned up a padding bug that is invisible in code review, 134px of dead space in the branding rail, and an 18px layout jolt on every mistyped PIN. No behaviour, copy, or PIN logic changes.",
+    "highlight": false,
+    "changes": [
+      "`p-0` was silently failing to remove the Card's padding. The PIN module was wrapped in `<Card className=\"border-0 bg-transparent p-0\">` \u2014 a wrapper that neutralises everything the Card provides. It leaked padding anyway: measured `0px` at 390px but 20px at 700px and 24px at 1024px+, with `CardHeader`'s intended 24px bottom gap silently becoming 20px. The cause is that `tailwind-merge` treats `p-0` and `sm:p-5` / `lg:p-6` as separate keys \u2014 an unmodified utility never conflicts with a modified one \u2014 so `p-0` only ever cancelled the base `p-4`. The module was inset from where the markup said it was, by a different amount at each breakpoint. Removed the no-op wrapper entirely so the pane's own `p-6 sm:p-8 lg:p-10` is the single source of inset; the heading and the PIN row now share one left edge at every width.",
+      "134px of dead space in the branding rail. The rail stretches to match the taller PIN pane, and with `justify-between` across two children all the slack pooled into one hole \u2014 31% of the rail's height, bracketed by two rules so the emptiness was explicit. The branding block is now centred with the attribution pinned to the bottom, and the separator that divided nothing is gone. Residual gap is 53px and reads as centring.",
+      "The frame jumped 18px on every wrong PIN. The status row mounted only when an error existed, so the whole centred card moved each time. The row's height is now reserved; measured shift is 0px.",
+      "Duplicate `tracking-widest` on the wordmark, already supplied by `.app-wordmark`, and a `flex flex-col gap-2` wrapper around a single child.",
+      "\"Screen Lock\" is now a real `<h2>`. It was a `CardTitle`, which renders a generic element; removing the Card wrapper let it become a proper heading under the `DREAM` `h1`.",
+      "PIN cell sizing. Widening the four cells to fill the pane was tried and reverted: at the real pane width they rendered 101\u00d756, reading as four blank text fields rather than a 4-digit code. Restored to 56\u00d756 squares \u2014 the tight, square group is the clearer affordance, and the ragged right edge beneath a full-width button is a measurement, not a defect anyone perceives.",
+      "Accessibility. All 31 accessibility e2e checks pass, four of which target this gate directly. Every `aria-label`, `aria-describedby`, `aria-invalid`, `role`, and the `pin-instructions` / `pin-status` id relationships are preserved, as are the reduced-motion paths."
+    ]
+  },
+  {
     "version": "v0.79.12",
     "codename": "Micrograms, Not Milligrams",
     "date": "20 August 2026",

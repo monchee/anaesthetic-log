@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Lock, AlertCircle, KeyRound } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui';
+import { Button } from '@/components/ui';
 
 import { UNLOCK_KEY, isAppUnlocked } from '@shared/utils/pwaUpdatePolicy';
 
@@ -121,10 +121,10 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
       <div className="relative z-10 w-full max-w-4xl animate-content-enter">
         <div className="grid grid-cols-1 md:grid-cols-12 border border-masthead-border border-b-[3px] border-b-masthead-edge shadow-2xl bg-masthead">
           {/* Left Rail / Lock Station Branding (Desktop side rail, Mobile top brand header) */}
-          <div className="md:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between border-b md:border-b-0 md:border-r border-masthead-border bg-masthead">
-            <div className="flex flex-col gap-6">
+          <div className="md:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col border-b md:border-b-0 md:border-r border-masthead-border bg-masthead">
+            <div className="flex flex-col gap-6 md:my-auto">
               <div className="flex flex-col gap-1.5">
-                <h1 className="app-wordmark text-3xl sm:text-4xl lg:text-5xl font-bold tracking-widest text-masthead-foreground leading-none">
+                <h1 className="app-wordmark text-3xl sm:text-4xl lg:text-5xl font-bold text-masthead-foreground leading-none">
                   DREAM
                 </h1>
                 <p className="text-xs font-medium tracking-wider text-masthead-foreground/70 uppercase leading-relaxed">
@@ -133,7 +133,7 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
               </div>
 
               {/* Lock Rail indicator */}
-              <div className="pt-6 border-t border-masthead-border flex flex-col gap-2">
+              <div className="pt-6 border-t border-masthead-border">
                 <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-masthead-accent">
                   <Lock className="size-4 shrink-0" aria-hidden="true" />
                   <span>Clinical Workstation</span>
@@ -142,24 +142,24 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
             </div>
 
             {/* Institutional attribution */}
-            <div className="pt-6 border-t border-masthead-border mt-6 md:mt-0 text-xs tracking-wide text-masthead-foreground/60">
+            <div className="mt-6 md:mt-0 text-xs tracking-wide text-masthead-foreground/60">
               <span>RPAH Department of Clinical Immunology &amp; Allergy</span>
             </div>
           </div>
 
           {/* Right Column / Rectangular PIN Module */}
           <div className="md:col-span-7 bg-card text-card-foreground p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
-            <Card className="border-0 bg-transparent p-0">
-              <CardHeader className="p-0 pb-6 text-left">
-                <CardTitle className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
+            <div>
+              <div className="pb-6 text-left">
+                <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
                   Screen Lock
-                </CardTitle>
-                <CardDescription id="pin-instructions" className="text-sm text-muted-foreground mt-1">
+                </h2>
+                <p id="pin-instructions" className="text-sm text-muted-foreground mt-1">
                   Enter PIN to continue
-                </CardDescription>
-              </CardHeader>
+                </p>
+              </div>
 
-              <CardContent className="p-0 flex flex-col gap-6">
+              <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-3">
                   <div
                     className="flex gap-2.5 sm:gap-3 justify-center sm:justify-start"
@@ -195,21 +195,23 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
                     ))}
                   </div>
 
-                  {error ? (
-                    <div
-                      id="pin-status"
-                      role="alert"
-                      aria-live="assertive"
-                      className="flex items-center gap-1.5 text-destructive text-sm font-medium pt-1"
-                    >
-                      <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
-                      <span>{error}</span>
-                    </div>
-                  ) : (
-                    <div id="pin-status" role="status" aria-live="polite" className="sr-only">
-                      <span>Screen locked. Enter 4-digit PIN.</span>
-                    </div>
-                  )}
+                  <div className="min-h-6 flex items-center">
+                    {error ? (
+                      <div
+                        id="pin-status"
+                        role="alert"
+                        aria-live="assertive"
+                        className="flex items-center gap-1.5 text-destructive text-sm font-medium"
+                      >
+                        <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
+                        <span>{error}</span>
+                      </div>
+                    ) : (
+                      <div id="pin-status" role="status" aria-live="polite" className="sr-only">
+                        <span>Screen locked. Enter 4-digit PIN.</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-4">
@@ -226,8 +228,8 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
                     This is a screen lock to prevent shoulder-surfing on shared workstations. Patient data security is governed separately by the database access controls.
                   </p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </div>
