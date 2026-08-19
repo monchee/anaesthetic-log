@@ -213,6 +213,7 @@
     --masthead-foreground: 0 0% 100%;
     --masthead-accent: 199 92% 89%;
     --masthead-border: 217 100% 30%;
+    --masthead-edge: 349 82.2% 46.3%; /* #D7153A — SCRATCH red identity edge */
   }
   .dark {
     /* ── Core Surfaces ────────────────────────────────────────── */
@@ -389,6 +390,7 @@
     --masthead-foreground: 0 0% 100%;
     --masthead-accent: 199 92% 85%;
     --masthead-border: 217 60% 26%;
+    --masthead-edge: 347 100% 66.1%; /* #FF5277 — SCRATCH red identity edge */
   }
 }
 

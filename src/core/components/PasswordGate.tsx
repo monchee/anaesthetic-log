@@ -113,7 +113,7 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
 
       {/* Authored responsive lock-station frame */}
       <div className="relative z-10 w-full max-w-4xl animate-content-enter">
-        <div className="grid grid-cols-1 md:grid-cols-12 border border-masthead-border shadow-2xl bg-masthead">
+        <div className="grid grid-cols-1 md:grid-cols-12 border border-masthead-border border-b-[3px] border-b-masthead-edge shadow-2xl bg-masthead">
           {/* Left Rail / Lock Station Branding (Desktop side rail, Mobile top brand header) */}
           <div className="md:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between border-b md:border-b-0 md:border-r border-masthead-border bg-masthead">
             <div className="flex flex-col gap-6">

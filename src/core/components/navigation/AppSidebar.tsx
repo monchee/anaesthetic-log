@@ -35,7 +35,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       aria-label="Application sidebar"
       className={cn(
         'hidden xl:flex fixed inset-y-0 left-0 w-64 h-screen z-30 flex-col',
-        'bg-masthead text-masthead-foreground border-r border-masthead-border',
+        'bg-masthead text-masthead-foreground border-r-[3px] border-r-masthead-edge',
         'no-print select-none'
       )}
     >

@@ -1,3 +1,12 @@
+## [0.79.9] — 2026-08-19 (Desktop Sidebar Identity Rail)
+
+Summary: Moves the SCRATCH red identity edge to the desktop navigation sidebar boundary while keeping the top bar and standalone headers on clean neutral dividers, and retains the red identity edge on the PIN gate lock-station frame.
+
+### Changed
+- **SCRATCH red identity edge relocated to desktop sidebar.** The restrained 3px red identity edge (`--masthead-edge`) now anchors the desktop application sidebar (`border-r-[3px] border-r-masthead-edge`) at the sidebar/content boundary, establishing clinical application branding without visual noise.
+- **Top navigation and standalone headers use neutral dividers.** The outer application header and standalone screen headers now use clean neutral dividers (`border-b border-border` on outer header, `border-b border-masthead-border` on mobile/tablet identity rows) rather than red edges.
+- **Retained PIN gate lock-station edge.** The central lock-station frame on the PIN gate screen continues to carry the 3px red identity accent (`border-b-[3px] border-b-masthead-edge`).
+
 ## [0.79.8] — 2026-08-19 (Actually Deleted This Time)
 
 Summary: Closes a gap the v0.79.7 sourcemap fix didn't fully cover — this project has no CI/CD pipeline, so `npm run deploy` run locally (the only deploy path that exists) doesn't have `SENTRY_AUTH_TOKEN` set unless the person deploying has it in their shell, meaning the Sentry-upload-triggered deletion never ran and source maps were still shipping to production.

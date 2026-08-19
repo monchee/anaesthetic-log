@@ -20,7 +20,14 @@ describe('AppTopBar', () => {
 
     const header = screen.getByRole('banner', { name: /Application header/i });
     expect(header).toBeInTheDocument();
-    expect(header).toHaveClass('bg-card', 'text-card-foreground', 'border-b', 'border-border', 'no-print');
+    expect(header).toHaveClass(
+      'bg-card',
+      'text-card-foreground',
+      'border-b',
+      'border-border',
+      'no-print'
+    );
+    expect(header).toHaveClass('xl:border-t-[3px]', 'xl:border-t-primary');
   });
 
   it('contains NO destination navigation links (Home, Dashboard, Research, etc.) in the top bar', () => {
@@ -132,6 +139,9 @@ describe('AppTopBar', () => {
     expect(phoneSection).toHaveClass('bg-masthead');
     expect(phoneSection?.querySelector('.min-h-\\[56px\\]')).toBeInTheDocument();
 
+    // Phone section carries its standard masthead bottom divider
+    expect(phoneSection).toHaveClass('border-b', 'border-masthead-border');
+
     // Phone section contains the title but NOT the icon or subtitle
     expect(phoneSection).toHaveTextContent('Patient Allergy Log');
     expect(phoneSection?.querySelector('[data-testid="page-icon"]')).toBeNull();
@@ -156,5 +166,9 @@ describe('AppTopBar', () => {
     expect(tabletSection).toHaveTextContent('Patient Allergy Log');
     expect(tabletSection).toHaveTextContent('Clinical assessment form');
     expect(tabletSection?.querySelector('[data-testid="page-icon"]')).toBeInTheDocument();
+
+    // Tablet row 1 keeps its divider because it separates the two tablet rows
+    const tabletRow1 = tabletSection?.querySelector('.bg-masthead');
+    expect(tabletRow1).toHaveClass('border-b', 'border-masthead-border');
   });
 });

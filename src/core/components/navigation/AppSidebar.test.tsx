@@ -22,7 +22,7 @@ describe('AppSidebar', () => {
 
     const sidebar = screen.getByRole('complementary', { name: /Application sidebar/i });
     expect(sidebar).toBeInTheDocument();
-    expect(sidebar).toHaveClass('hidden', 'xl:flex', 'bg-masthead', 'text-masthead-foreground', 'border-masthead-border', 'w-64', 'no-print');
+    expect(sidebar).toHaveClass('hidden', 'xl:flex', 'bg-masthead', 'text-masthead-foreground', 'border-r-[3px]', 'border-r-masthead-edge', 'w-64', 'no-print');
   });
 
   it('renders brand lockup with Stethoscope chip and DREAM title linking to /', () => {

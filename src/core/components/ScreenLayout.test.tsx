@@ -66,6 +66,13 @@ describe('ScreenLayout', () => {
     const header = screen.getByRole('banner', { name: /Application header/i });
     expect(header).toBeInTheDocument();
     expect(header).toHaveTextContent('Clinical Workspace');
+    expect(header).toHaveClass(
+      'bg-card',
+      'text-card-foreground',
+      'border-b',
+      'border-border',
+      'no-print'
+    );
 
     // Container does not have xl:pl-64
     expect(container.firstChild).not.toHaveClass('xl:pl-64');

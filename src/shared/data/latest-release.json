@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.9",
+    "codename": "Desktop Sidebar Identity Rail"
+  },
+  {
     "version": "v0.79.8",
     "codename": "Actually Deleted This Time"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.5",
     "codename": "Sections That Can't Cross-Write"
-  },
-  {
-    "version": "v0.79.4",
-    "codename": "Testable Test Panel"
   }
 ]

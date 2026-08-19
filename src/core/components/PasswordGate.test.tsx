@@ -36,6 +36,11 @@ describe('PasswordGate', () => {
     expect(ambient2).toBeInTheDocument();
     expect(ambient2).toHaveAttribute('aria-hidden', 'true');
 
+    // Central lock-station frame carries the 3px masthead-edge identity edge
+    const frame = container.querySelector('.shadow-2xl');
+    expect(frame).toBeInTheDocument();
+    expect(frame).toHaveClass('border', 'border-masthead-border', 'border-b-[3px]', 'border-b-masthead-edge');
+
     // DREAM Wordmark and subtitle
     expect(screen.getByRole('heading', { name: 'DREAM', level: 1 })).toBeInTheDocument();
     expect(
