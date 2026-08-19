@@ -1,3 +1,14 @@
+## [0.79.2] — 2026-08-19 (Lean and Locked Down)
+
+Summary: Performance and hardening pass on the production bundle and headers — smaller eager JS, no publicly-discoverable source maps, and the CSP finally enforcing instead of report-only.
+
+### Changed
+- **113 KB lighter cold load.** `GetStartedModal` only ever needs the newest release's version/codename, but was statically importing the full changelog (113 KB, the entire release history back to v0.1) on every cold load. `scripts/generate-changelog.mjs` now also emits a small `src/shared/data/latest-release.json` sibling, and the modal reads from that instead. The main `index` chunk drops from ~422 KB to ~324 KB raw (~115 KB to ~82 KB gzip); the full changelog now loads as its own chunk only when the Changelog/Technical Documentation pages are actually visited.
+- **Source maps no longer publicly discoverable.** Production builds set `sourcemap: 'hidden'` instead of `true` — Sentry's build-time upload still gets full symbolication, but shipped JS no longer carries a `sourceMappingURL` comment pointing at readable source.
+- **CSP is enforcing, not report-only.** `public/_headers` flips `Content-Security-Policy-Report-Only` to `Content-Security-Policy` with the exact same policy value (already measured strict-and-correct) — violations are now actually blocked, not just logged.
+- **Sentry trace volume reduced.** `tracesSampleRate` drops from 100% to 10% of transactions. Session replay sampling (`replaysSessionSampleRate`) is untouched — that's a PHI-app policy decision reserved for the product owner, not a performance tuning knob.
+- **Fixed stale Sentry sourcemap-upload config.** `vite.config.ts`'s `sentryVitePlugin` had placeholder `org: 'your-org'` / `project: 'anaesthetic-clinic'` (the latter predates the 2026-08-17 repo rename to `dream`) — now `org: 'monchee'`, `project: 'dream'`.
+
 ## [0.79.1] — 2026-08-19 (Degrade Gracefully)
 
 Summary: Defensive-only hardening — every change here adds a fallback for a scenario the app didn't handle before (storage-blocked browsers, a failed chunk load, a stale deployment), none of it changes normal-path behaviour.

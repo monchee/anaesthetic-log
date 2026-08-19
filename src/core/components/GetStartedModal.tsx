@@ -13,21 +13,17 @@ import { useRedcapCsvUpload } from '@shared/hooks/useRedcapCsvUpload';
 import { GetStartedActions } from './GetStartedActions';
 import { RedcapExportSteps } from '@features/dashboard/components/RedcapExportSteps';
 import { Patient, Screen } from '@shared/types';
-import changelogData from '@shared/data/changelog.json';
+import latestReleaseData from '@shared/data/latest-release.json';
 
-const _changelog = changelogData as Array<{
+const _latestReleases = latestReleaseData as Array<{
   version: string;
   codename: string;
-  date?: string;
-  summary?: string;
-  highlight: boolean;
   skipBanner?: boolean;
-  changes: string[];
 }>;
-const CURRENT_VERSION = _changelog[0].version;
+const CURRENT_VERSION = _latestReleases[0]?.version ?? '';
 // skipBanner allows a meta/tooling patch to be skipped in the banner
 // so it highlights the most recent substantive release instead.
-const DISPLAY_ENTRY = _changelog.find((e) => !e.skipBanner) ?? _changelog[0];
+const DISPLAY_ENTRY = _latestReleases.find((e) => !e.skipBanner) ?? _latestReleases[0] ?? { version: '', codename: '' };
 const CURRENT_CODENAME = DISPLAY_ENTRY.codename;
 const LAST_SEEN_KEY = 'dream:last_seen_version';
 const GET_STARTED_SEEN_KEY = 'dream:get_started_seen';

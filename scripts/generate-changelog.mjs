@@ -15,6 +15,7 @@ import { dirname, join } from 'node:path';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MD_PATH = join(ROOT, 'CHANGELOG.md');
 const JSON_PATH = join(ROOT, 'src', 'shared', 'data', 'changelog.json');
+const LATEST_JSON_PATH = join(ROOT, 'src', 'shared', 'data', 'latest-release.json');
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -130,6 +131,21 @@ export function syncChangelog({ existing, parsed }) {
   return { entries: existing, added, updated };
 }
 
+export function extractLatestReleases(entries, minCount = 5) {
+  const firstNonSkip = entries.findIndex((e) => !e.skipBanner);
+  const count = Math.max(minCount, firstNonSkip >= 0 ? firstNonSkip + 1 : 1);
+  return entries.slice(0, count).map((e) => {
+    const item = {
+      version: e.version,
+      codename: e.codename || '',
+    };
+    if (e.skipBanner) {
+      item.skipBanner = true;
+    }
+    return item;
+  });
+}
+
 export function main() {
   const existing = JSON.parse(readFileSync(JSON_PATH, 'utf8'));
 
@@ -138,6 +154,10 @@ export function main() {
 
   const out = escapeNonAscii(JSON.stringify(entries, null, 2)) + '\n';
   writeFileSync(JSON_PATH, out);
+
+  const latestEntries = extractLatestReleases(entries);
+  const latestOut = escapeNonAscii(JSON.stringify(latestEntries, null, 2)) + '\n';
+  writeFileSync(LATEST_JSON_PATH, latestOut);
 
   const changes = [
     added > 0 ? `added ${added} version(s)` : '',

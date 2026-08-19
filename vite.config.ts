@@ -106,8 +106,8 @@ export default defineConfig(() => {
     plugins.push(
       sentryVitePlugin({
         authToken: process.env.SENTRY_AUTH_TOKEN,
-        org: 'your-org',
-        project: 'anaesthetic-clinic',
+        org: 'monchee',
+        project: 'dream',
         telemetry: false,
       })
     );
@@ -184,7 +184,7 @@ export default defineConfig(() => {
           },
         },
       },
-      sourcemap: true,
+      sourcemap: 'hidden',
     },
   };
 });

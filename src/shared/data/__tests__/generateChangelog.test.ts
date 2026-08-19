@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { deriveSummaryFromChanges, parseChangelogMd, syncChangelog } from '../../../../scripts/generate-changelog.mjs';
+import { deriveSummaryFromChanges, extractLatestReleases, parseChangelogMd, syncChangelog } from '../../../../scripts/generate-changelog.mjs';
 
 describe('generate-changelog summary metadata', () => {
   it('parses an explicit plain summary line for the Quick Start banner', () => {
@@ -69,5 +69,36 @@ Summary: New explicit modal summary.
     expect(result.added).toBe(0);
     expect(result.updated).toBe(1);
     expect(result.entries[0].summary).toBe('New explicit modal summary.');
+  });
+
+  it('extracts latest releases preserving skipBanner and min count', () => {
+    const mockEntries = [
+      { version: 'v1.2.5', codename: 'Patch', skipBanner: true },
+      { version: 'v1.2.4', codename: 'Feature', skipBanner: false },
+      { version: 'v1.2.3', codename: 'Older 1' },
+      { version: 'v1.2.2', codename: 'Older 2' },
+      { version: 'v1.2.1', codename: 'Older 3' },
+      { version: 'v1.2.0', codename: 'Older 4' },
+    ];
+
+    const latest = extractLatestReleases(mockEntries, 5);
+
+    expect(latest).toHaveLength(5);
+    expect(latest[0]).toEqual({ version: 'v1.2.5', codename: 'Patch', skipBanner: true });
+    expect(latest[1]).toEqual({ version: 'v1.2.4', codename: 'Feature' });
+    expect(latest[4]).toEqual({ version: 'v1.2.1', codename: 'Older 3' });
+  });
+
+  it('extracts enough releases when non-skipBanner is beyond minCount', () => {
+    const mockEntries = [
+      { version: 'v1.2.3', codename: 'Patch 3', skipBanner: true },
+      { version: 'v1.2.2', codename: 'Patch 2', skipBanner: true },
+      { version: 'v1.2.1', codename: 'Feature', skipBanner: false },
+    ];
+
+    const latest = extractLatestReleases(mockEntries, 2);
+
+    expect(latest).toHaveLength(3);
+    expect(latest[2].version).toBe('v1.2.1');
   });
 });

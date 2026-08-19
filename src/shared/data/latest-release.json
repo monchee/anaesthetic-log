@@ -1,0 +1,22 @@
+[
+  {
+    "version": "v0.79.2",
+    "codename": "Lean and Locked Down"
+  },
+  {
+    "version": "v0.79.1",
+    "codename": "Degrade Gracefully"
+  },
+  {
+    "version": "v0.79.0",
+    "codename": "One Layout Chrome"
+  },
+  {
+    "version": "v0.78.9",
+    "codename": "One Types Barrel"
+  },
+  {
+    "version": "v0.78.8",
+    "codename": "Strict Housekeeping"
+  }
+]
