@@ -1,5 +1,19 @@
 [
   {
+    "version": "v0.79.11",
+    "codename": "A Background With a Job",
+    "date": "19 August 2026",
+    "summary": "The PIN gate's ambient background \u2014 two drifting light blobs and a hairline architectural grid \u2014 was pure decoration with no connection to what the screen actually does. Gives it two authored, state-tied moments instead: a brief warning-tinted pulse on a wrong PIN, and a chrome-accent convergence glow on a correct one, both built on the existing `error`/`isExiting` state with no new logic.",
+    "highlight": false,
+    "changes": [
+      "Wrong-PIN background acknowledgment. A one-shot `--destructive`-tinted glow (`lock-alert-pulse`, 0.6s) sweeps the ambient light fields on an incorrect entry and fully resolves back to idle \u2014 peripheral-vision feedback for a screen checked dozens of times a day on shared clinic terminals, on top of the existing input-field and alert-text feedback.",
+      "Correct-PIN convergence. A one-shot `--masthead-accent` brighten and slight scale (`lock-converge`, 0.28s) plays across both ambient blobs and the hairline grid on a correct PIN, timed to finish inside the existing 300ms exit fade rather than fight it.",
+      "First implementation pass used `drop-shadow()`, which was invisible. `drop-shadow()` derives its shape from the source element's own alpha channel; on a blurred, edge-fading radial-gradient blob that alpha is too diffuse to cast a visible shadow, so the first cut of the alert pulse computed correctly but rendered as nothing. Switched to `box-shadow`, which paints from box geometry instead \u2014 now clearly visible in both themes.",
+      "Reduced motion. Both new classes keep their colour/glow acknowledgment under `prefers-reduced-motion: reduce` while dropping all spatial movement (`transform: none`), verified via computed-style inspection rather than assuming the media query alone was enough.",
+      "Convergence visibility. The brighten/scale effect is real but largely masked by the pre-existing whole-page exit fade, which is already substantial within ~60ms. Left as-is rather than inflating the glow \u2014 the page-wide fade already delivers an unambiguous \"unlocked\" signal, and enlarging it further would read as a flash, not a restrained accent."
+    ]
+  },
+  {
     "version": "v0.79.10",
     "codename": "Primitives That Stop Fighting Back",
     "date": "19 August 2026",

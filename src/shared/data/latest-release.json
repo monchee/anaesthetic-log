@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.11",
+    "codename": "A Background With a Job"
+  },
+  {
     "version": "v0.79.10",
     "codename": "Primitives That Stop Fighting Back"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.7",
     "codename": "Review Follow-Through"
-  },
-  {
-    "version": "v0.79.6",
-    "codename": "No More Sideways Scrolling"
   }
 ]

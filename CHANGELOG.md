@@ -1,3 +1,18 @@
+## [0.79.11] — 2026-08-19 (A Background With a Job)
+
+Summary: The PIN gate's ambient background — two drifting light blobs and a hairline architectural grid — was pure decoration with no connection to what the screen actually does. Gives it two authored, state-tied moments instead: a brief warning-tinted pulse on a wrong PIN, and a chrome-accent convergence glow on a correct one, both built on the existing `error`/`isExiting` state with no new logic.
+
+### Added
+- **Wrong-PIN background acknowledgment.** A one-shot `--destructive`-tinted glow (`lock-alert-pulse`, 0.6s) sweeps the ambient light fields on an incorrect entry and fully resolves back to idle — peripheral-vision feedback for a screen checked dozens of times a day on shared clinic terminals, on top of the existing input-field and alert-text feedback.
+- **Correct-PIN convergence.** A one-shot `--masthead-accent` brighten and slight scale (`lock-converge`, 0.28s) plays across both ambient blobs and the hairline grid on a correct PIN, timed to finish inside the existing 300ms exit fade rather than fight it.
+
+### Fixed
+- **First implementation pass used `drop-shadow()`, which was invisible.** `drop-shadow()` derives its shape from the source element's own alpha channel; on a blurred, edge-fading radial-gradient blob that alpha is too diffuse to cast a visible shadow, so the first cut of the alert pulse computed correctly but rendered as nothing. Switched to `box-shadow`, which paints from box geometry instead — now clearly visible in both themes.
+
+### Checked, no change needed
+- **Reduced motion.** Both new classes keep their colour/glow acknowledgment under `prefers-reduced-motion: reduce` while dropping all spatial movement (`transform: none`), verified via computed-style inspection rather than assuming the media query alone was enough.
+- **Convergence visibility.** The brighten/scale effect is real but largely masked by the pre-existing whole-page exit fade, which is already substantial within ~60ms. Left as-is rather than inflating the glow — the page-wide fade already delivers an unambiguous "unlocked" signal, and enlarging it further would read as a flash, not a restrained accent.
+
 ## [0.79.10] — 2026-08-19 (Primitives That Stop Fighting Back)
 
 Summary: A full UI/UX polish pass with no functional change. The shared Card/Button primitives shipped defaults nobody wanted — a Tailwind shadow and a `pt-0` — so every call site overrode them, and the overrides disagreed with each other three ways. The same drift had reached typography (`h3` shipped at four different sizes), empty states (ten hand-rolled variants) and colour (raw palette utilities on-screen). This makes the primitives express the documented system so call sites stop fighting them, consolidates seven copy-pasted patterns into shared components, and reconciles DESIGN.md with what actually ships.

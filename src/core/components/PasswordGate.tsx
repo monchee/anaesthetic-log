@@ -87,12 +87,18 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
       aria-label="Screen lock"
     >
       {/* Decorative ambient background light fields */}
-      <div className="ambient-light-field-1" aria-hidden="true" />
-      <div className="ambient-light-field-2" aria-hidden="true" />
+      <div
+        className={`ambient-light-field-1 ${error ? 'animate-lock-alert' : ''} ${isExiting ? 'animate-lock-converge' : ''}`}
+        aria-hidden="true"
+      />
+      <div
+        className={`ambient-light-field-2 ${error ? 'animate-lock-alert' : ''} ${isExiting ? 'animate-lock-converge' : ''}`}
+        aria-hidden="true"
+      />
 
       {/* Decorative architectural hairline grid */}
       <svg
-        className="lock-station-grid absolute inset-0 w-full h-full pointer-events-none"
+        className={`lock-station-grid absolute inset-0 w-full h-full pointer-events-none ${isExiting ? 'animate-lock-converge' : ''}`}
         aria-hidden="true"
       >
         <defs>
