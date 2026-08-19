@@ -11,8 +11,8 @@ export interface TryptaseSectionProps {
 
 export function TryptaseSection({ tryptase, onChange }: TryptaseSectionProps) {
   return (
-    <Card style={{ '--section-index': 3 } as React.CSSProperties} className="animate-section-reveal rounded-none">
-      <CardHeader className="pb-3 border-b border-border">
+    <Card style={{ '--section-index': 3 } as React.CSSProperties} className="animate-section-reveal">
+      <CardHeader bordered>
         <CardTitle className="flex items-center gap-2 text-base text-foreground">
           <div className="bg-muted p-1.5 rounded-none">
             <Activity className="w-4 h-4 text-primary" />
@@ -26,7 +26,7 @@ export function TryptaseSection({ tryptase, onChange }: TryptaseSectionProps) {
           )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-6 space-y-5">
+      <CardContent className="space-y-4">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -47,7 +47,7 @@ export function TryptaseSection({ tryptase, onChange }: TryptaseSectionProps) {
         </div>
 
         {tryptase?.obtained && (
-          <div className="space-y-5 animate-in fade-in">
+          <div className="space-y-4 animate-in fade-in">
             <div className="flex items-center gap-3">
               <button
                 type="button"

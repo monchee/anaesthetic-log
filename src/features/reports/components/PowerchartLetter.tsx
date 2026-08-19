@@ -37,7 +37,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
   const reportDate = activeReportSavedAt ? new Date(activeReportSavedAt).toISOString() : new Date().toISOString();
 
   return (
-    <Card className="rounded-none overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
+    <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
       <ReportPrintIdentity
         patientName={redactedFullName}
         mrn={redact(data.mrn)}
@@ -60,7 +60,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
         </div>
       </div>
 
-      <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-2 print:space-y-1.5">
+      <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 print:p-2 print:space-y-1.5">
         {/* Patient Details */}
         <div className="bg-muted border border-border rounded-none p-4 print:bg-white print:border-slate-300">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 print:grid-cols-2 print:gap-2">
@@ -128,7 +128,7 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
 
           {/* Drug list — names only, no measurements (3B) */}
           {data.testPanel && data.testPanel.length > 0 && (
-            <ul className="list-disc list-inside space-y-0.5 text-foreground/80">
+            <ul className="list-disc list-inside space-y-1 text-foreground/80">
               {data.testPanel.map((row, i) => {
                 const drugName = row.drugName === 'Other' ? (row.customName || 'Other') : row.drugName;
                 return <li key={i}>{drugName}</li>;
@@ -235,10 +235,10 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
         {/* Print signature lines */}
         <div className="hidden print:flex print:pt-2 justify-between gap-12 print:break-inside-avoid">
           <div className="flex-1 border-t border-black pt-1">
-            <p className="text-xs uppercase font-semibold text-slate-500 tracking-wider">Clinician Signature</p>
+            <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider">Clinician Signature</p>
           </div>
           <div className="w-32 border-t border-black pt-1">
-            <p className="text-xs uppercase font-semibold text-slate-500 tracking-wider">Date</p>
+            <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider">Date</p>
           </div>
         </div>
       </CardContent>

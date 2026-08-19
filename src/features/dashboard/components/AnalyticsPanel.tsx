@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui';
 import { Users, AlertTriangle, Ban, Timer, PieChart, BarChart3 } from 'lucide-react';
+import { EmptyState, StatTile } from '@shared/components';
 
 interface StatsPanelProps {
   animatedTotalPatients: number;
@@ -54,78 +55,74 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {/* Left Column - Key Stats */}
-      <Card className="lg:col-span-1 shadow-sm">
-        <CardHeader className="pb-3 border-b border-border bg-card">
+      <Card elevation="raised" className="lg:col-span-1">
+        <CardHeader bordered className="bg-card">
           <CardTitle as="h2" className="text-base text-foreground flex items-center gap-2">
             <Users className="w-4 h-4 text-primary dark:text-primary" /> Overview
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 pt-6">
+        <CardContent className="p-4">
           <div className="grid grid-cols-2 gap-3">
             {/* Records — REDCap records and session logs shown separately */}
-            <div className="bg-card rounded-none p-3 border border-border">
-              <div className="flex items-center gap-2 mb-1">
-                <Users className="w-4 h-4 text-primary" />
-                <span className="section-label">Records</span>
-              </div>
-              <div className="text-2xl font-bold tabular-nums text-foreground">{animatedRedcapCount}</div>
-              <div className="text-xs text-muted-foreground tabular-nums mt-0.5">
-                {sessionLogCount > 0 ? `+${sessionLogCount} this session` : 'REDCap database'}
-              </div>
-            </div>
+            <StatTile
+              label="Records"
+              icon={<Users />}
+              tone="primary"
+              value={animatedRedcapCount}
+              hint={sessionLogCount > 0 ? `+${sessionLogCount} this session` : 'REDCap database'}
+            />
 
             {/* Severe */}
-            <div className="bg-card rounded-none p-3 border border-border">
-              <div className="flex items-center gap-2 mb-1">
-                <AlertTriangle className="w-4 h-4 text-status-danger" />
-                <span className="section-label">Severe</span>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold tabular-nums text-foreground">{animatedSevereCount}</span>
-                <span className="text-xs font-medium tabular-nums text-status-danger">{severeRate}%</span>
-              </div>
-            </div>
+            <StatTile
+              label="Severe"
+              icon={<AlertTriangle />}
+              tone="danger"
+              value={
+                <div className="flex items-baseline gap-1">
+                  <span>{animatedSevereCount}</span>
+                  <span className="text-xs font-medium text-status-danger">{severeRate}%</span>
+                </div>
+              }
+            />
 
             {/* Abandoned */}
-            <div className="bg-card rounded-none p-3 border border-border">
-              <div className="flex items-center gap-2 mb-1">
-                <Ban className="w-4 h-4 text-status-grade2" />
-                <span className="section-label">Abandoned</span>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold tabular-nums text-foreground">{animatedAbandonedCount}</span>
-                <span className="text-xs font-medium tabular-nums text-status-grade2">{abandonedRate}%</span>
-              </div>
-            </div>
+            <StatTile
+              label="Abandoned"
+              icon={<Ban />}
+              tone="warning"
+              value={
+                <div className="flex items-baseline gap-1">
+                  <span>{animatedAbandonedCount}</span>
+                  <span className="text-xs font-medium text-status-grade2">{abandonedRate}%</span>
+                </div>
+              }
+            />
 
             {/* Avg Time */}
-            <div className="bg-card rounded-none p-3 border border-border">
-              <div className="flex items-center gap-2 mb-1">
-                <Timer className="w-4 h-4 text-primary" />
-                <span
-                  className="section-label"
-                  title="Average induction-to-reaction time in minutes, excluding values outside 0-240 minutes."
-                >
-                  Avg Onset
-                </span>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold tabular-nums text-foreground">{animatedAvgTime}</span>
-                <span className="text-sm text-muted-foreground">min</span>
-              </div>
-            </div>
+            <StatTile
+              label="Avg Onset"
+              title="Average induction-to-reaction time in minutes, excluding values outside 0-240 minutes."
+              icon={<Timer />}
+              tone="primary"
+              value={
+                <div className="flex items-baseline gap-1">
+                  <span>{animatedAvgTime}</span>
+                  <span className="text-sm font-normal text-muted-foreground">min</span>
+                </div>
+              }
+            />
           </div>
         </CardContent>
       </Card>
 
       {/* Middle Column - Grade Distribution */}
-      <Card className="shadow-sm">
-        <CardHeader className="pb-3 border-b border-border bg-card">
+      <Card elevation="raised">
+        <CardHeader bordered className="bg-card">
           <CardTitle as="h2" className="text-base text-foreground flex items-center gap-2">
             <PieChart className="w-4 h-4 text-primary dark:text-primary" /> Severity Distribution
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 pt-6">
+        <CardContent className="p-4">
           {/* Stacked Bar */}
           <div
             className="flex h-8 w-full rounded-none overflow-hidden mb-4 bg-muted dark:bg-card"
@@ -158,13 +155,13 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
       </Card>
 
       {/* Right Column - Top Agents */}
-      <Card className="shadow-sm">
-        <CardHeader className="pb-3 border-b border-border bg-card">
+      <Card elevation="raised">
+        <CardHeader bordered className="bg-card">
           <CardTitle as="h2" className="text-base text-foreground flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-primary dark:text-primary" /> Top Suspected Agents
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 pt-6">
+        <CardContent className="p-4">
           {topAgents.length > 0 ? (
             <div className="space-y-2">
               {topAgents.slice(0, 5).map((agent, idx) => {
@@ -189,9 +186,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
               })}
             </div>
           ) : (
-            <div className="text-center py-4 text-muted-foreground italic text-sm">
-              No agents recorded yet.
-            </div>
+            <EmptyState size="sm" title="No agents recorded yet." />
           )}
         </CardContent>
       </Card>

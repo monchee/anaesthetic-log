@@ -22,15 +22,15 @@ interface TechnicalDocumentationPageProps {
 const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6 space-y-6">
+      <Card className="border-border">
+        <CardContent className="space-y-6">
 
           {/* Introduction */}
           <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
             <div className="flex items-start gap-4">
               <Cpu className="w-8 h-8 text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-foreground mb-2">Technical Overview</h3>
+                <h3>Technical Overview</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   The DREAM App is a Progressive Web App (PWA) built with modern web technologies. It is designed for local-first data processing, so patient data remains on the user's device during normal operation.
                 </p>
@@ -42,7 +42,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Code className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Technology Stack</h4>
+              <h4 className="mb-0">Technology Stack</h4>
             </div>
             <div className="grid md:grid-cols-2 gap-3 text-sm">
               <div className="bg-card p-3.5 rounded-none border border-border">
@@ -76,7 +76,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Lock className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Security Architecture</h4>
+              <h4 className="mb-0">Security Architecture</h4>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>The application follows a privacy-by-design approach with the following security features:</p>
@@ -109,7 +109,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Database className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Data Flow</h4>
+              <h4 className="mb-0">Data Flow</h4>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>The application follows this data workflow:</p>
@@ -129,7 +129,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Smartphone className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Offline Functionality (PWA)</h4>
+              <h4 className="mb-0">Offline Functionality (PWA)</h4>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>As a Progressive Web App, the application supports offline usage:</p>
@@ -158,7 +158,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Globe className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Browser Compatibility</h4>
+              <h4 className="mb-0">Browser Compatibility</h4>
             </div>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>The application supports modern browsers with JavaScript enabled:</p>
@@ -185,7 +185,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
 
           {/* Accessibility */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">Accessibility Features</h4>
+            <h4 className="mb-4">Accessibility Features</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>The application includes accessibility features to support diverse user needs:</p>
               <ul className="space-y-1 ml-4">
@@ -215,7 +215,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
 
           {/* Version History */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">Version History</h4>
+            <h4 className="mb-4">Version History</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex justify-between py-2 border-b border-border">
                 <span className="text-foreground">Current Version</span>

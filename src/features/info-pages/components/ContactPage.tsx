@@ -10,15 +10,15 @@ interface ContactPageProps {
 const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6 space-y-6">
+      <Card className="border-border">
+        <CardContent className="space-y-6">
           
           {/* Clinic Contact */}
           <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
             <div className="flex items-start gap-4">
               <Building2 className="w-8 h-8 text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-foreground mb-3">The DREAM App</h3>
+                <h3 className="mb-3">The DREAM App</h3>
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <div>
                     <p className="font-semibold text-foreground">Department of Clinical Immunology & Allergy</p>
@@ -50,7 +50,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
                 <MessageSquare className="w-5 h-5 text-primary" />
-                <h4 className="font-semibold text-foreground">General Enquiries</h4>
+                <h4 className="mb-0">General Enquiries</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                 For questions about using the application or general support.
@@ -63,7 +63,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
                 <Bug className="w-5 h-5 text-destructive" />
-                <h4 className="font-semibold text-foreground">Report an Issue</h4>
+                <h4 className="mb-0">Report an Issue</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                 Found a bug or something not working correctly?
@@ -88,7 +88,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
                 <Lightbulb className="w-5 h-5 text-status-warning" />
-                <h4 className="font-semibold text-foreground">Feature Requests</h4>
+                <h4 className="mb-0">Feature Requests</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                 Have an idea to improve the application?
@@ -101,7 +101,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ setScreen }) => {
 
           {/* Tips for Reporting Issues */}
           <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 border border-primary/20">
-            <h4 className="font-semibold text-primary mb-3">Tips for Reporting Issues</h4>
+            <h4 className="text-primary mb-3">Tips for Reporting Issues</h4>
             <ul className="space-y-2 text-sm text-foreground/90">
               {[
                 "Describe what you were trying to do when the issue occurred",

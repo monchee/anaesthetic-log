@@ -70,12 +70,12 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6 space-y-6">
+      <Card className="border-border">
+        <CardContent className="space-y-6">
           
           {resources.map((section, idx) => (
             <div key={idx}>
-              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-3">
+              <h3 className="section-label mb-3">
                 {section.category}
               </h3>
               <div className="space-y-3">
@@ -93,7 +93,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ setScreen }) => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <h4 className="font-semibold text-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors">
+                          <h4 className="group-hover:text-primary dark:group-hover:text-primary transition-colors">
                             {item.title}
                           </h4>
                           <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary dark:group-hover:text-primary transition-colors" />

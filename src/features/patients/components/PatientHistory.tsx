@@ -111,8 +111,8 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient, onToggleSuspec
   ] as const;
 
   return (
-    <Card className="shadow-md bg-card">
-      <CardHeader className="pb-3 border-b border-border bg-muted/30 dark:bg-muted/20">
+    <Card elevation="raised" className="bg-card">
+      <CardHeader bordered className="bg-muted/30 dark:bg-muted/20">
         <CardTitle className="flex items-center gap-2 text-base font-semibold tracking-tight text-foreground">
           <div className="bg-primary/15 dark:bg-primary/20 p-1.5 rounded-none">
             <History className="h-4 w-4 text-primary dark:text-primary" />

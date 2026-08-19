@@ -106,7 +106,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
   );
 
   return (
-    <Card className="rounded-none overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
+    <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none print:bg-white">
 
       {/* Screen-only Controls */}
       <div className="p-4 border-b border-border bg-muted flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-2 rounded-none print:hidden">

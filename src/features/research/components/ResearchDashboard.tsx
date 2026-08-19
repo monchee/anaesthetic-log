@@ -17,6 +17,7 @@ import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Progress, Skel
 import { fetchAllResults, exportToCsv, deleteResult } from '../services/ResearchService';
 import { ResearchRecord } from '../types';
 import { Screen } from '@shared/types';
+import { EmptyState, StatTile } from '@shared/components';
 import { toast } from 'sonner';
 
 function SubmissionDetail({ record, onDelete }: { record: ResearchRecord; onDelete: () => void }) {
@@ -258,7 +259,7 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
         <div className="mb-4 flex h-12 w-12 items-center justify-center border border-border bg-card rounded-none shadow-sm">
           <Database className="w-6 h-6 text-muted-foreground" />
         </div>
-        <h3 className="font-semibold text-foreground text-base">
+        <h3 className="heading-subsection">
           {isUnconfigured ? 'Research database is not configured' : 'Could not load research data'}
         </h3>
         <p className="mt-2 text-sm text-muted-foreground max-w-md">
@@ -317,8 +318,8 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
 
       {/* Header + stat cards */}
       <div style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
-        <Card className="shadow-sm rounded-none">
-          <CardHeader className="pb-3 border-b border-border bg-card">
+        <Card elevation="raised">
+          <CardHeader bordered className="bg-card">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
@@ -350,76 +351,47 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
               </div>
             </div>
           </CardHeader>
-          <CardContent className="pt-4">
+          <CardContent>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-
               {/* Sessions */}
-              <div className="border border-border bg-card p-4 rounded-none shadow-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="section-label">Sessions</span>
-                  <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-                    <ClipboardList className="w-3.5 h-3.5 text-primary" />
-                  </div>
-                </div>
-                <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
-                  {stats.totalSubmissions}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {stats.avgDrugsPerSession ? `avg ${stats.avgDrugsPerSession} drugs/session` : 'no data yet'}
-                </div>
-              </div>
+              <StatTile
+                label="Sessions"
+                icon={<ClipboardList />}
+                tone="primary"
+                value={stats.totalSubmissions}
+                hint={stats.avgDrugsPerSession ? `avg ${stats.avgDrugsPerSession} drugs/session` : 'no data yet'}
+              />
 
               {/* Drugs tested */}
-              <div className="border border-border bg-card p-4 rounded-none shadow-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="section-label">Drugs Tested</span>
-                  <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
-                    <FlaskConical className="w-3.5 h-3.5 text-primary" />
-                  </div>
-                </div>
-                <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
-                  {stats.totalDrugs}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {stats.totalPositive > 0 ? `${stats.totalPositive} positive result${stats.totalPositive !== 1 ? 's' : ''}` : 'across all sessions'}
-                </div>
-              </div>
+              <StatTile
+                label="Drugs Tested"
+                icon={<FlaskConical />}
+                tone="primary"
+                value={stats.totalDrugs}
+                hint={stats.totalPositive > 0 ? `${stats.totalPositive} positive result${stats.totalPositive !== 1 ? 's' : ''}` : 'across all sessions'}
+              />
 
               {/* Overall positivity */}
-              <div className="border border-border bg-card p-4 rounded-none shadow-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="section-label">Positivity Rate</span>
-                  <div className="bg-status-warning/10 p-1.5 rounded-none">
-                    <TrendingUp className="w-3.5 h-3.5 text-status-warning" />
-                  </div>
-                </div>
-                <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
-                  {stats.totalDrugs > 0 ? `${stats.overallPositivityRate}%` : '—'}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {stats.positiveSessionCount > 0
-                    ? `${stats.positiveSessionCount} session${stats.positiveSessionCount !== 1 ? 's' : ''} with positives`
-                    : 'no positive results yet'}
-                </div>
-              </div>
+              <StatTile
+                label="Positivity Rate"
+                icon={<TrendingUp />}
+                tone="warning"
+                value={stats.totalDrugs > 0 ? `${stats.overallPositivityRate}%` : '—'}
+                hint={stats.positiveSessionCount > 0
+                  ? `${stats.positiveSessionCount} session${stats.positiveSessionCount !== 1 ? 's' : ''} with positives`
+                  : 'no positive results yet'}
+              />
 
               {/* Challenge pass rate */}
-              <div className="border border-border bg-card p-4 rounded-none shadow-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="section-label">Challenge Pass</span>
-                  <div className="bg-status-success/10 p-1.5 rounded-none">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-status-success" />
-                  </div>
-                </div>
-                <div className="text-2xl sm:text-3xl font-bold text-foreground tabular-nums leading-none mb-1">
-                  {stats.challengeSuccessRate !== null ? `${stats.challengeSuccessRate}%` : '—'}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {stats.challengeCount > 0
-                    ? `${stats.challengeSuccessCount}/${stats.challengeCount} challenge${stats.challengeCount !== 1 ? 's' : ''} passed`
-                    : 'no challenges recorded'}
-                </div>
-              </div>
+              <StatTile
+                label="Challenge Pass"
+                icon={<CheckCircle2 />}
+                tone="primary"
+                value={stats.challengeSuccessRate !== null ? `${stats.challengeSuccessRate}%` : '—'}
+                hint={stats.challengeCount > 0
+                  ? `${stats.challengeSuccessCount}/${stats.challengeCount} challenge${stats.challengeCount !== 1 ? 's' : ''} passed`
+                  : 'no challenges recorded'}
+              />
             </div>
           </CardContent>
         </Card>
@@ -427,8 +399,8 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
 
       {/* Drug positivity breakdown */}
       <div style={{ '--section-index': 1 } as React.CSSProperties} className="animate-section-reveal">
-        <Card className="shadow-sm rounded-none">
-          <CardHeader className="pb-3 border-b border-border bg-card">
+        <Card elevation="raised">
+          <CardHeader bordered className="bg-card">
             <CardTitle as="h2" className="flex items-center gap-2 text-base text-foreground">
               <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
                 <BarChart2 className="w-4 h-4 text-primary" />
@@ -468,10 +440,10 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
                 })}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted-foreground">
-                <BarChart2 className="w-6 h-6" />
-                <p className="text-sm">No data yet. Save a testing session to populate this chart.</p>
-              </div>
+              <EmptyState
+                icon={<BarChart2 className="w-8 h-8 opacity-40" aria-hidden="true" />}
+                title="No data yet. Save a testing session to populate this chart."
+              />
             )}
           </CardContent>
         </Card>
@@ -479,8 +451,8 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
 
       {/* Records list */}
       <div style={{ '--section-index': 2 } as React.CSSProperties} className="animate-section-reveal">
-        <Card className="shadow-sm rounded-none">
-          <CardHeader className="pb-3 border-b border-border bg-card">
+        <Card elevation="raised">
+          <CardHeader bordered className="bg-card">
             <CardTitle as="h2" className="flex items-center justify-between gap-2 text-base text-foreground">
               <span className="flex items-center gap-2">
                 <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
@@ -495,11 +467,11 @@ export default function ResearchDashboard({ setScreen }: { setScreen?: (screen: 
           </CardHeader>
           <CardContent className="p-0">
             {records.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted-foreground">
-                <Database className="w-6 h-6" />
-                <p className="text-sm font-medium text-foreground">No submissions yet.</p>
-                <p className="text-xs text-muted-foreground">Complete a testing session and click "Save to Research Database".</p>
-              </div>
+              <EmptyState
+                icon={<Database className="w-8 h-8 opacity-40" aria-hidden="true" />}
+                title="No submissions yet."
+                description='Complete a testing session and click "Save to Research Database".'
+              />
             ) : (
               <div className="divide-y divide-border">
                 {records.map((r) => {

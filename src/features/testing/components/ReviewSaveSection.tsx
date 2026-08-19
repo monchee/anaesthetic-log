@@ -38,8 +38,8 @@ export const ReviewSaveSection: React.FC<ReviewSaveSectionProps> = ({
 
   return (
     <div className="space-y-6 animate-section-reveal">
-      <Card className="rounded-none shadow-sm">
-        <CardHeader className="pb-3 border-b border-border bg-card">
+      <Card elevation="raised">
+        <CardHeader bordered className="bg-card">
           <CardTitle className="flex items-center gap-2 text-base text-foreground">
             <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
               <FileCheck2 className="w-4 h-4 text-primary" />
@@ -48,7 +48,7 @@ export const ReviewSaveSection: React.FC<ReviewSaveSectionProps> = ({
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="pt-6 space-y-6">
+        <CardContent className="space-y-6">
           {/* Validation Error Alert */}
           {validationErrors.length > 0 && (
             <div

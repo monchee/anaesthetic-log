@@ -18,6 +18,7 @@ import { AdvancedSearchFilters, AdvancedSearchPanel } from './AdvancedSearchFilt
 import { CSVUploadInstructions } from './CSVUploadInstructions';
 import { exportDeidentifiedCSV, downloadFile } from '@shared/utils/auditExporter';
 import { AdvancedSearchFilters as SearchFilters } from '../hooks/useAdvancedSearch';
+import { EmptyState, TableEmptyRow } from '@shared/components/states';
 
 interface PatientTableProps {
   filteredPatients: Patient[];
@@ -150,8 +151,8 @@ const PatientTable: React.FC<PatientTableProps> = ({
   };
 
   return (
-    <Card className="w-full shadow-sm animate-enter-subtle">
-      <CardHeader className="py-2.5 sm:py-4 border-b border-border bg-card">
+    <Card elevation="raised" className="w-full animate-enter-subtle">
+      <CardHeader bordered className="py-2.5 sm:py-4 bg-card">
         <div className="flex flex-col gap-3 sm:gap-4">
           {/* Header Top Row: Title + Update Button */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
@@ -354,27 +355,16 @@ const PatientTable: React.FC<PatientTableProps> = ({
                 );
               })
             ) : quickFilter !== 'all' && filteredPatients.length > 0 ? (
-              <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground italic">
-                  No patients match this filter.
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={6} title="No patients match this filter." />
             ) : activeFilterCount > 0 ? (
-              <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground italic">
-                  No matching records found.
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={6} title="No matching records found." />
             ) : (
-              <tr>
-                <td colSpan={6} className="px-4 py-10 text-center">
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <Upload className="w-8 h-8 opacity-40" aria-hidden="true" />
-                    <p className="text-sm font-medium">No patient data loaded</p>
-                    <p className="text-xs">Upload a REDCap CSV to get started.</p>
-                  </div>
-                </td>
-              </tr>
+              <TableEmptyRow
+                colSpan={6}
+                icon={<Upload className="w-8 h-8 opacity-40" aria-hidden="true" />}
+                title="No patient data loaded"
+                description="Upload a REDCap CSV to get started."
+              />
             )}
           </tbody>
         </table>
@@ -445,21 +435,15 @@ const PatientTable: React.FC<PatientTableProps> = ({
             );
           })
         ) : quickFilter !== 'all' && filteredPatients.length > 0 ? (
-          <div className="p-8 text-center text-muted-foreground italic text-sm">
-            No patients match this filter.
-          </div>
+          <EmptyState title="No patients match this filter." />
         ) : activeFilterCount > 0 ? (
-          <div className="p-8 text-center text-muted-foreground italic text-sm">
-            No matching records found.
-          </div>
+          <EmptyState title="No matching records found." />
         ) : (
-          <div className="p-10 text-center">
-            <div className="flex flex-col items-center gap-2 text-muted-foreground">
-              <Upload className="w-8 h-8 opacity-40" aria-hidden="true" />
-              <p className="text-sm font-medium">No patient data loaded</p>
-              <p className="text-xs">Upload a REDCap CSV to get started.</p>
-            </div>
-          </div>
+          <EmptyState
+            icon={<Upload className="w-8 h-8 opacity-40" aria-hidden="true" />}
+            title="No patient data loaded"
+            description="Upload a REDCap CSV to get started."
+          />
         )}
       </div>
 

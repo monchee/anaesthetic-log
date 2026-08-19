@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Patient } from '@shared/types';
 import { formatDate } from '@shared/utils';
 import { Search, ChevronDown, Check, UserPlus } from 'lucide-react';
+import { EmptyState } from '@shared/components/states';
 
 interface PatientSelectorProps {
   onSelectPatient: (patient: Patient) => void;
@@ -190,9 +191,7 @@ const PatientSelector: React.FC<PatientSelectorProps> = ({ onSelectPatient, sele
             </div>
             
             {filteredPatients.length === 0 ? (
-                <div className="px-2 py-4 text-center text-xs text-muted-foreground">
-                    No matching records found.
-                </div>
+                <EmptyState size="sm" title="No matching records found." />
             ) : (
                 filteredPatients.map((patient, index) => (
                 <div

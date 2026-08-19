@@ -27,15 +27,15 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6">
+      <Card className="border-border">
+        <CardContent>
           {visibleVersions.map((v, idx) => {
             const isLatest = idx === 0;
             return (
               <div key={idx} className="flex flex-col md:flex-row gap-y-3 pb-10 last:pb-2">
                 {/* Left sidebar */}
                 <div className="md:w-48 flex-shrink-0">
-                  <div className="md:sticky md:top-8 flex flex-row md:flex-col items-start gap-2 md:gap-1.5">
+                  <div className="md:sticky md:top-8 flex flex-row flex-wrap md:flex-col md:flex-nowrap items-start gap-2 md:gap-1.5">
                     <span
                       className={`text-sm font-mono font-bold px-2.5 py-1 inline-flex items-center gap-1 rounded-none ${
                         isLatest
@@ -64,7 +64,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                 </div>
 
                 {/* Right content with timeline */}
-                <div className="flex-1 md:pl-8 relative">
+                <div className="flex-1 min-w-0 md:pl-8 relative">
                   {/* Vertical timeline line */}
                   <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px bg-border" />
                   {/* Timeline dot */}
@@ -80,7 +80,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                     {v.changes.map((change, cIdx) => (
                       <li
                         key={cIdx}
-                        className={`flex gap-2.5 text-sm leading-relaxed ${
+                        className={`flex gap-2 text-sm leading-relaxed ${
                           isLatest
                             ? 'text-foreground font-medium'
                             : 'text-muted-foreground'
@@ -91,7 +91,7 @@ const Changelog: React.FC<ChangelogProps> = ({ setScreen }) => {
                         ) : (
                           <span className="text-muted-foreground mt-0.5 shrink-0 select-none">—</span>
                         )}
-                        <span>{change}</span>
+                        <span className="min-w-0 break-words">{change}</span>
                       </li>
                     ))}
                   </ul>

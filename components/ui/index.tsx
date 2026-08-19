@@ -85,3 +85,4 @@ export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 // Custom Badge with medical grade variants (grade1-4, ungraded)
 export { Badge } from './badge';
 export { HoverCard, HoverCardTrigger, HoverCardContent } from './hover-card';
+export { LoadingSpinner } from './loading-spinner';

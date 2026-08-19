@@ -143,7 +143,7 @@ export function OutboundActionDialog({
         }}
       >
         <DialogHeader className="space-y-2 border-b border-border pb-3">
-          <DialogTitle className="flex items-center gap-2.5 text-base font-semibold text-foreground">
+          <DialogTitle className="flex items-center gap-2 text-base font-semibold text-foreground">
             <div className="bg-primary/10 p-1.5 rounded-none">{details.icon}</div>
             <span>{details.title}</span>
           </DialogTitle>
@@ -200,7 +200,7 @@ export function OutboundActionDialog({
                 <ShieldAlert className="w-4 h-4" />
                 <span>Transmitted Field Categories:</span>
               </div>
-              <ul className="list-disc list-inside text-xs text-muted-foreground space-y-0.5 pl-1">
+              <ul className="list-disc list-inside text-xs text-muted-foreground space-y-1 pl-1">
                 {RESEARCH_FIELD_CATEGORIES.map((cat, idx) => (
                   <li key={idx}>{cat}</li>
                 ))}

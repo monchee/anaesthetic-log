@@ -330,7 +330,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
   return (
     <>
-      <Card className="bg-card shadow-md overflow-hidden" data-testid="testing-plan-builder">
+      <Card elevation="raised" className="bg-card overflow-hidden" data-testid="testing-plan-builder">
         <div 
             className="p-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors"
             onClick={() => setIsOpen(!isOpen)}
@@ -339,9 +339,9 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                 <div className="bg-muted p-1.5 rounded-none text-muted-foreground">
                     <ClipboardList className="w-5 h-5" />
                 </div>
-                <div>
-                    <h2 className="font-semibold text-primary dark:text-primary text-lg">Testing Request Form</h2>
-                    <p className="text-xs text-muted-foreground font-medium">
+                 <div>
+                     <h2 className="heading-section text-primary dark:text-primary">Testing Request Form</h2>
+                     <p className="text-xs text-muted-foreground font-medium">
                       Select drugs to generate a printable testing plan
                     </p>
                     <DraftSaveIndicator lastSavedAt={lastDraftSavedAt} className="mt-1 block" />
@@ -368,8 +368,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         <div className={`flex items-center border-b border-dashed pb-1 mb-2 ${
                             urgent ? 'border-status-danger/30' : 'border-border'
                         }`}>
-                            <h3 className={`text-xs font-semibold uppercase tracking-wider ${
-                                urgent ? 'text-status-danger' : 'text-muted-foreground'
+                            <h3 className={`section-label ${
+                                urgent ? 'text-status-danger' : ''
                             }`}>Request Details</h3>
                         </div>
                         <div className="flex flex-wrap items-center gap-4">
@@ -389,7 +389,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                 <Label
                                     htmlFor="urgent"
                                     className={`text-sm font-bold uppercase tracking-wide cursor-pointer ${
-                                        urgent ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'
+                                        urgent ? 'text-status-danger' : 'text-muted-foreground'
                                     }`}
                                 >
                                     Urgent
@@ -401,7 +401,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     {/* Documents to Chase */}
                     <div className="space-y-2 rounded-none p-3 transition-colors duration-150">
                         <div className="flex items-center border-b border-dashed border-border pb-1 mb-2">
-                            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Documents to Chase</h3>
+                            <h3 className="section-label">Documents to Chase</h3>
                         </div>
                         <div className="flex flex-wrap gap-2">
                             <div className="flex items-center gap-2">
@@ -430,7 +430,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                     {/* Drug Selection Grid */}
                     <div className="space-y-2 rounded-none p-3 transition-colors duration-150">
                         <div className="flex items-center justify-between border-b border-dashed border-border pb-1 mb-2">
-                            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Select Drugs for Testing</h3>
+                            <h3 className="section-label">Select Drugs for Testing</h3>
                             <Button
                               variant="ghost"
                               size="sm"
@@ -479,7 +479,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                     className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${category === 'Others' ? 'col-span-full' : ''} ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-muted/50'}`}
                                 >
                                     <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-border'}`}>
-                                        <h4 className={`text-xs font-semibold uppercase tracking-wider flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-muted-foreground'}`}>
+                                        <h4 className={`section-label flex items-center gap-2 ${hasActiveSelection ? theme.headerText : ''}`}>
                                             {category}
                                             {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-none ${theme.pulse} animate-pulse`}></span>}
                                         </h4>
@@ -541,7 +541,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         {protocolChoices.length > 0 && (
                           <div className="col-span-full border border-border bg-muted/30 p-3 space-y-3 rounded-none">
                             <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                              <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Protocol Choices</h5>
+                              <h5 className="section-label">Protocol Choices</h5>
                               <span className="text-xs text-muted-foreground tabular-nums">
                                 {protocolChoices.length} drug{protocolChoices.length === 1 ? '' : 's'} with multiple protocols
                               </span>
@@ -586,8 +586,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${
                                 hasPendingRedcapOther ? 'border-status-warning/30' : hasCustomActive ? `${customTheme.headerBorder}` : 'border-border'
                               }`}>
-                                <h4 className={`text-xs font-semibold uppercase tracking-wider flex items-center gap-2 ${
-                                    hasPendingRedcapOther ? 'text-status-warning' : hasCustomActive ? customTheme.headerText : 'text-muted-foreground'
+                                <h4 className={`section-label flex items-center gap-2 ${
+                                    hasPendingRedcapOther ? 'text-status-warning' : hasCustomActive ? customTheme.headerText : ''
                                   }`}>
                                     Additional Items
                                     {hasPendingRedcapOther
@@ -712,14 +712,14 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
 
                     {/* Legend callout */}
                     <div className="flex flex-col gap-1.5 p-3 border border-border bg-muted/40 rounded-none">
-                        <div className="flex items-start gap-2.5">
+                        <div className="flex items-start gap-2">
                             <Pin className="w-3.5 h-3.5 shrink-0 mt-0.5 text-muted-foreground" />
                             <p className="text-xs text-muted-foreground leading-snug">
                                 <span className="font-semibold">Pre-filled</span> for all patients by default.
                             </p>
                         </div>
                         {historyDrugs.length > 0 && (
-                            <div className="flex items-start gap-2.5">
+                            <div className="flex items-start gap-2">
                                 <History className="w-3.5 h-3.5 shrink-0 mt-0.5 text-muted-foreground" />
                                 <p className="text-xs text-muted-foreground leading-snug">
                                     <span className="font-semibold">Auto-selected</span> from patient history — given at time of reaction.

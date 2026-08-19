@@ -15,7 +15,7 @@ export const RedcapExportSteps: React.FC<RedcapExportStepsProps> = ({
   return (
     <div className={`space-y-6 ${className}`.trim()}>
       <div className="bg-card p-4 rounded-none border border-border">
-        <h4 className="font-semibold mb-2 flex items-center gap-2 text-foreground">
+        <h4 className="flex items-center gap-2">
           <ExternalLink className="w-4 h-4 text-primary" /> Step 1: Login
         </h4>
         <p className="text-sm text-muted-foreground mb-2">

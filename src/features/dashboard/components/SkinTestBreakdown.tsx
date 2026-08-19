@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, Button } from '@/components/ui';
 import { Thermometer, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
+import { EmptyState, TableEmptyRow } from '@shared/components/states';
 
 interface DrugStat {
   name: string;
@@ -34,8 +35,8 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
   const areAllExpanded = allCategories.length > 0 && expandedCategories.length === allCategories.length;
 
   return (
-    <Card className="w-full shadow-sm animate-enter-subtle">
-      <CardHeader className="py-4 border-b border-border bg-card">
+    <Card elevation="raised" className="w-full animate-enter-subtle">
+      <CardHeader bordered className="py-4 bg-card">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <CardTitle as="h2" className="text-lg flex items-center gap-2 text-foreground">
@@ -121,11 +122,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                 );
               })
             ) : (
-              <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground italic">
-                  No data available.
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={7} title="No data available." />
             )}
           </tbody>
         </table>
@@ -215,9 +212,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
             );
           })
         ) : (
-          <div className="p-8 text-center text-muted-foreground italic text-sm">
-            No data available.
-          </div>
+          <EmptyState title="No data available." />
         )}
       </div>
     </Card>

@@ -43,7 +43,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
   };
 
   return (
-    <Card className="rounded-none overflow-hidden print:overflow-visible print:shadow-none print:border-none">
+    <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none">
       <ReportPrintIdentity
         patientName={patientName}
         mrn={redact(data.mrn)}
@@ -66,7 +66,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
         </div>
       </div>
 
-      <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-3 print:space-y-3">
+      <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 print:p-3 print:space-y-3">
          
          {/* Patient Details */}
          <div className="section-card bg-muted border border-border rounded-none p-4 print:bg-white print:border-slate-300">
@@ -246,20 +246,20 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
              </h3>
              <div className="space-y-3 print:space-y-2">
                {data.nurseNotes.preTesting && (
-                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-none p-3 print:bg-white print:border-blue-200 print:p-2">
-                   <p className="text-xs uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">Pre-Testing</p>
+                 <div className="bg-status-info/10 border border-status-info/30 rounded-none p-3 print:bg-white print:border-blue-200 print:p-2">
+                   <p className="text-xs uppercase tracking-wider text-status-info font-semibold mb-1 print:mb-0.5">Pre-Testing</p>
                    <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.preTesting}</p>
                  </div>
                )}
                {data.nurseNotes.duringTesting && (
-                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-none p-3 print:bg-white print:border-blue-200 print:p-2">
-                   <p className="text-xs uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">During Testing</p>
+                 <div className="bg-status-info/10 border border-status-info/30 rounded-none p-3 print:bg-white print:border-blue-200 print:p-2">
+                   <p className="text-xs uppercase tracking-wider text-status-info font-semibold mb-1 print:mb-0.5">During Testing</p>
                    <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.duringTesting}</p>
                  </div>
                )}
                {data.nurseNotes.postTesting && (
-                 <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-none p-3 print:bg-white print:border-blue-200 print:p-2">
-                   <p className="text-xs uppercase tracking-wider text-blue-600 font-semibold mb-1 print:mb-0.5">Post-Testing / Discharge</p>
+                 <div className="bg-status-info/10 border border-status-info/30 rounded-none p-3 print:bg-white print:border-blue-200 print:p-2">
+                   <p className="text-xs uppercase tracking-wider text-status-info font-semibold mb-1 print:mb-0.5">Post-Testing / Discharge</p>
                    <p className="text-sm whitespace-pre-wrap print:text-xs">{data.nurseNotes.postTesting}</p>
                  </div>
                )}

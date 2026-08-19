@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, Badge } from '../../../../components/ui';
 import { Clock } from 'lucide-react';
 import { LogFormData } from '@shared/types';
 import { formatDate, isSkinTestPositive } from '@shared/utils';
+import { TableEmptyRow } from '@shared/components/states';
 
 interface RecentTestingActivityProps {
   recentLogs: LogFormData[];
@@ -21,8 +22,8 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
   };
 
   return (
-    <Card className="w-full shadow-sm border-t-4 border-t-status-grade1 animate-enter-subtle">
-      <CardHeader className="py-4 border-b border-border bg-card">
+    <Card elevation="raised" className="w-full border-t-4 border-t-status-grade1 animate-enter-subtle">
+      <CardHeader bordered className="py-4 bg-card">
         <CardTitle as="h2" className="text-lg text-foreground dark:text-primary flex items-center gap-2">
           <Clock className="w-5 h-5 text-primary dark:text-primary" /> Recent Skin Testing Activity
         </CardTitle>
@@ -82,11 +83,7 @@ const RecentTestingActivity: React.FC<RecentTestingActivityProps> = ({
                 );
               })
             ) : (
-              <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground italic">
-                  No recent activity recorded in this session.
-                </td>
-              </tr>
+              <TableEmptyRow colSpan={4} title="No recent activity recorded in this session." />
             )}
           </tbody>
         </table>

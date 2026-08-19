@@ -11,7 +11,7 @@ interface AssessmentPlanSectionProps {
 export function AssessmentPlanSection({ plan, onInputChange }: AssessmentPlanSectionProps) {
   return (
     <Card style={{ '--section-index': 4 } as React.CSSProperties} className="animate-section-reveal">
-      <CardHeader className="pb-3 border-b border-border">
+      <CardHeader bordered>
         <CardTitle className="flex items-center gap-2 text-base text-foreground">
           <div className="bg-status-success/15 dark:bg-status-success/20 p-1.5 rounded-none">
             <CheckCircle2 className="w-4 h-4 text-status-success" />
@@ -19,7 +19,7 @@ export function AssessmentPlanSection({ plan, onInputChange }: AssessmentPlanSec
           Assessment & Plan
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-6">
+      <CardContent>
         <div className="space-y-2">
           <Label htmlFor="clinical-plan">Comments / Plan</Label>
           <textarea

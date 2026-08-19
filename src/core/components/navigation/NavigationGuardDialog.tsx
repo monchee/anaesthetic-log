@@ -52,7 +52,7 @@ export const NavigationGuardDialog: React.FC<NavigationGuardDialogProps> = ({
               type="button"
               variant="outline"
               onClick={onDelete}
-              className="rounded-none min-h-[44px] sm:min-h-[40px] px-4 text-sm border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive mr-auto"
+              className="rounded-none min-h-[44px] px-4 text-sm border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive mr-auto"
             >
               Delete draft
             </Button>
@@ -61,14 +61,14 @@ export const NavigationGuardDialog: React.FC<NavigationGuardDialogProps> = ({
             type="button"
             variant="outline"
             onClick={onCancel}
-            className="rounded-none min-h-[44px] sm:min-h-[40px] px-4 text-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="rounded-none min-h-[44px] px-4 text-sm btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Stay in session
           </Button>
           <Button
             type="button"
             onClick={onConfirm}
-            className="rounded-none min-h-[44px] sm:min-h-[40px] px-4 text-sm bg-primary hover:bg-primary/90 text-primary-foreground font-semibold btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="rounded-none min-h-[44px] px-4 text-sm bg-primary hover:bg-primary/90 text-primary-foreground font-semibold btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             Leave and keep draft
           </Button>

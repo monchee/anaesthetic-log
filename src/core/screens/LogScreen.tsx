@@ -191,10 +191,10 @@ export function LogScreen({
     return (
       <div
         key="testing-draft-banner"
-        className="no-print flex items-center justify-between px-4 py-2.5 bg-amber-500/10 border border-amber-500/30 rounded-none gap-3"
+        className="no-print flex items-center justify-between px-4 py-2.5 bg-status-warning/10 border border-status-warning/30 rounded-none gap-3"
       >
         <div className="flex items-center gap-2 text-sm min-w-0">
-          <TestTube2 className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" aria-hidden="true" />
+          <TestTube2 className="w-4 h-4 text-status-warning shrink-0" aria-hidden="true" />
           <span className="truncate text-foreground">
             In-progress testing session
             <span className="text-muted-foreground text-xs ml-2">· uncommitted draft kept locally</span>
@@ -204,7 +204,7 @@ export function LogScreen({
           <Button
             size="sm"
             onClick={() => (chrome.navigate ? chrome.navigate(Screen.TESTING) : chrome.setScreen(Screen.TESTING))}
-            className="rounded-none h-9 text-xs bg-amber-600 hover:bg-amber-700 text-white font-semibold btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+            className="rounded-none h-9 text-xs bg-status-warning hover:bg-status-warning/90 text-status-warning-foreground font-semibold btn-press focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-warning"
           >
             Resume Testing
           </Button>
@@ -231,8 +231,8 @@ export function LogScreen({
 
   // Patient selection card
   const renderPatientSelectionCard = () => (
-    <Card className="shadow-sm rounded-none">
-      <CardHeader className="pb-3 border-b border-border bg-card">
+    <Card elevation="raised">
+      <CardHeader bordered className="bg-card">
         <CardTitle className="flex items-center gap-2 text-lg text-foreground">
           <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
             <User className="w-4 h-4 text-primary" aria-hidden="true" />
@@ -240,7 +240,7 @@ export function LogScreen({
           Patient Selection
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-6">
+      <CardContent>
         <div className="flex flex-col gap-6">
           <div className="flex items-end gap-2 w-full">
             <PatientSelector
@@ -269,8 +269,8 @@ export function LogScreen({
   // Info and getting started cards
   const renderInfoCards = () => (
     <>
-      <Card className="shadow-sm rounded-none border-primary/20 bg-primary/5 dark:bg-card/40">
-        <CardContent className="pt-5 pb-5">
+      <Card elevation="raised" className="border-primary/20 bg-primary/5 dark:bg-card/40">
+        <CardContent className="pb-5">
           <div className="flex gap-3">
             <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none h-fit mt-0.5">
               <Info className="w-4 h-4 text-primary" aria-hidden="true" />

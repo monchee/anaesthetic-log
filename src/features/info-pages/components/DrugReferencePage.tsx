@@ -44,13 +44,13 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6 space-y-6">
+      <Card className="border-border">
+        <CardContent className="space-y-6">
 
           {/* Clinical Guidance */}
           <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
             <div>
-              <h3 className="font-semibold text-lg mb-2 text-foreground">How to Use This Reference</h3>
+              <h3>How to Use This Reference</h3>
               <p className="text-muted-foreground leading-relaxed text-sm">
                 This reference lists the anaesthetic and associated drugs tested in the clinic, organised by pharmacological category.
                 For each category, you'll find information on cross-reactivity patterns and suitable alternative drugs. This information
@@ -63,7 +63,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
 
           {/* Drug Categories */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-3">
+            <h3 className="section-label mb-3">
               Drug Categories
             </h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -74,7 +74,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
                     key={category}
                     className="bg-card rounded-none p-4 border border-border"
                   >
-                    <h4 className={`font-semibold mb-2 ${theme?.headerText || 'text-foreground'}`}>
+                    <h4 className={`mb-2 ${theme?.headerText || ''}`}>
                       {category}
                     </h4>
                     <div className="flex flex-wrap gap-1">
@@ -95,7 +95,7 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
 
           {/* Cross-Reactivity & Alternatives */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-3">
+            <h3 className="section-label mb-3">
               Cross-Reactivity & Alternatives
             </h3>
             <Accordion type="multiple" className="bg-card rounded-none border border-border px-4">

@@ -40,7 +40,7 @@ export const DrugSelectionPanel: React.FC<DrugSelectionPanelProps> = ({
           return (
             <div key={category} className={`space-y-2 rounded-none p-3 transition-colors duration-150 ${hasActiveSelection ? `${theme.activeBg} ${theme.activeRing} ring-1` : 'hover:bg-muted/50'}`}>
               <div className={`flex justify-between items-center border-b border-dashed pb-1 mb-2 ${hasActiveSelection ? `${theme.headerBorder}` : 'border-border'}`}>
-                <h4 className={`text-xs font-bold uppercase tracking-wide flex items-center gap-2 ${hasActiveSelection ? theme.headerText : 'text-muted-foreground'}`}>
+                <h4 className={`section-label flex items-center gap-2 ${hasActiveSelection ? theme.headerText : ''}`}>
                   {category}
                   {hasActiveSelection && <span className={`flex h-1.5 w-1.5 rounded-none ${theme.pulse} animate-pulse`}></span>}
                 </h4>

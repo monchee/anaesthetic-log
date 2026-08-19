@@ -141,11 +141,11 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6 space-y-6">
+      <Card className="border-border">
+        <CardContent className="space-y-6">
           {faqs.map((category, idx) => (
             <div key={idx} className="space-y-2">
-              <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground uppercase tracking-wide mb-3">
+              <h3 className="section-label flex items-center gap-2 mb-3">
                 <category.icon className="w-4 h-4 text-primary shrink-0" />
                 <span>{category.category}</span>
               </h3>

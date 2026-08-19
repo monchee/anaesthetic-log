@@ -10,15 +10,15 @@ interface DisclaimerPageProps {
 const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6 space-y-6">
+      <Card className="border-border">
+        <CardContent className="space-y-6">
 
           {/* Medical Disclaimer - Highlighted */}
           <div className="bg-destructive/10 dark:bg-destructive/15 rounded-none p-5 sm:p-6 border-2 border-destructive/30 dark:border-destructive/40">
             <div className="flex items-start gap-4">
               <AlertTriangle className="w-8 h-8 text-destructive shrink-0" />
               <div>
-                <h3 className="font-bold text-lg text-destructive mb-3">Medical Disclaimer</h3>
+                <h3 className="font-bold text-destructive mb-3">Medical Disclaimer</h3>
                 <div className="text-sm text-foreground/90 space-y-3">
                   <p className="font-medium">
                     This application is intended for use by qualified healthcare professionals ONLY. It is a clinical support tool designed to assist in the assessment and management of patients with suspected or confirmed anaesthetic allergies.
@@ -39,7 +39,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-3">
               <Phone className="w-5 h-5 text-status-warning shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-status-warning mb-2">Emergency Information</h4>
+                <h4 className="text-status-warning mb-2">Emergency Information</h4>
                 <div className="text-sm text-foreground/90 space-y-2">
                   <p>
                     <strong className="text-foreground">This application is NOT suitable for emergency situations.</strong>
@@ -59,7 +59,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Clinical Judgment Required</h4>
+              <h4 className="mb-0">Clinical Judgment Required</h4>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>
@@ -88,7 +88,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
 
           {/* No Warranty */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">No Warranty</h4>
+            <h4 className="mb-4">No Warranty</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 This application is provided "as is" and "as available" without warranty of any kind, whether express or implied.
@@ -115,7 +115,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
 
           {/* Limitation of Liability */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">Limitation of Liability</h4>
+            <h4 className="mb-4">Limitation of Liability</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 To the maximum extent permitted by law, Sydney Local Health District, Royal Prince Alfred Hospital, the Department of Clinical Immunology & Allergy, and their respective officers, employees, and agents:
@@ -143,7 +143,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
 
           {/* Professional Use Only */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">Professional Use Only</h4>
+            <h4 className="mb-4">Professional Use Only</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 This application is intended exclusively for use by authorised healthcare professionals within the context of their professional duties. Use by unauthorised individuals or for purposes other than legitimate clinical assessment is strictly prohibited.
@@ -156,7 +156,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
 
           {/* Guidelines Change */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">Clinical Guidelines Evolve</h4>
+            <h4 className="mb-4">Clinical Guidelines Evolve</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 Medical knowledge and clinical guidelines are continuously evolving. This application reflects best practices at the time of development but may not incorporate the most recent guideline changes.
@@ -169,7 +169,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ setScreen }) => {
 
           {/* Acceptance */}
           <div className="bg-nsw-info-bg/80 dark:bg-nsw-info/10 rounded-none p-5 border border-nsw-info/20 dark:border-nsw-info/30">
-            <h4 className="font-semibold text-nsw-info dark:text-nsw-blue mb-3">Use of Application Constitutes Acceptance</h4>
+            <h4 className="text-nsw-info dark:text-nsw-blue mb-3">Use of Application Constitutes Acceptance</h4>
             <div className="text-sm text-foreground/90">
               <p>
                 By accessing and using this application, you acknowledge that you have read, understood, and agree to be bound by this disclaimer. If you do not agree with any part of this disclaimer, you must not use this application.

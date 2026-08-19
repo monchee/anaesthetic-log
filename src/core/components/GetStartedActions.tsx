@@ -53,7 +53,7 @@ export const GetStartedActions: React.FC<GetStartedActionsProps> = ({
       >
         <div className="w-full min-w-0">
           <div className="flex items-center justify-between gap-3 mb-2 w-full min-w-0">
-            <div className="flex items-center gap-2.5 min-w-0">
+            <div className="flex items-center gap-2 min-w-0">
               <div className="p-2.5 bg-status-danger text-status-danger-foreground shrink-0 rounded-none">
                 {isUploading ? (
                   <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
@@ -88,7 +88,7 @@ export const GetStartedActions: React.FC<GetStartedActionsProps> = ({
       >
         <div className="w-full min-w-0">
           <div className="flex items-center justify-between gap-3 mb-2 w-full min-w-0">
-            <div className="flex items-center gap-2.5 min-w-0">
+            <div className="flex items-center gap-2 min-w-0">
               <div className="p-2.5 bg-path-testing text-path-testing-foreground shrink-0 rounded-none">
                 <TestTube2 className="w-5 h-5" aria-hidden="true" />
               </div>

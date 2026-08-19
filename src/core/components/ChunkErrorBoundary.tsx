@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui';
+import { ErrorState } from '@shared/components/states';
 
 interface ChunkErrorBoundaryProps {
   children: ReactNode;
@@ -53,38 +54,37 @@ export class ChunkErrorBoundary extends Component<ChunkErrorBoundaryProps, Chunk
           aria-live="polite"
           className="flex-1 flex flex-col items-center justify-center p-8 text-center min-h-[300px]"
         >
-          <div className="max-w-md w-full flex flex-col items-center gap-4 bg-card p-6 border border-border shadow-sm">
-            <AlertTriangle className="h-10 w-10 text-status-warning" aria-hidden="true" />
-            <div className="space-y-1">
-              <h3 className="text-base font-semibold text-foreground">
-                Unable to load this section
-              </h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                A network interruption or application update prevented this screen from loading.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-2 w-full pt-2">
-              <Button
-                type="button"
-                onClick={this.handleRetry}
-                variant="default"
-                className="flex-1 rounded-none flex items-center justify-center gap-2"
-                aria-label="Retry loading this section"
-              >
-                <RefreshCw className="h-4 w-4" aria-hidden="true" />
-                <span>Retry</span>
-              </Button>
-              <Button
-                type="button"
-                onClick={this.handleReload}
-                variant="outline"
-                className="flex-1 rounded-none"
-                aria-label="Reload the page"
-              >
-                Reload Page
-              </Button>
-            </div>
-          </div>
+          <ErrorState
+            icon={<AlertTriangle className="h-10 w-10 text-status-warning" aria-hidden="true" />}
+            title="Unable to load this section"
+            actions={
+              <div className="flex flex-col sm:flex-row gap-2 w-full pt-2">
+                <Button
+                  type="button"
+                  onClick={this.handleRetry}
+                  variant="default"
+                  className="flex-1 rounded-none flex items-center justify-center gap-2"
+                  aria-label="Retry loading this section"
+                >
+                  <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                  <span>Retry</span>
+                </Button>
+                <Button
+                  type="button"
+                  onClick={this.handleReload}
+                  variant="outline"
+                  className="flex-1 rounded-none"
+                  aria-label="Reload the page"
+                >
+                  Reload Page
+                </Button>
+              </div>
+            }
+          >
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              A network interruption or application update prevented this screen from loading.
+            </p>
+          </ErrorState>
         </div>
       );
     }

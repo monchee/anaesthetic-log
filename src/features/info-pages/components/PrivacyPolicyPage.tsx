@@ -12,8 +12,8 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6 space-y-6">
+      <Card className="border-border">
+        <CardContent className="space-y-6">
 
           {/* Introduction */}
           <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
@@ -42,7 +42,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Eye className="w-5 h-5 text-primary" />
-              <h2 className="font-semibold text-foreground text-base">Information We Collect</h2>
+              <h2 className="heading-section">Information We Collect</h2>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>The application may process the following types of information when you use REDCap data exports:</p>
@@ -67,7 +67,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Shield className="w-5 h-5 text-primary" />
-              <h2 className="font-semibold text-foreground text-base">How We Use Your Information</h2>
+              <h2 className="heading-section">How We Use Your Information</h2>
             </div>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>Your information is used solely for:</p>
@@ -96,7 +96,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Lock className="w-5 h-5 text-primary" />
-              <h2 className="font-semibold text-foreground text-base">Data Storage and Security</h2>
+              <h2 className="heading-section">Data Storage and Security</h2>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>We implement appropriate security measures to protect your information:</p>
@@ -125,7 +125,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="w-5 h-5 text-primary" />
-              <h2 className="font-semibold text-foreground text-base">Your Rights</h2>
+              <h2 className="heading-section">Your Rights</h2>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>Under the <strong className="text-foreground">Health Records and Information Privacy Act 2002 (NSW)</strong> and the <strong className="text-foreground">Privacy Act 1988 (Cth)</strong>, you have the right to:</p>
@@ -152,7 +152,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
 
           {/* Cookies and Tracking */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h2 className="font-semibold text-foreground text-base mb-4">Cookies and Tracking</h2>
+            <h2 className="heading-section mb-4">Cookies and Tracking</h2>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>This application does not use tracking cookies or third-party analytics. Browser storage (localStorage) holds only non-identifying preferences:</p>
               <ul className="space-y-1 ml-4">
@@ -178,7 +178,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-3">
               <Mail className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div>
-                <h2 className="font-semibold text-primary text-base mb-2">Privacy Contact</h2>
+                <h2 className="heading-section text-primary mb-2">Privacy Contact</h2>
                 <p className="text-sm text-foreground/90 leading-relaxed">
                   For privacy-related enquiries or complaints, please contact the RPAH Department of Clinical Immunology & Allergy or the Sydney Local Health District Privacy Officer.
                 </p>

@@ -47,7 +47,7 @@ export function DrugTestPanelSection({
 
   return (
     <Card style={{ '--section-index': 1 } as React.CSSProperties} className="animate-section-reveal">
-      <CardHeader className="pb-3 border-b border-border">
+      <CardHeader bordered>
         <CardTitle className="flex items-center gap-2 text-base text-foreground">
           <div className="bg-muted p-1.5 rounded-none">
             <Activity className="w-4 h-4 text-primary" />
@@ -55,7 +55,7 @@ export function DrugTestPanelSection({
           SPT &amp; IDT Panel
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-3 sm:pt-4 md:pt-4 space-y-4 sm:space-y-5 md:space-y-6">
+      <CardContent className="space-y-4 md:space-y-6">
         <div className="space-y-4 mb-6">
           <div className="flex justify-between items-center border-b border-border pb-2">
             <Label className="section-label">Select Drugs to Test:<span className="text-destructive ml-0.5" aria-hidden="true">*</span></Label>

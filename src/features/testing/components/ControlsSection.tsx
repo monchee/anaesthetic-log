@@ -25,15 +25,15 @@ export function VisitDetailsSection({
   const visitDateError = getError('visit-date');
 
   return (
-    <Card style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal rounded-none">
-      <CardContent className="pt-4 sm:pt-5 md:pt-6">
+    <Card style={{ '--section-index': 0 } as React.CSSProperties} className="animate-section-reveal">
+      <CardContent>
         {isDirectEntry ? (
           <div className="space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-border">
               <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
                 <User className="w-4 h-4 text-primary" />
               </div>
-              <h3 className="font-semibold text-base text-foreground">Patient Identity</h3>
+              <h3 className="heading-subsection">Patient Identity</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               <div>

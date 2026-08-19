@@ -86,7 +86,7 @@ export const ChallengeSection: React.FC<ChallengeSectionProps> = ({
             <Activity className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-bold text-foreground">
+            <h3 className="heading-section">
               Drug Challenge
             </h3>
             <p id="legacy-challenge-proceed-desc" className="text-xs text-muted-foreground">Proceed with live drug challenge</p>

@@ -1,5 +1,28 @@
 [
   {
+    "version": "v0.79.10",
+    "codename": "Primitives That Stop Fighting Back",
+    "date": "19 August 2026",
+    "summary": "A full UI/UX polish pass with no functional change. The shared Card/Button primitives shipped defaults nobody wanted \u2014 a Tailwind shadow and a `pt-0` \u2014 so every call site overrode them, and the overrides disagreed with each other three ways. The same drift had reached typography (`h3` shipped at four different sizes), empty states (ten hand-rolled variants) and colour (raw palette utilities on-screen). This makes the primitives express the documented system so call sites stop fighting them, consolidates seven copy-pasted patterns into shared components, and reconciles DESIGN.md with what actually ships.",
+    "highlight": false,
+    "changes": [
+      "Shared state components (`src/shared/components/states/`). `EmptyState` and `TableEmptyRow` replace ~10 divergent empty states that variously used `py-4`/`py-8`/`py-10`, italics, and three different icon treatments. `LoadingState` finally gives `components/ui/loading-spinner.tsx` a caller \u2014 it had been dead code with zero usages while `ScreenLayout` hand-rolled its own Suspense spinner. `ErrorState` is the shared shell behind `ErrorBoundary`, `ChunkErrorBoundary` and `ScreenUnavailable`, which were three independent centred-card layouts.",
+      "`StatTile` (`src/shared/components/StatTile.tsx`) replaces 8 duplicated metric tiles across `ResearchDashboard` and `AnalyticsPanel` that disagreed on padding (`p-4` vs `p-3`), value size, and elevation.",
+      "`ChromeStatusBadge` and `ThemeToggleButton` (`src/core/components/navigation/`) replace 6 hand-written status badges and 3 verbatim theme-toggle copies in `AppTopBar`. Both emit byte-identical class strings \u2014 the committed screenshot baselines pass unchanged.",
+      "Named heading utilities \u2014 `.heading-page`, `.heading-section`, `.heading-subsection`, each carrying a deliberate `mb-0` so they compose inside `flex`/`gap` and `space-y` layouts without doubling margins.",
+      "Surfaces are flat by default, as DESIGN.md always claimed. `Card` no longer emits a shadow; raised surfaces opt in via `<Card elevation=\"raised\">`. `Button`'s `default`/`destructive`/`outline`/`secondary` variants lost their resting shadows. This removes 11 `shadow-none` overrides and settles the `shadow-sm`-vs-`shadow-md` disagreement. `CardHeader` gained a `bordered` prop for the pattern 17 of 18 call sites hand-wrote; `CardContent` dropped the `pt-0` that 21 sites were adding back.",
+      "One typographic hierarchy. The base ramp was overridden 48 times, so heading level carried no consistent visual meaning. Retargeted to a monotonic dense scale (h1 `text-2xl` \u2192 h4 `text-base`) with a single uniform `mb-2`, replacing four different responsive margin recipes.",
+      "Spacing normalised to the documented 4/8/16/24/32 rhythm. `gap-2.5`/`gap-3.5`/`space-y-5`/`space-y-10`/`space-y-0.5` folded onto the baseline. The dense navigation chrome and the PIN entry grid deliberately keep their tighter tuned rhythm.",
+      "All remaining on-screen raw palette utilities are now semantic tokens. The testing-draft banner uses `--status-warning`, the urgent label and error icon `--status-danger`, the nurse-note callouts `--status-info`. Print-scoped `print:` colours are untouched, as the Print Typography Exception Rule allows. With those gone, the dark-mode hardcoded-colour safety net shrank from 13 rules to the 5 that still cover live print-scoped classes.",
+      "DESIGN.md reconciled \u2014 real type ramp, flat-by-default elevation vocabulary, and a new Shared UI Patterns section so the next contributor composes instead of copy-pasting.",
+      "The changelog page no longer scrolls sideways. A `flex-1` column with the default `min-width: auto` could not shrink below its content, so long backticked file paths in release notes pushed the page to 1719px inside a 1280px viewport \u2014 at every viewport width and every font scale. Now `flex-1 min-w-0` with `break-words` on the text, and the version-header row (version, codename, date, \"Latest\" badge) wraps on mobile instead of running off the edge at 125% scale. Both pre-existing, neither introduced here; caught by a 180-combination sweep across 10 routes \u00d7 light/dark \u00d7 85/100/125% font scale \u00d7 390/768/1280px, which now passes clean.",
+      "Heading colour was dead CSS. The base rule used `text-[var(--primary)]`, which emits `color: var(--primary)` while `--primary` holds a bare HSL triplet \u2014 invalid, so browsers dropped it and headings silently inherited. Now a real `text-foreground`.",
+      "Tap targets meet the documented 44px floor. Three stray `min-h-[40px]` controls raised; 50 controls now at `min-h-[44px]`, zero below.",
+      "Dashboard and AdvancedSearchFilters responsive behaviour \u2014 both already reflow correctly via `flex-wrap` and `grid-cols-3`; no page-level overflow at 390/768/1280px. No speculative breakpoints added.",
+      "Print output \u2014 all three report views render at A4 width (794px) with no overflow and no `.no-print` leakage; the Phase 5 token swaps did not reach the print stylesheets."
+    ]
+  },
+  {
     "version": "v0.79.9",
     "codename": "Desktop Sidebar Identity Rail",
     "date": "19 August 2026",

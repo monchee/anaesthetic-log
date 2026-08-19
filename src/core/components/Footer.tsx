@@ -40,7 +40,7 @@ export const Footer: React.FC<FooterProps> = ({
       className="border-t border-border bg-background/50 dark:bg-card/30 backdrop-blur-sm no-print mt-auto"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-5 md:px-6 py-4">
-        <div className="flex flex-col gap-3.5">
+        <div className="flex flex-col gap-3">
           {/* Legal / Governance Links */}
           <nav aria-label="Footer legal and governance navigation" className="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 gap-y-1 text-xs">
             {FOOTER_LEGAL_ITEMS.map((link) => {

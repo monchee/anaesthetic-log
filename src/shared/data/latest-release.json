@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.10",
+    "codename": "Primitives That Stop Fighting Back"
+  },
+  {
     "version": "v0.79.9",
     "codename": "Desktop Sidebar Identity Rail"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.6",
     "codename": "No More Sideways Scrolling"
-  },
-  {
-    "version": "v0.79.5",
-    "codename": "Sections That Can't Cross-Write"
   }
 ]

@@ -43,15 +43,27 @@ typography:
     letterSpacing: "0.1em"
   headline:
     fontFamily: "Public Sans, sans-serif"
-    fontSize: "1.875rem"
+    fontSize: "1.5rem"
     fontWeight: 600
     lineHeight: 1.25
     letterSpacing: "-0.01em"
   title:
     fontFamily: "Public Sans, sans-serif"
-    fontSize: "1.5rem"
+    fontSize: "1.25rem"
     fontWeight: 600
     lineHeight: 1.3
+    letterSpacing: "-0.01em"
+  subtitle:
+    fontFamily: "Public Sans, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 600
+    lineHeight: 1.35
+    letterSpacing: "-0.01em"
+  card-header:
+    fontFamily: "Public Sans, sans-serif"
+    fontSize: "1rem"
+    fontWeight: 600
+    lineHeight: 1.4
     letterSpacing: "-0.01em"
   body:
     fontFamily: "Public Sans, sans-serif"
@@ -175,16 +187,26 @@ App navigation chrome uses a dedicated semantic token namespace (`--masthead-*`)
 **Body Font:** Public Sans (fallback: Inter, sans-serif)  
 **Monospace / Data Font:** ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace (used for numeric IDs, timestamps, MRN, wheal measurements, and concentrations with `tabular-nums`)
 
-**Character:** Clean, objective grotesque sans-serif with high x-height and exceptional legibility across dense medical data grids and printed consultation letters. All on-screen sub-12px text sizes are migrated to scalable `text-xs` or `.section-label` (`text-[0.625rem]`), while preserving print-specific sub-12px sizing (`print:text-[8px]`, `print:text-[9px]`, `print:text-[10px]`).
+**Character:** Clean, objective grotesque sans-serif with high x-height and exceptional legibility across dense medical data grids and printed consultation letters. All on-screen sub-12px text sizes are migrated to scalable `text-xs` or `.section-label` (`0.75rem` / `12px`), while preserving print-specific sub-12px sizing (`print:text-[8px]`, `print:text-[9px]`, `print:text-[10px]`).
 
 ### Hierarchy
+
+Heading sizes are dense and compact by design for a clinical data UI. Base HTML headings (`h1`–`h6`) share `font-semibold text-foreground leading-tight tracking-[-0.01em] text-wrap: balance` and a uniform `mb-2` (8px) bottom margin:
+
 - **Display** (Bold 700, `3rem` / `48px`, Line-height 1, Tracking `0.1em`): Reserved strictly for the login wordmark (`.app-wordmark`).
-- **Headline (h1)** (Semibold 600, `1.875rem` / `30px`, Line-height 1.25, Tracking `-0.01em`): Main view headers and screen titles.
-- **Title (h2)** (Semibold 600, `1.5rem` / `24px`, Line-height 1.3, Tracking `-0.01em`): Section headings and major card titles.
-- **Subtitle (h3)** (Semibold 600, `1.25rem` / `20px`, Line-height 1.35): Subsection headings and dialog titles.
-- **Card Header (h4)** (Semibold 600, `1.125rem` / `18px`, Line-height 1.4): Card titles and table group headers.
+- **Headline (h1)** (Semibold 600, `text-2xl` / `1.5rem` / `24px`, Line-height 1.25, `mb-2`): Main view headers and screen titles.
+- **Title (h2)** (Semibold 600, `text-xl` / `1.25rem` / `20px`, Line-height 1.3, `mb-2`): Section headings and major card titles.
+- **Subtitle (h3)** (Semibold 600, `text-lg` / `1.125rem` / `18px`, Line-height 1.35, `mb-2`): Subsection headings and dialog titles.
+- **Card Header (h4)** (Semibold 600, `text-base` / `1rem` / `16px`, Line-height 1.4, `mb-2`): Card titles and table group headers.
 - **Body** (Regular 400, `0.875rem` / `14px` to `1rem` / `16px`, Line-height 1.5): Standard reading text and form values. Max line length 65–75ch for narrative blocks.
-- **Section Label** (Bold 700, `0.75rem` / `12px`, Line-height 1.2, Tracking `0.05em`, Uppercase): Field group badges and table column headers (`.section-label`).
+- **Section Label** (Bold 700, `0.75rem` / `12px` [`text-xs`], Line-height 1.2, Tracking `0.05em`, Uppercase): Field group badges and table column headers (`.section-label`).
+
+#### Named Heading Utilities
+To compose cleanly inside `flex`/`gap` and `space-y` layouts without unwanted margin interference, named heading utility classes define explicit sizes with a deliberate `mb-0` (callers add explicit margin when needed):
+- **Page Heading (`.heading-page`)** (`text-lg sm:text-xl font-bold tracking-tight mb-0`): Primary page view titles and top-bar h1 headings.
+- **Section Heading (`.heading-section`)** (`text-base font-semibold tracking-tight mb-0`): Major card and section h2 headings.
+- **Subsection Heading (`.heading-subsection`)** (`text-sm font-semibold mb-0`): In-card h3 headings and compact panel groups.
+- **Section Label (`.section-label`)** (`text-xs font-bold uppercase tracking-wider text-muted-foreground`): Reusable field group badges and column subheadings.
 
 ### Named Rules
 **The Heading Balance Rule.** Major headings use `text-wrap: balance` and tight tracking (`-0.01em`) to prevent orphaned words and maintain compact vertical rhythm.
@@ -229,13 +251,12 @@ The DREAM layout is structured around a single-page clinical workstation model:
 Surfaces in DREAM are intentionally flat and architectural. Depth is established through subtle 1px border lines (`border border-border`) and tonal background shifts rather than heavy floating drop shadows.
 
 ### Shadow Vocabulary
-- **Resting Flat** (`box-shadow: none` / `border: 1px solid hsl(var(--border))`): Default state for cards, tables, and form sections.
-- **Resting Subtle** (`shadow-sm` / `0 1px 2px 0 rgb(0 0 0 / 0.05)`): Applied to top header and primary action cards.
-- **Interactive Hover** (`shadow-lg` / `0 10px 15px -3px rgb(0 0 0 / 0.1)` + `-translate-y-1`): Applied strictly to clickable card selection tiles (`.card-interactive`).
+- **Flat (Default)** (`box-shadow: none` / `border: 1px solid hsl(var(--border))`): Default state for cards (`elevation="flat"`), buttons, tables, and form sections.
+- **Raised** (`shadow-sm` / `0 1px 2px 0 rgb(0 0 0 / 0.05)`): Applied via `<Card elevation="raised">` for highlighted action cards, callouts, and error containers.
 - **Modal / Dialog** (`shadow-xl` / `0 20px 25px -5px rgb(0 0 0 / 0.1)`): Applied to dialog popups, dropdown menus, and slide-over sheets.
 
 ### Named Rules
-**The Flat-By-Default Rule.** Surfaces rest flat with clean 1px structural borders. Shadows exist only to indicate active elevation (modals, dropdowns) or interactive hover affordances.
+**The Flat-By-Default Rule.** Surfaces rest flat with clean 1px structural borders and no resting drop shadows. Shadows exist only for intentional raised variants (`elevation="raised"`) or floating overlays (modals, dropdowns, popovers).
 
 ## Shapes
 
@@ -248,17 +269,29 @@ DREAM adopts a strict, authoritative **sharp-corner form language** (`radius: 0`
 ## Components & Clinical Affordances
 
 ### Buttons
-- **Shape:** Rectangular (`rounded-none`).
-- **Primary:** Background `hsl(var(--primary))`, text `hsl(var(--primary-foreground))`, padding `8px 16px` (`h-10 px-4`), semibold font. Hover darkens or lifts subtly.
-- **Secondary:** Background `hsl(var(--secondary))`, text `hsl(var(--secondary-foreground))`, border `1px solid hsl(var(--border))`.
-- **Destructive:** Background `hsl(var(--destructive))`, text `hsl(var(--destructive-foreground))`.
-- **Ghost / Outline:** Transparent background, visible border or text on hover.
+- **Shape & Elevation:** Rectangular (`rounded-none`), flat by default with no resting shadow across all variants (`default`, `destructive`, `outline`, `secondary`, `ghost`, `link`).
+- **Primary:** Background `hsl(var(--primary))`, text `hsl(var(--primary-foreground))`, padding `8px 16px` (`h-9 px-4 py-2`), medium font (`text-sm font-medium`). Hover darkens (`hover:bg-primary/90`).
+- **Secondary:** Background `hsl(var(--secondary))`, text `hsl(var(--secondary-foreground))`, border `1px solid hsl(var(--border))`, hover `hover:bg-secondary/80`.
+- **Destructive:** Background `hsl(var(--destructive))`, text `hsl(var(--destructive-foreground))`, hover `hover:bg-destructive/90`.
+- **Ghost / Outline:** Outline has border `1px solid hsl(var(--input))` with background `hsl(var(--background))`; ghost is transparent background. Both use `hover:bg-accent hover:text-accent-foreground`.
 - **Interaction:** Micro-press tactile feedback (`active:scale-[0.96]`), visible focus ring with 2px offset (`focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`).
 
 ### Cards & Containers
-- **Shape:** Rectangular (`rounded-none`), border `1px solid hsl(var(--border))`, background `hsl(var(--card))`.
-- **Card Header:** Border-bottom `1px solid hsl(var(--border))` where distinct division is required; padding `16px 20px`.
-- **Interactive Card:** Card with `.card-interactive` class providing subtle hover lift and shadow for clickable patient or tool selection.
+- **Shape & Elevation:** Rectangular (`rounded-none`), border `1px solid hsl(var(--border))`, background `hsl(var(--card))`. Supports `elevation="flat"` (default, no shadow) and `elevation="raised"` (`shadow-sm`).
+- **Card Header:** Padding `p-4 sm:p-5 lg:p-6`. Supports optional `bordered` boolean prop (`bordered={true}`) emitting `pb-3 border-b border-border` when distinct section separation is required.
+- **Card Title:** Defaults to `text-base font-semibold leading-none tracking-tight text-primary dark:text-foreground` (customizable via `as` prop).
+- **Card Content:** Carries full consistent padding (`p-4 sm:p-5 lg:p-6`), matching the header and footer rhythm rather than forcing `pt-0`.
+- **Card Footer:** Padding `p-4 sm:p-5 lg:p-6 pt-0`.
+
+### Shared UI Patterns
+Reusable state and pattern components to compose instead of hand-rolling:
+- **EmptyState** (`src/shared/components/states/EmptyState.tsx`): Centred icon, title, optional description, and action button (`sm` and `md` sizes); use for empty list, search, or workflow state placeholders.
+- **TableEmptyRow** (`src/shared/components/states/TableEmptyRow.tsx`): `<tr><td colSpan>` table row wrapper around `EmptyState`; use for standardized empty states across all tabular data grids.
+- **LoadingState** (`src/shared/components/states/LoadingState.tsx`): Centred spinner and label built on `LoadingSpinner`; use for async view loading and React `Suspense` fallbacks.
+- **ErrorState** (`src/shared/components/states/ErrorState.tsx`): Centred flat-card error shell composing `<Card elevation="raised">` with `titleAs` heading control (`h2` / `h3`); use for `ErrorBoundary`, `ChunkErrorBoundary`, and `ScreenUnavailable`.
+- **StatTile** (`src/shared/components/StatTile.tsx`): Metric display with uppercase section label, large `tabular-nums` value, hint, and tone-tinted icon chip (`primary`, `warning`, `danger`, `neutral`); use for research and analytics summary KPI tiles.
+- **ChromeStatusBadge** (`src/core/components/navigation/ChromeStatusBadge.tsx`): Non-interactive status badge with `draft` ("Testing draft") and `report` ("Report active") variants and `compact` | `default` | `comfortable` sizing; use for top-bar status feedback.
+- **ThemeToggleButton** (`src/core/components/navigation/ThemeToggleButton.tsx`): Single-button light/dark theme switch with tooltip, supporting `masthead` (deep navy chrome) and `card` (standard surface) variants; use for theme toggles in headers and menus.
 
 ### Form Inputs & Textareas
 - **Shape:** Rectangular (`rounded-none`), border `1px solid hsl(var(--input))`, background `hsl(var(--background))` or `hsl(var(--card))`.

@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui';
+import { ErrorState } from '@shared/components/states';
 import { captureException } from '@/src/lib/sentry';
 
 interface Props {
@@ -59,64 +60,63 @@ class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen flex items-center justify-center bg-background p-4">
-          <div className="max-w-md w-full">
-            <div className="bg-card rounded-none shadow-lg p-6 text-center">
-              <div className="flex justify-center mb-4">
-                <AlertTriangle className="h-12 w-12 text-red-500" aria-hidden="true" />
-              </div>
-              <h2 className="text-xl font-semibold text-foreground mb-2">
-                Something went wrong
-              </h2>
-              <p className="text-muted-foreground mb-2">
-                An unexpected error occurred. Don't worry, your data is safe.
-              </p>
-              <p className="text-sm text-muted-foreground mb-6">
-                Try these steps to recover:
-              </p>
-              <div className="space-y-3 text-left mb-6">
-                <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
-                  <li>Click <strong>"Try Again"</strong> to reset the current screen</li>
-                  <li>Click <strong>"Reload Page"</strong> to refresh the application</li>
-                  <li>If the issue persists, contact IT support and quote the error ID below</li>
-                </ol>
-              </div>
-              <div className="space-y-3">
-                <Button onClick={this.handleReset} className="w-full" aria-label="Try again">
-                  <RefreshCw className="w-4 h-4 mr-2" aria-hidden="true" />
-                  Try Again
-                </Button>
-                <Button
-                  onClick={() => window.location.reload()}
-                  variant="outline"
-                  className="w-full"
-                  aria-label="Reload the page"
-                >
-                  Reload Page
-                </Button>
-              </div>
-              {this.state.errorId && (
-                <p className="mt-4 text-xs text-muted-foreground font-mono">
-                  Error ID: {this.state.errorId}
-                </p>
-              )}
-              {this.state.error && import.meta.env.DEV && (
-                <details className="mt-4 text-left">
-                  <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
-                    Error Details (development only)
-                  </summary>
-                  <div className="mt-2 text-xs bg-muted p-3 rounded overflow-auto space-y-2">
-                    <div><strong>Message:</strong> {this.state.error.message}</div>
-                    {this.state.error.stack && (
-                      <div>
-                        <strong>Stack:</strong>
-                        <pre className="mt-1 whitespace-pre-wrap text-xs">{this.state.error.stack}</pre>
-                      </div>
-                    )}
-                  </div>
-                </details>
-              )}
+          <ErrorState
+            icon={<AlertTriangle className="h-12 w-12 text-status-danger" aria-hidden="true" />}
+            title="Something went wrong"
+            actions={
+              <>
+                <div className="space-y-3">
+                  <Button onClick={this.handleReset} className="w-full" aria-label="Try again">
+                    <RefreshCw className="w-4 h-4 mr-2" aria-hidden="true" />
+                    Try Again
+                  </Button>
+                  <Button
+                    onClick={() => window.location.reload()}
+                    variant="outline"
+                    className="w-full"
+                    aria-label="Reload the page"
+                  >
+                    Reload Page
+                  </Button>
+                </div>
+                {this.state.errorId && (
+                  <p className="mt-4 text-xs text-muted-foreground font-mono">
+                    Error ID: {this.state.errorId}
+                  </p>
+                )}
+                {this.state.error && import.meta.env.DEV && (
+                  <details className="mt-4 text-left">
+                    <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
+                      Error Details (development only)
+                    </summary>
+                    <div className="mt-2 text-xs bg-muted p-3 rounded overflow-auto space-y-2">
+                      <div><strong>Message:</strong> {this.state.error.message}</div>
+                      {this.state.error.stack && (
+                        <div>
+                          <strong>Stack:</strong>
+                          <pre className="mt-1 whitespace-pre-wrap text-xs">{this.state.error.stack}</pre>
+                        </div>
+                      )}
+                    </div>
+                  </details>
+                )}
+              </>
+            }
+          >
+            <p className="text-muted-foreground mb-2">
+              An unexpected error occurred. Don't worry, your data is safe.
+            </p>
+            <p className="text-sm text-muted-foreground mb-6">
+              Try these steps to recover:
+            </p>
+            <div className="space-y-3 text-left">
+              <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
+                <li>Click <strong>"Try Again"</strong> to reset the current screen</li>
+                <li>Click <strong>"Reload Page"</strong> to refresh the application</li>
+                <li>If the issue persists, contact IT support and quote the error ID below</li>
+              </ol>
             </div>
-          </div>
+          </ErrorState>
         </div>
       );
     }

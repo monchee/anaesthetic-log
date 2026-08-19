@@ -401,16 +401,6 @@
 }
 
 @layer components {
-  /* Standard card styling */
-  .card-compact {
-    @apply bg-card border border-border rounded-none p-4 shadow-sm;
-  }
-
-  /* Card with hover effect */
-  .card-interactive {
-    @apply card-compact hover:shadow-lg hover:-translate-y-1 transition-[transform,box-shadow] duration-200;
-  }
-
   /* Standard transitions */
   .transition-standard {
     @apply transition-[color,background-color,border-color,transform,opacity,box-shadow] duration-150 ease-out;
@@ -434,6 +424,20 @@
      Uses rem so it scales correctly with the FontSizeProvider (85%–125%). */
   .section-label {
     @apply text-xs font-bold uppercase tracking-wider text-muted-foreground;
+  }
+
+  /* Named heading scale with zero bottom margin for clean composition
+     inside flex/gap and space-y layouts. Callers add explicit margin when needed. */
+  .heading-page {
+    @apply text-lg sm:text-xl font-bold tracking-tight mb-0;
+  }
+
+  .heading-section {
+    @apply text-base font-semibold tracking-tight mb-0;
+  }
+
+  .heading-subsection {
+    @apply text-sm font-semibold mb-0;
   }
 
   /* Screen-level entrance animation */
@@ -632,8 +636,7 @@
   }
 
   .btn-press,
-  .hover-scale,
-  .card-interactive {
+  .hover-scale {
     transition: none !important;
     transform: none !important;
   }
@@ -656,15 +659,15 @@ html {
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold text-[var(--primary)] leading-tight;
+    @apply font-semibold text-foreground leading-tight;
     letter-spacing: -0.01em;
     text-wrap: balance;
   }
 
-  h1 { @apply text-3xl mb-4 sm:mb-5 lg:mb-6; }
-  h2 { @apply text-2xl mb-3 sm:mb-3.5 lg:mb-4; }
-  h3 { @apply text-xl mb-3; }
-  h4 { @apply text-lg font-semibold mb-2; }
+  h1 { @apply text-2xl mb-2; }
+  h2 { @apply text-xl mb-2; }
+  h3 { @apply text-lg mb-2; }
+  h4 { @apply text-base mb-2; }
 }
 
 @layer components {
@@ -683,19 +686,11 @@ html {
    intentional and must not be overridden.                                   */
 @layer utilities {
   /* ── Text ──────────────────────────────────────────────────────────────── */
-  .dark .text-slate-900 { color: hsl(var(--foreground)); }
-  .dark .text-slate-800 { color: hsl(var(--foreground)); }
   .dark .text-slate-700 { color: hsl(var(--foreground) / 0.8); }
   .dark .text-slate-600 { color: hsl(var(--muted-foreground)); }
   .dark .text-slate-500 { color: hsl(var(--muted-foreground)); }
   .dark .text-slate-400 { color: hsl(var(--muted-foreground) / 0.8); }
 
   /* ── Borders ────────────────────────────────────────────────────────────── */
-  .dark .border-slate-100 { border-color: hsl(var(--border)); }
-  .dark .border-slate-200 { border-color: hsl(var(--border)); }
   .dark .border-slate-300 { border-color: hsl(var(--border)); }
-
-  /* ── Dividers ────────────────────────────────────────────────────────────── */
-  .dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: hsl(var(--border)); }
-  .dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: hsl(var(--border)); }
 }

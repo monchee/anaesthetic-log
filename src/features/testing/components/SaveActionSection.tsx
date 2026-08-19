@@ -24,7 +24,7 @@ export function SaveActionSection({ validationErrors, errorSummaryRef, onSave }:
           className="rounded-none border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive space-y-1 outline-none focus-visible:ring-2 focus-visible:ring-destructive"
         >
           <p className="font-semibold">Please fix the following before saving:</p>
-          <ul className="list-disc list-inside space-y-0.5">
+          <ul className="list-disc list-inside space-y-1">
             {validationErrors.map((error, index) => (
               <li key={index}>
                 <a className="underline underline-offset-2 hover:text-destructive/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-destructive" href={`#${error.fieldId}`}>{error.message}</a>

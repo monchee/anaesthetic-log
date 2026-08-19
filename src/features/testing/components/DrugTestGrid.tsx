@@ -10,6 +10,7 @@ import { X, Plus, Check, ChevronDown } from 'lucide-react';
 import { DrugTestRow, DrugProtocol } from '@shared/types';
 import { CATEGORY_THEMES, DEFAULT_THEME, SKIN_TEST_POSITIVE_THRESHOLD } from '@shared/utils/constants';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
+import { EmptyState } from '@shared/components/states';
 
 interface DrugTestGridProps {
   testPanel: DrugTestRow[];
@@ -259,9 +260,10 @@ export const DrugTestGrid: React.FC<DrugTestGridProps> = ({
 }) => {
   if (testPanel.length === 0) {
     return (
-      <div className="text-center py-10 bg-card rounded-none border border-dashed border-border">
-        <p className="text-muted-foreground text-sm">No drugs selected. Choose a category above to begin.</p>
-      </div>
+      <EmptyState
+        title="No drugs selected. Choose a category above to begin."
+        className="bg-card rounded-none border border-dashed border-border"
+      />
     );
   }
 

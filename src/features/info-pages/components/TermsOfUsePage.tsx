@@ -10,15 +10,15 @@ interface TermsOfUsePageProps {
 const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6 space-y-6">
+      <Card className="border-border">
+        <CardContent className="space-y-6">
 
           {/* Introduction */}
           <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
             <div className="flex items-start gap-4">
               <Gavel className="w-8 h-8 text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-foreground mb-2">Terms of Use</h3>
+                <h3>Terms of Use</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   Welcome to The DREAM App. By accessing or using this application, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use this application.
                 </p>
@@ -33,7 +33,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <UserCheck className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">1. Acceptance of Terms</h4>
+              <h4 className="mb-0">1. Acceptance of Terms</h4>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>
@@ -47,7 +47,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
 
           {/* Permitted Use */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">2. Permitted Use</h4>
+            <h4 className="mb-4">2. Permitted Use</h4>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>This application is intended for use by:</p>
               <ul className="space-y-2 ml-4">
@@ -72,7 +72,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
 
           {/* User Responsibilities */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">3. User Responsibilities</h4>
+            <h4 className="mb-4">3. User Responsibilities</h4>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>As a user of this application, you agree to:</p>
               <ul className="space-y-2 ml-4">
@@ -104,7 +104,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Copyright className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">4. Intellectual Property</h4>
+              <h4 className="mb-0">4. Intellectual Property</h4>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>
@@ -121,7 +121,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-status-warning shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-status-warning mb-2">5. Medical Disclaimer</h4>
+                <h4 className="text-status-warning mb-2">5. Medical Disclaimer</h4>
                 <div className="text-sm text-foreground/90 space-y-2">
                   <p>
                     This application is a clinical support tool designed to assist healthcare professionals. It does not provide medical advice and should not replace professional clinical judgment.
@@ -136,7 +136,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
 
           {/* No Warranty */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">6. No Warranty</h4>
+            <h4 className="mb-4">6. No Warranty</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 This application is provided "as is" without warranty of any kind, whether express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
@@ -149,7 +149,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
 
           {/* Limitation of Liability */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">7. Limitation of Liability</h4>
+            <h4 className="mb-4">7. Limitation of Liability</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 To the fullest extent permitted by law, Sydney Local Health District, RPAH, and their officers, employees, and agents shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from or related to your use of the application.
@@ -162,7 +162,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
 
           {/* Termination */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">8. Termination</h4>
+            <h4 className="mb-4">8. Termination</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 Sydney Local Health District reserves the right to suspend or terminate access to this application at any time, with or without notice, for any reason, including but not limited to breach of these Terms of Use.
@@ -172,7 +172,7 @@ const TermsOfUsePage: React.FC<TermsOfUsePageProps> = ({ setScreen }) => {
 
           {/* Governing Law */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">9. Governing Law</h4>
+            <h4 className="mb-4">9. Governing Law</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 These Terms of Use are governed by and construed in accordance with the laws of New South Wales, Australia. You agree to submit to the exclusive jurisdiction of the courts of New South Wales.

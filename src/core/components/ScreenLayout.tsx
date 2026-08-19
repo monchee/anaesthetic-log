@@ -13,6 +13,7 @@ import { useChromeHeight } from '@core/hooks/useChromeHeight';
 import { CSVUploadInstructions } from '@features/dashboard/components/CSVUploadInstructions';
 import { useRedcapCsvUpload } from '@shared/hooks/useRedcapCsvUpload';
 import { ChunkErrorBoundary } from './ChunkErrorBoundary';
+import { LoadingState } from '@shared/components/states';
 import { cn } from '@/lib/utils';
 
 export interface ScreenChrome {
@@ -190,7 +191,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
                     </div>
                   )}
                   <div className="min-w-0">
-                    <h1 className="text-lg sm:text-xl font-bold tracking-tight leading-snug break-words m-0 text-foreground">
+                    <h1 className="heading-page leading-snug break-words">
                       {title}
                     </h1>
                     {subtitle && (
@@ -250,10 +251,7 @@ export const ScreenLayout: React.FC<ScreenLayoutProps> = ({
               <React.Suspense
                 fallback={
                   <div className="flex-1 flex flex-col items-center justify-center p-12 text-muted-foreground min-h-[50vh]">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="h-8 w-8 rounded-none border-2 border-primary/20 border-t-primary animate-spin" />
-                      <span className="text-sm font-medium animate-pulse">Loading content...</span>
-                    </div>
+                    <LoadingState label="Loading content..." size="lg" />
                   </div>
                 }
               >

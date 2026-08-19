@@ -22,7 +22,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
   const { avoidList } = buildRecommendations(posResults, crossSensitized);
 
   return (
-    <Card className="rounded-none overflow-hidden print:overflow-visible print:shadow-none print:border-none">
+    <Card className="overflow-hidden print:overflow-visible print:shadow-none print:border-none">
         <ReportPrintIdentity
           patientName={patientName}
           mrn={redact(data.mrn)}
@@ -39,7 +39,7 @@ const PatientHandout = ({ data, activeReportSavedAt }: PatientHandoutProps) => {
           </div>
         </div>
 
-        <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 md:space-y-10 print:p-3 print:space-y-2">
+        <CardContent className="p-4 md:p-8 lg:p-12 space-y-8 print:p-3 print:space-y-2">
            
            {/* Header Info */}
             <div className="section-card bg-muted border border-border rounded-none p-4 grid grid-cols-1 sm:grid-cols-3 gap-4 print:grid-cols-3 print:bg-white print:border-slate-300 print:p-2">

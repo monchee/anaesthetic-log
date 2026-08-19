@@ -10,15 +10,15 @@ interface ClinicalGovernancePageProps {
 const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6 space-y-6">
+      <Card className="border-border">
+        <CardContent className="space-y-6">
 
           {/* Introduction */}
           <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
             <div className="flex items-start gap-4">
               <Hospital className="w-8 h-8 text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-foreground mb-2">RPAH Clinical Governance Framework</h3>
+                <h3>RPAH Clinical Governance Framework</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   This application operates under the clinical governance framework of the Royal Prince Alfred Hospital (RPAH) Department of Clinical Immunology & Allergy, within the Sydney Local Health District (SLHD). Our governance practices align with the National Safety and Quality Health Service (NSQHS) Standards and the Australian Digital Health Agency's Clinical Governance Framework for digital health solutions.
                 </p>
@@ -30,7 +30,7 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Award className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Governance Structure</h4>
+              <h4 className="mb-0">Governance Structure</h4>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>The application is developed and maintained under the oversight of:</p>
@@ -59,7 +59,7 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <AlertTriangle className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Clinical Safety and Risk Management</h4>
+              <h4 className="mb-0">Clinical Safety and Risk Management</h4>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>We maintain clinical safety through:</p>
@@ -92,7 +92,7 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Users className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Partnership with Consumers</h4>
+              <h4 className="mb-0">Partnership with Consumers</h4>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>We engage with patients and consumers to ensure our services meet their needs:</p>
@@ -121,7 +121,7 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <FileCheck className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Clinical Effectiveness and Quality Improvement</h4>
+              <h4 className="mb-0">Clinical Effectiveness and Quality Improvement</h4>
             </div>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>We are committed to continuous improvement and evidence-based practice:</p>
@@ -148,7 +148,7 @@ const ClinicalGovernancePage: React.FC<ClinicalGovernancePageProps> = ({ setScre
 
           {/* Alignment with Standards */}
           <div className="bg-card rounded-none p-5 border border-border">
-            <h4 className="font-semibold text-foreground mb-4">Alignment with National Standards</h4>
+            <h4 className="mb-4">Alignment with National Standards</h4>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>This application aligns with the following frameworks:</p>
               <div className="grid md:grid-cols-2 gap-3 mt-3">

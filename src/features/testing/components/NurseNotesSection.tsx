@@ -12,8 +12,8 @@ export interface NurseNotesSectionProps {
 
 export function NurseNotesSection({ nurseNotes, onChange, isOpen, setIsOpen }: NurseNotesSectionProps) {
   return (
-    <Card style={{ '--section-index': 5 } as React.CSSProperties} className="animate-section-reveal rounded-none border-border">
-      <CardHeader className="pb-3 border-b border-border bg-card">
+    <Card style={{ '--section-index': 5 } as React.CSSProperties} className="animate-section-reveal border-border">
+      <CardHeader bordered className="bg-card">
         <button type="button" className="flex items-center justify-between w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-none p-0.5" onClick={() => setIsOpen(open => !open)}>
           <CardTitle className="flex items-center gap-2 text-base text-foreground">
             <div className="bg-primary/10 dark:bg-primary/20 p-1.5 rounded-none">
@@ -26,7 +26,7 @@ export function NurseNotesSection({ nurseNotes, onChange, isOpen, setIsOpen }: N
         </button>
       </CardHeader>
       {isOpen && (
-        <CardContent className="pt-6 space-y-5">
+        <CardContent className="space-y-4">
           {([
             ['preTesting', 'nurse-pre', 'Pre-Testing Observations', 'e.g. consent obtained, vitals stable, IV access established...'],
             ['duringTesting', 'nurse-during', 'During Testing', 'e.g. patient tolerated well, no adverse events observed...'],

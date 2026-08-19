@@ -10,15 +10,15 @@ interface AboutPageProps {
 const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
   return (
     <div className="py-4 sm:p-6 space-y-6">
-      <Card className="rounded-none border-border shadow-none">
-        <CardContent className="pt-6 space-y-6">
+      <Card className="border-border">
+        <CardContent className="space-y-6">
 
           {/* Introduction */}
           <div className="bg-primary/5 dark:bg-primary/10 rounded-none p-5 sm:p-6 border border-primary/20">
             <div className="flex items-start gap-4">
               <Stethoscope className="w-8 h-8 text-primary shrink-0" />
               <div>
-                <h3 className="font-semibold text-lg text-foreground mb-2">The DREAM App</h3>
+                <h3>The DREAM App</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   The Royal Prince Alfred Hospital (RPAH) Anaesthetic Allergy Clinic is a specialist service
                   for patients who have experienced a suspected allergic reaction during an anaesthetic.
@@ -34,7 +34,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
                 <Target className="w-5 h-5 text-primary" />
-                <h4 className="font-semibold text-foreground">Purpose</h4>
+                <h4 className="mb-0">Purpose</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 This tool helps clinicians prepare for allergy clinic appointments — quickly reviewing
@@ -46,7 +46,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
             <div className="bg-card rounded-none p-5 border border-border">
               <div className="flex items-center gap-2 mb-3">
                 <Shield className="w-5 h-5 text-primary" />
-                <h4 className="font-semibold text-foreground">Data Privacy</h4>
+                <h4 className="mb-0">Data Privacy</h4>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 During normal clinical use, patient data is processed in your browser from local
@@ -60,7 +60,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
           <div className="bg-card rounded-none p-5 border border-border">
             <div className="flex items-center gap-2 mb-4">
               <Users className="w-5 h-5 text-primary" />
-              <h4 className="font-semibold text-foreground">Key Features</h4>
+              <h4 className="mb-0">Key Features</h4>
             </div>
             <ul className="grid sm:grid-cols-2 gap-3">
               {[

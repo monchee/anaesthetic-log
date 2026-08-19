@@ -143,7 +143,7 @@ const PasswordGate: React.FC<PasswordGateProps> = ({ children }) => {
 
           {/* Right Column / Rectangular PIN Module */}
           <div className="md:col-span-7 bg-card text-card-foreground p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
-            <Card className="border-0 bg-transparent shadow-none p-0">
+            <Card className="border-0 bg-transparent p-0">
               <CardHeader className="p-0 pb-6 text-left">
                 <CardTitle className="text-xl sm:text-2xl font-semibold tracking-tight text-foreground">
                   Screen Lock

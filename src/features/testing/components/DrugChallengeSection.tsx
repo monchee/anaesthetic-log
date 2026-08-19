@@ -24,7 +24,7 @@ export function DrugChallengeSection({
 }: DrugChallengeSectionProps) {
   return (
     <Card style={{ '--section-index': 2 } as React.CSSProperties} className="animate-section-reveal">
-      <CardHeader className="pb-3 border-b border-border">
+      <CardHeader bordered>
         <CardTitle className="flex items-center gap-2 text-base text-foreground">
           <div className="bg-primary/10 dark:bg-card/40 p-1.5 rounded-none">
             <Syringe className="w-4 h-4 text-primary dark:text-primary" />
@@ -32,7 +32,7 @@ export function DrugChallengeSection({
           Drug Challenge
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-6 space-y-6">
+      <CardContent className="space-y-6">
         <button
           id="challenge-proceed-switch"
           type="button"
