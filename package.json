@@ -20,7 +20,8 @@
     "test:coverage": "vitest --coverage",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:ci": "npm run build && CI=1 playwright test --project=chromium --grep-invert @visual"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",

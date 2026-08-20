@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '20'
           cache: 'npm'
@@ -40,10 +40,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '20'
           cache: 'npm'
@@ -54,17 +54,11 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      # Playwright serves dist/ via `npm run preview` when CI is set, so the
-      # app must be built first. Without this the preview server has nothing
-      # to serve and every test times out waiting for the app to render.
-      - name: Build
-        run: npm run build
-
       - name: Run Playwright tests
-        run: npx playwright test --project=chromium --grep-invert @visual
+        run: npm run test:e2e:ci
 
       - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
@@ -83,19 +77,18 @@ jobs:
       - name: Check Cloudflare credentials
         id: check_credentials
         run: |
-          if [ -n "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "configured=true" >> "$GITHUB_OUTPUT"
-            echo "Cloudflare credentials detected; proceeding with deployment."
-          else
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "Deploy skipped: no Cloudflare credentials configured."
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "Error: Missing Cloudflare credentials. Both CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID must be set." >&2
+            exit 1
           fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+          echo "Cloudflare credentials detected; proceeding with deployment."
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '20'
           cache: 'npm'
