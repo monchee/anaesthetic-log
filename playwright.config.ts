@@ -11,6 +11,10 @@ export default defineConfig({
     baseURL: process.env.CI ? 'http://localhost:4173' : 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    // Pin the browser clock to the clinic's timezone. Tests that assert a
+    // formatted wall-clock time would otherwise pass only on a machine set to
+    // Sydney and fail on CI runners, which are UTC.
+    timezoneId: 'Australia/Sydney',
   },
   projects: [
     {
