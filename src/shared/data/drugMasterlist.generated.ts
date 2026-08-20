@@ -51,7 +51,7 @@ export const GENERATED_PROTOCOLS: DrugProtocol[] = [
     protocolLabel: "IV",
     sourceSlug: "cis-atracurium",
     underReview: false,
-    lastReviewed: "2026-08-20",
+    lastReviewed: "2026-03-28",
   },
   {
     id: "iv",
@@ -66,7 +66,7 @@ export const GENERATED_PROTOCOLS: DrugProtocol[] = [
     protocolLabel: "IV",
     sourceSlug: "pancuronium",
     underReview: false,
-    lastReviewed: "2026-08-20",
+    lastReviewed: "2026-03-28",
   },
   {
     id: "iv",
@@ -81,7 +81,7 @@ export const GENERATED_PROTOCOLS: DrugProtocol[] = [
     protocolLabel: "IV",
     sourceSlug: "rocuronium",
     underReview: false,
-    lastReviewed: "2026-08-20",
+    lastReviewed: "2026-03-28",
   },
   {
     id: "iv",
@@ -96,7 +96,7 @@ export const GENERATED_PROTOCOLS: DrugProtocol[] = [
     protocolLabel: "IV",
     sourceSlug: "suxamethonium",
     underReview: false,
-    lastReviewed: "2026-08-20",
+    lastReviewed: "2026-03-28",
   },
   {
     id: "iv",
@@ -111,6 +111,6 @@ export const GENERATED_PROTOCOLS: DrugProtocol[] = [
     protocolLabel: "IV",
     sourceSlug: "vecuronium",
     underReview: false,
-    lastReviewed: "2026-08-20",
+    lastReviewed: "2026-03-28",
   },
 ];
