@@ -134,6 +134,8 @@ The deploy script runs a production build and then publishes with:
 wrangler pages deploy dist --project-name dream --commit-dirty=true --branch main
 ```
 
+For automated CI/CD deployment instructions, see [MAINTAINERS.md](MAINTAINERS.md). For service ownership, credentials, domain risks, and fallback procedures, see [HANDOVER.md](HANDOVER.md).
+
 ## Project Structure
 
 ```text
@@ -152,7 +154,9 @@ src/
 
 ## Known Operational Notes
 
-- GitHub Actions validate pushes and pull requests to `main`.
+- GitHub Actions validate pushes and pull requests to `main`, with automated deployment to Cloudflare Pages on push to `main` when `CLOUDFLARE_API_TOKEN` is configured.
+- Maintainer runbook and testing scripts are documented in [MAINTAINERS.md](MAINTAINERS.md).
+- Succession inventory, credential rotation, and continuity plans are documented in [HANDOVER.md](HANDOVER.md).
 - Branch protection is not configured because GitHub reports it is unavailable for this private repository without GitHub Pro.
 - Production assets are split into dedicated vendor chunks (React runtime, Supabase, Sentry, Radix UI, forms, and icons) so production builds stay well within chunk-size limits without warnings.
 - `/manifest.webmanifest` is generated from the Vite PWA configuration. The Vite config is the manifest source of truth.
