@@ -49,13 +49,18 @@ This document provides a comprehensive inventory of services, secrets, external 
 - **Current State**: [dream.yuson.au](https://dream.yuson.au) is mapped via DNS to Cloudflare Pages.
 - **Succession Risk**: `yuson.au` is a **personal domain** owned by the original author. If the personal domain lapses or becomes unavailable, the custom URL will stop resolving.
 - **Domain Independence**: In `vite.config.ts`, `base: './'` is configured, ensuring all bundle assets and routes use relative paths. The application is completely domain-agnostic and functions identically under any hostname, subdirectory, or port.
-- **Fallback URL**: The Cloudflare-provided domain [dream.pages.dev](https://dream.pages.dev) is always available as an immediate fallback.
+- **Fallback URL**: [anaesthetic-allergy-log-7ya.pages.dev](https://anaesthetic-allergy-log-7ya.pages.dev)
+  — **not** `dream.pages.dev`, which does not resolve. A Pages project's `*.pages.dev` hostname is
+  fixed when the project is first created and does not follow later renames; this project was
+  originally created under a different name. Verified serving the same production build as the
+  custom domain (identical asset hashes). Confirm this URL still resolves whenever you touch the
+  Cloudflare project — it is the address a successor falls back to if the personal domain lapses.
 - **Migration to a New Domain (e.g., Hospital / NSW Health Domain)**:
   1. In Cloudflare Pages Dashboard, navigate to **dream** > **Custom domains** > **Set up a custom domain**.
   2. Enter the new FQDN (e.g. `dream.allergy.rpah.health.nsw.gov.au` or `dream.yourhospital.org.au`).
   3. In the hospital/department DNS provider, create a `CNAME` record:
      - **Host / Name**: `dream` (or desired subdomain)
-     - **Target / Value**: `dream.pages.dev`
+     - **Target / Value**: `anaesthetic-allergy-log-7ya.pages.dev`
   4. Cloudflare automatically provisions and renews SSL/TLS certificates for the custom domain.
   5. Update clinic bookmarks and PWA shortcuts.
 
