@@ -1,5 +1,5 @@
-import { execSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
+import expectedOrder from './expectedProtocolOrder.json';
 import {
   DRUG_MASTERLIST,
   DREAM_ONLY_PROTOCOLS,
@@ -59,42 +59,31 @@ describe('drugMasterlist structure & integrity', () => {
 });
 
 describe('drugMasterlist array ordering & backwards compatibility', () => {
-  it('preserves exact positional ordering of all 116 records compared to git HEAD', () => {
-    const oldFileContent = execSync(
-      'GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1 git show HEAD:src/shared/data/drugMasterlist.ts',
-      { encoding: 'utf8' }
-    );
-
-    const oldTuples: { drugName: string; testType: string; protocolLabel: string }[] = [];
-    const recordRegex = /\{\s*drugName:\s*['"]([^'"]+)['"][\s\S]*?testType:\s*['"]([^'"]+)['"][\s\S]*?protocolLabel:\s*['"]([^'"]*)['"]/g;
-
-    let m;
-    while ((m = recordRegex.exec(oldFileContent)) !== null) {
-      oldTuples.push({
-        drugName: m[1],
-        testType: m[2],
-        protocolLabel: m[3],
-      });
-    }
-
-    expect(oldTuples).toHaveLength(116);
+  // DREAM selects protocol variants by array index (protocolIndex), so a positional
+  // shift silently re-points a saved clinical plan at a different dose. The expected
+  // order is a committed fixture rather than a `git show` of a previous revision:
+  // that baseline disappears the moment this change merges, and a check that quietly
+  // stops working is worse than no check.
+  it('preserves the frozen positional ordering of all 116 records', () => {
+    expect(expectedOrder.count).toBe(116);
+    expect(expectedOrder.order).toHaveLength(116);
     expect(DRUG_MASTERLIST).toHaveLength(116);
 
-    for (let i = 0; i < 116; i++) {
-      const oldRec = oldTuples[i];
-      const newRec = DRUG_MASTERLIST[i];
-      expect(newRec.drugName, `Position ${i} drugName mismatch`).toBe(oldRec.drugName);
-      expect(newRec.testType, `Position ${i} testType mismatch`).toBe(oldRec.testType);
-      expect(newRec.protocolLabel, `Position ${i} protocolLabel mismatch`).toBe(oldRec.protocolLabel);
+    for (let i = 0; i < expectedOrder.order.length; i++) {
+      const want = expectedOrder.order[i];
+      const got = DRUG_MASTERLIST[i];
+      expect(got.drugName, `Position ${i} drugName mismatch`).toBe(want.drugName);
+      expect(got.testType, `Position ${i} testType mismatch`).toBe(want.testType);
+      expect(got.protocolLabel, `Position ${i} protocolLabel mismatch`).toBe(want.protocolLabel);
     }
   });
 });
 
 describe('drugMasterlist diluents & snapshot data', () => {
   it('uses sourced diluent values for representative RTU and reconstitution-volume drugs', () => {
-    expect(getSkinProtocolsForDrug('Rocuronium')[0].diluent).toBe('Normal saline (NS)');
-    expect(getSkinProtocolsForDrug('Cis-atracurium')[0].diluent).toBe('Normal saline (NS)');
-    expect(getSkinProtocolsForDrug('Vecuronium')[0].diluent).toBe('Normal saline (reconstitute with 2.5 mL WFI)');
+    expect(getSkinProtocolsForDrug('Rocuronium')[0].diluent).toBe('0.9% sodium chloride');
+    expect(getSkinProtocolsForDrug('Cis-atracurium')[0].diluent).toBe('0.9% sodium chloride');
+    expect(getSkinProtocolsForDrug('Vecuronium')[0].diluent).toBe('0.9% sodium chloride (reconstitute with 2.5 mL WFI)');
     expect(getSkinProtocolsForDrug('Cefazolin')[0].diluent).toBe('0.9% sodium chloride (reconstitute with 10 mL WFI)');
     expect(getSkinProtocolsForDrug('Pantoprazole')[0].diluent).toBe('0.9% sodium chloride (reconstitute with 10 mL)');
     expect(getSkinProtocolsForDrug('Penicillin Major')[0].diluent).toBe('Phosphate-buffered saline (1 mL supplied diluent — not plain saline)');
@@ -104,7 +93,7 @@ describe('drugMasterlist diluents & snapshot data', () => {
     const rocuronium = getSkinProtocolsForDrug('Rocuronium')[0];
     expect(rocuronium.sourceSlug).toBe('rocuronium');
     expect(rocuronium.underReview).toBe(false);
-    expect(rocuronium.lastReviewed).toBe('2026-03-28');
+    expect(rocuronium.lastReviewed).toBe('2026-08-20');
     expect(rocuronium.id).toBe('iv');
   });
 

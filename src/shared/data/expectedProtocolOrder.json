@@ -1,0 +1,587 @@
+{
+  "_comment": "Frozen positional order of DRUG_MASTERLIST as it existed before generation from SCRATCH. DREAM selects protocol variants by array index, so a shift here re-points saved clinical plans at different doses. Captured from origin/main at the Phase 2 cutover. Only change this deliberately, alongside a migration for stored protocolIndex values.",
+  "capturedFrom": "origin/main @ pre-snapshot cutover",
+  "count": 116,
+  "order": [
+    {
+      "drugName": "Cis-atracurium",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Rocuronium",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Pancuronium",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Vecuronium",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Suxamethonium",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Sugammadex (Alone)",
+      "testType": "skin",
+      "protocolLabel": "Alone"
+    },
+    {
+      "drugName": "Sugammadex (+ Rocuronium)",
+      "testType": "skin",
+      "protocolLabel": "+ Rocuronium"
+    },
+    {
+      "drugName": "Penicillin Major",
+      "testType": "skin",
+      "protocolLabel": "PPL"
+    },
+    {
+      "drugName": "Penicillin Minor",
+      "testType": "skin",
+      "protocolLabel": "MD"
+    },
+    {
+      "drugName": "Ampicillin",
+      "testType": "skin",
+      "protocolLabel": "Neat SPT"
+    },
+    {
+      "drugName": "Ampicillin",
+      "testType": "skin",
+      "protocolLabel": "1:5 SPT"
+    },
+    {
+      "drugName": "Ampicillin",
+      "testType": "control",
+      "protocolLabel": "Control"
+    },
+    {
+      "drugName": "Amoxycillin",
+      "testType": "skin",
+      "protocolLabel": "Neat SPT"
+    },
+    {
+      "drugName": "Amoxycillin",
+      "testType": "skin",
+      "protocolLabel": "1:5 SPT"
+    },
+    {
+      "drugName": "Benzylpenicillin",
+      "testType": "skin",
+      "protocolLabel": "1:1,000 start"
+    },
+    {
+      "drugName": "Benzylpenicillin",
+      "testType": "skin",
+      "protocolLabel": "1:100 start"
+    },
+    {
+      "drugName": "Benzylpenicillin",
+      "testType": "control",
+      "protocolLabel": "Control"
+    },
+    {
+      "drugName": "Augmentin",
+      "testType": "skin",
+      "protocolLabel": "1:1,000 start"
+    },
+    {
+      "drugName": "Augmentin",
+      "testType": "skin",
+      "protocolLabel": "1:100 start"
+    },
+    {
+      "drugName": "Cephalexin",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Tazocin",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Methoxybenzylpenicillin",
+      "testType": "skin",
+      "protocolLabel": ""
+    },
+    {
+      "drugName": "Cefazolin",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Cefepime",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Cefotaxime",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Ceftazidime",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Ceftriaxone",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Cefuroxime",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Midazolam",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Propofol",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Ketamine",
+      "testType": "skin",
+      "protocolLabel": "1:1,000 start"
+    },
+    {
+      "drugName": "Ketamine",
+      "testType": "skin",
+      "protocolLabel": "1:100 start"
+    },
+    {
+      "drugName": "Thiopental",
+      "testType": "skin",
+      "protocolLabel": "1:1,000 start"
+    },
+    {
+      "drugName": "Thiopental",
+      "testType": "skin",
+      "protocolLabel": "1:100 start"
+    },
+    {
+      "drugName": "Lignocaine",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Mepivacaine",
+      "testType": "skin",
+      "protocolLabel": "Epidural"
+    },
+    {
+      "drugName": "Bupivacaine",
+      "testType": "skin",
+      "protocolLabel": "Epidural"
+    },
+    {
+      "drugName": "Ropivacaine",
+      "testType": "skin",
+      "protocolLabel": "Epidural Protocol 1"
+    },
+    {
+      "drugName": "Ropivacaine",
+      "testType": "skin",
+      "protocolLabel": "Epidural Protocol 2"
+    },
+    {
+      "drugName": "Alfentanil",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Fentanyl",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Morphine",
+      "testType": "skin",
+      "protocolLabel": "1:1,000 start"
+    },
+    {
+      "drugName": "Morphine",
+      "testType": "skin",
+      "protocolLabel": "1:100 start"
+    },
+    {
+      "drugName": "Remifentanil",
+      "testType": "skin",
+      "protocolLabel": "1:1,000 start"
+    },
+    {
+      "drugName": "Remifentanil",
+      "testType": "skin",
+      "protocolLabel": "1:100 start"
+    },
+    {
+      "drugName": "Oxycodone",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Chlorhexidine",
+      "testType": "skin",
+      "protocolLabel": "0.02%"
+    },
+    {
+      "drugName": "Povidone Iodine",
+      "testType": "skin",
+      "protocolLabel": "1:1,000 start"
+    },
+    {
+      "drugName": "Povidone Iodine",
+      "testType": "skin",
+      "protocolLabel": "1:100 start"
+    },
+    {
+      "drugName": "Esomeprazole",
+      "testType": "skin",
+      "protocolLabel": ""
+    },
+    {
+      "drugName": "Lansoprazole",
+      "testType": "skin",
+      "protocolLabel": ""
+    },
+    {
+      "drugName": "Omeprazole",
+      "testType": "skin",
+      "protocolLabel": ""
+    },
+    {
+      "drugName": "Pantoprazole",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Rabeprazole",
+      "testType": "skin",
+      "protocolLabel": ""
+    },
+    {
+      "drugName": "Actrapid (Insulin)",
+      "testType": "skin",
+      "protocolLabel": "S/C"
+    },
+    {
+      "drugName": "Azithromycin",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Betamethasone",
+      "testType": "experimental",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Cefuroxime Suspension",
+      "testType": "skin",
+      "protocolLabel": "Suspension"
+    },
+    {
+      "drugName": "Ciprofloxacin",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Clindamycin",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Dalteparin",
+      "testType": "skin",
+      "protocolLabel": "SC"
+    },
+    {
+      "drugName": "Dexamethasone",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Doxycycline",
+      "testType": "skin",
+      "protocolLabel": "1:1,000 start"
+    },
+    {
+      "drugName": "Doxycycline",
+      "testType": "skin",
+      "protocolLabel": "1:100 start"
+    },
+    {
+      "drugName": "Droperidol",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Enoxaparin",
+      "testType": "skin",
+      "protocolLabel": "SC"
+    },
+    {
+      "drugName": "Fluconazole",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Glycopyrronium",
+      "testType": "experimental",
+      "protocolLabel": ""
+    },
+    {
+      "drugName": "Granisetron",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Heparin",
+      "testType": "skin",
+      "protocolLabel": "SC"
+    },
+    {
+      "drugName": "Humulin NPH (Insulin)",
+      "testType": "skin",
+      "protocolLabel": "S/C"
+    },
+    {
+      "drugName": "Humulin R (Insulin)",
+      "testType": "skin",
+      "protocolLabel": "S/C"
+    },
+    {
+      "drugName": "Hydrocortisone",
+      "testType": "experimental",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Latex",
+      "testType": "skin",
+      "protocolLabel": ""
+    },
+    {
+      "drugName": "Levofloxacin",
+      "testType": "skin",
+      "protocolLabel": "Tablet"
+    },
+    {
+      "drugName": "Levonorgestrel",
+      "testType": "skin",
+      "protocolLabel": "Oral"
+    },
+    {
+      "drugName": "Medroxyprogesterone",
+      "testType": "skin",
+      "protocolLabel": "Inj"
+    },
+    {
+      "drugName": "Metacresol",
+      "testType": "skin",
+      "protocolLabel": "1:1,000 start"
+    },
+    {
+      "drugName": "Metacresol",
+      "testType": "skin",
+      "protocolLabel": "1:100 start"
+    },
+    {
+      "drugName": "Methylprednisolone",
+      "testType": "experimental",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Metoclopramide",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Metronidazole",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Neostigmine",
+      "testType": "experimental",
+      "protocolLabel": "Inj"
+    },
+    {
+      "drugName": "Novorapid (Insulin)",
+      "testType": "skin",
+      "protocolLabel": "S/C"
+    },
+    {
+      "drugName": "Omnipaque",
+      "testType": "skin",
+      "protocolLabel": "IV Contrast"
+    },
+    {
+      "drugName": "Ondansetron",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Optisulin (Insulin)",
+      "testType": "skin",
+      "protocolLabel": "S/C"
+    },
+    {
+      "drugName": "Paracetamol",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Parecoxib",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Patent Blue",
+      "testType": "skin",
+      "protocolLabel": "SC"
+    },
+    {
+      "drugName": "Protamine",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Protaphane (Insulin)",
+      "testType": "skin",
+      "protocolLabel": "S/C"
+    },
+    {
+      "drugName": "Tranexamic Acid",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Tramadol",
+      "testType": "experimental",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Triamcinolone",
+      "testType": "experimental",
+      "protocolLabel": "Inj"
+    },
+    {
+      "drugName": "Ultravist",
+      "testType": "skin",
+      "protocolLabel": "IV Contrast"
+    },
+    {
+      "drugName": "Ultravist",
+      "testType": "control",
+      "protocolLabel": "Control"
+    },
+    {
+      "drugName": "Urografin",
+      "testType": "skin",
+      "protocolLabel": "IV Contrast"
+    },
+    {
+      "drugName": "Vancomycin",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Visipaque",
+      "testType": "skin",
+      "protocolLabel": "IV Contrast"
+    },
+    {
+      "drugName": "Xylocaine",
+      "testType": "skin",
+      "protocolLabel": "IV"
+    },
+    {
+      "drugName": "Methylene Blue",
+      "testType": "skin",
+      "protocolLabel": ""
+    },
+    {
+      "drugName": "IV Contrast",
+      "testType": "skin",
+      "protocolLabel": ""
+    },
+    {
+      "drugName": "Atropine",
+      "testType": "skin",
+      "protocolLabel": ""
+    },
+    {
+      "drugName": "Amoxycillin Suspension",
+      "testType": "challenge",
+      "protocolLabel": "Oral Graded Challenge"
+    },
+    {
+      "drugName": "Amoxycillin/Clavulanic Acid",
+      "testType": "challenge",
+      "protocolLabel": "Oral Graded Challenge"
+    },
+    {
+      "drugName": "Cefazolin",
+      "testType": "challenge",
+      "protocolLabel": "IV Challenge"
+    },
+    {
+      "drugName": "Cephalexin",
+      "testType": "challenge",
+      "protocolLabel": "Oral Graded Challenge"
+    },
+    {
+      "drugName": "Ciprofloxacin",
+      "testType": "challenge",
+      "protocolLabel": "Oral Graded Challenge"
+    },
+    {
+      "drugName": "Doxycycline",
+      "testType": "challenge",
+      "protocolLabel": "Oral Graded Challenge"
+    },
+    {
+      "drugName": "Flucloxacillin",
+      "testType": "challenge",
+      "protocolLabel": "Oral Graded Challenge"
+    },
+    {
+      "drugName": "Lignocaine",
+      "testType": "challenge",
+      "protocolLabel": "Challenge"
+    },
+    {
+      "drugName": "Meloxicam",
+      "testType": "challenge",
+      "protocolLabel": "Graded Challenge"
+    },
+    {
+      "drugName": "Trimethoprim/Sulfamethoxazole",
+      "testType": "challenge",
+      "protocolLabel": "Oral Graded Challenge"
+    },
+    {
+      "drugName": "Trimethoprim",
+      "testType": "challenge",
+      "protocolLabel": "Oral Graded Challenge"
+    },
+    {
+      "drugName": "Voltaren (Diclofenac)",
+      "testType": "challenge",
+      "protocolLabel": "Graded Challenge"
+    }
+  ]
+}
