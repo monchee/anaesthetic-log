@@ -1,5 +1,19 @@
 [
   {
+    "version": "v0.79.17",
+    "codename": "A Background That Breathes",
+    "date": "20 August 2026",
+    "summary": "A tuning pass on the PIN gate's idle ambient background, requested after it read as barely perceptible in both themes. The ambient light fields only ever animated position \u2014 their color intensity was completely static \u2014 which is a large part of why they didn't register as \"alive\" even on a longer look. No component logic, markup, or the earlier state-feedback animations (wrong-PIN pulse, unlock convergence) changed.",
+    "highlight": false,
+    "changes": [
+      "Ambient blob color intensity roughly doubled. Gradient stop alphas increased in both themes (light: 0.22\u21920.38 / 0.14\u21920.24 and 0.18\u21920.32 / 0.12\u21920.20; dark mode matched proportionally), with blur reduced from 60px to 48px so the added color reads as a defined glow rather than an even softer wash.",
+      "The blobs now genuinely breathe. Added an opacity keyframe (0.85 \u2192 1.0 \u2192 0.9) to the existing position-drift animation, so color intensity itself animates across each cycle instead of only position. Verified live: opacity sampled at 0.85, 0.90, and ~1.0 across a 12-second window, confirming real motion rather than a static value.",
+      "The architectural hairline grid bumped more modestly (0.28\u21920.34 base, pulse range 0.24-0.34\u21920.30-0.42) \u2014 kept as the restrained secondary texture, with the ambient blobs carrying most of the increased presence.",
+      "Reduced motion. Confirmed live rather than assumed from reading the media query: under `prefers-reduced-motion: reduce`, computed `animationName` is `none` and opacity is forced to `1` on both the blobs and the grid \u2014 the new breathing keyframe is fully disabled, same as the existing drift animation it was added to.",
+      "The wrong-PIN and unlock-convergence one-shot animations (`lock-alert-pulse`, `lock-converge`) are untouched \u2014 this pass only tunes the idle/resting state."
+    ]
+  },
+  {
     "version": "v0.79.16",
     "codename": "One Line, Four Fields",
     "date": "20 August 2026",

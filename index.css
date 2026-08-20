@@ -469,7 +469,7 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    opacity: 0.28;
+    opacity: 0.34;
     animation:
       lock-grid-drift 42s ease-in-out infinite alternate,
       lock-grid-pulse 18s ease-in-out infinite alternate;
@@ -486,11 +486,11 @@
     max-width: 700px;
     max-height: 700px;
     border-radius: 50%;
-    background: radial-gradient(circle at center, hsl(var(--nsw-blue) / 0.22) 0%, hsl(var(--masthead-accent) / 0.14) 45%, transparent 70%);
-    filter: blur(60px);
+    background: radial-gradient(circle at center, hsl(var(--nsw-blue) / 0.38) 0%, hsl(var(--masthead-accent) / 0.24) 45%, transparent 70%);
+    filter: blur(48px);
     pointer-events: none;
     animation: ambient-drift-1 24s ease-in-out infinite alternate;
-    will-change: transform;
+    will-change: transform, opacity;
   }
 
   .ambient-light-field-2 {
@@ -502,19 +502,19 @@
     max-width: 650px;
     max-height: 650px;
     border-radius: 50%;
-    background: radial-gradient(circle at center, hsl(var(--masthead-accent) / 0.18) 0%, hsl(var(--nsw-blue) / 0.12) 50%, transparent 70%);
-    filter: blur(60px);
+    background: radial-gradient(circle at center, hsl(var(--masthead-accent) / 0.32) 0%, hsl(var(--nsw-blue) / 0.20) 50%, transparent 70%);
+    filter: blur(48px);
     pointer-events: none;
     animation: ambient-drift-2 30s ease-in-out infinite alternate;
-    will-change: transform;
+    will-change: transform, opacity;
   }
 
   .dark .ambient-light-field-1 {
-    background: radial-gradient(circle at center, hsl(var(--nsw-blue) / 0.20) 0%, hsl(var(--masthead-accent) / 0.12) 45%, transparent 70%);
+    background: radial-gradient(circle at center, hsl(var(--nsw-blue) / 0.34) 0%, hsl(var(--masthead-accent) / 0.20) 45%, transparent 70%);
   }
 
   .dark .ambient-light-field-2 {
-    background: radial-gradient(circle at center, hsl(var(--masthead-accent) / 0.16) 0%, hsl(var(--nsw-blue) / 0.10) 50%, transparent 70%);
+    background: radial-gradient(circle at center, hsl(var(--masthead-accent) / 0.28) 0%, hsl(var(--nsw-blue) / 0.16) 50%, transparent 70%);
   }
 
   /* One-shot auth alert pulse for PIN error */
@@ -542,37 +542,43 @@
 
 @keyframes lock-grid-pulse {
   0% {
-    opacity: 0.24;
+    opacity: 0.30;
   }
   50% {
-    opacity: 0.34;
+    opacity: 0.42;
   }
   100% {
-    opacity: 0.28;
+    opacity: 0.34;
   }
 }
 
 @keyframes ambient-drift-1 {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.85;
   }
   50% {
     transform: translate3d(4%, 6%, 0) scale(1.05);
+    opacity: 1;
   }
   100% {
     transform: translate3d(-3%, 3%, 0) scale(0.97);
+    opacity: 0.9;
   }
 }
 
 @keyframes ambient-drift-2 {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.85;
   }
   50% {
     transform: translate3d(-5%, -4%, 0) scale(1.06);
+    opacity: 1;
   }
   100% {
     transform: translate3d(3%, -6%, 0) scale(0.95);
+    opacity: 0.9;
   }
 }
 

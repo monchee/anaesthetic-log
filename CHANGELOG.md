@@ -1,3 +1,16 @@
+## [0.79.17] — 2026-08-20 (A Background That Breathes)
+
+Summary: A tuning pass on the PIN gate's idle ambient background, requested after it read as barely perceptible in both themes. The ambient light fields only ever animated position — their color intensity was completely static — which is a large part of why they didn't register as "alive" even on a longer look. No component logic, markup, or the earlier state-feedback animations (wrong-PIN pulse, unlock convergence) changed.
+
+### Changed
+- **Ambient blob color intensity roughly doubled.** Gradient stop alphas increased in both themes (light: 0.22→0.38 / 0.14→0.24 and 0.18→0.32 / 0.12→0.20; dark mode matched proportionally), with blur reduced from 60px to 48px so the added color reads as a defined glow rather than an even softer wash.
+- **The blobs now genuinely breathe.** Added an opacity keyframe (0.85 → 1.0 → 0.9) to the existing position-drift animation, so color intensity itself animates across each cycle instead of only position. Verified live: opacity sampled at 0.85, 0.90, and ~1.0 across a 12-second window, confirming real motion rather than a static value.
+- **The architectural hairline grid bumped more modestly** (0.28→0.34 base, pulse range 0.24-0.34→0.30-0.42) — kept as the restrained secondary texture, with the ambient blobs carrying most of the increased presence.
+
+### Checked, no change needed
+- **Reduced motion.** Confirmed live rather than assumed from reading the media query: under `prefers-reduced-motion: reduce`, computed `animationName` is `none` and opacity is forced to `1` on both the blobs and the grid — the new breathing keyframe is fully disabled, same as the existing drift animation it was added to.
+- **The wrong-PIN and unlock-convergence one-shot animations** (`lock-alert-pulse`, `lock-converge`) are untouched — this pass only tunes the idle/resting state.
+
 ## [0.79.16] — 2026-08-20 (One Line, Four Fields)
 
 Summary: A bug fix on the `/testing` direct-entry route's "Patient Identity" card, reported with a screenshot. The Date of Birth input rendered visibly lower than MRN, First Name, and Last Name, and the MRN placeholder text was clipped mid-word. No validation logic, ids, or copy changed beyond the one placeholder string below.
