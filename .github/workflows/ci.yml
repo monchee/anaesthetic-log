@@ -54,6 +54,12 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
+      # Playwright serves dist/ via `npm run preview` when CI is set, so the
+      # app must be built first. Without this the preview server has nothing
+      # to serve and every test times out waiting for the app to render.
+      - name: Build
+        run: npm run build
+
       - name: Run Playwright tests
         run: npx playwright test --project=chromium --grep-invert @visual
 
