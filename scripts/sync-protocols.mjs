@@ -19,7 +19,11 @@ const DEFAULT_LOCAL_PATH = '/Users/monchee/Projects/scratch/docs/api/protocols.j
 // project only gets its requested *.pages.dev name if it is free, and it was not.
 export const PUBLISHED_PROTOCOLS_URL = 'https://scratch.yuson.au/api/protocols.json';
 
-const SUPPORTED_SCHEMA_VERSIONS = ['1.0'];
+export const SUPPORTED_SCHEMA_VERSIONS = ['1.0', '1.1'];
+
+export function isSupportedSchemaVersion(version) {
+  return typeof version === 'string' && SUPPORTED_SCHEMA_VERSIONS.includes(version);
+}
 
 export function computeDoseLevelDiff(oldSnapshot, newSnapshot) {
   const diffs = [];
@@ -238,10 +242,10 @@ export async function syncProtocols(options = {}) {
     newSnapshotRaw = JSON.parse(fileContent);
   }
 
-  if (!SUPPORTED_SCHEMA_VERSIONS.includes(newSnapshotRaw.schema_version)) {
-    console.error(`\nError: Unrecognised schema_version "${newSnapshotRaw.schema_version}".`);
-    console.error(`Supported versions: ${SUPPORTED_SCHEMA_VERSIONS.join(', ')}`);
-    process.exit(1);
+  if (!isSupportedSchemaVersion(newSnapshotRaw.schema_version)) {
+    const errorMsg = `Unrecognised schema_version "${newSnapshotRaw.schema_version}". Supported versions: ${SUPPORTED_SCHEMA_VERSIONS.join(', ')}`;
+    console.error(`\nError: ${errorMsg}`);
+    throw new Error(errorMsg);
   }
 
   let oldSnapshot = null;
