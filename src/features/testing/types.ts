@@ -11,6 +11,7 @@ export interface ChallengeStep {
 }
 
 export interface DrugProtocol {
+  id: string;
   drugName: string;
   needsPharmacyVerification?: true;
   category: string;
@@ -21,6 +22,9 @@ export interface DrugProtocol {
   idtSteps: IDTStep[];
   challengeSteps: ChallengeStep[];
   protocolLabel: string;
+  sourceSlug?: string;
+  underReview?: boolean;
+  lastReviewed?: string;
 }
 
 export interface CustomDrugEntry {
@@ -36,6 +40,7 @@ export interface DrugTestRow {
   drugName: string;
   customName?: string;
   protocolIndex?: number;
+  protocolId?: string;
   sptWheal: string;
   idtResults: string[];
   notes?: string;

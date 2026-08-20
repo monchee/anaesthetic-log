@@ -47,7 +47,14 @@ This document provides a comprehensive inventory of services, secrets, external 
 
 ### 3. Custom Domain & DNS Migration
 - **Current State**: [dream.yuson.au](https://dream.yuson.au) is mapped via DNS to Cloudflare Pages.
-- **Succession Risk**: `yuson.au` is a **personal domain** owned by the original author. If the personal domain lapses or becomes unavailable, the custom URL will stop resolving.
+- **Succession Risk**: `yuson.au` is a **personal domain** owned by the original author. If the personal
+  domain lapses or becomes unavailable, the custom URL will stop resolving.
+- **BOTH APPLICATIONS SHARE THIS DOMAIN.** SCRATCH, the drug-protocol source of truth, is served at
+  [scratch.yuson.au](https://scratch.yuson.au) from the same personal domain. If `yuson.au` lapses,
+  clinicians lose the reference handbook and the app that records the encounter **at the same time**,
+  and DREAM's `npm run protocols:sync` stops resolving. Treat moving both to an institutional domain
+  as a single piece of work, not two. The SCRATCH repository is `monchee/drug-library`; its Cloudflare
+  Pages project is named `scratch`.
 - **Domain Independence**: In `vite.config.ts`, `base: './'` is configured, ensuring all bundle assets and routes use relative paths. The application is completely domain-agnostic and functions identically under any hostname, subdirectory, or port.
 - **Fallback URL**: [anaesthetic-allergy-log-7ya.pages.dev](https://anaesthetic-allergy-log-7ya.pages.dev)
   — **not** `dream.pages.dev`, which does not resolve. A Pages project's `*.pages.dev` hostname is
