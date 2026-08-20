@@ -93,7 +93,7 @@ describe('drugMasterlist diluents & snapshot data', () => {
     const rocuronium = getSkinProtocolsForDrug('Rocuronium')[0];
     expect(rocuronium.sourceSlug).toBe('rocuronium');
     expect(rocuronium.underReview).toBe(false);
-    expect(rocuronium.lastReviewed).toBe('2026-08-20');
+    expect(rocuronium.lastReviewed).toBe('2026-03-28');
     expect(rocuronium.id).toBe('iv');
   });
 
