@@ -14,9 +14,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SNAPSHOT_PATH = join(ROOT, 'src', 'shared', 'data', 'protocols.snapshot.json');
 const DEFAULT_LOCAL_PATH = '/Users/monchee/Projects/scratch/docs/api/protocols.json';
 
-// UNVERIFIED: Must be confirmed before use. The real published hostname is not yet known
-// (the obvious guess https://scratch.pages.dev belongs to an unrelated site).
-export const PUBLISHED_PROTOCOLS_URL = 'https://unverified-scratch-domain.invalid/api/protocols.json';
+// SCRATCH's published protocol export. Verified serving the SCRATCH handbook.
+// Note: scratch.pages.dev belongs to MIT Scratch, not this project — a Pages
+// project only gets its requested *.pages.dev name if it is free, and it was not.
+export const PUBLISHED_PROTOCOLS_URL = 'https://scratch.yuson.au/api/protocols.json';
 
 const SUPPORTED_SCHEMA_VERSIONS = ['1.0'];
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-DREAM (Drug Reaction Evaluation & Anaesthetic Management) is a private, local-first clinical Progressive Web App designed for the Royal Prince Alfred Hospital (RPAH) Department of Clinical Immunology & Allergy. It guides clinicians through perioperative anaesthetic allergy workups—from REDCap patient record import and tailored testing plan creation to skin prick/intradermal test logging, patient handouts, and eMR-ready clinical reports—all processed locally in the browser without transmitting identifiable patient data. Drug protocol definitions and dilution concentrations are tied to the SCRATCH drug library (repository `monchee/drug-library`, hosted at [scratch.pages.dev](https://scratch.pages.dev)), which serves as the upcoming source of truth for drug protocol data that DREAM consumes as a pinned JSON snapshot.
+DREAM (Drug Reaction Evaluation & Anaesthetic Management) is a private, local-first clinical Progressive Web App designed for the Royal Prince Alfred Hospital (RPAH) Department of Clinical Immunology & Allergy. It guides clinicians through perioperative anaesthetic allergy workups—from REDCap patient record import and tailored testing plan creation to skin prick/intradermal test logging, patient handouts, and eMR-ready clinical reports—all processed locally in the browser without transmitting identifiable patient data. Drug protocol definitions and dilution concentrations are tied to the SCRATCH drug library (repository `monchee/drug-library`, hosted at [scratch.yuson.au](https://scratch.yuson.au)), which serves as the upcoming source of truth for drug protocol data that DREAM consumes as a pinned JSON snapshot.
 
 ---
 
