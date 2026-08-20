@@ -87,7 +87,7 @@ After a deployment completes, verify the release with the following checklist:
 
 2. **Access the Live Application**:
    - Production URL: [https://dream.yuson.au](https://dream.yuson.au)
-   - Cloudflare Pages fallback URL: [https://dream.pages.dev](https://dream.pages.dev)
+   - Cloudflare Pages fallback URL: [https://anaesthetic-allergy-log-7ya.pages.dev](https://anaesthetic-allergy-log-7ya.pages.dev) (not `dream.pages.dev` — see HANDOVER.md)
 
 3. **Check PWA & Version**:
    - Trigger a refresh to allow the service worker to fetch the updated bundle.
