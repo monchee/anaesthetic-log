@@ -1,46 +1,15 @@
 import React from 'react';
-import { Card, CardContent, Button, Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui';
+import { Card, CardContent, Button, Accordion, AccordionItem, AccordionTrigger, AccordionContent, Badge } from '@/components/ui';
 import { Home, AlertTriangle, ArrowRight } from 'lucide-react';
 import { Screen } from '@shared/types';
 import { DRUG_CATEGORIES, CATEGORY_THEMES } from '@shared/utils/constants';
+import { CROSS_REACTIVITY_ITEMS, CROSS_REACTIVITY_GOVERNANCE } from '@shared/data/crossReactivity';
 
 interface DrugReferencePageProps {
   setScreen: (screen: Screen) => void;
 }
 
 const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
-  const crossReactivityInfo = [
-    {
-      category: "Muscle Relaxants",
-      info: "Quaternary ammonium compounds are thought to be responsible for most reactions. Cross-reactivity between agents is common due to structural similarities.",
-      alternatives: "Consider non-depolarising agents with different structures. Cisatracurium may have lower immunogenicity."
-    },
-    {
-      category: "Penicillins",
-      info: "Cross-reactivity with cephalosporins depends on side chain similarity. First-generation cephalosporins have higher cross-reactivity (~2%).",
-      alternatives: "Cephalosporins with dissimilar side chains, carbapenems (low cross-reactivity), or non-beta-lactams."
-    },
-    {
-      category: "Cephalosporins",
-      info: "Cross-reactivity is more related to R1 side chain similarity than the beta-lactam ring. Later generations have different side chains.",
-      alternatives: "Cephalosporins with different side chains, carbapenems, aztreonam (minimal cross-reactivity)."
-    },
-    {
-      category: "Local Anaesthetics",
-      info: "True allergy is rare (<1%). Most reactions are vasovagal or due to adrenaline. Amide types rarely cross-react with each other.",
-      alternatives: "Different amide local anaesthetic, or ester type if amide allergy confirmed."
-    },
-    {
-      category: "Opioids",
-      info: "Can cause direct mast cell degranulation (non-IgE mediated). Morphine and codeine are most histamine-releasing.",
-      alternatives: "Fentanyl or remifentanil (less histamine release), or non-opioid analgesia."
-    },
-    {
-      category: "Hypnotics",
-      info: "Propofol reactions may be to the lipid emulsion or specific to propofol. Egg/soya allergy is not a contraindication.",
-      alternatives: "Different induction agent (thiopentone, ketamine, etomidate)."
-    }
-  ];
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
@@ -95,11 +64,22 @@ const DrugReferencePage: React.FC<DrugReferencePageProps> = ({ setScreen }) => {
 
           {/* Cross-Reactivity & Alternatives */}
           <div>
-            <h3 className="section-label mb-3">
-              Cross-Reactivity & Alternatives
-            </h3>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h3 className="section-label mb-0">
+                Cross-Reactivity & Alternatives
+              </h3>
+              {CROSS_REACTIVITY_GOVERNANCE.under_review && (
+                <Badge
+                  variant="warning"
+                  className="rounded-none border border-status-warning/40 px-2 py-0.5 text-xs font-semibold"
+                >
+                  <AlertTriangle className="w-3.5 h-3.5 mr-1.5 shrink-0" aria-hidden="true" />
+                  Clinical review pending
+                </Badge>
+              )}
+            </div>
             <Accordion type="multiple" className="bg-card rounded-none border border-border px-4">
-              {crossReactivityInfo.map((item, idx) => (
+              {CROSS_REACTIVITY_ITEMS.map((item, idx) => (
                 <AccordionItem 
                   key={idx}
                   value={`item-${idx}`}
