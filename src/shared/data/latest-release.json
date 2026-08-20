@@ -1,5 +1,9 @@
 [
   {
+    "version": "v0.79.16",
+    "codename": "One Line, Four Fields"
+  },
+  {
     "version": "v0.79.15",
     "codename": "Solid, Slim, Self-Clearing"
   },
@@ -14,9 +18,5 @@
   {
     "version": "v0.79.12",
     "codename": "Micrograms, Not Milligrams"
-  },
-  {
-    "version": "v0.79.11",
-    "codename": "A Background With a Job"
   }
 ]

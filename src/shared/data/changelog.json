@@ -1,5 +1,18 @@
 [
   {
+    "version": "v0.79.16",
+    "codename": "One Line, Four Fields",
+    "date": "20 August 2026",
+    "summary": "A bug fix on the `/testing` direct-entry route's \"Patient Identity\" card, reported with a screenshot. The Date of Birth input rendered visibly lower than MRN, First Name, and Last Name, and the MRN placeholder text was clipped mid-word. No validation logic, ids, or copy changed beyond the one placeholder string below.",
+    "highlight": false,
+    "changes": [
+      "Date of Birth input sat 16px lower than its siblings. Its label \u2014 \"Date of Birth (Optional)\" \u2014 wraps to two lines at the column widths used in both the 4-column desktop grid and the 2-column tablet grid, while MRN/First Name/Last Name stay single-line. Since each field lays out its own label-then-input stack independently, the taller label pushed its input down with nothing to keep the row aligned. Measured before: label heights 14px vs 30px, input tops 314px vs 330px at 1440px. All four labels now reserve identical space (`min-h-[2rem]`, text bottom-anchored against it) regardless of whether their own text wraps, so every input starts at the same y-position in the 1-column, 2-column, and 4-column layouts alike. Measured after: all four inputs at `inputTop: 332` at desktop; the 2-column tablet arrangement pairs correctly row by row too.",
+      "MRN placeholder text was clipped. `\"Medical Record Number...\"` (25 characters) in a monospace font inside a ~180px grid column rendered as roughly `\"Medical Record Numl\"` with the rest invisible. Shortened to `\"Record number...\"` (17 characters), which fits cleanly without touching the column width or the deliberate `font-mono` styling used for the typed value.",
+      "Accessibility. The dedicated `direct-entry` e2e spec (4/4) and the full accessibility suite (31/31) both pass \u2014 the label markup changed shape (each label's text now sits inside an inner `<span>`) but every `id`, `htmlFor`, and `aria-*` association is unchanged.",
+      "Dark mode and mobile. Verified visually at 1440px, 700px (2-column), 390px (1-column stacked), and dark mode \u2014 alignment holds in every arrangement, not just the one in the reported screenshot."
+    ]
+  },
+  {
     "version": "v0.79.15",
     "codename": "Solid, Slim, Self-Clearing",
     "date": "20 August 2026",

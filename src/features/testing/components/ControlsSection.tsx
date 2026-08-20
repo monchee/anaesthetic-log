@@ -37,15 +37,17 @@ export function VisitDetailsSection({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <Label htmlFor="patient-mrn" className="section-label mb-1.5 block">
-                  MRN<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
+                <Label htmlFor="patient-mrn" className="section-label mb-1.5 min-h-[2rem] flex flex-col justify-end">
+                  <span>
+                    MRN<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
+                  </span>
                 </Label>
                 <Input
                   id="patient-mrn"
                   className="rounded-none font-mono"
                   value={formData.mrn}
                   onChange={(e) => onInputChange('mrn', e.target.value)}
-                  placeholder="Medical Record Number..."
+                  placeholder="Record number..."
                   aria-invalid={!!mrnError}
                   aria-describedby={mrnError ? 'patient-mrn-error' : undefined}
                 />
@@ -56,8 +58,10 @@ export function VisitDetailsSection({
                 )}
               </div>
               <div>
-                <Label htmlFor="patient-first-name" className="section-label mb-1.5 block">
-                  First Name<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
+                <Label htmlFor="patient-first-name" className="section-label mb-1.5 min-h-[2rem] flex flex-col justify-end">
+                  <span>
+                    First Name<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
+                  </span>
                 </Label>
                 <Input
                   id="patient-first-name"
@@ -75,8 +79,10 @@ export function VisitDetailsSection({
                 )}
               </div>
               <div>
-                <Label htmlFor="patient-last-name" className="section-label mb-1.5 block">
-                  Last Name<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
+                <Label htmlFor="patient-last-name" className="section-label mb-1.5 min-h-[2rem] flex flex-col justify-end">
+                  <span>
+                    Last Name<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
+                  </span>
                 </Label>
                 <Input
                   id="patient-last-name"
@@ -94,8 +100,10 @@ export function VisitDetailsSection({
                 )}
               </div>
               <div>
-                <Label htmlFor="patient-dob" className="section-label mb-1.5 block">
-                  Date of Birth <span className="text-muted-foreground text-xs font-normal">(Optional)</span>
+                <Label htmlFor="patient-dob" className="section-label mb-1.5 min-h-[2rem] flex flex-col justify-end">
+                  <span>
+                    Date of Birth <span className="text-muted-foreground text-xs font-normal">(Optional)</span>
+                  </span>
                 </Label>
                 <Input
                   id="patient-dob"
