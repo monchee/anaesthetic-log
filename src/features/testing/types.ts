@@ -1,6 +1,7 @@
 export interface IDTStep {
   ratio: string;         // e.g. "1:1,000"
   concentration: string; // e.g. "0.01mg/mL"
+  preparation?: string;
 }
 
 export interface ChallengeStep {
@@ -24,6 +25,7 @@ export interface DrugProtocol {
   protocolLabel: string;
   sourceSlug?: string;
   underReview?: boolean;
+  reviewNote?: string;
   lastReviewed?: string;
 }
 

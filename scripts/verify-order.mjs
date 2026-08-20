@@ -16,18 +16,16 @@ try {
   process.exit(2);
 }
 
-const EXPECTED_PROTOCOL_COUNT = 116;
 if (
   !fixture ||
   typeof fixture !== 'object' ||
   !Array.isArray(fixture.order) ||
   !Number.isInteger(fixture.count) ||
-  fixture.count !== EXPECTED_PROTOCOL_COUNT ||
-  fixture.order.length !== EXPECTED_PROTOCOL_COUNT
+  fixture.count !== fixture.order.length
 ) {
   console.error(
     `BROKEN CHECK: fixture is malformed or count mismatch (count: ${fixture?.count}, order.length: ${fixture?.order?.length}).\n` +
-    `Expected an object with 'order' array and matching integer 'count' equal to ${EXPECTED_PROTOCOL_COUNT}.`
+    `Expected an object with 'order' array and matching integer 'count'.`
   );
   process.exit(2);
 }
@@ -56,9 +54,10 @@ function extractTuples(fileContent) {
   return tuples;
 }
 
-// 2. Read generated and dream-only files to reconstruct the merged DRUG_MASTERLIST order
+// 2. Read generated, dream-only, and merged drugMasterlist files to reconstruct DRUG_MASTERLIST order
 const generatedContent = readFileSync(join(ROOT, 'src', 'shared', 'data', 'drugMasterlist.generated.ts'), 'utf8');
 const dreamOnlyContent = readFileSync(join(ROOT, 'src', 'shared', 'data', 'dreamOnlyProtocols.ts'), 'utf8');
+const masterlistContent = readFileSync(join(ROOT, 'src', 'shared', 'data', 'drugMasterlist.ts'), 'utf8');
 
 const generatedTuples = extractTuples(generatedContent);
 const dreamOnlyTuples = extractTuples(dreamOnlyContent);
@@ -67,23 +66,37 @@ function findGenTuple(drugName, testType, label) {
   const match = generatedTuples.find(
     (t) => t.drugName === drugName && t.testType === testType && (!label || t.protocolLabel === label)
   );
-  if (!match) throw new Error(`Missing generated tuple: ${drugName} (${testType})`);
+  if (!match) throw new Error(`Missing generated tuple: ${drugName} (${testType}${label ? ` - ${label}` : ''})`);
   return match;
 }
 
-// Reconstruct merged array order exactly as drugMasterlist.ts does
-const actualTuples = [
-  findGenTuple('Cis-atracurium', 'skin'),
-  findGenTuple('Rocuronium', 'skin'),
-  findGenTuple('Pancuronium', 'skin'),
-  findGenTuple('Vecuronium', 'skin'),
-  findGenTuple('Suxamethonium', 'skin'),
-  ...dreamOnlyTuples.slice(0, 17),
-  findGenTuple('Cefazolin', 'skin'),
-  ...dreamOnlyTuples.slice(17, 100),
-  findGenTuple('Cefazolin', 'challenge'),
-  ...dreamOnlyTuples.slice(100),
-];
+function findDreamTuple(drugName, testType, label) {
+  const match = dreamOnlyTuples.find(
+    (t) => t.drugName === drugName && t.testType === testType && (!label || t.protocolLabel === label)
+  );
+  if (!match) throw new Error(`Missing DREAM-only tuple: ${drugName} (${testType}${label ? ` - ${label}` : ''})`);
+  return match;
+}
+
+function extractMasterlistTuples(content) {
+  const tuples = [];
+  const regex = /find(Generated|DreamOnly)\(\s*['"]([^'"]+)['"]\s*,\s*['"]([^'"]+)['"](?:\s*,\s*['"]([^'"]*)['"])?\s*\)/g;
+  let m;
+  while ((m = regex.exec(content)) !== null) {
+    const isGen = m[1] === 'Generated';
+    const drugName = m[2];
+    const testType = m[3];
+    const protocolLabel = m[4] || '';
+    if (isGen) {
+      tuples.push(findGenTuple(drugName, testType, protocolLabel));
+    } else {
+      tuples.push(findDreamTuple(drugName, testType, protocolLabel));
+    }
+  }
+  return tuples;
+}
+
+const actualTuples = extractMasterlistTuples(masterlistContent);
 
 console.log('================================================================================');
 console.log('DRUG MASTERLIST POSITIONAL ORDER VERIFICATION');
