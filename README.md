@@ -99,6 +99,7 @@ If port 3000 is already in use, Vite may choose the next available port. Check t
 - `npm run lint` — run ESLint
 - `npm run test:unit` — run unit/component tests
 - `npm run test:e2e` — run Playwright tests
+- `npm run test:e2e:ci` — build DREAM first and run non-visual Chromium e2e tests against the production preview
 - `npm run test:coverage` — generate local coverage reports
 - `npm run build` — sync changelog data and build production assets
 - `npm run preview` — preview the production build locally
@@ -154,7 +155,7 @@ src/
 
 ## Known Operational Notes
 
-- GitHub Actions validate pushes and pull requests to `main`, with automated deployment to Cloudflare Pages on push to `main` when `CLOUDFLARE_API_TOKEN` is configured.
+- GitHub Actions validate pushes and pull requests to `main`, with automated deployment to Cloudflare Pages on push to `main` when Cloudflare credentials (`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`) are configured.
 - Maintainer runbook and testing scripts are documented in [MAINTAINERS.md](MAINTAINERS.md).
 - Succession inventory, credential rotation, and continuity plans are documented in [HANDOVER.md](HANDOVER.md).
 - Branch protection is not configured because GitHub reports it is unavailable for this private repository without GitHub Pro.

@@ -35,6 +35,7 @@ Starts the Vite dev server at `http://localhost:3000`.
 - **Unit test coverage**: `npm run test:coverage`
 - **End-to-end tests (Playwright)**: `npm run test:e2e`
 - **End-to-end tests (interactive UI)**: `npm run test:e2e:ui`
+- **End-to-end tests (CI/production preview)**: `npm run test:e2e:ci` (builds DREAM first, then runs non-visual Chromium tests against `npm run preview` with `CI=1`)
 
 ### Build & Preview
 - **Production build**: `npm run build` (runs `prebuild` changelog sync then `vite build`)
@@ -55,7 +56,7 @@ Starts the Vite dev server at `http://localhost:3000`.
 4. The GitHub Actions workflow (`.github/workflows/ci.yml`) runs `test` and `e2e` jobs in parallel.
 5. Upon successful completion of both test suites, the `deploy` job builds the application, strips sourcemaps (`find dist -name '*.map' -delete`), and publishes to Cloudflare Pages using `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
 
-> **Note**: If `CLOUDFLARE_API_TOKEN` is not configured in GitHub repository secrets, the `deploy` job skips cleanly without failing the CI run.
+> **Note**: Both `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` must be configured in GitHub repository secrets. If either credential is missing, the `deploy` job fails loudly.
 
 ### Break-Glass Path (Emergency Manual Deployment)
 If GitHub Actions is down, credentials fail, or an urgent hotfix must be shipped immediately:
