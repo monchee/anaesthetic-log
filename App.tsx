@@ -298,7 +298,7 @@ export function AnaestheticLogApp() {
             if (!open) cancelPatientSelect();
           }}
           title="Switch patient?"
-          message={`You have unsaved changes in your current testing session.${selectedPatient ? ` Current: ${selectedPatient.lastName ? `${selectedPatient.lastName.toUpperCase()}, ${selectedPatient.firstName}` : selectedPatient.firstName} (MRN: ${selectedPatient.mrn || '—'}, DOB: ${selectedPatient.dob || 'not recorded'}).` : ''}${pendingPatientSelection ? ` Target: ${pendingPatientSelection.patient.lastName ? `${pendingPatientSelection.patient.lastName.toUpperCase()}, ${pendingPatientSelection.patient.firstName}` : pendingPatientSelection.patient.firstName} (MRN: ${pendingPatientSelection.patient.mrn || '—'}, DOB: ${pendingPatientSelection.patient.dob || 'not recorded'}).` : ''} Switching patients will discard these changes. This cannot be undone.`}
+          message={`You have unsaved changes in your current testing session.${selectedPatient ? ` Current: ${selectedPatient.lastName ? `${selectedPatient.lastName.toUpperCase()}, ${selectedPatient.firstName}` : selectedPatient.firstName} (REDCap ID: ${selectedPatient.mrn || '—'}, DOB: ${selectedPatient.dob || 'not recorded'}).` : ''}${pendingPatientSelection ? ` Target: ${pendingPatientSelection.patient.lastName ? `${pendingPatientSelection.patient.lastName.toUpperCase()}, ${pendingPatientSelection.patient.firstName}` : pendingPatientSelection.patient.firstName} (REDCap ID: ${pendingPatientSelection.patient.mrn || '—'}, DOB: ${pendingPatientSelection.patient.dob || 'not recorded'}).` : ''} Switching patients will discard these changes. This cannot be undone.`}
           confirmLabel="Switch patient"
           cancelLabel="Cancel"
           variant="danger"

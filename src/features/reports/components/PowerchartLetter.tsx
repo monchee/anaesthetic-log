@@ -69,12 +69,12 @@ const PowerchartLetter: React.FC<PowerchartLetterProps> = ({ data, patient, acti
             <p className="text-xl font-semibold tracking-tight text-primary print:text-base print:text-black">{redactedFullName}</p>
           </div>
           <div>
-            <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">MRN</p>
+            <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">REDCap ID</p>
             <p className="text-lg font-mono font-medium text-foreground/80 print:text-xs">{redact(data.mrn)}</p>
           </div>
           {patient?.redcapId && patient.redcapId !== data.mrn && (
             <div>
-              <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">REDCap Record ID</p>
+              <p className="text-xs uppercase font-semibold text-muted-foreground tracking-wider print:text-[9px]">REDCap Record ID (secondary)</p>
               <p className="text-lg font-mono font-medium text-foreground/80 print:text-xs">{redact(patient.redcapId)}</p>
             </div>
           )}

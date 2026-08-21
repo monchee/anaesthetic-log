@@ -68,7 +68,7 @@ export const ReviewSaveSection: React.FC<ReviewSaveSectionProps> = ({
                       type="button"
                       onClick={() => {
                         const lower = error.message.toLowerCase();
-                        if (lower.includes('mrn') || lower.includes('name') || lower.includes('visit')) {
+                        if (lower.includes('mrn') || lower.includes('redcap') || lower.includes('name') || lower.includes('visit')) {
                           onJumpToSection(0, error.fieldId);
                         } else if (lower.includes('challenge')) {
                           onJumpToSection(2, error.fieldId);
@@ -110,7 +110,7 @@ export const ReviewSaveSection: React.FC<ReviewSaveSectionProps> = ({
                     <strong>Name:</strong> {formData.lastName || '—'}, {formData.firstName || '—'}
                   </p>
                   <p>
-                    <strong>MRN:</strong> <span className="font-mono">{formData.mrn || '—'}</span>
+                    <strong>REDCap ID:</strong> <span className="font-mono">{formData.mrn || '—'}</span>
                   </p>
                   <p>
                     <strong>Visit Date:</strong> {formData.visitDate || '—'}

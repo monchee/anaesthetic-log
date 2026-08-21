@@ -117,7 +117,7 @@ test.describe('Testing Day Flow', () => {
     await page.waitForLoadState('networkidle');
     await dismissHelpModal(page);
 
-    await page.getByLabel(/^mrn/i).fill('1');
+    await page.getByLabel(/^REDCap ID/i).fill('1');
     await page.getByLabel(/first name/i).fill('Wei');
     await page.getByLabel(/last name/i).fill('Chen');
 
@@ -138,7 +138,7 @@ test.describe('Testing Day Flow', () => {
     await expect(page.getByText(/Draft saved/)).toBeVisible({ timeout: 5000 });
     await expect(page.getByLabel(/first name/i)).toHaveValue('Wei');
     await expect(page.getByLabel(/last name/i)).toHaveValue('Chen');
-    await expect(page.getByLabel(/^mrn/i)).toHaveValue('1');
+    await expect(page.getByLabel(/^REDCap ID/i)).toHaveValue('1');
 
     // Section 1's field values are also preserved in the draft.
     await page.getByRole('button', { name: 'Next Section', exact: true }).click();

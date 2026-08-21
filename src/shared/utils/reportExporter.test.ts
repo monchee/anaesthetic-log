@@ -181,7 +181,7 @@ describe('formatClinicalReportAsText', () => {
     }), () => '[redacted]');
 
     expect(text).toContain('Patient: [redacted]');
-    expect(text).toContain('MRN: [redacted]');
+    expect(text).toContain('REDCap ID: [redacted]');
     expect(text).toContain('DOB: [redacted]');
     expect(text).not.toContain('Alice Smith');
     expect(text).not.toContain('MRN-999');

@@ -100,7 +100,7 @@ describe('SaveActionSection', () => {
 
   it('renders validation error summary when errors exist', () => {
     const errors = [
-      { message: 'MRN is required', fieldId: 'patient-mrn' },
+      { message: 'REDCap ID is required', fieldId: 'patient-mrn' },
       { message: 'Plan is required', fieldId: 'clinical-plan' },
     ];
     render(
@@ -112,7 +112,7 @@ describe('SaveActionSection', () => {
     );
 
     expect(screen.getByRole('alert')).toBeInTheDocument();
-    expect(screen.getByText('MRN is required')).toBeInTheDocument();
+    expect(screen.getByText('REDCap ID is required')).toBeInTheDocument();
     expect(screen.getByText('Plan is required')).toBeInTheDocument();
   });
 });

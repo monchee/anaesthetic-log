@@ -37,7 +37,7 @@ describe('PatientIdentityBar', () => {
     render(<PatientIdentityBar {...baseProps} />);
 
     const identityBar = screen.getByLabelText('Patient identity');
-    expect(identityBar).toHaveTextContent('DOE, Jane·MRN MrN00aB1·DOB not recorded');
+    expect(identityBar).toHaveTextContent('DOE, Jane·REDCap ID MrN00aB1·DOB not recorded');
     expect(screen.queryByText(/^Reaction/)).not.toBeInTheDocument();
   });
 

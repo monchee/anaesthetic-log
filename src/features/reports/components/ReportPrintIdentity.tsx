@@ -16,7 +16,7 @@ export const ReportPrintIdentity: React.FC<ReportPrintIdentityProps> = ({
   reportTitle,
   requestDate,
 }) => {
-  const patientIdentifier = `${patientName} · MRN ${mrn}${dob ? ` · DOB ${formatDate(dob)}` : ''}`;
+  const patientIdentifier = `${patientName} · REDCap ID ${mrn}${dob ? ` · DOB ${formatDate(dob)}` : ''}`;
   const footerDate = requestDate || new Date().toISOString();
 
   return (
@@ -26,7 +26,7 @@ export const ReportPrintIdentity: React.FC<ReportPrintIdentityProps> = ({
         <span>{reportTitle}</span>
       </div>
       <div className="hidden print:flex print:items-center print:justify-between print:border-t print:border-black print:bg-white print:pt-[3mm] print:text-[10px] print:font-semibold print:text-black">
-        <span>{patientName} · MRN {mrn}</span>
+        <span>{patientName} · REDCap ID {mrn}</span>
         <span>Date of report: {formatDate(footerDate)}</span>
       </div>
     </>

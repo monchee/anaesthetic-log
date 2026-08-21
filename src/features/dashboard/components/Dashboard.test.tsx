@@ -193,7 +193,7 @@ describe('Dashboard', () => {
     it('filters patients by search term', async () => {
       render(<Dashboard {...mockProps} />);
 
-      const searchInput = screen.getByPlaceholderText(/Search by Name, MRN/i);
+      const searchInput = screen.getByPlaceholderText(/Search by Name, REDCap ID/i);
       fireEvent.change(searchInput, { target: { value: 'John' } });
 
       await waitFor(() => {
@@ -205,7 +205,7 @@ describe('Dashboard', () => {
     it('filters patients by MRN', async () => {
       render(<Dashboard {...mockProps} />);
 
-      const searchInput = screen.getByPlaceholderText(/Search by Name, MRN/i);
+      const searchInput = screen.getByPlaceholderText(/Search by Name, REDCap ID/i);
       fireEvent.change(searchInput, { target: { value: 'MRN001' } });
 
       await waitFor(() => {
@@ -217,7 +217,7 @@ describe('Dashboard', () => {
     it('clears search when input is cleared', async () => {
       render(<Dashboard {...mockProps} />);
 
-      const searchInput = screen.getByPlaceholderText(/Search by Name, MRN/i);
+      const searchInput = screen.getByPlaceholderText(/Search by Name, REDCap ID/i);
       fireEvent.change(searchInput, { target: { value: 'John' } });
 
       await waitFor(() => {
@@ -583,7 +583,7 @@ describe('Dashboard', () => {
     it('has proper ARIA labels on search input', () => {
       render(<Dashboard {...mockProps} />);
 
-      const searchInput = screen.getByPlaceholderText(/Search by Name, MRN/i);
+      const searchInput = screen.getByPlaceholderText(/Search by Name, REDCap ID/i);
       expect(searchInput).toHaveAttribute('aria-label');
     });
 
@@ -597,7 +597,7 @@ describe('Dashboard', () => {
     it('is keyboard navigable', () => {
       render(<Dashboard {...mockProps} />);
 
-      const searchInput = screen.getByPlaceholderText(/Search by Name, MRN/i);
+      const searchInput = screen.getByPlaceholderText(/Search by Name, REDCap ID/i);
       searchInput.focus();
       expect(searchInput).toHaveFocus();
 

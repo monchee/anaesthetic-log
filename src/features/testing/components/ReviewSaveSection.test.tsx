@@ -92,7 +92,7 @@ describe('ReviewSaveSection', () => {
   it('renders validation errors and jumps to corresponding sections', () => {
     const onJump = vi.fn();
     const errors = [
-      { message: 'MRN is required', fieldId: 'mrn-input' },
+      { message: 'REDCap ID is required', fieldId: 'mrn-input' },
       { message: 'Challenge drug must be selected', fieldId: 'challenge-drug' },
       { message: 'Drug test panel required', fieldId: 'drug-panel' },
       { message: 'Plan is required', fieldId: 'plan-text' },
@@ -110,7 +110,7 @@ describe('ReviewSaveSection', () => {
 
     expect(screen.getByText(/Please fix the following issues before saving:/i)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /MRN is required/i }));
+    fireEvent.click(screen.getByRole('button', { name: /REDCap ID is required/i }));
     expect(onJump).toHaveBeenCalledWith(0, 'mrn-input');
 
     fireEvent.click(screen.getByRole('button', { name: /Challenge drug must be selected/i }));

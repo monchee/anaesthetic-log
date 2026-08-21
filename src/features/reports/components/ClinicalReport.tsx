@@ -76,7 +76,7 @@ const ClinicalReport: React.FC<ClinicalReportProps> = ({ data, activeReportSaved
                <p className="text-xl md:text-2xl font-semibold tracking-tight text-primary print:text-base print:text-black">{patientName}</p>
             </div>
             <div>
-               <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">MRN</label>
+               <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-1 print:mb-0.5">REDCap ID</label>
                <p className="text-lg font-mono font-medium text-foreground print:text-sm">{redact(data.mrn)}</p>
             </div>
             <div>

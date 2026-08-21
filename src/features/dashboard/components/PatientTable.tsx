@@ -220,8 +220,8 @@ const PatientTable: React.FC<PatientTableProps> = ({
               <div className="relative flex-1 sm:flex-none sm:w-64">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
                 <Input
-                  placeholder="Search by Name, MRN..."
-                  aria-label="Search patients by name, medical record number (MRN), or city"
+                  placeholder="Search by Name, REDCap ID..."
+                  aria-label="Search patients by name, REDCap ID, or city"
                   className="pl-9 h-9 bg-muted"
                   value={filters.textQuery}
                   onChange={(e) => updateFilter('textQuery', e.target.value)}

@@ -233,7 +233,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
             <table className="w-full text-xs print:text-[9px] border-collapse">
               <tbody>
                 <tr className="border-t border-border print:border-black">
-                  <td className="py-0.5 pr-2 font-semibold text-muted-foreground print:text-slate-700 whitespace-nowrap w-24 print:w-20 align-top">URN:</td>
+                  <td className="py-0.5 pr-2 font-semibold text-muted-foreground print:text-slate-700 whitespace-nowrap w-24 print:w-20 align-top">REDCap ID:</td>
                   <td className="py-0.5 font-mono text-foreground print:text-black">{patient.mrn}</td>
                 </tr>
                 <tr className="border-t border-border print:border-black">

@@ -89,7 +89,7 @@ describe('ClinicalContextBar', () => {
     expect(screen.getByText('Visit 18/03/2026')).toBeInTheDocument();
   });
 
-  it('renders direct-entry badge for direct source and never displays REDCap ID', () => {
+  it('renders direct-entry badge for direct source and displays REDCap ID label', () => {
     const context = createClinicalWorkContext({
       source: 'direct',
       firstName: 'John',
@@ -99,7 +99,7 @@ describe('ClinicalContextBar', () => {
 
     render(<ClinicalContextBar context={context} />);
     expect(screen.getAllByText('Direct Entry').length).toBeGreaterThanOrEqual(1);
-    expect(screen.queryByText(/redcap/i)).not.toBeInTheDocument();
+    expect(screen.getAllByText(/REDCap ID/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders manual-entry badge for manual source', () => {

@@ -26,20 +26,20 @@ describe('reports print safety', () => {
 
     const { rerender } = renderReport(<ClinicalReport data={data} />);
     expect(screen.getByRole('heading', { level: 2, name: 'Anaesthetic Testing Report' })).toBeInTheDocument();
-    expect(screen.getAllByText(/Wei Chen · MRN MRN-42 · DOB 01\/05\/1980/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Wei Chen · REDCap ID MRN-42 · DOB 01\/05\/1980/).length).toBeGreaterThan(0);
     expect(screen.getByText('Date of Birth')).toBeInTheDocument();
     expect(screen.getAllByText('01/05/1980').length).toBeGreaterThan(0);
 
     rerender(<RedactProvider><PatientHandout data={data} /></RedactProvider>);
     expect(screen.getByRole('heading', { level: 2, name: 'Allergy Testing Results' })).toBeInTheDocument();
-    expect(screen.getAllByText(/Wei Chen · MRN MRN-42 · DOB 01\/05\/1980/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Wei Chen · REDCap ID MRN-42 · DOB 01\/05\/1980/).length).toBeGreaterThan(0);
     expect(screen.getByText('Date of Birth')).toBeInTheDocument();
     expect(screen.getAllByText('01/05/1980').length).toBeGreaterThan(0);
 
     rerender(<RedactProvider><PowerchartLetter data={data} patient={patient} /></RedactProvider>);
     expect(screen.getByRole('heading', { level: 2, name: 'Anaesthetic Allergy Clinic' })).toBeInTheDocument();
     expect(screen.getByText('Powerchart Letter')).toBeInTheDocument();
-    expect(screen.getAllByText(/Wei Chen · MRN MRN-42 · DOB 01\/05\/1980/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Wei Chen · REDCap ID MRN-42 · DOB 01\/05\/1980/).length).toBeGreaterThan(0);
   });
 
   it('uses black-and-white distinguishable clinical challenge badges', () => {

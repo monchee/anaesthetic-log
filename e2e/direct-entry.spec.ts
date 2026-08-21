@@ -24,7 +24,7 @@ test.describe('Home quick-start entry points', () => {
     await expect(page).toHaveURL(/\/testing$/);
     await expect(page.getByRole('heading', { name: 'Allergy Testing', exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Patient Identity', exact: true })).toBeVisible();
-    await expect(page.getByLabel(/MRN/i)).toBeEditable();
+    await expect(page.getByLabel(/REDCap ID/i)).toBeEditable();
     await expect(page.getByLabel(/First Name/i)).toBeEditable();
     await expect(page.getByLabel(/Last Name/i)).toBeEditable();
     await expect(page.getByLabel(/Date of Birth/i)).toBeEditable();
@@ -35,7 +35,7 @@ test.describe('Home quick-start entry points', () => {
     // section 0, where each field shows its own inline error message (not a link).
     await page.getByRole('button', { name: /7\.\s*Review and save/i }).click();
     await page.getByRole('button', { name: 'Save Clinical Record', exact: true }).first().click();
-    await expect(page.getByText('MRN is required')).toBeVisible();
+    await expect(page.getByText('REDCap ID is required')).toBeVisible();
     await expect(page.getByText('First name is required')).toBeVisible();
     await expect(page.getByText('Last name is required')).toBeVisible();
   });
@@ -48,7 +48,7 @@ test.describe('Home quick-start entry points', () => {
     await expect(page).toHaveURL(/\/testing$/);
     await expect(page.getByRole('heading', { name: 'Allergy Testing', exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Patient Identity', exact: true })).toBeVisible();
-    await expect(page.getByLabel(/MRN/i)).toBeEditable();
+    await expect(page.getByLabel(/REDCap ID/i)).toBeEditable();
     await expect(page.getByLabel(/Patient identity/i)).toHaveCount(0);
   });
 

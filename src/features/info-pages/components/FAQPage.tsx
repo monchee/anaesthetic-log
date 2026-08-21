@@ -15,7 +15,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
       items: [
         {
           question: "What are the ways to start an allergy testing session?",
-          answer: "DREAM supports two entry paths: (1) Patient-Linked Testing: Select a patient from the database on Home, review their reaction history, build and preview a testing plan, and proceed with prefilled drug protocols. (2) Direct Allergy Testing: Click 'Open Allergy Testing' on Home (or navigate directly to /testing) to start a fresh testing session at bedside with editable patient identity fields (MRN, first name, last name, DOB) without pre-selecting a patient or creating a prior plan."
+          answer: "DREAM supports two entry paths: (1) Patient-Linked Testing: Select a patient from the database on Home, review their reaction history, build and preview a testing plan, and proceed with prefilled drug protocols. (2) Direct Allergy Testing: Click 'Open Allergy Testing' on Home (or navigate directly to /testing) to start a fresh testing session at bedside with editable patient identity fields (REDCap ID, first name, last name, DOB) without pre-selecting a patient or creating a prior plan."
         },
         {
           question: "How do I upload patient data?",
@@ -37,7 +37,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
       items: [
         {
           question: "How do I search for a patient?",
-          answer: "Use the search box at the top of the dashboard to find patients by name, MRN, or suspected agent. You can also use the Filters button for advanced filtering."
+          answer: "Use the search box at the top of the dashboard to find patients by name, REDCap ID, or suspected agent. You can also use the Filters button for advanced filtering."
         },
         {
           question: "What do the reaction grades mean?",

@@ -147,7 +147,7 @@ describe('TestingLogForm (Indexed Workflow)', () => {
     it('renders editable identity fields when isDirectEntry is true', () => {
       render(<TestWrapper initialData={mockFormData} props={{ ...mockProps, isDirectEntry: true }} />);
 
-      expect(screen.getByLabelText(/MRN/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/REDCap ID/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/Last Name/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/Date of Birth/i)).toBeInTheDocument();
@@ -163,7 +163,7 @@ describe('TestingLogForm (Indexed Workflow)', () => {
       };
       render(<TestWrapper initialData={emptyData} props={{ ...mockProps, isDirectEntry: true }} />);
 
-      fireEvent.change(screen.getByLabelText(/^MRN/i), { target: { value: 'MRN999' } });
+      fireEvent.change(screen.getByLabelText(/^REDCap ID/i), { target: { value: 'MRN999' } });
       fireEvent.change(screen.getByLabelText(/^First Name/i), { target: { value: 'Alice' } });
       fireEvent.change(screen.getByLabelText(/^Last Name/i), { target: { value: 'Smith' } });
       fireEvent.change(screen.getByLabelText(/Date of Birth/i), { target: { value: '1985-05-12' } });
@@ -320,7 +320,7 @@ describe('TestingLogForm (Indexed Workflow)', () => {
         expect(screen.getByText('Patient Identity')).toBeInTheDocument();
       });
 
-      fireEvent.change(screen.getByLabelText(/^MRN/i), { target: { value: 'MRN999' } });
+      fireEvent.change(screen.getByLabelText(/^REDCap ID/i), { target: { value: 'MRN999' } });
       fireEvent.change(screen.getByLabelText(/^First Name/i), { target: { value: 'Alice' } });
       fireEvent.change(screen.getByLabelText(/^Last Name/i), { target: { value: 'Smith' } });
       fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
@@ -345,7 +345,7 @@ describe('TestingLogForm (Indexed Workflow)', () => {
         expect(screen.getByText('Patient Identity')).toBeInTheDocument();
       });
 
-      fireEvent.change(screen.getByLabelText(/^MRN/i), { target: { value: 'MRN999' } });
+      fireEvent.change(screen.getByLabelText(/^REDCap ID/i), { target: { value: 'MRN999' } });
       fireEvent.change(screen.getByLabelText(/^First Name/i), { target: { value: 'Alice' } });
       fireEvent.change(screen.getByLabelText(/^Last Name/i), { target: { value: 'Smith' } });
       fireEvent.click(screen.getByRole('button', { name: /Save Clinical Record/i }));
