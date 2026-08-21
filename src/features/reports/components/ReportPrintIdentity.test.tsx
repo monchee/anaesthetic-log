@@ -16,11 +16,11 @@ describe('ReportPrintIdentity', () => {
     );
 
     // Top print header
-    expect(screen.getByText('Wei Chen · MRN MRN-12345 · DOB 01/05/1985')).toBeInTheDocument();
+    expect(screen.getByText('Wei Chen · REDCap ID MRN-12345 · DOB 01/05/1985')).toBeInTheDocument();
     expect(screen.getByText('Anaesthetic Testing Report')).toBeInTheDocument();
 
     // Bottom print footer
-    expect(screen.getByText('Wei Chen · MRN MRN-12345')).toBeInTheDocument();
+    expect(screen.getByText('Wei Chen · REDCap ID MRN-12345')).toBeInTheDocument();
     expect(screen.getByText('Date of report: 15/03/2024')).toBeInTheDocument();
   });
 
@@ -33,7 +33,7 @@ describe('ReportPrintIdentity', () => {
       />
     );
 
-    expect(screen.getAllByText('John Doe · MRN MRN-999')).toHaveLength(2);
+    expect(screen.getAllByText('John Doe · REDCap ID MRN-999')).toHaveLength(2);
     expect(screen.getByText('Patient Handout')).toBeInTheDocument();
     expect(screen.getByText(/Date of report:/)).toBeInTheDocument();
   });

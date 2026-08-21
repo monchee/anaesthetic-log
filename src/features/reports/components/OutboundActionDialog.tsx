@@ -110,9 +110,9 @@ export function OutboundActionDialog({
           icon: <Database className="w-5 h-5 text-primary" />,
           confirmLabel: researchAlreadySubmitted ? 'Already Submitted' : 'Confirm & Submit to Research Registry',
           destination: propDestination || 'ANZTADC Secure Research Database',
-          disclosure: propDisclosureMode || 'De-identified (patient direct identifiers: name, MRN, DOB, contacts omitted)',
+          disclosure: propDisclosureMode || 'De-identified (patient direct identifiers: name, REDCap ID, DOB, contacts omitted)',
           description:
-            'Confirm transmission of de-identified clinical testing results to the anaesthetic reaction registry. Patient direct identifiers (name, MRN, DOB, contacts) are omitted prior to transmission.',
+            'Confirm transmission of de-identified clinical testing results to the anaesthetic reaction registry. Patient direct identifiers (name, REDCap ID, DOB, contacts) are omitted prior to transmission.',
         };
     }
   };
@@ -167,7 +167,7 @@ export function OutboundActionDialog({
               <span className="font-semibold text-foreground">{patientName}</span>
 
               <span className="font-semibold text-muted-foreground uppercase tracking-wider text-xs">
-                MRN:
+                REDCap ID:
               </span>
               <span className="font-mono text-foreground">{mrn}</span>
 
@@ -206,7 +206,7 @@ export function OutboundActionDialog({
                 ))}
               </ul>
               <p className="text-xs text-muted-foreground pt-1 border-t border-primary/10 italic">
-                Note: Patient direct identifiers (name, MRN, DOB, contacts) are omitted.
+                Note: Patient direct identifiers (name, REDCap ID, DOB, contacts) are omitted.
               </p>
             </div>
           )}

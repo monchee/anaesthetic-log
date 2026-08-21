@@ -75,7 +75,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
 
   const toValidationLink = (message: string): ValidationErrorLink => {
     const lower = message.toLowerCase();
-    if (lower.includes('mrn')) return { message, fieldId: 'patient-mrn' };
+    if (lower.includes('mrn') || lower.includes('redcap id')) return { message, fieldId: 'patient-mrn' };
     if (lower.includes('first name')) return { message, fieldId: 'patient-first-name' };
     if (lower.includes('last name')) return { message, fieldId: 'patient-last-name' };
     if (lower.includes('visit date')) return { message, fieldId: 'visit-date' };
@@ -86,7 +86,7 @@ const TestingLogForm: React.FC<TestingLogFormProps> = ({
   const getInvalidSectionIndex = (errors: string[]): number => {
     for (const error of errors) {
       const lower = error.toLowerCase();
-      if (lower.includes('mrn') || lower.includes('first name') || lower.includes('last name') || lower.includes('visit date')) {
+      if (lower.includes('mrn') || lower.includes('redcap id') || lower.includes('first name') || lower.includes('last name') || lower.includes('visit date')) {
         return 0; // Patient and visit
       }
       if (lower.includes('drug') || lower.includes('test panel')) {

@@ -39,7 +39,7 @@ export function VisitDetailsSection({
               <div>
                 <Label htmlFor="patient-mrn" className="section-label mb-1.5 min-h-[2rem] flex flex-col justify-end">
                   <span>
-                    MRN<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
+                    REDCap ID<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
                   </span>
                 </Label>
                 <Input
@@ -47,7 +47,7 @@ export function VisitDetailsSection({
                   className="rounded-none font-mono"
                   value={formData.mrn}
                   onChange={(e) => onInputChange('mrn', e.target.value)}
-                  placeholder="Record number..."
+                  placeholder="REDCap ID..."
                   aria-invalid={!!mrnError}
                   aria-describedby={mrnError ? 'patient-mrn-error' : undefined}
                 />
@@ -150,7 +150,7 @@ export function VisitDetailsSection({
                 </div>
               </div>
               <div className="border-l pl-4 border-border">
-                <div className="section-label">MRN</div>
+                <div className="section-label">REDCap ID</div>
                 <div className="text-lg font-bold text-foreground font-mono">
                   {formData.mrn}
                 </div>

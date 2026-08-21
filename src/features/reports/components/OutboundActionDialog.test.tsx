@@ -68,8 +68,8 @@ describe('OutboundActionDialog', () => {
 
     expect(screen.getByText(/Transmitted Field Categories:/i)).toBeInTheDocument();
     expect(screen.getByText(/Tested drug names and skin\/intradermal test/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/Patient direct identifiers \(name, MRN, DOB, contacts\) are omitted/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/De-identified \(patient direct identifiers: name, MRN, DOB, contacts omitted\)/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Patient direct identifiers \(name, REDCap ID, DOB, contacts\) are omitted/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/De-identified \(patient direct identifiers: name, REDCap ID, DOB, contacts omitted\)/i)).toBeInTheDocument();
     expect(screen.queryByText(/Fully De-identified/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/anonymised/i)).not.toBeInTheDocument();
     expect(screen.getByText(/This record has already been submitted/i)).toBeInTheDocument();

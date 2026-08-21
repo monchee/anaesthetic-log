@@ -47,8 +47,8 @@ describe('testingPlanFormatter', () => {
 
     // Patient Details
     expect(result).toContain('Name:       Wei Chen');
-    expect(result).toContain('MRN:        MRN-12345');
-    expect(result).toContain('REDCap ID:  REDCAP-999');
+    expect(result).toContain('REDCap ID:  MRN-12345');
+    expect(result).toContain('REDCap Record ID (secondary): REDCAP-999');
     expect(result).toContain('DOB:        15/06/1985');
     expect(result).toContain('Gender:     Female');
     expect(result).toContain('Date of Reaction: 10/02/2024');
@@ -203,15 +203,15 @@ describe('testingPlanFormatter', () => {
     expect(result).not.toContain('*** URGENT');
   });
 
-  it('omits REDCap ID when it matches MRN or is missing', () => {
+  it('omits REDCap Record ID (secondary) when it matches REDCap ID / MRN or is missing', () => {
     const patientSame = createMockPatient({ mrn: 'MRN-100', redcapId: 'MRN-100' });
     const planData = createMockTestingPlanData();
     const resultSame = formatTestingPlanAsText(patientSame, planData, sampleDrugCategories);
-    expect(resultSame).not.toContain('REDCap ID:');
+    expect(resultSame).not.toContain('REDCap Record ID (secondary):');
 
     const patientNone = createMockPatient({ mrn: 'MRN-200', redcapId: undefined });
     const resultNone = formatTestingPlanAsText(patientNone, planData, sampleDrugCategories);
-    expect(resultNone).not.toContain('REDCap ID:');
+    expect(resultNone).not.toContain('REDCap Record ID (secondary):');
   });
 
   it('handles missing DOB and gender gracefully', () => {

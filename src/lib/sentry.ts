@@ -19,6 +19,8 @@ async function loadSentry(): Promise<SentryModule | null> {
  * for structured identifiers, not a substitute for never logging PHI.
  */
 const PHI_PATTERNS: Array<[RegExp, string]> = [
+  [/REDCap Record ID(?:\s*\(secondary\))?:?\s*[\w-]+/gi, 'REDCap Record ID: [REDACTED]'],
+  [/REDCap ID:?\s*[\w-]+/gi, 'REDCap ID: [REDACTED]'],
   [/MRN:?\s*[\w-]+/gi, 'MRN: [REDACTED]'],
   [/\bREC-\d+\b/g, '[RECORD-ID]'],
   [/\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b/g, '[DATE]'], // DOB-shaped dates

@@ -63,7 +63,7 @@ export function ClinicalContextBar({
           <span className="font-semibold truncate">{formattedName}</span>
           <span aria-hidden="true" className="text-muted-foreground shrink-0">·</span>
           <span className="shrink-0">
-            MRN <span className="font-mono font-semibold">{mrn ? redact(mrn) : '—'}</span>
+            REDCap ID <span className="font-mono font-semibold">{mrn ? redact(mrn) : '—'}</span>
           </span>
         </div>
 
@@ -106,7 +106,7 @@ export function ClinicalContextBar({
                 <dt className="text-muted-foreground font-medium">Name</dt>
                 <dd className="font-semibold text-foreground break-words m-0">{formattedName}</dd>
 
-                <dt className="text-muted-foreground font-medium">MRN</dt>
+                <dt className="text-muted-foreground font-medium">REDCap ID</dt>
                 <dd className="font-mono font-semibold text-foreground m-0">{mrn ? redact(mrn) : '—'}</dd>
 
                 <dt className="text-muted-foreground font-medium">DOB</dt>
@@ -146,7 +146,7 @@ export function ClinicalContextBar({
 
             <span aria-hidden="true" className="text-muted-foreground">·</span>
             <span>
-              MRN <span className="font-mono font-semibold">{mrn ? redact(mrn) : '—'}</span>
+              REDCap ID <span className="font-mono font-semibold">{mrn ? redact(mrn) : '—'}</span>
             </span>
 
             <span aria-hidden="true" className="text-muted-foreground">·</span>

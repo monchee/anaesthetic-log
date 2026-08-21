@@ -49,7 +49,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
               <ul className="space-y-2 ml-4">
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1 select-none">•</span>
-                  <span><strong className="text-foreground">Personal Information:</strong> Name, date of birth, MRN/hospital ID, city or suburb</span>
+                  <span><strong className="text-foreground">Personal Information:</strong> Name, date of birth, REDCap ID/hospital ID, city or suburb</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1 select-none">•</span>

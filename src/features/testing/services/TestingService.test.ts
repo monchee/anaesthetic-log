@@ -59,7 +59,7 @@ describe('TestingService', () => {
 
       expect(result.isValid).toBe(false);
       expect(result.errors).toEqual([
-        'MRN is required',
+        'REDCap ID is required',
         'First name is required',
         'Last name is required',
         'Visit date is required',

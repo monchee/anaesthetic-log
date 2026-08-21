@@ -14,7 +14,7 @@ export class TestingService {
 
     // Required fields
     if (!formData.mrn?.trim()) {
-      errors.push('MRN is required');
+      errors.push('REDCap ID is required');
     }
     if (!formData.firstName?.trim()) {
       errors.push('First name is required');

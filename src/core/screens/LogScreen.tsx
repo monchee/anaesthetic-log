@@ -142,7 +142,7 @@ export function LogScreen({
     const errors = {
       firstName: selectedPatient.firstName.trim() ? '' : 'First name is required.',
       lastName: selectedPatient.lastName.trim() ? '' : 'Last name is required.',
-      mrn: selectedPatient.mrn.trim() ? '' : 'MRN is required.',
+      mrn: selectedPatient.mrn.trim() ? '' : 'REDCap ID is required.',
     };
     setManualPatientErrors(errors);
     if (Object.values(errors).some(Boolean)) return;
@@ -430,7 +430,7 @@ export function LogScreen({
           if (!open) setPendingPatientToSelect(null);
         }}
         title="Switch patient?"
-        message={`You have unsaved changes in your current testing session.${selectedPatient ? ` Current: ${selectedPatient.lastName ? `${selectedPatient.lastName.toUpperCase()}, ${selectedPatient.firstName}` : selectedPatient.firstName} (MRN: ${selectedPatient.mrn || '—'}, DOB: ${selectedPatient.dob || 'not recorded'}).` : ''}${pendingPatientToSelect ? ` Target: ${pendingPatientToSelect.lastName ? `${pendingPatientToSelect.lastName.toUpperCase()}, ${pendingPatientToSelect.firstName}` : pendingPatientToSelect.firstName} (MRN: ${pendingPatientToSelect.mrn || '—'}, DOB: ${pendingPatientToSelect.dob || 'not recorded'}).` : ''} Switching patients will discard these changes. This cannot be undone.`}
+        message={`You have unsaved changes in your current testing session.${selectedPatient ? ` Current: ${selectedPatient.lastName ? `${selectedPatient.lastName.toUpperCase()}, ${selectedPatient.firstName}` : selectedPatient.firstName} (REDCap ID: ${selectedPatient.mrn || '—'}, DOB: ${selectedPatient.dob || 'not recorded'}).` : ''}${pendingPatientToSelect ? ` Target: ${pendingPatientToSelect.lastName ? `${pendingPatientToSelect.lastName.toUpperCase()}, ${pendingPatientToSelect.firstName}` : pendingPatientToSelect.firstName} (REDCap ID: ${pendingPatientToSelect.mrn || '—'}, DOB: ${pendingPatientToSelect.dob || 'not recorded'}).` : ''} Switching patients will discard these changes. This cannot be undone.`}
         confirmLabel="Switch patient"
         cancelLabel="Cancel"
         variant="danger"
@@ -501,7 +501,7 @@ export function LogScreen({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="manual-mrn" className="section-label mb-1.5 block">
-                    MRN<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
+                    REDCap ID<span className="text-destructive ml-0.5" aria-hidden="true">*</span>
                   </Label>
                   <Input
                     id="manual-mrn"
@@ -511,7 +511,7 @@ export function LogScreen({
                       onManualDetailChange('mrn', e.target.value);
                       setManualPatientErrors(prev => ({ ...prev, mrn: '' }));
                     }}
-                    placeholder="Medical Record Number..."
+                    placeholder="REDCap ID..."
                     aria-invalid={!!manualPatientErrors.mrn}
                     aria-describedby={manualPatientErrors.mrn ? 'manual-mrn-error' : undefined}
                   />
@@ -523,14 +523,14 @@ export function LogScreen({
                 </div>
                 <div>
                   <Label htmlFor="manual-redcap-id" className="section-label mb-1.5 block">
-                    REDCap Record ID
+                    REDCap Record ID (secondary)
                   </Label>
                   <Input
                     id="manual-redcap-id"
                     className="rounded-none font-mono"
                     value={selectedPatient.redcapId || ''}
                     onChange={(e) => onManualDetailChange('redcapId', e.target.value)}
-                    placeholder="REDCap ID..."
+                    placeholder="Secondary ID..."
                   />
                 </div>
               </div>
