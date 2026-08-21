@@ -152,13 +152,13 @@ const PatientTable: React.FC<PatientTableProps> = ({
 
   return (
     <Card elevation="raised" className="w-full animate-enter-subtle">
-      <CardHeader bordered className="py-2.5 sm:py-4 bg-card">
+      <CardHeader bordered className="py-4 bg-card">
         <div className="flex flex-col gap-3 sm:gap-4">
           {/* Header Top Row: Title + Update Button */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4">
             <div className="space-y-1">
-              <CardTitle as="h2" className="text-lg flex items-center gap-2 text-foreground">
-                <FileText className="w-5 h-5 text-primary" /> REDCap Record Database
+              <CardTitle as="h2" className="text-base flex items-center gap-2 text-foreground">
+                <FileText className="w-4 h-4 text-primary" /> REDCap Record Database
               </CardTitle>
               <div className="text-xs text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1">
                 <span>{isCustomData ? `Updated ${databaseDate}` : 'Demo data'}</span>
@@ -243,7 +243,7 @@ const PatientTable: React.FC<PatientTableProps> = ({
                       variant={isSelected ? 'default' : 'outline'}
                       aria-pressed={isSelected}
                       onClick={() => selectQuickFilter(value)}
-                      className="h-8 rounded-none px-3 text-xs"
+                      className="h-8 rounded-none px-3 text-xs btn-press"
                     >
                       {isSelected ? <Check className="mr-1 h-3.5 w-3.5" aria-hidden="true" /> : null}
                       {label}
