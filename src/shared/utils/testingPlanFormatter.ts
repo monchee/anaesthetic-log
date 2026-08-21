@@ -1,5 +1,6 @@
 import { Patient, TestingPlanData } from '@shared/types';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
+import { resolveSelectedProtocol } from './protocolResolver';
 
 export function formatTestingPlanAsText(
   patient: Patient,
@@ -57,15 +58,60 @@ export function formatTestingPlanAsText(
       lines.push(`${category}:`);
       active.forEach(d => {
         const protocols = getSkinProtocolsForDrug(d);
-        const protocolIdx = data.selectedProtocols?.[d] ?? 0;
-        const protocol = protocols[protocolIdx] ?? protocols[0];
-        if (protocol?.sptNeatConcentration) {
-          const idtChain = protocol.idtSteps.map(s => `${s.ratio}${s.concentration ? ` (${s.concentration})` : ''}`).join(' → ');
-          const protocolNote = idtChain ? `SPT: ${protocol.sptNeatConcentration} | IDT: ${idtChain}` : `SPT: ${protocol.sptNeatConcentration}`;
-          lines.push(`  - ${d}${protocol.presentation ? ` (${protocol.presentation})` : ''}`);
-          lines.push(`      ${protocolNote}`);
-        } else {
+        const resolution = resolveSelectedProtocol(protocols, data.selectedProtocols?.[d]);
+
+        if (resolution.status === 'invalid') {
           lines.push(`  - ${d}`);
+          lines.push('      ⚠ Protocol selection requires review');
+          return;
+        }
+
+        if (resolution.status === 'empty') {
+          lines.push(`  - ${d}`);
+          return;
+        }
+
+        const protocol = resolution.protocol;
+        lines.push(`  - ${d}${protocol.presentation ? ` (${protocol.presentation})` : ''}`);
+
+        // Protocol label if present
+        if (protocol.protocolLabel) {
+          lines.push(`      Protocol: ${protocol.protocolLabel}`);
+        }
+
+        // SPT Neat Concentration & Diluent
+        if (protocol.sptNeatConcentration || protocol.diluent) {
+          const parts: string[] = [];
+          if (protocol.sptNeatConcentration) parts.push(`SPT: ${protocol.sptNeatConcentration}`);
+          if (protocol.diluent) parts.push(`Diluent: ${protocol.diluent}`);
+          lines.push(`      ${parts.join(' | ')}`);
+        }
+
+        // IDT steps in source order with optional preparation
+        if (protocol.idtSteps && protocol.idtSteps.length > 0) {
+          const idtChain = protocol.idtSteps
+            .map(s => {
+              const conc = s.concentration ? ` (${s.concentration})` : '';
+              const prep = s.preparation ? ` [${s.preparation}]` : '';
+              return `${s.ratio}${conc}${prep}`;
+            })
+            .join(' → ');
+          lines.push(`      IDT: ${idtChain}`);
+        }
+
+        // Under review note
+        if (protocol.underReview) {
+          lines.push(`      ⚠ Under review${protocol.reviewNote ? `: ${protocol.reviewNote}` : ''}`);
+        }
+
+        // Pharmacy verification warning
+        if (protocol.needsPharmacyVerification) {
+          lines.push('      ⚠ Confirm preparation with pharmacy');
+        }
+
+        // SCRATCH source deep-link
+        if (protocol.sourceSlug) {
+          lines.push(`      Source: https://scratch.yuson.au/drugs/${protocol.sourceSlug}/`);
         }
       });
       hasAnyDrug = true;
@@ -76,7 +122,16 @@ export function formatTestingPlanAsText(
     lines.push('Additional:');
     activeCustom.forEach(e => {
       const spt = e.sptConcentration ? ` | SPT: ${e.sptConcentration}` : '';
-      const idt = e.idtSteps?.length ? ` | IDT: ${e.idtSteps.map(s => s.ratio).filter(Boolean).join(', ')}` : '';
+      const idt = e.idtSteps?.length
+        ? ` | IDT: ${e.idtSteps
+            .map(s => {
+              const conc = s.concentration ? ` (${s.concentration})` : '';
+              const prep = s.preparation ? ` [${s.preparation}]` : '';
+              return `${s.ratio}${conc}${prep}`;
+            })
+            .filter(Boolean)
+            .join(', ')}`
+        : '';
       lines.push(`  - ${e.name}${spt}${idt}`);
     });
     hasAnyDrug = true;

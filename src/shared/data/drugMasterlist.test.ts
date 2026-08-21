@@ -79,6 +79,14 @@ describe('drugMasterlist array ordering & backwards compatibility', () => {
       expect(got.protocolLabel, `Position ${i} protocolLabel mismatch`).toBe(want.protocolLabel);
     }
   });
+
+  it('preserves the canonical SHA-256 hash of the 116 frozen pre-snapshot protocols', async () => {
+    const { computeTuplesHash, FROZEN_PRE_SNAPSHOT_PREFIX_SHA256 } = await import(
+      '../../../scripts/verify-order.mjs'
+    );
+    expect(computeTuplesHash(expectedOrder.order, 116)).toBe(FROZEN_PRE_SNAPSHOT_PREFIX_SHA256);
+    expect(computeTuplesHash(DRUG_MASTERLIST, 116)).toBe(FROZEN_PRE_SNAPSHOT_PREFIX_SHA256);
+  });
 });
 
 describe('drugMasterlist diluents & snapshot data', () => {
