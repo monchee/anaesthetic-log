@@ -1,7 +1,7 @@
 {
   "_comment": "Frozen positional order of DRUG_MASTERLIST as it existed before generation from SCRATCH. DREAM selects protocol variants by array index, so a shift here re-points saved clinical plans at different doses. Captured from origin/main at the Phase 2 cutover. Only change this deliberately, alongside a migration for stored protocolIndex values.",
   "capturedFrom": "origin/main @ pre-snapshot cutover",
-  "count": 116,
+  "count": 117,
   "order": [
     {
       "drugName": "Cis-atracurium",
@@ -582,6 +582,11 @@
       "drugName": "Voltaren (Diclofenac)",
       "testType": "challenge",
       "protocolLabel": "Graded Challenge"
+    },
+    {
+      "drugName": "Flucloxacillin",
+      "testType": "skin",
+      "protocolLabel": "IV"
     }
   ]
 }

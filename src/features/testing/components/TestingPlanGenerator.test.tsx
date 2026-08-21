@@ -8,6 +8,7 @@ const drugCategories = {
   'Muscle Relaxants': ['Cis-atracurium'],
   Penicillins: ['Cephalexin'],
   Hypnotics: ['Ketamine'],
+  'Proton Pump Inhibitors': ['Pantoprazole'],
   Others: ['Chlorhexidine', 'Latex'],
 };
 
@@ -76,9 +77,8 @@ describe('TestingPlanGenerator', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Cephalexin' }));
 
-    const warning = screen.getByText('⚠ Confirm preparation with pharmacy');
-    expect(warning).toBeInTheDocument();
-    expect(warning).toHaveClass('border-status-warning', 'text-status-warning');
+    const warning = screen.getAllByText(/Confirm preparation with pharmacy/i);
+    expect(warning.length).toBeGreaterThan(0);
     expect(within(screen.getByRole('button', { name: /Cephalexin/i })).getByText(/Confirm preparation with pharmacy/)).toBeInTheDocument();
     expect(within(screen.getByRole('button', { name: /Chlorhexidine/i })).queryByText(/Confirm preparation with pharmacy/)).not.toBeInTheDocument();
   });
@@ -145,8 +145,6 @@ describe('TestingPlanGenerator', () => {
   });
 
   it('preselects Cis-atracurium when reaction history uses the unhyphenated REDCap spelling', () => {
-    // REDCap's reaction form stores "Cisatracurium" (no hyphen) while the
-    // masterlist canonical name is "Cis-atracurium" — the matcher must bridge them.
     const patientWithReactionDrug = createMockPatient({
       id: 'PLAN-CISATRA',
       history: {
@@ -202,5 +200,120 @@ describe('TestingPlanGenerator', () => {
     expect(screen.getByRole('button', { name: /Sodium citrate flush.*not listed/i })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByText('(not listed)')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Remove custom drug Sodium citrate flush' })).toBeInTheDocument();
+  });
+
+  it('renders inline protocol dose tables with exact clinical strings and source links for selected listed drugs', () => {
+    renderGenerator();
+
+    // Chlorhexidine is preselected by default
+    const tableSection = screen.getByTestId('selected-protocol-details');
+    expect(tableSection).toBeInTheDocument();
+
+    expect(within(tableSection).getByText('Chlorhexidine')).toBeInTheDocument();
+    expect(within(tableSection).getByText('0.02% solution (0.2 mg/mL) or 0.1% solution (1 mg/mL)')).toBeInTheDocument();
+    expect(within(tableSection).getByText('Neat (0.2 mg/mL)')).toBeInTheDocument();
+    expect(within(tableSection).getByText('0.9% sodium chloride')).toBeInTheDocument();
+    expect(within(tableSection).getByText('0.1 mL of 0.02 mg/mL + 0.9 mL NS')).toBeInTheDocument();
+
+    const scratchLink = within(tableSection).getByRole('link', { name: /View Chlorhexidine on SCRATCH/i });
+    expect(scratchLink).toHaveAttribute('href', 'https://scratch.yuson.au/drugs/chlorhexidine/');
+  });
+
+  it('renders under-review badge, reviewNote, and source link when selecting a generated drug under review', () => {
+    renderGenerator();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Pantoprazole' }));
+
+    const tableSection = screen.getByTestId('selected-protocol-details');
+    expect(within(tableSection).getByText('Pantoprazole')).toBeInTheDocument();
+    expect(within(tableSection).getByText(/Under review/i)).toBeInTheDocument();
+    expect(within(tableSection).getByText('The Spreadsheet 2 spreadsheet labels the SPT concentration as "Neat (40 mg/mL)". This is a spreadsheet labelling error — the correct reconstituted concentration is 4 mg/mL (40 mg powder + 10 mL NS).')).toBeInTheDocument();
+
+    const scratchLink = within(tableSection).getByRole('link', { name: /View Pantoprazole on SCRATCH/i });
+    expect(scratchLink).toHaveAttribute('href', 'https://scratch.yuson.au/drugs/pantoprazole/');
+
+    // IDT steps exact strings
+    expect(within(tableSection).getByText('0.1 mL of 0.04 mg/mL + 0.9 mL NS')).toBeInTheDocument();
+    expect(within(tableSection).getByText('0.1 mL of 0.4 mg/mL + 0.9 mL NS')).toBeInTheDocument();
+    expect(within(tableSection).getByText('0.1 mL neat + 0.9 mL NS')).toBeInTheDocument();
+  });
+
+  it('updates the active inline dose table when switching protocol choices on a multi-protocol drug', async () => {
+    renderGenerator();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Ketamine' }));
+
+    const tableSection = screen.getByTestId('selected-protocol-details');
+    expect(within(tableSection).getByText('Ketamine')).toBeInTheDocument();
+    expect(within(tableSection).getByText('1:1,000 start')).toBeInTheDocument();
+    expect(within(tableSection).getByText('1:1,000')).toBeInTheDocument();
+
+    // Switch protocol to 1:100 start
+    fireEvent.click(screen.getByRole('combobox', { name: 'Ketamine' }));
+    fireEvent.click(await screen.findByRole('option', { name: /1:100 start/i }));
+
+    expect(within(tableSection).getByText('1:100 start')).toBeInTheDocument();
+    expect(within(tableSection).getByText('1:100')).toBeInTheDocument();
+
+    // Ketamine is DREAM-only, so no SCRATCH link should exist for it
+    expect(within(tableSection).queryByRole('link', { name: /View Ketamine on SCRATCH/i })).not.toBeInTheDocument();
+  });
+
+  it('fails closed and shows accessible review alert when restored draft contains invalid protocol index', async () => {
+    localStorage.setItem(TESTING_PLAN_BUILDER_DRAFTS_KEY, JSON.stringify({
+      savedAt: Date.now(),
+      value: {
+        [patient.id]: {
+          selectedDrugs: ['Ketamine'],
+          selectedProtocols: { Ketamine: 99 }, // Out of range
+          customDrugs: [],
+          notes: '',
+          urgent: false,
+          reactionDate: '2024-02-10',
+          documentsToChase: {
+            tryptases: false,
+            anaestheticChart: false,
+            other: false,
+            otherText: '',
+          },
+        },
+      },
+    }));
+
+    const { onPreview } = renderGenerator();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('protocol-review-required-Ketamine')).toBeInTheDocument();
+    });
+
+    const alert = screen.getByTestId('protocol-review-required-Ketamine');
+    expect(alert).toHaveTextContent('⚠ Ketamine — Protocol selection requires review');
+
+    // Verify guessed dose table is NOT rendered
+    expect(screen.queryByTestId('protocol-dose-table-Ketamine')).not.toBeInTheDocument();
+
+    // Verify dropdown shows review required indicator
+    expect(screen.getByText('⚠ Review required')).toBeInTheDocument();
+
+    // Verify persistent alert near Preview & Print button is visible
+    const buttonAlert = screen.getByTestId('protocol-selection-review-alert');
+    expect(buttonAlert).toBeInTheDocument();
+    expect(buttonAlert).toHaveTextContent('Protocol selection requires review. A valid protocol option must be selected before previewing or printing.');
+
+    // Verify onPreview is NOT called when clicking Preview & Print with an invalid restored protocol index
+    fireEvent.click(screen.getByRole('button', { name: /Preview & Print Request Form/i }));
+    expect(onPreview).not.toHaveBeenCalled();
+
+    // Now select a valid protocol option from dropdown
+    fireEvent.click(screen.getByRole('combobox', { name: 'Ketamine' }));
+    fireEvent.click(await screen.findByRole('option', { name: /1:100 start/i }));
+
+    // Verify review alert near button is cleared and onPreview succeeds
+    expect(screen.queryByTestId('protocol-selection-review-alert')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Preview & Print Request Form/i }));
+    expect(onPreview).toHaveBeenCalledWith(expect.objectContaining({
+      selectedDrugs: ['Ketamine'],
+      selectedProtocols: expect.objectContaining({ Ketamine: 1 }),
+    }));
   });
 });

@@ -2,11 +2,15 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Card, CardContent, Button, Label, Switch, Checkbox, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Patient, TestingPlanData, CustomDrugEntry, DocumentsToChase } from '@shared/types';
+import { DrugProtocol } from '@features/testing/types';
 import { Printer, Check, X, ClipboardList, ChevronDown, Plus, History, Pin, Search } from 'lucide-react';
 import { CATEGORY_THEMES, DEFAULT_THEME, DEFAULT_SELECTED_DRUGS } from '@shared/utils/constants';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
+import { resolveSelectedProtocol, type ProtocolResolution } from '@shared/utils/protocolResolver';
 import { getIfFresh, setWithTTL, TESTING_PLAN_BUILDER_DRAFTS_KEY } from '@shared/utils/ttlStorage';
 import { DraftSaveIndicator } from './DraftSaveIndicator';
+import { ProtocolDoseTable } from './ProtocolDoseTable';
+
 
 interface TestingPlanGeneratorProps {
   patient: Patient;
@@ -302,21 +306,54 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
       .filter(({ protocols }) => protocols.length > 1)
   ), [selectedDrugs]);
 
-  const handlePreview = () => {
-    const selectedProtocolPayload = Object.fromEntries(
-      selectedDrugs.map(drug => [drug, selectedProtocols[drug] ?? 0])
+  const selectedListedDrugResolutions = useMemo(() => {
+    return selectedDrugs
+      .filter(drug => !customDrugs.some(c => c.name === drug))
+      .map(drug => {
+        const protocols = getSkinProtocolsForDrug(drug);
+        const resolution = resolveSelectedProtocol(protocols, selectedProtocols[drug]);
+        return { drug, protocols, resolution };
+      });
+  }, [selectedDrugs, customDrugs, selectedProtocols]);
+
+  const hasUnresolvedProtocols = useMemo(() => {
+    return selectedListedDrugResolutions.some(
+      item => item.resolution.status === 'invalid' || item.resolution.status === 'empty'
     );
+  }, [selectedListedDrugResolutions]);
+
+  const selectedListedDrugs = useMemo(() => {
+    return selectedListedDrugResolutions.filter(
+      (item): item is { drug: string; protocols: DrugProtocol[]; resolution: ProtocolResolution } => item.protocols.length > 0
+    );
+  }, [selectedListedDrugResolutions]);
+
+  const handlePreview = () => {
+    const isBlocked = selectedListedDrugResolutions.some(
+      item => item.resolution.status === 'invalid' || item.resolution.status === 'empty'
+    );
+    if (isBlocked) {
+      return;
+    }
+
+    const selectedProtocolPayload: Record<string, number> = {};
+    selectedDrugs.forEach(drug => {
+      if (selectedProtocols[drug] !== undefined) {
+        selectedProtocolPayload[drug] = selectedProtocols[drug];
+      }
+    });
 
     onPreview({
-        selectedDrugs,
-        selectedProtocols: selectedProtocolPayload,
-        customDrugs,
-        notes,
-        urgent,
-        reactionDate,
-        documentsToChase,
+      selectedDrugs,
+      selectedProtocols: selectedProtocolPayload,
+      customDrugs,
+      notes,
+      urgent,
+      reactionDate,
+      documentsToChase,
     });
   };
+
 
   const customTheme = CATEGORY_THEMES['Others'] || DEFAULT_THEME;
   const hasCustomActive = customDrugs.some(e => selectedDrugs.includes(e.name));
@@ -495,8 +532,8 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                                             const fromHistory = historyDrugs.includes(drug);
                                             const isDefault = DEFAULT_SELECTED_DRUGS.includes(drug);
                                             const protocols = getSkinProtocolsForDrug(drug);
-                                            const activeProtocolIndex = Math.min(selectedProtocols[drug] ?? 0, Math.max(protocols.length - 1, 0));
-                                            const needsPharmacyVerification = protocols[activeProtocolIndex]?.needsPharmacyVerification === true;
+                                            const resolution = resolveSelectedProtocol(protocols, selectedProtocols[drug]);
+                                            const needsPharmacyVerification = resolution.status === 'valid' && resolution.protocol.needsPharmacyVerification === true;
                                             return (
                                             <button
                                                 key={drug}
@@ -548,18 +585,32 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             </div>
                             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                               {protocolChoices.map(({ drug, protocols }) => {
-                                const selectedProtocolIndex = Math.min(selectedProtocols[drug] ?? 0, protocols.length - 1);
+                                const resolution = resolveSelectedProtocol(protocols, selectedProtocols[drug]);
+                                const isInvalid = resolution.status === 'invalid';
+                                const selectValue = resolution.status === 'valid' ? String(resolution.index) : '';
                                 return (
                                   <div key={drug} className="space-y-1">
-                                    <Label htmlFor={`protocol-${drug}`} className="text-xs font-medium text-foreground">
-                                      {drug}
-                                    </Label>
+                                    <div className="flex items-center justify-between">
+                                      <Label htmlFor={`protocol-${drug}`} className="text-xs font-medium text-foreground">
+                                        {drug}
+                                      </Label>
+                                      {isInvalid && (
+                                        <span className="text-[10px] font-bold text-status-danger">
+                                          ⚠ Review required
+                                        </span>
+                                      )}
+                                    </div>
                                     <Select
-                                      value={String(selectedProtocolIndex)}
+                                      value={selectValue}
                                       onValueChange={(value) => updateSelectedProtocol(drug, Number(value))}
                                     >
-                                      <SelectTrigger id={`protocol-${drug}`} className="h-8 text-xs rounded-none bg-background">
-                                        <SelectValue />
+                                      <SelectTrigger
+                                        id={`protocol-${drug}`}
+                                        className={`h-8 text-xs rounded-none bg-background ${
+                                          isInvalid ? 'border-status-danger text-status-danger ring-1 ring-status-danger/30' : ''
+                                        }`}
+                                      >
+                                        <SelectValue placeholder="Select protocol (review required)..." />
                                       </SelectTrigger>
                                       <SelectContent className="rounded-none">
                                         {protocols.map((protocol, index) => (
@@ -576,6 +627,7 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                             </div>
                           </div>
                         )}
+
 
                         {/* Custom Drugs Section */}
                         <div className={`col-span-full space-y-2 rounded-none p-3 transition-colors duration-150 ${
@@ -707,6 +759,44 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                               </p>
                             )}
                         </div>
+
+                        {/* Selected Protocol & Dose Details for Listed Drugs */}
+                        {selectedListedDrugs.length > 0 && (
+                          <div className="col-span-full border border-border bg-muted/20 p-3 space-y-3 rounded-none" data-testid="selected-protocol-details">
+                            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between border-b border-dashed border-border pb-1">
+                              <h5 className="section-label">Protocol &amp; Dose Specifications</h5>
+                              <span className="text-xs text-muted-foreground tabular-nums">
+                                {selectedListedDrugs.length} selected drug{selectedListedDrugs.length === 1 ? '' : 's'}
+                              </span>
+                            </div>
+                            <div className="grid gap-3 grid-cols-1 lg:grid-cols-2">
+                              {selectedListedDrugs.map(({ drug, resolution }) => {
+                                if (resolution.status === 'valid') {
+                                  return <ProtocolDoseTable key={drug} protocol={resolution.protocol} />;
+                                }
+                                if (resolution.status === 'invalid') {
+                                  return (
+                                    <div
+                                      key={drug}
+                                      role="alert"
+                                      aria-live="assertive"
+                                      className="border border-status-danger bg-status-danger/10 p-3 rounded-none space-y-1 text-status-danger"
+                                      data-testid={`protocol-review-required-${drug}`}
+                                    >
+                                      <div className="flex items-center gap-1.5 font-bold text-xs">
+                                        <span>⚠ {drug} — Protocol selection requires review</span>
+                                      </div>
+                                      <p className="text-xs font-normal text-foreground/90 leading-relaxed">
+                                        Saved protocol selection index is invalid. Please select a valid protocol option in Protocol Choices below.
+                                      </p>
+                                    </div>
+                                  );
+                                }
+                                return null;
+                              })}
+                            </div>
+                          </div>
+                        )}
                     </div>
                     </div>
 
@@ -739,10 +829,27 @@ const TestingPlanGenerator: React.FC<TestingPlanGeneratorProps> = ({ patient, dr
                         />
                     </div>
 
-                    <div className="flex justify-end pt-4 border-t border-border">
-                        <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold rounded-none btn-press">
-                            <Printer className="w-4 h-4 mr-2" /> Preview & Print Request Form
-                        </Button>
+                    <div className="pt-4 border-t border-border space-y-3">
+                        {hasUnresolvedProtocols && (
+                          <div
+                            role="alert"
+                            aria-live="assertive"
+                            className="border border-status-danger bg-status-danger/10 p-3 rounded-none text-status-danger space-y-1"
+                            data-testid="protocol-selection-review-alert"
+                          >
+                            <div className="flex items-center gap-1.5 font-bold text-xs">
+                              <span>⚠ Protocol selection requires review</span>
+                            </div>
+                            <p className="text-xs font-normal text-foreground/90 leading-relaxed">
+                              Protocol selection requires review. A valid protocol option must be selected before previewing or printing.
+                            </p>
+                          </div>
+                        )}
+                        <div className="flex justify-end">
+                          <Button onClick={handlePreview} className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold rounded-none btn-press">
+                              <Printer className="w-4 h-4 mr-2" /> Preview & Print Request Form
+                          </Button>
+                        </div>
                     </div>
                 </div>
             </CardContent>

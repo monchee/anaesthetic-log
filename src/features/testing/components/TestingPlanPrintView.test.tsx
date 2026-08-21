@@ -109,6 +109,100 @@ describe('TestingPlanPrintView', () => {
     expect(screen.getAllByText(/Confirm preparation with pharmacy/)).toHaveLength(1);
   });
 
+  it('renders exact IDT preparation text in the concentration cell when present', () => {
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={{
+          ...baseData,
+          selectedDrugs: ['Pantoprazole'],
+          selectedProtocols: { Pantoprazole: 0 },
+        }}
+        drugCategories={{
+          'Proton Pump Inhibitors': ['Pantoprazole'],
+        }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    // Check exact preparation strings in IDT rows
+    expect(screen.getByText('0.1 mL of 0.04 mg/mL + 0.9 mL NS')).toBeInTheDocument();
+    expect(screen.getByText('0.1 mL of 0.4 mg/mL + 0.9 mL NS')).toBeInTheDocument();
+    expect(screen.getByText('0.1 mL neat + 0.9 mL NS')).toBeInTheDocument();
+  });
+
+  it('renders under-review badge, exact reviewNote, and source link next to first row for generated drugs', () => {
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={{
+          ...baseData,
+          selectedDrugs: ['Pantoprazole'],
+          selectedProtocols: { Pantoprazole: 0 },
+        }}
+        drugCategories={{
+          'Proton Pump Inhibitors': ['Pantoprazole'],
+        }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    const underReviewBadge = screen.getByText(/Under review/i);
+    expect(underReviewBadge).toBeInTheDocument();
+    expect(underReviewBadge.closest('.border-status-warning')).toHaveClass('print:border-black', 'print:bg-white', 'print:text-black');
+
+    expect(screen.getByText('The Spreadsheet 2 spreadsheet labels the SPT concentration as "Neat (40 mg/mL)". This is a spreadsheet labelling error — the correct reconstituted concentration is 4 mg/mL (40 mg powder + 10 mL NS).')).toBeInTheDocument();
+
+    const link = screen.getByRole('link', { name: /https:\/\/scratch\.yuson\.au\/drugs\/pantoprazole\//i });
+    expect(link).toHaveAttribute('href', 'https://scratch.yuson.au/drugs/pantoprazole/');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+
+  it('does not render a source link for DREAM-only protocols', () => {
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={{
+          ...baseData,
+          selectedDrugs: ['Cephalexin'],
+          selectedProtocols: { Cephalexin: 0 },
+        }}
+        drugCategories={{
+          Penicillins: ['Cephalexin'],
+        }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    expect(screen.queryByRole('link', { name: /scratch\.yuson\.au/i })).not.toBeInTheDocument();
+    expect(screen.queryByText(/scratch\.yuson\.au/i)).not.toBeInTheDocument();
+  });
+
+  it('fails closed on invalid protocol index with accessible review alert and no guessed doses', () => {
+    render(
+      <TestingPlanPrintView
+        patient={patient}
+        data={{
+          ...baseData,
+          selectedDrugs: ['Ketamine'],
+          selectedProtocols: { Ketamine: 99 },
+        }}
+        drugCategories={{
+          Hypnotics: ['Ketamine'],
+        }}
+        onProceed={vi.fn()}
+      />
+    );
+
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent('⚠ Protocol selection requires review');
+    expect(screen.getByText('Ketamine')).toBeInTheDocument();
+    expect(screen.queryByText('1:1,000')).not.toBeInTheDocument();
+    expect(screen.queryByText('1:100')).not.toBeInTheDocument();
+  });
+
+
   it('renders the screen-only "Copy as Text" button in controls', () => {
     render(
       <TestingPlanPrintView

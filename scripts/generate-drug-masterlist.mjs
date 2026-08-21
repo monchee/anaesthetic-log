@@ -27,7 +27,7 @@ export function transformSnapshotToProtocols(snapshot) {
   const protocols = [];
 
   for (const drug of snapshot.drugs || []) {
-    const drugName = drug.title;
+    const drugName = drug.dream?.drug_name || drug.title;
     const category = drug.dream?.category || '';
     const sourceSlug = drug.slug;
     const lastReviewed = drug.last_reviewed;
@@ -61,11 +61,13 @@ export function transformSnapshotToProtocols(snapshot) {
           idtSteps: (protocol.idt || []).map((step) => ({
             ratio: step.dilution || '',
             concentration: step.concentration || '',
+            ...(step.preparation ? { preparation: step.preparation } : {}),
           })),
           challengeSteps: [],
           protocolLabel: protocol.label,
           sourceSlug,
           underReview,
+          ...(protocol.review_note ? { reviewNote: protocol.review_note } : {}),
           lastReviewed,
           ...(needsPharmacyVerification ? { needsPharmacyVerification: true } : {}),
         });
@@ -89,6 +91,7 @@ export function transformSnapshotToProtocols(snapshot) {
           protocolLabel: `${protocol.label} Challenge`,
           sourceSlug,
           underReview,
+          ...(protocol.review_note ? { reviewNote: protocol.review_note } : {}),
           lastReviewed,
           ...(needsPharmacyVerification ? { needsPharmacyVerification: true } : {}),
         });
@@ -112,6 +115,7 @@ export function transformSnapshotToProtocols(snapshot) {
           protocolLabel: protocol.label,
           sourceSlug,
           underReview,
+          ...(protocol.review_note ? { reviewNote: protocol.review_note } : {}),
           lastReviewed,
           ...(needsPharmacyVerification ? { needsPharmacyVerification: true } : {}),
         });
@@ -128,11 +132,13 @@ export function transformSnapshotToProtocols(snapshot) {
           idtSteps: (protocol.idt || []).map((step) => ({
             ratio: step.dilution || '',
             concentration: step.concentration || '',
+            ...(step.preparation ? { preparation: step.preparation } : {}),
           })),
           challengeSteps: [],
           protocolLabel: protocol.label,
           sourceSlug,
           underReview,
+          ...(protocol.review_note ? { reviewNote: protocol.review_note } : {}),
           lastReviewed,
           ...(needsPharmacyVerification ? { needsPharmacyVerification: true } : {}),
         });
@@ -155,7 +161,7 @@ export function generateTypeScript(protocols) {
     "import type { DrugProtocol, IDTStep, ChallengeStep } from '@features/testing/types';",
     '',
     '// Compact helpers for readability',
-    'const s = (ratio: string, concentration: string): IDTStep => ({ ratio, concentration });',
+    'const s = (ratio: string, concentration: string, preparation?: string): IDTStep => (preparation ? { ratio, concentration, preparation } : { ratio, concentration });',
     'const c = (step: number, dose: string, volume: string, cumulative: string): ChallengeStep => ({ step, dose, volume, cumulative });',
     '',
     'export const GENERATED_PROTOCOLS: DrugProtocol[] = [',
@@ -178,7 +184,12 @@ export function generateTypeScript(protocols) {
       lines.push('    idtSteps: [],');
     } else {
       const idtFormatted = p.idtSteps
-        .map((step) => `s(${formatStringLiteral(step.ratio)}, ${formatStringLiteral(step.concentration)})`)
+        .map((step) => {
+          if (step.preparation) {
+            return `s(${formatStringLiteral(step.ratio)}, ${formatStringLiteral(step.concentration)}, ${formatStringLiteral(step.preparation)})`;
+          }
+          return `s(${formatStringLiteral(step.ratio)}, ${formatStringLiteral(step.concentration)})`;
+        })
         .join(', ');
       lines.push(`    idtSteps: [${idtFormatted}],`);
     }
@@ -198,6 +209,9 @@ export function generateTypeScript(protocols) {
     }
     if (p.underReview !== undefined) {
       lines.push(`    underReview: ${p.underReview},`);
+    }
+    if (p.reviewNote) {
+      lines.push(`    reviewNote: ${formatStringLiteral(p.reviewNote)},`);
     }
     if (p.lastReviewed) {
       lines.push(`    lastReviewed: ${formatStringLiteral(p.lastReviewed)},`);

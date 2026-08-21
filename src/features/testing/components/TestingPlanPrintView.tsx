@@ -5,6 +5,7 @@ import { formatDate, showToast } from '@shared/utils';
 import { Printer, ChevronRight, Mail, AlertTriangle, FolderSearch, NotebookText, Copy } from 'lucide-react';
 import { formatTestingPlanAsText } from '@shared/utils/testingPlanFormatter';
 import { getSkinProtocolsForDrug } from '@shared/data/drugMasterlist';
+import { resolveSelectedProtocol } from '@shared/utils/protocolResolver';
 import { OutboundActionDialog, OutboundActionType } from '@features/reports/components/OutboundActionDialog';
 
 interface TestingPlanPrintViewProps {
@@ -21,9 +22,14 @@ interface TestRow {
   type: 'SPT' | 'IDT';
   concentration: string;
   diluent?: string;
+  preparation?: string;
   isFirstForDrug: boolean;
   isCustomNotListed?: boolean;
   needsPharmacyVerification?: boolean;
+  underReview?: boolean;
+  reviewNote?: string;
+  sourceSlug?: string;
+  requiresReview?: boolean;
 }
 
 const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: TestingPlanPrintViewProps) => {
@@ -36,24 +42,89 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
   Object.entries(drugCategories).forEach(([category, drugs]) => {
     (drugs as string[]).filter(d => selectedDrugs.includes(d)).forEach(d => {
       const protocols = getSkinProtocolsForDrug(d);
-      const protocolIdx = data.selectedProtocols?.[d] ?? 0;
-      const protocol = protocols[protocolIdx] ?? protocols[0];
+      const resolution = resolveSelectedProtocol(protocols, data.selectedProtocols?.[d]);
+
+      if (resolution.status === 'invalid') {
+        testRows.push({
+          drugName: d,
+          category,
+          type: 'SPT',
+          concentration: '—',
+          isFirstForDrug: true,
+          requiresReview: true,
+        });
+        return;
+      }
+
+      if (resolution.status === 'empty') {
+        testRows.push({
+          drugName: d,
+          category,
+          type: 'SPT',
+          concentration: '—',
+          isFirstForDrug: true,
+        });
+        return;
+      }
+
+      const protocol = resolution.protocol;
       const protocolLabel = protocols.length > 1 && protocol ? protocol.protocolLabel : undefined;
+      const underReview = protocol?.underReview === true;
+      const reviewNote = protocol?.reviewNote;
+      const sourceSlug = protocol?.sourceSlug;
+      const needsPharmacyVerification = protocol?.needsPharmacyVerification === true;
 
       let isFirst = true;
       if (protocol?.sptNeatConcentration) {
-        testRows.push({ drugName: d, protocolLabel, category, type: 'SPT', concentration: protocol.sptNeatConcentration, diluent: protocol.diluent, isFirstForDrug: isFirst, needsPharmacyVerification: protocol.needsPharmacyVerification === true });
+        testRows.push({
+          drugName: d,
+          protocolLabel,
+          category,
+          type: 'SPT',
+          concentration: protocol.sptNeatConcentration,
+          diluent: protocol.diluent,
+          isFirstForDrug: isFirst,
+          needsPharmacyVerification,
+          underReview,
+          reviewNote,
+          sourceSlug,
+        });
         isFirst = false;
       }
       protocol?.idtSteps?.forEach(step => {
-        testRows.push({ drugName: d, protocolLabel, category, type: 'IDT', concentration: step.ratio + (step.concentration ? ` (${step.concentration})` : ''), isFirstForDrug: isFirst, needsPharmacyVerification: isFirst && protocol.needsPharmacyVerification === true });
+        testRows.push({
+          drugName: d,
+          protocolLabel,
+          category,
+          type: 'IDT',
+          concentration: step.ratio + (step.concentration ? ` (${step.concentration})` : ''),
+          diluent: undefined,
+          preparation: step.preparation,
+          isFirstForDrug: isFirst,
+          needsPharmacyVerification: isFirst && needsPharmacyVerification,
+          underReview: isFirst && underReview,
+          reviewNote: isFirst ? reviewNote : undefined,
+          sourceSlug: isFirst ? sourceSlug : undefined,
+        });
         isFirst = false;
       });
-      if (isFirst && protocol?.needsPharmacyVerification === true) {
-        testRows.push({ drugName: d, protocolLabel, category, type: 'SPT', concentration: '—', isFirstForDrug: true, needsPharmacyVerification: true });
+      if (isFirst && (needsPharmacyVerification || underReview)) {
+        testRows.push({
+          drugName: d,
+          protocolLabel,
+          category,
+          type: 'SPT',
+          concentration: '—',
+          isFirstForDrug: true,
+          needsPharmacyVerification,
+          underReview,
+          reviewNote,
+          sourceSlug,
+        });
       }
     });
   });
+
 
   customDrugs.filter(e => selectedDrugs.includes(e.name)).forEach(entry => {
     const notListed = entry.fromRedcapOther === true;
@@ -63,7 +134,7 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
       isFirst = false;
     }
     entry.idtSteps?.forEach(step => {
-      testRows.push({ drugName: entry.name, category: 'Additional', type: 'IDT', concentration: step.ratio + (step.concentration ? ` (${step.concentration})` : ''), isFirstForDrug: isFirst, isCustomNotListed: notListed && isFirst });
+      testRows.push({ drugName: entry.name, category: 'Additional', type: 'IDT', concentration: step.ratio + (step.concentration ? ` (${step.concentration})` : ''), preparation: step.preparation, isFirstForDrug: isFirst, isCustomNotListed: notListed && isFirst });
       isFirst = false;
     });
     if (isFirst) {
@@ -350,6 +421,36 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                         <div className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-500 uppercase tracking-wide mt-0.5">
                           {row.category}
                         </div>
+                        {row.requiresReview && (
+                          <div
+                            role="alert"
+                            className="mt-1 border border-status-danger bg-status-danger/10 px-1 py-0.5 text-xs font-bold leading-tight text-status-danger print:border-black print:bg-white print:text-[8px] print:text-black rounded-none"
+                          >
+                            ⚠ Protocol selection requires review
+                          </div>
+                        )}
+                        {row.sourceSlug && (
+                          <div className="mt-0.5 text-[9px] print:text-[8px] text-muted-foreground print:text-slate-700">
+                            <a
+                              href={`https://scratch.yuson.au/drugs/${row.sourceSlug}/`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline print:text-black print:no-underline inline-flex items-center gap-0.5"
+                            >
+                              <span>Source: https://scratch.yuson.au/drugs/{row.sourceSlug}/</span>
+                            </a>
+                          </div>
+                        )}
+                        {row.underReview && (
+                          <div className="mt-1 border border-status-warning bg-status-warning/10 px-1 py-0.5 text-xs font-bold leading-tight text-status-warning print:border-black print:bg-white print:text-[8px] print:text-black rounded-none">
+                            <div>⚠ Under review</div>
+                            {row.reviewNote && (
+                              <div className="font-normal text-[10px] print:text-[8px] mt-0.5 text-muted-foreground print:text-black leading-snug">
+                                {row.reviewNote}
+                              </div>
+                            )}
+                          </div>
+                        )}
                         {row.needsPharmacyVerification && (
                           <div className="mt-1 border border-status-warning bg-status-warning/10 px-1 py-0.5 text-xs font-bold leading-tight text-status-warning print:border-black print:bg-white print:text-[8px] print:text-black rounded-none">
                             ⚠ Confirm preparation with pharmacy
@@ -363,8 +464,13 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                   </td>
                   <td className="border border-border print:border-black px-1.5 py-2 print:py-1.5 font-mono text-muted-foreground print:text-slate-700 leading-tight">
                     <div>{row.concentration}</div>
+                    {row.preparation && (
+                      <div className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-600 mt-0.5 font-sans">
+                        {row.preparation}
+                      </div>
+                    )}
                     {row.diluent && (
-                      <div className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-500 mt-0.5">
+                      <div className="text-[9px] print:text-[8px] text-muted-foreground print:text-slate-500 mt-0.5 font-sans">
                         {row.diluent.startsWith('Neat') ? row.diluent : `in ${row.diluent}`}
                       </div>
                     )}

@@ -8,6 +8,10 @@ describe('testingPlanFormatter', () => {
     'Neuromuscular Blocking Agents (NMBAs)': ['Rocuronium', 'Vecuronium', 'Suxamethonium'],
     'Induction Agents': ['Propofol', 'Thiopentone'],
     'Opioids': ['Fentanyl', 'Morphine'],
+    'Proton Pump Inhibitors': ['Pantoprazole'],
+    'Penicillins': ['Tazocin', 'Cephalexin'],
+    'Hypnotics': ['Ketamine'],
+    'Others': ['Levofloxacin'],
   };
 
   it('formats a complete standard testing plan with protocol details', () => {
@@ -66,6 +70,125 @@ describe('testingPlanFormatter', () => {
     expect(result).toContain('CLINICAL NOTES');
     expect(result).toContain('Previous severe anaphylaxis during elective laparoscopic cholecystectomy.');
     expect(result).toContain('Request Date:');
+  });
+
+  it('formats exact clinical fields for Pantoprazole including diluent, preparation, review note, and SCRATCH link', () => {
+    const patient = createMockPatient();
+    const planData = createMockTestingPlanData({
+      selectedDrugs: ['Pantoprazole'],
+      selectedProtocols: { Pantoprazole: 0 },
+    });
+
+    const result = formatTestingPlanAsText(patient, planData, sampleDrugCategories);
+
+    expect(result).toContain('Proton Pump Inhibitors:');
+    expect(result).toContain('- Pantoprazole (40 mg powder for injection)');
+    expect(result).toContain('SPT: Neat (4 mg/mL) | Diluent: 0.9% sodium chloride (reconstitute with 10 mL NS)');
+    expect(result).toContain('IDT: 1:1,000 (0.004 mg/mL) [0.1 mL of 0.04 mg/mL + 0.9 mL NS] → 1:100 (0.04 mg/mL) [0.1 mL of 0.4 mg/mL + 0.9 mL NS] → 1:10 (0.4 mg/mL) [0.1 mL neat + 0.9 mL NS]');
+    expect(result).toContain('⚠ Under review: The Spreadsheet 2 spreadsheet labels the SPT concentration as "Neat (40 mg/mL)". This is a spreadsheet labelling error — the correct reconstituted concentration is 4 mg/mL (40 mg powder + 10 mL NS).');
+    expect(result).toContain('Source: https://scratch.yuson.au/drugs/pantoprazole/');
+  });
+
+  it('formats exact clinical fields for Tazocin including diluent, preparation, review note, and SCRATCH link', () => {
+    const patient = createMockPatient();
+    const planData = createMockTestingPlanData({
+      selectedDrugs: ['Tazocin'],
+      selectedProtocols: { Tazocin: 0 },
+    });
+
+    const result = formatTestingPlanAsText(patient, planData, sampleDrugCategories);
+
+    expect(result).toContain('Penicillins:');
+    expect(result).toContain('- Tazocin (4 g / 500 mg powder for injection)');
+    expect(result).toContain('SPT: 1:10 — ⚠️ concentration under review (Medication List: 2 mg/mL; calculation: 20 mg/mL) | Diluent: 0.9% sodium chloride (reconstitute with 20 mL NS)');
+    expect(result).toContain('IDT: 1:100 (2/0.2 mg/mL) [0.1 mL of 20/2 mg/mL + 0.9 mL NS]');
+    expect(result).toContain('⚠ Under review: Concentration discrepancy: Medication List specifies SPT at 1:10 (2 mg/mL Piperacillin), whereas calculation of 1:10 of 200 mg/mL gives 20 mg/mL. Concentration under clinical review.');
+    expect(result).toContain('Source: https://scratch.yuson.au/drugs/tazocin/');
+  });
+
+  it('formats pharmacy-verification warning and omits SCRATCH link for DREAM-only Cephalexin', () => {
+    const patient = createMockPatient();
+    const planData = createMockTestingPlanData({
+      selectedDrugs: ['Cephalexin'],
+      selectedProtocols: { Cephalexin: 0 },
+    });
+
+    const result = formatTestingPlanAsText(patient, planData, sampleDrugCategories);
+
+    expect(result).toContain('Penicillins:');
+    expect(result).toContain('- Cephalexin (2mg/mL)');
+    expect(result).toContain('SPT: Neat (2mg/mL) | Diluent: 0.9% sodium chloride');
+    expect(result).toContain('IDT: 1:100 (0.02mg/mL) → 1:10 (0.2mg/mL) → Neat (2mg/mL)');
+    expect(result).toContain('⚠ Confirm preparation with pharmacy');
+    expect(result).not.toContain('scratch.yuson.au');
+  });
+
+
+  it('formats pharmacy warning and source URL for generated Levofloxacin', () => {
+    const patient = createMockPatient();
+    const planData = createMockTestingPlanData({
+      selectedDrugs: ['Levofloxacin'],
+      selectedProtocols: { Levofloxacin: 0 },
+    });
+
+    const result = formatTestingPlanAsText(patient, planData, sampleDrugCategories);
+
+    expect(result).toContain('- Levofloxacin (500 mg tablets or IV formulation)');
+    expect(result).toContain('Protocol: Tablet');
+    expect(result).toContain('⚠ Confirm preparation with pharmacy');
+    expect(result).toContain('Source: https://scratch.yuson.au/drugs/levofloxacin/');
+  });
+
+  it('formats multi-protocol DREAM-only Ketamine with explicit protocol label and no SCRATCH URL', () => {
+    const patient = createMockPatient();
+    const planData = createMockTestingPlanData({
+      selectedDrugs: ['Ketamine'],
+      selectedProtocols: { Ketamine: 0 },
+    });
+
+    const result = formatTestingPlanAsText(patient, planData, sampleDrugCategories);
+
+    expect(result).toContain('Hypnotics:');
+    expect(result).toContain('- Ketamine (100mg/mL)');
+    expect(result).toContain('Protocol: 1:1,000 start');
+    expect(result).toContain('SPT: Neat (100mg/mL) | Diluent: 0.9% sodium chloride');
+    expect(result).toContain('IDT: 1:1,000 (0.1mg/mL) → 1:100 (1mg/mL) → 1:10 (10mg/mL)');
+    expect(result).not.toContain('scratch.yuson.au');
+  });
+
+  it('formats alternative protocol selection for Ketamine with explicit protocol label', () => {
+    const patient = createMockPatient();
+    const planData = createMockTestingPlanData({
+      selectedDrugs: ['Ketamine'],
+      selectedProtocols: { Ketamine: 1 },
+    });
+
+    const result = formatTestingPlanAsText(patient, planData, sampleDrugCategories);
+
+    expect(result).toContain('Hypnotics:');
+    expect(result).toContain('- Ketamine (100mg/mL)');
+    expect(result).toContain('Protocol: 1:100 start');
+    expect(result).toContain('SPT: Neat (100mg/mL) | Diluent: 0.9% sodium chloride');
+    expect(result).toContain('IDT: 1:1,000 (0.1mg/mL)');
+    expect(result).not.toContain('scratch.yuson.au');
+  });
+
+  it('fails closed on invalid protocol index and does not render guessed doses', () => {
+    const patient = createMockPatient();
+    const planData = createMockTestingPlanData({
+      selectedDrugs: ['Ketamine'],
+      selectedProtocols: { Ketamine: 99 }, // Out of bounds
+    });
+
+    const result = formatTestingPlanAsText(patient, planData, sampleDrugCategories);
+
+    expect(result).toContain('Hypnotics:');
+    expect(result).toContain('- Ketamine');
+    expect(result).toContain('⚠ Protocol selection requires review');
+    // Ensure guessed dose steps are NOT rendered
+    expect(result).not.toContain('1:1,000');
+    expect(result).not.toContain('1:100');
+    expect(result).not.toContain('Neat (50 mg/mL)');
   });
 
   it('omits urgent banner when urgent is false', () => {
@@ -135,10 +258,10 @@ describe('testingPlanFormatter', () => {
     expect(result).not.toContain('DOCUMENTS TO CHASE');
   });
 
-  it('formats custom drugs and additional entries', () => {
+  it('formats custom drugs and additional entries, including exact custom preparation strings', () => {
     const patient = createMockPatient();
     const planData = createMockTestingPlanData({
-      selectedDrugs: ['CustomDrugA', 'CustomDrugB'],
+      selectedDrugs: ['CustomDrugA', 'CustomDrugB', 'CustomDrugWithPrep'],
       customDrugs: [
         {
           name: 'CustomDrugA',
@@ -148,6 +271,11 @@ describe('testingPlanFormatter', () => {
         {
           name: 'CustomDrugB',
         },
+        {
+          name: 'CustomDrugWithPrep',
+          sptConcentration: '5mg/mL',
+          idtSteps: [{ ratio: '1:100', concentration: '0.05mg/mL', preparation: '0.1 mL stock + 0.9 mL saline' }],
+        },
       ],
     });
     const result = formatTestingPlanAsText(patient, planData, sampleDrugCategories);
@@ -155,6 +283,7 @@ describe('testingPlanFormatter', () => {
     expect(result).toContain('Additional:');
     expect(result).toContain('- CustomDrugA | SPT: 10mg/ml | IDT: 1:100, 1:10');
     expect(result).toContain('- CustomDrugB');
+    expect(result).toContain('- CustomDrugWithPrep | SPT: 5mg/mL | IDT: 1:100 (0.05mg/mL) [0.1 mL stock + 0.9 mL saline]');
   });
 
   it('displays "No drugs selected." when selectedDrugs is empty', () => {

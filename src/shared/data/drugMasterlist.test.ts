@@ -9,11 +9,13 @@ import {
   getDrugsByCategory,
   getChallengeDrugsByCategory,
 } from './drugMasterlist';
+import { GENERATED_PROTOCOLS } from './drugMasterlist.generated';
 
 describe('drugMasterlist structure & integrity', () => {
-  it('contains exactly 116 protocol records in the merged masterlist', () => {
-    expect(DRUG_MASTERLIST).toHaveLength(116);
+  it('contains exactly 117 protocol records in the merged masterlist', () => {
+    expect(DRUG_MASTERLIST).toHaveLength(117);
     expect(DREAM_ONLY_PROTOCOLS).toHaveLength(109);
+    expect(GENERATED_PROTOCOLS).toHaveLength(67);
   });
 
   it('defines a non-empty id for every protocol entry', () => {
@@ -64,10 +66,10 @@ describe('drugMasterlist array ordering & backwards compatibility', () => {
   // order is a committed fixture rather than a `git show` of a previous revision:
   // that baseline disappears the moment this change merges, and a check that quietly
   // stops working is worse than no check.
-  it('preserves the frozen positional ordering of all 116 records', () => {
-    expect(expectedOrder.count).toBe(116);
-    expect(expectedOrder.order).toHaveLength(116);
-    expect(DRUG_MASTERLIST).toHaveLength(116);
+  it('preserves the frozen positional ordering of all 117 records', () => {
+    expect(expectedOrder.count).toBe(117);
+    expect(expectedOrder.order).toHaveLength(117);
+    expect(DRUG_MASTERLIST).toHaveLength(117);
 
     for (let i = 0; i < expectedOrder.order.length; i++) {
       const want = expectedOrder.order[i];
@@ -77,6 +79,14 @@ describe('drugMasterlist array ordering & backwards compatibility', () => {
       expect(got.protocolLabel, `Position ${i} protocolLabel mismatch`).toBe(want.protocolLabel);
     }
   });
+
+  it('preserves the canonical SHA-256 hash of the 116 frozen pre-snapshot protocols', async () => {
+    const { computeTuplesHash, FROZEN_PRE_SNAPSHOT_PREFIX_SHA256 } = await import(
+      '../../../scripts/verify-order.mjs'
+    );
+    expect(computeTuplesHash(expectedOrder.order, 116)).toBe(FROZEN_PRE_SNAPSHOT_PREFIX_SHA256);
+    expect(computeTuplesHash(DRUG_MASTERLIST, 116)).toBe(FROZEN_PRE_SNAPSHOT_PREFIX_SHA256);
+  });
 });
 
 describe('drugMasterlist diluents & snapshot data', () => {
@@ -85,7 +95,7 @@ describe('drugMasterlist diluents & snapshot data', () => {
     expect(getSkinProtocolsForDrug('Cis-atracurium')[0].diluent).toBe('0.9% sodium chloride');
     expect(getSkinProtocolsForDrug('Vecuronium')[0].diluent).toBe('0.9% sodium chloride (reconstitute with 2.5 mL WFI)');
     expect(getSkinProtocolsForDrug('Cefazolin')[0].diluent).toBe('0.9% sodium chloride (reconstitute with 10 mL WFI)');
-    expect(getSkinProtocolsForDrug('Pantoprazole')[0].diluent).toBe('0.9% sodium chloride (reconstitute with 10 mL)');
+    expect(getSkinProtocolsForDrug('Pantoprazole')[0].diluent).toBe('0.9% sodium chloride (reconstitute with 10 mL NS)');
     expect(getSkinProtocolsForDrug('Penicillin Major')[0].diluent).toBe('Phosphate-buffered saline (1 mL supplied diluent — not plain saline)');
   });
 
@@ -116,6 +126,145 @@ describe('drugMasterlist diluents & snapshot data', () => {
     expect(challenge?.challengeSteps).toHaveLength(4);
     expect(challenge?.idtSteps).toHaveLength(0);
     expect(challenge?.diluent).toBe('');
+  });
+});
+
+describe('snapshot-synchronized drugs exact values & clinical safety checks', () => {
+  it('verifies Cefuroxime uses source iv skin record and keeps Cefuroxime Suspension separate', () => {
+    const cefuroximeProtocols = getProtocolsForDrug('Cefuroxime');
+    expect(cefuroximeProtocols).toHaveLength(1);
+    const cef = cefuroximeProtocols[0];
+    expect(cef.id).toBe('iv');
+    expect(cef.testType).toBe('skin');
+    expect(cef.sourceSlug).toBe('cefuroxime');
+    expect(cef.sptNeatConcentration).toBe('Neat (25 mg/mL)');
+    expect(cef.idtSteps).toEqual([
+      { ratio: '1:100', concentration: '0.25 mg/mL', preparation: '0.1 mL of 2.5 mg/mL + 0.9 mL NS' },
+      { ratio: '1:10', concentration: '2.5 mg/mL', preparation: '0.1 mL of 25 mg/mL + 0.9 mL NS' },
+    ]);
+    expect(cef.underReview).toBe(false);
+
+    const suspension = getProtocolsForDrug('Cefuroxime Suspension');
+    expect(suspension).toHaveLength(1);
+    expect(suspension[0].id).toBe('suspension');
+    expect(suspension[0].needsPharmacyVerification).toBe(true);
+  });
+
+  it('verifies Flucloxacillin preserves DREAM challenge at index 110 and appends source skin record at index 116', () => {
+    const flucAll = getProtocolsForDrug('Flucloxacillin');
+    expect(flucAll).toHaveLength(2);
+
+    const challenge = DRUG_MASTERLIST[110];
+    expect(challenge.drugName).toBe('Flucloxacillin');
+    expect(challenge.testType).toBe('challenge');
+    expect(challenge.protocolLabel).toBe('Oral Graded Challenge');
+    expect(challenge.challengeSteps).toHaveLength(3);
+
+    const skin = DRUG_MASTERLIST[116];
+    expect(skin.drugName).toBe('Flucloxacillin');
+    expect(skin.testType).toBe('skin');
+    expect(skin.id).toBe('iv');
+    expect(skin.protocolLabel).toBe('IV');
+    expect(skin.sourceSlug).toBe('flucloxacillin');
+    expect(skin.sptNeatConcentration).toBe('0.2 mg/mL');
+    expect(skin.diluent).toBe('0.9% sodium chloride (Initial Reconstitution: Add 4.6 mL NS to 500 mg vial to obtain 100 mg/mL; Intermediate Dilution: Draw 1.0 mL of 100 mg/mL solution, add 4.0 mL NS to result in 20 mg/mL)');
+    expect(skin.idtSteps).toEqual([
+      { ratio: '1:100', concentration: '0.2 mg/mL', preparation: '0.1 mL of 2 mg/mL + 0.9 mL NS' },
+      { ratio: '1:10', concentration: '2 mg/mL', preparation: '0.1 mL neat (20mg/ml) + 0.9 mL NS' },
+    ]);
+  });
+
+  it('verifies Levofloxacin retains pharmacy verification flag and exact source IDT steps', () => {
+    const levo = getSkinProtocolsForDrug('Levofloxacin')[0];
+    expect(levo.id).toBe('tablet');
+    expect(levo.protocolLabel).toBe('Tablet');
+    expect(levo.needsPharmacyVerification).toBe(true);
+    expect(levo.sourceSlug).toBe('levofloxacin');
+    expect(levo.presentation).toBe('500 mg tablets or IV formulation');
+    expect(levo.sptNeatConcentration).toBe('Neat (5 mg/mL)');
+    expect(levo.diluent).toBe('Normal saline for IDT dilutions (consult the Manufacturing Pharmacist for the exact diluent and method if using tablets)');
+    expect(levo.idtSteps).toEqual([
+      { ratio: '1:100', concentration: '0.05 mg/mL', preparation: '0.1 mL of 0.5 mg/mL + 0.9 mL NS' },
+    ]);
+  });
+
+  it('verifies Levonorgestrel is source SPT-only with stale DREAM IDT removed', () => {
+    const levo = getSkinProtocolsForDrug('Levonorgestrel')[0];
+    expect(levo.id).toBe('oral');
+    expect(levo.protocolLabel).toBe('Oral');
+    expect(levo.needsPharmacyVerification).toBe(true);
+    expect(levo.sourceSlug).toBe('levonorgestrel');
+    expect(levo.sptNeatConcentration).toBe('Neat (crushed tablet solution)');
+    expect(levo.idtSteps).toEqual([]);
+  });
+
+  it('verifies Pantoprazole retains underReview flag, reviewNote, and 4 mg/mL concentration', () => {
+    const panto = getSkinProtocolsForDrug('Pantoprazole')[0];
+    expect(panto.id).toBe('iv');
+    expect(panto.sourceSlug).toBe('pantoprazole');
+    expect(panto.underReview).toBe(true);
+    expect(panto.reviewNote).toBe(
+      'The Spreadsheet 2 spreadsheet labels the SPT concentration as "Neat (40 mg/mL)". This is a spreadsheet labelling error — the correct reconstituted concentration is 4 mg/mL (40 mg powder + 10 mL NS).'
+    );
+    expect(panto.sptNeatConcentration).toBe('Neat (4 mg/mL)');
+    expect(panto.diluent).toBe('0.9% sodium chloride (reconstitute with 10 mL NS)');
+    expect(panto.idtSteps).toHaveLength(3);
+  });
+
+  it('verifies Sugammadex (Alone) uses source id alone and keeps Sugammadex (+ Rocuronium) DREAM-only', () => {
+    const alone = DRUG_MASTERLIST[5];
+    expect(alone.drugName).toBe('Sugammadex (Alone)');
+    expect(alone.id).toBe('alone');
+    expect(alone.sourceSlug).toBe('sugammadex');
+    expect(alone.sptNeatConcentration).toBe('Neat (100 mg/mL)');
+    expect(alone.idtSteps).toEqual([
+      { ratio: '1:1,000', concentration: '0.1 mg/mL', preparation: '0.1 mL of 1 mg/mL + 0.9 mL NS' },
+      { ratio: '1:100', concentration: '1 mg/mL', preparation: '0.1 mL of 10 mg/mL + 0.9 mL NS' },
+    ]);
+
+    const combo = DRUG_MASTERLIST[6];
+    expect(combo.drugName).toBe('Sugammadex (+ Rocuronium)');
+    expect(combo.id).toBe('rocuronium');
+    expect(combo.sourceSlug).toBeUndefined();
+  });
+
+  it('verifies Tazocin retains underReview flag, reviewNote, and only the single source IDT row', () => {
+    const taz = getSkinProtocolsForDrug('Tazocin')[0];
+    expect(taz.id).toBe('iv');
+    expect(taz.sourceSlug).toBe('tazocin');
+    expect(taz.underReview).toBe(true);
+    expect(taz.reviewNote).toBe(
+      'Concentration discrepancy: Medication List specifies SPT at 1:10 (2 mg/mL Piperacillin), whereas calculation of 1:10 of 200 mg/mL gives 20 mg/mL. Concentration under clinical review.'
+    );
+    expect(taz.sptNeatConcentration).toBe('1:10 — ⚠️ concentration under review (Medication List: 2 mg/mL; calculation: 20 mg/mL)');
+    expect(taz.diluent).toBe('0.9% sodium chloride (reconstitute with 20 mL NS)');
+    expect(taz.idtSteps).toEqual([
+      { ratio: '1:100', concentration: '2/0.2 mg/mL', preparation: '0.1 mL of 20/2 mg/mL + 0.9 mL NS' },
+    ]);
+  });
+
+  it('verifies Urografin retains all three literal source rows', () => {
+    const uro = getSkinProtocolsForDrug('Urografin')[0];
+    expect(uro.id).toBe('iv-contrast');
+    expect(uro.sourceSlug).toBe('urografin');
+    expect(uro.sptNeatConcentration).toBe('Neat');
+    expect(uro.diluent).toBe('0.9% sodium chloride');
+    expect(uro.idtSteps).toEqual([
+      { ratio: '1:100', concentration: '—', preparation: '0.1 mL of 1:10 + 0.9 mL NS' },
+      { ratio: '1:10', concentration: '—', preparation: '0.1 mL neat + 0.9 mL NS' },
+      { ratio: 'Neat', concentration: '500 U/mL', preparation: 'Undiluted stock' },
+    ]);
+  });
+
+  it('verifies Vancomycin retains only the single source IDT row and source diluent', () => {
+    const vanc = getSkinProtocolsForDrug('Vancomycin')[0];
+    expect(vanc.id).toBe('iv');
+    expect(vanc.sourceSlug).toBe('vancomycin');
+    expect(vanc.sptNeatConcentration).toBe('Neat (100 mg/mL)');
+    expect(vanc.diluent).toBe('0.9% sodium chloride (add 5 mL NS to 500 mg or 10 mL NS to 1 g)');
+    expect(vanc.idtSteps).toEqual([
+      { ratio: '1:1,000,000', concentration: '0.0001 mg/mL', preparation: '0.1 mL of 0.001 mg/mL + 0.9 mL NS' },
+    ]);
   });
 });
 

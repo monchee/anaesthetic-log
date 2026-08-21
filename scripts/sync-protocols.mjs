@@ -60,7 +60,7 @@ export function computeDoseLevelDiff(oldSnapshot, newSnapshot) {
       }
 
       const pChanges = [];
-      const scalarFields = ['label', 'test_type', 'presentation', 'diluent', 'under_review', 'needs_pharmacy_verification'];
+      const scalarFields = ['label', 'test_type', 'presentation', 'diluent', 'under_review', 'review_note', 'needs_pharmacy_verification'];
       for (const field of scalarFields) {
         if (oldP[field] !== newP[field]) {
           pChanges.push(`${field}: ${JSON.stringify(oldP[field])} -> ${JSON.stringify(newP[field])}`);
