@@ -108,11 +108,6 @@ export function formatTestingPlanAsText(
         if (protocol.needsPharmacyVerification) {
           lines.push('      ⚠ Confirm preparation with pharmacy');
         }
-
-        // SCRATCH source deep-link
-        if (protocol.sourceSlug) {
-          lines.push(`      Source: https://scratch.yuson.au/drugs/${protocol.sourceSlug}/`);
-        }
       });
       hasAnyDrug = true;
     }

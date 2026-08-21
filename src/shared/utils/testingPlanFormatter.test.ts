@@ -72,7 +72,7 @@ describe('testingPlanFormatter', () => {
     expect(result).toContain('Request Date:');
   });
 
-  it('formats exact clinical fields for Pantoprazole including diluent, preparation, review note, and SCRATCH link', () => {
+  it('formats exact clinical fields for Pantoprazole including diluent, preparation, and review note while omitting SCRATCH link', () => {
     const patient = createMockPatient();
     const planData = createMockTestingPlanData({
       selectedDrugs: ['Pantoprazole'],
@@ -86,10 +86,11 @@ describe('testingPlanFormatter', () => {
     expect(result).toContain('SPT: Neat (4 mg/mL) | Diluent: 0.9% sodium chloride (reconstitute with 10 mL NS)');
     expect(result).toContain('IDT: 1:1,000 (0.004 mg/mL) [0.1 mL of 0.04 mg/mL + 0.9 mL NS] → 1:100 (0.04 mg/mL) [0.1 mL of 0.4 mg/mL + 0.9 mL NS] → 1:10 (0.4 mg/mL) [0.1 mL neat + 0.9 mL NS]');
     expect(result).toContain('⚠ Under review: The Spreadsheet 2 spreadsheet labels the SPT concentration as "Neat (40 mg/mL)". This is a spreadsheet labelling error — the correct reconstituted concentration is 4 mg/mL (40 mg powder + 10 mL NS).');
-    expect(result).toContain('Source: https://scratch.yuson.au/drugs/pantoprazole/');
+    expect(result).not.toContain('scratch.yuson.au');
+    expect(result).not.toContain('Source:');
   });
 
-  it('formats exact clinical fields for Tazocin including diluent, preparation, review note, and SCRATCH link', () => {
+  it('formats exact clinical fields for Tazocin including diluent, preparation, and review note while omitting SCRATCH link', () => {
     const patient = createMockPatient();
     const planData = createMockTestingPlanData({
       selectedDrugs: ['Tazocin'],
@@ -103,7 +104,8 @@ describe('testingPlanFormatter', () => {
     expect(result).toContain('SPT: 1:10 — ⚠️ concentration under review (Medication List: 2 mg/mL; calculation: 20 mg/mL) | Diluent: 0.9% sodium chloride (reconstitute with 20 mL NS)');
     expect(result).toContain('IDT: 1:100 (2/0.2 mg/mL) [0.1 mL of 20/2 mg/mL + 0.9 mL NS]');
     expect(result).toContain('⚠ Under review: Concentration discrepancy: Medication List specifies SPT at 1:10 (2 mg/mL Piperacillin), whereas calculation of 1:10 of 200 mg/mL gives 20 mg/mL. Concentration under clinical review.');
-    expect(result).toContain('Source: https://scratch.yuson.au/drugs/tazocin/');
+    expect(result).not.toContain('scratch.yuson.au');
+    expect(result).not.toContain('Source:');
   });
 
   it('formats pharmacy-verification warning and omits SCRATCH link for DREAM-only Cephalexin', () => {
@@ -121,10 +123,11 @@ describe('testingPlanFormatter', () => {
     expect(result).toContain('IDT: 1:100 (0.02mg/mL) → 1:10 (0.2mg/mL) → Neat (2mg/mL)');
     expect(result).toContain('⚠ Confirm preparation with pharmacy');
     expect(result).not.toContain('scratch.yuson.au');
+    expect(result).not.toContain('Source:');
   });
 
 
-  it('formats pharmacy warning and source URL for generated Levofloxacin', () => {
+  it('formats pharmacy warning for generated Levofloxacin and omits SCRATCH link', () => {
     const patient = createMockPatient();
     const planData = createMockTestingPlanData({
       selectedDrugs: ['Levofloxacin'],
@@ -136,7 +139,8 @@ describe('testingPlanFormatter', () => {
     expect(result).toContain('- Levofloxacin (500 mg tablets or IV formulation)');
     expect(result).toContain('Protocol: Tablet');
     expect(result).toContain('⚠ Confirm preparation with pharmacy');
-    expect(result).toContain('Source: https://scratch.yuson.au/drugs/levofloxacin/');
+    expect(result).not.toContain('scratch.yuson.au');
+    expect(result).not.toContain('Source:');
   });
 
   it('formats multi-protocol DREAM-only Ketamine with explicit protocol label and no SCRATCH URL', () => {
