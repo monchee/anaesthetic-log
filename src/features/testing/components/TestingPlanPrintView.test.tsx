@@ -131,7 +131,7 @@ describe('TestingPlanPrintView', () => {
     expect(screen.getByText('0.1 mL neat + 0.9 mL NS')).toBeInTheDocument();
   });
 
-  it('renders under-review badge, exact reviewNote, and source link next to first row for generated drugs', () => {
+  it('renders under-review badge and exact reviewNote while omitting source link for generated drugs', () => {
     render(
       <TestingPlanPrintView
         patient={patient}
@@ -153,10 +153,9 @@ describe('TestingPlanPrintView', () => {
 
     expect(screen.getByText('The Spreadsheet 2 spreadsheet labels the SPT concentration as "Neat (40 mg/mL)". This is a spreadsheet labelling error — the correct reconstituted concentration is 4 mg/mL (40 mg powder + 10 mL NS).')).toBeInTheDocument();
 
-    const link = screen.getByRole('link', { name: /https:\/\/scratch\.yuson\.au\/drugs\/pantoprazole\//i });
-    expect(link).toHaveAttribute('href', 'https://scratch.yuson.au/drugs/pantoprazole/');
-    expect(link).toHaveAttribute('target', '_blank');
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(screen.queryByRole('link', { name: /scratch\.yuson\.au/i })).not.toBeInTheDocument();
+    expect(screen.queryByText(/scratch\.yuson\.au/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Source:/i)).not.toBeInTheDocument();
   });
 
   it('does not render a source link for DREAM-only protocols', () => {
@@ -177,6 +176,7 @@ describe('TestingPlanPrintView', () => {
 
     expect(screen.queryByRole('link', { name: /scratch\.yuson\.au/i })).not.toBeInTheDocument();
     expect(screen.queryByText(/scratch\.yuson\.au/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Source:/i)).not.toBeInTheDocument();
   });
 
   it('fails closed on invalid protocol index with accessible review alert and no guessed doses', () => {
@@ -250,6 +250,8 @@ describe('TestingPlanPrintView', () => {
     await waitFor(() => {
       expect(writeTextMock).toHaveBeenCalledTimes(1);
       expect(writeTextMock).toHaveBeenCalledWith(expectedBody);
+      expect(expectedBody).not.toContain('scratch.yuson.au');
+      expect(expectedBody).not.toContain('Source:');
       expect(toastSuccessSpy).toHaveBeenCalledWith('Testing request copied to clipboard');
     });
   });

@@ -28,7 +28,6 @@ interface TestRow {
   needsPharmacyVerification?: boolean;
   underReview?: boolean;
   reviewNote?: string;
-  sourceSlug?: string;
   requiresReview?: boolean;
 }
 
@@ -71,7 +70,6 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
       const protocolLabel = protocols.length > 1 && protocol ? protocol.protocolLabel : undefined;
       const underReview = protocol?.underReview === true;
       const reviewNote = protocol?.reviewNote;
-      const sourceSlug = protocol?.sourceSlug;
       const needsPharmacyVerification = protocol?.needsPharmacyVerification === true;
 
       let isFirst = true;
@@ -87,7 +85,6 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
           needsPharmacyVerification,
           underReview,
           reviewNote,
-          sourceSlug,
         });
         isFirst = false;
       }
@@ -104,7 +101,6 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
           needsPharmacyVerification: isFirst && needsPharmacyVerification,
           underReview: isFirst && underReview,
           reviewNote: isFirst ? reviewNote : undefined,
-          sourceSlug: isFirst ? sourceSlug : undefined,
         });
         isFirst = false;
       });
@@ -119,7 +115,6 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
           needsPharmacyVerification,
           underReview,
           reviewNote,
-          sourceSlug,
         });
       }
     });
@@ -427,18 +422,6 @@ const TestingPlanPrintView = ({ patient, data, drugCategories, onProceed }: Test
                             className="mt-1 border border-status-danger bg-status-danger/10 px-1 py-0.5 text-xs font-bold leading-tight text-status-danger print:border-black print:bg-white print:text-[8px] print:text-black rounded-none"
                           >
                             ⚠ Protocol selection requires review
-                          </div>
-                        )}
-                        {row.sourceSlug && (
-                          <div className="mt-0.5 text-[9px] print:text-[8px] text-muted-foreground print:text-slate-700">
-                            <a
-                              href={`https://scratch.yuson.au/drugs/${row.sourceSlug}/`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-primary hover:underline print:text-black print:no-underline inline-flex items-center gap-0.5"
-                            >
-                              <span>Source: https://scratch.yuson.au/drugs/{row.sourceSlug}/</span>
-                            </a>
                           </div>
                         )}
                         {row.underReview && (
