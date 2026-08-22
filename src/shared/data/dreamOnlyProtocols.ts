@@ -1,8 +1,4 @@
-import type { DrugProtocol, IDTStep, ChallengeStep } from "@features/testing/types";
-
-// Compact helpers for readability
-const s = (ratio: string, concentration: string): IDTStep => ({ ratio, concentration });
-const c = (step: number, dose: string, volume: string, cumulative: string): ChallengeStep => ({ step, dose, volume, cumulative });
+import type { DrugProtocol } from "@features/testing/types";
 
 /**
  * Hand-maintained DREAM protocol records for drugs not yet authored in SCRATCH.
