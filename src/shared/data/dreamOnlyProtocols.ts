@@ -2,16 +2,11 @@ import type { DrugProtocol } from "@features/testing/types";
 
 /**
  * Hand-maintained DREAM protocol records for drugs not yet authored in SCRATCH.
- * As drugs are migrated to SCRATCH, their records move to protocols.snapshot.json
- * and are removed from this list.
+ *
+ * EMPTY since the 2026-08 tranche migration: every one of the 117 masterlist
+ * records is generated from the SCRATCH export (protocols.snapshot.json), and
+ * future dose edits happen under SCRATCH's clinical sign-off gate. If a new
+ * panel placeholder is needed before its SCRATCH page exists, add a record
+ * here and reference it with findDreamOnly in drugMasterlist.ts.
  */
-export const DREAM_ONLY_PROTOCOLS: DrugProtocol[] = [
-  // ── REVERSAL AGENTS ────────────────────────────────────────────────────────
-  // ── PENICILLINS ────────────────────────────────────────────────────────
-  // ── HYPNOTICS ────────────────────────────────────────────────────────
-  // ── LOCAL ANAESTHETICS ────────────────────────────────────────────────────────
-  // ── OPIOIDS ────────────────────────────────────────────────────────
-  // ── ANTISEPTICS ────────────────────────────────────────────────────────
-  // ── OTHERS ────────────────────────────────────────────────────────
-  // ── CHALLENGE / DESENSITISATION ────────────────────────────────────────────────────────
-];
+export const DREAM_ONLY_PROTOCOLS: DrugProtocol[] = [];
