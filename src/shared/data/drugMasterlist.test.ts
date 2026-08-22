@@ -14,8 +14,8 @@ import { GENERATED_PROTOCOLS } from './drugMasterlist.generated';
 describe('drugMasterlist structure & integrity', () => {
   it('contains exactly 117 protocol records in the merged masterlist', () => {
     expect(DRUG_MASTERLIST).toHaveLength(117);
-    expect(DREAM_ONLY_PROTOCOLS).toHaveLength(13);
-    expect(GENERATED_PROTOCOLS).toHaveLength(104);
+    expect(DREAM_ONLY_PROTOCOLS).toHaveLength(4);
+    expect(GENERATED_PROTOCOLS).toHaveLength(113);
   });
 
   it('defines a non-empty id for every protocol entry', () => {
@@ -225,7 +225,7 @@ describe('snapshot-synchronized drugs exact values & clinical safety checks', ()
     const combo = DRUG_MASTERLIST[6];
     expect(combo.drugName).toBe('Sugammadex (+ Rocuronium)');
     expect(combo.id).toBe('rocuronium');
-    expect(combo.sourceSlug).toBeUndefined();
+    expect(combo.sourceSlug).toBe('sugammadex-rocuronium');
   });
 
   it('verifies Tazocin retains underReview flag, reviewNote, and only the single source IDT row', () => {
