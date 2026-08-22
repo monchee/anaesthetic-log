@@ -90,7 +90,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [20] Tazocin (skin, IV)
   findGenerated("Tazocin", "skin", "IV"),
   // [21] Methoxybenzylpenicillin (skin)
-  findDreamOnly("Methoxybenzylpenicillin", "skin"),
+  findGenerated("Methoxybenzylpenicillin", "skin"),
   // [22] Cefazolin (skin, IV)
   findGenerated("Cefazolin", "skin", "IV"),
   // [23] Cefepime (skin, IV)
@@ -250,11 +250,11 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [100] Xylocaine (skin, IV)
   findGenerated("Xylocaine", "skin", "IV"),
   // [101] Methylene Blue (skin)
-  findDreamOnly("Methylene Blue", "skin"),
+  findGenerated("Methylene Blue", "skin"),
   // [102] IV Contrast (skin)
-  findDreamOnly("IV Contrast", "skin"),
+  findGenerated("IV Contrast", "skin"),
   // [103] Atropine (skin)
-  findDreamOnly("Atropine", "skin"),
+  findGenerated("Atropine", "skin"),
   // [104] Amoxycillin Suspension (challenge, Oral Graded Challenge)
   findGenerated("Amoxycillin Suspension", "challenge", "Oral Graded Challenge"),
   // [105] Amoxycillin/Clavulanic Acid (challenge, Oral Graded Challenge)
