@@ -21,23 +21,6 @@ function findGenerated(
   return match;
 }
 
-function findDreamOnly(
-  drugName: string,
-  testType: 'skin' | 'challenge' | 'control' | 'experimental',
-  protocolLabel?: string
-): DrugProtocol {
-  const match = DREAM_ONLY_PROTOCOLS.find(
-    (p) =>
-      p.drugName === drugName &&
-      p.testType === testType &&
-      (!protocolLabel || p.protocolLabel === protocolLabel)
-  );
-  if (!match) {
-    throw new Error(`Missing DREAM-only protocol for ${drugName} (${testType}${protocolLabel ? ` - ${protocolLabel}` : ''})`);
-  }
-  return match;
-}
-
 /**
  * Complete drug masterlist for allergy testing and challenges.
  * Combines generated protocols from SCRATCH (protocols.snapshot.json) with
