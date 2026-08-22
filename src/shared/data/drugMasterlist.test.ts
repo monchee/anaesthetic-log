@@ -14,8 +14,8 @@ import { GENERATED_PROTOCOLS } from './drugMasterlist.generated';
 describe('drugMasterlist structure & integrity', () => {
   it('contains exactly 117 protocol records in the merged masterlist', () => {
     expect(DRUG_MASTERLIST).toHaveLength(117);
-    expect(DREAM_ONLY_PROTOCOLS).toHaveLength(50);
-    expect(GENERATED_PROTOCOLS).toHaveLength(67);
+    expect(DREAM_ONLY_PROTOCOLS).toHaveLength(24);
+    expect(GENERATED_PROTOCOLS).toHaveLength(93);
   });
 
   it('defines a non-empty id for every protocol entry', () => {

@@ -255,8 +255,10 @@ describe('TestingPlanGenerator', () => {
     expect(within(tableSection).getByText('1:100 start')).toBeInTheDocument();
     expect(within(tableSection).getByText('1:100')).toBeInTheDocument();
 
-    // Ketamine is DREAM-only, so no SCRATCH link should exist for it
-    expect(within(tableSection).queryByRole('link', { name: /View Ketamine on SCRATCH/i })).not.toBeInTheDocument();
+    // Ketamine is SCRATCH-sourced since the tranche-1 migration, so its
+    // protocol detail links to the handbook page
+    const scratchLink = within(tableSection).getByRole('link', { name: /View Ketamine on SCRATCH/i });
+    expect(scratchLink).toHaveAttribute('href', 'https://scratch.yuson.au/drugs/ketamine/');
   });
 
   it('fails closed and shows accessible review alert when restored draft contains invalid protocol index', async () => {
