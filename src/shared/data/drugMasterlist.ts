@@ -62,29 +62,29 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [6] Sugammadex (+ Rocuronium) (skin, + Rocuronium)
   findDreamOnly("Sugammadex (+ Rocuronium)", "skin", "+ Rocuronium"),
   // [7] Penicillin Major (skin, PPL)
-  findDreamOnly("Penicillin Major", "skin", "PPL"),
+  findGenerated("Penicillin Major", "skin", "PPL"),
   // [8] Penicillin Minor (skin, MD)
-  findDreamOnly("Penicillin Minor", "skin", "MD"),
+  findGenerated("Penicillin Minor", "skin", "MD"),
   // [9] Ampicillin (skin, Neat SPT)
-  findDreamOnly("Ampicillin", "skin", "Neat SPT"),
+  findGenerated("Ampicillin", "skin", "Neat SPT"),
   // [10] Ampicillin (skin, 1:5 SPT)
-  findDreamOnly("Ampicillin", "skin", "1:5 SPT"),
+  findGenerated("Ampicillin", "skin", "1:5 SPT"),
   // [11] Ampicillin (control, Control)
-  findDreamOnly("Ampicillin", "control", "Control"),
+  findGenerated("Ampicillin", "control", "Control"),
   // [12] Amoxycillin (skin, Neat SPT)
-  findDreamOnly("Amoxycillin", "skin", "Neat SPT"),
+  findGenerated("Amoxycillin", "skin", "Neat SPT"),
   // [13] Amoxycillin (skin, 1:5 SPT)
-  findDreamOnly("Amoxycillin", "skin", "1:5 SPT"),
+  findGenerated("Amoxycillin", "skin", "1:5 SPT"),
   // [14] Benzylpenicillin (skin, 1:1,000 start)
-  findDreamOnly("Benzylpenicillin", "skin", "1:1,000 start"),
+  findGenerated("Benzylpenicillin", "skin", "1:1,000 start"),
   // [15] Benzylpenicillin (skin, 1:100 start)
-  findDreamOnly("Benzylpenicillin", "skin", "1:100 start"),
+  findGenerated("Benzylpenicillin", "skin", "1:100 start"),
   // [16] Benzylpenicillin (control, Control)
-  findDreamOnly("Benzylpenicillin", "control", "Control"),
+  findGenerated("Benzylpenicillin", "control", "Control"),
   // [17] Augmentin (skin, 1:1,000 start)
-  findDreamOnly("Augmentin", "skin", "1:1,000 start"),
+  findGenerated("Augmentin", "skin", "1:1,000 start"),
   // [18] Augmentin (skin, 1:100 start)
-  findDreamOnly("Augmentin", "skin", "1:100 start"),
+  findGenerated("Augmentin", "skin", "1:100 start"),
   // [19] Cephalexin (skin, IV)
   findDreamOnly("Cephalexin", "skin", "IV"),
   // [20] Tazocin (skin, IV)
@@ -108,13 +108,13 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [29] Propofol (skin, IV)
   findGenerated("Propofol", "skin", "IV"),
   // [30] Ketamine (skin, 1:1,000 start)
-  findDreamOnly("Ketamine", "skin", "1:1,000 start"),
+  findGenerated("Ketamine", "skin", "1:1,000 start"),
   // [31] Ketamine (skin, 1:100 start)
-  findDreamOnly("Ketamine", "skin", "1:100 start"),
+  findGenerated("Ketamine", "skin", "1:100 start"),
   // [32] Thiopental (skin, 1:1,000 start)
-  findDreamOnly("Thiopental", "skin", "1:1,000 start"),
+  findGenerated("Thiopental", "skin", "1:1,000 start"),
   // [33] Thiopental (skin, 1:100 start)
-  findDreamOnly("Thiopental", "skin", "1:100 start"),
+  findGenerated("Thiopental", "skin", "1:100 start"),
   // [34] Lignocaine (skin, IV)
   findDreamOnly("Lignocaine", "skin", "IV"),
   // [35] Mepivacaine (skin, Epidural)
@@ -122,29 +122,29 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [36] Bupivacaine (skin, Epidural)
   findGenerated("Bupivacaine", "skin", "Epidural"),
   // [37] Ropivacaine (skin, Epidural Protocol 1)
-  findDreamOnly("Ropivacaine", "skin", "Epidural Protocol 1"),
+  findGenerated("Ropivacaine", "skin", "Epidural Protocol 1"),
   // [38] Ropivacaine (skin, Epidural Protocol 2)
-  findDreamOnly("Ropivacaine", "skin", "Epidural Protocol 2"),
+  findGenerated("Ropivacaine", "skin", "Epidural Protocol 2"),
   // [39] Alfentanil (skin, IV)
   findGenerated("Alfentanil", "skin", "IV"),
   // [40] Fentanyl (skin, IV)
   findGenerated("Fentanyl", "skin", "IV"),
   // [41] Morphine (skin, 1:1,000 start)
-  findDreamOnly("Morphine", "skin", "1:1,000 start"),
+  findGenerated("Morphine", "skin", "1:1,000 start"),
   // [42] Morphine (skin, 1:100 start)
-  findDreamOnly("Morphine", "skin", "1:100 start"),
+  findGenerated("Morphine", "skin", "1:100 start"),
   // [43] Remifentanil (skin, 1:1,000 start)
-  findDreamOnly("Remifentanil", "skin", "1:1,000 start"),
+  findGenerated("Remifentanil", "skin", "1:1,000 start"),
   // [44] Remifentanil (skin, 1:100 start)
-  findDreamOnly("Remifentanil", "skin", "1:100 start"),
+  findGenerated("Remifentanil", "skin", "1:100 start"),
   // [45] Oxycodone (skin, IV)
   findGenerated("Oxycodone", "skin", "IV"),
   // [46] Chlorhexidine (skin, 0.02%)
   findGenerated("Chlorhexidine", "skin", "0.02%"),
   // [47] Povidone Iodine (skin, 1:1,000 start)
-  findDreamOnly("Povidone Iodine", "skin", "1:1,000 start"),
+  findGenerated("Povidone Iodine", "skin", "1:1,000 start"),
   // [48] Povidone Iodine (skin, 1:100 start)
-  findDreamOnly("Povidone Iodine", "skin", "1:100 start"),
+  findGenerated("Povidone Iodine", "skin", "1:100 start"),
   // [49] Esomeprazole (skin)
   findGenerated("Esomeprazole", "skin"),
   // [50] Lansoprazole (skin)
@@ -202,9 +202,9 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [76] Medroxyprogesterone (skin, Inj)
   findGenerated("Medroxyprogesterone", "skin", "Inj"),
   // [77] Metacresol (skin, 1:1,000 start)
-  findDreamOnly("Metacresol", "skin", "1:1,000 start"),
+  findGenerated("Metacresol", "skin", "1:1,000 start"),
   // [78] Metacresol (skin, 1:100 start)
-  findDreamOnly("Metacresol", "skin", "1:100 start"),
+  findGenerated("Metacresol", "skin", "1:100 start"),
   // [79] Methylprednisolone (experimental, IV)
   findGenerated("Methylprednisolone", "experimental", "IV"),
   // [80] Metoclopramide (skin, IV)
