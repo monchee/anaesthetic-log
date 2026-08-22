@@ -68,12 +68,14 @@ const AboutPage: React.FC<AboutPageProps> = ({ setScreen }) => {
                 "Search and filter patients by name, reaction grade, date, and more",
                 "Detailed patient history and timeline views",
                 "Skin test and drug challenge result recording",
-                "Three report types: clinical report, patient handout, and clinical letter",
+                "Drug reference guide with non-irritating test concentrations and cross-reactivity notes",
+                "Three report types: clinical report, patient handout, and Powerchart Letter",
                 "Create and print testing plan request forms for nursing staff",
                 "Print-optimised layouts for all documents",
                 "Import patient records from your clinic database",
                 "Export anonymised testing data for research and audit",
                 "Adjustable appearance — dark mode and font size options",
+                "PIN screen lock to shield patient details on shared workstations",
                 "Works offline — use the app without internet access",
                 "Research database for contributing to cross-patient studies"
               ].map((feature, idx) => (

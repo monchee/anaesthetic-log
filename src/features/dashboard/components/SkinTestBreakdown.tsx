@@ -39,8 +39,8 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
       <CardHeader bordered className="py-4 bg-card">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <CardTitle as="h2" className="text-lg flex items-center gap-2 text-foreground">
-              <Thermometer className="w-5 h-5 text-primary" /> Positive Skin Test Breakdown
+            <CardTitle as="h2" className="text-base flex items-center gap-2 text-foreground">
+              <Thermometer className="w-4 h-4 text-primary" /> Positive Skin Test Breakdown
             </CardTitle>
             <p className="text-sm text-muted-foreground">Number of positive patient reactions by drug (SPT/IDT &gt; 3mm or Positive Challenge).</p>
           </div>
@@ -60,7 +60,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
       {/* Desktop View (Table) */}
       <div className="hidden md:block overflow-x-auto">
         <table className="min-w-[760px] md:min-w-full text-sm relative border-collapse">
-          <thead className="bg-card text-xs uppercase text-muted-foreground font-semibold sticky top-0 z-10 shadow-sm">
+          <thead className="bg-card text-xs uppercase text-muted-foreground font-semibold">
             <tr>
               <th scope="col" className="px-4 py-3 text-left bg-card w-1/3">Drug</th>
               <th scope="col" className="px-4 py-3 text-center bg-card">SPT</th>
@@ -158,7 +158,7 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                     {totalCategoryPositives > 0 ? (
                       <span className="inline-flex items-center px-2 py-0.5 rounded-none text-xs font-medium bg-muted dark:bg-card text-foreground dark:text-primary border border-border/50">
                         <span className="tabular-nums font-mono">{totalCategoryPositives}</span>
-                        <span className="ml-1 text-[10px] text-muted-foreground font-normal">pos</span>
+                        <span className="ml-1 text-xs text-muted-foreground font-normal">pos</span>
                       </span>
                     ) : (
                       <span className="text-muted-foreground text-xs font-mono">-</span>
@@ -184,23 +184,23 @@ const SkinTestBreakdown: React.FC<SkinTestBreakdownProps> = ({
                         {/* Modality Stats Grid */}
                         <div className="grid grid-cols-5 gap-1 text-center pt-0.5">
                           <div className="bg-card dark:bg-background/60 p-1 rounded-none border border-border/50">
-                            <div className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">SPT</div>
+                            <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">SPT</div>
                             <div className="text-xs font-mono tabular-nums text-foreground mt-0.5 font-medium">{item.spt || '-'}</div>
                           </div>
                           <div className="bg-card dark:bg-background/60 p-1 rounded-none border border-border/50">
-                            <div className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">1:100</div>
+                            <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">1:100</div>
                             <div className="text-xs font-mono tabular-nums text-foreground mt-0.5 font-medium">{item.idt100 || '-'}</div>
                           </div>
                           <div className="bg-card dark:bg-background/60 p-1 rounded-none border border-border/50">
-                            <div className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">1:10</div>
+                            <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">1:10</div>
                             <div className="text-xs font-mono tabular-nums text-foreground mt-0.5 font-medium">{item.idt10 || '-'}</div>
                           </div>
                           <div className="bg-card dark:bg-background/60 p-1 rounded-none border border-border/50">
-                            <div className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Neat</div>
+                            <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Neat</div>
                             <div className="text-xs font-mono tabular-nums text-foreground mt-0.5 font-medium">{item.idtNeat || '-'}</div>
                           </div>
                           <div className="bg-card dark:bg-background/60 p-1 rounded-none border border-border/50">
-                            <div className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Chal</div>
+                            <div className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Chal</div>
                             <div className="text-xs font-mono tabular-nums text-foreground mt-0.5 font-medium">{item.challenge || '-'}</div>
                           </div>
                         </div>

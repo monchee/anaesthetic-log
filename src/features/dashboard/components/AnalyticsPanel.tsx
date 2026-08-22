@@ -57,7 +57,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
       {/* Left Column - Key Stats */}
       <Card elevation="raised" className="lg:col-span-1">
         <CardHeader bordered className="bg-card">
-          <CardTitle as="h2" className="text-base text-foreground flex items-center gap-2">
+          <CardTitle as="h2" className="text-base flex items-center gap-2 text-foreground">
             <Users className="w-4 h-4 text-primary dark:text-primary" /> Overview
           </CardTitle>
         </CardHeader>
@@ -77,6 +77,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
               label="Severe"
               icon={<AlertTriangle />}
               tone="danger"
+              hint="% of REDCap records"
               value={
                 <div className="flex items-baseline gap-1">
                   <span>{animatedSevereCount}</span>
@@ -90,6 +91,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
               label="Abandoned"
               icon={<Ban />}
               tone="warning"
+              hint="% of REDCap records"
               value={
                 <div className="flex items-baseline gap-1">
                   <span>{animatedAbandonedCount}</span>
@@ -118,7 +120,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
       {/* Middle Column - Grade Distribution */}
       <Card elevation="raised">
         <CardHeader bordered className="bg-card">
-          <CardTitle as="h2" className="text-base text-foreground flex items-center gap-2">
+          <CardTitle as="h2" className="text-base flex items-center gap-2 text-foreground">
             <PieChart className="w-4 h-4 text-primary dark:text-primary" /> Severity Distribution
           </CardTitle>
         </CardHeader>
@@ -147,7 +149,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
             {gradeMeta.map(({ key, label, count, className }) => (
               <div key={key} className={`flex items-center gap-1.5 ${key === 'Ungraded' ? 'col-span-2' : ''}`}>
                 <span className={`inline-flex h-4 min-w-4 items-center justify-center rounded-none text-xs font-bold text-white ${className}`}>{key === 'Ungraded' ? '-' : key}</span>
-                <span className="text-muted-foreground">{label}: <b className="text-foreground">{count}</b></span>
+                <span className="text-muted-foreground">{label}: <b className="text-foreground">{count}</b> ({Math.round((count / totalPatients) * 100)}%)</span>
               </div>
             ))}
           </div>
@@ -157,7 +159,7 @@ const AnalyticsPanel: React.FC<StatsPanelProps> = ({
       {/* Right Column - Top Agents */}
       <Card elevation="raised">
         <CardHeader bordered className="bg-card">
-          <CardTitle as="h2" className="text-base text-foreground flex items-center gap-2">
+          <CardTitle as="h2" className="text-base flex items-center gap-2 text-foreground">
             <BarChart3 className="w-4 h-4 text-primary dark:text-primary" /> Top Suspected Agents
           </CardTitle>
         </CardHeader>

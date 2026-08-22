@@ -51,7 +51,7 @@ export function AnaestheticLogApp() {
     screen, setScreen, navigate, hrefFor, pendingNavigation, confirmNavigation, cancelNavigation,
     formData, setFormData,
     workContext, activeReportContext,
-    selectedPatient, lastSavedRecord, setLastSavedRecord, activeReportSavedAt,
+    selectedPatient, lastSavedRecord, activeReportSavedAt,
     lastDraftSavedAt, isSavingDraft,
     testingPlanData, setTestingPlanData,
     isPatientDialogOpen, setIsPatientDialogOpen,
@@ -168,12 +168,6 @@ export function AnaestheticLogApp() {
           recentLogs={recentLogs}
           isLoadingPatients={isLoadingPatients}
           patientDbSavedAt={patientDbSavedAt}
-          onSetScreen={handleNavigate}
-          onViewLog={(log) => {
-            setLastSavedRecord(log);
-            handleNavigate(Screen.SUMMARY);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
           onSelectPatient={handleDashboardPatientSelect}
           onUploadPatients={handleUploadPatients}
         />

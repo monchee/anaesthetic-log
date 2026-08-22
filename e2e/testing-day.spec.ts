@@ -106,10 +106,9 @@ test.describe('Testing Day Flow', () => {
     await expect(dashboardLink).toBeVisible({ timeout: 5000 });
     await dashboardLink.click();
     await expect(page.getByRole('heading', { name: 'Clinical Dashboard' })).toBeVisible({ timeout: 10000 });
-
-    // ── Step 11: Recent Testing Activity shows sessions ────────────────────
-    // Mock logs are seeded — the dashboard should show at least one recent session
-    await expect(page.getByText(/Recent Testing Activity/i).or(page.getByText(/recent/i))).toBeVisible({ timeout: 5000 });
+    // The former "Recent Testing Activity" assertion was removed with the
+    // RecentTestingActivity component itself. Reaching the dashboard is still
+    // asserted above; there is no longer a recent-sessions panel to check.
   });
 
   test('restores in-progress testing draft after reload', async ({ page }) => {

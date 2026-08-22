@@ -14,7 +14,7 @@ import { GENERATED_PROTOCOLS } from './drugMasterlist.generated';
 describe('drugMasterlist structure & integrity', () => {
   it('contains exactly 117 protocol records in the merged masterlist', () => {
     expect(DRUG_MASTERLIST).toHaveLength(117);
-    expect(DREAM_ONLY_PROTOCOLS).toHaveLength(109);
+    expect(DREAM_ONLY_PROTOCOLS).toHaveLength(50);
     expect(GENERATED_PROTOCOLS).toHaveLength(67);
   });
 
@@ -325,3 +325,68 @@ describe('drugMasterlist helper functions', () => {
     expect(challengeDrugs['Others']).toContain('Amoxycillin Suspension');
   });
 });
+
+describe('dreamOnlyProtocols referencing integrity & dead record guard', () => {
+  it('ensures every record in DREAM_ONLY_PROTOCOLS is actively referenced in DRUG_MASTERLIST (no dead duplicates)', () => {
+    const masterlistSet = new Set(DRUG_MASTERLIST);
+    const unreferenced = DREAM_ONLY_PROTOCOLS.filter((protocol) => !masterlistSet.has(protocol));
+
+    if (unreferenced.length > 0) {
+      const details = unreferenced
+        .map(
+          (p) =>
+            `  • [${p.category}] ${p.drugName} (testType: '${p.testType}'${p.protocolLabel ? `, label: '${p.protocolLabel}'` : ''}, id: '${p.id}')`
+        )
+        .join('\n');
+      expect.fail(
+        `Dead/unreferenced protocol record(s) detected in dreamOnlyProtocols.ts (${unreferenced.length} record(s)):\n${details}\n` +
+          `Either reference these records in drugMasterlist.ts or delete them if they have migrated to SCRATCH.`
+      );
+    }
+
+    expect(unreferenced).toHaveLength(0);
+  });
+
+  it('ensures 1:1 bidirectional reference parity between DREAM_ONLY_PROTOCOLS and DRUG_MASTERLIST dream-only records', () => {
+    const dreamOnlyInMasterlist = DRUG_MASTERLIST.filter((protocol) => DREAM_ONLY_PROTOCOLS.includes(protocol));
+
+    // Direction 1: Every record in DREAM_ONLY_PROTOCOLS must be present in DRUG_MASTERLIST
+    const unreferenced = DREAM_ONLY_PROTOCOLS.filter((p) => !dreamOnlyInMasterlist.includes(p));
+    expect(
+      unreferenced,
+      `Dead records in dreamOnlyProtocols.ts: ${unreferenced.map(p => `${p.drugName} (${p.testType}${p.protocolLabel ? ` - ${p.protocolLabel}` : ''})`).join(', ')}`
+    ).toHaveLength(0);
+
+    // Direction 2: Count matches exactly (no unreferenced records in DREAM_ONLY_PROTOCOLS and no orphaned references)
+    expect(DREAM_ONLY_PROTOCOLS).toHaveLength(dreamOnlyInMasterlist.length);
+  });
+
+  it('fails if drugMasterlist attempts to reference a non-existent findDreamOnly protocol', () => {
+    const findProtocol = (
+      drugName: string,
+      testType: 'skin' | 'challenge' | 'control' | 'experimental',
+      protocolLabel?: string
+    ) => {
+      const match = DREAM_ONLY_PROTOCOLS.find(
+        (p) =>
+          p.drugName === drugName &&
+          p.testType === testType &&
+          (!protocolLabel || p.protocolLabel === protocolLabel)
+      );
+      if (!match) {
+        throw new Error(
+          `Missing DREAM-only protocol for ${drugName} (${testType}${protocolLabel ? ` - ${protocolLabel}` : ''})`
+        );
+      }
+      return match;
+    };
+
+    expect(() => findProtocol('NonExistentDrug', 'skin')).toThrow(
+      /Missing DREAM-only protocol for NonExistentDrug/
+    );
+    expect(() => findProtocol('Sugammadex (+ Rocuronium)', 'skin', 'NonExistentLabel')).toThrow(
+      /Missing DREAM-only protocol for Sugammadex/
+    );
+  });
+});
+

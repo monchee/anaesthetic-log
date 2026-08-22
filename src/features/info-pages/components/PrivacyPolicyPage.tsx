@@ -8,7 +8,7 @@ interface PrivacyPolicyPageProps {
 }
 
 const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
-  const lastUpdated = 'March 2026';
+  const lastUpdated = 'August 2026';
 
   return (
     <div className="py-4 sm:p-6 space-y-6">
@@ -111,7 +111,7 @@ const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ setScreen }) => {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1 select-none">•</span>
-                  <span><strong className="text-foreground">No Persistent Storage:</strong> Data is cleared when the session ends (unless explicitly saved locally)</span>
+                  <span><strong className="text-foreground">On-Device Storage:</strong> Your imported patient database is stored on this device until you replace or remove it; in-progress session data (the current report and testing draft) is automatically deleted after 6 hours</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1 select-none">•</span>

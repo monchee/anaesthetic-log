@@ -1,24 +1,21 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { parseRedcapCSV, decodeCsvBytes } from '@shared/utils';
-import { Screen, Patient, LogFormData } from '@shared/types';
+import { Patient, LogFormData } from '@shared/types';
 import { toast } from 'sonner';
 import { useCountUp } from '@shared/hooks/useCountUp';
 import { useDashboardAnalytics } from '../hooks/useDashboardAnalytics';
 import AnalyticsPanel from './AnalyticsPanel';
-import RecentTestingActivity from './RecentTestingActivity';
 import { useAdvancedSearch } from '../hooks/useAdvancedSearch';
 import PatientTable from './PatientTable';
 import SkinTestBreakdown from './SkinTestBreakdown';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 interface DashboardProps {
-  setScreen: (screen: Screen) => void;
   existingPatients: Patient[];
   recentLogs: LogFormData[];
   drugOptions: string[];
   drugCategories: Record<string, string[]>;
-  onViewLog: (log: LogFormData) => void;
   onSelectPatient: (patient: Patient) => void;
   onUploadPatients: (patients: Patient[], fileLastModified?: number) => void;
   databaseDate: string;
@@ -33,7 +30,7 @@ const getPrefersReducedMotion = () => (
     : false
 );
 
-const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onViewLog, onSelectPatient, onUploadPatients, databaseDate, isCustomData, isLoadingPatients, patientDbSavedAt }) => {
+const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, drugOptions, drugCategories, onSelectPatient, onUploadPatients, databaseDate, isCustomData, isLoadingPatients, patientDbSavedAt }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -274,16 +271,8 @@ const Dashboard: React.FC<DashboardProps> = ({ existingPatients, recentLogs, dru
           />
         </div>
 
-        {/* Recent Skin Testing Activity Card */}
-        <div style={{ '--section-index': 2 } as React.CSSProperties} className={sectionRevealClass}>
-          <RecentTestingActivity
-            recentLogs={recentLogs}
-            onViewLog={onViewLog}
-          />
-        </div>
-
         {/* Positive Skin Test Breakdown */}
-        <div style={{ '--section-index': 3 } as React.CSSProperties} className={sectionRevealClass}>
+        <div style={{ '--section-index': 2 } as React.CSSProperties} className={sectionRevealClass}>
           <SkinTestBreakdown
             statsByCategory={analytics.statsByCategory}
             expandedCategories={expandedCategories}

@@ -19,7 +19,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         },
         {
           question: "How do I upload patient data?",
-          answer: "Click the 'Update DB' button on the dashboard or 'Upload REDCap export & review records' on Home, then follow the instructions to export your data from REDCap in CSV format. Select the exported file to import your patient records."
+          answer: "Click 'Upload CSV' on the dashboard or in the sidebar, or choose 'Upload REDCap export & review cases' on Home, then follow the instructions to export your data from REDCap in CSV format. Select the exported file to import your patient records."
         },
         {
           question: "What format should the CSV file be in?",
@@ -27,7 +27,11 @@ const FAQPage: React.FC<FAQPageProps> = ({ setScreen }) => {
         },
         {
           question: "Is my patient data secure?",
-          answer: "Yes. All data is processed locally in your browser. Nothing is sent to external servers. Your data remains on your computer."
+          answer: "Yes. During normal use, all patient data is processed locally in your browser and remains on your computer. The only network transmission is the optional research database submission, which sends only the deidentified research payload to the clinic's configured research project — never identifiable patient information."
+        },
+        {
+          question: "Why do I need to enter a PIN?",
+          answer: "The app opens with a 4-digit PIN screen lock in each new browser session. It shields patient information from shoulder-surfing on shared clinic workstations. It is a privacy screen, not an access control — patient data security remains governed by your existing database access controls."
         }
       ]
     },

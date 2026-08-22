@@ -108,7 +108,6 @@ describe('Dashboard', () => {
     recentLogs: mockLogs,
     drugOptions: mockDrugOptions,
     drugCategories: mockDrugCategories,
-    onViewLog: vi.fn(),
     onSelectPatient: vi.fn(),
     onUploadPatients: vi.fn(),
     databaseDate: '2024-01-01',
@@ -140,7 +139,6 @@ describe('Dashboard', () => {
         'Severity Distribution',
         'Top Suspected Agents',
         'REDCap Record Database',
-        'Recent Skin Testing Activity',
         'Positive Skin Test Breakdown',
       ].forEach((name) => {
         expect(screen.getByRole('heading', { level: 2, name })).toBeInTheDocument();
@@ -499,29 +497,6 @@ describe('Dashboard', () => {
 
       await waitFor(() => {
         expect(mockProps.onSelectPatient).toHaveBeenCalledWith(mockProps.existingPatients[0]);
-      });
-    });
-
-    it('calls onViewLog when recent log row is clicked', async () => {
-      render(<Dashboard {...mockProps} recentLogs={mockLogs} />);
-
-      const recentSection = screen.getByText(/Recent Skin Testing Activity/i).closest('div[class*="rounded"]');
-      const logRow = within(recentSection as HTMLElement).getAllByText(/Doe, John/i)[0].closest('tr');
-      if (logRow) fireEvent.click(logRow);
-
-      await waitFor(() => {
-        expect(mockProps.onViewLog).toHaveBeenCalledWith(mockLogs[0]);
-      });
-    });
-
-    it('calls onViewLog when recent log row is activated by keyboard', async () => {
-      render(<Dashboard {...mockProps} recentLogs={mockLogs} />);
-
-      const logRow = screen.getByRole('button', { name: /View testing log for John Doe/i });
-      fireEvent.keyDown(logRow, { key: 'Enter', code: 'Enter' });
-
-      await waitFor(() => {
-        expect(mockProps.onViewLog).toHaveBeenCalledWith(mockLogs[0]);
       });
     });
   });

@@ -91,6 +91,10 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1 select-none">•</span>
+                  <span><strong className="text-foreground">PIN Screen Lock:</strong> A 4-digit PIN screen lock in each new browser session shields patient information from shoulder-surfing on shared workstations (privacy screen, not access control)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1 select-none">•</span>
                   <span><strong className="text-foreground">HTTPS Only:</strong> The application is served exclusively over HTTPS</span>
                 </li>
                 <li className="flex items-start gap-2">
@@ -195,7 +199,7 @@ const TechnicalDocumentationPage: React.FC<TechnicalDocumentationPageProps> = ({
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1 select-none">•</span>
-                  <span>Adjustable font size (3 levels)</span>
+                  <span>Adjustable font size (85%–125%)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1 select-none">•</span>
