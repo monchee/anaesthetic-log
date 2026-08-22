@@ -21,15 +21,6 @@ export const DREAM_ONLY_PROTOCOLS: DrugProtocol[] = [
   },
   // ── PENICILLINS ────────────────────────────────────────────────────────
   {
-    id: "iv",
-    drugName: "Cephalexin", category: "Penicillins", testType: "skin",
-    needsPharmacyVerification: true,
-    presentation: "2mg/mL", sptNeatConcentration: "Neat (2mg/mL)", diluent: "0.9% sodium chloride",
-    idtSteps: [s("1:100", "0.02mg/mL"), s("1:10", "0.2mg/mL"), s("Neat", "2mg/mL")],
-    challengeSteps: [],
-    protocolLabel: "IV",
-  },
-  {
     id: "standard",
     drugName: "Methoxybenzylpenicillin", category: "Penicillins", testType: "skin",
     needsPharmacyVerification: true,
@@ -40,14 +31,6 @@ export const DREAM_ONLY_PROTOCOLS: DrugProtocol[] = [
   },
   // ── HYPNOTICS ────────────────────────────────────────────────────────
   // ── LOCAL ANAESTHETICS ────────────────────────────────────────────────────────
-  {
-    id: "iv",
-    drugName: "Lignocaine", category: "Local Anaesthetics", testType: "skin",
-    presentation: "50mg/5mL", sptNeatConcentration: "Neat (10mg/mL)", diluent: "0.9% sodium chloride",
-    idtSteps: [s("1:1,000", "0.01mg/mL"), s("1:100", "0.1mg/mL"), s("1:10", "1mg/mL"), s("Neat", "10mg/mL")],
-    challengeSteps: [],
-    protocolLabel: "IV",
-  },
   // ── OPIOIDS ────────────────────────────────────────────────────────
   // ── ANTISEPTICS ────────────────────────────────────────────────────────
   // ── OTHERS ────────────────────────────────────────────────────────
@@ -59,46 +42,6 @@ export const DREAM_ONLY_PROTOCOLS: DrugProtocol[] = [
     idtSteps: [s("1:100", "0.29mg/mL")],
     challengeSteps: [],
     protocolLabel: "Suspension",
-  },
-  {
-    id: "iv",
-    drugName: "Ciprofloxacin", category: "Others", testType: "skin",
-    presentation: "200mg/100mL", sptNeatConcentration: "Neat (2mg/mL)", diluent: "0.9% sodium chloride",
-    idtSteps: [s("1:100", "0.04mg/mL")],
-    challengeSteps: [],
-    protocolLabel: "IV",
-  },
-  {
-    id: "1-1000-start",
-    drugName: "Doxycycline", category: "Others", testType: "skin",
-    presentation: "100mg", sptNeatConcentration: "Neat (10mg/mL)", diluent: "0.9% sodium chloride (reconstitute with 10 mL WFI or saline)",
-    idtSteps: [s("1:10,000", "0.001mg/mL"), s("1:1,000", "0.01mg/mL"), s("1:100", "0.05mg/mL")],
-    challengeSteps: [],
-    protocolLabel: "1:1,000 start",
-  },
-  {
-    id: "1-100-start",
-    drugName: "Doxycycline", category: "Others", testType: "skin",
-    presentation: "100mg", sptNeatConcentration: "Neat (10mg/mL)", diluent: "0.9% sodium chloride (reconstitute with 10 mL WFI or saline)",
-    idtSteps: [s("1:10,000", "0.001mg/mL"), s("1:1,000", "0.01mg/mL"), s("1:100", "0.02mg/mL")],
-    challengeSteps: [],
-    protocolLabel: "1:100 start",
-  },
-  {
-    id: "iv-contrast",
-    drugName: "Ultravist", category: "Others", testType: "skin",
-    presentation: "46.76g/75mL", sptNeatConcentration: "Neat", diluent: "0.9% sodium chloride",
-    idtSteps: [s("1:100", ""), s("1:10", "")],
-    challengeSteps: [],
-    protocolLabel: "IV Contrast",
-  },
-  {
-    id: "control",
-    drugName: "Ultravist", category: "Others", testType: "control",
-    presentation: "46.76g/75mL", sptNeatConcentration: "Neat", diluent: "0.9% sodium chloride",
-    idtSteps: [s("1:100", ""), s("1:10", "")],
-    challengeSteps: [],
-    protocolLabel: "Control",
   },
   {
     id: "standard",
@@ -146,43 +89,11 @@ export const DREAM_ONLY_PROTOCOLS: DrugProtocol[] = [
   },
   {
     id: "oral-graded-challenge",
-    drugName: "Cephalexin", category: "Penicillins", testType: "challenge",
-    presentation: "125mg/5mL suspension", sptNeatConcentration: "", diluent: "",
-    idtSteps: [],
-    challengeSteps: [c(1, "25mg", "1.0 mL", "25mg"), c(2, "50mg", "2.0 mL", "75mg"), c(3, "100mg", "4.0 mL", "175mg"), c(4, "250mg", "10 mL", "425mg")],
-    protocolLabel: "Oral Graded Challenge",
-  },
-  {
-    id: "oral-graded-challenge",
-    drugName: "Ciprofloxacin", category: "Others", testType: "challenge",
-    presentation: "Oral suspension", sptNeatConcentration: "", diluent: "",
-    idtSteps: [],
-    challengeSteps: [c(1, "50mg", "1 mL", "50mg"), c(2, "125mg", "2.5 mL", "175mg"), c(3, "250mg", "5 mL", "425mg"), c(4, "500mg", "10 mL", "925mg")],
-    protocolLabel: "Oral Graded Challenge",
-  },
-  {
-    id: "oral-graded-challenge",
-    drugName: "Doxycycline", category: "Others", testType: "challenge",
-    presentation: "Oral", sptNeatConcentration: "", diluent: "",
-    idtSteps: [],
-    challengeSteps: [c(1, "10mg", "", ""), c(2, "25mg", "", ""), c(3, "75mg", "", "")],
-    protocolLabel: "Oral Graded Challenge",
-  },
-  {
-    id: "oral-graded-challenge",
     drugName: "Flucloxacillin", category: "Penicillins", testType: "challenge",
     presentation: "125mg/5mL suspension", sptNeatConcentration: "", diluent: "",
     idtSteps: [],
     challengeSteps: [c(1, "50mg", "2 mL", "50mg"), c(2, "125mg", "5 mL", "175mg"), c(3, "325mg", "13 mL", "500mg")],
     protocolLabel: "Oral Graded Challenge",
-  },
-  {
-    id: "challenge",
-    drugName: "Lignocaine", category: "Local Anaesthetics", testType: "challenge",
-    presentation: "1% 50mg/5mL", sptNeatConcentration: "", diluent: "",
-    idtSteps: [],
-    challengeSteps: [c(1, "10mg", "1 mL", "")],
-    protocolLabel: "Challenge",
   },
   {
     id: "graded-challenge",

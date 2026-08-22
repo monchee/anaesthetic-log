@@ -86,7 +86,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [18] Augmentin (skin, 1:100 start)
   findGenerated("Augmentin", "skin", "1:100 start"),
   // [19] Cephalexin (skin, IV)
-  findDreamOnly("Cephalexin", "skin", "IV"),
+  findGenerated("Cephalexin", "skin", "IV"),
   // [20] Tazocin (skin, IV)
   findGenerated("Tazocin", "skin", "IV"),
   // [21] Methoxybenzylpenicillin (skin)
@@ -116,7 +116,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [33] Thiopental (skin, 1:100 start)
   findGenerated("Thiopental", "skin", "1:100 start"),
   // [34] Lignocaine (skin, IV)
-  findDreamOnly("Lignocaine", "skin", "IV"),
+  findGenerated("Lignocaine", "skin", "IV"),
   // [35] Mepivacaine (skin, Epidural)
   findGenerated("Mepivacaine", "skin", "Epidural"),
   // [36] Bupivacaine (skin, Epidural)
@@ -164,7 +164,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [57] Cefuroxime Suspension (skin, Suspension)
   findDreamOnly("Cefuroxime Suspension", "skin", "Suspension"),
   // [58] Ciprofloxacin (skin, IV)
-  findDreamOnly("Ciprofloxacin", "skin", "IV"),
+  findGenerated("Ciprofloxacin", "skin", "IV"),
   // [59] Clindamycin (skin, IV)
   findGenerated("Clindamycin", "skin", "IV"),
   // [60] Dalteparin (skin, SC)
@@ -172,9 +172,9 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [61] Dexamethasone (skin, IV)
   findGenerated("Dexamethasone", "skin", "IV"),
   // [62] Doxycycline (skin, 1:1,000 start)
-  findDreamOnly("Doxycycline", "skin", "1:1,000 start"),
+  findGenerated("Doxycycline", "skin", "1:1,000 start"),
   // [63] Doxycycline (skin, 1:100 start)
-  findDreamOnly("Doxycycline", "skin", "1:100 start"),
+  findGenerated("Doxycycline", "skin", "1:100 start"),
   // [64] Droperidol (skin, IV)
   findGenerated("Droperidol", "skin", "IV"),
   // [65] Enoxaparin (skin, SC)
@@ -238,9 +238,9 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [94] Triamcinolone (experimental, Inj)
   findGenerated("Triamcinolone", "experimental", "Inj"),
   // [95] Ultravist (skin, IV Contrast)
-  findDreamOnly("Ultravist", "skin", "IV Contrast"),
+  findGenerated("Ultravist", "skin", "IV Contrast"),
   // [96] Ultravist (control, Control)
-  findDreamOnly("Ultravist", "control", "Control"),
+  findGenerated("Ultravist", "control", "Control"),
   // [97] Urografin (skin, IV Contrast)
   findGenerated("Urografin", "skin", "IV Contrast"),
   // [98] Vancomycin (skin, IV)
@@ -262,15 +262,15 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [106] Cefazolin (challenge, IV Challenge)
   findGenerated("Cefazolin", "challenge", "IV Challenge"),
   // [107] Cephalexin (challenge, Oral Graded Challenge)
-  findDreamOnly("Cephalexin", "challenge", "Oral Graded Challenge"),
+  findGenerated("Cephalexin", "challenge", "Oral Graded Challenge"),
   // [108] Ciprofloxacin (challenge, Oral Graded Challenge)
-  findDreamOnly("Ciprofloxacin", "challenge", "Oral Graded Challenge"),
+  findGenerated("Ciprofloxacin", "challenge", "Oral Graded Challenge"),
   // [109] Doxycycline (challenge, Oral Graded Challenge)
-  findDreamOnly("Doxycycline", "challenge", "Oral Graded Challenge"),
+  findGenerated("Doxycycline", "challenge", "Oral Graded Challenge"),
   // [110] Flucloxacillin (challenge, Oral Graded Challenge)
   findDreamOnly("Flucloxacillin", "challenge", "Oral Graded Challenge"),
   // [111] Lignocaine (challenge, Challenge)
-  findDreamOnly("Lignocaine", "challenge", "Challenge"),
+  findGenerated("Lignocaine", "challenge", "Challenge"),
   // [112] Meloxicam (challenge, Graded Challenge)
   findDreamOnly("Meloxicam", "challenge", "Graded Challenge"),
   // [113] Trimethoprim/Sulfamethoxazole (challenge, Oral Graded Challenge)
