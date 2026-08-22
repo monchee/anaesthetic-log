@@ -32,8 +32,11 @@ test.describe('Smoke Tests', () => {
     // Wait for the app to load
     await page.waitForLoadState('networkidle');
 
-    // The app title is DREAM — check the h1 in the header
-    await expect(page.getByRole('heading', { name: 'DREAM' })).toBeVisible();
+    // The app title is DREAM — check the h1 in the header.
+    // `exact` matters: accessible-name matching is substring-based, and other
+    // headings on the page contain "DREAM" (e.g. "The DREAM App"), which would
+    // otherwise resolve to multiple elements and fail Playwright strict mode.
+    await expect(page.getByRole('heading', { name: 'DREAM', exact: true })).toBeVisible();
   });
 
   test('can navigate to dashboard', async ({ page }) => {
