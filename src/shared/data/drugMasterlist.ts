@@ -60,7 +60,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [5] Sugammadex (Alone) (skin, Alone)
   findGenerated("Sugammadex (Alone)", "skin", "Alone"),
   // [6] Sugammadex (+ Rocuronium) (skin, + Rocuronium)
-  findDreamOnly("Sugammadex (+ Rocuronium)", "skin", "+ Rocuronium"),
+  findGenerated("Sugammadex (+ Rocuronium)", "skin", "+ Rocuronium"),
   // [7] Penicillin Major (skin, PPL)
   findGenerated("Penicillin Major", "skin", "PPL"),
   // [8] Penicillin Minor (skin, MD)
@@ -162,7 +162,7 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [56] Betamethasone (experimental, IV)
   findGenerated("Betamethasone", "experimental", "IV"),
   // [57] Cefuroxime Suspension (skin, Suspension)
-  findDreamOnly("Cefuroxime Suspension", "skin", "Suspension"),
+  findGenerated("Cefuroxime Suspension", "skin", "Suspension"),
   // [58] Ciprofloxacin (skin, IV)
   findGenerated("Ciprofloxacin", "skin", "IV"),
   // [59] Clindamycin (skin, IV)
@@ -256,9 +256,9 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [103] Atropine (skin)
   findDreamOnly("Atropine", "skin"),
   // [104] Amoxycillin Suspension (challenge, Oral Graded Challenge)
-  findDreamOnly("Amoxycillin Suspension", "challenge", "Oral Graded Challenge"),
+  findGenerated("Amoxycillin Suspension", "challenge", "Oral Graded Challenge"),
   // [105] Amoxycillin/Clavulanic Acid (challenge, Oral Graded Challenge)
-  findDreamOnly("Amoxycillin/Clavulanic Acid", "challenge", "Oral Graded Challenge"),
+  findGenerated("Amoxycillin/Clavulanic Acid", "challenge", "Oral Graded Challenge"),
   // [106] Cefazolin (challenge, IV Challenge)
   findGenerated("Cefazolin", "challenge", "IV Challenge"),
   // [107] Cephalexin (challenge, Oral Graded Challenge)
@@ -268,17 +268,17 @@ export const DRUG_MASTERLIST: DrugProtocol[] = [
   // [109] Doxycycline (challenge, Oral Graded Challenge)
   findGenerated("Doxycycline", "challenge", "Oral Graded Challenge"),
   // [110] Flucloxacillin (challenge, Oral Graded Challenge)
-  findDreamOnly("Flucloxacillin", "challenge", "Oral Graded Challenge"),
+  findGenerated("Flucloxacillin", "challenge", "Oral Graded Challenge"),
   // [111] Lignocaine (challenge, Challenge)
   findGenerated("Lignocaine", "challenge", "Challenge"),
   // [112] Meloxicam (challenge, Graded Challenge)
-  findDreamOnly("Meloxicam", "challenge", "Graded Challenge"),
+  findGenerated("Meloxicam", "challenge", "Graded Challenge"),
   // [113] Trimethoprim/Sulfamethoxazole (challenge, Oral Graded Challenge)
-  findDreamOnly("Trimethoprim/Sulfamethoxazole", "challenge", "Oral Graded Challenge"),
+  findGenerated("Trimethoprim/Sulfamethoxazole", "challenge", "Oral Graded Challenge"),
   // [114] Trimethoprim (challenge, Oral Graded Challenge)
-  findDreamOnly("Trimethoprim", "challenge", "Oral Graded Challenge"),
+  findGenerated("Trimethoprim", "challenge", "Oral Graded Challenge"),
   // [115] Voltaren (Diclofenac) (challenge, Graded Challenge)
-  findDreamOnly("Voltaren (Diclofenac)", "challenge", "Graded Challenge"),
+  findGenerated("Voltaren (Diclofenac)", "challenge", "Graded Challenge"),
   // [116] Flucloxacillin (skin, IV)
   findGenerated("Flucloxacillin", "skin", "IV"),
 ];
